@@ -10,13 +10,13 @@ case class Person(age: Int, address: Address)
 
 object AddressLens extends BasicLens[Person, Address] {
   def get(from: Person): Address = from.address
-  def set(from: Person, updatedField: Address): Person = from.copy(address = updatedField)
+  def modify(from: Person, f: Address => Address): Person = from.copy(address = f.apply(from.address))
 }
 
 
 object CityLens extends BasicLens[Address, String] {
   def get(from: Address): String = from.city
-  def set(from: Address, updatedField: String): Address = from.copy(city = updatedField)
+  def modify(from: Address, f: String => String): Address = from.copy(city = f.apply(from.city))
 }
 
 object Age extends HLens[Person, Int] {
@@ -39,6 +39,7 @@ object Example extends App {
 
   println(Person2City.set(person, "Paris") )
   println(Person2City.get(person))
+  println(Person2City.modify(person, _ + "!!!"))
 
   println(Age.set(person, 20))
 
