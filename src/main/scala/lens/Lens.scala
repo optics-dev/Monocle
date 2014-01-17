@@ -1,8 +1,7 @@
 package lens
 
-/**
- * Created by julient on 17/01/2014.
- */
+
+
 trait Lens[A,B] extends Getter[A,B] with Setter[A, B] {
   def >-[C](other: Lens[B,C]): Lens[A,C] = Lens.compose(this, other)
 }
