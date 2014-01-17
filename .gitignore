@@ -1,0 +1,11 @@
+## IntelliJ files to ignore
+*.iml
+*.iws
+*.ipr
+.idea
+.idea/*
+
+## scala specific files to ignore
+*.class
+target/
+project/project/
