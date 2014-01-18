@@ -79,7 +79,7 @@ Applicative
 
 An Applicative is a lens toward 0 or more values
 
-    object LongLatApplicative extends Lens[Location, Double]
+    object LongLatApplicative extends Applicative[Location, Double]
     val location = Location(2.0, 6.0)
 
 Set
@@ -105,8 +105,8 @@ Modify
 Get
 ---
 
-    Get is slightly trickier, we need a way to accumulate or fold all values that we retrieve
-    Therefore, we need the return type to have Monoid instance, e.g. Addition of Double
+Get is slightly trickier, we need a way to accumulate or fold all values that we retrieve
+Therefore, we need the return type to have Monoid instance, e.g. Addition of Double
 
     implicit object Addition extends Monoid[Double] {
       def append(f1: Double, f2: => Double): Double = f1 + f2
