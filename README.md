@@ -35,14 +35,6 @@ Set
     // Lens syntax:
     (AddressLens >- CityLens).set(person, "Paris")
 
-Set
----
-
-    // Scala syntax:
-    person.copy(address = person.address.copy(city = "Paris"))
-
-    // Lens syntax:
-    (AddressLens >- CityLens).set(person, "Paris")
 
 Modify
 ------
