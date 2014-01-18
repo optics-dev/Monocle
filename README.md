@@ -13,7 +13,7 @@ Lens library in scala
     object LocationLens extends Lens[Address, Location]
     object LatitudeLens extends Lens[Location, Long]
 
-    val address = Address("London", "EC1...")
+    val address = Address("London", "EC1...", Location(12, 34))
     val person  = Person("Roger", 25, address)
 
 Get
