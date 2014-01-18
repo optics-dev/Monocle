@@ -119,3 +119,15 @@ Therefore, we need the return type to possess a Monoid instance, e.g. Addition o
 
     // Applicative syntax:
     LongLatApplicative.fold(location)
+
+
+Composition
+===========
+
+This is the bread and butter of Lens and Traversal, they compose!
+
+    Lens[A,B]      >- Lens[B,C]      : Lens[A,C]
+    Traversal[A,B] >- Traversal[B,C] : Traversal[A,C]
+
+    Traversal[A,B] >- Lens[B,C]      : Traversal[A,C]
+    Lens[A,B]      >- Traversal[B,C] : Traversal[A,C]
