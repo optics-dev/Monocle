@@ -1,11 +1,12 @@
 package example
 
 import lens.Lens
-import lens.impl.HaskLens
-import scalaz.Functor
+import lens.impl.{HTraversal, HLens}
+import scala.language.higherKinds
 import scalaz.std.option._
+import scalaz.{Monoid, Applicative, Functor}
 
-
+case class Location(latitude: Double, longitude: Double)
 case class Address(city: String, postcode: String)
 case class Person(age: Int, address: Address)
 
@@ -14,7 +15,6 @@ object AddressLens extends Lens[Person, Address] {
 
   def lift[F[_] : Functor](from: Person, f: Address => F[Address]): F[Person] =
     implicitly[Functor[F]].map(f(from.address))(newValue => from.copy(address = newValue))
-
 }
 
 object CityLens extends Lens[Address, String] {
@@ -23,16 +23,23 @@ object CityLens extends Lens[Address, String] {
     implicitly[Functor[F]].map(f(from.city))(newValue => from.copy(city = newValue))
 }
 
-object AddressHLens extends HaskLens[Person, Address] {
+object AddressHLens extends HLens[Person, Address] {
   protected def lensFunction[F[_] : Functor](lift: Address => F[Address], person: Person): F[Person] = {
     implicitly[Functor[F]].map(lift(person.address))(newValue => person.copy(address = newValue))
   }
 }
 
-object CityHLens extends HaskLens[Address, String] {
+object CityHLens extends HLens[Address, String] {
   protected def lensFunction[F[_] : Functor](lift: String => F[String], address: Address): F[Address] = {
     implicitly[Functor[F]].map(lift(address.city))(newValue => address.copy(city = newValue))
   }
+}
+
+object LongTraversal extends HTraversal[Location, Double] {
+  protected def traversalFunction[F[_] : Applicative](lift: Double => F[Double], from: Location): F[Location] =
+    implicitly[Applicative[F]].apply2(lift(from.latitude), lift(from.longitude)){ case (newLatitude, newLongitude) =>
+      from.copy(latitude = newLatitude, longitude = newLongitude)
+    }
 }
 
 object Example extends App {
@@ -56,6 +63,16 @@ object Example extends App {
   println(Person2CityHLens.get(person))
   println(Person2CityHLens.modify(person, _ + "!!!"))
   println(Person2CityHLens.lift(person, city => Option(city)))
+
+  val location = Location(2, 6)
+
+  implicit object Addition extends Monoid[Double] {
+    def append(f1: Double, f2: => Double): Double = f1 + f2
+    def zero: Double = 0L
+  }
+
+  println(LongTraversal.get(location))
+  println(LongTraversal.modify(location, _ + 2))
 
 }
 

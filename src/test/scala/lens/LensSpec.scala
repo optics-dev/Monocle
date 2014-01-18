@@ -1,6 +1,6 @@
 package lens
 
-import lens.impl.HaskLens
+import lens.impl.HLens
 import lens.util.Identity
 import org.scalatest.Matchers._
 import org.scalatest.PropSpec
@@ -14,7 +14,7 @@ class LensSpec extends PropSpec with PropertyChecks  {
 
   case class Example(s: String)
 
-  object StringLens extends HaskLens[Example, String] {
+  object StringLens extends HLens[Example, String] {
     protected def lensFunction[F[_] : Functor](lift: String => F[String], example: Example): F[Example] = {
       implicitly[Functor[F]].map(lift(example.s))(newValue => example.copy(s = newValue))
     }

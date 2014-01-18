@@ -1,11 +1,13 @@
 package lens.util
 
-import scalaz.Functor
+import scalaz.Applicative
 
 case class Identity[A](value: A)
 
 object Identity {
-  implicit object IdentityFunctor extends Functor[Identity] {
-    def map[A, B](fa: Identity[A])(f: A => B): Identity[B] = Identity(f(fa.value))
+
+  implicit object IdentityApplicative extends Applicative[Identity] {
+    def point[A](a: => A): Identity[A] = Identity(a)
+    def ap[A, B](fa: => Identity[A])(f: => Identity[(A) => B]): Identity[B] = Identity(f.value(fa.value))
   }
 }

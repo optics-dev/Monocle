@@ -1,10 +1,16 @@
 package lens
 
+import scala.language.higherKinds
 import scalaz.Functor
 import util.Identity
 
 
-trait Lens[A,B] extends Getter[A,B] with Setter[A, B] with Modifier[A, B] with Lift[A, B] {
+trait Lens[A,B] {
+
+  def get(from: A): B
+
+  def lift[F[_] : Functor](from: A, f: B => F[B]):  F[A]
+
   // default implementation of set using modify
   def set(from: A, newValue: B): A = modify(from, _ => newValue)
 
@@ -14,21 +20,6 @@ trait Lens[A,B] extends Getter[A,B] with Setter[A, B] with Modifier[A, B] with L
   def >-[C](other: Lens[B,C]): Lens[A,C] = Lens.compose(this, other)
 }
 
-trait Getter[A, B]{
-  def get(from: A): B
-}
-
-trait Setter[A,B] {
-  def set(from: A, newValue: B): A
-}
-
-trait Modifier[A, B] extends Setter[A, B] {
-  def modify(from: A, f: B => B): A
-}
-
-trait Lift[A, B] {
-  def lift[F[_] : Functor](from: A, f: B => F[B]):  F[A]
-}
 
 object Lens {
   def compose[A, B, C](a2b: Lens[A, B], b2C: Lens[B, C]): Lens[A, C] =  new Lens[A, C] {
