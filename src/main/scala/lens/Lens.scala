@@ -18,6 +18,7 @@ trait Lens[A,B] {
   def modify(from: A, f: B => B): A = lift(from, { b : B => Identity(f(b)) } ).value
 
   def >-[C](other: Lens[B,C]): Lens[A,C] = Lens.compose(this, other)
+  def >-[C](other: Traversal[B,C]): Traversal[A,C] = Traversal.compose(this, other)
 }
 
 

@@ -3,7 +3,7 @@ package lens.impl
 import lens.Traversal
 import lens.util.{Identity, Constant}
 import scala.language.higherKinds
-import scalaz.{Monoid, Applicative}
+import scalaz.Applicative
 import scalaz.std.list._
 
 
@@ -15,12 +15,15 @@ trait HTraversal[A, B] extends Traversal[A,B] {
     traversalFunction[({type l[a] = Constant[List[B],a]})#l](lift, from).value
   }
 
-  def fold(from: A)(implicit ev: Monoid[B]): B = {
-    val b2Fb: B => Constant[B, B] = { b: B => Constant(b)}
-    traversalFunction[({type l[a] = Constant[B,a]})#l] (b2Fb, from).value
-  }
-
   def modify(from: A, f: B => B): A =
     traversalFunction[Identity]({ b: B => Identity[B](f(b)) }, from).value
+
+}
+
+object HTraversal {
+  def compose[A, B, C](a2b: HTraversal[A, B], b2C: HTraversal[B, C]): HTraversal[A, C] = new HTraversal[A, C] {
+    protected def traversalFunction[F[_] : Applicative](lift: (C) => F[C], a: A): F[A] =
+      a2b.traversalFunction({b: B => b2C.traversalFunction(lift, b)}, a)
+  }
 
 }
