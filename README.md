@@ -82,6 +82,15 @@ An Applicative is a lens toward 0 or more values
     object LongLatApplicative extends Applicative[Location, Double]
     val location = Location(2.0, 6.0)
 
+Get
+---
+
+    // Scala syntax:
+    List(location.latitude, location.longitude)
+
+    // Applicative syntax:
+    LongLatApplicative.get(location)
+
 Set
 ---
 
@@ -102,11 +111,11 @@ Modify
     LongLatApplicative.modify(location, _ + 2)
 
 
-Get
----
+Fold
+----
 
-Get is slightly trickier, we need a way to accumulate or fold all values that we retrieve
-Therefore, we need the return type to have Monoid instance, e.g. Addition of Double
+Fold is slightly trickier, we need a way to accumulate or fold all values that we retrieve
+Therefore, we need the return type to possess a Monoid instance, e.g. Addition of Double
 
     implicit object Addition extends Monoid[Double] {
       def append(f1: Double, f2: => Double): Double = f1 + f2
@@ -117,4 +126,4 @@ Therefore, we need the return type to have Monoid instance, e.g. Addition of Dou
     location.latitude + location.longitude
 
     // Applicative syntax:
-    LongLatApplicative.get(location)
+    LongLatApplicative.fold(location)

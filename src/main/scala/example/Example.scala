@@ -72,6 +72,7 @@ object Example extends App {
   }
 
   println(LongTraversal.get(location))
+  println(LongTraversal.fold(location))
   println(LongTraversal.modify(location, _ + 2))
 
 }
