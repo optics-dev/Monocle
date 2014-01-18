@@ -1,8 +1,8 @@
 package example
 
-import scalaz.Functor
 import lens.Lens
 import lens.impl.HaskLens
+import scalaz.Functor
 import scalaz.std.option._
 
 

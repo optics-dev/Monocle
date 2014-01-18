@@ -1,8 +1,9 @@
 package lens.impl
 
-import scalaz.Functor
 import lens.Lens
-import util.Constant
+import lens.util.Constant
+import scala.language.higherKinds
+import scalaz.Functor
 
 
 trait HaskLens[A, B] extends Lens[A,B] {

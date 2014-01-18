@@ -1,4 +1,4 @@
-package util
+package lens.util
 
 import scalaz.Functor
 
