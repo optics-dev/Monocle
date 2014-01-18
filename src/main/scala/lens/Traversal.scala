@@ -7,7 +7,9 @@ trait Traversal[A, B] {
 
   def get(from: A): List[B]
 
-  def fold(from: A)(implicit ev: Monoid[B]): B = get(from).foldRight(ev.zero)((c1,c2) => ev.append(c1, c2))
+  def fold(from: A, zero: B)(append: (B, B) => B): B = get(from).foldRight(zero)(append)
+
+  def fold(from: A)(implicit ev: Monoid[B]): B = fold(from, ev.zero){ case (b1, b2) => ev.append(b1, b2) }
 
   def set(from: A, newValue: B): A = modify(from, _ => newValue)
 

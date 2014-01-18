@@ -66,12 +66,12 @@ Lift
     // Lens syntax:
     (AddressLens >- CityLens >- LocationLens).lift(person, neighbours)
 
-Applicative
-===========
+Traversal
+=========
 
-An Applicative is a lens toward 0 or more values
+A Traversal is a lens toward 0 or more values
 
-    object LongLatApplicative extends Applicative[Location, Double]
+    object LongLatTraversal extends Traversal[Location, Double]
     val location = Location(2.0, 6.0)
 
 Get
@@ -80,8 +80,8 @@ Get
     // Scala syntax:
     List(location.latitude, location.longitude)
 
-    // Applicative syntax:
-    LongLatApplicative.get(location)
+    // Traversal syntax:
+    LongLatTraversal.get(location)
 
 Set
 ---
@@ -89,8 +89,8 @@ Set
     // Scala syntax:
     location.copy(latitude = 4.0, longitude = 4.0)
 
-    // Applicative syntax:
-    LongLatApplicative.set(location, 4.0)
+    // Traversal syntax:
+    LongLatTraversal.set(location, 4.0)
 
 
 Modify
@@ -99,15 +99,15 @@ Modify
     // Scala syntax:
     location.copy(latitude = location.latitude + 2, longitude = location.longitude + 2)
 
-    // Applicative syntax:
-    LongLatApplicative.modify(location, _ + 2)
+    // Traversal syntax:
+    LongLatTraversal.modify(location, _ + 2)
 
 
 Fold
 ----
 
 Fold is slightly trickier, we need a way to accumulate or fold all values that we retrieve
-Therefore, we need the return type to possess a Monoid instance, e.g. Addition of Double
+Therefore, we need the return type to possess a Monoid instance or to manually define the fold logic
 
     implicit object Addition extends Monoid[Double] {
       def append(f1: Double, f2: => Double): Double = f1 + f2
@@ -117,8 +117,11 @@ Therefore, we need the return type to possess a Monoid instance, e.g. Addition o
     // Scala syntax:
     location.latitude + location.longitude
 
-    // Applicative syntax:
-    LongLatApplicative.fold(location)
+    // Traversal syntax using implicit Monoid:
+    LongLatTraversal.fold(location)
+
+    // Traversal syntax using explicit fold logic:
+    LongLatTraversal.fold(location, 0.0)(_ + _)
 
 
 Composition
