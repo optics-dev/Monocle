@@ -1,7 +1,7 @@
 Lens
 ====
 
-Lens library in scala
+Attempt to port the amazing Haskell [Lens](https://github.com/ekmett/lens) library to Scala
 
 
     case class Person(name: String, age: Int, address: Address)
