@@ -2,7 +2,7 @@ package lens.impl
 
 import scalaz.Functor
 import lens.Lens
-import util.{Constant, Identity}
+import util.Constant
 
 
 trait HaskLens[A, B] extends Lens[A,B] {
@@ -13,10 +13,7 @@ trait HaskLens[A, B] extends Lens[A,B] {
     lensFunction[({type l[a] = Constant[B,a]})#l] (b2Fb, a).value
   }
 
-  def modify(from: A, f: B => B): A = {
-    val b2Fb: B => Identity[B] = { b : B => Identity(f(b)) }
-    lensFunction[Identity](b2Fb, from).value
-  }
+  def lift[F[_] : Functor](from: A, f: B => F[B]): F[A] = lensFunction(f, from)
 
   // overload
   def >-[C](other: HaskLens[B, C]): Lens[A, C] = HaskLens.compose(this, other)
