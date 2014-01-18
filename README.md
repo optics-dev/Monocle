@@ -61,7 +61,7 @@ Modify
 Lift
 ----
 
-   def neighbours(location: Location): List[Location]
+    def neighbours(location: Location): List[Location]
 
     // Scala syntax:
     val location = person.address.location
