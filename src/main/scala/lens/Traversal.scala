@@ -1,11 +1,14 @@
 package lens
 
-import scalaz.Monoid
-
+import lens.util.Identity
+import scala.language.higherKinds
+import scalaz.{Applicative, Monoid}
 
 trait Traversal[A, B] {
 
   def get(from: A): List[B]
+
+  def lift[F[_] : Applicative](from: A, f: B => F[B]):  F[A]
 
   def fold(from: A, zero: B)(append: (B, B) => B): B = get(from).foldRight(zero)(append)
 
@@ -13,7 +16,7 @@ trait Traversal[A, B] {
 
   def set(from: A, newValue: B): A = modify(from, _ => newValue)
 
-  def modify(from: A, f: B => B): A
+  def modify(from: A, f: B => B): A = lift(from, Identity[B]).value
 
   def >-[C](other: Traversal[B,C]): Traversal[A,C] = Traversal.compose(this, other)
   def >-[C](other: Lens[B,C]): Traversal[A,C]      = Traversal.compose(this, other)
@@ -26,20 +29,20 @@ object Traversal {
 
     def get(from: A): List[C] = a2b.get(from) flatMap b2C.get
 
-    def modify(from: A, f: C => C): A = a2b.modify(from, b2C.modify(_, f))
+    def lift[F[_] : Applicative](from: A, f: C => F[C]): F[A] = a2b.lift(from, b2C.lift(_, f))
   }
 
   def compose[A, B, C](a2b: Traversal[A, B], b2C: Lens[B, C]): Traversal[A, C] = new Traversal[A, C] {
 
     def get(from: A): List[C] = a2b.get(from) map b2C.get
 
-    def modify(from: A, f: C => C): A = a2b.modify(from, b2C.modify(_, f))
+    def lift[F[_] : Applicative](from: A, f: C => F[C]): F[A] = a2b.lift(from, b2C.lift(_, f))
   }
 
   def compose[A, B, C](a2b: Lens[A, B], b2C: Traversal[B, C]): Traversal[A, C] = new Traversal[A, C] {
 
     def get(from: A): List[C] = b2C.get(a2b.get(from))
 
-    def modify(from: A, f: C => C): A = a2b.modify(from, b2C.modify(_, f))
+    def lift[F[_] : Applicative](from: A, f: C => F[C]): F[A] = a2b.lift(from, b2C.lift(_, f))
   }
 }

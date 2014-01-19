@@ -4,6 +4,7 @@ import lens.Lens
 import lens.impl.{HTraversal, HLens}
 import scala.language.higherKinds
 import scalaz.std.option._
+import scalaz.std.list._
 import scalaz.{Monoid, Applicative, Functor}
 
 case class Location(latitude: Double, longitude: Double)
@@ -42,6 +43,7 @@ object Example extends App {
   println(LatLongTraversal.get(location))
   println(LatLongTraversal.fold(location))
   println(LatLongTraversal.modify(location, _ + 2))
+  println(LatLongTraversal.lift(location, l => List(l+1, l, l-1)))
 
   // composition of lens and traversal
   println((AddressHLens >- LocationHLens >- LatLongTraversal).get(person))

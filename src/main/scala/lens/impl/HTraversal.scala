@@ -1,10 +1,9 @@
 package lens.impl
 
 import lens.Traversal
-import lens.util.{Identity, Constant}
+import lens.util.Constant
 import scala.language.higherKinds
 import scalaz.Applicative
-import scalaz.std.list._
 
 
 trait HTraversal[A, B] extends Traversal[A,B] {
@@ -15,9 +14,7 @@ trait HTraversal[A, B] extends Traversal[A,B] {
     traversalFunction[({type l[a] = Constant[List[B],a]})#l](lift, from).value
   }
 
-  def modify(from: A, f: B => B): A =
-    traversalFunction[Identity]({ b: B => Identity[B](f(b)) }, from).value
-
+  def lift[F[_] : Applicative](from: A, f: B => F[B]): F[A] = traversalFunction(f, from)
 }
 
 object HTraversal {
