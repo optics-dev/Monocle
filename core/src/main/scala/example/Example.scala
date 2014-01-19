@@ -54,36 +54,36 @@ object AddressLens extends Lens[Person, Address] {
   def get(from: Person): Address = from.address
 
   def lift[F[_] : Functor](from: Person, f: Address => F[Address]): F[Person] =
-    implicitly[Functor[F]].map(f(from.address))(newValue => from.copy(address = newValue))
+    Functor[F].map(f(from.address))(newValue => from.copy(address = newValue))
 }
 
 object CityLens extends Lens[Address, String] {
   def get(from: Address): String = from.city
   def lift[F[_] : Functor](from: Address, f: String => F[String]): F[Address] =
-    implicitly[Functor[F]].map(f(from.city))(newValue => from.copy(city = newValue))
+    Functor[F].map(f(from.city))(newValue => from.copy(city = newValue))
 }
 
 object AddressHLens extends HLens[Person, Address] {
   protected def lensFunction[F[_] : Functor](lift: Address => F[Address], person: Person): F[Person] = {
-    implicitly[Functor[F]].map(lift(person.address))(newValue => person.copy(address = newValue))
+    Functor[F].map(lift(person.address))(newValue => person.copy(address = newValue))
   }
 }
 
 object CityHLens extends HLens[Address, String] {
   protected def lensFunction[F[_] : Functor](lift: String => F[String], address: Address): F[Address] = {
-    implicitly[Functor[F]].map(lift(address.city))(newValue => address.copy(city = newValue))
+    Functor[F].map(lift(address.city))(newValue => address.copy(city = newValue))
   }
 }
 
 object LocationHLens extends HLens[Address, Location] {
   protected def lensFunction[F[_] : Functor](lift: Location => F[Location], address: Address): F[Address] = {
-    implicitly[Functor[F]].map(lift(address.location))(newValue => address.copy(location = newValue))
+    Functor[F].map(lift(address.location))(newValue => address.copy(location = newValue))
   }
 }
 
 object LatLongTraversal extends HTraversal[Location, Double] {
   protected def traversalFunction[F[_] : Applicative](lift: Double => F[Double], from: Location): F[Location] =
-    implicitly[Applicative[F]].apply2(lift(from.latitude), lift(from.longitude)){ case (newLatitude, newLongitude) =>
+    Applicative[F].apply2(lift(from.latitude), lift(from.longitude)){ case (newLatitude, newLongitude) =>
       from.copy(latitude = newLatitude, longitude = newLongitude)
     }
 }
