@@ -26,23 +26,14 @@ trait Traversal[A, B] {
 
 object Traversal {
   def compose[A, B, C](a2b: Traversal[A, B], b2C: Traversal[B, C]): Traversal[A, C] = new Traversal[A, C] {
-
     def get(from: A): List[C] = a2b.get(from) flatMap b2C.get
-
     def lift[F[_] : Applicative](from: A, f: C => F[C]): F[A] = a2b.lift(from, b2C.lift(_, f))
   }
 
   def compose[A, B, C](a2b: Traversal[A, B], b2C: Lens[B, C]): Traversal[A, C] = new Traversal[A, C] {
-
     def get(from: A): List[C] = a2b.get(from) map b2C.get
-
     def lift[F[_] : Applicative](from: A, f: C => F[C]): F[A] = a2b.lift(from, b2C.lift(_, f))
   }
 
-  def compose[A, B, C](a2b: Lens[A, B], b2C: Traversal[B, C]): Traversal[A, C] = new Traversal[A, C] {
 
-    def get(from: A): List[C] = b2C.get(a2b.get(from))
-
-    def lift[F[_] : Applicative](from: A, f: C => F[C]): F[A] = a2b.lift(from, b2C.lift(_, f))
-  }
 }
