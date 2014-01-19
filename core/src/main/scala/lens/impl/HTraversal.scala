@@ -4,7 +4,7 @@ import lens.Traversal
 import lens.util.Constant
 import scala.language.higherKinds
 import scalaz.Applicative
-import scalaz.std.list.
+import scalaz.std.list._
 
 
 trait HTraversal[A, B] extends Traversal[A,B] {
