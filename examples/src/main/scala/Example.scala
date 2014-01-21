@@ -1,4 +1,4 @@
-package example
+
 
 import lens.Lens
 import lens.impl.{HTraversal, HLens}

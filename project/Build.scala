@@ -2,7 +2,7 @@ import sbt._
 import Keys._
 
 
-object BuildSettings {
+objectBuildSettings {
   val buildScalaVersion = "2.10.3"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
@@ -30,16 +30,16 @@ object ScalaLensBuild extends Build {
     "root",
     file("."),
     settings = buildSettings ++ Seq(
-      run <<= run in Compile in core)
-  ) aggregate(macros, core)
+      run <<= run in Compile in macros)
+  ) aggregate(macros, core, examples)
 
   lazy val macros: Project = Project(
     "macros",
     file("macros"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaReflect)
+      libraryDependencies ++= Seq(scalaReflect, scalaz)
     )
-  )
+  ) dependsOn(core)
 
   lazy val core: Project = Project(
     "core",
@@ -48,5 +48,11 @@ object ScalaLensBuild extends Build {
       name := "Lens Core",
       libraryDependencies ++= Seq(scalaz, scalaTest, scalaCheck)
     )
-  ) dependsOn(macros)
+  )
+
+  lazy val examples: Project = Project(
+    "examples",
+    file("examples"),
+    settings = buildSettings ++ Seq(publishArtifact := false)
+  ) dependsOn(macros, core)
 }
