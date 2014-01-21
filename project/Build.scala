@@ -2,7 +2,7 @@ import sbt._
 import Keys._
 
 
-objectBuildSettings {
+object BuildSettings {
   val buildScalaVersion = "2.10.3"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
