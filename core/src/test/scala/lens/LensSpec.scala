@@ -6,48 +6,47 @@ import org.scalatest.Matchers._
 import org.scalatest.PropSpec
 import org.scalatest.prop.PropertyChecks
 import scala.language.higherKinds
-import scalaz.Functor
+import org.scalacheck.Arbitrary
+import org.scalacheck.Arbitrary._
 
 
 class LensSpec extends PropSpec with PropertyChecks  {
 
+  case class Example(s: String, i: Int)
 
-  case class Example(s: String)
+  val StringLens = HLens[Example, String](_.s, (a, b) => a.copy(s = b))
 
-  object StringLens extends HLens[Example, String] {
-    protected def lensFunction[F[_] : Functor](lift: String => F[String], example: Example): F[Example] = {
-      implicitly[Functor[F]].map(lift(example.s))(newValue => example.copy(s = newValue))
-    }
-  }
-
-  val example = Example("blabla")
+  implicit val exampleGen : Arbitrary[Example] =  Arbitrary(for {
+    s <- arbitrary[String]
+    i <- arbitrary[Int]
+  } yield Example(s, i))
 
   property("set - get") {
-    forAll { (s: String) =>
+    forAll { (example: Example, s: String) =>
       StringLens.get(StringLens.set(example, s)) should be (s)
     }
   }
 
   property("get - set") {
-    forAll { (s: String) =>
+    forAll { (example: Example, s: String) =>
       StringLens.set(example, StringLens.get(example)) should be (example)
     }
   }
 
   property("set - set") {
-    forAll { (s: String) =>
+    forAll { (example: Example, s: String) =>
       StringLens.set(example, s) should be (StringLens.set(StringLens.set(example, s), s))
     }
   }
 
   property("modify - id") {
-    forAll { (s: String) =>
+    forAll { (example: Example) =>
       StringLens.modify(example, identity) should be (example)
     }
   }
 
   property("lift - id") {
-    forAll { (s: String) =>
+    forAll { (example: Example) =>
       StringLens.lift(example, Identity[String] ).value should be (example)
     }
   }

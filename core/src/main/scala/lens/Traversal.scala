@@ -16,7 +16,7 @@ trait Traversal[A, B] {
 
   def set(from: A, newValue: B): A = modify(from, _ => newValue)
 
-  def modify(from: A, f: B => B): A = lift(from, Identity[B]).value
+  def modify(from: A, f: B => B): A = lift(from, { b : B => Identity(f(b)) }).value
 
   def >-[C](other: Traversal[B,C]): Traversal[A,C] = Traversal.compose(this, other)
   def >-[C](other: Lens[B,C]): Traversal[A,C]      = Traversal.compose(this, other)

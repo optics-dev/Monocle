@@ -64,6 +64,7 @@ object Example extends App {
   }
 
   println(LatLongTraversal.get(location))
+  println(LatLongTraversal.set(location, 1.0))
   println(LatLongTraversal.fold(location))
   println(LatLongTraversal.modify(location, _ + 2))
   println(LatLongTraversal.lift(location, l => List(l+1, l, l-1)))
