@@ -2,42 +2,39 @@ package lens
 
 import scala.language.experimental.macros
 import scala.reflect.macros.Context
-import lens.impl.HLens
 
 object Macro {
 
-  def generateLens[A, B](field: String): HLens[A, B] = macro generateLens_impl[A, B]
+  def mkLens[A, B](fieldName: String): Lens[A, B] = macro mkLens_impl[A, B]
 
-  def generateLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(field: c.Expr[String]): c.Expr[HLens[A, B]] = {
+  def mkLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(fieldName: c.Expr[String]): c.Expr[Lens[A, B]] = {
     import c.universe._
 
     val (aTpe, bTpe) =  (weakTypeOf[A], weakTypeOf[B])
 
-    val fieldMethod =  aTpe.declarations.collectFirst {
-      case m : MethodSymbol if m.isCaseAccessor => m.name
-    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $field in ${weakTypeOf[A]}"))
+    val getter = mkGetter_impl[A,B](c)(fieldName)
+    val setter = mkSetter_impl[A,B](c)(fieldName)
 
-    val quasi = q"""n
-      new HLens[$aTpe, $bTpe] {
-        protected def lensFunction[F[_] : Functor](lift: $bTpe => F[$bTpe], from: $aTpe): F[$aTpe] =
-          Functor[F].map(lift(from.$fieldMethod))(newValue => from.copy($fieldMethod = newValue))
-      }"""
+    val quasi2 = q"""
+      import lens.impl.HLens
+      HLens[$aTpe, $bTpe]($getter, $setter)
+    """
 
-    c.Expr[HLens[A, B]](quasi)
+    c.Expr[Lens[A, B]](quasi2)
   }
 
-  def get[A, B](from: A, field: String): B = macro get_impl[A, B]
+  def mkGetter[A, B](field: String): A => B = macro mkGetter_impl[A, B]
 
-  def get_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(from: c.Expr[A],  field: c.Expr[String]): c.Expr[B] = {
+  def mkGetter_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(field: c.Expr[String]): c.Expr[B] = {
     import c.universe._
-    val (aTpe, bTpe) =  (weakTypeOf[A], weakTypeOf[B])
+    val aTpe =  weakTypeOf[A]
 
     val fieldMethod =  aTpe.declarations.collectFirst {
       case m : MethodSymbol if m.isCaseAccessor => m.name
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $field in ${weakTypeOf[A]}"))
 
 
-    val quasi = q"""$from.$fieldMethod"""
+    val quasi = q"""{(a: $aTpe) => a.$fieldMethod}"""
     c.Expr[B](quasi)
   }
 
@@ -49,11 +46,9 @@ object Macro {
 
     val constructor = aTpe.declarations.collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
-    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in ${weakTypeOf[A]}"))
+    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in $aTpe"))
 
-    val field = constructor.paramss.head.find(
-      _.name.decoded == fieldName.toString()
-    ).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named in $fieldName"))
+    val field = constructor.paramss.head.headOption.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
 
     c.Expr[(A,B) => A](q"{(a: $aTpe, b: $bTpe) => a.copy(${field.name} = b)}")
   }

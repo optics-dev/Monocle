@@ -53,6 +53,8 @@ object ScalaLensBuild extends Build {
   lazy val examples: Project = Project(
     "examples",
     file("examples"),
-    settings = buildSettings ++ Seq(publishArtifact := false)
+    settings = buildSettings ++ Seq(
+      libraryDependencies ++= Seq(scalaz, scalaTest, scalaCheck)
+    )
   ) dependsOn(macros, core)
 }

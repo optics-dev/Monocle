@@ -7,9 +7,9 @@ object MacroExample extends App {
 
   val person = Person("Paul")
 
-  val name = Macro.get[Person, String](person, "name")
+  val name = Macro.mkGetter[Person, String]("name")
 
-  println("Name: " + name)
+  println("Name: " + name(person))
 
 
 
