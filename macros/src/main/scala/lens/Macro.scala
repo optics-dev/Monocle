@@ -15,27 +15,26 @@ object Macro {
     val getter = mkGetter_impl[A,B](c)(fieldName)
     val setter = mkSetter_impl[A,B](c)(fieldName)
 
-    val quasi2 = q"""
+    c.Expr[Lens[A, B]](q"""
       import lens.impl.HLens
       HLens[$aTpe, $bTpe]($getter, $setter)
-    """
-
-    c.Expr[Lens[A, B]](quasi2)
+    """)
   }
 
-  def mkGetter[A, B](field: String): A => B = macro mkGetter_impl[A, B]
+  def mkGetter[A, B](fieldName: String): A => B = macro mkGetter_impl[A, B]
 
-  def mkGetter_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(field: c.Expr[String]): c.Expr[B] = {
+  def mkGetter_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(fieldName: c.Expr[String]): c.Expr[B] = {
     import c.universe._
     val aTpe =  weakTypeOf[A]
 
+    val strFieldName = c.eval(c.Expr[String](c.resetAllAttrs(fieldName.tree.duplicate)))
+
     val fieldMethod =  aTpe.declarations.collectFirst {
-      case m : MethodSymbol if m.isCaseAccessor => m.name
-    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $field in ${weakTypeOf[A]}"))
+      case m : MethodSymbol if m.isCaseAccessor && m.name.decoded == strFieldName => m.name
+    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $strFieldName in $aTpe"))
 
 
-    val quasi = q"""{(a: $aTpe) => a.$fieldMethod}"""
-    c.Expr[B](quasi)
+    c.Expr[B](q"""{(a: $aTpe) => a.$fieldMethod}""")
   }
 
   def mkSetter[A, B](fieldName: String): (A,B) => A = macro mkSetter_impl[A,B]
@@ -48,9 +47,12 @@ object Macro {
       case m: MethodSymbol if m.isPrimaryConstructor => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in $aTpe"))
 
-    val field = constructor.paramss.head.headOption.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
+    val strFieldName = c.eval(c.Expr[String](c.resetAllAttrs(fieldName.tree.duplicate)))
+
+    val field = constructor.paramss.head.find(_.name.decoded == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
 
     c.Expr[(A,B) => A](q"{(a: $aTpe, b: $bTpe) => a.copy(${field.name} = b)}")
   }
+
 
 }
