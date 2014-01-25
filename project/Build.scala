@@ -8,10 +8,11 @@ object BuildSettings {
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization      := "org.scalalens",
     version           := "0.1",
+    scalaVersion      := buildScalaVersion,
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature"),
     resolvers         += Resolver.sonatypeRepo("releases"),
     resolvers         += Resolver.sonatypeRepo("snapshots"),
-    addCompilerPlugin("org.scala-lang.plugins" % "macro-paradise" % "2.0.0-SNAPSHOT" cross CrossVersion.full)
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0-M3" cross CrossVersion.full)
   )
 }
 
@@ -20,6 +21,7 @@ object Dependencies {
   val scalaTest    = "org.scalatest"   %% "scalatest"     % "2.0.1-SNAP"   % "test"
   val scalaCheck   = "org.scalacheck"  %% "scalacheck"    % "1.11.1"       % "test"
   val scalaReflect = "org.scala-lang"  %  "scala-reflect" % BuildSettings.buildScalaVersion
+  val quasiquotes  = "org.scalamacros" % "quasiquotes" % "2.0.0-M3" cross CrossVersion.full
 }
 
 object ScalaLensBuild extends Build {
@@ -37,7 +39,7 @@ object ScalaLensBuild extends Build {
     "macros",
     file("macros"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaReflect, scalaz)
+      libraryDependencies ++= Seq(scalaReflect, quasiquotes, scalaz)
     )
   ) dependsOn(core)
 
