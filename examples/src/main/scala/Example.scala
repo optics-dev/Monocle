@@ -1,33 +1,20 @@
 
 
-import lens.Lens
-import lens.impl.{HTraversal, HLens}
+import lens.impl.HTraversal
 import scala.language.higherKinds
 import scalaz.std.option._
-import scalaz.std.list._
-import scalaz.{Monoid, Applicative, Functor}
+import scalaz.{Monoid, Applicative}
 
 case class Location(latitude: Double, longitude: Double)
 case class Address(city: String, postcode: String, location: Location)
 case class Person(age: Int, address: Address)
 
 object Example extends App {
+  import lens.Macro._
 
-  object AddressLens extends Lens[Person, Address] {
-    def get(from: Person): Address = from.address
-    def lift[F[_] : Functor](from: Person, f: Address => F[Address]): F[Person] =
-      Functor[F].map(f(from.address))(newValue => from.copy(address = newValue))
-  }
-
-  object CityLens extends Lens[Address, String] {
-    def get(from: Address): String = from.city
-    def lift[F[_] : Functor](from: Address, f: String => F[String]): F[Address] =
-      Functor[F].map(f(from.city))(newValue => from.copy(city = newValue))
-  }
-
-  val AddressHLens  = HLens[Person, Address](_.address, (a, b) => a.copy(address = b))
-  val CityHLens     = HLens[Address, String](_.city, (a, b) => a.copy(city = b))
-  val LocationHLens = HLens[Address, Location](_.location, (a, b) => a.copy(location = b))
+  val AddressLens  = mkLens[Person, Address]("address")
+  val CityLens     = mkLens[Address, String]("city")
+  val LocationLens = mkLens[Address, Location]("location")
 
   object LatLongTraversal extends HTraversal[Location, Double] {
     protected def traversalFunction[F[_] : Applicative](lift: Double => F[Double], from: Location): F[Location] = {
@@ -51,13 +38,6 @@ object Example extends App {
   println(Person2CityLens.modify(person, _ + "!!!"))
   println(Person2CityLens.lift(person, city => Option(city)))
 
-  val Person2CityHLens = AddressHLens >- CityHLens
-
-  println(Person2CityHLens.set(person, "Paris") )
-  println(Person2CityHLens.get(person))
-  println(Person2CityHLens.modify(person, _ + "!!!"))
-  println(Person2CityHLens.lift(person, city => Option(city)))
-
   val location = Location(2, 6)
 
   implicit object Addition extends Monoid[Double] {
@@ -69,10 +49,12 @@ object Example extends App {
   println(LatLongTraversal.set(location, 1.0))
   println(LatLongTraversal.fold(location))
   println(LatLongTraversal.modify(location, _ + 2))
+
+  import scalaz.std.list._
   println(LatLongTraversal.lift(location, l => List(l+1, l, l-1)))
 
   // composition of lens and traversal
-  println((AddressHLens >- LocationHLens >- LatLongTraversal).get(person))
+  println((AddressLens >- LocationLens >- LatLongTraversal).get(person))
 
 }
 

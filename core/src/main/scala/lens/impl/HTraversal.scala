@@ -4,13 +4,12 @@ import lens.Traversal
 import lens.util.Constant
 import scala.language.higherKinds
 import scalaz.Applicative
-import scalaz.std.list._
-
 
 trait HTraversal[A, B] extends Traversal[A,B] {
   protected def traversalFunction[F[_] : Applicative](lift: B => F[B], a: A): F[A]
 
   def get(from: A): List[B] = {
+    import scalaz.std.list._
     val lift: B => Constant[List[B], B] = { b: B => Constant(List(b))}
     traversalFunction[({type l[a] = Constant[List[B],a]})#l](lift, from).value
   }
