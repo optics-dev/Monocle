@@ -30,10 +30,12 @@ object Example extends App {
   val LocationHLens = HLens[Address, Location](_.location, (a, b) => a.copy(location = b))
 
   object LatLongTraversal extends HTraversal[Location, Double] {
-    protected def traversalFunction[F[_] : Applicative](lift: Double => F[Double], from: Location): F[Location] =
-      Applicative[F].apply2(lift(from.latitude), lift(from.longitude)){ case (newLatitude, newLongitude) =>
+    protected def traversalFunction[F[_] : Applicative](lift: Double => F[Double], from: Location): F[Location] = {
+      import scalaz.syntax.applicative._
+      (lift(from.latitude) |@| lift(from.longitude))((newLatitude, newLongitude) =>
         from.copy(latitude = newLatitude, longitude = newLongitude)
-      }
+      )
+    }
   }
 
   val address = Address("London", "EC1...", Location(4.0, 6.0))
