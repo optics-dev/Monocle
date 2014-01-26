@@ -1,6 +1,7 @@
 package lens
 
 import lens.syntax._
+import lens.syntax.std._
 import scala.language.postfixOps
 
 
@@ -21,4 +22,7 @@ object SyntaxExample extends App {
   println(map >- at("Roma") get)
 
   println(map >- at("Paris") >- option[Location] >- latitude set 89)
+
+  println(List(1,2,3) >-- list[Int] set 3)          // ==> List(3,3,3)
+  println(List(1,2,3) >-- list[Int] modify (_ + 1)) // ==> List(2,3,4)
 }
