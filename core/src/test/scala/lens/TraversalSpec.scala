@@ -26,6 +26,13 @@ class TraversalSpec extends PropSpec with PropertyChecks {
   } yield Location(x, y))
 
 
+  property("get ordered") {
+    forAll { (location: Location) =>
+      LatLongTraversal.get(location) should be (List(location.latitude, location.longitude))
+    }
+  }
+
+
   property("set - get") {
     forAll { (location: Location, n: Int) =>
       LatLongTraversal.get(LatLongTraversal.set(location, n)) should be (List(n,n))

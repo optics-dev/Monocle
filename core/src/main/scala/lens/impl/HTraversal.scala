@@ -10,7 +10,7 @@ trait HTraversal[A, B] extends Traversal[A,B] {
   def get(from: A): List[B] = {
     import scalaz.std.list._
     val lift: B => Constant[List[B], B] = { b: B => Constant(List(b))}
-    traversalFunction[({type l[a] = Constant[List[B],a]})#l](lift, from).value
+    traversalFunction[({type l[a] = Constant[List[B],a]})#l](lift, from).value.reverse
   }
 
   def lift[F[_] : Applicative](from: A, f: B => F[B]): F[A] = traversalFunction(f, from)
