@@ -1,16 +1,15 @@
 package lens
 
+import lens.impl.HLens
 import scalaz.{Applicative, Functor}
 import util.Identity
 
 
-trait Lens[A,B] {
+trait Lens[A,B] extends Setter[A, B] {
 
   def get(from: A): B
 
   def lift[F[_] : Functor](from: A, f: B => F[B]):  F[A]
-
-  def set(from: A, newValue: B): A = modify(from, _ => newValue)
 
   def modify(from: A, f: B => B): A = lift(from, { b : B => Identity(f(b)) } ).value
 
@@ -20,6 +19,12 @@ trait Lens[A,B] {
 
 
 object Lens {
+
+  def apply[A, B](_get: A => B, _set: (A, B) => A): Lens[A, B] = new HLens[A, B] {
+    protected def lensFunction[F[_] : Functor](lift: (B) => F[B], from: A): F[A] =
+      Functor[F].map(lift(_get(from)))(newValue => _set(from, newValue))
+  }
+
   def compose[A, B, C](a2b: Lens[A, B], b2C: Lens[B, C]): Lens[A, C] =  new Lens[A, C] {
     def get(from: A): C = b2C.get(a2b.get(from))
     def lift[F[_] : Functor](from: A, f: C => F[C]): F[A] = a2b.lift(from, b2C.lift(_, f))

@@ -29,7 +29,7 @@ object Example extends App {
   import scalaz.std.list._
   println(locationTraversal.lift(l, pos => List(pos + 1, pos, pos - 1)))
 
-  // composition of lens and traversal
+  // composition of lenses and traversal
   println((address >- location >- locationTraversal).get(p))
 
 }

@@ -6,18 +6,22 @@ import scala.language.postfixOps
 
 object SyntaxExample extends App {
   import Person._
+  import Location._
   import lens.std.Map._
 
   val p = Person(23, "roger", Address("London", "EC1...", Location(2, 10)))
   val newPerson = p >- age modify(_ + 2)
   println(newPerson)
 
-  val map = Map(1 -> "one", 2 -> "two", 3 -> "three")
+  val map = Map("Paris" -> Location(12, 34), "London" -> Location(10, 50))
 
-  println(map >- at(1) get)
-  println(map >- at(1) set Some("zero"))
-  println(map >- at(1) set None)
-  println(map >- at(6) get)
+  println(map >- at("Paris") get)
+  println(map >- at("Pairs") set Some(Location(14, 18)))
+  println(map >- at("Pairs") set None)
+  println(map >- at("Roma") get)
+
+  import scalaz.std.option.optionInstance
+  println(map >- at("Paris") >- Setter[Option, Location] >- latitude set 89)
 }
 
 

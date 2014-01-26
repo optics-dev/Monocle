@@ -1,19 +1,18 @@
 package lens
 
-import lens.impl.HLens
 import lens.util.Identity
+import org.scalacheck.Arbitrary
+import org.scalacheck.Arbitrary._
 import org.scalatest.Matchers._
 import org.scalatest.PropSpec
 import org.scalatest.prop.PropertyChecks
-import org.scalacheck.Arbitrary
-import org.scalacheck.Arbitrary._
 
 
 class LensSpec extends PropSpec with PropertyChecks  {
 
   case class Example(s: String, i: Int)
 
-  val StringLens = HLens[Example, String](_.s, (a, b) => a.copy(s = b))
+  val StringLens = Lens[Example, String](_.s, (a, b) => a.copy(s = b))
 
   implicit val exampleGen : Arbitrary[Example] =  Arbitrary(for {
     s <- arbitrary[String]

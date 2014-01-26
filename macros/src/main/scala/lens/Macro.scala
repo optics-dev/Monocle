@@ -20,8 +20,8 @@ private[lens] object MacroImpl {
     val setter = mkSetter_impl[A,B](c)(fieldName)
 
     c.Expr[Lens[A, B]](q"""
-      import lens.impl.HLens
-      HLens[$aTpe, $bTpe]($getter, $setter)
+      import lens.Lens
+      Lens[$aTpe, $bTpe]($getter, $setter)
     """)
   }
 

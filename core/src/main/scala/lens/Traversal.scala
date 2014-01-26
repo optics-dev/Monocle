@@ -3,7 +3,7 @@ package lens
 import lens.util.Identity
 import scalaz.{Applicative, Monoid}
 
-trait Traversal[A, B] {
+trait Traversal[A, B] extends Setter[A, B] {
 
   def get(from: A): List[B]
 
@@ -12,8 +12,6 @@ trait Traversal[A, B] {
   def fold(from: A, zero: B)(append: (B, B) => B): B = get(from).foldRight(zero)(append)
 
   def fold(from: A)(implicit ev: Monoid[B]): B = fold(from, ev.zero){ case (b1, b2) => ev.append(b1, b2) }
-
-  def set(from: A, newValue: B): A = modify(from, _ => newValue)
 
   def modify(from: A, f: B => B): A = lift(from, { b : B => Identity(f(b)) }).value
 
