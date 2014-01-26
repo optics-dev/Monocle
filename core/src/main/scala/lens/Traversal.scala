@@ -1,7 +1,8 @@
 package lens
 
+import lens.impl.HTraversal
 import lens.util.Identity
-import scalaz.{Applicative, Monoid}
+import scalaz.{Traverse, Applicative, Monoid}
 
 trait Traversal[A, B] extends Setter[A, B] {
 
@@ -21,6 +22,12 @@ trait Traversal[A, B] extends Setter[A, B] {
 
 
 object Traversal {
+
+  def apply[T[_]: Traverse, A]: HTraversal[T[A], A] = new HTraversal[T[A], A] {
+    protected def traversalFunction[F[_] : Applicative](lift: A => F[A], from: T[A]): F[T[A]] =
+      Traverse[T].traverse(from)(lift)
+  }
+
   def compose[A, B, C](a2b: Traversal[A, B], b2C: Traversal[B, C]): Traversal[A, C] = new Traversal[A, C] {
     def get(from: A): List[C] = a2b.get(from) flatMap b2C.get
     def lift[F[_] : Applicative](from: A, f: C => F[C]): F[A] = a2b.lift(from, b2C.lift(_, f))

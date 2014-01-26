@@ -2,7 +2,6 @@ package lens
 
 import scalaz.Functor
 
-
 trait Setter[A, B] {
 
   def set(from: A, newValue: B): A  = modify(from, _ => newValue)
