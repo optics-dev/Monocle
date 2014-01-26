@@ -20,8 +20,5 @@ object SyntaxExample extends App {
   println(map >- at("Pairs") set None)
   println(map >- at("Roma") get)
 
-  import scalaz.std.option.optionInstance
-  println(map >- at("Paris") >- Setter[Option, Location] >- latitude set 89)
+  println(map >- at("Paris") >- option[Location] >- latitude set 89)
 }
-
-
