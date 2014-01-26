@@ -39,7 +39,7 @@ object ScalaLensBuild extends Build {
     "macros",
     file("macros"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaReflect, quasiquotes, scalaz)
+      libraryDependencies ++= Seq(scalaReflect, quasiquotes, scalaz, scalaTest, scalaCheck)
     )
   ) dependsOn(core)
 
@@ -56,7 +56,7 @@ object ScalaLensBuild extends Build {
     "examples",
     file("examples"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, scalaTest, scalaCheck)
+      libraryDependencies ++= Seq(scalaz)
     )
   ) dependsOn(macros, core)
 }

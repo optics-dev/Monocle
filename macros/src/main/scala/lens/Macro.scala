@@ -5,7 +5,11 @@ import scala.reflect.macros.Context
 
 object Macro {
 
-  def mkLens[A, B](fieldName: String): Lens[A, B] = macro mkLens_impl[A, B]
+  def mkLens[A, B](fieldName: String): Lens[A, B] = macro MacroImpl.mkLens_impl[A, B]
+
+}
+
+private[lens] object MacroImpl {
 
   def mkLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(fieldName: c.Expr[String]): c.Expr[Lens[A, B]] = {
     import c.universe._
@@ -21,8 +25,6 @@ object Macro {
     """)
   }
 
-  def mkGetter[A, B](fieldName: String): A => B = macro mkGetter_impl[A, B]
-
   def mkGetter_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(fieldName: c.Expr[String]): c.Expr[B] = {
     import c.universe._
     val aTpe =  weakTypeOf[A]
@@ -36,8 +38,6 @@ object Macro {
 
     c.Expr[B](q"""{(a: $aTpe) => a.$fieldMethod}""")
   }
-
-  def mkSetter[A, B](fieldName: String): (A,B) => A = macro mkSetter_impl[A,B]
 
   def mkSetter_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(fieldName: c.Expr[String]): c.Expr[(A,B) => A] = {
     import c.universe._
@@ -53,6 +53,5 @@ object Macro {
 
     c.Expr[(A,B) => A](q"{(a: $aTpe, b: $bTpe) => a.copy(${field.name} = b)}")
   }
-
 
 }
