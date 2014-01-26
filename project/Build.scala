@@ -9,7 +9,7 @@ object BuildSettings {
     organization      := "org.scalalens",
     version           := "0.1",
     scalaVersion      := buildScalaVersion,
-    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature"),
+    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-language:higherKinds"),
     resolvers         += Resolver.sonatypeRepo("releases"),
     resolvers         += Resolver.sonatypeRepo("snapshots"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0-M3" cross CrossVersion.full)

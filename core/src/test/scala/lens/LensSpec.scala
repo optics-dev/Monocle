@@ -5,7 +5,6 @@ import lens.util.Identity
 import org.scalatest.Matchers._
 import org.scalatest.PropSpec
 import org.scalatest.prop.PropertyChecks
-import scala.language.higherKinds
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 

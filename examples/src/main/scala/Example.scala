@@ -1,16 +1,18 @@
 
 
 import lens.impl.HTraversal
-import scala.language.higherKinds
+import scalaz.Applicative
+import scalaz.std.list.listInstance
 import scalaz.std.option._
-import scalaz.{Monoid, Applicative}
 
 case class Location(latitude: Double, longitude: Double)
 case class Address(city: String, postcode: String, location: Location)
 case class Person(age: Int, address: Address)
 
 object Example extends App {
+
   import lens.Macro._
+  import scalaz.std.anyVal.doubleInstance
 
   val AddressLens  = mkLens[Person, Address]("address")
   val CityLens     = mkLens[Address, String]("city")
@@ -40,17 +42,11 @@ object Example extends App {
 
   val location = Location(2, 6)
 
-  implicit object Addition extends Monoid[Double] {
-    def append(f1: Double, f2: => Double): Double = f1 + f2
-    def zero: Double = 0L
-  }
-
   println(LatLongTraversal.get(location))
   println(LatLongTraversal.set(location, 1.0))
   println(LatLongTraversal.fold(location))
   println(LatLongTraversal.modify(location, _ + 2))
 
-  import scalaz.std.list._
   println(LatLongTraversal.lift(location, l => List(l+1, l, l-1)))
 
   // composition of lens and traversal

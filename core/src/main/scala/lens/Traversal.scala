@@ -1,7 +1,6 @@
 package lens
 
 import lens.util.Identity
-import scala.language.higherKinds
 import scalaz.{Applicative, Monoid}
 
 trait Traversal[A, B] {
@@ -20,7 +19,6 @@ trait Traversal[A, B] {
 
   def >-[C](other: Traversal[B,C]): Traversal[A,C] = Traversal.compose(this, other)
   def >-[C](other: Lens[B,C]): Traversal[A,C]      = Traversal.compose(this, other)
-
 }
 
 

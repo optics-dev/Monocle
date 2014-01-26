@@ -7,7 +7,6 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.Matchers._
 import org.scalatest.PropSpec
 import org.scalatest.prop.PropertyChecks
-import scala.language.higherKinds
 import scalaz.Applicative
 
 class TraversalSpec extends PropSpec with PropertyChecks {

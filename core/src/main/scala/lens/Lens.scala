@@ -1,6 +1,5 @@
 package lens
 
-import scala.language.higherKinds
 import scalaz.{Applicative, Functor}
 import util.Identity
 

@@ -2,11 +2,10 @@ package lens.impl
 
 import lens.Traversal
 import lens.util.Constant
-import scala.language.higherKinds
 import scalaz.Applicative
 
 trait HTraversal[A, B] extends Traversal[A,B] {
-  protected def traversalFunction[F[_] : Applicative](lift: B => F[B], a: A): F[A]
+  protected def traversalFunction[F[_] : Applicative](lift: B => F[B], from: A): F[A]
 
   def get(from: A): List[B] = {
     import scalaz.std.list._
@@ -19,8 +18,8 @@ trait HTraversal[A, B] extends Traversal[A,B] {
 
 object HTraversal {
   def compose[A, B, C](a2b: HTraversal[A, B], b2C: HTraversal[B, C]): HTraversal[A, C] = new HTraversal[A, C] {
-    protected def traversalFunction[F[_] : Applicative](lift: (C) => F[C], a: A): F[A] =
-      a2b.traversalFunction({b: B => b2C.traversalFunction(lift, b)}, a)
+    protected def traversalFunction[F[_] : Applicative](lift: (C) => F[C], from: A): F[A] =
+      a2b.traversalFunction({b: B => b2C.traversalFunction(lift, b)}, from)
   }
 
 }

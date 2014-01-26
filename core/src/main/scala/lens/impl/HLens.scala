@@ -2,7 +2,6 @@ package lens.impl
 
 import lens.Lens
 import lens.util.Constant
-import scala.language.higherKinds
 import scalaz.Functor
 
 

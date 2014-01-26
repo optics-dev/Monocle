@@ -3,7 +3,6 @@ import org.scalacheck.Arbitrary
 import org.scalatest.Matchers._
 import org.scalatest.PropSpec
 import org.scalatest.prop.PropertyChecks
-import scala.language.higherKinds
 import org.scalacheck.Arbitrary._
 
 class MacroSpec extends PropSpec with PropertyChecks {
