@@ -5,11 +5,13 @@ import scalaz.{Applicative, Functor}
 import util.Identity
 
 
-trait Lens[A,B] extends Setter[A, B] {
+trait Lens[A,B] {
 
   def get(from: A): B
 
   def lift[F[_] : Functor](from: A, f: B => F[B]):  F[A]
+
+  def set(from: A, newValue: B): A  = modify(from, _ => newValue)
 
   def modify(from: A, f: B => B): A = lift(from, { b : B => Identity(f(b)) } ).value
 

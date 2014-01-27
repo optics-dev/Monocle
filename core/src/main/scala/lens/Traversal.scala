@@ -4,7 +4,7 @@ import lens.impl.HTraversal
 import lens.util.Identity
 import scalaz.{Traverse, Applicative, Monoid}
 
-trait Traversal[A, B] extends Setter[A, B] {
+trait Traversal[A, B] {
 
   def get(from: A): List[B]
 
@@ -14,10 +14,12 @@ trait Traversal[A, B] extends Setter[A, B] {
 
   def fold(from: A)(implicit ev: Monoid[B]): B = fold(from, ev.zero){ case (b1, b2) => ev.append(b1, b2) }
 
+  def set(from: A, newValue: B): A  = modify(from, _ => newValue)
+
   def modify(from: A, f: B => B): A = lift(from, { b : B => Identity(f(b)) }).value
 
   def >-[C](other: Traversal[B,C]): Traversal[A,C] = Traversal.compose(this, other)
-  def >-[C](other: Lens[B,C]): Traversal[A,C]      = Traversal.compose(this, other)
+  def >-[C](other:      Lens[B,C]): Traversal[A,C] = Traversal.compose(this, other)
 }
 
 

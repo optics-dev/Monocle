@@ -23,9 +23,9 @@ object SyntaxExample extends App {
   println(map >- at("Pairs") set None)                   // Map("London" -> Location(10, 50))
   println(map >- at("Paris") >- option[Location] >- latitude set 89) // Map("Paris" -> Location(89, 18), "London" ...)
 
-  println(List(1,2,3) ->- list[Int] set 3)                    // ==> List(3,3,3)
-  println(List(1,2,3) ->- list[Int] modify (_ + 1))           // ==> List(2,3,4)
-  println(List(1,2) ->- list[Int] lift (l => List(l-1, l+1))) // ==> List(List(0, 1), List(0, 3), List(2, 1), List(2, 3))
-  println(List(1,2) ->- list[Int] lift (l => Option(l)))      // ==> Some(List(1,2))
+  println(List(1,2,3).traverse set 3)                    // ==> List(3,3,3)
+  println(List(1,2,3).traverse modify (_ + 1))           // ==> List(2,3,4)
+  println(List(1,2).traverse lift (l => List(l-1, l+1))) // ==> List(List(0, 1), List(0, 3), List(2, 1), List(2, 3))
+  println(List(1,2).traverse lift (l => Option(l)))      // ==> Some(List(1,2))
 
 }
