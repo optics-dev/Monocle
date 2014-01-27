@@ -27,5 +27,4 @@ object SyntaxExample extends App {
   println(List(1,2,3).traverse modify (_ + 1))           // ==> List(2,3,4)
   println(List(1,2).traverse lift (l => List(l-1, l+1))) // ==> List(List(0, 1), List(0, 3), List(2, 1), List(2, 3))
   println(List(1,2).traverse lift (l => Option(l)))      // ==> Some(List(1,2))
-
 }

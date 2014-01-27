@@ -17,7 +17,6 @@ case class AppliedTraversal[A, B](from: A, traversal: Traversal[A, B]) {
 
   def fold(implicit ev: Monoid[B]): B = traversal.fold(from)
 
-  def >-[C](other: Lens[B,C]): AppliedTraversal[A,C] = new AppliedTraversal[A, C](from, traversal >- other)
-  def >-[C](other: Traversal[B,C]): AppliedTraversal[A,C] = new AppliedTraversal[A, C](from, traversal >- other)
-
+  def >-[C](other: Lens[B,C])     : AppliedTraversal[A,C] = AppliedTraversal[A, C](from, traversal >- other)
+  def >-[C](other: Traversal[B,C]): AppliedTraversal[A,C] = AppliedTraversal[A, C](from, traversal >- other)
 }
