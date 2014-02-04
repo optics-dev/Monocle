@@ -6,7 +6,7 @@ object BuildSettings {
   val buildScalaVersion = "2.10.3"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
-    organization      := "org.scalalens",
+    organization      := "org.monocle",
     version           := "0.1",
     scalaVersion      := buildScalaVersion,
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-language:higherKinds"),
@@ -51,7 +51,7 @@ object ScalaLensBuild extends Build {
     "core",
     file("core"),
     settings = buildSettings ++ Seq(
-      name := "Lens Core",
+      name := "Moncole Core",
       libraryDependencies ++= Seq(scalaz) ++ tests
     )
   )
