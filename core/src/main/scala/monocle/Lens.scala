@@ -1,8 +1,9 @@
 package monocle
 
-import monocle.util.{Identity, Constant}
+import monocle.util.Constant
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
+import scalaz.Id._
 import scalaz.{Equal, Applicative, Functor}
 
 
@@ -30,7 +31,7 @@ object Lens {
     include(Traversal.laws(lens))
 
     property("lift - identity") = forAll { from: S =>
-      Equal[S].equal(lens.lift[Identity](from, Identity[A]).value, from)
+      Equal[S].equal(lens.lift[Id](from, id.point[A](_)), from)
     }
 
     property("set - get") = forAll { (from: S, newValue: A) =>

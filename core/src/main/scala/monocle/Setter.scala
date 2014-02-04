@@ -19,7 +19,6 @@ trait Setter[S, T, A, B] { self =>
 
 object Setter {
 
-
   def laws[S: Arbitrary : Equal, A : Arbitrary](setter: Setter[S, S, A, A]) = new Properties("Setter") {
     property("modify - identity") = forAll { from: S =>
       Equal[S].equal(setter.modify(from, identity), from)

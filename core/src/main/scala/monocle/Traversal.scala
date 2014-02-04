@@ -1,10 +1,11 @@
 package monocle
 
-import monocle.util.{Constant, Identity}
+import monocle.util.Constant
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
-import scalaz._
 import scalaz.std.list._
+import scalaz.{Traverse, Foldable, Monoid, Applicative, Equal}
+import scalaz.Id._
 
 
 trait Traversal[S, T, A, B] extends Setter[S, T ,A, B] with Fold[S, A] { self =>
@@ -16,7 +17,7 @@ trait Traversal[S, T, A, B] extends Setter[S, T ,A, B] with Fold[S, A] { self =>
     multiLift[({type l[a] = Constant[List[A],a]})#l](from,lift).value.reverse
   }
 
-  def modify(from: S, f: A => B): T = multiLift(from, {a: A => Identity(f(a)) }).value
+  def modify(from: S, f: A => B): T = multiLift[Id](from, { a: A => id.point(f(a)) } )
 
   def fold(from: S)(implicit ev: Monoid[A]): A = Foldable[List].foldMap(getAll(from))(identity)
 
@@ -42,7 +43,7 @@ object Traversal {
     include(Setter.laws(traversal))
 
     property("multi lift - identity") = forAll { from: S =>
-      Equal[S].equal(traversal.multiLift[Identity](from, Identity[A]).value, from)
+      Equal[S].equal(traversal.multiLift[Id](from, id.point[A](_)), from)
     }
 
     property("set - get all") = forAll { (from: S, newValue: A) =>
