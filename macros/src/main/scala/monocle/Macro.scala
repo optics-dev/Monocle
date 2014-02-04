@@ -1,17 +1,17 @@
-package lens
+package monocle
 
 import scala.language.experimental.macros
 import scala.reflect.macros.Context
 
 object Macro {
 
-  def mkLens[A, B](fieldName: String): Lens[A, B] = macro MacroImpl.mkLens_impl[A, B]
+  def mkLens[A, B](fieldName: String): Lens[A, A, B, B] = macro MacroImpl.mkLens_impl[A, B]
 
 }
 
-private[lens] object MacroImpl {
+private[monocle] object MacroImpl {
 
-  def mkLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(fieldName: c.Expr[String]): c.Expr[Lens[A, B]] = {
+  def mkLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c : Context)(fieldName: c.Expr[String]): c.Expr[Lens[A, A, B, B]] = {
     import c.universe._
 
     val (aTpe, bTpe) =  (weakTypeOf[A], weakTypeOf[B])
@@ -19,9 +19,9 @@ private[lens] object MacroImpl {
     val getter = mkGetter_impl[A,B](c)(fieldName)
     val setter = mkSetter_impl[A,B](c)(fieldName)
 
-    c.Expr[Lens[A, B]](q"""
-      import lens.Lens
-      Lens[$aTpe, $bTpe]($getter, $setter)
+    c.Expr[Lens[A, A, B, B]](q"""
+      import monocle.Lens
+      Lens[$aTpe, $aTpe, $bTpe, $bTpe]($getter, $setter)
     """)
   }
 
