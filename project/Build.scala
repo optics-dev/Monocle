@@ -17,14 +17,18 @@ object BuildSettings {
 }
 
 object Dependencies {
-  val scalaz       = "org.scalaz"      %% "scalaz-core"   % "7.0.5"
-  val scalaTest    = "org.scalatest"   %% "scalatest"     % "2.0.1-SNAP"   % "test"
-  val scalaCheck   = "org.scalacheck"  %% "scalacheck"    % "1.11.1"       % "test"
-  val scalaReflect = "org.scala-lang"  %  "scala-reflect" % BuildSettings.buildScalaVersion
-  val quasiquotes  = "org.scalamacros" % "quasiquotes" % "2.0.0-M3" cross CrossVersion.full
+  val scalaz       = "org.scalaz"      %% "scalaz-core"               % "7.0.5"
+  val scalaCheck   = "org.scalacheck"  %% "scalacheck"                % "1.10.1"
+  val scalaCheckBinding = "org.scalaz" %% "scalaz-scalacheck-binding" % "7.0.5"        % "test"
+  val specs2       = "org.specs2"      %% "specs2"                    % "1.12.3"       % "test"
+  val scalazSpec2  = "org.typelevel"   %% "scalaz-specs2"             % "0.1.5"        % "test"
+  val scalaReflect = "org.scala-lang"  %  "scala-reflect"             % BuildSettings.buildScalaVersion
+  val quasiquotes  = "org.scalamacros" % "quasiquotes"                % "2.0.0-M3" cross CrossVersion.full
+  val tests        = Seq(scalaCheck, scalaCheckBinding, specs2, scalazSpec2)
 }
 
 object ScalaLensBuild extends Build {
+
   import BuildSettings._
   import Dependencies._
 
@@ -39,7 +43,7 @@ object ScalaLensBuild extends Build {
     "macros",
     file("macros"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaReflect, quasiquotes, scalaz, scalaTest, scalaCheck)
+      libraryDependencies ++= Seq(scalaReflect, quasiquotes, scalaz) ++ tests
     )
   ) dependsOn(core)
 
@@ -48,7 +52,7 @@ object ScalaLensBuild extends Build {
     file("core"),
     settings = buildSettings ++ Seq(
       name := "Lens Core",
-      libraryDependencies ++= Seq(scalaz, scalaTest, scalaCheck)
+      libraryDependencies ++= Seq(scalaz) ++ tests
     )
   )
 

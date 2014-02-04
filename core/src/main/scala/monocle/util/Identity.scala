@@ -1,4 +1,4 @@
-package lens.util
+package monocle.util
 
 import scalaz.Applicative
 

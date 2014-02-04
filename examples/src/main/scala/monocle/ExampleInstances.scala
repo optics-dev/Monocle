@@ -1,21 +1,16 @@
-import lens.impl.HTraversal
-import lens.Macro._
-import scalaz.Applicative
+package monocle
 
-package object lens {
+import monocle.Macro._
+
+object ExampleInstances {
 
   case class Location(_latitude: Double, _longitude: Double)
   case class Address(_city: String, _postcode: String, _location: Location)
   case class Person(_age: Int, _name: String, _address: Address)
 
   object Location {
-    val locationTraversal = new HTraversal[Location, Double] {
-      protected def traversalFunction[F[_] : Applicative](lift: Double => F[Double], from: Location): F[Location] = {
-        import scalaz.syntax.applicative._
-        (lift(from._latitude) |@| lift(from._longitude))((newLatitude, newLongitude) =>
-          from.copy(_latitude = newLatitude, _longitude = newLongitude)
-        )
-      }
+    val locationTraversal = Traversal.make2[Location, Location, Double, Double](_._latitude)(_._longitude){ case (from, newLat, newLong) =>
+      from.copy(_latitude = newLat, _longitude = newLong)
     }
 
     val latitude  = mkLens[Location, Double]("_latitude")
