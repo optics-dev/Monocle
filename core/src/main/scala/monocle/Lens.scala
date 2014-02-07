@@ -20,15 +20,16 @@ trait Lens[S, T, A, B] extends Traversal[S, T, A, B] { self =>
   }
 }
 
-object Lens {
+trait SimpleLens[S, A] extends Lens[S, S, A, A] with SimpleTraversal[S, A]
 
-  def apply[S, T, A, B](_get: S => A, _set: (S, B) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
-    def lift[F[_] : Functor](from: S, f: A => F[B]): F[T] =
+object SimpleLens {
+  def apply[S, A](_get: S => A, _set: (S, A) => S): SimpleLens[S, A] = new SimpleLens[S, A] {
+    def lift[F[_] : Functor](from: S, f: A => F[A]): F[S] =
       Functor[F].map(f(_get(from)))(newValue => _set(from, newValue))
   }
 
-  def laws[S: Arbitrary : Equal, A : Arbitrary : Equal](lens: Lens[S, S, A, A]) = new Properties("Lens") {
-    include(Traversal.laws(lens))
+  def laws[S: Arbitrary : Equal, A : Arbitrary : Equal](lens: SimpleLens[S, A]) = new Properties("Lens") {
+    include(SimpleTraversal.laws(lens))
 
     property("lift - identity") = forAll { from: S =>
       Equal[S].equal(lens.lift[Id](from, id.point[A](_)), from)
@@ -41,6 +42,14 @@ object Lens {
     property("get - set") = forAll { from: S =>
       Equal[S].equal(lens.set(from, lens.get(from)), from)
     }
+  }
+}
+
+object Lens {
+
+  def apply[S, T, A, B](_get: S => A, _set: (S, B) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
+    def lift[F[_] : Functor](from: S, f: A => F[B]): F[T] =
+      Functor[F].map(f(_get(from)))(newValue => _set(from, newValue))
   }
 
 }

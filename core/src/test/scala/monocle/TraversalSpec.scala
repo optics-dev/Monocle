@@ -10,7 +10,7 @@ class TraversalSpec extends Spec {
 
   case class Location(latitude: Int, longitude: Int, name: String)
 
-  val locationTraversal = Traversal.make2[Location, Location, Int, Int](_.latitude)(_.longitude){ case (from, newLat, newLong) =>
+  val locationTraversal = SimpleTraversal.make2[Location, Int](_.latitude)(_.longitude){ case (from, newLat, newLong) =>
    from.copy(latitude = newLat, longitude = newLong)
   }
 
@@ -22,7 +22,7 @@ class TraversalSpec extends Spec {
 
   implicit val exampleEq = defaultEqual[Location]
 
-  checkAll(Traversal.laws(locationTraversal))
+  checkAll(SimpleTraversal.laws(locationTraversal))
 
 
 //  property("get ordered") {

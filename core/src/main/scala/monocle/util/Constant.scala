@@ -17,4 +17,8 @@ object Constant {
     def ap[A, B](fa: => Constant[T,A])(f: => Constant[T,A => B]): Constant[T,B] =
       Constant[T, B](Monoid[T].append(fa.value, f.value))
   }
+
+  implicit def ConstantContravariant[T] = new Contravariant[({type l[a] = Constant[T,a]})#l] {
+    def contramap[A, B](f: A => B)(fb: Constant[T, B]): Constant[T, A] = Constant[T,A](fb.value)
+  }
 }

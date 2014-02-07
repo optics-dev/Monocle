@@ -11,7 +11,7 @@ class LensSpec extends Spec {
 
   case class Example(s: String, i: Int)
 
-  val StringLens = SLens[Example, String](_.s, (a, b) => a.copy(s = b))
+  val StringLens = SimpleLens[Example, String](_.s, (a, b) => a.copy(s = b))
 
   implicit val exampleGen : Arbitrary[Example] =  Arbitrary(for {
     s <- arbitrary[String]
@@ -20,6 +20,6 @@ class LensSpec extends Spec {
 
   implicit val exampleEq = defaultEqual[Example]
 
-  checkAll(Lens.laws(StringLens))
+  checkAll(SimpleLens.laws(StringLens))
 
 }
