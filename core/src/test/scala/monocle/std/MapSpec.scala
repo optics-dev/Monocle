@@ -1,9 +1,8 @@
 package monocle.std
 
-import org.specs2.scalaz.Spec
-import monocle.{SimpleLens, Lens}
+import monocle.Lens
 import monocle.TestHelper._
-
+import org.specs2.scalaz.Spec
 
 class MapSpec extends Spec {
 
@@ -12,6 +11,6 @@ class MapSpec extends Spec {
   implicit val mapEq = defaultEqual[Map[Int, String]]
   implicit val optEq = defaultEqual[Option[String]]
 
-  checkAll(SimpleLens.laws(at))
+  checkAll(Lens.laws(at))
 
 }

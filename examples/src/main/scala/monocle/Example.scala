@@ -20,20 +20,21 @@ object Example extends App {
   println((address compose city).modify(p, _ + "!!!"))
   println((address compose city).lift(p, city => Option(city)))
 
-  println(locationTraversal.getAll(l))
+  println(locationTraversal.toListOf(l))
   println(locationTraversal.set(l, 1.0))
-  println(locationTraversal.fold(l))
+  println(locationTraversal.simpleFold(l))
   println(locationTraversal.modify(l, _ + 2))
 
   println(locationTraversal.multiLift(l, pos => List(pos + 1, pos, pos - 1)))
 
   // composition of lenses and traversal
-  println((address compose location compose locationTraversal).getAll(p))
+  println((address compose location compose locationTraversal).toListOf(p))
 
   val int2DoubleOption = Traversal[Option, Int, Double]
 
   val someInt : Option[Int] = Some(1)
   println(int2DoubleOption.modify(someInt, _ + 2.00))
+  println(int2DoubleOption.toListOf(someInt))
 
 }
 
