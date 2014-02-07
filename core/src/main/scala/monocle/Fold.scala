@@ -15,6 +15,8 @@ trait Fold[S, A] { self =>
   def fold[B: Monoid](from: S)(f: A => B): B =
     underlyingFold[({type l[a] = Constant[B,a]})#l](from){ a: A => Constant[B, A](f(a))}.value
 
+  def simpleFold(from: S)(implicit ev: Monoid[A]): A = fold(from)(identity)
+
   def toListOf(from: S): List[A] = fold(from)(List(_))
 
   def headOption(from: S): Option[A] = fold(from)(Option(_).first)
@@ -27,10 +29,4 @@ trait Fold[S, A] { self =>
     protected def underlyingFold[F[_] : Contravariant : Applicative](from: S)(f: B => F[B]): F[S] =
       self.underlyingFold(from)(other.underlyingFold(_)(f))
   }
-}
-
-trait Getting[R, S, A] {
-
-  def getting(lift: A => Constant[R, A])(from: S): Constant[R, S]
-
 }
