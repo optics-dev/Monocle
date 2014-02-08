@@ -14,7 +14,7 @@ trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
 
   def modify(from: S, f: A => B): T = multiLift[Id](from, { a: A => id.point(f(a)) } )
 
-  def fold[M: Monoid](from: S)(f: A => M): M =
+  def foldMap[M: Monoid](from: S)(f: A => M): M =
     multiLift[({type l[a] = Constant[M,a]})#l](from, { a: A => Constant[M, B](f(a))}).value
 
   def compose[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = new Traversal[S, T, C, D] {
