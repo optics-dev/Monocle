@@ -1,12 +1,11 @@
 package monocle
 
-import monocle.util.Contravariant
-import monocle.util.Contravariant.coerce
+import monocle.util.Constant
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
 import scalaz.Id._
 import scalaz.std.list._
-import scalaz.{Traverse, Applicative, Equal}
+import scalaz.{Monoid, Traverse, Applicative, Equal}
 
 
 trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
@@ -15,8 +14,8 @@ trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
 
   def modify(from: S, f: A => B): T = multiLift[Id](from, { a: A => id.point(f(a)) } )
 
-  protected def underlyingFold[F[_] : Contravariant : Applicative](from: S)(f: A => F[A]): F[S] =
-    coerce[F, T, S](multiLift(from, { a: A => coerce[F, A, B](f(a)) }))
+  def fold[M: Monoid](from: S)(f: A => M): M =
+    multiLift[({type l[a] = Constant[M,a]})#l](from, { a: A => Constant[M, B](f(a))}).value
 
   def compose[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = new Traversal[S, T, C, D] {
     def multiLift[F[_] : Applicative](from: S, f: C => F[D]): F[T] = self.multiLift(from,  other.multiLift(_, f))
