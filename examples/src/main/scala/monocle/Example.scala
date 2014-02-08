@@ -22,7 +22,7 @@ object Example extends App {
 
   println(locationTraversal.toListOf(l))
   println(locationTraversal.set(l, 1.0))
-  println(locationTraversal.simpleFold(l))
+  println(locationTraversal.fold(l))
   println(locationTraversal.modify(l, _ + 2))
 
   println(locationTraversal.multiLift(l, pos => List(pos + 1, pos, pos - 1)))
