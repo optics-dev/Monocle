@@ -7,7 +7,7 @@ import scalaz.Id._
 import scalaz.{Equal, Applicative, Functor}
 
 
-trait Lens[S, T, A, B] extends Traversal[S, T, A, B] { self =>
+trait Lens[S, T, A, B] extends Traversal[S, T, A, B] with Getter[S, A] { self =>
 
   def lift[F[_] : Functor](from: S, f: A => F[B]):  F[T]
 
