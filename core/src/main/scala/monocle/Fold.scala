@@ -21,6 +21,8 @@ trait Fold[S, A] { self =>
 
   def all(from: S)(p: A => Boolean): Boolean = foldMap(from)(p(_).conjunction)
 
+  def asFold: Fold[S, A] = self
+
   def compose[B](other: Fold[A, B]): Fold[S, B] = new Fold[S, B] {
     def foldMap[C: Monoid](from: S)(f: B => C): C = self.foldMap(from)(other.foldMap(_)(f))
   }

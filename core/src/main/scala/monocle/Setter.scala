@@ -11,7 +11,9 @@ trait Setter[S, T, A, B] { self =>
 
   def modify(from: S, f: A => B): T
 
-  def compose[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = new Setter[S, T, C, D] {
+  def asSetter: Setter[S, T, A, B] = self
+
+    def compose[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = new Setter[S, T, C, D] {
     def modify(from: S, f: C => D): T = self.modify(from, other.modify(_, f))
   }
 
