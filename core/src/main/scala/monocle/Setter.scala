@@ -25,7 +25,7 @@ object Setter {
     def modify(from: F[A], f: A => B): F[B] = Functor[F].map(from)(f)
   }
 
-  def laws[S: Arbitrary : Equal, A : Arbitrary](setter: Setter[S, S, A, A]) = new Properties("Setter") {
+  def laws[S: Arbitrary : Equal, A : Arbitrary](setter: SimpleSetter[S, A]) = new Properties("Setter") {
     property("modify - identity") = forAll { from: S =>
       Equal[S].equal(setter.modify(from, identity), from)
     }

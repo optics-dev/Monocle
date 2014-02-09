@@ -27,7 +27,7 @@ object Lens {
       Functor[F].map(f(_get(from)))(newValue => _set(from, newValue))
   }
 
-  def laws[S: Arbitrary : Equal, A : Arbitrary : Equal](lens: Lens[S, S, A, A]) = new Properties("Lens") {
+  def laws[S: Arbitrary : Equal, A : Arbitrary : Equal](lens: SimpleLens[S, A]) = new Properties("Lens") {
     include(Traversal.laws(lens))
 
     property("lift - identity") = forAll { from: S =>

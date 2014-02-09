@@ -36,7 +36,7 @@ object Traversal {
       Applicative[F].apply2(f(get1(from)), f(get2(from)))((v1, v2) => _set(from, v1, v2))
   }
 
-  def laws[S : Arbitrary : Equal, A : Arbitrary : Equal](traversal: Traversal[S, S, A, A]) = new Properties("Traversal") {
+  def laws[S : Arbitrary : Equal, A : Arbitrary : Equal](traversal: SimpleTraversal[S, A]) = new Properties("Traversal") {
     include(Setter.laws(traversal))
 
     property("multi lift - identity") = forAll { from: S =>
