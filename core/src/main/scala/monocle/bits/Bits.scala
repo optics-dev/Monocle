@@ -11,6 +11,7 @@ trait Bits[A] {
   def shiftL(a: A, n: Int): A
   def shiftR(a: A, n: Int): A
 
+  // create an A with a single bit set at position n
   def singleBit(n: Int): A
 
   def updateBit(a: A, n: Int, newValue: Boolean): A = if(newValue) setBit(a, n) else clearBit(a, n)
