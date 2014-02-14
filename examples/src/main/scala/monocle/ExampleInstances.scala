@@ -9,9 +9,10 @@ object ExampleInstances {
   case class Person(_age: Int, _name: String, _address: Address)
 
   object Location {
-    val locationTraversal = Traversal.make2[Location, Location, Double, Double](_._latitude)(_._longitude){ case (from, newLat, newLong) =>
-      from.copy(_latitude = newLat, _longitude = newLong)
-    }
+    val locationTraversal: SimpleTraversal[Location, Double] =
+      Traversal.make2[Location, Location, Double, Double](_._latitude)(_._longitude){ case (from, newLat, newLong) =>
+        from.copy(_latitude = newLat, _longitude = newLong)
+      }
 
     val latitude  = mkLens[Location, Double]("_latitude")
     val longitude = mkLens[Location, Double]("_longitude")

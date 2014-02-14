@@ -36,6 +36,18 @@ object Example extends App {
   println(int2DoubleOption.modify(someInt, _ + 2.00))
   println(int2DoubleOption.toListOf(someInt))
 
+  import monocle.syntax.lens._
+  import monocle.syntax.traversal._
+  import scala.language.postfixOps
+
+  val address2Latitude = address oo location oo latitude
+
+  println(p >- address oo city get)
+  println(p >- address oo location oo latitude modify (_ + 1))
+
+  println(p >-- address oo location oo locationTraversal toListOf)
+  println(p >-- address oo location oo locationTraversal set 2L)
+
 }
 
 
