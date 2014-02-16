@@ -1,7 +1,7 @@
 package monocle
 package syntax
 
-trait Syntaxes {
+trait Syntax {
 
   object lens extends ToLensOps with ToAppliedLensOps
 

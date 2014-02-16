@@ -1,4 +1,4 @@
 package monocle
 
 
-package object syntax extends Syntaxes
+package object syntax extends Syntax
