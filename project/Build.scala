@@ -1,18 +1,22 @@
 import sbt._
 import Keys._
 
+import xerial.sbt.Sonatype._
+import xerial.sbt.Sonatype.SonatypeKeys._
+
 object BuildSettings {
+  import ScalaLensPublishing._
   val buildScalaVersion = "2.10.3"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization      := "com.github.julien-truffaut",
-    version           := "0.1",
+    version           := "0.1-SNAPSHOT",
     scalaVersion      := buildScalaVersion,
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-language:higherKinds", "-language:implicitConversions"),
     resolvers         += Resolver.sonatypeRepo("releases"),
     resolvers         += Resolver.sonatypeRepo("snapshots"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0-M3" cross CrossVersion.full)
-  )
+  )  ++ publishSettings
 }
 
 object Dependencies {
@@ -30,12 +34,13 @@ object ScalaLensBuild extends Build {
   import BuildSettings._
   import Dependencies._
 
+
   lazy val root: Project = Project(
     "monocle",
     file("."),
-    settings = buildSettings ++ xerial.sbt.Sonatype.sonatypeSettings ++ Seq(
-      pomExtra := ScalaLensPublishing.pomExtra,
-      run <<= run in Compile in macros)
+    settings = buildSettings ++ Seq(
+      publishArtifact := false,
+      run <<= run in Compile in macros) ++ sonatypeSettings
   ) aggregate(macros, core, examples)
 
   lazy val macros: Project = Project(
@@ -59,6 +64,7 @@ object ScalaLensBuild extends Build {
     "monocle-examples",
     file("examples"),
     settings = buildSettings ++ Seq(
+      publishArtifact := false,
       libraryDependencies ++= Seq(scalaz)
     )
   ) dependsOn(macros, core)
@@ -66,25 +72,27 @@ object ScalaLensBuild extends Build {
 
 object ScalaLensPublishing  {
 
-  def pomExtra: xml.NodeSeq = {
-    <url>https://github.com/julien-truffaut/Monocle</url>
-      <licenses>
-        <license>
-          <name>MIT</name>
-          <url>http://opensource.org/licenses/MIT</url>
-        </license>
-      </licenses>
-      <scm>
-        <connection>scm:git:github.com/julien-truffaut/Monocle</connection>
-        <developerConnection>scm:git:git@github.com:julien-truffaut/Monocle.git</developerConnection>
-        <url>github.com/julien-truffaut/Monocle.git</url>
-      </scm>
-      <developers>
-        <developer>
-          <id>julien-truffaut</id>
-          <name>Julien Truffaut</name>
-        </developer>
-      </developers>
-  }
+  lazy val publishSettings: Seq[Setting[_]] = Seq(
+    pomExtra := {
+      <url>https://github.com/julien-truffaut/Monocle</url>
+        <licenses>
+          <license>
+            <name>MIT</name>
+            <url>http://opensource.org/licenses/MIT</url>
+          </license>
+        </licenses>
+        <scm>
+          <connection>scm:git:github.com/julien-truffaut/Monocle</connection>
+          <developerConnection>scm:git:git@github.com:julien-truffaut/Monocle.git</developerConnection>
+          <url>github.com:julien-truffaut/Monocle.git</url>
+        </scm>
+        <developers>
+          <developer>
+            <id>julien-truffaut</id>
+            <name>Julien Truffaut</name>
+          </developer>
+        </developers>
+    }
+  ) ++ sonatypeSettings
 
 }
