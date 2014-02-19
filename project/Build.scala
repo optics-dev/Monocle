@@ -1,12 +1,11 @@
 import sbt._
 import Keys._
 
-
 object BuildSettings {
   val buildScalaVersion = "2.10.3"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
-    organization      := "org.monocle",
+    organization      := "com.github.julien-truffaut",
     version           := "0.1",
     scalaVersion      := buildScalaVersion,
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-language:higherKinds", "-language:implicitConversions"),
@@ -28,19 +27,19 @@ object Dependencies {
 }
 
 object ScalaLensBuild extends Build {
-
   import BuildSettings._
   import Dependencies._
 
   lazy val root: Project = Project(
-    "root",
+    "monocle",
     file("."),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ xerial.sbt.Sonatype.sonatypeSettings ++ Seq(
+      pomExtra := ScalaLensPublishing.pomExtra,
       run <<= run in Compile in macros)
   ) aggregate(macros, core, examples)
 
   lazy val macros: Project = Project(
-    "macros",
+    "monocle-macros",
     file("macros"),
     settings = buildSettings ++ Seq(
       libraryDependencies ++= Seq(scalaReflect, quasiquotes, scalaz) ++ tests
@@ -48,7 +47,7 @@ object ScalaLensBuild extends Build {
   ) dependsOn(core)
 
   lazy val core: Project = Project(
-    "core",
+    "monocle-core",
     file("core"),
     settings = buildSettings ++ Seq(
       name := "Moncole Core",
@@ -57,10 +56,35 @@ object ScalaLensBuild extends Build {
   )
 
   lazy val examples: Project = Project(
-    "examples",
+    "monocle-examples",
     file("examples"),
     settings = buildSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz)
     )
   ) dependsOn(macros, core)
+}
+
+object ScalaLensPublishing  {
+
+  def pomExtra: xml.NodeSeq = {
+    <url>https://github.com/julien-truffaut/Monocle</url>
+      <licenses>
+        <license>
+          <name>MIT</name>
+          <url>http://opensource.org/licenses/MIT</url>
+        </license>
+      </licenses>
+      <scm>
+        <connection>scm:git:github.com/julien-truffaut/Monocle</connection>
+        <developerConnection>scm:git:git@github.com:julien-truffaut/Monocle.git</developerConnection>
+        <url>github.com/julien-truffaut/Monocle.git</url>
+      </scm>
+      <developers>
+        <developer>
+          <id>julien-truffaut</id>
+          <name>Julien Truffaut</name>
+        </developer>
+      </developers>
+  }
+
 }
