@@ -3,7 +3,7 @@ Monocle
 
 Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens)
 
-Examples of lens and traversal can be found in the sub-project examples
+See sub-project examples for ... examples ;)
 
 ## Using Monocle
 
