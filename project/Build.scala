@@ -55,7 +55,6 @@ object ScalaLensBuild extends Build {
     "monocle-core",
     file("core"),
     settings = buildSettings ++ Seq(
-      name := "Moncole Core",
       libraryDependencies ++= Seq(scalaz) ++ tests
     )
   )
