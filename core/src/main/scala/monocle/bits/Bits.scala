@@ -53,4 +53,23 @@ object Bits {
     def negate(a: Int): Int = ~ a
   }
 
+  implicit val charInstance : Bits[Char] = new Bits[Char] {
+
+    val bitSize: Int = 16
+
+    def bitwiseOr(a1: Char, a2: Char): Char = (a1 | a2).asInstanceOf[Char]
+    def bitwiseAnd(a1: Char, a2: Char): Char = (a1 & a2).asInstanceOf[Char]
+    def bitwiseXor(a1: Char, a2: Char): Char = (a1 ^ a2).asInstanceOf[Char]
+
+    def shiftL(a: Char, n: Int): Char = (a << n).asInstanceOf[Char]
+    def shiftR(a: Char, n: Int): Char = (a >> n).asInstanceOf[Char]
+
+    def singleBit(n: Int): Char = (1 << n).asInstanceOf[Char]
+
+    def testBit(a: Char, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
+
+    def negate(a: Char): Char = (~ a).asInstanceOf[Char]
+    def signed(a: Char): Boolean = a.signum > 0
+  }
+
 }
