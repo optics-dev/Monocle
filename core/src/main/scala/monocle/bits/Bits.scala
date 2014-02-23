@@ -53,6 +53,7 @@ object Bits {
     def negate(a: Int): Int = ~ a
   }
 
+  // todo: can we avoid down casting ?
   implicit val charInstance : Bits[Char] = new Bits[Char] {
 
     val bitSize: Int = 16

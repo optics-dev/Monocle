@@ -14,6 +14,7 @@ object BitsExample extends App {
 
   val atFirstBitForChar = atBit[Char](0)
 
-  println(atFirstBitForChar.get('x'))
+  println(atFirstBitForChar.get('x'))       // false
+  println(atFirstBitForChar.set('x', true)) // y
 
 }
