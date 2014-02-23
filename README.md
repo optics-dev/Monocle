@@ -5,7 +5,6 @@ Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://githu
 
 See sub-project examples for ... examples ;)
 
-## Using Monocle
 
 ```scala
 resolvers ++= Seq(
@@ -14,6 +13,6 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.github.julien-truffaut"  %%  "monocle-core"      % "0.1-SNAPSHOT"
+  "com.github.julien-truffaut"  %%  "monocle"      % "0.1-SNAPSHOT"
 )
 ```
