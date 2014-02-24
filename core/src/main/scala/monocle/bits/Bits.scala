@@ -58,7 +58,7 @@ object Bits {
 
     val bitSize: Int = 16
 
-    def bitwiseOr(a1: Char, a2: Char): Char = (a1 | a2).asInstanceOf[Char]
+    def bitwiseOr(a1: Char, a2: Char): Char = (a1 | a2).toChar
     def bitwiseAnd(a1: Char, a2: Char): Char = (a1 & a2).asInstanceOf[Char]
     def bitwiseXor(a1: Char, a2: Char): Char = (a1 ^ a2).asInstanceOf[Char]
 
