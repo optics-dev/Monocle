@@ -1,6 +1,7 @@
 package monocle
 
 import monocle.util.Constant
+import monocle.util.Constant._
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
 import scalaz.Id._
@@ -13,7 +14,7 @@ trait Lens[S, T, A, B] extends Traversal[S, T, A, B] with Getter[S, A] { self =>
 
   def multiLift[F[_] : Applicative](from: S, f: A => F[B]): F[T] = lift(from, f)
 
-  def get(from: S): A = lift[({type l[b] = Constant[A,b]})#l](from, {a: A => Constant[A, B](a)}).value
+  def get(from: S): A = lift[({type l[b] = Constant[A,b]})#l](from, {a: A => Constant.apply[A, B](a)})
 
   def compose[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
     def lift[F[_] : Functor](from: S, f: C => F[D]): F[T] = self.lift(from,  other.lift(_, f))

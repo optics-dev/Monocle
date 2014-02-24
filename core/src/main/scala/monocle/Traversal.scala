@@ -1,6 +1,7 @@
 package monocle
 
 import monocle.util.Constant
+import monocle.util.Constant._
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
 import scalaz.Id._
@@ -15,7 +16,7 @@ trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
   def modify(from: S, f: A => B): T = multiLift[Id](from, { a: A => id.point(f(a)) } )
 
   def foldMap[M: Monoid](from: S)(f: A => M): M =
-    multiLift[({type l[a] = Constant[M,a]})#l](from, { a: A => Constant[M, B](f(a))}).value
+    multiLift[({type l[a] = Constant[M,a]})#l](from, { a: A => Constant[M, B](f(a))})
 
   def asTraversal: Traversal[S, T, A, B] = self
 
