@@ -2,7 +2,9 @@ package monocle.std
 
 import monocle.SimpleLens
 
-object Map {
+object map extends MapInstances
+
+trait MapInstances {
 
   def at[K,V](key: K)= SimpleLens[Map[K,V], Option[V]](
     _.get(key),

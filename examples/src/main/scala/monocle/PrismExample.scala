@@ -1,6 +1,8 @@
 package monocle
 
-import monocle.Prism._
+import monocle.std.option._
+import monocle.thirdparty.scalazEither
+import scalazEither._
 import scalaz.{\/-, -\/}
 
 object PrismExample extends App {
