@@ -27,12 +27,14 @@ object Iso {
   }
 
   def laws[S: Arbitrary : Equal, A : Arbitrary : Equal](iso: SimpleIso[S, A]) = new Properties("Iso") {
+    import scalaz.syntax.equal._
+
     include(Lens.laws(iso))
     include(Prism.laws(iso))
 
     property("double inverse") = forAll { (from: S, newValue: A) =>
-      Equal[A].equal(iso.inverse.inverse.get(from), iso.get(from))
-      Equal[S].equal(iso.inverse.inverse.set(from, newValue), iso.set(from, newValue))
+      iso.inverse.inverse.get(from) === iso.get(from)
+      iso.inverse.inverse.set(from, newValue) === iso.set(from, newValue)
     }
 
   }

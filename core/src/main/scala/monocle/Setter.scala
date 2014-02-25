@@ -26,13 +26,15 @@ object Setter {
   }
 
   def laws[S: Arbitrary : Equal, A : Arbitrary](setter: SimpleSetter[S, A]) = new Properties("Setter") {
+    import scalaz.syntax.equal._
+
     property("modify - identity") = forAll { from: S =>
-      Equal[S].equal(setter.modify(from, identity), from)
+      setter.modify(from, identity) === from
     }
 
     property("set - set") = forAll { (from: S, newValue: A) =>
       val setOnce = setter.set(from, newValue)
-      Equal[S].equal(setOnce, setter.set(setOnce, newValue))
+      setOnce === setter.set(setOnce, newValue)
     }
   }
 

@@ -38,14 +38,15 @@ object Traversal {
   }
 
   def laws[S : Arbitrary : Equal, A : Arbitrary : Equal](traversal: SimpleTraversal[S, A]) = new Properties("Traversal") {
+    import scalaz.syntax.equal._
     include(Setter.laws(traversal))
 
     property("multi lift - identity") = forAll { from: S =>
-      Equal[S].equal(traversal.multiLift[Id](from, id.point[A](_)), from)
+      traversal.multiLift[Id](from, id.point[A](_)) === from
     }
 
     property("set - get all") = forAll { (from: S, newValue: A) =>
-      Equal[List[A]].equal(traversal.toListOf(traversal.set(from, newValue)), traversal.toListOf(from) map (_ => newValue))
+      traversal.toListOf(traversal.set(from, newValue)) === traversal.toListOf(from).map(_ => newValue)
     }
   }
 }

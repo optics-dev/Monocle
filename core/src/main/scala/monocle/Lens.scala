@@ -29,18 +29,20 @@ object Lens {
   }
 
   def laws[S: Arbitrary : Equal, A : Arbitrary : Equal](lens: SimpleLens[S, A]) = new Properties("Lens") {
+    import scalaz.syntax.equal._
+
     include(Traversal.laws(lens))
 
     property("lift - identity") = forAll { from: S =>
-      Equal[S].equal(lens.lift[Id](from, id.point[A](_)), from)
+      lens.lift[Id](from, id.point[A](_)) === from
     }
 
     property("set - get") = forAll { (from: S, newValue: A) =>
-      Equal[A].equal(lens.get(lens.set(from, newValue)), newValue)
+      lens.get(lens.set(from, newValue)) === newValue
     }
 
     property("get - set") = forAll { from: S =>
-      Equal[S].equal(lens.set(from, lens.get(from)), from)
+      lens.set(from, lens.get(from)) === from
     }
   }
 

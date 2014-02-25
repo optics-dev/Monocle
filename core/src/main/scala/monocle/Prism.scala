@@ -36,18 +36,19 @@ object Prism {
 
 
   def laws[S: Arbitrary : Equal, A : Arbitrary : Equal](prism: SimplePrism[S, A]) = new Properties("Prism") {
+    import scalaz.syntax.equal._
     import scalaz.std.option._
 
     include(Traversal.laws(prism))
 
     property("re - getOption") = forAll { value: A =>
-      Equal[Option[A]].equal(prism.getOption(prism.re.get(value)), Some(value))
+      prism.getOption(prism.re.get(value)) === Some(value)
     }
 
     property("focus is smaller") = forAll { (from: S, newValue: A) =>
       prism.getOption(from).map{ someA =>
-        Equal[S].equal(prism.re.get(someA), from)
-      }.getOrElse(true)
+        prism.re.get(someA) === from
+      } getOrElse true
     }
   }
 
