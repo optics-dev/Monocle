@@ -2,7 +2,9 @@ package monocle
 
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
-import scalaz.{Equal, \/, Applicative}
+import scalaz._
+import scalaz.\/-
+import scala.{Some, None}
 
 
 trait Prism[S, T, A, B] extends Traversal[S, T, A, B] { self =>
@@ -50,5 +52,23 @@ object Prism {
       }.getOrElse(true)
     }
   }
+
+  def _Some[A, B]: Prism[Option[A], Option[B], A, B] =
+    Prism[Option[A], Option[B], A, B](Some.apply, _.map(\/-(_)) getOrElse -\/(None))
+
+  def _None[A]: SimplePrism[Option[A] , Unit] =
+    SimplePrism[Option[A] , Unit](_ => None, { opt => if(opt == None) Some(()) else None } )
+
+  def _Left[A, B, C]: Prism[A \/ B, C \/ B, A, C] =
+    Prism[A \/ B, C \/ B, A, C](-\/.apply, {
+      case -\/(a) => \/-(a)
+      case \/-(b) => -\/(\/-(b))
+    } )
+
+  def _Right[A, B, C]: Prism[A \/ B, A \/ C, B, C] =
+    Prism[A \/ B, A \/ C, B, C](\/-.apply, {
+      case -\/(a) => -\/(-\/(a))
+      case \/-(b) => \/-(b)
+    } )
 
 }

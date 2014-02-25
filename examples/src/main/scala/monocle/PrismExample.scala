@@ -1,5 +1,7 @@
 package monocle
 
+import monocle.Prism._
+import scalaz.{\/-, -\/}
 
 object PrismExample extends App {
 
@@ -12,5 +14,19 @@ object PrismExample extends App {
   println(intToChar.re.get('a'))       // 97
 
   println(intToChar.set(97, 'z'))      // 122
+
+  println(_Some.getOption(Some(1)))    // Some(1)
+  println(_Some.set(None, 2))          // None
+  println(_Some.set(Some(1), 'a'))     // Some('a')
+  println(_Some.modify(Some(1), {n: Int => n + 2.0})) // Some(3.0)
+
+  println(_None.getOption(Some(1)))    // None
+  println(_None.getOption(None))       // Some(())
+
+  println(_Left.getOption(-\/ (1)))    // Some(1)
+  println(_Left.getOption( \/-(1)))    // None
+
+  println(_Right.getOption(-\/ (1)))    // None
+  println(_Right.getOption( \/-(1)))    // Some(1)
 
 }
