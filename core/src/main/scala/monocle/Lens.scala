@@ -8,6 +8,10 @@ import scalaz.Id._
 import scalaz.{Equal, Applicative, Functor}
 
 
+/**
+ * A Lens defines a single focus between a type S and A such as if you change A to B
+ * you obtain a T.
+ */
 trait Lens[S, T, A, B] extends Traversal[S, T, A, B] with Getter[S, A] { self =>
 
   def lift[F[_] : Functor](from: S, f: A => F[B]):  F[T]

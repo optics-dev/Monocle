@@ -8,7 +8,10 @@ import scalaz.Id._
 import scalaz.std.list._
 import scalaz.{Monoid, Traverse, Applicative, Equal}
 
-
+/**
+ * A Traversal is generalisation of a Lens in a way that it defines a multi foci between
+ * S and 0 to many A.
+ */
 trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
 
   def multiLift[F[_] : Applicative](from: S, f: A => F[B]):  F[T]

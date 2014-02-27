@@ -4,10 +4,16 @@ import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
 import scalaz.{Equal, Applicative, \/}
 
-
+/**
+ * A Prism is a special case of Traversal where the focus is limited to
+ * 0 or 1 A. In addition, a Prism defines a reverse relation such as
+ * you can always get T from B.
+ */
 trait Prism[S, T, A, B] extends Traversal[S, T, A, B] { self =>
 
   def re: Getter[B, T]
+
+  def reverseGet(from: B): T = re.get(from)
 
   def getOption(from: S): Option[A] = headOption(from)
 
