@@ -1,13 +1,17 @@
 package monocle
 
 import monocle.util.Constant
+import monocle.util.Constant._
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
 import scalaz.Id._
 import scalaz.std.list._
 import scalaz.{Monoid, Traverse, Applicative, Equal}
 
-
+/**
+ * A Traversal is generalisation of a Lens in a way that it defines a multi foci between
+ * S and 0 to many A.
+ */
 trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
 
   def multiLift[F[_] : Applicative](from: S, f: A => F[B]):  F[T]
@@ -15,7 +19,7 @@ trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
   def modify(from: S, f: A => B): T = multiLift[Id](from, { a: A => id.point(f(a)) } )
 
   def foldMap[M: Monoid](from: S)(f: A => M): M =
-    multiLift[({type l[a] = Constant[M,a]})#l](from, { a: A => Constant[M, B](f(a))}).value
+    multiLift[({type l[a] = Constant[M,a]})#l](from, { a: A => Constant[M, B](f(a))})
 
   def asTraversal: Traversal[S, T, A, B] = self
 
@@ -37,14 +41,15 @@ object Traversal {
   }
 
   def laws[S : Arbitrary : Equal, A : Arbitrary : Equal](traversal: SimpleTraversal[S, A]) = new Properties("Traversal") {
+    import scalaz.syntax.equal._
     include(Setter.laws(traversal))
 
     property("multi lift - identity") = forAll { from: S =>
-      Equal[S].equal(traversal.multiLift[Id](from, id.point[A](_)), from)
+      traversal.multiLift[Id](from, id.point[A](_)) === from
     }
 
     property("set - get all") = forAll { (from: S, newValue: A) =>
-      Equal[List[A]].equal(traversal.toListOf(traversal.set(from, newValue)), traversal.toListOf(from) map (_ => newValue))
+      traversal.toListOf(traversal.set(from, newValue)) === traversal.toListOf(from).map(_ => newValue)
     }
   }
 }

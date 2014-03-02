@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.std.Map._
+import monocle.std.map._
 
 
 object MapExample extends App {

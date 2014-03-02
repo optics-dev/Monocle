@@ -1,19 +1,24 @@
 package monocle
 
 import monocle.util.Constant
+import monocle.util.Constant._
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
 import scalaz.Id._
 import scalaz.{Equal, Applicative, Functor}
 
 
+/**
+ * A Lens defines a single focus between a type S and A such as if you change A to B
+ * you obtain a T.
+ */
 trait Lens[S, T, A, B] extends Traversal[S, T, A, B] with Getter[S, A] { self =>
 
   def lift[F[_] : Functor](from: S, f: A => F[B]):  F[T]
 
   def multiLift[F[_] : Applicative](from: S, f: A => F[B]): F[T] = lift(from, f)
 
-  def get(from: S): A = lift[({type l[b] = Constant[A,b]})#l](from, {a: A => Constant[A, B](a)}).value
+  def get(from: S): A = lift[({type l[b] = Constant[A,b]})#l](from, {a: A => Constant.apply[A, B](a)})
 
   def compose[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
     def lift[F[_] : Functor](from: S, f: C => F[D]): F[T] = self.lift(from,  other.lift(_, f))
@@ -28,18 +33,20 @@ object Lens {
   }
 
   def laws[S: Arbitrary : Equal, A : Arbitrary : Equal](lens: SimpleLens[S, A]) = new Properties("Lens") {
+    import scalaz.syntax.equal._
+
     include(Traversal.laws(lens))
 
     property("lift - identity") = forAll { from: S =>
-      Equal[S].equal(lens.lift[Id](from, id.point[A](_)), from)
+      lens.lift[Id](from, id.point[A](_)) === from
     }
 
     property("set - get") = forAll { (from: S, newValue: A) =>
-      Equal[A].equal(lens.get(lens.set(from, newValue)), newValue)
+      lens.get(lens.set(from, newValue)) === newValue
     }
 
     property("get - set") = forAll { from: S =>
-      Equal[S].equal(lens.set(from, lens.get(from)), from)
+      lens.set(from, lens.get(from)) === from
     }
   }
 

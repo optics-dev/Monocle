@@ -16,6 +16,6 @@ object IsoExample extends App {
 
   println( locationPairIso.set(l, (4.0, 6.0)) ) // Location(4.0, 6.0)
 
-  println( locationPairIso.inverse compose latitude modify(p, _ + 1) ) // (4.0, 5.0)
+  println( locationPairIso.reverse compose latitude modify(p, _ + 1) ) // (4.0, 5.0)
 
 }
