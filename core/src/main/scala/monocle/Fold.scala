@@ -5,7 +5,7 @@ import scalaz.std.list._
 import scalaz.std.option._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
-import scalaz.{Foldable, Monoid}
+import scalaz.{ Foldable, Monoid }
 
 trait Fold[S, A] { self =>
 
@@ -30,7 +30,7 @@ trait Fold[S, A] { self =>
 
 object Fold {
 
-  def apply[F[_]: Foldable, A]: Fold[F[A], A] = new Fold[F[A], A]{
+  def apply[F[_]: Foldable, A]: Fold[F[A], A] = new Fold[F[A], A] {
     def foldMap[B: Monoid](from: F[A])(f: A => B): B = Foldable[F].foldMap(from)(f)
   }
 

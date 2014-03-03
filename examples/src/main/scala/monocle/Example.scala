@@ -15,7 +15,7 @@ object Example extends App {
   //basic scala
   println(p.copy(_address = p._address.copy(_city = "Paris")))
 
-  println((address compose city).set(p, "Paris") )
+  println((address compose city).set(p, "Paris"))
   println((address compose city).get(p))
   println((address compose city).modify(p, _ + "!!!"))
   println((address compose city).lift(p, city => Option(city)))
@@ -32,7 +32,7 @@ object Example extends App {
 
   val int2DoubleOption = Traversal[Option, Int, Double]
 
-  val someInt : Option[Int] = Some(1)
+  val someInt: Option[Int] = Some(1)
   println(int2DoubleOption.modify(someInt, _ + 2.00))
   println(int2DoubleOption.toListOf(someInt))
 
@@ -49,7 +49,4 @@ object Example extends App {
   println(p >-- address oo location oo locationTraversal set 2L)
 
 }
-
-
-
 

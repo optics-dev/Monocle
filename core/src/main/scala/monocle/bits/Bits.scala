@@ -14,9 +14,9 @@ trait Bits[A] {
   // create an A with a single bit set at position n
   def singleBit(n: Int): A
 
-  def updateBit(a: A, n: Int, newValue: Boolean): A = if(newValue) setBit(a, n) else clearBit(a, n)
+  def updateBit(a: A, n: Int, newValue: Boolean): A = if (newValue) setBit(a, n) else clearBit(a, n)
 
-  def setBit(a: A, n: Int): A   = bitwiseOr(a, singleBit(n))
+  def setBit(a: A, n: Int): A = bitwiseOr(a, singleBit(n))
   def clearBit(a: A, n: Int): A = bitwiseAnd(a, negate(singleBit(n)))
 
   def testBit(a: A, n: Int): Boolean
@@ -30,7 +30,7 @@ object Bits {
 
   def apply[A](implicit ev: Bits[A]): Bits[A] = ev
 
-  implicit val intInstance : Bits[Int] = new Bits[Int] {
+  implicit val intInstance: Bits[Int] = new Bits[Int] {
 
     def bitwiseOr(a1: Int, a2: Int): Int = a1 | a2
 
@@ -50,10 +50,10 @@ object Bits {
 
     def signed(a: Int): Boolean = a.signum > 0
 
-    def negate(a: Int): Int = ~ a
+    def negate(a: Int): Int = ~a
   }
 
-  implicit val charInstance : Bits[Char] = new Bits[Char] {
+  implicit val charInstance: Bits[Char] = new Bits[Char] {
 
     val bitSize: Int = 16
 
@@ -68,7 +68,7 @@ object Bits {
 
     def testBit(a: Char, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
 
-    def negate(a: Char): Char = (~ a).toChar
+    def negate(a: Char): Char = (~a).toChar
     def signed(a: Char): Boolean = a.signum > 0
   }
 

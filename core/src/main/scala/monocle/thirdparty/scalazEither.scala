@@ -1,7 +1,7 @@
 package monocle.thirdparty
 
 import monocle.Prism
-import scalaz.{\/-, -\/, \/}
+import scalaz.{ \/-, -\/, \/ }
 
 object scalazEither extends ScalazEitherInstances
 
@@ -10,11 +10,11 @@ trait ScalazEitherInstances {
     Prism[A \/ B, C \/ B, A, C](-\/.apply, {
       case -\/(a) => \/-(a)
       case \/-(b) => -\/(\/-(b))
-    } )
+    })
 
   def _Right[A, B, C]: Prism[A \/ B, A \/ C, B, C] =
     Prism[A \/ B, A \/ C, B, C](\/-.apply, {
       case -\/(a) => -\/(-\/(a))
       case \/-(b) => \/-(b)
-    } )
+    })
 }

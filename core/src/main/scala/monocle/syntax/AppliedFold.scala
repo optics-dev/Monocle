@@ -3,7 +3,6 @@ package monocle.syntax
 import monocle.Fold
 import scalaz.Monoid
 
-
 trait AppliedFold[S, A] { self =>
   val from: S
   def _fold: Fold[S, A]

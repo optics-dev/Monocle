@@ -10,23 +10,24 @@ object ExampleInstances {
 
   object Location {
     val locationTraversal: SimpleTraversal[Location, Double] =
-      Traversal.make2[Location, Location, Double, Double](_._latitude)(_._longitude){ case (from, newLat, newLong) =>
-        from.copy(_latitude = newLat, _longitude = newLong)
+      Traversal.make2[Location, Location, Double, Double](_._latitude)(_._longitude) {
+        case (from, newLat, newLong) =>
+          from.copy(_latitude = newLat, _longitude = newLong)
       }
 
-    val latitude  = mkLens[Location, Double]("_latitude")
+    val latitude = mkLens[Location, Double]("_latitude")
     val longitude = mkLens[Location, Double]("_longitude")
   }
 
   object Address {
     val postcode = mkLens[Address, String]("_postcode")
-    val city     = mkLens[Address, String]("_city")
+    val city = mkLens[Address, String]("_city")
     val location = mkLens[Address, Location]("_location")
   }
 
   object Person {
-    val age     = mkLens[Person, Int]("_age")
-    val name    = mkLens[Person, String]("_name")
+    val age = mkLens[Person, Int]("_age")
+    val name = mkLens[Person, String]("_name")
     val address = mkLens[Person, Address]("_address")
   }
 
