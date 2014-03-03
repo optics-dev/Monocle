@@ -11,4 +11,3 @@ class OptionSpec extends Spec {
   checkAll(Prism.laws(_None[Long]))
 
 }
-

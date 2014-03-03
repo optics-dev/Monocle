@@ -4,7 +4,6 @@ import monocle.Lens
 import org.specs2.scalaz.Spec
 import scalaz.std.AllInstances._
 
-
 class BitsSpec extends Spec {
 
   val atIntFirst = atBit[Int](0)

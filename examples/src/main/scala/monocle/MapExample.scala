@@ -2,7 +2,6 @@ package monocle
 
 import monocle.std.map._
 
-
 object MapExample extends App {
 
   val map = Map(1 -> "One", 2 -> "Two")

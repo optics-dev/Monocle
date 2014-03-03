@@ -2,7 +2,6 @@ package monocle.syntax
 
 import monocle.Getter
 
-
 trait AppliedGetter[S, A] { self =>
 
   val from: S

@@ -5,6 +5,9 @@
 .idea
 .idea/*
 
+## NetBeans files to ignore
+.*_nb
+
 ## scala specific files to ignore
 *.class
 target/

@@ -1,13 +1,13 @@
 package monocle
 
 import org.scalacheck.Prop._
-import org.scalacheck.{Properties, Arbitrary}
-import scalaz.{Equal, Functor}
+import org.scalacheck.{ Properties, Arbitrary }
+import scalaz.{ Equal, Functor }
 
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.
  */
-trait Iso[S, T, A, B] extends Lens[S, T, A, B] with Prism[S, T, A, B]{
+trait Iso[S, T, A, B] extends Lens[S, T, A, B] with Prism[S, T, A, B] {
 
   def reverse: Iso[B, A, T, S]
 
@@ -21,15 +21,15 @@ object Iso {
     def reverse: Iso[B, A, T, S] = new Iso[B, A, T, S] {
       def reverse: Iso[S, T, A, B] = self
 
-      def lift[F[_] : Functor](from: B, f: T => F[S]): F[A] =
+      def lift[F[_]: Functor](from: B, f: T => F[S]): F[A] =
         Functor[F].map(f(_reverseGet(from)))(_get)
     }
 
-    def lift[F[_] : Functor](from: S, f: A => F[B]): F[T] =
+    def lift[F[_]: Functor](from: S, f: A => F[B]): F[T] =
       Functor[F].map(f(_get(from)))(_reverseGet)
   }
 
-  def laws[S: Arbitrary : Equal, A : Arbitrary : Equal](iso: SimpleIso[S, A]) = new Properties("Iso") {
+  def laws[S: Arbitrary: Equal, A: Arbitrary: Equal](iso: SimpleIso[S, A]) = new Properties("Iso") {
     import scalaz.syntax.equal._
 
     include(Lens.laws(iso))

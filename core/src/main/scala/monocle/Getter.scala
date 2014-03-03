@@ -1,6 +1,5 @@
 package monocle
 
-
 trait Getter[S, A] { self =>
 
   def get(from: S): A
@@ -8,7 +7,7 @@ trait Getter[S, A] { self =>
   def asGetter: Getter[S, A] = self
 
   def compose[B](other: Getter[A, B]): Getter[S, B] = new Getter[S, B] {
-    def get(from: S): B = other.get( self.get(from) )
+    def get(from: S): B = other.get(self.get(from))
   }
 
 }
@@ -18,4 +17,3 @@ object Getter {
     def get(from: S): A = _get(from)
   }
 }
-

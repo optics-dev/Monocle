@@ -1,6 +1,6 @@
 package monocle.util
 
-import scalaz.{Applicative, Monoid, Functor}
+import scalaz.{ Applicative, Monoid, Functor }
 
 object Constant {
 
@@ -8,14 +8,14 @@ object Constant {
 
   def apply[A, B](a: A): Constant[A, B] = a
 
-  implicit def ConstantFunctor[T] = new Functor[({type l[a] = Constant[T,a]})#l] {
+  implicit def ConstantFunctor[T] = new Functor[({ type l[a] = Constant[T, a] })#l] {
     def map[A, B](fa: Constant[T, A])(f: A => B): Constant[T, B] = fa
   }
 
-  implicit def ConstantApplicative[T : Monoid] = new Applicative[({type l[a] = Constant[T,a]})#l] {
-    def point[A](a: => A): Constant[T,A] = Monoid[T].zero
+  implicit def ConstantApplicative[T: Monoid] = new Applicative[({ type l[a] = Constant[T, a] })#l] {
+    def point[A](a: => A): Constant[T, A] = Monoid[T].zero
 
-    def ap[A, B](fa: => Constant[T,A])(f: => Constant[T,A => B]): Constant[T,B] =
+    def ap[A, B](fa: => Constant[T, A])(f: => Constant[T, A => B]): Constant[T, B] =
       Monoid[T].append(fa, f)
   }
 }
