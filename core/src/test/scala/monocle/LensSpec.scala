@@ -1,9 +1,9 @@
 package monocle
 
-import monocle.TestHelper._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import org.specs2.scalaz._
+import scalaz.Equal
 import scalaz.std.AllInstances._
 
 class LensSpec extends Spec {
@@ -17,7 +17,7 @@ class LensSpec extends Spec {
     i <- arbitrary[Int]
   } yield Example(s, i))
 
-  implicit val exampleEq = defaultEqual[Example]
+  implicit val exampleEq = Equal.equalA[Example]
 
   checkAll(Lens.laws(StringLens))
 

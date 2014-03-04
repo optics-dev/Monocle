@@ -1,12 +1,13 @@
 package monocle
 
+import monocle.std.int._
 import org.specs2.scalaz.Spec
-import scalaz.std.AllInstances._
+import scalaz.Equal
 
 class PrismSpec extends Spec {
 
-  val intToChar: SimplePrism[Int, Char] =
-    SimplePrism[Int, Char](_.toInt, { n: Int => if (n > Char.MaxValue || n < Char.MinValue) None else Some(n.toChar) })
+  implicit val intEqual  = Equal.equalA[Int]
+  implicit val charEqual = Equal.equalA[Char]
 
   checkAll(Prism.laws(intToChar))
 

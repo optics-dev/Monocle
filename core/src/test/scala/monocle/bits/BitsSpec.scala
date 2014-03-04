@@ -3,18 +3,18 @@ package monocle.bits
 import monocle.Lens
 import org.specs2.scalaz.Spec
 import scalaz.std.AllInstances._
+import scalaz.Equal
+
 
 class BitsSpec extends Spec {
+  import monocle.std.char._
+  import monocle.std.int._
 
-  val atIntFirst = atBit[Int](0)
-  val atIntLast = atBit[Int](-1)
+  implicit val intEqual  = Equal.equalA[Int]
+  implicit val charEqual = Equal.equalA[Char]
 
-  val atCharFirst = atBit[Char](0)
-  val atCharLast = atBit[Char](-1)
+  checkAll(Lens.laws(atBit[Int](0)))
+  checkAll(Lens.laws(atBit[Int](-1)))
 
-  checkAll(Lens.laws(atIntFirst))
-  checkAll(Lens.laws(atIntLast))
-
-  checkAll(Lens.laws(atCharFirst))
-  checkAll(Lens.laws(atCharLast))
+  checkAll(Lens.laws(atBit[Char](0)))
 }

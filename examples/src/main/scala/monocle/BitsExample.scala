@@ -3,6 +3,8 @@ package monocle
 import monocle.bits._
 
 object BitsExample extends App {
+  import monocle.std.char._
+  import monocle.std.int._
 
   val atFirstBit = atBit[Int](0)
 

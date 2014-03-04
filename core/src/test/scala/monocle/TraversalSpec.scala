@@ -1,10 +1,10 @@
 package monocle
 
-import monocle.TestHelper._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 import org.specs2.scalaz.Spec
 import scalaz.std.AllInstances._
+import scalaz.Equal
 
 class TraversalSpec extends Spec {
 
@@ -21,7 +21,7 @@ class TraversalSpec extends Spec {
     n <- arbitrary[String]
   } yield Location(x, y, n))
 
-  implicit val exampleEq = defaultEqual[Location]
+  implicit val exampleEq = Equal.equalA[Location]
 
   checkAll(Traversal.laws(locationTraversal))
 
