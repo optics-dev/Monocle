@@ -1,11 +1,13 @@
 package monocle.std
 
 import monocle.util.{Bounded, Bits}
+import monocle._
+import monocle.util.Bounded._
 
 
 trait ByteInstances {
 
-  implicit val byteInstance: Bits[Byte] = new Bits[Byte] with Bounded[Byte] {
+  implicit val byteInstance = new Bits[Byte] with Bounded[Byte] {
 
     val MaxValue: Byte = Byte.MaxValue
     val MinValue: Byte = Byte.MinValue
@@ -28,6 +30,9 @@ trait ByteInstances {
 
     def negate(a: Byte): Byte = (~a).toByte
   }
+
+  val intToByte  : SimplePrism[Int, Byte]  = safeCast(_.toInt, _.toByte)
+  val longToByte : SimplePrism[Long, Byte] = safeCast(_.toLong, _.toByte)
 
 }
 
