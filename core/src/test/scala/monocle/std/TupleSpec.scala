@@ -10,6 +10,6 @@ class TupleSpec extends Spec {
 
   implicit val intStringEqual = Equal.equalA[(Int, String)]
 
-  checkAll(Lens.laws(_1[Int, String]))
-  checkAll(Lens.laws(_2[Int, String]))
+  checkAll(Lens.laws(_1[Int, String, Int]))
+  checkAll(Lens.laws(_2[Int, String, String]))
 }
