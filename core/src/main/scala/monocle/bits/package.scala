@@ -1,11 +1,11 @@
 package monocle
 
 package object bits {
-
-  def atBit[S: Bits](n: Int): Lens[S, S, Boolean, Boolean] = {
+  
+  def atBit[S: Bits](n: Int): SimpleLens[S, Boolean] = {
     val bitsInstance = Bits[S]
     val index = normalizeIndex(bitsInstance.bitSize, n)
-    Lens[S, S, Boolean, Boolean](bitsInstance.testBit(_, index), bitsInstance.updateBit(_, index, _))
+    SimpleLens[S, Boolean](bitsInstance.testBit(_, index), bitsInstance.updateBit(_, index, _))
   }
 
   // map i to a value in base, negative value means that it is indexed from the end
