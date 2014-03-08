@@ -1,6 +1,5 @@
 package monocle.std
 
-import monocle.SimplePrism
 import monocle.util.Bits
 
 

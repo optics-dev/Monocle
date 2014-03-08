@@ -1,11 +1,14 @@
 package monocle.std
 
-import monocle.util.Bits
+import monocle.util.{Bounded, Bits}
 
 
 trait ByteInstances {
 
-  implicit val byteInstance: Bits[Byte] = new Bits[Byte] {
+  implicit val byteInstance: Bits[Byte] = new Bits[Byte] with Bounded[Byte] {
+
+    val MaxValue: Byte = Byte.MaxValue
+    val MinValue: Byte = Byte.MinValue
 
     val bitSize: Int = 8
 
