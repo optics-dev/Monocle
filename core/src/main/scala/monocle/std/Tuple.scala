@@ -6,18 +6,7 @@ object tuple extends TupleInstances
 
 trait TupleInstances {
 
-  def pairToFirstArg[S, T]: SimpleLens[(S, T), S] = {
-    def get(pair: (S, T)): S = pair._1
-    def set(pair: (S, T), newValue: S) : (S, T) = pair.copy(_1 = newValue)
-
-    SimpleLens(get, set)
-  }
-
-  def pairToSecondArg[S, T]: SimpleLens[(S, T), T] = {
-    def get(pair: (S, T)): T = pair._2
-    def set(pair: (S, T), newValue: T) : (S, T) = pair.copy(_2 = newValue)
-
-    SimpleLens(get, set)
-  }
+  def _1[A, B]: SimpleLens[(A, B), A] = SimpleLens(_._1, (pair, s) => pair.copy(_1 = s))
+  def _2[A, B]: SimpleLens[(A, B), B] = SimpleLens(_._2, (pair, t) => pair.copy(_2 = t))
 
 }
