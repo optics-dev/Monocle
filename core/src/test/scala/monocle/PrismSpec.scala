@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.std.int._
+import monocle.std.char._
 import org.specs2.scalaz.Spec
 import scalaz.Equal
 
