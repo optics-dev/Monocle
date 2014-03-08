@@ -10,7 +10,7 @@ class LensSpec extends Spec {
 
   case class Example(s: String, i: Int)
 
-  val StringLens = Macro.mkLens[Example, String]("s")
+  val StringLens = SimpleLens[Example, String](_.s, (ex, s) => ex.copy(s = s))
 
   implicit val exampleGen: Arbitrary[Example] = Arbitrary(for {
     s <- arbitrary[String]
