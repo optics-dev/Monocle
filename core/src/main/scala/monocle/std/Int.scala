@@ -2,14 +2,15 @@ package monocle.std
 
 import monocle.SimplePrism
 import monocle.bits.Bits
-
+import monocle.bounded.Bounded._
+import monocle.bounded.Bounded
 
 trait IntInStances {
 
-  val intToChar: SimplePrism[Int, Char] =
-    SimplePrism[Int, Char](_.toInt, { n: Int => if (n > Char.MaxValue || n < Char.MinValue) None else Some(n.toChar) })
+  implicit val intInstance: Bits[Int] with Bounded[Int] = new Bits[Int] with Bounded[Int] {
 
-  implicit val intInstance: Bits[Int] = new Bits[Int] {
+    override val MaxValue: Int = Int.MaxValue
+    override val MinValue: Int = Int.MinValue
 
     val bitSize: Int = 32
 
@@ -30,6 +31,9 @@ trait IntInStances {
     def negate(a: Int): Int = ~a
   }
 
+  val longToInt: SimplePrism[Long, Int] = safeCast(_.toLong, _.toInt)
+
 }
 
 object int extends IntInStances
+

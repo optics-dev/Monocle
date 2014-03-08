@@ -1,11 +1,16 @@
 package monocle.std
 
 import monocle.bits.Bits
-
+import monocle.SimplePrism
+import monocle.bounded.Bounded._
+import monocle.bounded.Bounded
 
 trait CharInstances {
 
-  implicit val charInstance: Bits[Char] = new Bits[Char] {
+  implicit val charInstance = new Bits[Char] with Bounded[Char] {
+
+    override val MaxValue: Char = Char.MaxValue
+    override val MinValue: Char = Char.MinValue
 
     val bitSize: Int = 16
 
@@ -23,6 +28,9 @@ trait CharInstances {
     def negate(a: Char): Char = (~a).toChar
     def signed(a: Char): Boolean = a.signum > 0
   }
+
+  val longToChar: SimplePrism[Long, Char] = safeCast(_.toInt, _.toChar)
+  val intToChar: SimplePrism[Int, Char] = safeCast(_.toInt, _.toChar)
 
 }
 
