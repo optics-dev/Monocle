@@ -1,6 +1,10 @@
-package monocle
+package monocle.std
 
-package object tuple {
+import monocle.SimpleLens
+
+object tuple extends TupleInstances
+
+trait TupleInstances {
 
   def pairToFirstArg[S, T]: SimpleLens[(S, T), S] = {
     def get(pair: (S, T)): S = pair._1
