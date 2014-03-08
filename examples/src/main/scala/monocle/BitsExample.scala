@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.bits._
+import monocle.util.Bits._
 
 object BitsExample extends App {
   import monocle.std.char._

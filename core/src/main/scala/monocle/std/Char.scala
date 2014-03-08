@@ -1,16 +1,15 @@
 package monocle.std
 
-import monocle.bits.Bits
 import monocle.SimplePrism
-import monocle.bounded.Bounded._
-import monocle.bounded.Bounded
+import monocle.util.{Bits, Bounded}
+import monocle.util.Bounded._
 
 trait CharInstances {
 
   implicit val charInstance = new Bits[Char] with Bounded[Char] {
 
-    override val MaxValue: Char = Char.MaxValue
-    override val MinValue: Char = Char.MinValue
+    val MaxValue: Char = Char.MaxValue
+    val MinValue: Char = Char.MinValue
 
     val bitSize: Int = 16
 

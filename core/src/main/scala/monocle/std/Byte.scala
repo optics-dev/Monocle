@@ -1,7 +1,6 @@
 package monocle.std
 
-import monocle.SimplePrism
-import monocle.bits.Bits
+import monocle.util.Bits
 
 
 trait ByteInstances {

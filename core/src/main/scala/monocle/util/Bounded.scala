@@ -1,4 +1,4 @@
-package monocle.bounded
+package monocle.util
 
 import monocle.SimplePrism
 
