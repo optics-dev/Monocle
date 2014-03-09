@@ -20,6 +20,11 @@ object TestUtil {
     }
   }
 
+  implicit def pairEq[A: Equal, B: Equal] = new Equal[(A, B)] {
+    override def equal(p1: (A, B), p2: (A, B)): Boolean =
+      Equal[A].equal(p1._1, p2._1) && Equal[B].equal(p1._2, p2._2)
+  }
+
 
 
 }
