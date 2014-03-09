@@ -1,4 +1,3 @@
-//Created By Ilan Godik
 package monocle
 
 import monocle.std.tuple._
