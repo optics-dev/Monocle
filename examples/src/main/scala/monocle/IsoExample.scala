@@ -1,19 +1,27 @@
 package monocle
 
-import monocle.ExampleInstances.Location
 
 object IsoExample extends App {
-  import Location._
+  
+  case class Point(_x: Int, _y: Int)
+  val x = Macro.mkLens[Point, Int]("_x")
+  
 
-  val locationPairIso = SimpleIso[Location, (Double, Double)](
-    { l => (l._latitude, l._longitude) },
-    { case (lat, long) => Location(lat, long) })
+  val iso = SimpleIso[Point, (Int, Int)](
+    { l => (l._x, l._y) },
+    { case (_x, _y) => Point(_x, _y) }
+  )
 
-  val l = Location(3.0, 5.0)
-  val p = (3.0, 5.0)
+  val point = Point(3, 5)
+  val tuple = (3, 5)
 
-  println(locationPairIso.set(l, (4.0, 6.0))) // Location(4.0, 6.0)
+  println(iso.set(point, (4, 6)))  // Point(4, 6)
+  println(iso.reverse compose x modify (tuple, _ + 1)) // (4, 5)
 
-  println(locationPairIso.reverse compose latitude modify (p, _ + 1)) // (4.0, 5.0)
+  import monocle.std.tuple._
+  val xSynonym = iso compose _1[Int, Int, Int]
+
+  println(xSynonym get Point(3, 4))      // 3
+  println(xSynonym set (Point(3, 4), 4)) // Point(4, 4)
 
 }

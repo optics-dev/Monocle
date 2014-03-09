@@ -1,14 +1,25 @@
 package monocle
 
-import monocle.ExampleInstances._
+import monocle.Macro._
+import monocle.std.tuple._
+import scala.Some
 import scalaz.std.AllInstances._
 
 object Example extends App {
-  import Address._
-  import Location._
-  import Person._
+  case class Address(_city: String, _postcode: String, _location: (Int, Int))
+  case class Person(_age: Int, _name: String, _address: Address)
 
-  val l = Location(2, 6)
+  // Some boiler plate code to create Lens. We can probably remove it with Macro annotation
+  val postcode = mkLens[Address, String]("_postcode")
+  val city     = mkLens[Address, String]("_city")
+  val location = mkLens[Address, (Int, Int)]("_location")
+
+  val age      = mkLens[Person, Int]("_age")
+  val name     = mkLens[Person, String]("_name")
+  val address  = mkLens[Person, Address]("_address")
+
+
+  val l = (2, 6)
   val a = Address("London", "EC1...", l)
   val p = Person(25, "Roger", a)
 
@@ -20,15 +31,15 @@ object Example extends App {
   println((address compose city).modify(p, _ + "!!!"))
   println((address compose city).lift(p, city => Option(city)))
 
-  println(locationTraversal.toListOf(l))
-  println(locationTraversal.set(l, 1.0))
-  println(locationTraversal.fold(l))
-  println(locationTraversal.modify(l, _ + 2))
+  println(both.toListOf(l))
+  println(both.set(l, 1.0))
+  println(both.fold(l))
+  println(both.modify(l, (_: Int) + 2))
 
-  println(locationTraversal.multiLift(l, pos => List(pos + 1, pos, pos - 1)))
+  println(both.multiLift(l, { pos: Int => List(pos + 1, pos, pos - 1)} ))
 
   // composition of lenses and traversal
-  println((address compose location compose locationTraversal).toListOf(p))
+  println((address compose location compose both[Int, Int]).toListOf(p))
 
   val int2DoubleOption = Traversal[Option, Int, Double]
 
@@ -37,16 +48,14 @@ object Example extends App {
   println(int2DoubleOption.toListOf(someInt))
 
   import monocle.syntax.lens._
-  import monocle.syntax.traversal._
   import scala.language.postfixOps
 
-  val address2Latitude = address oo location oo latitude
 
   println(p >- address oo city get)
-  println(p >- address oo location oo latitude modify (_ + 1))
+  println(p >- (address oo location oo _1) modify (_ + 1))
 
-  println(p >-- address oo location oo locationTraversal toListOf)
-  println(p >-- address oo location oo locationTraversal set 2L)
+  println(p >- address oo location oo both[Int, Int] toListOf)
+  println(p >- address oo location oo both[Int, Int] set 2)
 
 }
 
