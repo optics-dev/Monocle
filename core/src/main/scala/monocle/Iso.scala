@@ -7,11 +7,16 @@ import scalaz.{ Equal, Functor }
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.
  */
-trait Iso[S, T, A, B] extends Lens[S, T, A, B] with Prism[S, T, A, B] {
+trait Iso[S, T, A, B] extends Lens[S, T, A, B] with Prism[S, T, A, B] { self =>
 
   def reverse: Iso[B, A, T, S]
 
   def re: Getter[B, T] = reverse.asGetter
+
+  def compose[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = new Iso[S, T, C, D] {
+    def lift[F[_]: Functor](from: S, f: C => F[D]): F[T] = self.lift(from, other.lift(_, f))
+    def reverse: Iso[D, C, T, S] = other.reverse compose self.reverse
+  }
 
 }
 
