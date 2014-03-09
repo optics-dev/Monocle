@@ -21,6 +21,7 @@ object BuildSettings {
 
 object Dependencies {
   val scalaz       = "org.scalaz"      %% "scalaz-core"               % "7.0.5"
+  val shapeless    = "com.chuusai"     % "shapeless"                  % "2.0.0-M1" cross CrossVersion.full
   val scalaCheck   = "org.scalacheck"  %% "scalacheck"                % "1.10.1"
   val scalaCheckBinding = "org.scalaz" %% "scalaz-scalacheck-binding" % "7.0.5"        % "test"
   val specs2       = "org.specs2"      %% "specs2"                    % "1.12.3"       % "test"
@@ -47,7 +48,7 @@ object ScalaLensBuild extends Build {
     "monocle-core",
     file("core"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz) ++ macrosDep ++ testsDep
+      libraryDependencies ++= Seq(scalaz, shapeless) ++ macrosDep ++ testsDep
     )
   )
 
@@ -56,7 +57,7 @@ object ScalaLensBuild extends Build {
     file("examples"),
     settings = buildSettings ++ Seq(
       publishArtifact := false,
-      libraryDependencies ++= Seq(scalaz)
+      libraryDependencies ++= Seq(scalaz, shapeless)
     )
   ) dependsOn(core)
 }
