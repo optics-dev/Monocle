@@ -7,11 +7,7 @@ import org.specs2.scalaz.Spec
 
 class BitsSpec extends Spec {
 
-  import monocle.std.boolean._
-  import monocle.std.byte._
-  import monocle.std.char._
-  import monocle.std.int._
-  import monocle.std.long._
+  import monocle.std.anyval._
 
   checkAll("atBit[Int] first bit"    , Lens.laws(atBit[Int](0)))
   checkAll("atBit[Int] last bit"     , Lens.laws(atBit[Int](-1)))
