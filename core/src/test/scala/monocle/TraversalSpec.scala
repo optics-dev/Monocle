@@ -25,10 +25,4 @@ class TraversalSpec extends Spec {
 
   checkAll(Traversal.laws(locationTraversal))
 
-
-  //  property("get ordered") {
-  //    forAll { (location: Location) =>
-  //      LatLongTraversal.get(location) should be (List(location.latitude, location.longitude))
-  //    }
-  //  }
 }

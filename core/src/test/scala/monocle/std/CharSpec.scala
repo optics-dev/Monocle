@@ -7,7 +7,7 @@ import org.specs2.scalaz.Spec
 
 class CharSpec extends Spec {
 
-  checkAll(Prism.laws(intToChar))
-  checkAll(Prism.laws(longToChar))
+  checkAll("intToChar", Prism.laws(intToChar))
+  checkAll("longToChar", Prism.laws(longToChar))
 
 }

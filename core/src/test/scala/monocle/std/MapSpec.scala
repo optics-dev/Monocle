@@ -10,6 +10,6 @@ class MapSpec extends Spec {
 
   implicit val mapEq = Equal.equalA[Map[Int, String]]
 
-  checkAll(Lens.laws(at[Int, String](1)))
+  checkAll("at", Lens.laws(at[Int, String](1)))
 
 }

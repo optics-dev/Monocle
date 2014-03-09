@@ -8,7 +8,7 @@ import org.specs2.scalaz.Spec
 
 class ByteSpec extends Spec {
 
-  checkAll(Prism.laws(intToByte))
-  checkAll(Prism.laws(longToByte))
+  checkAll("intToByte", Prism.laws(intToByte))
+  checkAll("longToByte", Prism.laws(longToByte))
 
 }

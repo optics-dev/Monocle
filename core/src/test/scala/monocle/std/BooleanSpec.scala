@@ -8,9 +8,9 @@ import org.specs2.scalaz.Spec
 
 class BooleanSpec extends Spec {
 
-  checkAll(Prism.laws(byteToBoolean))
-  checkAll(Prism.laws(charToBoolean))
-  checkAll(Prism.laws(intToBoolean))
-  checkAll(Prism.laws(longToBoolean))
+  checkAll("byteToBoolean", Prism.laws(byteToBoolean))
+  checkAll("charToBoolean", Prism.laws(charToBoolean))
+  checkAll("intToBoolean", Prism.laws(intToBoolean))
+  checkAll("longToBoolean", Prism.laws(longToBoolean))
 
 }

@@ -12,13 +12,13 @@ class BitsSpec extends Spec {
   import monocle.std.char._
   import monocle.std.int._
 
-  checkAll(Lens.laws(atBit[Int](0)))
-  checkAll(Lens.laws(atBit[Int](-1)))
+  checkAll("atBit[Int] first bit"    , Lens.laws(atBit[Int](0)))
+  checkAll("atBit[Int] last bit"     , Lens.laws(atBit[Int](-1)))
 
-  checkAll(Lens.laws(atBit[Char](0)))
+  checkAll("atBit[Char] first bit"   , Lens.laws(atBit[Char](0)))
 
-  checkAll(Lens.laws(atBit[Byte](0)))
+  checkAll("atBit[Byte] first bit"   , Lens.laws(atBit[Byte](0)))
 
-  checkAll(Lens.laws(atBit[Boolean](0)))
+  checkAll("atBit[Boolean] first bit", Lens.laws(atBit[Boolean](0)))
 
 }
