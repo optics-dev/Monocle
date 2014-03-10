@@ -11,13 +11,12 @@ object Example extends App {
 
   // Some boiler plate code to create Lens. We can probably remove it with Macro annotation
   val postcode = mkLens[Address, String]("_postcode")
-  val city     = mkLens[Address, String]("_city")
+  val city = mkLens[Address, String]("_city")
   val location = mkLens[Address, (Int, Int)]("_location")
 
-  val age      = mkLens[Person, Int]("_age")
-  val name     = mkLens[Person, String]("_name")
-  val address  = mkLens[Person, Address]("_address")
-
+  val age = mkLens[Person, Int]("_age")
+  val name = mkLens[Person, String]("_name")
+  val address = mkLens[Person, Address]("_address")
 
   val l = (2, 6)
   val a = Address("London", "EC1...", l)
@@ -36,7 +35,7 @@ object Example extends App {
   println(both.fold(l))
   println(both.modify(l, (_: Int) + 2))
 
-  println(both.multiLift(l, { pos: Int => List(pos + 1, pos, pos - 1)} ))
+  println(both.multiLift(l, { pos: Int => List(pos + 1, pos, pos - 1) }))
 
   // composition of lenses and traversal
   println((address compose location compose both[Int, Int]).toListOf(p))
@@ -49,7 +48,6 @@ object Example extends App {
 
   import monocle.syntax.lens._
   import scala.language.postfixOps
-
 
   println(p >- address oo city get)
   println(p >- (address oo location oo _1) modify (_ + 1))

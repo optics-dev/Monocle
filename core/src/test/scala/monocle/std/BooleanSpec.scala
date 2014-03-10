@@ -5,7 +5,6 @@ import monocle.TestUtil._
 import monocle.std.boolean._
 import org.specs2.scalaz.Spec
 
-
 class BooleanSpec extends Spec {
 
   checkAll("byteToBoolean", Prism.laws(byteToBoolean))

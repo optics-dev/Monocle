@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.SimplePrism
-import monocle.util.{Bits, Bounded}
+import monocle.util.{ Bits, Bounded }
 import monocle.util.Bounded._
 
 trait CharInstances {
@@ -13,7 +13,7 @@ trait CharInstances {
 
     val bitSize: Int = 16
 
-    def bitwiseOr(a1: Char, a2: Char): Char  = (a1 | a2).toChar
+    def bitwiseOr(a1: Char, a2: Char): Char = (a1 | a2).toChar
     def bitwiseAnd(a1: Char, a2: Char): Char = (a1 & a2).toChar
     def bitwiseXor(a1: Char, a2: Char): Char = (a1 ^ a2).toChar
 

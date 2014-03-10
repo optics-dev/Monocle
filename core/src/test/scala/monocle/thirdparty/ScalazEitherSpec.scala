@@ -14,7 +14,7 @@ class ScalazEitherSpec extends Spec {
   implicit def arbitraryEither[A: Arbitrary, B: Arbitrary]: Arbitrary[A \/ B] =
     Arbitrary(arbitrary[Either[A, B]] map fromEither)
 
-  checkAll("_Left" , Prism.laws(_Left[Int, String, Int]))
+  checkAll("_Left", Prism.laws(_Left[Int, String, Int]))
   checkAll("_Right", Prism.laws(_Right[Int, String, String]))
 
 }

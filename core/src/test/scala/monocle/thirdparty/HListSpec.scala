@@ -1,6 +1,5 @@
 package monocle.thirdparty
 
-import monocle.Lens
 import monocle.TestUtil._
 import monocle.thirdparty.hlist._
 import org.scalacheck.Arbitrary

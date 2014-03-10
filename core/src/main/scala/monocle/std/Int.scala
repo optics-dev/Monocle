@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.SimplePrism
-import monocle.util.{Bits, Bounded}
+import monocle.util.{ Bits, Bounded }
 import monocle.util.Bounded._
 
 trait IntInStances {
@@ -13,7 +13,7 @@ trait IntInStances {
 
     val bitSize: Int = 32
 
-    def bitwiseOr(a1: Int, a2: Int) : Int = a1 | a2
+    def bitwiseOr(a1: Int, a2: Int): Int = a1 | a2
     def bitwiseAnd(a1: Int, a2: Int): Int = a1 & a2
     def bitwiseXor(a1: Int, a2: Int): Int = a1 ^ a2
 
@@ -21,7 +21,6 @@ trait IntInStances {
 
     def shiftL(a: Int, n: Int): Int = a << n
     def shiftR(a: Int, n: Int): Int = a >> n
-
 
     def testBit(a: Int, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
 

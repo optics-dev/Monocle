@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.TestUtil._
 import monocle.std.tuple._
-import monocle.{Traversal, Lens}
+import monocle.{ Traversal, Lens }
 import org.specs2.scalaz.Spec
 
 class TupleSpec extends Spec {

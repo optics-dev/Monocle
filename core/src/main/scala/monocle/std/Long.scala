@@ -2,7 +2,6 @@ package monocle.std
 
 import monocle.util.Bits
 
-
 object long extends LongInstances
 
 trait LongInstances {
@@ -16,7 +15,7 @@ trait LongInstances {
     def shiftR(a: Long, n: Int): Long = a >> n
     def shiftL(a: Long, n: Int): Long = a << n
     def bitwiseXor(a1: Long, a2: Long): Long = a1 ^ a2
-    def bitwiseOr(a1: Long, a2: Long) : Long = a1 | a2
+    def bitwiseOr(a1: Long, a2: Long): Long = a1 | a2
     def bitwiseAnd(a1: Long, a2: Long): Long = a1 & a2
 
     val bitSize: Int = 32
