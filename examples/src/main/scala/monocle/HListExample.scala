@@ -2,6 +2,7 @@ package monocle
 
 import monocle.thirdparty.hlist._
 import shapeless._
+import shapeless.Generic._
 
 object HListExample extends App {
 
@@ -18,9 +19,12 @@ object HListExample extends App {
 
 
   case class Person(name : String, age : Int)
-  val julien = Person("Julien", 27)
+  val character = Person("Julien", 27)
 
-  println( first.get(julien) )
+  implicit val gen = Generic.product[Person]
+
+  println( first.get(character) )
+  println( first.set(character, "Roger"))
 
 
 

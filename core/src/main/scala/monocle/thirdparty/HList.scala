@@ -1,7 +1,9 @@
 package monocle.thirdparty
 
 import monocle.{SimpleLens, Iso, Lens}
+import shapeless.HList._
 import shapeless._
+import shapeless.ops.hlist.{ReplaceAt, At}
 
 
 object hlist extends HListInstances
@@ -20,9 +22,16 @@ trait HListInstances {
       hl => hl.head -> hl.tail.head
     )
 
-  def first[S, A, L <: HList](implicit gen : Generic.Aux[S, L], nth : HListNthLensAux[L, shapeless.nat._0.N, A]) = at(shapeless.nat._0)
 
-  def at[S, A, L <: HList](n : Nat)(implicit gen : Generic.Aux[S, L], nth : HListNthLensAux[L, n.N, A]) =
-    SimpleLens[S, A](s => nth.get(gen.to(s)), (s, a) => gen.from(nth.set(gen.to(s))(a)) )
+  def first[S, A, L <: HList](implicit gen: Generic.Aux[S, L],
+                                        at: At.Aux[L, shapeless.nat._0.N, A],
+                                   replace: ReplaceAt.Aux[L, shapeless.nat._0.N, A, (A, L)]) = _at(shapeless.nat._0)
+
+
+
+  def _at[S, A, L <: HList](n : Nat)(implicit gen: Generic.Aux[S, L],
+                                               at: At.Aux[L, n.N, A],
+                                          replace: ReplaceAt.Aux[L, n.N, A, (A, L)]) =
+    SimpleLens[S, A](s => gen.to(s).at(n), (s, a) => gen.from(gen.to(s).updatedAt(n, a)) )
 
 }
