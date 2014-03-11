@@ -41,7 +41,7 @@ object Iso {
     include(Prism.laws(iso))
 
     property("double inverse") = forAll { (from: S, newValue: A) =>
-      iso.reverse.reverse.get(from) === iso.get(from)
+      iso.reverse.reverse.get(from)           === iso.get(from)
       iso.reverse.reverse.set(from, newValue) === iso.set(from, newValue)
     }
 
