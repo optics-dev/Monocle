@@ -13,7 +13,7 @@ trait ByteInstances {
 
     val bitSize: Int = 8
 
-    def bitwiseOr(a1: Byte, a2: Byte): Byte = (a1 | a2).toByte
+    def bitwiseOr (a1: Byte, a2: Byte): Byte = (a1 | a2).toByte
     def bitwiseAnd(a1: Byte, a2: Byte): Byte = (a1 & a2).toByte
     def bitwiseXor(a1: Byte, a2: Byte): Byte = (a1 ^ a2).toByte
 
@@ -29,7 +29,7 @@ trait ByteInstances {
     def negate(a: Byte): Byte = (~a).toByte
   }
 
-  val intToByte: SimplePrism[Int, Byte] = safeCast(_.toInt, _.toByte)
+  val intToByte : SimplePrism[Int,  Byte] = safeCast(_.toInt , _.toByte)
   val longToByte: SimplePrism[Long, Byte] = safeCast(_.toLong, _.toByte)
 
 }

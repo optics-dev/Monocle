@@ -5,6 +5,7 @@ import scalaz.Monoid
 
 trait AppliedFold[S, A] { self =>
   val from: S
+
   def _fold: Fold[S, A]
 
   def foldMap[B: Monoid](f: A => B): B = _fold.foldMap(from)(f)

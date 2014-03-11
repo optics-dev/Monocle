@@ -4,7 +4,7 @@ import monocle.SimplePrism
 import monocle.util.{ Bits, Bounded }
 import monocle.util.Bounded._
 
-trait IntInStances {
+trait IntInstances {
 
   implicit val intInstance: Bits[Int] with Bounded[Int] = new Bits[Int] with Bounded[Int] {
 
@@ -13,7 +13,7 @@ trait IntInStances {
 
     val bitSize: Int = 32
 
-    def bitwiseOr(a1: Int, a2: Int): Int = a1 | a2
+    def bitwiseOr (a1: Int, a2: Int): Int = a1 | a2
     def bitwiseAnd(a1: Int, a2: Int): Int = a1 & a2
     def bitwiseXor(a1: Int, a2: Int): Int = a1 ^ a2
 
@@ -33,5 +33,5 @@ trait IntInStances {
 
 }
 
-object int extends IntInStances
+object int extends IntInstances
 

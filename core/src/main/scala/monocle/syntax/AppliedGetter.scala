@@ -5,6 +5,7 @@ import monocle.Getter
 trait AppliedGetter[S, A] { self =>
 
   val from: S
+
   def _getter: Getter[S, A]
 
   def get: A = _getter.get(from)

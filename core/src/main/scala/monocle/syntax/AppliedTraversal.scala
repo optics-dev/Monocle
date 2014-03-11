@@ -8,6 +8,7 @@ trait AppliedTraversal[S, T, A, B] extends AppliedSetter[S, T, A, B] with Applie
   def _traversal: Traversal[S, T, A, B]
 
   def _fold: Fold[S, A] = _traversal
+
   def _setter: Setter[S, T, A, B] = _traversal
 
   def multiLift[F[_]: Applicative](f: A => F[B]): F[T] = _traversal.multiLift[F](from, f)

@@ -13,7 +13,7 @@ trait BooleanInstances {
 
     val bitSize: Int = 1
 
-    def bitwiseOr(a1: Boolean, a2: Boolean): Boolean = a1 | a2
+    def bitwiseOr (a1: Boolean, a2: Boolean): Boolean = a1 | a2
     def bitwiseAnd(a1: Boolean, a2: Boolean): Boolean = a1 & a2
     def bitwiseXor(a1: Boolean, a2: Boolean): Boolean = a1 ^ a2
 

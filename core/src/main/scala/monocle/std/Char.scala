@@ -13,7 +13,7 @@ trait CharInstances {
 
     val bitSize: Int = 16
 
-    def bitwiseOr(a1: Char, a2: Char): Char = (a1 | a2).toChar
+    def bitwiseOr (a1: Char, a2: Char): Char = (a1 | a2).toChar
     def bitwiseAnd(a1: Char, a2: Char): Char = (a1 & a2).toChar
     def bitwiseXor(a1: Char, a2: Char): Char = (a1 ^ a2).toChar
 
@@ -29,7 +29,7 @@ trait CharInstances {
   }
 
   val longToChar: SimplePrism[Long, Char] = safeCast(_.toInt, _.toChar)
-  val intToChar: SimplePrism[Int, Char] = safeCast(_.toInt, _.toChar)
+  val intToChar : SimplePrism[Int,  Char] = safeCast(_.toInt, _.toChar)
 
 }
 

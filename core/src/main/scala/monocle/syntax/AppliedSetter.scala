@@ -4,6 +4,7 @@ import monocle.Setter
 
 trait AppliedSetter[S, T, A, B] { self =>
   val from: S
+
   def _setter: Setter[S, T, A, B]
 
   def set(newValue: B): T = _setter.set(from, newValue)
