@@ -22,16 +22,16 @@ trait HListInstances {
       hl => hl.head -> hl.tail.head
     )
 
-
   def first[S, A, L <: HList](implicit gen: Generic.Aux[S, L],
                                         at: At.Aux[L, shapeless.nat._0.N, A],
-                                   replace: ReplaceAt.Aux[L, shapeless.nat._0.N, A, (A, L)]) = _at(shapeless.nat._0)
+                                   replace: ReplaceAt.Aux[L, shapeless.nat._0.N, A, (A, L)]): Lens[S, S, A, A] =
+    _at(shapeless.nat._0)
 
 
 
   def _at[S, A, L <: HList](n : Nat)(implicit gen: Generic.Aux[S, L],
                                                at: At.Aux[L, n.N, A],
-                                          replace: ReplaceAt.Aux[L, n.N, A, (A, L)]) =
+                                          replace: ReplaceAt.Aux[L, n.N, A, (A, L)]): Lens[S, S, A, A]  =
     SimpleLens[S, A](s => gen.to(s).at(n), (s, a) => gen.from(gen.to(s).updatedAt(n, a)) )
 
 }

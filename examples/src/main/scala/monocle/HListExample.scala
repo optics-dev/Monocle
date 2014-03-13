@@ -18,14 +18,19 @@ object HListExample extends App {
   println( (pairToHListIso compose _1[Int, HL[String,HNil], Char]).set((1,"bla"), 'c') )  // ('c', "bla")
 
 
-  case class Person(name : String, age : Int)
-  val character = Person("Julien", 27)
+  case class Person(_name : String, _age : Int, _location: (Int, Int))
+  val location = Macro.mkLens[Person, (Int, Int)]("_location")
+
+  val character = Person("Bob", 27, (3,4))
 
   implicit val gen = Generic.product[Person]
 
-  println( first.get(character) )
-  println( first.set(character, "Roger"))
+  println( first.get(character) )         // Bob
+  println( first.set(character, "Roger")) // Person("Roger", 27, (3,4))
 
+  println( (location lensCompose first) get character  )
 
+  // this does not compile!
+  // println( (location compose first) get character  )
 
 }
