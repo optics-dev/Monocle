@@ -12,6 +12,8 @@ trait AppliedLens[S, T, A, B] extends AppliedTraversal[S, T, A, B] with AppliedG
 
   def lift[F[_]: Functor](f: A => F[B]): F[T] = _lens.lift[F](from, f)
 
+  def lCompose[C, D](other: Lens[A, B, C, D]): AppliedLens[S, T, C, D] = oo(other)
+
   def oo[C, D](other: Lens[A, B, C, D]): AppliedLens[S, T, C, D] = new AppliedLens[S, T, C, D] {
     val from: S = self.from
     val _lens: Lens[S, T, C, D] = self._lens compose other
