@@ -1,10 +1,10 @@
 package monocle
 
 import monocle.thirdparty.hlist._
-import shapeless.{Generic, HNil}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import scalaz.Equal
+import shapeless.{Generic, HNil}
 
 
 package object thirdparty {

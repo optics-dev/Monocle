@@ -27,7 +27,7 @@ object Dependencies {
   val specs2       = "org.specs2"      %% "specs2"                    % "1.12.3"       % "test"
   val scalazSpec2  = "org.typelevel"   %% "scalaz-specs2"             % "0.1.5"        % "test"
   val scalaReflect = "org.scala-lang"  %  "scala-reflect"             % BuildSettings.buildScalaVersion
-  val quasiquotes  = "org.scalamacros" % "quasiquotes"                % "2.0.0-M3" cross CrossVersion.full
+  val quasiquotes  = "org.scalamacros" %  "quasiquotes"                % "2.0.0-M3" cross CrossVersion.full
   val testsDep     = Seq(scalaCheck, scalaCheckBinding, specs2, scalazSpec2)
   val macrosDep    = Seq(scalaReflect, quasiquotes)
 }
@@ -48,9 +48,17 @@ object ScalaLensBuild extends Build {
     "monocle-core",
     file("core"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, shapeless) ++ macrosDep ++ testsDep
+      libraryDependencies ++= Seq(scalaz) ++ macrosDep ++ testsDep
     )
   )
+
+  lazy val generic: Project = Project(
+    "monocle-generic",
+    file("generic"),
+    settings = buildSettings ++ Seq(
+      libraryDependencies ++= Seq(scalaz, shapeless) ++ macrosDep ++ testsDep
+    )
+  ) dependsOn(core)
 
   lazy val examples: Project = Project(
     "monocle-examples",
@@ -59,7 +67,7 @@ object ScalaLensBuild extends Build {
       publishArtifact := false,
       libraryDependencies ++= Seq(scalaz, shapeless)
     )
-  ) dependsOn(core)
+  ) dependsOn(core, generic)
 }
 
 object ScalaLensPublishing  {
