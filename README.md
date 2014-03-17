@@ -8,7 +8,7 @@ Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://githu
 Sub projects:
 
 Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.
-Core only depends on scalaz for type classes and scalacheck to encode laws.
+Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes and [scalacheck](http://www.scalacheck.org/) to encode laws.
 
 Generic is an experiment to provide highly generalised Lens and Iso using HList from [shapeless](https://github.com/milessabin/shapeless).
 Generic focus is on beautiful abstraction and not efficiency (runtime or compile time).
