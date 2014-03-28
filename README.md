@@ -11,7 +11,7 @@ Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and
 Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes and [scalacheck](http://www.scalacheck.org/) to encode laws.
 
 Generic is an experiment to provide highly generalised Lens and Iso using HList from [shapeless](https://github.com/milessabin/shapeless).
-Generic focus is on beautiful abstraction and not efficiency (runtime or compile time).
+Generic focus is on neat abstraction but that may come at additional runtime or compile time cost.
 
 Example shows how other sub projects can be used.
 
