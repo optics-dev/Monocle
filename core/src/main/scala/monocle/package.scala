@@ -18,8 +18,8 @@ package object monocle {
   }
 
   object SimplePrism {
-    def apply[S, A](_reverseGet: A => S, seta: S => Option[A]): SimplePrism[S, A] =
-      Prism(_reverseGet, { s: S => seta(s).map(\/-(_)) getOrElse -\/(s) })
+    def apply[S, A](_reverseGet: A => S, _getOption: S => Option[A]): SimplePrism[S, A] =
+      Prism(_reverseGet, { s: S => _getOption(s).map(\/-(_)) getOrElse -\/(s) })
   }
 
 }
