@@ -7,7 +7,7 @@ import scalaz.std.AllInstances._
 
 class EitherSpec extends Spec {
 
-  checkAll("_Left" , Prism.laws(_Left[Int, String, Int]))
-  checkAll("_Right", Prism.laws(_Right[Int, String, String]))
+  checkAll("std left" , Prism.laws(left[Int, String, Int]))
+  checkAll("std right", Prism.laws(right[Int, String, String]))
 
 }
