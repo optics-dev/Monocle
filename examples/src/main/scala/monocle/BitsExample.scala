@@ -1,10 +1,10 @@
 package monocle
 
 import monocle.util.Bits._
+import monocle.std.char._
+import monocle.std.int._
 
 object BitsExample extends App {
-  import monocle.std.char._
-  import monocle.std.int._
 
   val atFirstBit = atBit[Int](0)
 
@@ -15,7 +15,12 @@ object BitsExample extends App {
 
   val atFirstBitForChar = atBit[Char](0)
 
-  println(atFirstBitForChar.get('x')) // false
+  println(atFirstBitForChar.get('x'))       // false
   println(atFirstBitForChar.set('x', true)) // y
+
+  import monocle.syntax.lens._
+
+  println( 3 |-> atBit(1) get )        // true
+  println( 3 |-> atBit(1) modify(!_) ) // 1
 
 }

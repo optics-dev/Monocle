@@ -1,7 +1,6 @@
 package monocle
 
 import monocle.thirdparty.hlist._
-import scala.language.postfixOps
 
 object HListExample extends App {
 
@@ -11,7 +10,7 @@ object HListExample extends App {
 
   import monocle.syntax.iso._
 
-  val l = example >- toHListIso get
+  val l = example <-> toHListIso get
 
   println( l ) // 1 :: "bla" :: true :: HNil
 

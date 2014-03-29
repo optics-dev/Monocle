@@ -6,10 +6,12 @@ package object syntax extends Syntax
 
 trait Syntax {
 
-  object lens extends ToLensOps with ToAppliedLensOps
+  object lens extends LensSyntax
 
-  object traversal extends ToTraversalOps with ToAppliedTraversalOps
+  object traversal extends TraversalSyntax
 
-  object iso extends ToAppliedIsoOps
+  object iso extends IsoSyntax
+
+  object prism extends PrismSyntax
 
 }

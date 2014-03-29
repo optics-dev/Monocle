@@ -12,7 +12,8 @@ object BuildSettings {
     organization      := "com.github.julien-truffaut",
     version           := "0.2-SNAPSHOT",
     scalaVersion      := buildScalaVersion,
-    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-language:higherKinds", "-language:implicitConversions"),
+    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
+      "-language:higherKinds", "-language:implicitConversions", "-language:postfixOps"),
     resolvers         += Resolver.sonatypeRepo("releases"),
     resolvers         += Resolver.sonatypeRepo("snapshots"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0-M3" cross CrossVersion.full)
