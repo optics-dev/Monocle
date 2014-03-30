@@ -13,7 +13,7 @@ trait Fold[S, A] { self =>
 
   def fold(from: S)(implicit ev: Monoid[A]): A = foldMap(from)(identity)
 
-  def toListOf(from: S): List[A] = foldMap(from)(List(_)).reverse
+  def getAll(from: S): List[A] = foldMap(from)(List(_)).reverse
 
   def headOption(from: S): Option[A] = foldMap(from)(Option(_).first)
 

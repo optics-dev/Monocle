@@ -11,7 +11,7 @@ trait AppliedFold[S, A] { self =>
 
   def fold(implicit ev: Monoid[A]): A = _fold.fold(from)
 
-  def toListOf: List[A] = _fold.toListOf(from)
+  def getAll: List[A] = _fold.getAll(from)
 
   def headOption: Option[A] = _fold.headOption(from)
 

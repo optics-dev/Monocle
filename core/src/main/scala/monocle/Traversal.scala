@@ -49,7 +49,7 @@ object Traversal {
     }
 
     property("set - get all") = forAll { (from: S, newValue: A) =>
-      traversal.toListOf(traversal.set(from, newValue)) === traversal.toListOf(from).map(_ => newValue)
+      traversal.getAll(traversal.set(from, newValue)) === traversal.getAll(from).map(_ => newValue)
     }
   }
 }

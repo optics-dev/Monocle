@@ -32,7 +32,7 @@ object Example extends App {
   println( (address compose city).modify(p, _ + "!!!") ) // Person(25, "Roger", Address("London!!!", "EC1...", (2, 6)))
   println( (address compose city).lift(p, city => Option(city)) ) // Some(Person(25, "Roger", Address("London", "EC1...", (2, 6))))
 
-  println( both.toListOf(l) ) // List(2, 6)
+  println( both.getAll(l) )   // List(2, 6)
   println( both.set(l, 1.0) ) // (1.0, 1.0)
   println( both.fold(l) )     // 8
   println( both.modify(l, (_: Int) + 2) ) // (4, 8)
@@ -40,12 +40,12 @@ object Example extends App {
   println( both.multiLift(l, { pos: Int => List(pos + 1, pos, pos - 1)} ) ) // List((3,7), (3,6), (3,5), (2,7), (2,6), (2,5), (1,7), (1,6), (1,5))
 
   // composition of lenses and traversal
-  println( (address compose location compose both[Int, Int]).toListOf(p) )
+  println( (address compose location compose both[Int, Int]).getAll(p) )
 
   import monocle.syntax.lens._
 
   println(p |-> address |-> city get)                       // London
-  println(p |-> address |-> location |->> both toListOf)    // List(2, 6)
+  println(p |-> address |-> location |->> both getAll)      // List(2, 6)
   println(p |-> address |-> location |-> _1 modify (_ + 1)) // Person(25, "Roger", Address("London", "EC1...", (3, 6)))
   println(p |-> address |-> location |->> both set 2)       // Person(25, "Roger", Address("London", "EC1...", (2, 2)))
 
