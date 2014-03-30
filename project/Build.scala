@@ -43,7 +43,7 @@ object ScalaLensBuild extends Build {
     settings = buildSettings ++ Seq(
       publishArtifact := false,
       run <<= run in Compile in core) ++ sonatypeSettings
-  ) aggregate(core, examples)
+  ) aggregate(core, generic, examples)
 
   lazy val core: Project = Project(
     "monocle-core",
@@ -59,7 +59,7 @@ object ScalaLensBuild extends Build {
     settings = buildSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, shapeless) ++ macrosDep ++ testsDep
     )
-  ) dependsOn(core)
+  ) dependsOn(core % "test->test;compile->compile")
 
   lazy val examples: Project = Project(
     "monocle-examples",
