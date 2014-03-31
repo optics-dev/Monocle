@@ -3,6 +3,7 @@ package monocle.std
 import monocle.SimplePrism
 import monocle.util.{Bits, Bounded}
 import monocle.util.Bounded._
+import scala.util.Try
 
 trait IntInStances {
 
@@ -32,6 +33,10 @@ trait IntInStances {
 
   val longToInt: SimplePrism[Long, Int] = safeCast(_.toLong, _.toInt)
 
+  val stringToInt: SimplePrism[String, Int] = SimplePrism(
+    _.toString,
+    { s => Try{s.toInt}.toOption }
+  )
 }
 
 object int extends IntInStances
