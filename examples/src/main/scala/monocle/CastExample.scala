@@ -1,6 +1,7 @@
 package monocle
 
 import monocle.std.char._
+import monocle.std.int._
 
 object CastExample extends App {
 
@@ -11,4 +12,7 @@ object CastExample extends App {
 
   println( 65 <-? intToChar getOption ) // Some(A)
 
+  println( "12345" <-? stringToInt getOption ) // Some(12345)
+  println( "1ff1" <-? stringToInt getOption ) // None
+  println( "Wrong number" <-? stringToInt getOption ) // None
 }
