@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.util.Constant
+import monocle.util.{Each, Constant}
 import monocle.util.Constant._
 import org.scalacheck.Prop._
 import org.scalacheck.{ Properties, Arbitrary }
@@ -39,6 +39,9 @@ object Traversal {
     def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
       Applicative[F].apply2(f(get1(from)), f(get2(from)))((v1, v2) => _set(from, v1, v2))
   }
+
+
+  def each[S, A](implicit ev: Each.Aux[S, A]): SimpleTraversal[S, A] = ev.each
 
   def laws[S: Arbitrary: Equal, A: Arbitrary: Equal](traversal: SimpleTraversal[S, A]) = new Properties("Traversal") {
     import scalaz.syntax.equal._
