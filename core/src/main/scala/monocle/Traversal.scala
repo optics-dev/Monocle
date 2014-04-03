@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.util.{Each, Constant}
+import monocle.util.Constant
 import monocle.util.Constant._
 import org.scalacheck.Prop._
 import org.scalacheck.{ Properties, Arbitrary }
@@ -35,16 +35,21 @@ object Traversal {
     def multiLift[F[_]: Applicative](from: T[A], f: A => F[B]): F[T[B]] = Traverse[T].traverse(from)(f)
   }
 
-  def make2[S, T, A, B](get1: S => A)(get2: S => A)(_set: (S, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+  def apply2[S, T, A, B](get1: S => A)(get2: S => A)(_set: (S, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
     def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
       Applicative[F].apply2(f(get1(from)), f(get2(from)))((v1, v2) => _set(from, v1, v2))
   }
 
+  def apply3[S, T, A, B](get1: S => A)(get2: S => A)(get3: S => A)(_set: (S, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
+      Applicative[F].apply3(f(get1(from)), f(get2(from)), f(get3(from)))((v1, v2, v3) => _set(from, v1, v2, v3))
+  }
 
-  def each[S, A](implicit ev: Each.Aux[S, A]): SimpleTraversal[S, A] = ev.each
 
   def laws[S: Arbitrary: Equal, A: Arbitrary: Equal](traversal: SimpleTraversal[S, A]) = new Properties("Traversal") {
+
     import scalaz.syntax.equal._
+
     include(Setter.laws(traversal))
 
     property("multi lift - identity") = forAll { from: S =>

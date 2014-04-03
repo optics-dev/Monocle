@@ -66,7 +66,7 @@ object ScalaLensBuild extends Build {
     file("examples"),
     settings = buildSettings ++ Seq(
       publishArtifact := false,
-      libraryDependencies ++= Seq(scalaz, shapeless)
+      libraryDependencies ++= Seq(scalaz, shapeless) ++ testsDep
     )
   ) dependsOn(core, generic)
 }
