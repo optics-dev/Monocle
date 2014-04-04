@@ -25,7 +25,7 @@ class MapExample extends Spec {
     // add a new value
     (map |-> at("Three") set Some(3)) shouldEqual Map("One" -> 1, "Two" -> 2, "Three" -> 3)
 
-    // can be compose with some to simplify modification
+    // can be composed with some to simplify modification
     import monocle.std.option.some
     (map |-> at("One") |->> some modify(_ + 1)) shouldEqual Map("One" -> 2, "Two" -> 2)
 
