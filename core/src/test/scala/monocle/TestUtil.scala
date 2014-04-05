@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.Equal
+import scalaz.{Order, Equal}
 
 
 object TestUtil {
@@ -19,6 +19,6 @@ object TestUtil {
   implicit def pairEq[A: Equal, B: Equal] = scalaz.std.tuple.tuple2Equal[A, B]
   implicit def tripleEq[A: Equal, B: Equal, C: Equal] = scalaz.std.tuple.tuple3Equal[A, B, C]
 
-  implicit def mapEq[A: Equal, B: Equal] = scalaz.std.map.mapEqual[A, B]
+  implicit def mapEq[K: Order, V: Equal] = scalaz.std.map.mapEqual[K, V]
 
 }
