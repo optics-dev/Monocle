@@ -12,6 +12,11 @@ class EachExample extends Spec {
     (None : Option[Int]) |->> each modify( _ + 1) shouldEqual None
   }
 
+  "Each can be used on List" in {
+    List(1, 2)    |->> each modify( _ + 1) shouldEqual List(2, 3)
+    List(1, 2, 3) |->> each modify( _ + 1) shouldEqual List(2, 3, 4)
+  }
+
   "Each can be used on Map to update all values" in {
     Map("One" -> 1, "Two" -> 2) |->> each modify( _ + 1) shouldEqual Map("One" -> 2, "Two" -> 3)
   }

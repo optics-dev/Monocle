@@ -14,4 +14,8 @@ class EachSpec extends Spec {
 
   checkAll("each option", Traversal.laws(each[Option[Int], Int]))
 
+  checkAll("each List", Traversal.laws(each[List[Int], Int]))
+
+  checkAll("each triple", Traversal.laws(each[(Int, Int, Int), Int]))
+
 }

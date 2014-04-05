@@ -28,6 +28,11 @@ trait EachInstances {
     def each: SimpleTraversal[Option[A], A] = monocle.std.option.some
   }
 
+  implicit def listEachInstance[A]: Each[List[A], A] = new Each[List[A], A] {
+    import scalaz.std.list._
+    def each: SimpleTraversal[List[A], A] = Traversal[List, A, A]
+  }
+
   implicit def pairEachInstance[A]: Each[(A, A), A] = new Each[(A, A), A] {
     def each: SimpleTraversal[(A, A), A] = monocle.std.tuple.both
   }
