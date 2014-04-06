@@ -12,7 +12,6 @@ class HListSpec extends Spec {
   checkAll("_1 from HList", Lens.laws(_1[Int, HL[String, HNil], Int]))
   checkAll("_2 from HList", Lens.laws(_2[Int, String, HNil, String]))
 
-
-  checkAll("toHListIso", Iso.laws(toHListIso[Example, IntStringHList]) )
+  checkAll("toHList", Iso.laws(toHList[Example, IntStringHList]) )
 
 }
