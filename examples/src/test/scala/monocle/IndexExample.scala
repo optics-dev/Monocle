@@ -11,7 +11,7 @@ class IndexExample extends Spec {
 
     (Map("One" -> 1, "Two" -> 2) |->> index("One") headOption) shouldEqual Some(1)
 
-    Map("One" -> 1, "Two" -> 2) |->> index("One") set 2 shouldEqual Map("One" -> 2, "Two" -> 2)
+    (Map("One" -> 1, "Two" -> 2) |->> index("One") set 2) shouldEqual Map("One" -> 2, "Two" -> 2)
 
   }
 
@@ -24,6 +24,11 @@ class IndexExample extends Spec {
     // setting or modifying a value at an index without value is a no op
     (List(0,1,2,3) |->> index(64) set 10)       shouldEqual List(0,1,2,3)
 
+  }
+
+  "index creates 0 or 1 Traversal from a String to a Char" in {
+
+    ("Hello World" |->> index(2) headOption) shouldEqual Some('l')
 
   }
 
