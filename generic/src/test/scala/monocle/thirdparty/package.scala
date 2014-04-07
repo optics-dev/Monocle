@@ -20,7 +20,7 @@ package object thirdparty {
   } yield Example(i, s))
 
   implicit val arbitraryHListIntString: Arbitrary[IntStringHList] =
-    Arbitrary(arbitrary[Example].map(toHListIso[Example, IntStringHList].get))
+    Arbitrary(arbitrary[Example].map(toHList[Example, IntStringHList].get))
 
   implicit val equalExample        = Equal.equalA[Example]
   implicit val equalHListIntString = Equal.equalA[IntStringHList]

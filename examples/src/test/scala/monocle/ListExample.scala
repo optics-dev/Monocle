@@ -1,0 +1,22 @@
+package monocle
+
+import monocle.std.list._
+import org.specs2.scalaz.Spec
+
+class ListExample extends Spec {
+  
+  "head creates a Lens from a List to its headOption" in {
+
+    head.get(List(1,2,3)) shouldEqual Some(1)
+    head.get(Nil)         shouldEqual None
+
+    head.set(List(1,2,3), Some(0)) shouldEqual List(0,2,3)
+    // delete head
+    head.set(List(1,2,3), None)    shouldEqual List(2,3)
+    // add head
+    head.set(Nil, Some(1))         shouldEqual List(1)
+
+  }
+
+  
+}

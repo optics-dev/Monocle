@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.Equal
+import scalaz.{Order, Equal}
 
 
 object TestUtil {
@@ -13,19 +13,13 @@ object TestUtil {
   implicit val longEqual    = Equal.equalA[Long]
   implicit val stringEqual  = Equal.equalA[String]
 
-  implicit def optEq[A: Equal] = new Equal[Option[A]] {
-    override def equal(opt1: Option[A], opt2: Option[A]): Boolean = (opt1, opt2) match {
-      case (None, None)         => true
-      case (Some(a1), Some(a2)) => Equal[A].equal(a1, a2)
-      case _                    => false
-    }
-  }
+  implicit def optEq[A: Equal] = scalaz.std.option.optionEqual[A]
 
-  implicit def pairEq[A: Equal, B: Equal] = new Equal[(A, B)] {
-    override def equal(p1: (A, B), p2: (A, B)): Boolean =
-      Equal[A].equal(p1._1, p2._1) && Equal[B].equal(p1._2, p2._2)
-  }
+  implicit def listEq[A: Equal] = scalaz.std.list.listEqual[A]
 
+  implicit def pairEq[A: Equal, B: Equal] = scalaz.std.tuple.tuple2Equal[A, B]
+  implicit def tripleEq[A: Equal, B: Equal, C: Equal] = scalaz.std.tuple.tuple3Equal[A, B, C]
 
+  implicit def mapEq[K: Order, V: Equal] = scalaz.std.map.mapEqual[K, V]
 
 }

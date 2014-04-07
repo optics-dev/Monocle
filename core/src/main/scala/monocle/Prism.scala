@@ -46,13 +46,14 @@ object Prism {
 
     include(Traversal.laws(prism))
 
-    property("re - getOption") = forAll { value: A =>
-      prism.getOption(prism.re.get(value)) === Some(value)
+    property("reverseGet - getOption") = forAll { value: A =>
+      prism.getOption(prism.reverseGet(value)) === Some(value)
     }
 
-    property("focus is smaller") = forAll { (from: S, newValue: A) =>
+    property("getOption - reverseGet") = forAll { (from: S, newValue: A) =>
+      // if we can extract an A from S, then this A fully describes S
       prism.getOption(from).map { someA =>
-        prism.re.get(someA) === from
+        prism.reverseGet(someA) === from
       } getOrElse true
     }
   }

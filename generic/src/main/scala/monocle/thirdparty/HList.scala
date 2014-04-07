@@ -17,7 +17,7 @@ trait HListInstances {
     Lens[HL[A1, HL[A2, T]], HL[A1, HL[New, T]], A2, New](_.tail.head, (l, a) => l.copy(tail = l.tail.copy(head = a)))
 
   /** Create an iso between an S and its HList representation  */
-  def toHListIso[S, L <: HList](implicit gen: Generic.Aux[S, L]): SimpleIso[S, L] =
+  def toHList[S, L <: HList](implicit gen: Generic.Aux[S, L]): SimpleIso[S, L] =
     Iso[S, S, L, L]({ s => gen.to(s)}, {l => gen.from(l)} )
 
 

@@ -10,6 +10,6 @@ trait TupleInstances {
   def _2[A, B, New]: Lens[(A, B), (A,New), B, New] = Lens(_._2, (pair, n) => pair.copy(_2 = n))
 
   def both[A, B]: Traversal[(A, A), (B, B), A, B]  =
-    Traversal.make2[(A, A), (B, B), A, B](_._1)(_._2)((_, b1, b2) => (b1, b2))
+    Traversal.apply2[(A, A), (B, B), A, B](_._1)(_._2)((_, b1, b2) => (b1, b2))
 
 }

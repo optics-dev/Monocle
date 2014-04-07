@@ -7,7 +7,7 @@ import scalaz.std.AllInstances._
 
 class OptionSpec extends Spec {
 
-  checkAll("_Some", Prism.laws(_Some[Int, Int]))
-  checkAll("_None", Prism.laws(_None[Long]))
+  checkAll("some", Prism.laws(some[Int, Int]))
+  checkAll("none", Prism.laws(none[Long]))
 
 }

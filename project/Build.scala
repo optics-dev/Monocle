@@ -12,7 +12,8 @@ object BuildSettings {
     organization      := "com.github.julien-truffaut",
     version           := "0.2-SNAPSHOT",
     scalaVersion      := buildScalaVersion,
-    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-language:higherKinds", "-language:implicitConversions"),
+    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
+      "-language:higherKinds", "-language:implicitConversions", "-language:postfixOps"),
     resolvers         += Resolver.sonatypeRepo("releases"),
     resolvers         += Resolver.sonatypeRepo("snapshots"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0-M3" cross CrossVersion.full)
@@ -42,7 +43,7 @@ object ScalaLensBuild extends Build {
     settings = buildSettings ++ Seq(
       publishArtifact := false,
       run <<= run in Compile in core) ++ sonatypeSettings
-  ) aggregate(core, examples)
+  ) aggregate(core, generic, examples)
 
   lazy val core: Project = Project(
     "monocle-core",
@@ -58,14 +59,14 @@ object ScalaLensBuild extends Build {
     settings = buildSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, shapeless) ++ macrosDep ++ testsDep
     )
-  ) dependsOn(core)
+  ) dependsOn(core % "test->test;compile->compile")
 
   lazy val examples: Project = Project(
     "monocle-examples",
     file("examples"),
     settings = buildSettings ++ Seq(
       publishArtifact := false,
-      libraryDependencies ++= Seq(scalaz, shapeless)
+      libraryDependencies ++= Seq(scalaz, shapeless) ++ testsDep
     )
   ) dependsOn(core, generic)
 }

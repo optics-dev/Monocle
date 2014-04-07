@@ -1,6 +1,7 @@
 package monocle.std
 
-import monocle.SimpleLens
+import monocle._
+import scala.Some
 
 object map extends MapInstances
 
