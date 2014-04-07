@@ -7,6 +7,7 @@ object TestUtil {
 
   implicit val booleanEqual = Equal.equalA[Boolean]
   implicit val byteEqual    = Equal.equalA[Byte]
+  implicit val shortEqual   = Equal.equalA[Short]
   implicit val charEqual    = Equal.equalA[Char]
   implicit val intEqual     = Equal.equalA[Int]
   implicit val longEqual    = Equal.equalA[Long]
