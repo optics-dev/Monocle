@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.syntax.traversal._
-import monocle.util.Each._
+import monocle.function.Each._
 import org.specs2.scalaz.Spec
 
 

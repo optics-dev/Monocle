@@ -1,10 +1,12 @@
-package monocle.util
+package monocle.function
 
-import monocle.{Traversal, SimpleTraversal}
+
 import scala.annotation.implicitNotFound
+import monocle.{Traversal, SimpleTraversal}
+
 
 /**
- * Defines Traversal for a monomorphic container S towards all its A element
+ * Defines a Traversal from a monomorphic container S to all of its elements
  */
 @implicitNotFound(msg = "Cannot find instance of Each[${S}, ${A}] in scope, typically you want to import monocle.util.Each._")
 trait Each[S, A] {
@@ -14,6 +16,7 @@ trait Each[S, A] {
 }
 
 object Each extends EachInstances
+
 
 trait EachInstances {
 
@@ -43,5 +46,3 @@ trait EachInstances {
   }
 
 }
-
-
