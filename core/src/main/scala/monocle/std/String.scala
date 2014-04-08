@@ -1,8 +1,11 @@
 package monocle.std
 
-/**
- * Created by julient on 08/04/2014.
- */
-class String {
+import monocle.SimpleIso
+
+object string extends StringInstances
+
+trait StringInstances {
+
+  val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString(""))
 
 }

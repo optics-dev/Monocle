@@ -3,6 +3,7 @@ package monocle.function
 import org.specs2.scalaz.Spec
 import monocle.Traversal
 import monocle.function.FilterIndex._
+import monocle.TestUtil._
 
 
 class FilterIndexSpec extends Spec {

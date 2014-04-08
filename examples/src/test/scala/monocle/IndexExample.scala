@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.syntax.traversal._
-import monocle.util.Index._
+import monocle.function.Index._
 import org.specs2.scalaz.Spec
 
 
@@ -12,14 +12,6 @@ class IndexExample extends Spec {
     (Map("One" -> 1, "Two" -> 2) |->> index("One") headOption) shouldEqual Some(1)
 
     (Map("One" -> 1, "Two" -> 2) |->> index("One") set 2) shouldEqual Map("One" -> 2, "Two" -> 2)
-
-  }
-
-  "filterIndexes creates Traversal from a Map to all values where the index matches the predicate" in {
-
-    (Map("One" -> 1, "Two" -> 2) |->> filterIndexes{k: String => k.toLowerCase.contains("o")} getAll) shouldEqual List(1, 2)
-
-    (Map("One" -> 1, "Two" -> 2) |->> filterIndexes{k: String => k.startsWith("T")} set 3) shouldEqual Map("One" -> 1, "Two" -> 3)
 
   }
 
@@ -34,13 +26,7 @@ class IndexExample extends Spec {
 
   }
 
-  "filterIndexes creates Traversal from a List to all values where the index matches the predicate" in {
 
-    (List(1,3,5,7) |->> filterIndexes{ i: Int => i%2 == 0 } getAll) shouldEqual List(1,5)
-
-    (List(1,3,5,7) |->> filterIndexes{ i: Int => i >= 2 } modify(_ + 2)) shouldEqual List(1,3,7,9)
-
-  }
 
   "index creates 0 or 1 Traversal from a String to a Char" in {
 
