@@ -1,8 +1,8 @@
-package monocle.util
+package monocle.function
 
 import monocle.TestUtil._
 import monocle.Traversal
-import monocle.util.Index._
+import monocle.function.Index._
 import org.specs2.scalaz.Spec
 
 

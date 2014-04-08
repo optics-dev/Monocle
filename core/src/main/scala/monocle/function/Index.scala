@@ -1,4 +1,4 @@
-package monocle.util
+package monocle.function
 
 import monocle.{Traversal, SimpleTraversal}
 import scalaz.Applicative
@@ -8,6 +8,7 @@ trait Index[S, I, A] {
   /** Creates a Traversal from S to 0 or 1 A */
   def index(i: I): SimpleTraversal[S, A]
 
+  /** Creates a Traversal from S to all A with an index matching the predicate */
   def filterIndexes(predicate: I => Boolean): SimpleTraversal[S, A]
 
 }
@@ -19,16 +20,15 @@ object Index {
   def filterIndexes[S, I, A](predicate: I => Boolean)
                             (implicit ev: Index[S, I, A]): SimpleTraversal[S, A] = ev.filterIndexes(predicate)
 
-  implicit def indexedMap[K, V] = new Index[Map[K, V], K, V] {
-    def index(i: K): SimpleTraversal[Map[K, V], V] = {
-      import monocle.syntax.traversal._
-      monocle.std.map.at[K, V](i) |->> monocle.std.option.some
-    }
+  implicit def indexWitAt[S, I, A](implicit at: At[S, I, A]) = new Index[S, I, A] {
 
-    def filterIndexes(predicate: K => Boolean) = new Traversal[Map[K, V], Map[K, V], V, V]{
-      def multiLift[F[_] : Applicative](from: Map[K, V], f: V => F[V]): F[Map[K, V]] =
-        Applicative[F].map(filterLiftList(from.toList, f)(predicate))(_.toMap)
-    }
+    import At._
+    import monocle.std.option.some
+    import monocle.syntax.traversal._
+
+    def index(i: I) = at(i) |->> some
+
+    def filterIndexes(predicate: I => Boolean) = filterAt(predicate) |->> some
   }
 
 

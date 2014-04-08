@@ -3,7 +3,7 @@ package monocle
 import monocle.std.map._
 import org.specs2.scalaz.Spec
 
-class MapExample extends Spec {
+class AtExample extends Spec {
 
   "at creates a Lens from a Map to an optional value" in {
 
