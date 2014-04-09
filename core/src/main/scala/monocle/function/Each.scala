@@ -37,7 +37,8 @@ trait EachInstances {
   }
 
   implicit def pairEachInstance[A]: Each[(A, A), A] = new Each[(A, A), A] {
-    def each: SimpleTraversal[(A, A), A] = monocle.std.tuple.both
+    def each: SimpleTraversal[(A, A), A] =
+      Traversal.apply2[(A, A), (A, A), A, A](_._1)(_._2)((_, b1, b2) => (b1, b2))
   }
 
   implicit def tripleEachInstance[A]: Each[(A, A, A), A] = new Each[(A, A, A), A] {

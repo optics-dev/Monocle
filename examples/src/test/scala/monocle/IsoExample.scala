@@ -21,7 +21,7 @@ class IsoExample extends Spec {
   }
 
   "Iso composition can limit the need of ad-hoc Lens" in {
-    import monocle.std.tuple._1
+    import monocle.function.Field1._
 
     // here we use tuple Lens on Pair via pointToPair Iso
     (Point(3, 5) <-> pointToPair |-> _1 get)   shouldEqual 3
