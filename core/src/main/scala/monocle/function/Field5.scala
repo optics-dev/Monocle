@@ -4,6 +4,7 @@ import monocle._
 
 trait Field5[S, A] {
 
+  /** Creates a Lens from S to it is fifth element */
   def _5: SimpleLens[S, A]
 
 }

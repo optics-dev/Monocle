@@ -7,7 +7,10 @@ import scalaz.syntax.equal._
 
 trait Index[S, I, A] {
 
-  /** Creates a Traversal from S to 0 or 1 A */
+  /**
+   * Creates a Traversal from S to 0 or 1 A
+   * index is less powerful than at as we can only modify an index that already exist
+   */
   def index(i: I): SimpleTraversal[S, A]
 
 }

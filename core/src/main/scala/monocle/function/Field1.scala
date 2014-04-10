@@ -5,6 +5,7 @@ import monocle.SimpleLens
 
 trait Field1[S, A] {
 
+  /** Creates a Lens from S to it is first element */
   def _1: SimpleLens[S, A]
 
 }

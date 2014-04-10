@@ -1,16 +1,14 @@
 package monocle.function
 
 
-import scala.annotation.implicitNotFound
 import monocle.{Traversal, SimpleTraversal}
 
 
-/**
- * Defines a Traversal from a monomorphic container S to all of its elements
- */
-@implicitNotFound(msg = "Cannot find instance of Each[${S}, ${A}] in scope, typically you want to import monocle.util.Each._")
 trait Each[S, A] {
 
+  /**
+   * Creates a Traversal from a monomorphic container S to all of its elements
+   */
   def each: SimpleTraversal[S, A]
 
 }
@@ -23,7 +21,9 @@ trait EachInstances {
   def each[S, A](implicit ev: Each[S, A]): SimpleTraversal[S, A] = ev.each
 
   implicit def mapEachInstance[K, V]: Each[Map[K, V], V] = new Each[Map[K, V], V] {
+
     import scalaz.std.map._
+
     def each: SimpleTraversal[Map[K, V], V] = Traversal[({type F[v] = Map[K,v]})#F, V, V]
   }
 
@@ -32,7 +32,9 @@ trait EachInstances {
   }
 
   implicit def listEachInstance[A]: Each[List[A], A] = new Each[List[A], A] {
+
     import scalaz.std.list._
+
     def each: SimpleTraversal[List[A], A] = Traversal[List, A, A]
   }
 

@@ -4,7 +4,10 @@ import monocle.SimpleLens
 
 trait At[S, I, A] {
 
-  /** Creates a Lens from S to an optional A at index i */
+  /**
+   * Creates a Lens from S to an optional A at index i
+   * at is strictly more powerful than index because we can add a value at an empty index
+   */
   def at(i: I): SimpleLens[S, Option[A]]
 
 }
