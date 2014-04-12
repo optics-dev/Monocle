@@ -21,8 +21,8 @@ trait ListInstances {
     def _set(list: List[A], option: Option[A]): List[A] = (list, option) match {
       case(Nil,   None  ) => Nil
       case(Nil,   Some(a)) => a :: Nil
-      case(xs,    None  ) => xs.dropRight(1)
-      case(xs,    Some(a)) => xs.dropRight(1) ::: List(a)
+      case(xs,    None  ) => xs.init
+      case(xs,    Some(a)) => xs.init ++ List(a)
     }
 
     SimpleLens[List[A], Option[A]](_get, _set)
