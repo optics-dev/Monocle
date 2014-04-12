@@ -12,4 +12,5 @@ class ListSpec extends Spec {
   implicit val listEq = Equal.equalA[List[Int]]
 
   checkAll("head", Lens.laws(head[Int]))
+  checkAll("last", Lens.laws(last[Int]))
 }
