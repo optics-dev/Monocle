@@ -1,5 +1,6 @@
 package monocle
 
+import org.scalacheck.{Gen, Arbitrary}
 import scalaz.{Tree, Show, Order, Equal}
 
 
@@ -29,9 +30,29 @@ object TestUtil {
 
   // Show instances
 
-  implicit val showInt = Show.showA[Int]
+  implicit val intShow = Show.showA[Int]
 
-  implicit def showTree[A : Show] = new Show[Tree[A]] {
+  implicit def treeShow[A : Show] = new Show[Tree[A]] {
     override def shows(f: Tree[A]): String = f.drawTree
   }
+
+  // Arbitrary instances
+
+  implicit def treeArb[A](implicit a: Arbitrary[A]): Arbitrary[Tree[A]] =
+    Arbitrary {
+      val genLeaf = for(label <- Arbitrary.arbitrary[A]) yield Tree.leaf(label)
+
+      def genInternal(sz: Int): Gen[Tree[A]] = for {
+        label    <- Arbitrary.arbitrary[A]
+        n        <- Gen.choose(sz/3, sz/2)
+        children <- Gen.listOfN(n, sizedTree(sz/2))
+      } yield Tree.node(label, children.toStream)
+
+      def sizedTree(sz: Int) =
+        if(sz <= 0) genLeaf
+        else Gen.frequency((1, genLeaf), (3, genInternal(sz)))
+
+      Gen.sized(sz => sizedTree(sz))
+    }
+
 }
