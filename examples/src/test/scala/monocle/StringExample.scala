@@ -7,6 +7,7 @@ class StringExample extends Spec {
   "stringToInt is a prism from String to Int" in {
     stringToInt.getOption("352") shouldEqual Some(352)
     stringToInt.reverseGet(8921) shouldEqual "8921"
+    stringToInt.getOption("") shouldEqual None
   }
 
   "stringToBoolean is a prism from String to Boolean" in {

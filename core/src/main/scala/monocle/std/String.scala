@@ -1,20 +1,37 @@
 package monocle.std
 
 import monocle.util.TryPrism._
-import monocle.SimpleIso
+import monocle.{SimplePrism, SimpleIso}
+import scalaz.syntax.traverse._
+import scalaz.std.list._
+import scalaz.std.option._
+import monocle.std.anyval._
 
-object string extends StringInstances
+object string extends StringInstances with StringFunctions
 
 trait StringInstances {
-  def stringCast[A](unsafe: String => A) = trySimplePrism[String, A](_.toString, unsafe)
+  def stringToBoolean = trySimplePrism[String, Boolean](_.toString, _.toBoolean)
+  def stringToLong = SimplePrism[String, Long](_.toString, string.parseLong)
+  def stringToInt = stringToLong.compose(longToInt)
+  def stringToByte = stringToLong.compose(longToByte)
 
-  def stringToBoolean = stringCast(_.toBoolean)
-  def stringToByte = stringCast(_.toByte)
-  def stringToShort = stringCast(_.toShort)
-  def stringToInt = stringCast(_.toInt)
-  def stringToLong = stringCast(_.toLong)
-  def stringToFloat = stringCast(_.toFloat)
-  def stringToDouble = stringCast(_.toDouble)
+  val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString)
+}
 
-  val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString(""))
+trait StringFunctions {
+  def parseLong(s: String): Option[Long] =
+    if (s.isEmpty) None
+    else s.toList match {
+      case '-' :: xs => parseLongUnsigned(xs).map(-_)
+      case '+' :: xs => parseLongUnsigned(xs)
+      case xs => parseLongUnsigned(xs)
+    }
+
+  def parseLongUnsigned(s: List[Char]): Option[Long] = s.traverse(charToDigit).map(_.foldl(0L)(n => d => n * 10 + d))
+
+  def charToDigit(c: Char): Option[Int] =
+    if (c >= '0' && c <= '9')
+      Some(c - '0')
+    else
+      None
 }
