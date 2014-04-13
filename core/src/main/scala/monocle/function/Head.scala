@@ -1,14 +1,12 @@
 package monocle.function
 
-import monocle.{SimpleIso, SimpleLens}
-import monocle.syntax.lens._
-import scala.collection.immutable.Stream.Empty
+import monocle.SimpleTraversal
 
 
 trait Head[S, A] {
 
-  /** Creates a Lens from S to its optional first element */
-  def head: SimpleLens[S, Option[A]]
+  /** Creates a Traversal from S to its optional first element */
+  def head: SimpleTraversal[S, A]
 
 }
 
@@ -17,30 +15,14 @@ object Head extends HeadInstances
 
 trait HeadInstances {
 
-  def head[S, A](implicit ev: Head[S, A]): SimpleLens[S, Option[A]] = ev.head
+  def head[S, A](implicit ev: Head[S, A]): SimpleTraversal[S, A] = ev.head
 
-  def isoHead[S, T, A](iso: SimpleIso[S, T])(implicit ev: Head[T, A]): Head[S, A] = new Head[S, A] {
-    def head: SimpleLens[S, Option[A]] = iso |-> ev.head
+  def indexHead[S, A](implicit ev: Index[S, Int, A]): Head[S, A] = new Head[S, A] {
+    def head: SimpleTraversal[S, A] = ev.index(0)
   }
 
-  implicit def listHead[A] = new Head[List[A], A] {
-    def head = SimpleLens[List[A], Option[A]](_.headOption, {
-      case(Nil    , None   ) => Nil
-      case(Nil    , Some(a)) => List(a)
-      case(x :: xs, None   ) => xs
-      case(x :: xs, Some(a)) => a :: xs
-    })
-  }
-
-  implicit val stringHead: Head[String, Char] = isoHead(monocle.std.string.stringToList)
-
-  implicit def streamHead[A] = new Head[Stream[A], A] {
-    def head = SimpleLens[Stream[A], Option[A]](_.headOption, {
-      case(Empty   , None   ) => Empty
-      case(Empty   , Some(a)) => Stream(a)
-      case(x #:: xs, None   ) => xs
-      case(x #::xs , Some(a)) => a #:: xs
-    })
-  }
+  implicit def listHead[A]  : Head[List[A]  , A]    = indexHead[List[A]  , A]
+  implicit def streamHead[A]: Head[Stream[A], A]    = indexHead[Stream[A], A]
+  implicit val stringHead   : Head[String   , Char] = indexHead[String   , Char]
 
 }

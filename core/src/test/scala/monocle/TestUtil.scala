@@ -57,4 +57,9 @@ object TestUtil {
       Gen.sized(sz => sizedTree(sz))
     }
 
+  implicit def optionArbitrary[A](implicit a: Arbitrary[A]): Arbitrary[Option[A]] = Arbitrary(Gen.frequency(
+    1 -> None,
+    3 -> Arbitrary.arbitrary[A].map(Option(_))
+  ))
+
 }

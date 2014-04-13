@@ -28,6 +28,15 @@ trait FilterIndexInstances {
     }
   }
 
+  implicit def streamFilterIndex[A] = new FilterIndex[Stream[A], Int, A] {
+    def filterIndex(predicate: Int => Boolean) = new Traversal[Stream[A], Stream[A], A, A] {
+      def multiLift[F[_] : Applicative](from: Stream[A], f: A => F[A]): F[Stream[A]] =
+        scalaz.std.stream.streamInstance.traverseImpl(from.zipWithIndex){ case (a, j) =>
+          if(predicate(j)) f(a) else Applicative[F].point(a)
+        }
+    }
+  }
+
   implicit val stringFilterIndex = new FilterIndex[String, Int, Char]{
     def filterIndex(predicate: Int => Boolean) =
       monocle.std.string.stringToList |->> listFilterIndex.filterIndex(predicate)

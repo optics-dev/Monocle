@@ -25,6 +25,7 @@ trait IndexInstances {
 
   implicit def mapIndex[K, V]: Index[Map[K, V], K  , V]    = atIndex
   implicit def listIndex[A]  : Index[List[A]  , Int, A]    = filterIndexIndex
+  implicit def streamIndex[A]: Index[Stream[A], Int, A]    = filterIndexIndex
   implicit val stringIndex   : Index[String   , Int, Char] = filterIndexIndex
 
   def atIndex[S, I, A](implicit ev: At[S, I, A]) = new Index[S, I, A] {
