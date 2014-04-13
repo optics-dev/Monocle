@@ -1,6 +1,7 @@
 package monocle.std
 
 import monocle.util.TryPrism._
+import monocle.SimpleIso
 
 object string extends StringInstances
 
@@ -14,4 +15,6 @@ trait StringInstances {
   def stringToLong = stringCast(_.toLong)
   def stringToFloat = stringCast(_.toFloat)
   def stringToDouble = stringCast(_.toDouble)
+
+  val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString(""))
 }

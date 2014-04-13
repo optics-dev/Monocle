@@ -68,7 +68,7 @@ object ScalaLensBuild extends Build {
       publishArtifact := false,
       libraryDependencies ++= Seq(scalaz, shapeless) ++ testsDep
     )
-  ) dependsOn(core, generic)
+  ) dependsOn(core % "test->test;compile->compile", generic)
 }
 
 object ScalaLensPublishing  {

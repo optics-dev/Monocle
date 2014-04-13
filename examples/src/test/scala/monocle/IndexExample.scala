@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.syntax.traversal._
-import monocle.util.Index._
+import monocle.function.Index._
 import org.specs2.scalaz.Spec
 
 
@@ -25,6 +25,8 @@ class IndexExample extends Spec {
     (List(0,1,2,3) |->> index(64) set 10)       shouldEqual List(0,1,2,3)
 
   }
+
+
 
   "index creates 0 or 1 Traversal from a String to a Char" in {
 
