@@ -6,6 +6,7 @@ import scala.collection.immutable.Stream.Empty
 
 trait Head[S, A] {
 
+  /** Creates a Lens from S to its optional first element */
   def head: SimpleLens[S, Option[A]]
 
 }

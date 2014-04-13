@@ -8,7 +8,7 @@ import monocle.std.option._
 
 class HeadExample extends Spec {
 
-  "head creates a Lens from a List to an optional head" in {
+  "head creates a Lens from a List to its optional first element" in {
     (List(1,2,3)      |-> head get) shouldEqual Some(1)
     ((Nil: List[Int]) |-> head get) shouldEqual None
 
@@ -21,7 +21,7 @@ class HeadExample extends Spec {
     ((Nil: List[Int]) |-> head set Some(1)) shouldEqual List(1)
   }
 
-  "head creates a Lens from a Stream to an optional head" in {
+  "head creates a Lens from a Stream to its optional first element" in {
     (Stream(1,2,3) |-> head get) shouldEqual Some(1)
 
     (Stream(1,2,3) |-> head |->> some modify (_ + 1)) shouldEqual Stream(2,2,3)
