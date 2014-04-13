@@ -32,9 +32,11 @@ object TestUtil {
 
   implicit val intShow = Show.showA[Int]
 
-  implicit def treeShow[A : Show] = new Show[Tree[A]] {
+  implicit def treeShow[A: Show] = new Show[Tree[A]] {
     override def shows(f: Tree[A]): String = f.drawTree
   }
+
+  implicit def streamShow[A: Show] = scalaz.std.stream.streamShow[A]
 
   // Arbitrary instances
 

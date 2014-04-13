@@ -9,12 +9,17 @@ import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
 import scalaz.Tree
 
-
 object tree extends TreeInstances
 
 trait TreeInstances {
 
-  def leftMostNode[A]: SimpleLens[Tree[A], A] = {
+  def rootLabel[A]: SimpleLens[Tree[A], A] =
+    SimpleLens[Tree[A], A](_.rootLabel, (tree, l) => Tree.node(l, tree.subForest))
+
+  def subForest[A]: SimpleLens[Tree[A], Stream[Tree[A]]] =
+    SimpleLens[Tree[A], Stream[Tree[A]]](_.subForest, (tree, children) => Tree.node(tree.rootLabel, children))
+
+  def leftMostLabel[A]: SimpleLens[Tree[A], A] = {
 
     @tailrec
     def _get(tree: Tree[A]): A = tree.subForest match {
@@ -30,7 +35,7 @@ trait TreeInstances {
     SimpleLens[Tree[A], A](_get, _set)
   }
 
-  def rightMostNode[A]: SimpleLens[Tree[A], A] = {
+  def rightMostLabel[A]: SimpleLens[Tree[A], A] = {
 
     @tailrec
     def _get(tree: Tree[A]): A = tree.subForest match {

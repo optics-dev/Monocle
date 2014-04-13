@@ -8,7 +8,9 @@ import org.specs2.scalaz.Spec
 
 class TreeSpec extends Spec {
 
-  checkAll("leftMostNode" , Lens.laws(leftMostNode[Int]))
-  checkAll("rightMostNode", Lens.laws(rightMostNode[Int]))
+  checkAll("rootLabel"     , Lens.laws(rootLabel[Int]))
+  checkAll("subForest"     , Lens.laws(subForest[Int]))
+  checkAll("leftMostLabel" , Lens.laws(leftMostLabel[Int]))
+  checkAll("rightMostLabel", Lens.laws(rightMostLabel[Int]))
 
 }
