@@ -27,4 +27,10 @@ class HeadExample extends Spec {
     (Stream(1,2,3) |-> head |->> some modify (_ + 1)) shouldEqual Stream(2,2,3)
   }
 
+  "head creates a Lens from a String to its optional head Char" in {
+    ("Hello" |-> head get) shouldEqual Some('H')
+
+    ("Hello" |-> head set None) shouldEqual "ello"
+  }
+
 }

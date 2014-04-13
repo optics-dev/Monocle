@@ -27,4 +27,10 @@ class LastExample extends Spec {
     (Stream(1,2,3) |-> last |->> some modify (_ + 1)) shouldEqual Stream(1,2,4)
   }
 
+  "last creates a Lens from a String to its optional last Char" in {
+    ("Hello" |-> last get) shouldEqual Some('o')
+
+    ("Hello" |-> last set None) shouldEqual "Hell"
+  }
+
 }

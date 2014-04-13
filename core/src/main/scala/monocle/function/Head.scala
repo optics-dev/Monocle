@@ -1,6 +1,7 @@
 package monocle.function
 
-import monocle.SimpleLens
+import monocle.{SimpleIso, SimpleLens}
+import monocle.syntax.lens._
 import scala.collection.immutable.Stream.Empty
 
 
@@ -18,6 +19,10 @@ trait HeadInstances {
 
   def head[S, A](implicit ev: Head[S, A]): SimpleLens[S, Option[A]] = ev.head
 
+  def isoHead[S, T, A](iso: SimpleIso[S, T])(implicit ev: Head[T, A]): Head[S, A] = new Head[S, A] {
+    def head: SimpleLens[S, Option[A]] = iso |-> ev.head
+  }
+
   implicit def listHead[A] = new Head[List[A], A] {
     def head = SimpleLens[List[A], Option[A]](_.headOption, {
       case(Nil    , None   ) => Nil
@@ -26,6 +31,8 @@ trait HeadInstances {
       case(x :: xs, Some(a)) => a :: xs
     })
   }
+
+  implicit val stringHead: Head[String, Char] = isoHead(monocle.std.string.stringToList)
 
   implicit def streamHead[A] = new Head[Stream[A], A] {
     def head = SimpleLens[Stream[A], Option[A]](_.headOption, {
