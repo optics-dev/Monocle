@@ -1,4 +1,5 @@
-import scalaz.{ -\/, \/-, \/ }
+import scala.util.Try
+import scalaz.{ -\/, \/- }
 
 package object monocle {
 
@@ -20,6 +21,9 @@ package object monocle {
   object SimplePrism {
     def apply[S, A](_reverseGet: A => S, _getOption: S => Option[A]): SimplePrism[S, A] =
       Prism(_reverseGet, { s: S => _getOption(s).map(\/-(_)) getOrElse -\/(s) })
+
+    def trySimplePrism[S, A](safe: A => S, unsafe: S => A): SimplePrism[S, A] =
+      SimplePrism(safe, s => Try(unsafe(s)).toOption)
   }
 
 }

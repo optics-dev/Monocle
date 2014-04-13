@@ -1,7 +1,7 @@
 package monocle.std
 
-import monocle.util.TryPrism._
 import monocle.{SimplePrism, SimpleIso}
+import SimplePrism.trySimplePrism
 import scalaz.syntax.traverse._
 import scalaz.std.list._
 import scalaz.std.option._

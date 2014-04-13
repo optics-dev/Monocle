@@ -25,8 +25,8 @@ class StringSpec extends Spec {
 
   "parseLong should return None for non digit strings" in {
     parseLong("hello") shouldEqual None
-    parseLong("୨") shouldEqual None
-    parseLong("８") shouldEqual None
+    parseLong("୨") shouldEqual None  // Non ascii digits
+    parseLong("８") shouldEqual None // Non ascii digits
   }
 
   "parseLong should return None for an empty string" in {
@@ -35,6 +35,6 @@ class StringSpec extends Spec {
 
   "charToDigit should return Some(digit) only for [0..9] digits" in {
     charToDigit('5') shouldEqual Some(5)
-    charToDigit('８') shouldEqual None
+    charToDigit('８') shouldEqual None // Non ascii digit
   }
 }
