@@ -1,6 +1,7 @@
 package monocle.function
 
 import monocle.SimpleIso
+import scalaz.Tree
 
 trait Reverse[S] {
 
@@ -22,5 +23,10 @@ trait ReverseInstances {
   implicit def listReverse[A]  : Reverse[List[A]]   = apply[List[A]](_.reverse)
   implicit def streamReverse[A]: Reverse[Stream[A]] = apply[Stream[A]](_.reverse)
   implicit def stringReverse[A]: Reverse[String]    = apply[String](_.reverse)
+
+  implicit def treeReverse[A]: Reverse[Tree[A]] = new Reverse[Tree[A]] {
+    def reverse = SimpleIso[Tree[A], Tree[A]](reverseTree, reverseTree)
+    private def reverseTree(tree: Tree[A]): Tree[A] = Tree.node(tree.rootLabel, tree.subForest.reverse.map(reverseTree))
+  }
 
 }
