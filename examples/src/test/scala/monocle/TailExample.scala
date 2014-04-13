@@ -16,9 +16,9 @@ class TailExample extends Spec {
   }
 
   "tail creates a Traversal from a Stream to its tail" in {
-    (Stream(1, 2, 3)  |->> tail headOption) shouldEqual Some(Stream(2, 3))
+    (Stream(1, 2, 3) |->> tail headOption) shouldEqual Some(Stream(2, 3))
 
-    (Stream(1, 2, 3)    |->> tail set Stream.Empty) shouldEqual Stream(1)
+    (Stream(1, 2, 3) |->> tail set Stream.Empty) shouldEqual Stream(1)
   }
 
   "tail creates a Traversal from a String to its tail" in {
