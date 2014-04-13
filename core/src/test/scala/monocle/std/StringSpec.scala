@@ -33,7 +33,7 @@ class StringSpec extends Spec {
     parseLong("") shouldEqual None
   }
 
-  "charToDigit should return Some(digit) only for [0..9] digits" in {
+  "charToDigit should return Some(digit) only for ascii [0..9] digits" in {
     charToDigit('5') shouldEqual Some(5)
     charToDigit('８') shouldEqual None // Non ascii digit
   }
