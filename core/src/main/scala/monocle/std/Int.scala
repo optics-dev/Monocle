@@ -4,7 +4,7 @@ import monocle.SimplePrism
 import monocle.util.{Bits, Bounded}
 import monocle.util.Bounded._
 
-trait IntInStances {
+trait IntInstances {
 
   implicit val intInstance: Bits[Int] with Bounded[Int] = new Bits[Int] with Bounded[Int] {
 
@@ -34,5 +34,5 @@ trait IntInStances {
 
 }
 
-object int extends IntInStances
+object int extends IntInstances
 
