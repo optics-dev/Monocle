@@ -2,12 +2,10 @@ package monocle.util
 
 import monocle.Lens
 import monocle.TestUtil._
-import monocle.util.Bits._
+import monocle.function.AtBit._
 import org.specs2.scalaz.Spec
 
 class BitsSpec extends Spec {
-
-  import monocle.std.anyval._
 
   checkAll("atBit[Int] first bit"    , Lens.laws(atBit[Int](0)))
   checkAll("atBit[Int] last bit"     , Lens.laws(atBit[Int](-1)))

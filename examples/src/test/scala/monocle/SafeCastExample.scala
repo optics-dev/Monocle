@@ -1,17 +1,30 @@
 package monocle
 
-import monocle.std.char._
+import monocle.function.SafeCast._
 import monocle.syntax.prism._
 import org.specs2.scalaz.Spec
 
 class SafeCastExample extends Spec {
 
-  "an intToChar is a Prism from Int to Char" in {
-    intToChar.getOption(65)   shouldEqual Some('A')
-    intToChar.reverseGet('a') shouldEqual 97
+  "safeCast creates a Prism from Int to Char" in {
+    safeCast[Int, Char].getOption(65)   shouldEqual Some('A')
+    safeCast[Int, Char].reverseGet('a') shouldEqual 97
 
     // with some syntax sugar
-    (65 <-? intToChar getOption) shouldEqual Some('A')
+    (65 <-? safeCast[Int, Char] getOption) shouldEqual Some('A')
   }
+
+  "safeCast creates a Prism from String to Int" in {
+    safeCast[String, Int].getOption("352") shouldEqual Some(352)
+    safeCast[String, Int].reverseGet(8921) shouldEqual "8921"
+    safeCast[String, Int].getOption("")    shouldEqual None
+  }
+
+  "safeCast creates a Prism from String to Boolean" in {
+    safeCast[String, Boolean].getOption("true") shouldEqual Some(true)
+    safeCast[String, Boolean].reverseGet(false) shouldEqual "false"
+  }
+
+ // idem for all other instances of SafeCast
 
 }

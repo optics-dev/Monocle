@@ -1,6 +1,5 @@
 package monocle.util
 
-import monocle._
 
 trait Bits[A] {
 
@@ -28,20 +27,109 @@ trait Bits[A] {
 
 }
 
-object Bits {
+object Bits extends BitsInstances {
 
   def apply[A](implicit ev: Bits[A]): Bits[A] = ev
 
-  def atBit[S: Bits](n: Int): SimpleLens[S, Boolean] = {
-    val bitsInstance = Bits[S]
-    val index = normalizeIndex(bitsInstance.bitSize, n)
-    SimpleLens[S, Boolean](bitsInstance.testBit(_, index), bitsInstance.updateBit(_, index, _))
+}
+
+trait BitsInstances {
+
+  implicit val booleanBits = new Bits[Boolean] {
+
+    val bitSize: Int = 1
+
+    def bitwiseOr(a1: Boolean, a2: Boolean) : Boolean = a1 | a2
+    def bitwiseAnd(a1: Boolean, a2: Boolean): Boolean = a1 & a2
+    def bitwiseXor(a1: Boolean, a2: Boolean): Boolean = a1 ^ a2
+
+    def singleBit(n: Int): Boolean = true
+
+    def shiftL(a: Boolean, n: Int): Boolean = false
+    def shiftR(a: Boolean, n: Int): Boolean = false
+
+
+    def testBit(a: Boolean, n: Int): Boolean = a
+
+    def signed(a: Boolean): Boolean = a
+
+    def negate(a: Boolean): Boolean = !a
   }
 
-  // map i to a value in base, negative value means that it is indexed from the end
-  private def normalizeIndex(base: Int, i: Int): Int = {
-    val modulo = i % base
-    if (modulo >= 0) modulo else modulo + base
+  implicit val byteBits = new Bits[Byte] {
+
+    val bitSize: Int = 8
+
+    def bitwiseOr(a1: Byte, a2: Byte) : Byte = (a1 | a2).toByte
+    def bitwiseAnd(a1: Byte, a2: Byte): Byte = (a1 & a2).toByte
+    def bitwiseXor(a1: Byte, a2: Byte): Byte = (a1 ^ a2).toByte
+
+    def singleBit(n: Int): Byte = (1 << n).toByte
+
+    def shiftL(a: Byte, n: Int): Byte = (a << n).toByte
+    def shiftR(a: Byte, n: Int): Byte = (a >> n).toByte
+
+
+    def testBit(a: Byte, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
+
+    def signed(a: Byte): Boolean = a.signum > 0
+
+    def negate(a: Byte): Byte = (~a).toByte
+  }
+
+  implicit val charBits = new Bits[Char] {
+
+    val bitSize: Int = 16
+
+    def bitwiseOr(a1: Char, a2: Char): Char  = (a1 | a2).toChar
+    def bitwiseAnd(a1: Char, a2: Char): Char = (a1 & a2).toChar
+    def bitwiseXor(a1: Char, a2: Char): Char = (a1 ^ a2).toChar
+
+    def shiftL(a: Char, n: Int): Char = (a << n).toChar
+    def shiftR(a: Char, n: Int): Char = (a >> n).toChar
+
+    def singleBit(n: Int): Char = (1 << n).toChar
+
+    def testBit(a: Char, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
+
+    def negate(a: Char): Char = (~a).toChar
+    def signed(a: Char): Boolean = a.signum > 0
+  }
+
+  implicit val intBits = new Bits[Int] {
+
+    val bitSize: Int = 32
+
+    def bitwiseOr(a1: Int, a2: Int) : Int = a1 | a2
+    def bitwiseAnd(a1: Int, a2: Int): Int = a1 & a2
+    def bitwiseXor(a1: Int, a2: Int): Int = a1 ^ a2
+
+    def singleBit(n: Int): Int = 1 << n
+
+    def shiftL(a: Int, n: Int): Int = a << n
+    def shiftR(a: Int, n: Int): Int = a >> n
+
+
+    def testBit(a: Int, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
+
+    def signed(a: Int): Boolean = a.signum > 0
+
+    def negate(a: Int): Int = ~a
+  }
+
+  implicit val longBits = new Bits[Long] {
+    def signed(a: Long): Boolean = a.signum > 0
+    def negate(a: Long): Long = ~a
+    def testBit(a: Long, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
+    def singleBit(n: Int): Long = 1 << n
+
+    def shiftR(a: Long, n: Int): Long = a >> n
+    def shiftL(a: Long, n: Int): Long = a << n
+    def bitwiseXor(a1: Long, a2: Long): Long = a1 ^ a2
+    def bitwiseOr(a1: Long, a2: Long) : Long = a1 | a2
+    def bitwiseAnd(a1: Long, a2: Long): Long = a1 & a2
+
+    val bitSize: Int = 32
   }
 
 }

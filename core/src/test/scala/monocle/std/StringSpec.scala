@@ -4,13 +4,8 @@ import monocle.Iso
 import monocle.TestUtil._
 import monocle.std.string._
 import org.specs2.scalaz.Spec
-import monocle.Prism
 
 class StringSpec extends Spec {
-  checkAll("stringToBoolean", Prism.laws(stringToBoolean))
-  checkAll("stringToByte", Prism.laws(stringToByte))
-  checkAll("stringToInt", Prism.laws(stringToInt))
-  checkAll("stringToLong", Prism.laws(stringToLong))
 
   checkAll("stringToList", Iso.laws(stringToList))
 
