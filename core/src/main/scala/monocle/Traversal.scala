@@ -35,6 +35,13 @@ object Traversal {
     def multiLift[F[_]: Applicative](from: T[A], f: A => F[B]): F[T[B]] = Traverse[T].traverse(from)(f)
   }
 
+  def apply[R[_]: Traverse, S, T, A, B](_getAll: S => R[A], _setAll: (S, R[B]) => T): Traversal[S, T, A, B] =
+    new Traversal[S, T, A, B] {
+      def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
+        Applicative[F].map(
+          Traverse[R].traverse(_getAll(from))(f))(_setAll(from, _))
+    }
+
   def apply2[S, T, A, B](get1: S => A)(get2: S => A)(_set: (S, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
     def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
       Applicative[F].apply2(f(get1(from)), f(get2(from)))((v1, v2) => _set(from, v1, v2))

@@ -25,4 +25,17 @@ class TraversalSpec extends Spec {
 
   checkAll(Traversal.laws(locationTraversal))
 
+  case class Contact(name: String, phoneNumbers: List[String])
+
+  val contactTraversal = Traversal.apply[List, Contact, Contact, String, String](
+    _.phoneNumbers, (p, ns) => p.copy(phoneNumbers = ns))
+
+  implicit val contactGen: Arbitrary[Contact] = Arbitrary(for {
+    n <- arbitrary[String]
+    ns <- arbitrary[List[String]]
+  } yield Contact(n, ns))
+
+  implicit val contactEq = Equal.equalA[Contact]
+
+  checkAll("getAll/setAll", Traversal.laws(contactTraversal))
 }
