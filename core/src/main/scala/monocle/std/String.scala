@@ -1,20 +1,13 @@
 package monocle.std
 
-import monocle.{SimplePrism, SimpleIso}
-import SimplePrism.trySimplePrism
+import monocle.SimpleIso
 import scalaz.syntax.traverse._
 import scalaz.std.list._
 import scalaz.std.option._
-import monocle.std.anyval._
 
 object string extends StringInstances with StringFunctions
 
 trait StringInstances {
-  def stringToBoolean = trySimplePrism[String, Boolean](_.toString, _.toBoolean)
-  def stringToLong = SimplePrism[String, Long](_.toString, string.parseLong)
-  def stringToInt = stringToLong.compose(longToInt)
-  def stringToByte = stringToLong.compose(longToByte)
-
   val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString)
 }
 
