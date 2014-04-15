@@ -1,18 +1,19 @@
 package monocle.std
 
 import monocle._
-
+import monocle.function.Curry
 
 object function extends FunctionInstances
 
 trait FunctionInstances {
 
-  def curry[A, B, C]: SimpleIso[(A, B) => C, A => B => C] =
-    SimpleIso[(A, B) => C, A => B => C](f => { a: A => b: B => f(a,b) }, g => { (a: A, b: B) => g(a)(b) })
+  def curry[F, G](implicit evidence: Curry[F, G]): SimpleIso[F, G] = evidence.curry
 
-  def uncurry[A, B, C]: SimpleIso[A => B => C, (A, B) => C] = curry.reverse
+  def uncurry[F, G](implicit evidence: Curry[F, G]): SimpleIso[G, F] = curry.reverse
 
   def flip[A, B, C]: SimpleIso[A => B => C, B => A => C] =
-    SimpleIso[A => B => C, B => A => C](f => { b: B => a: A => f(a)(b) }, g => { a: A => b: B => g(b)(a) })
+    SimpleIso(flipped, flipped)
 
+  def flipped[A, B, C]: (A => B => C) => (B => A => C) =
+    f => a => b => f(b)(a)
 }
