@@ -1,5 +1,6 @@
 import scala.util.Try
 import scalaz.{ -\/, \/- }
+import scalaz.Traverse
 
 package object monocle {
 
@@ -24,6 +25,11 @@ package object monocle {
 
     def trySimplePrism[S, A](safe: A => S, unsafe: S => A): SimplePrism[S, A] =
       SimplePrism(safe, s => Try(unsafe(s)).toOption)
+  }
+
+  object SimpleTraversal {
+    def apply[S, A, T[_]: Traverse](_getAll: S => T[A], _setAll: (S, T[A]) => S): SimpleTraversal[S, A] =
+      Traversal[T, S, S, A, A](_getAll, _setAll)
   }
 
 }
