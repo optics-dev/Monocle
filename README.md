@@ -55,7 +55,7 @@ If you have any questions, we have irc channel on [freenode](http://webchat.free
 
 Thank you for you contribution!
 ### Authors
-Julien Trufaut<br>
+Julien Truffaut<br>
 Ross Huggett<br>
 ### Contact
 ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
