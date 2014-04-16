@@ -1,4 +1,6 @@
 ## Monocle
+### Description
+Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens)
 ### Build
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
 ### Usage
@@ -63,8 +65,6 @@ ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshug
 19th October 2013<br>
 ### Requirements
 Java Runtime Environment version 1.8 and Maven 3.0.4<br>
-### Description
-Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens)
 ### Installation
 Chatter requires version 1.7 of the Java runtime environment to be available on the target machine.<br>
 ### Changelog
