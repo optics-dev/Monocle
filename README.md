@@ -2,7 +2,7 @@
 ### Build
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
 ### Usage
-Creating
+#### Creating
  ```scala
   case class Location(_x: Int, _y: Int)
   case class Character(_name: String, _health: Int, _location: Location)
@@ -13,11 +13,11 @@ Creating
 
   val barbarian = Character("Krom" , 30, Location(8,13))
   ```
-Getting
+#### Getting
  `health.get(barbarian)`
-Setting
+#### Setting
  `health.set(barbarian, 32)`
-Modifying
+#### Modifying
  `health.modify(barbarian, _ + 1)`
 #### Sub Projects
 Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.
