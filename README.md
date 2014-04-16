@@ -1,13 +1,23 @@
-Monocle
-=======
-
+## Monocle
+### Build
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
+### Usage
+Creating
+ `case class Location(_x: Int, _y: Int)
+  case class Character(_name: String, _health: Int, _location: Location)
 
-Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens)
+  val health  : Lens[Character, Int]      = ???
+  val location: Lens[Character, Location] = ???
+  val x, y    : Lens[Location, Int]       = ???
 
-Sub Projects
-------------
-
+  val barbarian = Character("Krom" , 30, Location(8,13))`
+Getting
+ `health.get(barbarian)`
+Setting
+ `health.set(barbarian, 32)`
+Modifying
+ `health.modify(barbarian, _ + 1)`
+#### Sub Projects
 Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.
 Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes and [scalacheck](http://www.scalacheck.org/) to encode laws.
 
@@ -15,7 +25,6 @@ Generic is an experiment to provide highly generalised Lens and Iso using HList 
 Generic focus is on neat abstraction but that may come at additional runtime or compile time cost.
 
 Example shows how other sub projects can be used.
-
 
 ```scala
 resolvers ++= Seq(
@@ -27,10 +36,7 @@ libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-core"  % "0.1" // or 0.2-SNAPSHOT
 )
 ```
-
-Contributor Handbook
----------------------
-
+#### Contributor Handbook
 We are happy to have as many people as possible contributing to Monocle.
 Therefore, we made this small workflow to simplify the process:
 
@@ -44,3 +50,20 @@ Therefore, we made this small workflow to simplify the process:
 If you have any questions, we have irc channel on [freenode](http://webchat.freenode.net/) #scala-monocle
 
 Thank you for you contribution!
+### Authors
+Julien Trufaut<br>
+Ross Huggett<br>
+### Contact
+ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
+### Version
+1.0<br>
+### Release Date
+19th October 2013<br>
+### Requirements
+Java Runtime Environment version 1.8 and Maven 3.0.4<br>
+### Description
+Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens)
+### Installation
+Chatter requires version 1.7 of the Java runtime environment to be available on the target machine.<br>
+### Changelog
+1.0 - First version.<br>
