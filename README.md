@@ -60,12 +60,10 @@ Ross Huggett<br>
 ### Contact
 ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
 ### Version
-1.0<br>
+0.1<br>
 ### Release Date
-19th October 2013<br>
+March 2014<br>
 ### Requirements
-Java Runtime Environment version 1.8 and Maven 3.0.4<br>
-### Installation
-Chatter requires version 1.7 of the Java runtime environment to be available on the target machine.<br>
+Java Runtime Environment version 1.8, Scala 2.10.2 and SBT 0.13<br>
 ### Changelog
-1.0 - First version.<br>
+0.1 - First version.<br>
