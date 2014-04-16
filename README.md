@@ -64,6 +64,6 @@ ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshug
 ### Release Date
 March 2014<br>
 ### Requirements
-Java Runtime Environment version 1.8, Scala 2.10.2 and SBT 0.13<br>
+Java Runtime Environment version 1.8, Scala 2.10.2 and SBT 0.13.<br>
 ### Changelog
 0.1 - First version.<br>
