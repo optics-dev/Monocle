@@ -3,14 +3,14 @@
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
 ### Usage
 Creating
- `case class Location(_x: Int, _y: Int)
+ ```case class Location(_x: Int, _y: Int)
   case class Character(_name: String, _health: Int, _location: Location)
 
   val health  : Lens[Character, Int]      = ???
   val location: Lens[Character, Location] = ???
   val x, y    : Lens[Location, Int]       = ???
 
-  val barbarian = Character("Krom" , 30, Location(8,13))`
+  val barbarian = Character("Krom" , 30, Location(8,13))```
 Getting
  `health.get(barbarian)`
 Setting
