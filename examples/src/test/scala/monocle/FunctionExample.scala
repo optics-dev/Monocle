@@ -40,6 +40,17 @@ class FunctionExample extends Spec {
      * so we do the modification through the Iso.
      **/
     (f _ <-> curry modify (_ compose (_ + 1)))(5, 7) shouldEqual (2 * 6 + 3 * 7)
+
+  }
+
+  "Increase the second argument of a 2 argument function" in {
+    def f(a: Int, b: Int): Int =
+      2 * a + 3 * b
+
+    /**
+     * If we wanted to increase the second argument instead, we could use flip.
+     */
+    (f _ <-> curry <-> flip modify (_ compose (_ + 1)))(5, 7) shouldEqual (2 * 5 + 3 * 8)
   }
 
   "flip exchanges the the first 2 parameters of a function" in {
