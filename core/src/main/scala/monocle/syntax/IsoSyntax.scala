@@ -26,7 +26,7 @@ trait AppliedIso[S, T, A, B] extends AppliedLens[S, T, A, B] with AppliedPrism[S
 
   def <->[C, D](other: Iso[A, B, C, D]): AppliedIso[S, T, C, D] = new AppliedIso[S, T, C, D] {
     val from: S = self.from
-    val _iso: Iso[S, T, C, D] = self._iso compose other
+    def _iso: Iso[S, T, C, D] = self._iso compose other
   }
 }
 
