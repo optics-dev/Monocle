@@ -43,6 +43,12 @@ class FunctionExample extends Spec {
 
   }
 
+  "flip exchanges the the first 2 parameters of a function" in {
+    def f(a: Int, b: Double): Double = a + b
+
+    (f _ <-> curry <-> flip <-> uncurry get)(3.2, 1) shouldEqual 4.2
+  }
+
   "Increase the second argument of a 2 argument function" in {
     def f(a: Int, b: Int): Int =
       2 * a + 3 * b
@@ -51,12 +57,6 @@ class FunctionExample extends Spec {
      * If we wanted to increase the second argument instead, we could use flip.
      */
     (f _ <-> curry <-> flip modify (_ compose (_ + 1)))(5, 7) shouldEqual (2 * 5 + 3 * 8)
-  }
-
-  "flip exchanges the the first 2 parameters of a function" in {
-    def f(a: Int, b: Double): Double = a + b
-
-    (f _ <-> curry <-> flip <-> uncurry get)(3.2, 1) shouldEqual 4.2
   }
 
 }
