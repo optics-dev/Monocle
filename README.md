@@ -21,6 +21,8 @@ Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://githu
  `health.set(barbarian, 32)`
 #### Modifying
  `health.modify(barbarian, _ + 1)`
+#### Composition
+ `health.compose()`
 #### Sub Projects
 Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.
 Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes and [scalacheck](http://www.scalacheck.org/) to encode laws.
@@ -54,16 +56,12 @@ Therefore, we made this small workflow to simplify the process:
 If you have any questions, we have irc channel on [freenode](http://webchat.freenode.net/) #scala-monocle
 
 Thank you for you contribution!
-### Authors
-Julien Truffaut<br>
-Ross Huggett<br>
 ### Contact
-ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
+Julien Truffaut -<br>
+Ross Huggett - ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
 ### Version
 0.1<br>
 ### Release Date
 March 2014<br>
 ### Requirements
-Java Runtime Environment version 1.8, Scala 2.10.2 and SBT 0.13.<br>
-### Changelog
-0.1 - First version.<br>
+Scala 2.10.2 and SBT 0.13.<br>
