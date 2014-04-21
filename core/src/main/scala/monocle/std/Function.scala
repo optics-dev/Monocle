@@ -7,6 +7,7 @@ object function extends FunctionInstances
 
 trait FunctionInstances {
 
+  /**curry: ((A,B,...,Z) => Res) <=> (A => B => ... => Z => Res)*/
   def curry[F, G](implicit evidence: Curry[F, G]): SimpleIso[F, G] = evidence.curry
 
   def uncurry[F, G](implicit evidence: Curry[F, G]): SimpleIso[G, F] = curry.reverse

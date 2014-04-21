@@ -20,6 +20,10 @@ class SafeCastExample extends Spec {
     safeCast[String, Int].getOption("")    shouldEqual None
   }
 
+  "With safeCast[String,Int] one could map a String with an Int => Int function." in {
+    safeCast[String, Int].modify("1024", _ * 2) shouldEqual "2048"
+  }
+
   "safeCast creates a Prism from String to Boolean" in {
     safeCast[String, Boolean].getOption("true") shouldEqual Some(true)
     safeCast[String, Boolean].reverseGet(false) shouldEqual "false"
