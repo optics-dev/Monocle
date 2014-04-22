@@ -14,6 +14,7 @@ object BuildSettings {
     scalaVersion      := buildScalaVersion,
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
       "-language:higherKinds", "-language:implicitConversions", "-language:postfixOps"),
+    incOptions        := incOptions.value.withNameHashing(true),
     resolvers         += Resolver.sonatypeRepo("releases"),
     resolvers         += Resolver.sonatypeRepo("snapshots"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0-M3" cross CrossVersion.full)
