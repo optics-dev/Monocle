@@ -19,6 +19,9 @@ trait Prism[S, T, A, B] extends Traversal[S, T, A, B] { self =>
 
   def asPrism: Prism[S, T, A, B] = self
 
+  /** non overloaded compose function */
+  def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = compose(other)
+
   def compose[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = new Prism[S, T, C, D] {
     def re: Getter[D, T] = other.re compose self.re
 

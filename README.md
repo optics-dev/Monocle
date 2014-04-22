@@ -6,22 +6,49 @@ Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://githu
 ### Usage
 #### Lens
  ```scala
-  case class Location(_x: Int, _y: Int)
-  case class Character(_name: String, _health: Int, _location: Location)
+  case class Character(_name: String, _health: Int, _location: (Int, Int))
 
   import monocle.Macro
 
   val health   = Macro.mkLens[Character, Int]("_health")
-  val location = Macro.mkLens[Character, Location]("_location")
-  val x        = Macro.mkLens[Location, Int]("_x")
+  val location = Macro.mkLens[Character, (Int, Int)]("_location")
 
-  val barbarian = Character("Krom" , 30, Location(8,13))
+  val barbarian = Character("Krom" , 30, (8,13))
 
- health.get(barbarian) == 30
- health.set(barbarian, 32)       == Character("Krom" , 32, Location(8,13))
- health.modify(barbarian, _ + 1) == Character("Krom" , 31, Location(8,13))
+  health.get(barbarian) == 30
+  health.set(barbarian, 32)       == Character("Krom" , 32, (8,13))
+  health.modify(barbarian, _ + 1) == Character("Krom" , 31, (8,13))
 
- (location compose x).set(barbarian, 0) == Character("Krom" , 31, Location(0,13))
+  import monocle.function.Fields._
+
+  (location composeLens _1).set(barbarian, 0) == Character("Krom" , 31, (0,13))
+```
+#### Traversal
+ ```scala
+  case class Game(_score: Int, _players: List[Character])
+
+  val players = Macro.mkLens[Game, List[Character]]("_players")
+
+  val barbarian = Character("Krom" , 30, (8,13))
+  val wizard    = Character("Waza" , 12, (6,1))
+
+  val dnd = Game(10, List(barbarian, wizard))
+
+  import monocle.function.Each._
+
+  (players composeTraversal each composeTraversal health).getAll(dnd) == List(30, 12)
+
+  // reduce by 2 the health points of all players
+  (players composeTraversal each composeTraversal health).modify(dnd, _ - 2) ==
+    Game(10, List(Character("Krom" , 28, (8,13)), Character("Waza" , 10, (6,10))))
+
+  // generate all possible legal moves
+  def legalMoves(n: Int): List[Int] = List(n - 1, n + 1).filter(_ > 0)
+  (players composeTraversal each composeTraversal location composeTraversal each).multiLift(dnd, legalMoves)
+
+  // or with some syntax sugar
+  import monocle.syntax.lens._
+  dnd |-> players |->> each |->> location |->> each multiLift legalMoves
 ```
 #### Sub Projects
 Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.

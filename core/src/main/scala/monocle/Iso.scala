@@ -13,6 +13,9 @@ trait Iso[S, T, A, B] extends Lens[S, T, A, B] with Prism[S, T, A, B] { self =>
 
   def re: Getter[B, T] = reverse.asGetter
 
+  /** non overloaded compose function */
+  def composeIso[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = compose(other)
+
   def compose[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = new Iso[S, T, C, D] {
     def lift[F[_]: Functor](from: S, f: C => F[D]): F[T] = self.lift(from, other.lift(_, f))
     def reverse: Iso[D, C, T, S] = other.reverse compose self.reverse

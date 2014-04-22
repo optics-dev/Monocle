@@ -22,10 +22,13 @@ trait AppliedPrism[S, T, A, B] extends AppliedTraversal[S, T, A, B]  { self =>
 
   def getOption: Option[A] = _prism.getOption(from)
 
-  def <-?[C, D](other: Prism[A, B, C, D]): AppliedPrism[S, T, C, D] = new AppliedPrism[S, T, C, D] {
+  def composePrism[C, D](other: Prism[A, B, C, D]): AppliedPrism[S, T, C, D] = new AppliedPrism[S, T, C, D] {
     val _prism: Prism[S, T, C, D] = self._prism compose other
     val from: S = self.from
   }
+
+  /** Alias to composePrism */
+  def <-?[C, D](other: Prism[A, B, C, D]): AppliedPrism[S, T, C, D] = composePrism(other)
 }
 
 final class AppliedPrismOps[S](value: S) {

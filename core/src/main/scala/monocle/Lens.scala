@@ -21,6 +21,9 @@ trait Lens[S, T, A, B] extends Traversal[S, T, A, B] with Getter[S, A] { self =>
 
   def get(from: S): A = lift[({ type l[b] = Constant[A, b] })#l](from, { a: A => Constant.apply[A, B](a) })
 
+  /** non overloaded compose function */
+  def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = compose(other)
+
   def compose[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
     def lift[F[_]: Functor](from: S, f: C => F[D]): F[T] = self.lift(from, other.lift(_, f))
   }

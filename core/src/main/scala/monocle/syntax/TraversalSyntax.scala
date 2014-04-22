@@ -24,10 +24,13 @@ trait AppliedTraversal[S, T, A, B] extends AppliedSetter[S, T, A, B] with Applie
 
   def multiLift[F[_]: Applicative](f: A => F[B]): F[T] = _traversal.multiLift[F](from, f)
 
-  def |->>[C, D](other: Traversal[A, B, C, D]): AppliedTraversal[S, T, C, D] = new AppliedTraversal[S, T, C, D] {
+  def composeTraversal[C, D](other: Traversal[A, B, C, D]): AppliedTraversal[S, T, C, D] = new AppliedTraversal[S, T, C, D] {
     val from: S = self.from
     val _traversal: Traversal[S, T, C, D] = self._traversal compose other
   }
+
+  /** Alias to composeTraversal */
+  def |->>[C, D](other: Traversal[A, B, C, D]): AppliedTraversal[S, T, C, D] = composeTraversal(other)
 
 }
 

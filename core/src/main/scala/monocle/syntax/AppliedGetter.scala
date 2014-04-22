@@ -9,7 +9,7 @@ trait AppliedGetter[S, A] { self =>
 
   def get: A = _getter.get(from)
 
-  def oo[B](other: Getter[A, B]): AppliedGetter[S, B] = new AppliedGetter[S, B] {
+  def composeGetter[B](other: Getter[A, B]): AppliedGetter[S, B] = new AppliedGetter[S, B] {
     val from: S = self.from
     val _getter: Getter[S, B] = self._getter compose other
   }
