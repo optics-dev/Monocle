@@ -4,25 +4,25 @@ Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://githu
 ### Build
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
 ### Usage
-#### Creating
+#### Lens
  ```scala
   case class Location(_x: Int, _y: Int)
   case class Character(_name: String, _health: Int, _location: Location)
 
-  val health  : Lens[Character, Int]      = ???
-  val location: Lens[Character, Location] = ???
-  val x, y    : Lens[Location, Int]       = ???
+  import monocle.Macro
+
+  val health   = Macro.mkLens[Character, Int]("_health")
+  val location = Macro.mkLens[Character, Location]("_location")
+  val x        = Macro.mkLens[Location, Int]("_x")
 
   val barbarian = Character("Krom" , 30, Location(8,13))
-  ```
-#### Getting
- `health.get(barbarian)`
-#### Setting
- `health.set(barbarian, 32)`
-#### Modifying
- `health.modify(barbarian, _ + 1)`
-#### Composition
- `health.compose()`
+
+ health.get(barbarian) == 30
+ health.set(barbarian, 32)       == Character("Krom" , 32, Location(8,13))
+ health.modify(barbarian, _ + 1) == Character("Krom" , 31, Location(8,13))
+
+ (location compose x).set(barbarian, 0) == Character("Krom" , 31, Location(0,13))
+```
 #### Sub Projects
 Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.
 Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes and [scalacheck](http://www.scalacheck.org/) to encode laws.
