@@ -1,4 +1,3 @@
-## Monocle
 ![Monocle Logo](https://raw.github.com/julien-truffaut/Monocle/master/logo/monocle.png)<br>
 Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens).
 ### Build
