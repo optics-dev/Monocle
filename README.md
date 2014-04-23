@@ -3,6 +3,17 @@
 Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens).
 ### Build
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
+
+```scala
+resolvers ++= Seq(
+  "Sonatype OSS Releases"  at "http://oss.sonatype.org/content/repositories/releases/",
+  "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+)
+
+libraryDependencies ++= Seq(
+  "com.github.julien-truffaut"  %%  "monocle-core"  % "0.1" // or 0.2-SNAPSHOT
+)
+```
 ### Usage
 #### Lens
  ```scala
@@ -58,17 +69,6 @@ Generic is an experiment to provide highly generalised Lens and Iso using HList 
 Generic focus is on neat abstraction but that may come at additional runtime or compile time cost.
 
 Example shows how other sub projects can be used.
-
-```scala
-resolvers ++= Seq(
-  "Sonatype OSS Releases"  at "http://oss.sonatype.org/content/repositories/releases/",
-  "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
-)
-
-libraryDependencies ++= Seq(
-  "com.github.julien-truffaut"  %%  "monocle-core"  % "0.1" // or 0.2-SNAPSHOT
-)
-```
 #### Contributor Handbook
 We are happy to have as many people as possible contributing to Monocle.
 Therefore, we made this small workflow to simplify the process:
