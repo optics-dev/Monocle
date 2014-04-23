@@ -1,5 +1,5 @@
 ## Monocle
-### Description
+![Monocle Logo](https://raw.github.com/julien-truffaut/Monocle/master/logo/monocle.png)<br>
 Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens).
 ### Build
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
