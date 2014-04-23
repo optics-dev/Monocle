@@ -5,5 +5,4 @@ import org.specs2.scalaz.Spec
 
 class StringExample extends Spec {
 
-
 }
