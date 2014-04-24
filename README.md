@@ -79,7 +79,7 @@ Therefore, we made this small workflow to simplify the process:
 5.   Submit a [pull request](https://help.github.com/articles/using-pull-requests)
 6.   We will review your pull request and merge it back to master
 
-If you have any questions, we have irc channel on [freenode](http://webchat.freenode.net/) #scala-monocle
+If you have any questions, we have irc channel on [freenode](http://webchat.freenode.net/) #scala-monocle and a [mailing group](https://groups.google.com/forum/#!forum/scala-monocle)
 
 Thank you for you contribution!
 ### Contact
