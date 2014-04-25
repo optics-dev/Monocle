@@ -83,6 +83,8 @@ If you have any questions, we have irc channel on [freenode](http://webchat.free
 
 Thank you for you contribution!
 ### Contact
+Mailing List - scala-monocle@googlegroups.com
+#### Contributors
 Julien Truffaut -<br>
 Ross Huggett - ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
 ### Version
