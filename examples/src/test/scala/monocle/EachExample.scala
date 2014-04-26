@@ -26,4 +26,9 @@ class EachExample extends Spec {
     (1, 2, 3) |->> each modify( _ + 1) shouldEqual (2, 3, 4)
   }
 
+  "Each can be used on Vector" in {
+    Vector(1, 2)    |->> each modify( _ + 1) shouldEqual Vector(2, 3)
+    Vector(1, 2, 3) |->> each modify( _ + 1) shouldEqual Vector(2, 3, 4)
+  }
+
 }

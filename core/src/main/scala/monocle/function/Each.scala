@@ -48,4 +48,11 @@ trait EachInstances {
       Traversal.apply3[(A, A, A), (A, A, A), A, A](_._1)(_._2)(_._3)((_, b1, b2, b3) => (b1, b2, b3))
   }
 
+  implicit def vectorEachInstance[A]: Each[Vector[A], A] = new Each[Vector[A], A] {
+
+    import scalaz.std.vector._
+
+    def each: SimpleTraversal[Vector[A], A] = Traversal[Vector, A, A]
+  }
+
 }
