@@ -87,5 +87,6 @@ Thank you for you contribution!
 ### Contributors
 Julien Truffaut - [@JulienTruffaut](https://twitter.com/JulienTruffaut "@JulienTruffaut") </a><br>
 Ross Huggett - ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
+Ilan Godik - ilan3580@gmail.com / [NightRa](https://github.com/NightRa "NightRa") </a><br>
 ### Requirements
 Scala 2.10.2 and SBT 0.13.<br>
