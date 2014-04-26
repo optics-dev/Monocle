@@ -44,7 +44,7 @@ trait TailInstances {
     def tail: SimpleTraversal[Vector[A], Vector[A]] = new Traversal[Vector[A], Vector[A], Vector[A], Vector[A]] {
       def multiLift[F[_] : Applicative](from: Vector[A], f: Vector[A] => F[Vector[A]]): F[Vector[A]] = from match {
         case Vector() => Applicative[F].point(Vector[A]())
-        case x +: xs => Applicative[F].map(f(xs))(x +: _)
+        case x +: xs  => Applicative[F].map(f(xs))(x +: _)
       }
     }
   }
