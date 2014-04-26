@@ -23,6 +23,7 @@ trait ReverseInstances {
   implicit def listReverse[A]  : Reverse[List[A]]   = apply[List[A]](_.reverse)
   implicit def streamReverse[A]: Reverse[Stream[A]] = apply[Stream[A]](_.reverse)
   implicit def stringReverse[A]: Reverse[String]    = apply[String](_.reverse)
+  implicit def vectorReverse[A]: Reverse[Vector[A]] = apply[Vector[A]](_.reverse)
 
   implicit def treeReverse[A]: Reverse[Tree[A]] = new Reverse[Tree[A]] {
     def reverse = SimpleIso[Tree[A], Tree[A]](reverseTree, reverseTree)

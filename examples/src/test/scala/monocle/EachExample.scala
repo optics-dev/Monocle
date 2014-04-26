@@ -33,4 +33,9 @@ class EachExample extends Spec with ScalazMatchers {
     (node(1, Stream(leaf(2), leaf(3))) |->> each getAll) shouldEqual List(1,2,3)
   }
 
+  "Each can be used on Vector" in {
+    Vector(1, 2)    |->> each modify( _ + 1) shouldEqual Vector(2, 3)
+    Vector(1, 2, 3) |->> each modify( _ + 1) shouldEqual Vector(2, 3, 4)
+  }
+
 }

@@ -11,5 +11,6 @@ class TailSpec extends Spec {
   checkAll("tail List"   , Traversal.laws(tail[List[Int]]))
   checkAll("tail Stream" , Traversal.laws(tail[Stream[Int]]))
   checkAll("tail String" , Traversal.laws(tail[String]))
+  checkAll("tail Vector" , Traversal.laws(tail[Vector[Int]]))
 
 }

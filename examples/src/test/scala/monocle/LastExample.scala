@@ -14,7 +14,7 @@ class LastExample extends Spec {
     (List(1,2,3) |->> last set 0) shouldEqual List(1,2,0)
   }
 
-  "last creates a Lens from a List to its optional last element" in {
+  "last creates a Lens from a Stream to its optional last element" in {
     (Stream(1,2,3) |->> last headOption) shouldEqual Some(3)
 
     (Stream(1,2,3) |->> last set 0) shouldEqual Stream(1,2,0)
@@ -24,6 +24,12 @@ class LastExample extends Spec {
     ("Hello" |->> last headOption) shouldEqual Some('o')
 
     ("Hello" |->> last set 'a') shouldEqual "Hella"
+  }
+
+  "last creates a Lens from a Vector to its optional last element" in {
+    (Vector(1,2,3) |->> last headOption) shouldEqual Some(3)
+
+    (Vector(1,2,3) |->> last set 0) shouldEqual Vector(1,2,0)
   }
 
 }

@@ -13,5 +13,6 @@ class ReverseSpec extends Spec {
   checkAll("reverse Stream", Iso.laws(reverse[Stream[Int]]))
   checkAll("reverse String", Iso.laws(reverse[String]))
   checkAll("reverse Tree"  , Iso.laws(reverse[Tree[Int]]))
+  checkAll("reverse Vector", Iso.laws(reverse[Vector[Int]]))
 
 }

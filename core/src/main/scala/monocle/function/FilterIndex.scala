@@ -53,4 +53,13 @@ trait FilterIndexInstances {
     }
   }
 
+  implicit def vectorFilterIndex[A] = new FilterIndex[Vector[A], Int, A] {
+    def filterIndex(predicate: Int => Boolean) = new Traversal[Vector[A], Vector[A], A, A] {
+      def multiLift[F[_] : Applicative](from: Vector[A], f: A => F[A]): F[Vector[A]] =
+        scalaz.std.vector.vectorInstance.traverseImpl(from.zipWithIndex){ case (a, j) =>
+          if(predicate(j)) f(a) else Applicative[F].point(a)
+        }
+    }
+  }
+
 }

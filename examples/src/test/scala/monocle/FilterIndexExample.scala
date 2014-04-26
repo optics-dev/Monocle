@@ -23,4 +23,12 @@ class FilterIndexExample extends Spec {
 
   }
 
+  "filterIndexes creates Traversal from a Vector to all values where the index matches the predicate" in {
+
+    (Vector(1,3,5,7) |->> filterIndex{ i: Int => i%2 == 0 } getAll) shouldEqual Vector(1,5)
+
+    (Vector(1,3,5,7) |->> filterIndex{ i: Int => i >= 2 } modify(_ + 2)) shouldEqual Vector(1,3,7,9)
+
+  }
+
 }

@@ -14,4 +14,5 @@ class IndexSpec extends Spec {
 
   checkAll("index String", Traversal.laws(index[String, Int, Char](2)))
 
+  checkAll("index Vector", Traversal.laws(index[Vector[String], Int, String](2)))
 }

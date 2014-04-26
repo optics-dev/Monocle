@@ -26,4 +26,11 @@ class HeadExample extends Spec {
     ("Hello" |->> head set 'M') shouldEqual "Mello"
   }
 
+  "head creates a Traversal from a Vector to its optional first element" in {
+    (Vector(1,2,3)      |->> head headOption) shouldEqual Some(1)
+    ((Vector.empty: Vector[Int]) |->> head headOption) shouldEqual None
+
+    (Vector(1,2,3) |->> head set 0) shouldEqual List(0,2,3)
+  }
+
 }

@@ -68,4 +68,11 @@ trait EachInstances {
     def each: SimpleTraversal[Tree[A], A] = Traversal[Tree, A, A]
   }
 
+  implicit def vectorEachInstance[A]: Each[Vector[A], A] = new Each[Vector[A], A] {
+
+    import scalaz.std.vector._
+
+    def each: SimpleTraversal[Vector[A], A] = Traversal[Vector, A, A]
+  }
+
 }

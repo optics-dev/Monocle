@@ -25,4 +25,12 @@ class TailExample extends Spec {
     ("hello" |->> tail modify (_.toUpperCase)) shouldEqual "hELLO"
   }
 
+  "tail creates a Traversal from a Vector to its tail" in {
+    (Vector(1, 2, 3)  |->> tail headOption) shouldEqual Some(Vector(2, 3))
+    (Vector(1)        |->> tail headOption) shouldEqual Some(Vector.empty)
+    ((Vector.empty: Vector[Int]) |->> tail headOption) shouldEqual None
+
+    (Vector(1, 2, 3)    |->> tail set Vector(4, 5, 6)) shouldEqual Vector(1, 4, 5, 6)
+  }
+
 }

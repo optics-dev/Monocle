@@ -25,4 +25,8 @@ class ReverseExample extends Spec with ScalazMatchers {
     (node(1, Stream(leaf(2), leaf(3))) <-> reverse get) must equal (node(1, Stream(leaf(3), leaf(2))))
   }
 
+  "reverse creates an Iso from a Vector to its reversed version" in {
+    (Vector(1,2,3) <-> reverse get) shouldEqual Vector(3,2,1)
+  }
+
 }
