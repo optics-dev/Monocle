@@ -1,4 +1,4 @@
-![Monocle Logo](https://raw.github.com/julien-truffaut/Monocle/master/logo/monocle.png)<br>
+![Monocle Logo](https://raw.github.com/julien-truffaut/Monocle/master/image/logo.png)<br>
 Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens).
 ### Build
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
@@ -60,6 +60,8 @@ libraryDependencies ++= Seq(
   import monocle.syntax.lens._
   dnd |-> players |->> each |->> location |->> each multiLift legalMoves
 ```
+#### Overview
+![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
 #### Sub Projects
 Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.
 Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes and [scalacheck](http://www.scalacheck.org/) to encode laws.
