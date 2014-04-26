@@ -84,12 +84,8 @@ Therefore, we made this small workflow to simplify the process:
 If you have any questions, we have irc channel on [freenode](http://webchat.freenode.net/) #scala-monocle and a [mailing group](https://groups.google.com/forum/#!forum/scala-monocle)
 
 Thank you for you contribution!
-### Contact
-Julien Truffaut -<br>
+### Contributors
+Julien Truffaut - [@JulienTruffaut](https://twitter.com/JulienTruffaut "@JulienTruffaut") </a><br>
 Ross Huggett - ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
-### Version
-0.1<br>
-### Release Date
-March 2014<br>
 ### Requirements
 Scala 2.10.2 and SBT 0.13.<br>
