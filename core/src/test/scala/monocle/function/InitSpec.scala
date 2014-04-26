@@ -10,6 +10,7 @@ class InitSpec extends Spec {
   checkAll("init List"  , Traversal.laws(init[List[Int]]))
   checkAll("init Stream", Traversal.laws(init[Stream[Int]]))
   checkAll("init String", Traversal.laws(init[String]))
+  checkAll("init Vector", Traversal.laws(init[Vector[Int]]))
 
 }
 

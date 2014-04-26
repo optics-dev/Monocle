@@ -16,4 +16,5 @@ class FilterIndexSpec extends Spec {
 
   checkAll("filterIndex String", Traversal.laws(filterIndex[String, Int, Char](predicate)))
 
+  checkAll("filterIndex Vector", Traversal.laws(filterIndex[Vector[Char], Int, Char](predicate)))
 }

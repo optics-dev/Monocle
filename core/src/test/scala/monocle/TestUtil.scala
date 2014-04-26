@@ -19,6 +19,7 @@ object TestUtil {
 
   implicit def optEq[A: Equal] = scalaz.std.option.optionEqual[A]
   implicit def listEq[A: Equal] = scalaz.std.list.listEqual[A]
+  implicit def vectorEq[A: Equal] = scalaz.std.vector.vectorEqual[A]
   implicit def streamEq[A: Equal] = scalaz.std.stream.streamEqual[A]
   implicit def mapEq[K: Order, V: Equal] = scalaz.std.map.mapEqual[K, V]
 
@@ -62,5 +63,8 @@ object TestUtil {
     1 -> None,
     3 -> Arbitrary.arbitrary[A].map(Option(_))
   ))
+
+  implicit def vectorArbitrary[A: Arbitrary]: Arbitrary[Vector[A]] =
+    Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toVector))
 
 }

@@ -11,5 +11,6 @@ class LastSpec extends Spec {
   checkAll("last List"  , Traversal.laws(last[List[Int]  , Int]))
   checkAll("last Stream", Traversal.laws(last[Stream[Int], Int]))
   checkAll("last String", Traversal.laws(last[String     , Char]))
+  checkAll("last Vector", Traversal.laws(last[Vector[Int], Int]))
 
 }
