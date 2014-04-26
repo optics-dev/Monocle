@@ -24,7 +24,12 @@ trait LastInstances {
 
   implicit def listLast[A]  : Last[List[A]  , A]    = reverseHeadLast[List[A]  , A]
   implicit def streamLast[A]: Last[Stream[A], A]    = reverseHeadLast[Stream[A], A]
-  implicit val stringLast   : Last[String   , Char] = reverseHeadLast[String   , Char]
   implicit def vectorLast[A]: Last[Vector[A], A]    = reverseHeadLast[Vector[A]  , A]
+  implicit val stringLast   : Last[String   , Char] = reverseHeadLast[String   , Char]
+
+
+  implicit def optionLast[A]: Last[Option[A], A]    = new Last[Option[A], A] {
+    def last: SimpleTraversal[Option[A], A] = monocle.std.option.some
+  }
 
 }

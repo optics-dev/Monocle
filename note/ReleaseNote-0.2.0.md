@@ -5,8 +5,8 @@
     *   `atBit(i: Int)`, Lens to focus on ith Bit. Implemented for Boolean, Byte, Char, Int and Long
     *   `safeCast`, Prism defining a safe down casting between two types. Implemented for most primitive type and String
     *   `curry` and `uncurry`, Iso for functions with up to 5 parameters
-    *   `head` and `last`, respectively Traversal to the first and last element. Implemented for std List, Vector, Stream and String
-    *   `tail` and `init`, respectively Traversal to all elements except first and all elements except last.
+    *   `head` and `last`, Traversal to the first and last element respectively. Implemented for std List, Vector, Stream, Option and String
+    *   `tail` and `init`, Traversal to all elements except first and all elements except last respectively.
         Implemented for std List, Vector, Stream and String
     *   `reverse`, Iso that reverses the order of elements. Implemented for std List, Vector, Stream, String and scalaz Tree
     *   `index(i: Int)`, Traversal to focus on ith element. Implemented for std List, Vector, Stream, Map and String

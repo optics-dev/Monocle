@@ -7,30 +7,22 @@ import org.specs2.scalaz.Spec
 
 class HeadExample extends Spec {
 
-  "head creates a Traversal from a List to its optional first element" in {
+  "head creates a Traversal from a List, Stream, Vector or Option to its optional first element" in {
     (List(1,2,3)      |->> head headOption) shouldEqual Some(1)
-    ((Nil: List[Int]) |->> head headOption) shouldEqual None
+    (Stream(1,2,3)    |->> head headOption) shouldEqual Some(1)
+    (Vector(1,2,3)    |->> head headOption) shouldEqual Some(1)
+    (Option(1)        |->> head headOption) shouldEqual Some(1)
 
-    (List(1,2,3) |->> head set 0) shouldEqual List(0,2,3)
-  }
+    (List.empty[Int]  |->> head headOption)    shouldEqual None
+    (List.empty[Int]  |->> head modify(_ + 1)) shouldEqual Nil
 
-  "head creates a Traversal from a Stream to its optional first element" in {
-    (Stream(1,2,3) |->> head headOption) shouldEqual Some(1)
-
-    (Stream(1,2,3) |->> head modify (_ + 1)) shouldEqual Stream(2,2,3)
+    (List(1,2,3)      |->> head set 0) shouldEqual List(0,2,3)
   }
 
   "head creates a Traversal from a String to its optional head Char" in {
     ("Hello" |->> head headOption) shouldEqual Some('H')
 
     ("Hello" |->> head set 'M') shouldEqual "Mello"
-  }
-
-  "head creates a Traversal from a Vector to its optional first element" in {
-    (Vector(1,2,3)      |->> head headOption) shouldEqual Some(1)
-    ((Vector.empty: Vector[Int]) |->> head headOption) shouldEqual None
-
-    (Vector(1,2,3) |->> head set 0) shouldEqual List(0,2,3)
   }
 
 }
