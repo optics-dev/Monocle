@@ -25,4 +25,12 @@ class InitExample extends Spec {
     ("hello" |->> init modify (_.toUpperCase)) shouldEqual "HELLo"
   }
 
+  "tail creates a Traversal from a Vector to its tail" in {
+    (Vector(1, 2, 3)    |->> init headOption) shouldEqual Some(Vector(1, 2))
+    (Vector(1)          |->> init headOption) shouldEqual Some(Vector.empty)
+    ((Vector.empty: Vector[Int]) |->> init headOption) shouldEqual None
+
+    (Vector(1, 2, 3)    |->> init set Vector(4, 5, 6)) shouldEqual Vector(4, 5, 6, 3)
+  }
+
 }

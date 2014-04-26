@@ -22,6 +22,6 @@ trait InitInstances {
   implicit def listInit[A]: Init[List[A]]     = reverseTail
   implicit def StreamInit[A]: Init[Stream[A]] = reverseTail
   implicit val stringInit: Init[String]       = reverseTail
-
+  implicit def vectorInit[A]: Init[Vector[A]] = reverseTail
 
 }

@@ -3,9 +3,6 @@ Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://githu
 ### Build
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
 
-The project is built using sbt using the command `sbt clean publish-local`. This will compile the classes, run the
-tests, build the jars and intall them to to `~/.ivy2/local`.
-
 ```scala
 resolvers ++= Seq(
   "Sonatype OSS Releases"  at "http://oss.sonatype.org/content/repositories/releases/",

@@ -24,5 +24,5 @@ trait HeadInstances {
   implicit def listHead[A]  : Head[List[A]  , A]    = indexHead[List[A]  , A]
   implicit def streamHead[A]: Head[Stream[A], A]    = indexHead[Stream[A], A]
   implicit val stringHead   : Head[String   , Char] = indexHead[String   , Char]
-
+  implicit def vectorHead[A]: Head[Vector[A]  , A]  = indexHead[Vector[A]  , A]
 }
