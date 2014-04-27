@@ -20,5 +20,5 @@
     *   `?->  == composePrism`
     *   `|->  == composeLens`
     *   `|->> == composeTraversal`
-*   Start to experiment using shapeless to generate Iso to `HList` in generic sub module
-*   Add documentation in examples and improve landing page
+*   Add experimental sub project generic, using shapeless to generate Iso between `HList` and case class or tuple
+*   Add documentation in examples
