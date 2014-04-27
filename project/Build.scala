@@ -10,7 +10,7 @@ object BuildSettings {
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization      := "com.github.julien-truffaut",
-    version           := "0.2-SNAPSHOT",
+    version           := "0.2.0",
     scalaVersion      := buildScalaVersion,
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
       "-language:higherKinds", "-language:implicitConversions", "-language:postfixOps"),
