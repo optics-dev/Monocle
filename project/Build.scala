@@ -6,7 +6,7 @@ import xerial.sbt.Sonatype.SonatypeKeys._
 
 object BuildSettings {
   import ScalaLensPublishing._
-  val buildScalaVersion = "2.10.3"
+  val buildScalaVersion = "2.10.4"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization      := "com.github.julien-truffaut",
@@ -23,7 +23,7 @@ object BuildSettings {
 
 object Dependencies {
   val scalaz       = "org.scalaz"      %% "scalaz-core"               % "7.0.5"
-  val shapeless    = "com.chuusai"     % "shapeless"                  % "2.0.0-M1" cross CrossVersion.full
+  val shapeless    = "com.chuusai"     %  "shapeless_2.10.4"          % "2.0.0"
   val scalaCheck   = "org.scalacheck"  %% "scalacheck"                % "1.10.1"
   val scalaCheckBinding = "org.scalaz" %% "scalaz-scalacheck-binding" % "7.0.5"        % "test"
   val specs2       = "org.specs2"      %% "specs2"                    % "1.12.3"       % "test"
