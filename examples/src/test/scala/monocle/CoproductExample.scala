@@ -12,7 +12,7 @@ class CoproductExample extends Spec {
   type ISB = Int :+: String :+: Boolean :+: CNil
 
 
-  "coProductPrism creates a Prism between a Coproduct and one of its choice" in {
+  "safeCast creates a Prism between a Coproduct and one of its choice" in {
 
     val b = Coproduct[ISB](true)
     val i = Coproduct[ISB](3)
@@ -27,7 +27,7 @@ class CoproductExample extends Spec {
 
   }
 
-  "coProductPrism can only create Prism to one of the type of the Coproduct" in {
+  "safeCast can only create Prism to one of the type of the Coproduct" in {
 
     illTyped("""
       safeCast[ISB, Float]
