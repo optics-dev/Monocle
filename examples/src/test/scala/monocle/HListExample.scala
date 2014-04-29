@@ -3,29 +3,27 @@ package monocle
 import monocle.syntax.iso._
 import monocle.thirdparty.hlist._
 import org.specs2.scalaz.Spec
-import shapeless.HNil
+import shapeless.{HNil, ::}
+import monocle.syntax.lens._
+import monocle.function.Fields._
 
 
 class HListExample extends Spec {
 
   case class Example(i : Int, s: String, b: Boolean)
 
-  val example = Example(1, "bla", true)
-  val hlist   = example <-> toHList get
+  "_1 to _6 creates a Lens from HList to ith element" in {
+    (1 :: "bla" :: true :: HNil |-> _1 get) shouldEqual 1
+    (1 :: "bla" :: true :: HNil |-> _2 get) shouldEqual "bla"
+    (1 :: "bla" :: true :: 5F :: 'c' :: 7L ::  HNil |-> _6 get) shouldEqual 7L
+
+    (1 :: "bla" :: true :: HNil  |-> _1 modify(_ + 1)) shouldEqual 2 :: "bla" :: true :: HNil
+  }
 
   "toHList creates an Iso between a Generic (typically case class) and HList" in {
-    (example <-> toHList get) shouldEqual (1 :: "bla" :: true :: HNil)
-  }
+    (Example(1, "bla", true) <-> toHList get) shouldEqual (1 :: "bla" :: true :: HNil)
 
-  "_1 creates a Lens toward the first element of a non-empty HList" in {
-    _1.get(hlist) shouldEqual 1
-
-    _1.set(hlist, 2)     shouldEqual (2     :: "bla" :: true :: HNil)
-    _1.set(hlist, false) shouldEqual (false :: "bla" :: true :: HNil)
-  }
-
-  "_2 creates a Lens toward the second element of an Hlist with 2 or more elements" in {
-    _2.get(hlist) shouldEqual "bla"
+    (Example(1, "bla", true) <-> toHList |-> _1 set 5) shouldEqual Example(5, "bla", true)
   }
 
 }

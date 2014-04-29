@@ -1,25 +1,55 @@
 package monocle.thirdparty
 
-import monocle.{SimpleIso, Iso, Lens}
-import shapeless.{Generic, HList}
+import monocle._
+import monocle.function._
+import shapeless.ops.hlist.{ReplaceAt, At}
+import shapeless.{Generic, Nat, HList}
+
 
 object hlist extends HListInstances
 
 trait HListInstances {
 
-  type HL[+H, T <: HList] = shapeless.::[H, T]
+  def toHList[S, A <: HList](implicit gen: Generic.Aux[S, A]): SimpleIso[S, A] =
+    SimpleIso[S, A]({ s => gen.to(s)}, {l => gen.from(l)} )
 
-  /** Create a lens toward the first element of an HList */
-  def _1[A, T <: HList, New] = Lens[HL[A, T], HL[New, T], A, New](_.head, (l, a) => l.copy(head = a))
-
-  /** Create a lens toward the second element of an HList */
-  def _2[A1, A2, T <: HList, New] =
-    Lens[HL[A1, HL[A2, T]], HL[A1, HL[New, T]], A2, New](_.tail.head, (l, a) => l.copy(tail = l.tail.copy(head = a)))
-
-  /** Create an iso between an S and its HList representation  */
-  def toHList[S, L <: HList](implicit gen: Generic.Aux[S, L]): SimpleIso[S, L] =
-    Iso[S, S, L, L]({ s => gen.to(s)}, {l => gen.from(l)} )
+  def fromHList[S <: HList, A](implicit gen: Generic.Aux[A, S]): SimpleIso[S, A] =
+    toHList.reverse
 
 
+  implicit def hListField1[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._0.N, A],
+                                              evReplace: ReplaceAt.Aux[S, shapeless.nat._0.N, A, (A, S)]) = new Field1[S, A] {
+    def _1: SimpleLens[S, A] = hListAt(shapeless.nat._0)
+  }
+
+  implicit def hListField2[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._1.N, A],
+                                              evReplace: ReplaceAt.Aux[S, shapeless.nat._1.N, A, (A, S)]) = new Field2[S, A] {
+    def _2: SimpleLens[S, A] = hListAt(shapeless.nat._1)
+  }
+
+  implicit def hListField3[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._2.N, A],
+                                              evReplace: ReplaceAt.Aux[S, shapeless.nat._2.N, A, (A, S)]) = new Field3[S, A] {
+    def _3: SimpleLens[S, A] = hListAt(shapeless.nat._2)
+  }
+
+  implicit def hListField4[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._3.N, A],
+                                              evReplace: ReplaceAt.Aux[S, shapeless.nat._3.N, A, (A, S)]) = new Field4[S, A] {
+    def _4: SimpleLens[S, A] = hListAt(shapeless.nat._3)
+  }
+
+  implicit def hListField5[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._4.N, A],
+                                              evReplace: ReplaceAt.Aux[S, shapeless.nat._4.N, A, (A, S)]) = new Field5[S, A] {
+    def _5: SimpleLens[S, A] = hListAt(shapeless.nat._4)
+  }
+
+  implicit def hListField6[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._5.N, A],
+                                              evReplace: ReplaceAt.Aux[S, shapeless.nat._5.N, A, (A, S)]) = new Field6[S, A] {
+    def _6: SimpleLens[S, A] = hListAt(shapeless.nat._5)
+  }
+
+
+  private def hListAt[S <: HList, A](n : Nat)(implicit evAt: At.Aux[S, n.N, A],
+                                                  evReplace: ReplaceAt.Aux[S, n.N, A, (A, S)]): SimpleLens[S, A]  =
+    SimpleLens[S, A](_.at(n), (hlist, a) => hlist.updatedAt(n, a) )
 
 }

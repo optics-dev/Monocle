@@ -15,6 +15,7 @@ object TestUtil {
   implicit val intEqual     = Equal.equalA[Int]
   implicit val longEqual    = Equal.equalA[Long]
   implicit val floatEqual   = Equal.equalA[Float]
+  implicit val doubleEqual  = Equal.equalA[Double]
   implicit val stringEqual  = Equal.equalA[String]
 
   implicit def optEq[A: Equal] = scalaz.std.option.optionEqual[A]
