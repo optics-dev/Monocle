@@ -25,8 +25,9 @@ class EachExample extends Spec with ScalazMatchers {
   }
 
   "Each can be used on tuple of same type" in {
-    (1, 2)    |->> each modify( _ + 1) shouldEqual (2, 3)
-    (1, 2, 3) |->> each modify( _ + 1) shouldEqual (2, 3, 4)
+    (1, 2)             |->> each modify( _ + 1) shouldEqual (2, 3)
+    (1, 2, 3)          |->> each modify( _ + 1) shouldEqual (2, 3, 4)
+    (1, 2, 3, 4, 5, 6) |->> each modify( _ + 1) shouldEqual (2, 3, 4, 5, 6, 7)
   }
 
   "Each can be used on Tree" in {

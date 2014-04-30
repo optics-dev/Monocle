@@ -38,14 +38,29 @@ object Traversal {
     def multiLift[F[_]: Applicative](from: T[A], f: A => F[B]): F[T[B]] = Traverse[T].traverse(from)(f)
   }
 
-  def apply2[S, T, A, B](get1: S => A)(get2: S => A)(_set: (S, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+  def apply2[S, T, A, B](get1: S => A, get2: S => A)(_set: (S, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
     def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
       Applicative[F].apply2(f(get1(from)), f(get2(from)))((v1, v2) => _set(from, v1, v2))
   }
 
-  def apply3[S, T, A, B](get1: S => A)(get2: S => A)(get3: S => A)(_set: (S, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+  def apply3[S, T, A, B](get1: S => A, get2: S => A, get3: S => A)(_set: (S, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
     def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
       Applicative[F].apply3(f(get1(from)), f(get2(from)), f(get3(from)))((v1, v2, v3) => _set(from, v1, v2, v3))
+  }
+
+  def apply4[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A)(_set: (S, B, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
+      Applicative[F].apply4(f(get1(from)), f(get2(from)), f(get3(from)), f(get4(from)))((v1, v2, v3, v4) => _set(from, v1, v2, v3, v4))
+  }
+
+  def apply5[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(_set: (S, B, B, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
+      Applicative[F].apply5(f(get1(from)), f(get2(from)), f(get3(from)), f(get4(from)), f(get5(from)))((v1, v2, v3, v4, v5) => _set(from, v1, v2, v3, v4, v5))
+  }
+
+  def apply6[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(_set: (S, B, B, B, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
+      Applicative[F].apply6(f(get1(from)), f(get2(from)), f(get3(from)), f(get4(from)), f(get5(from)), f(get6(from)))((v1, v2, v3, v4, v5, v6) => _set(from, v1, v2, v3, v4, v5, v6))
   }
 
 
