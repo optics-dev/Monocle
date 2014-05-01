@@ -17,7 +17,7 @@ object BuildSettings {
     incOptions        := incOptions.value.withNameHashing(true),
     resolvers         += Resolver.sonatypeRepo("releases"),
     resolvers         += Resolver.sonatypeRepo("snapshots"),
-    addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0-M3" cross CrossVersion.full)
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0" cross CrossVersion.full)
   )  ++ publishSettings
 }
 
@@ -31,7 +31,7 @@ object Dependencies {
   val specs2            = "org.specs2"      %% "specs2"                    % "1.12.3"       % "test"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.1.5"        % "test"
   val scalaReflect      = "org.scala-lang"  %  "scala-reflect"             % BuildSettings.buildScalaVersion
-  val quasiquotes       = "org.scalamacros" %  "quasiquotes"               % "2.0.0-M3" cross CrossVersion.full
+  val quasiquotes       = "org.scalamacros" %  "quasiquotes"               % "2.0.0" cross CrossVersion.binary
   val testsDep          = Seq(scalaCheck, scalaCheckBinding, specs2, scalazSpec2)
   val macrosDep         = Seq(scalaReflect, quasiquotes)
   val shapelessDep      = Seq(shapeless, shapelessCheck, shapelessZ)
