@@ -32,7 +32,7 @@ private[monocle] object MacroImpl {
     val strFieldName = c.eval(c.Expr[String](c.resetAllAttrs(fieldName.tree.duplicate)))
 
     val fieldMethod = aTpe.declarations.collectFirst {
-      case m: MethodSymbol if m.isCaseAccessor && m.name.decoded == strFieldName => m.name
+      case m: MethodSymbol if m.isCaseAccessor && m.name.decoded == strFieldName => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $strFieldName in $aTpe"))
 
     c.Expr[B](q"""{(a: $aTpe) => a.$fieldMethod}""")
@@ -50,7 +50,7 @@ private[monocle] object MacroImpl {
 
     val field = constructor.paramss.head.find(_.name.decoded == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
 
-    c.Expr[(A, B) => A](q"{(a: $aTpe, b: $bTpe) => a.copy(${field.name} = b)}")
+    c.Expr[(A, B) => A](q"{(a: $aTpe, b: $bTpe) => a.copy(${field} = b)}")
   }
 
 }
