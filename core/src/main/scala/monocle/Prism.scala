@@ -1,8 +1,6 @@
 package monocle
 
-import org.scalacheck.Prop._
-import org.scalacheck.{ Properties, Arbitrary }
-import scalaz.{ Equal, Applicative, \/ }
+import scalaz.{ Applicative, \/ }
 
 /**
  * A Prism is a special case of Traversal where the focus is limited to
@@ -41,24 +39,6 @@ object Prism {
         .map(Applicative[F].map(_)(_reverseGet)) // T \/ F[T]
         .leftMap(Applicative[F].point(_)) // F[T] \/ F[T]
         .fold(identity, identity) // F[T]
-  }
-
-  def laws[S: Arbitrary: Equal, A: Arbitrary: Equal](prism: SimplePrism[S, A]) = new Properties("Prism") {
-    import scalaz.syntax.equal._
-    import scalaz.std.option._
-
-    include(Traversal.laws(prism))
-
-    property("reverseGet - getOption") = forAll { value: A =>
-      prism.getOption(prism.reverseGet(value)) === Some(value)
-    }
-
-    property("getOption - reverseGet") = forAll { (from: S, newValue: A) =>
-      // if we can extract an A from S, then this A fully describes S
-      prism.getOption(from).map { someA =>
-        prism.reverseGet(someA) === from
-      } getOrElse true
-    }
   }
 
 }

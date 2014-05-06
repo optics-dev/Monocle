@@ -1,8 +1,6 @@
 package monocle
 
-import org.scalacheck.Prop._
-import org.scalacheck.{ Properties, Arbitrary }
-import scalaz.{ Equal, Functor }
+import scalaz.Functor
 
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.
@@ -35,19 +33,6 @@ object Iso {
 
     def lift[F[_]: Functor](from: S, f: A => F[B]): F[T] =
       Functor[F].map(f(_get(from)))(_reverseGet)
-  }
-
-  def laws[S: Arbitrary: Equal, A: Arbitrary: Equal](iso: SimpleIso[S, A]) = new Properties("Iso") {
-    import scalaz.syntax.equal._
-
-    include(Lens.laws(iso))
-    include(Prism.laws(iso))
-
-    property("double inverse") = forAll { (from: S, newValue: A) =>
-      iso.reverse.reverse.get(from) === iso.get(from)
-      iso.reverse.reverse.set(from, newValue) === iso.set(from, newValue)
-    }
-
   }
 
 }

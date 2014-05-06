@@ -5,7 +5,7 @@ import xerial.sbt.Sonatype._
 import xerial.sbt.Sonatype.SonatypeKeys._
 
 object BuildSettings {
-  import ScalaLensPublishing._
+  import MonoclePublishing._
   val buildScalaVersion = "2.10.4"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
@@ -26,18 +26,17 @@ object Dependencies {
   val shapeless         = "com.chuusai"     %  "shapeless_2.10.4"          % "2.0.0"
   val shapelessZ        = "org.typelevel"   %% "shapeless-scalaz"          % "0.2"
   val shapelessCheck    = "org.typelevel"   %% "shapeless-scalacheck"      % "0.2"
-  val scalaCheck        = "org.scalacheck"  %% "scalacheck"                % "1.10.1"
+  val scalaCheck        = "org.scalacheck"  %% "scalacheck"                % "1.10.1"       % "test"
   val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.0.5"        % "test"
   val specs2            = "org.specs2"      %% "specs2"                    % "1.12.3"       % "test"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.1.5"        % "test"
   val scalaReflect      = "org.scala-lang"  %  "scala-reflect"             % BuildSettings.buildScalaVersion
   val quasiquotes       = "org.scalamacros" %  "quasiquotes"               % "2.0.0" cross CrossVersion.binary
-  val testsDep          = Seq(scalaCheck, scalaCheckBinding, specs2, scalazSpec2)
   val macrosDep         = Seq(scalaReflect, quasiquotes)
   val shapelessDep      = Seq(shapeless, shapelessCheck, shapelessZ)
 }
 
-object ScalaLensBuild extends Build {
+object MonocleBuild extends Build {
   import BuildSettings._
   import Dependencies._
 
@@ -47,13 +46,13 @@ object ScalaLensBuild extends Build {
     settings = buildSettings ++ Seq(
       publishArtifact := false,
       run <<= run in Compile in core) ++ sonatypeSettings
-  ) aggregate(core, generic, examples)
+  ) aggregate(core, generic, law, spec, examples)
 
   lazy val core: Project = Project(
     "monocle-core",
     file("core"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz) ++ macrosDep ++ testsDep
+      libraryDependencies ++= Seq(scalaz) ++ macrosDep
     )
   )
 
@@ -61,21 +60,38 @@ object ScalaLensBuild extends Build {
     "monocle-generic",
     file("generic"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz) ++ shapelessDep ++ macrosDep ++ testsDep
+      libraryDependencies ++= Seq(scalaz) ++ shapelessDep
     )
-  ) dependsOn(core % "test->test;compile->compile")
+  ) dependsOn(core)
+
+  lazy val law: Project = Project(
+    "monocle-law",
+    file("law"),
+    settings = buildSettings ++ Seq(
+      libraryDependencies ++= Seq(scalaz, scalaCheck)
+    )
+  ) dependsOn(core)
+
+  lazy val spec: Project = Project(
+    "monocle-spec",
+    file("spec"),
+    settings = buildSettings ++ Seq(
+      publishArtifact      := false,
+      libraryDependencies ++= Seq(scalaz, scalaCheck, scalaCheckBinding, specs2, scalazSpec2) ++ shapelessDep
+    )
+  ) dependsOn(core, generic ,law % "test->test")
 
   lazy val examples: Project = Project(
     "monocle-examples",
     file("examples"),
     settings = buildSettings ++ Seq(
-      publishArtifact := false,
-      libraryDependencies ++= Seq(scalaz) ++ shapelessDep ++ testsDep
+      publishArtifact      := false,
+      libraryDependencies ++= Seq(scalaz, specs2) ++ shapelessDep
     )
-  ) dependsOn(core % "test->test;compile->compile", generic)
+  ) dependsOn(core, generic, spec % "test->test")
 }
 
-object ScalaLensPublishing  {
+object MonoclePublishing  {
 
   lazy val publishSettings: Seq[Setting[_]] = Seq(
     pomExtra := {

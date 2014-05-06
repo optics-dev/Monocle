@@ -2,10 +2,7 @@ package monocle
 
 import monocle.util.Constant
 import monocle.util.Constant._
-import org.scalacheck.Prop._
-import org.scalacheck.{ Properties, Arbitrary }
-import scalaz.Id._
-import scalaz.{ Equal, Applicative, Functor, Monoid }
+import scalaz.{ Applicative, Functor, Monoid }
 
 /**
  * A Lens defines a single focus between a type S and A such as if you change A to B
@@ -34,24 +31,6 @@ object Lens {
   def apply[S, T, A, B](_get: S => A, _set: (S, B) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
     def lift[F[_]: Functor](from: S, f: A => F[B]): F[T] =
       Functor[F].map(f(_get(from)))(newValue => _set(from, newValue))
-  }
-
-  def laws[S: Arbitrary: Equal, A: Arbitrary: Equal](lens: SimpleLens[S, A]) = new Properties("Lens") {
-    import scalaz.syntax.equal._
-
-    include(Traversal.laws(lens))
-
-    property("lift - identity") = forAll { from: S =>
-      lens.lift[Id](from, id.point[A](_)) === from
-    }
-
-    property("set - get") = forAll { (from: S, newValue: A) =>
-      lens.get(lens.set(from, newValue)) === newValue
-    }
-
-    property("get - set") = forAll { from: S =>
-      lens.set(from, lens.get(from)) === from
-    }
   }
 
 }

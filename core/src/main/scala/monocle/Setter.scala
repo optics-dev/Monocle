@@ -1,8 +1,6 @@
 package monocle
 
-import org.scalacheck.Prop.forAll
-import org.scalacheck.{ Properties, Arbitrary }
-import scalaz.{ Functor, Equal }
+import scalaz.Functor
 
 trait Setter[S, T, A, B] { self =>
 
@@ -25,19 +23,6 @@ object Setter {
 
   def apply[F[_]: Functor, A, B]: Setter[F[A], F[B], A, B] = new Setter[F[A], F[B], A, B] {
     def modify(from: F[A], f: A => B): F[B] = Functor[F].map(from)(f)
-  }
-
-  def laws[S: Arbitrary: Equal, A: Arbitrary](setter: SimpleSetter[S, A]) = new Properties("Setter") {
-    import scalaz.syntax.equal._
-
-    property("modify - identity") = forAll { from: S =>
-      setter.modify(from, identity) === from
-    }
-
-    property("set - set") = forAll { (from: S, newValue: A) =>
-      val setOnce = setter.set(from, newValue)
-      setOnce === setter.set(setOnce, newValue)
-    }
   }
 
 }

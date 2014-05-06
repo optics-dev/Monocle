@@ -2,11 +2,9 @@ package monocle
 
 import monocle.util.Constant
 import monocle.util.Constant._
-import org.scalacheck.Prop._
-import org.scalacheck.{ Properties, Arbitrary }
 import scalaz.Id._
 import scalaz.std.list._
-import scalaz.{ Monoid, Traverse, Applicative, Equal }
+import scalaz.{ Monoid, Traverse, Applicative }
 
 /**
  * A Traversal is generalisation of a Lens in a way that it defines a multi foci between
@@ -63,19 +61,4 @@ object Traversal {
       Applicative[F].apply6(f(get1(from)), f(get2(from)), f(get3(from)), f(get4(from)), f(get5(from)), f(get6(from)))((v1, v2, v3, v4, v5, v6) => _set(from, v1, v2, v3, v4, v5, v6))
   }
 
-
-  def laws[S: Arbitrary: Equal, A: Arbitrary: Equal](traversal: SimpleTraversal[S, A]) = new Properties("Traversal") {
-
-    import scalaz.syntax.equal._
-
-    include(Setter.laws(traversal))
-
-    property("multi lift - identity") = forAll { from: S =>
-      traversal.multiLift[Id](from, id.point[A](_)) === from
-    }
-
-    property("set - get all") = forAll { (from: S, newValue: A) =>
-      traversal.getAll(traversal.set(from, newValue)) === traversal.getAll(from).map(_ => newValue)
-    }
-  }
 }
