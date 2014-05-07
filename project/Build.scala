@@ -46,7 +46,7 @@ object MonocleBuild extends Build {
     settings = buildSettings ++ Seq(
       publishArtifact := false,
       run <<= run in Compile in core) ++ sonatypeSettings
-  ) aggregate(core, generic, law, spec, examples)
+  ) aggregate(core, generic, law, test, example)
 
   lazy val core: Project = Project(
     "monocle-core",
@@ -72,23 +72,23 @@ object MonocleBuild extends Build {
     )
   ) dependsOn(core)
 
-  lazy val spec: Project = Project(
-    "monocle-spec",
-    file("spec"),
+  lazy val test: Project = Project(
+    "monocle-test",
+    file("test"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
       libraryDependencies ++= Seq(scalaz, scalaCheck, scalaCheckBinding, specs2, scalazSpec2) ++ shapelessDep
     )
   ) dependsOn(core, generic ,law % "test->test")
 
-  lazy val examples: Project = Project(
-    "monocle-examples",
-    file("examples"),
+  lazy val example: Project = Project(
+    "monocle-example",
+    file("example"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
       libraryDependencies ++= Seq(scalaz, specs2) ++ shapelessDep
     )
-  ) dependsOn(core, generic, spec % "test->test")
+  ) dependsOn(core, generic, test % "test->test")
 }
 
 object MonoclePublishing  {

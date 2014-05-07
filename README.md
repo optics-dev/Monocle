@@ -64,7 +64,9 @@ libraryDependencies ++= Seq(
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
 #### Sub Projects
 Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.
-Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes and [scalacheck](http://www.scalacheck.org/) to encode laws.
+Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes.
+
+Law defines Iso, Lens, Prism, Setter and Traversal laws using [scalacheck](http://www.scalacheck.org/).
 
 Generic is an experiment to provide highly generalised Lens and Iso using HList from [shapeless](https://github.com/milessabin/shapeless).
 Generic focus is on neat abstraction but that may come at additional runtime or compile time cost.
