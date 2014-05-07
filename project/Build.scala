@@ -22,7 +22,7 @@ object BuildSettings {
 }
 
 object Dependencies {
-  val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.0.5"
+  val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.0.6"
   val shapeless         = "com.chuusai"     %  "shapeless_2.10.4"          % "2.0.0"
   val shapelessZ        = "org.typelevel"   %% "shapeless-scalaz"          % "0.2"
   val shapelessCheck    = "org.typelevel"   %% "shapeless-scalacheck"      % "0.2"
