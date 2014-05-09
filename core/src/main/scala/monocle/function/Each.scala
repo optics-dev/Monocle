@@ -9,7 +9,7 @@ import scalaz.std.map._
 import scalaz.std.option._
 import scalaz.std.stream._
 import scalaz.std.vector._
-import scalaz.{Traverse, Tree}
+import scalaz.{IList, Traverse, Tree}
 
 
 trait Each[S, A] {
@@ -35,6 +35,7 @@ trait EachInstances {
   implicit def mapEach[K, V]: Each[Map[K, V], V] = traverseEach[({type F[v] = Map[K,v]})#F, V]
   implicit def optEach[A]   : Each[Option[A], A] = traverseEach[Option, A]
   implicit def listEach[A]  : Each[List[A]  , A] = traverseEach[List, A]
+  implicit def iListEach[A] : Each[IList[A] , A] = traverseEach[IList, A]
   implicit def streamEach[A]: Each[Stream[A], A] = traverseEach[Stream, A]
   implicit def vectorEach[A]: Each[Vector[A], A] = traverseEach[Vector, A]
   implicit def treeEach[A]  : Each[Tree[A]  , A] = traverseEach[Tree, A]
