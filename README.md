@@ -10,7 +10,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.github.julien-truffaut"  %%  "monocle-core"  % "0.3.0" // or 0.4-SNAPSHOT
+  "com.github.julien-truffaut"  %%  "monocle-core"  % "0.3" // or 0.4-SNAPSHOT
 )
 ```
 ### Usage
