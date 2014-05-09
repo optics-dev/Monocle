@@ -9,9 +9,6 @@ import org.specs2.scalaz.Spec
 import scalaz.Equal
 import scalaz.syntax.equal._
 import shapeless.{Generic, ::, HNil}
-import shapeless.contrib.scalaz._
-import shapeless.contrib.scalacheck._
-import shapeless.TypeClass.deriveConstructors
 
 class HListSpec extends Spec {
 
@@ -21,10 +18,21 @@ class HListSpec extends Spec {
 
   implicit val exampleGen: Generic.Aux[Example, H] = Generic.product[Example]
 
+  implicit val exampleEq = Equal.equalA[Example]
+
   implicit val hEq: Equal[H] = new Equal[H] {
     def equal(a1: H, a2: H): Boolean =
       fromHList[H, Example].get(a1) === fromHList[H,Example].get(a2)
   }
+
+  implicit val exampleArb: Arbitrary[Example] = Arbitrary(for{
+    i <- Arbitrary.arbitrary[Int]
+    b <- Arbitrary.arbitrary[Boolean]
+    c <- Arbitrary.arbitrary[Char]
+    f <- Arbitrary.arbitrary[Float]
+    l <- Arbitrary.arbitrary[Long]
+    d <- Arbitrary.arbitrary[Double]
+  } yield Example(i,b,c,f,l,d))
 
   implicit val hArb: Arbitrary[H] = Arbitrary(for {
     example <- Arbitrary.arbitrary[Example]

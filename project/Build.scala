@@ -6,7 +6,7 @@ import xerial.sbt.Sonatype.SonatypeKeys._
 
 object BuildSettings {
   import MonoclePublishing._
-  val buildScalaVersion = "2.10.4"
+  val buildScalaVersion = "2.11.0"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization      := "com.github.julien-truffaut",
@@ -22,18 +22,13 @@ object BuildSettings {
 }
 
 object Dependencies {
-  val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.0.5"
-  val shapeless         = "com.chuusai"     %  "shapeless_2.10.4"          % "2.0.0"
-  val shapelessZ        = "org.typelevel"   %% "shapeless-scalaz"          % "0.2"
-  val shapelessCheck    = "org.typelevel"   %% "shapeless-scalacheck"      % "0.2"
-  val scalaCheck        = "org.scalacheck"  %% "scalacheck"                % "1.10.1"
-  val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.0.5"        % "test"
-  val specs2            = "org.specs2"      %% "specs2"                    % "1.12.3"       % "test"
-  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.1.5"        % "test"
+  val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.0-SNAPSHOT"
+  val shapeless         = "com.chuusai"     %% "shapeless"                 % "2.0.0"
+  val scalaCheck        = "org.scalacheck"  %% "scalacheck"                % "1.11.3"
+  val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0-SNAPSHOT" % "test"
+  val specs2            = "org.specs2"      %% "specs2"                    % "2.3.11"         % "test"
+  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.3-SNAPSHOT"   % "test"
   val scalaReflect      = "org.scala-lang"  %  "scala-reflect"             % BuildSettings.buildScalaVersion
-  val quasiquotes       = "org.scalamacros" %  "quasiquotes"               % "2.0.0" cross CrossVersion.binary
-  val macrosDep         = Seq(scalaReflect, quasiquotes)
-  val shapelessDep      = Seq(shapeless, shapelessCheck, shapelessZ)
 }
 
 object MonocleBuild extends Build {
@@ -52,7 +47,7 @@ object MonocleBuild extends Build {
     "monocle-core",
     file("core"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz) ++ macrosDep
+      libraryDependencies ++= Seq(scalaz, scalaReflect)
     )
   )
 
@@ -60,7 +55,7 @@ object MonocleBuild extends Build {
     "monocle-generic",
     file("generic"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz) ++ shapelessDep
+      libraryDependencies ++= Seq(scalaz, shapeless)
     )
   ) dependsOn(core)
 
@@ -77,7 +72,7 @@ object MonocleBuild extends Build {
     file("test"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
-      libraryDependencies ++= Seq(scalaz, scalaCheck, scalaCheckBinding, specs2, scalazSpec2) ++ shapelessDep
+      libraryDependencies ++= Seq(scalaz, shapeless, scalaCheck, scalaCheckBinding, specs2, scalazSpec2)
     )
   ) dependsOn(core, generic ,law)
 
@@ -86,7 +81,7 @@ object MonocleBuild extends Build {
     file("example"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
-      libraryDependencies ++= Seq(scalaz, specs2) ++ shapelessDep
+      libraryDependencies ++= Seq(scalaz, shapeless, specs2)
     )
   ) dependsOn(core, generic, test % "test->test")
 }

@@ -31,6 +31,9 @@ object TestUtil {
   implicit def tuple5Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal] = scalaz.std.tuple.tuple5Equal[A1, A2, A3, A4, A5]
   implicit def tuple6Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal, A6: Equal] = scalaz.std.tuple.tuple6Equal[A1, A2, A3, A4, A5, A6]
 
+  // Order instances
+
+  implicit val intOrder = Order.fromScalaOrdering[Int]
 
   // Show instances
 
