@@ -26,6 +26,10 @@ class OverloadedComposeExample extends Spec {
     optLens.composeTraversal(some).getAll(example) shouldEqual List(2)
   }
 
+  "also when type parameter is explicit" in {
+    (optLens.compose(some: SimplePrism[Option[Int], Int])).getAll(example) shouldEqual List(2)
+  }
+
   "compose and implicit do not work together" in {
     illTyped("""
       optLens.compose(each).getAll(example)
