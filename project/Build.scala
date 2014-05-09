@@ -26,7 +26,7 @@ object Dependencies {
   val shapeless         = "com.chuusai"     %  "shapeless_2.10.4"          % "2.0.0"
   val shapelessZ        = "org.typelevel"   %% "shapeless-scalaz"          % "0.2"
   val shapelessCheck    = "org.typelevel"   %% "shapeless-scalacheck"      % "0.2"
-  val scalaCheck        = "org.scalacheck"  %% "scalacheck"                % "1.10.1"       % "test"
+  val scalaCheck        = "org.scalacheck"  %% "scalacheck"                % "1.10.1"
   val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.0.5"        % "test"
   val specs2            = "org.specs2"      %% "specs2"                    % "1.12.3"       % "test"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.1.5"        % "test"
@@ -79,7 +79,7 @@ object MonocleBuild extends Build {
       publishArtifact      := false,
       libraryDependencies ++= Seq(scalaz, scalaCheck, scalaCheckBinding, specs2, scalazSpec2) ++ shapelessDep
     )
-  ) dependsOn(core, generic ,law % "test->test")
+  ) dependsOn(core, generic ,law)
 
   lazy val example: Project = Project(
     "monocle-example",
