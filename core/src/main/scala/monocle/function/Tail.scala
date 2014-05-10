@@ -2,7 +2,7 @@ package monocle.function
 
 import monocle.syntax.traversal._
 import monocle.{Traversal, SimpleTraversal}
-import scalaz.Applicative
+import scalaz.{INil, IList, ICons, Applicative}
 
 trait Tail[S] {
 
@@ -45,6 +45,15 @@ trait TailInstances {
       def multiLift[F[_] : Applicative](from: Vector[A], f: Vector[A] => F[Vector[A]]): F[Vector[A]] = from match {
         case Vector() => Applicative[F].point(Vector[A]())
         case x +: xs  => Applicative[F].map(f(xs))(x +: _)
+      }
+    }
+  }
+
+  implicit def IListTail[A] = new Tail[IList[A]]{
+    def tail: SimpleTraversal[IList[A], IList[A]] = new Traversal[IList[A], IList[A], IList[A], IList[A]] {
+      def multiLift[F[_] : Applicative](from: IList[A], f: IList[A] => F[IList[A]]): F[IList[A]] = from match {
+        case INil()  => Applicative[F].point(INil())
+        case ICons(x, xs) => Applicative[F].map(f(xs))(x :: _)
       }
     }
   }

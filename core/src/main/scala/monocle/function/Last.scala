@@ -2,6 +2,7 @@ package monocle.function
 
 import monocle.SimpleTraversal
 import monocle.syntax.traversal._
+import scalaz.IList
 
 
 trait Last[S, A] {
@@ -23,6 +24,7 @@ trait LastInstances {
   }
 
   implicit def listLast[A]  : Last[List[A]  , A]    = reverseHeadLast[List[A]  , A]
+  implicit def iListLast[A] : Last[IList[A] , A]    = reverseHeadLast[IList[A] , A]
   implicit def streamLast[A]: Last[Stream[A], A]    = reverseHeadLast[Stream[A], A]
   implicit def vectorLast[A]: Last[Vector[A], A]    = reverseHeadLast[Vector[A]  , A]
   implicit val stringLast   : Last[String   , Char] = reverseHeadLast[String   , Char]

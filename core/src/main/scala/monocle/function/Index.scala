@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle.SimpleTraversal
-import scalaz.Equal
+import scalaz.{IList, Equal}
 import monocle.syntax.traversal._
 import scalaz.syntax.equal._
 
@@ -28,6 +28,7 @@ trait IndexInstances {
   implicit def streamIndex[A]: Index[Stream[A], Int, A]    = filterIndexIndex
   implicit val stringIndex   : Index[String   , Int, Char] = filterIndexIndex
   implicit def vectorIndex[A]: Index[Vector[A], Int, A]    = filterIndexIndex
+  implicit def iListIndex[A] : Index[IList[A],  Int, A]    = filterIndexIndex
 
   def atIndex[S, I, A](implicit ev: At[S, I, A]) = new Index[S, I, A] {
     def index(i: I) = ev.at(i) |->> monocle.std.option.some

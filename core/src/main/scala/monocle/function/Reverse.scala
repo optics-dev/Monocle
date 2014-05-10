@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle.SimpleIso
-import scalaz.Tree
+import scalaz.{IList, Tree}
 
 trait Reverse[S] {
 
@@ -21,6 +21,7 @@ trait ReverseInstances {
   def reverse[S](implicit ev: Reverse[S]): SimpleIso[S, S] = ev.reverse
 
   implicit def listReverse[A]  : Reverse[List[A]]   = apply[List[A]](_.reverse)
+  implicit def iListReverse[A] : Reverse[IList[A]]  = apply[IList[A]](_.reverse)
   implicit def streamReverse[A]: Reverse[Stream[A]] = apply[Stream[A]](_.reverse)
   implicit def stringReverse[A]: Reverse[String]    = apply[String](_.reverse)
   implicit def vectorReverse[A]: Reverse[Vector[A]] = apply[Vector[A]](_.reverse)

@@ -2,7 +2,8 @@ package monocle.function
 
 import monocle.syntax.traversal._
 import monocle.{Traversal, SimpleTraversal}
-import scalaz.Applicative
+import scalaz.{IList, Applicative}
+import scalaz.syntax.traverse._
 
 trait FilterIndex[S, I, A] {
 
@@ -57,6 +58,15 @@ trait FilterIndexInstances {
     def filterIndex(predicate: Int => Boolean) = new Traversal[Vector[A], Vector[A], A, A] {
       def multiLift[F[_] : Applicative](from: Vector[A], f: A => F[A]): F[Vector[A]] =
         scalaz.std.vector.vectorInstance.traverseImpl(from.zipWithIndex){ case (a, j) =>
+          if(predicate(j)) f(a) else Applicative[F].point(a)
+        }
+    }
+  }
+
+  implicit def iListFilterIndex[A] = new FilterIndex[IList[A], Int, A] {
+    def filterIndex(predicate: Int => Boolean) = new Traversal[IList[A], IList[A], A, A] {
+      def multiLift[F[_] : Applicative](from: IList[A], f: A => F[A]): F[IList[A]] =
+        from.zipWithIndex.traverse{ case (a, j) =>
           if(predicate(j)) f(a) else Applicative[F].point(a)
         }
     }

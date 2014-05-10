@@ -1,6 +1,7 @@
 package monocle.function
 
 import monocle.SimpleTraversal
+import scalaz.IList
 
 
 trait Head[S, A] {
@@ -22,6 +23,7 @@ trait HeadInstances {
   }
 
   implicit def listHead[A]  : Head[List[A]  , A]    = indexHead[List[A]  , A]
+  implicit def iListHead[A] : Head[IList[A] , A]    = indexHead[IList[A] , A]
   implicit def streamHead[A]: Head[Stream[A], A]    = indexHead[Stream[A], A]
   implicit def vectorHead[A]: Head[Vector[A], A]    = indexHead[Vector[A]  , A]
   implicit val stringHead   : Head[String   , Char] = indexHead[String   , Char]
