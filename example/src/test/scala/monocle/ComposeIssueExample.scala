@@ -10,7 +10,7 @@ import org.specs2.execute.{AnyValueAsResult, AsResult}
 /**
  * Illustrate the purpose of specific compose function for each main concept (Lens, Traversal, etc)
  */
-class OverloadedComposeExample extends Spec {
+class ComposeIssueExample extends Spec {
 
   case class Example(_opt: Option[Int])
 
