@@ -22,12 +22,12 @@ object BuildSettings {
 }
 
 object Dependencies {
-  val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.0-SNAPSHOT"
+  val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.0.6"
   val shapeless         = "com.chuusai"     %% "shapeless"                 % "2.0.0"
   val scalaCheck        = "org.scalacheck"  %% "scalacheck"                % "1.11.3"
-  val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0-SNAPSHOT" % "test"
-  val specs2            = "org.specs2"      %% "specs2"                    % "2.3.11"         % "test"
-  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.3-SNAPSHOT"   % "test"
+  val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.0.6"   % "test"
+  val specs2            = "org.specs2"      %% "specs2"                    % "2.3.11"  % "test"
+  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.2"     % "test"
   val scalaReflect      = "org.scala-lang"  %  "scala-reflect"             % BuildSettings.buildScalaVersion
 }
 
