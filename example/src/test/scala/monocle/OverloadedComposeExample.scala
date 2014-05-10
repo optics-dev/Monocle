@@ -5,6 +5,7 @@ import monocle.function.Each._
 import monocle.std.option._
 import org.specs2.scalaz.Spec
 import shapeless.test.illTyped
+import org.specs2.execute.{AnyValueAsResult, AsResult}
 
 /**
  * Illustrate the purpose of specific compose function for each main concept (Lens, Traversal, etc)
@@ -17,9 +18,9 @@ class OverloadedComposeExample extends Spec {
   val example = Example(Some(2))
 
   "compose does not compile between Lens and Prism" in {
-    illTyped("""
+    new AnyValueAsResult[Unit].asResult(illTyped("""
       optLens.compose(some).getAll(example)
-    """)
+    """))
   }
 
   "but composeTraversal does" in {
@@ -31,9 +32,9 @@ class OverloadedComposeExample extends Spec {
   }
 
   "compose and implicit do not work together" in {
-    illTyped("""
+    new AnyValueAsResult[Unit].asResult(illTyped("""
       optLens.compose(each).getAll(example)
-    """)
+    """))
   }
 
   "but composeTraversal is fine" in {

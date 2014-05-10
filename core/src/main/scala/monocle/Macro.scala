@@ -29,7 +29,7 @@ private[monocle] object MacroImpl {
     import c.universe._
     val aTpe = weakTypeOf[A]
 
-    val strFieldName = c.eval(c.Expr[String](c.resetAllAttrs(fieldName.tree.duplicate)))
+    val strFieldName = c.eval(c.Expr[String](c.resetLocalAttrs(fieldName.tree.duplicate)))
 
     val fieldMethod = aTpe.declarations.collectFirst {
       case m: MethodSymbol if m.isCaseAccessor && m.name.decoded == strFieldName => m
@@ -46,7 +46,7 @@ private[monocle] object MacroImpl {
       case m: MethodSymbol if m.isPrimaryConstructor => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in $aTpe"))
 
-    val strFieldName = c.eval(c.Expr[String](c.resetAllAttrs(fieldName.tree.duplicate)))
+    val strFieldName = c.eval(c.Expr[String](c.resetLocalAttrs(fieldName.tree.duplicate)))
 
     val field = constructor.paramss.head.find(_.name.decoded == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
 

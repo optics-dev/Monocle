@@ -1,10 +1,11 @@
 package monocle
 
-import org.specs2.scalaz.Spec
-import shapeless.{Coproduct, CNil, :+:}
-import monocle.thirdparty.coproduct._
 import monocle.function.SafeCast._
+import monocle.thirdparty.coproduct._
+import org.specs2.execute.AnyValueAsResult
+import org.specs2.scalaz.Spec
 import shapeless.test.illTyped
+import shapeless.{Coproduct, CNil, :+:}
 
 
 class CoproductExample extends Spec {
@@ -29,9 +30,9 @@ class CoproductExample extends Spec {
 
   "safeCast can only create Prism to one of the type of the Coproduct" in {
 
-    illTyped("""
-      safeCast[ISB, Float]
-    """)
+    new AnyValueAsResult[Unit].asResult(
+      illTyped("""safeCast[ISB, Float]""")
+    )
 
   }
 
