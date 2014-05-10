@@ -62,7 +62,7 @@ libraryDependencies ++= Seq(
   (players composeTraversal each composeTraversal location composeTraversal each).multiLift(dnd, legalMoves)
 
   // or with some syntax sugar
-  import monocle.syntax.lens._
+  import monocle.syntax._
   dnd |-> players |->> each |->> location |->> each multiLift legalMoves
 ```
 #### Overview

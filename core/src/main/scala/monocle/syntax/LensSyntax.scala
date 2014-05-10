@@ -3,20 +3,17 @@ package monocle.syntax
 import monocle.{ Getter, Traversal, Lens }
 import scalaz.Functor
 
-trait LensSyntax {
-
+private[syntax] trait LensSyntax {
   implicit def toLensOps[S, T, A, B](lens:  Lens[S, T, A, B]): LensOps[S, T, A, B] = new LensOps(lens)
 
-  implicit def toAppliedLensOps[S](value: S): AppliedLensOps[S] = new AppliedLensOps(value)
-
+  implicit def toPartialApplyLensOps[S](value: S): PartialApplyLensOps[S] = new PartialApplyLensOps(value)
 }
 
-class LensOps[S, T, A, B](self: Lens[S, T, A, B]) {
+private[syntax] final class LensOps[S, T, A, B](self: Lens[S, T, A, B]) {
   def |->[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = self compose other
 }
 
-trait AppliedLens[S, T, A, B] extends AppliedTraversal[S, T, A, B] with AppliedGetter[S, A] { self =>
-
+private[syntax] trait PartialApplyLens[S, T, A, B] extends PartialApplyTraversal[S, T, A, B] with PartialApplyGetter[S, A] { self =>
   def _lens: Lens[S, T, A, B]
 
   def _traversal: Traversal[S, T, A, B] = _lens
@@ -24,18 +21,21 @@ trait AppliedLens[S, T, A, B] extends AppliedTraversal[S, T, A, B] with AppliedG
 
   def lift[F[_]: Functor](f: A => F[B]): F[T] = _lens.lift[F](from, f)
 
-  def composeLens[C, D](other: Lens[A, B, C, D]): AppliedLens[S, T, C, D] = new AppliedLens[S, T, C, D] {
+  def composeLens[C, D](other: Lens[A, B, C, D]): PartialApplyLens[S, T, C, D] = new PartialApplyLens[S, T, C, D] {
     val from: S = self.from
     val _lens: Lens[S, T, C, D] = self._lens compose other
   }
 
   /** Alias to composeLens */
-  def |->[C, D](other: Lens[A, B, C, D]): AppliedLens[S, T, C, D] = composeLens(other)
+  def |->[C, D](other: Lens[A, B, C, D]): PartialApplyLens[S, T, C, D] = composeLens(other)
 }
 
-class AppliedLensOps[S](value: S) {
-  def |->[T, A, B](lens: Lens[S, T, A, B]): AppliedLens[S, T, A, B] = new AppliedLens[S, T, A, B] {
+private[syntax] final class PartialApplyLensOps[S](value: S) {
+  def partialApplyLens[T, A, B](lens: Lens[S, T, A, B]): PartialApplyLens[S, T, A, B] = new PartialApplyLens[S, T, A, B] {
     val from: S = value
-    val _lens: Lens[S, T, A, B] = lens
+    def _lens: Lens[S, T, A, B] = lens
   }
+
+  /** Alias to partialApplyLens */
+  def |->[T, A, B](lens: Lens[S, T, A, B]): PartialApplyLens[S, T, A, B] = partialApplyLens(lens)
 }

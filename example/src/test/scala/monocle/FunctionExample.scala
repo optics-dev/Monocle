@@ -2,7 +2,7 @@ package monocle
 
 import org.specs2.scalaz.Spec
 import monocle.std.function._
-import monocle.syntax.iso._
+import monocle.syntax._
 
 
 class FunctionExample extends Spec {

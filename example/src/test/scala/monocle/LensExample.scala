@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.Macro._
-import monocle.syntax.lens._
+import monocle.syntax._
 import org.specs2.scalaz.Spec
 
 class LensExample extends Spec {

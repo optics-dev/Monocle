@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.function.SafeCast._
-import monocle.syntax.prism._
+import monocle.syntax._
 import org.specs2.scalaz.Spec
 
 class SafeCastExample extends Spec {

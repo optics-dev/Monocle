@@ -3,7 +3,7 @@ package monocle.thirdparty
 import monocle.SimpleLens
 import monocle.function.Head._
 import monocle.function.Last._
-import monocle.syntax.traversal._
+import monocle.syntax._
 import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
 import scalaz.Tree

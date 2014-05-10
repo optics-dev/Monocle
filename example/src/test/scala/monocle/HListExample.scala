@@ -1,11 +1,10 @@
 package monocle
 
-import monocle.syntax.iso._
+import monocle.function.Fields._
+import monocle.syntax._
 import monocle.thirdparty.hlist._
 import org.specs2.scalaz.Spec
-import shapeless.{HNil, ::}
-import monocle.syntax.lens._
-import monocle.function.Fields._
+import shapeless.HNil
 
 
 class HListExample extends Spec {

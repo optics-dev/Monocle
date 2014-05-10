@@ -2,7 +2,7 @@ package monocle
 
 import org.specs2.scalaz.Spec
 import monocle.function.Fields._
-import monocle.syntax.lens._
+import monocle.syntax._
 
 
 class FieldsExample extends Spec {

@@ -2,7 +2,7 @@ package monocle
 
 import org.specs2.scalaz.Spec
 import monocle.function.FilterIndex._
-import monocle.syntax.traversal._
+import monocle.syntax._
 import scalaz.IList
 
 

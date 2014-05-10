@@ -4,7 +4,7 @@ import monocle.thirdparty.tree._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 import scalaz.Tree._
 import monocle.TestUtil._
-import monocle.syntax.lens._
+import monocle.syntax._
 
 class TreeExample extends Spec with ScalazMatchers {
 
