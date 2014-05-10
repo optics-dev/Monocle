@@ -6,29 +6,29 @@ import xerial.sbt.Sonatype.SonatypeKeys._
 
 object BuildSettings {
   import MonoclePublishing._
-  val buildScalaVersion = "2.10.4"
+  val buildScalaVersion = "2.11.0"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
-    organization      := "com.github.julien-truffaut",
-    version           := "0.4-SNAPSHOT",
-    scalaVersion      := buildScalaVersion,
+    organization       := "com.github.julien-truffaut",
+    version            := "0.4-SNAPSHOT",
+    scalaVersion       := buildScalaVersion,
+    crossScalaVersions := Seq(buildScalaVersion, "2.10.4"),
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
       "-language:higherKinds", "-language:implicitConversions", "-language:postfixOps"),
-    incOptions        := incOptions.value.withNameHashing(true),
-    resolvers         += Resolver.sonatypeRepo("releases"),
-    resolvers         += Resolver.sonatypeRepo("snapshots")
+    incOptions         := incOptions.value.withNameHashing(true),
+    resolvers          += Resolver.sonatypeRepo("releases"),
+    resolvers          += Resolver.sonatypeRepo("snapshots")
   ) ++ publishSettings
 }
 
 object Dependencies {
   val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.0.6"
-  val shapeless         = "com.chuusai"     %  "shapeless_2.10.4"          % "2.0.0"
+  val shapeless         = "com.chuusai"     %% "shapeless"                 % "2.0.0"
   val scalaCheck        = "org.scalacheck"  %% "scalacheck"                % "1.11.3"
   val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.0.6"   % "test"
   val specs2            = "org.specs2"      %% "specs2"                    % "2.3.11"  % "test"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.2"     % "test"
   val scalaReflect      = "org.scala-lang"  %  "scala-reflect"             % BuildSettings.buildScalaVersion
-  val quasiquotes       = "org.scalamacros" %  "quasiquotes"               % "2.0.0" cross CrossVersion.binary
 }
 
 object MonocleBuild extends Build {
@@ -47,7 +47,7 @@ object MonocleBuild extends Build {
     "monocle-core",
     file("core"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, scalaReflect, quasiquotes),
+      libraryDependencies ++= Seq(scalaz, scalaReflect),
       addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0" cross CrossVersion.full)
     )
   )

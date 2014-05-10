@@ -9,8 +9,13 @@ resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 )
 
+val scalaVersion   = "2.11.0" // or "2.10.4"
+val libraryVersion = "0.3.0"  // or "0.4-SNAPSHOT"
+
 libraryDependencies ++= Seq(
-  "com.github.julien-truffaut"  %%  "monocle-core"  % "0.3.0" // or 0.4-SNAPSHOT
+  "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion
+  "com.github.julien-truffaut"  %%  "monocle-generic" % libraryVersion
+  "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % test
 )
 ```
 ### Usage

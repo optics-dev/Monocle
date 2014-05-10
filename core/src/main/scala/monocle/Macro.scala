@@ -1,7 +1,7 @@
 package monocle
 
 import scala.language.experimental.macros
-import scala.reflect.macros.Context
+import scala.reflect.macros.whitebox.Context
 
 object Macro {
 
@@ -29,10 +29,10 @@ private[monocle] object MacroImpl {
     import c.universe._
     val aTpe = weakTypeOf[A]
 
-    val strFieldName = c.eval(c.Expr[String](c.resetLocalAttrs(fieldName.tree.duplicate)))
+    val strFieldName = c.eval(c.Expr[String](c.untypecheck(fieldName.tree.duplicate)))
 
-    val fieldMethod = aTpe.declarations.collectFirst {
-      case m: MethodSymbol if m.isCaseAccessor && m.name.decoded == strFieldName => m
+    val fieldMethod = aTpe.decls.collectFirst {
+      case m: MethodSymbol if m.isCaseAccessor && m.name.decodedName.toString == strFieldName => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $strFieldName in $aTpe"))
 
     c.Expr[B](q"""{(a: $aTpe) => a.$fieldMethod}""")
@@ -42,13 +42,13 @@ private[monocle] object MacroImpl {
     import c.universe._
     val (aTpe, bTpe) = (weakTypeOf[A], weakTypeOf[B])
 
-    val constructor = aTpe.declarations.collectFirst {
+    val constructor = aTpe.decls.collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in $aTpe"))
 
-    val strFieldName = c.eval(c.Expr[String](c.resetLocalAttrs(fieldName.tree.duplicate)))
+    val strFieldName = c.eval(c.Expr[String](c.untypecheck(fieldName.tree.duplicate)))
 
-    val field = constructor.paramss.head.find(_.name.decoded == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
+    val field = constructor.paramLists.head.find(_.name.decodedName.toString == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
 
     c.Expr[(A, B) => A](q"{(a: $aTpe, b: $bTpe) => a.copy(${field} = b)}")
   }
