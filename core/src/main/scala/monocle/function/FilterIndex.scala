@@ -3,6 +3,7 @@ package monocle.function
 import monocle.syntax.traversal._
 import monocle.{Traversal, SimpleTraversal}
 import scalaz.{IList, Applicative}
+import scalaz.syntax.traverse._
 
 trait FilterIndex[S, I, A] {
 
@@ -65,7 +66,7 @@ trait FilterIndexInstances {
   implicit def iListFilterIndex[A] = new FilterIndex[IList[A], Int, A] {
     def filterIndex(predicate: Int => Boolean) = new Traversal[IList[A], IList[A], A, A] {
       def multiLift[F[_] : Applicative](from: IList[A], f: A => F[A]): F[IList[A]] =
-        scalaz.IList.instances.traverseImpl(from.zipWithIndex){ case (a, j) =>
+        from.zipWithIndex.traverse{ case (a, j) =>
           if(predicate(j)) f(a) else Applicative[F].point(a)
         }
     }

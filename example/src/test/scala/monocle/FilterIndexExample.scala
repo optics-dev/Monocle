@@ -3,6 +3,7 @@ package monocle
 import org.specs2.scalaz.Spec
 import monocle.function.FilterIndex._
 import monocle.syntax.traversal._
+import scalaz.IList
 
 
 class FilterIndexExample extends Spec {
@@ -15,11 +16,12 @@ class FilterIndexExample extends Spec {
 
   }
 
-  "filterIndexes creates Traversal from a List, Vector or Stream to all values where the index matches the predicate" in {
+  "filterIndexes creates Traversal from a List, IList, Vector or Stream to all values where the index matches the predicate" in {
 
     (List(1,3,5,7) |->> filterIndex{ i: Int => i%2 == 0 } getAll) shouldEqual List(1,5)
 
     (List(1,3,5,7)   |->> filterIndex{ i: Int => i >= 2 } modify(_ + 2)) shouldEqual List(1,3,7,9)
+    (IList(1,3,5,7)  |->> filterIndex{ i: Int => i >= 2 } modify(_ + 2)) shouldEqual IList(1,3,7,9)
     (Vector(1,3,5,7) |->> filterIndex{ i: Int => i >= 2 } modify(_ + 2)) shouldEqual Vector(1,3,7,9)
     (Stream(1,3,5,7) |->> filterIndex{ i: Int => i >= 2 } modify(_ + 2)) shouldEqual Stream(1,3,7,9)
 

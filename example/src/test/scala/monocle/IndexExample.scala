@@ -15,7 +15,7 @@ class IndexExample extends Spec {
 
   }
 
-  "index creates 0 or 1 Traversal from a List, Vector or Stream to a value at the index" in {
+  "index creates 0 or 1 Traversal from a List, IList, Vector or Stream to a value at the index" in {
 
     (List(0,1,2,3) |->> index(1) headOption) shouldEqual Some(1)
     (List(0,1,2,3) |->> index(8) headOption) shouldEqual None
