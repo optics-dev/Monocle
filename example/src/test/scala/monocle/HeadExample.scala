@@ -3,6 +3,7 @@ package monocle
 import monocle.function.Head._
 import monocle.syntax.traversal._
 import org.specs2.scalaz.Spec
+import scalaz.IList
 
 
 class HeadExample extends Spec {
@@ -11,7 +12,7 @@ class HeadExample extends Spec {
     (List(1,2,3)      |->> head headOption) shouldEqual Some(1)
     (Stream(1,2,3)    |->> head headOption) shouldEqual Some(1)
     (Vector(1,2,3)    |->> head headOption) shouldEqual Some(1)
-
+    (IList(1,2,3)     |->> head headOption) shouldEqual Some(1)
 
     (List.empty[Int]  |->> head headOption)    shouldEqual None
     (List.empty[Int]  |->> head modify(_ + 1)) shouldEqual Nil

@@ -3,12 +3,14 @@ package monocle
 import monocle.function.Last._
 import monocle.syntax.traversal._
 import org.specs2.scalaz.Spec
+import scalaz.IList
 
 
 class LastExample extends Spec {
 
-  "last creates a Traversal from a List, Stream or Vector to its optional first element" in {
+  "last creates a Traversal from a List, IList, Stream or Vector to its optional first element" in {
     (List(1,2,3)      |->> last headOption) shouldEqual Some(3)
+    (IList(1,2,3)     |->> last headOption) shouldEqual Some(3)
     (Stream(1,2,3)    |->> last headOption) shouldEqual Some(3)
     (Vector(1,2,3)    |->> last headOption) shouldEqual Some(3)
 

@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Tree, Show, Order, Equal}
+import scalaz._
 import org.scalacheck.{Gen, Arbitrary}
 
 object TestUtil {
@@ -71,5 +71,8 @@ object TestUtil {
 
   implicit def vectorArbitrary[A: Arbitrary]: Arbitrary[Vector[A]] =
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toVector))
+
+  implicit def iListArbitrary[A: Arbitrary]: Arbitrary[IList[A]] =
+    Arbitrary(Arbitrary.arbitrary[List[A]].map(IList.fromList))
 
 }
