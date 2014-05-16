@@ -19,7 +19,7 @@ trait LastInstances {
 
   def last[S, A](implicit ev: Last[S, A]): SimpleTraversal[S, A] = ev.last
 
-  def reverseHeadLast[S, A](implicit evHead: Head[S, A], evReverse: Reverse[S]): Last[S, A] = new Last[S, A] {
+  def reverseHeadLast[S, A](implicit evHead: Head[S, A], evReverse: Reverse[S, S]): Last[S, A] = new Last[S, A] {
     def last: SimpleTraversal[S, A] = evReverse.reverse |->> evHead.head
   }
 

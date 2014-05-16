@@ -12,8 +12,13 @@ class ReverseExample extends Spec with ScalazMatchers {
     (List(1,2,3) <-> reverse get) shouldEqual List(3,2,1)
   }
 
+  "reverse creates an Iso from a 2-6 tuple to its reversed version" in {
+    ((1,'b')                        <-> reverse get) shouldEqual ('b',1)
+    ((1,'b', true)                  <-> reverse get) shouldEqual (true, 'b',1)
+    ((1,'b', true, 5.4, "plop", 7L) <-> reverse get) shouldEqual (7L, "plop", 5.4, true, 'b',1)
+  }
+
   "reverse creates an Iso from a Stream to its reversed version" in {
-    // Todo: look at infinite case
     (Stream(1,2,3) <-> reverse get) shouldEqual Stream(3,2,1)
   }
 

@@ -16,7 +16,7 @@ trait InitInstances {
 
   def init[S](implicit ev: Init[S]): SimpleTraversal[S, S] = ev.init
 
-  def reverseTail[S](implicit evReverse: Reverse[S], evTail: Tail[S]): Init[S] = new Init[S] {
+  def reverseTail[S](implicit evReverse: Reverse[S, S], evTail: Tail[S]): Init[S] = new Init[S] {
     def init: SimpleTraversal[S, S] = evReverse.reverse |->> evTail.tail |->> evReverse.reverse
   }
 
