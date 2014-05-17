@@ -6,4 +6,5 @@
     *   scalacheck to 1.11.3
 *   Add instances for scalaz `IList`
 *   Add reverseModify on SimplePrism
-*   Generalize reverse to type having a different type once reversed. Added instances for tuple 2-6
+*   Generalize reverse to type having a different type once reversed.
+    Added instances for all tuple (2-6 in core, other in generic)
