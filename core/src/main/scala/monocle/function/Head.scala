@@ -1,35 +1,32 @@
 package monocle.function
 
-import monocle.SimpleTraversal
-import scalaz.IList
+import monocle.SimpleLens
+import monocle.function.Field1._
 
 
 trait Head[S, A] {
 
-  /** Creates a Traversal from S to its optional first element */
-  def head: SimpleTraversal[S, A]
+  /**
+   * Creates a Lens from S to its first element
+   * head is safe, it should only be implemented on object with a first element
+   */
+   def head: SimpleLens[S, A]
 
 }
 
 
 object Head extends HeadInstances
 
-trait HeadInstances {
+trait HeadInstances extends HeadInstances1 {
 
-  def head[S, A](implicit ev: Head[S, A]): SimpleTraversal[S, A] = ev.head
+  def head[S, A](implicit ev: Head[S, A]): SimpleLens[S, A] = ev.head
 
-  def indexHead[S, A](implicit ev: Index[S, Int, A]): Head[S, A] = new Head[S, A] {
-    def head: SimpleTraversal[S, A] = ev.index(0)
-  }
+}
 
-  implicit def listHead[A]  : Head[List[A]  , A]    = indexHead[List[A]  , A]
-  implicit def iListHead[A] : Head[IList[A] , A]    = indexHead[IList[A] , A]
-  implicit def streamHead[A]: Head[Stream[A], A]    = indexHead[Stream[A], A]
-  implicit def vectorHead[A]: Head[Vector[A], A]    = indexHead[Vector[A]  , A]
-  implicit val stringHead   : Head[String   , Char] = indexHead[String   , Char]
+trait HeadInstances1 {
 
-  implicit def optionHead[A]: Head[Option[A], A]    = new Head[Option[A], A] {
-    def head: SimpleTraversal[Option[A], A] = monocle.std.option.some
+  implicit def Field1Head[S, A](implicit ev: Field1[S,A]): Head[S, A] = new Head[S, A]{
+    def head = _1
   }
 
 }

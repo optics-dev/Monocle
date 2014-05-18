@@ -1,34 +1,17 @@
 package monocle
 
 import monocle.function.Last._
-import monocle.syntax.traversal._
+import monocle.syntax.lens._
 import org.specs2.scalaz.Spec
-import scalaz.IList
 
 
 class LastExample extends Spec {
 
-  "last creates a Traversal from a List, IList, Stream or Vector to its optional first element" in {
-    (List(1,2,3)      |->> last headOption) shouldEqual Some(3)
-    (IList(1,2,3)     |->> last headOption) shouldEqual Some(3)
-    (Stream(1,2,3)    |->> last headOption) shouldEqual Some(3)
-    (Vector(1,2,3)    |->> last headOption) shouldEqual Some(3)
+  "last creates a Lens from a 2-6 tuple to its last element" in {
+    ((2, false) |-> last get)                      shouldEqual false
+    (('r', false, "lala", 5.6, 7, 4) |-> last get) shouldEqual 4
 
-    (List.empty[Int]  |->> last headOption)    shouldEqual None
-    (List.empty[Int]  |->> last modify(_ + 1)) shouldEqual Nil
-
-    (List(1,2,3)      |->> last set 0) shouldEqual List(1,2,0)
-  }
-
-  "last creates a Traversal from a String to its optional head Char" in {
-    ("Hello" |->> last headOption) shouldEqual Some('o')
-
-    ("Hello" |->> last set 'a') shouldEqual "Hella"
-  }
-
-  "last creates a Traversal from an Option to its optional element" in {
-    (Option(1)          |->> last headOption) shouldEqual Some(1)
-    ((None: Option[Int])|->> last headOption) shouldEqual None
+    ((2, false) |-> last set true) shouldEqual (2, true)
   }
 
 }

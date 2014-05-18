@@ -7,4 +7,7 @@
 *   Add instances for scalaz `IList`
 *   Add reverseModify on SimplePrism
 *   Generalize reverse to type having a different type once reversed.
-    Added instances for all tuple (2-6 in core, other in generic)
+    Implemented instances for all tuple (2-6 in core, other in generic)
+*   Rename `Head` -> `HeadOption` and `Last` -> `LastOption`
+*   Add `Head` and `Last` functions which create a Lens to the first and last element respectively.
+    Implemented instances for 2-6 tuple

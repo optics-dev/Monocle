@@ -1,8 +1,8 @@
 package monocle.thirdparty
 
 import monocle.SimpleLens
-import monocle.function.Head._
-import monocle.function.Last._
+import monocle.function.HeadOption._
+import monocle.function.LastOption._
 import monocle.syntax.traversal._
 import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
@@ -28,7 +28,7 @@ trait TreeInstances {
 
     def _set(tree: Tree[A], newLeaf: A): Tree[A] = tree.subForest match {
       case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel, xs |->> head modify(_set(_, newLeaf)) )
+      case xs    => Tree.node(tree.rootLabel, xs |->> headOption modify(_set(_, newLeaf)) )
     }
 
     SimpleLens[Tree[A], A](_get, _set)
@@ -44,7 +44,7 @@ trait TreeInstances {
 
     def _set(tree: Tree[A], newLeaf: A): Tree[A] = tree.subForest match {
       case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel,  xs |->> last modify(_set(_, newLeaf)) )
+      case xs    => Tree.node(tree.rootLabel,  xs |->> lastOption modify(_set(_, newLeaf)) )
     }
 
     SimpleLens[Tree[A], A](_get, _set)
