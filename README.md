@@ -13,8 +13,9 @@ val scalaVersion   = "2.10.4" // or "2.11.0" only available in SNAPSHOT at the m
 val libraryVersion = "0.3.0"  // or "0.4-SNAPSHOT"
 
 libraryDependencies ++= Seq(
-  "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion
-  "com.github.julien-truffaut"  %%  "monocle-generic" % libraryVersion
+  "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion,
+  "com.github.julien-truffaut"  %%  "monocle-generic" % libraryVersion,
+  "com.github.julien-truffaut"  %%  "monocle-macro"   % libraryVersion,
   "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % test
 )
 ```

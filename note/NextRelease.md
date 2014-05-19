@@ -11,3 +11,4 @@
 *   Rename `Head` -> `HeadOption` and `Last` -> `LastOption`
 *   Add `Head` and `Last` functions which create a Lens to the first and last element respectively.
     Implemented instances for 2-6 tuple
+*   Move Macro from core to their own module (macro)
