@@ -1,7 +1,7 @@
 package monocle
 
 import scala.language.experimental.macros
-import scala.reflect.macros.whitebox.Context
+import monocle.internal.CompatibilityMacro210._
 
 object Macro {
 
@@ -10,6 +10,8 @@ object Macro {
 }
 
 private[monocle] object MacroImpl {
+
+  import scala.reflect.macros._
 
   def mkLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[Lens[A, A, B, B]] = {
     import c.universe._
@@ -29,9 +31,9 @@ private[monocle] object MacroImpl {
     import c.universe._
     val aTpe = weakTypeOf[A]
 
-    val strFieldName = c.eval(c.Expr[String](c.untypecheck(fieldName.tree.duplicate)))
+    val strFieldName = c.eval(c.Expr[String](c.resetLocalAttrs(fieldName.tree.duplicate)))
 
-    val fieldMethod = aTpe.decls.collectFirst {
+    val fieldMethod = aTpe.declarations.collectFirst {
       case m: MethodSymbol if m.isCaseAccessor && m.name.decodedName.toString == strFieldName => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $strFieldName in $aTpe"))
 
@@ -42,13 +44,13 @@ private[monocle] object MacroImpl {
     import c.universe._
     val (aTpe, bTpe) = (weakTypeOf[A], weakTypeOf[B])
 
-    val constructor = aTpe.decls.collectFirst {
+    val constructor = aTpe.declarations.collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in $aTpe"))
 
-    val strFieldName = c.eval(c.Expr[String](c.untypecheck(fieldName.tree.duplicate)))
+    val strFieldName = c.eval(c.Expr[String](c.resetLocalAttrs(fieldName.tree.duplicate)))
 
-    val field = constructor.paramLists.head.find(_.name.decodedName.toString == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
+    val field = constructor.paramss.head.find(_.name.decodedName.toString == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
 
     c.Expr[(A, B) => A](q"{(a: $aTpe, b: $bTpe) => a.copy(${field} = b)}")
   }

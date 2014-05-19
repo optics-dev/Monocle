@@ -73,6 +73,8 @@ Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes
 
 Law defines Iso, Lens, Prism, Setter and Traversal laws using [scalacheck](http://www.scalacheck.org/).
 
+Macro defines a macro to reduce Lens creation boiler plate.
+
 Generic is an experiment to provide highly generalised Lens and Iso using HList from [shapeless](https://github.com/milessabin/shapeless).
 Generic focus is on neat abstraction but that may come at additional runtime or compile time cost.
 
