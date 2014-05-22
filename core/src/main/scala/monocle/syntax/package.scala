@@ -5,6 +5,7 @@ package object syntax
      with TraversalSyntax
      with IsoSyntax
      with PrismSyntax
+     with OptionalSyntax
      with GetterSyntax
      with FoldSyntax
      with SetterSyntax

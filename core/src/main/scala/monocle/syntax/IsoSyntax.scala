@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.{Traversal, Prism, Lens, Iso}
+import monocle.{Optional, Prism, Lens, Iso}
 
 private[syntax] trait IsoSyntax {
 
@@ -17,7 +17,7 @@ private[syntax] final class IsoOps[S, T, A, B](val self: Iso[S, T, A, B]) {
 private[syntax] trait ApplyIso[S, T, A, B] extends ApplyLens[S, T, A, B] with ApplyPrism[S, T, A, B] { self =>
   def _iso: Iso[S, T, A, B]
 
-  override val _traversal: Traversal[S, T, A, B] = _iso
+  override def _optional: Optional[S, T, A, B] = _iso
 
   def _lens: Lens[S, T, A, B] = _iso
   def _prism: Prism[S, T, A, B] = _iso

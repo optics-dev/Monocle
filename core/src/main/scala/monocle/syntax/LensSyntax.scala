@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.{ Getter, Traversal, Lens }
+import monocle.{ Getter, Optional, Lens }
 import scalaz.Functor
 
 private[syntax] trait LensSyntax {
@@ -13,10 +13,10 @@ private[syntax] final class LensOps[S, T, A, B](self: Lens[S, T, A, B]) {
   def |->[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = self compose other
 }
 
-private[syntax] trait ApplyLens[S, T, A, B] extends ApplyTraversal[S, T, A, B] with ApplyGetter[S, A] { self =>
+private[syntax] trait ApplyLens[S, T, A, B] extends ApplyOptional[S, T, A, B] with ApplyGetter[S, A] { self =>
   def _lens: Lens[S, T, A, B]
 
-  def _traversal: Traversal[S, T, A, B] = _lens
+  def _optional: Optional[S, T, A, B] = _lens
   def _getter: Getter[S, A] = _lens
 
   def lift[F[_]: Functor](f: A => F[B]): F[T] = _lens.lift[F](from, f)

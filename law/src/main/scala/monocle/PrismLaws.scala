@@ -11,7 +11,7 @@ object PrismLaws {
     import scalaz.syntax.equal._
     import scalaz.std.option._
 
-    include(TraversalLaws(prism))
+    include(OptionalLaws(prism))
 
     property("reverseGet - getOption") = forAll { value: A =>
       prism.getOption(prism.reverseGet(value)) === Some(value)

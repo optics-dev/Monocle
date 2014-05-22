@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.{Prism, Traversal}
+import monocle.{Prism, Optional}
 
 private[syntax] trait PrismSyntax {
   implicit def toPrismOps[S, T, A, B](prism: Prism[S, T, A, B]): PrismOps[S, T, A, B] = new PrismOps(prism)
@@ -12,12 +12,10 @@ private[syntax] final class PrismOps[S, T, A, B](val self: Prism[S, T, A, B]) {
   def <-?[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = self compose other
 }
 
-private[syntax] trait ApplyPrism[S, T, A, B] extends ApplyTraversal[S, T, A, B]  { self =>
+private[syntax] trait ApplyPrism[S, T, A, B] extends ApplyOptional[S, T, A, B]  { self =>
   def _prism: Prism[S, T, A, B]
 
-  def _traversal: Traversal[S, T, A, B] = _prism
-
-  def getOption: Option[A] = _prism.getOption(from)
+  def _optional: Optional[S, T, A, B] = _prism
 
   def composePrism[C, D](other: Prism[A, B, C, D]): ApplyPrism[S, T, C, D] = new ApplyPrism[S, T, C, D] {
     val _prism: Prism[S, T, C, D] = self._prism compose other
