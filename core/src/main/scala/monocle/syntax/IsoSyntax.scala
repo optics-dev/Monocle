@@ -2,20 +2,19 @@ package monocle.syntax
 
 import monocle.{Traversal, Prism, Lens, Iso}
 
-trait IsoSyntax {
+private[syntax] trait IsoSyntax {
 
   implicit def toIsoOps[S, T, A, B](iso:  Iso[S, T, A, B]): IsoOps[S, T, A, B] = new IsoOps(iso)
 
-  implicit def toAppliedIsoOps[S](value: S): AppliedIsoOps[S] = new AppliedIsoOps(value)
+  implicit def toApplyIsoOps[S](value: S): ApplyIsoOps[S] = new ApplyIsoOps(value)
   
 }
 
-final class IsoOps[S, T, A, B](val self: Iso[S, T, A, B]) {
+private[syntax] final class IsoOps[S, T, A, B](val self: Iso[S, T, A, B]) {
   def <->[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = self compose other
 }
 
-trait AppliedIso[S, T, A, B] extends AppliedLens[S, T, A, B] with AppliedPrism[S, T, A, B] { self =>
-
+private[syntax] trait ApplyIso[S, T, A, B] extends ApplyLens[S, T, A, B] with ApplyPrism[S, T, A, B] { self =>
   def _iso: Iso[S, T, A, B]
 
   override val _traversal: Traversal[S, T, A, B] = _iso
@@ -23,18 +22,21 @@ trait AppliedIso[S, T, A, B] extends AppliedLens[S, T, A, B] with AppliedPrism[S
   def _lens: Lens[S, T, A, B] = _iso
   def _prism: Prism[S, T, A, B] = _iso
 
-  def composeIso[C, D](other: Iso[A, B, C, D]): AppliedIso[S, T, C, D] = new AppliedIso[S, T, C, D] {
+  def composeIso[C, D](other: Iso[A, B, C, D]): ApplyIso[S, T, C, D] = new ApplyIso[S, T, C, D] {
     val from: S = self.from
     def _iso: Iso[S, T, C, D] = self._iso compose other
   }
 
   /** Alias to composeIso */
-  def <->[C, D](other: Iso[A, B, C, D]): AppliedIso[S, T, C, D] = composeIso(other)
+  def <->[C, D](other: Iso[A, B, C, D]): ApplyIso[S, T, C, D] = composeIso(other)
 }
 
-class AppliedIsoOps[S](value: S) {
-  def <->[T, A, B](iso: Iso[S, T, A, B]): AppliedIso[S, T, A, B] = new AppliedIso[S, T, A, B] {
+private[syntax] final class ApplyIsoOps[S](value: S) {
+  def applyIso[T, A, B](iso: Iso[S, T, A, B]): ApplyIso[S, T, A, B] = new ApplyIso[S, T, A, B] {
     val from: S = value
     def _iso: Iso[S, T, A, B] = iso
   }
+
+  /** Alias to ApplyIso */
+  def <->[T, A, B](iso: Iso[S, T, A, B]): ApplyIso[S, T, A, B] = applyIso(iso)
 }

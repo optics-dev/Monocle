@@ -2,7 +2,7 @@ package monocle
 
 import monocle.TestUtil._
 import monocle.function.Reverse._
-import monocle.syntax.iso._
+import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 import scalaz.Tree._
 

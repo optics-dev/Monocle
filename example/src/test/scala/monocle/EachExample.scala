@@ -2,7 +2,7 @@ package monocle
 
 import monocle.TestUtil._
 import monocle.function.Each._
-import monocle.syntax.traversal._
+import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 import scalaz.Tree._
 import scalaz.IList

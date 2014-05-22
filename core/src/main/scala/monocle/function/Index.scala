@@ -1,9 +1,9 @@
 package monocle.function
 
 import monocle.SimpleTraversal
-import scalaz.{IList, Equal}
-import monocle.syntax.traversal._
+import monocle.syntax._
 import scalaz.syntax.equal._
+import scalaz.{IList, Equal}
 
 trait Index[S, I, A] {
 

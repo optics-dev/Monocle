@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle.SimpleTraversal
-import monocle.syntax.traversal._
+import monocle.syntax._
 import scalaz.IList
 
 trait Init[S] {

@@ -3,7 +3,7 @@ package monocle.function
 import monocle.SimpleTraversal
 import monocle.function.HeadOption._
 import monocle.function.Reverse._
-import monocle.syntax.traversal._
+import monocle.syntax._
 import scalaz.IList
 
 trait LastOption[S, A] {

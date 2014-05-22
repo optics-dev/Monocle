@@ -1,7 +1,6 @@
 package monocle.function
 
 import monocle.SimpleLens
-import monocle.syntax.lens._
 
 trait Last[S, A] {
 
@@ -25,7 +24,7 @@ trait LastInstances extends LastInstances1 {
 trait LastInstances1 {
 
   implicit def reverseFirstLast[S, RS, A](implicit evReverse: Reverse[S, RS], evField1: Field1[RS, A]): Last[S, A] = new Last[S, A]{
-    def last: SimpleLens[S, A] = evReverse.reverse |-> evField1._1
+    def last: SimpleLens[S, A] = evReverse.reverse composeLens  evField1._1
   }
 
 }

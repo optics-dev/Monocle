@@ -3,20 +3,17 @@ package monocle.syntax
 import monocle.{ Getter, Traversal, Lens }
 import scalaz.Functor
 
-trait LensSyntax {
-
+private[syntax] trait LensSyntax {
   implicit def toLensOps[S, T, A, B](lens:  Lens[S, T, A, B]): LensOps[S, T, A, B] = new LensOps(lens)
 
-  implicit def toAppliedLensOps[S](value: S): AppliedLensOps[S] = new AppliedLensOps(value)
-
+  implicit def toApplyLensOps[S](value: S): ApplyLensOps[S] = new ApplyLensOps(value)
 }
 
-class LensOps[S, T, A, B](self: Lens[S, T, A, B]) {
+private[syntax] final class LensOps[S, T, A, B](self: Lens[S, T, A, B]) {
   def |->[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = self compose other
 }
 
-trait AppliedLens[S, T, A, B] extends AppliedTraversal[S, T, A, B] with AppliedGetter[S, A] { self =>
-
+private[syntax] trait ApplyLens[S, T, A, B] extends ApplyTraversal[S, T, A, B] with ApplyGetter[S, A] { self =>
   def _lens: Lens[S, T, A, B]
 
   def _traversal: Traversal[S, T, A, B] = _lens
@@ -24,18 +21,21 @@ trait AppliedLens[S, T, A, B] extends AppliedTraversal[S, T, A, B] with AppliedG
 
   def lift[F[_]: Functor](f: A => F[B]): F[T] = _lens.lift[F](from, f)
 
-  def composeLens[C, D](other: Lens[A, B, C, D]): AppliedLens[S, T, C, D] = new AppliedLens[S, T, C, D] {
+  def composeLens[C, D](other: Lens[A, B, C, D]): ApplyLens[S, T, C, D] = new ApplyLens[S, T, C, D] {
     val from: S = self.from
     val _lens: Lens[S, T, C, D] = self._lens compose other
   }
 
   /** Alias to composeLens */
-  def |->[C, D](other: Lens[A, B, C, D]): AppliedLens[S, T, C, D] = composeLens(other)
+  def |->[C, D](other: Lens[A, B, C, D]): ApplyLens[S, T, C, D] = composeLens(other)
 }
 
-class AppliedLensOps[S](value: S) {
-  def |->[T, A, B](lens: Lens[S, T, A, B]): AppliedLens[S, T, A, B] = new AppliedLens[S, T, A, B] {
+private[syntax] final class ApplyLensOps[S](value: S) {
+  def applyLens[T, A, B](lens: Lens[S, T, A, B]): ApplyLens[S, T, A, B] = new ApplyLens[S, T, A, B] {
     val from: S = value
-    val _lens: Lens[S, T, A, B] = lens
+    def _lens: Lens[S, T, A, B] = lens
   }
+
+  /** Alias to ApplyLens */
+  def |->[T, A, B](lens: Lens[S, T, A, B]): ApplyLens[S, T, A, B] = applyLens(lens)
 }

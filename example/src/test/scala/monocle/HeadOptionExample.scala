@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.function.HeadOption._
-import monocle.syntax.traversal._
+import monocle.syntax._
 import org.specs2.scalaz.Spec
 import scalaz.IList
 

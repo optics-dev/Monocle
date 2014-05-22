@@ -1,7 +1,7 @@
 package monocle.function
 
 
-import monocle.syntax.traversal._
+import monocle.syntax._
 import monocle.{Traversal, SimpleTraversal}
 import scalaz.Tree._
 import scalaz.std.list._
