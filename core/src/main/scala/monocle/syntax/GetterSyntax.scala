@@ -3,24 +3,24 @@ package monocle.syntax
 import monocle.Getter
 
 private[syntax] trait GetterSyntax {
-  implicit def toPartialApplyGetterOps[S](value: S): PartialApplyGetterOps[S] = new PartialApplyGetterOps(value)
+  implicit def toApplyGetterOps[S](value: S): ApplyGetterOps[S] = new ApplyGetterOps(value)
 }
 
-private[syntax] trait PartialApplyGetter[S, A] { self =>
+private[syntax] trait ApplyGetter[S, A] { self =>
   def from: S
   def _getter: Getter[S, A]
 
   def get: A = _getter.get(from)
 
-  def composeGetter[B](other: Getter[A, B]): PartialApplyGetter[S, B] = new PartialApplyGetter[S, B] {
+  def composeGetter[B](other: Getter[A, B]): ApplyGetter[S, B] = new ApplyGetter[S, B] {
     val from: S = self.from
     val _getter: Getter[S, B] = self._getter compose other
   }
 
 }
 
-private[syntax] final class PartialApplyGetterOps[S](value: S) {
-  def partialApplyGetter[A](getter: Getter[S, A]): PartialApplyGetter[S, A] = new PartialApplyGetter[S, A] {
+private[syntax] final class ApplyGetterOps[S](value: S) {
+  def applyGetter[A](getter: Getter[S, A]): ApplyGetter[S, A] = new ApplyGetter[S, A] {
     val from: S = value
     def _getter: Getter[S, A] = getter
   }
