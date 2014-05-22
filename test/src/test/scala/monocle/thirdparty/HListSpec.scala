@@ -2,6 +2,7 @@ package monocle.thirdparty
 
 import monocle.TestUtil._
 import monocle.function.Fields._
+import monocle.function.Reverse._
 import monocle.thirdparty.hlist._
 import monocle.{IsoLaws, LensLaws}
 import org.scalacheck.Arbitrary
@@ -9,12 +10,14 @@ import org.specs2.scalaz.Spec
 import scalaz.Equal
 import scalaz.syntax.equal._
 import shapeless.{Generic, ::, HNil}
+import shapeless.HList._
 
 class HListSpec extends Spec {
 
   case class Example(i: Int, b: Boolean, c: Char, f: Float, l: Long, d: Double)
 
-  type H = Int :: Boolean :: Char :: Float :: Long :: Double :: HNil
+  type H        = Int :: Boolean :: Char :: Float :: Long :: Double :: HNil
+  type ReverseH = Double :: Long :: Float :: Char :: Boolean :: Int :: HNil
 
   implicit val exampleGen: Generic.Aux[Example, H] = Generic.product[Example]
 
@@ -23,6 +26,11 @@ class HListSpec extends Spec {
   implicit val hEq: Equal[H] = new Equal[H] {
     def equal(a1: H, a2: H): Boolean =
       fromHList[H, Example].get(a1) === fromHList[H,Example].get(a2)
+  }
+
+  implicit val reverseHEq: Equal[ReverseH] = new Equal[ReverseH] {
+    def equal(a1: ReverseH, a2: ReverseH): Boolean =
+      a1.reverse === a2.reverse
   }
 
   implicit val exampleArb: Arbitrary[Example] = Arbitrary(for{
@@ -38,6 +46,10 @@ class HListSpec extends Spec {
     example <- Arbitrary.arbitrary[Example]
   } yield toHList[Example, H].get(example))
 
+  implicit val reverseHArb: Arbitrary[ReverseH] = Arbitrary(for {
+    h <- Arbitrary.arbitrary[H]
+  } yield h.reverse)
+
 
   checkAll("_1 from HList", LensLaws(_1[H, Int]))
   checkAll("_2 from HList", LensLaws(_2[H, Boolean]))
@@ -46,6 +58,7 @@ class HListSpec extends Spec {
   checkAll("_5 from HList", LensLaws(_5[H, Long]))
   checkAll("_6 from HList", LensLaws(_6[H, Double]))
 
-  checkAll("toHList", IsoLaws(toHList[Example, H]) )
+  checkAll("toHList"      , IsoLaws(toHList[Example, H]))
+  checkAll("reverse HList", IsoLaws(reverse[H, ReverseH]))
 
 }

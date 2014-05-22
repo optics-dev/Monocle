@@ -9,12 +9,13 @@ resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 )
 
-val scalaVersion   = "2.11.0" // or "2.10.4"
+val scalaVersion   = "2.10.4" // or "2.11.0" only available in SNAPSHOT at the moment
 val libraryVersion = "0.3.0"  // or "0.4-SNAPSHOT"
 
 libraryDependencies ++= Seq(
-  "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion
-  "com.github.julien-truffaut"  %%  "monocle-generic" % libraryVersion
+  "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion,
+  "com.github.julien-truffaut"  %%  "monocle-generic" % libraryVersion,
+  "com.github.julien-truffaut"  %%  "monocle-macro"   % libraryVersion,
   "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % test
 )
 ```
@@ -72,6 +73,8 @@ Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and
 Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes.
 
 Law defines Iso, Lens, Prism, Setter and Traversal laws using [scalacheck](http://www.scalacheck.org/).
+
+Macro defines a macro to reduce Lens creation boiler plate.
 
 Generic is an experiment to provide highly generalised Lens and Iso using HList from [shapeless](https://github.com/milessabin/shapeless).
 Generic focus is on neat abstraction but that may come at additional runtime or compile time cost.

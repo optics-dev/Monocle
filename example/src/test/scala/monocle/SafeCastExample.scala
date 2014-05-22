@@ -10,6 +10,10 @@ class SafeCastExample extends Spec {
     safeCast[Int, Char].getOption(65)   shouldEqual Some('A')
     safeCast[Int, Char].reverseGet('a') shouldEqual 97
 
+    safeCast[Int, Char].reverseModify('b', _ - 1) shouldEqual Some('a')
+    safeCast[Int, Char].reverseModify('b', _ + 1) shouldEqual Some('c')
+    safeCast[Int, Char].reverseModify('b', _ + Char.MaxValue.toInt) shouldEqual None
+
     // with some syntax sugar
     (65 <-? safeCast[Int, Char] getOption) shouldEqual Some('A')
   }

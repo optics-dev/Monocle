@@ -2,7 +2,7 @@ package monocle.thirdparty
 
 import monocle._
 import monocle.function._
-import shapeless.ops.hlist.{ReplaceAt, At}
+import shapeless.ops.hlist.{Reverse => HReverse, ReplaceAt, At}
 import shapeless.{Generic, Nat, HList}
 
 
@@ -15,6 +15,11 @@ trait HListInstances {
 
   def fromHList[S <: HList, A](implicit gen: Generic.Aux[A, S]): SimpleIso[S, A] =
     toHList.reverse
+
+  implicit def hListReverse[S <: HList, A <: HList](implicit ev1: HReverse.Aux[S, A],
+                                                    ev2: HReverse.Aux[A, S]): Reverse[S, A] = new Reverse[S, A]{
+    def reverse = SimpleIso[S, A](ev1.apply, ev2.apply)
+  }
 
 
   implicit def hListField1[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._0.N, A],

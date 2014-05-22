@@ -3,32 +3,16 @@ package monocle
 import monocle.function.Head._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
-import scalaz.IList
 
 
 class HeadExample extends Spec {
 
-  "head creates a Traversal from a List, Stream or Vector to its optional first element" in {
-    (List(1,2,3)      |->> head headOption) shouldEqual Some(1)
-    (Stream(1,2,3)    |->> head headOption) shouldEqual Some(1)
-    (Vector(1,2,3)    |->> head headOption) shouldEqual Some(1)
-    (IList(1,2,3)     |->> head headOption) shouldEqual Some(1)
+  "head creates a Lens from a 2-6 tuple to its first element" in {
+    ((2, false) |-> head get)                      shouldEqual 2
+    (('r', false, "lala", 5.6, 7, 4) |-> head get) shouldEqual 'r'
 
-    (List.empty[Int]  |->> head headOption)    shouldEqual None
-    (List.empty[Int]  |->> head modify(_ + 1)) shouldEqual Nil
+    ((2, false) |-> head set 4) shouldEqual (4, false)
 
-    (List(1,2,3)      |->> head set 0) shouldEqual List(0,2,3)
-  }
-
-  "head creates a Traversal from a String to its optional head Char" in {
-    ("Hello" |->> head headOption) shouldEqual Some('H')
-
-    ("Hello" |->> head set 'M') shouldEqual "Mello"
-  }
-
-  "head creates a Traversal from an Option to its optional element" in {
-    (Option(1)          |->> head headOption) shouldEqual Some(1)
-    ((None: Option[Int])|->> head headOption) shouldEqual None
   }
 
 }

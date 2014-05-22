@@ -12,7 +12,7 @@ object BuildSettings {
     organization       := "com.github.julien-truffaut",
     version            := "0.4-SNAPSHOT",
     scalaVersion       := buildScalaVersion,
-    crossScalaVersions := Seq(buildScalaVersion, "2.10.4"),
+    crossScalaVersions := Seq("2.10.4", "2.11.0"),
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
       "-language:higherKinds", "-language:implicitConversions", "-language:postfixOps"),
     incOptions         := incOptions.value.withNameHashing(true),
@@ -23,12 +23,10 @@ object BuildSettings {
 
 object Dependencies {
   val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.0.6"
-  val shapeless         = "com.chuusai"     %% "shapeless"                 % "2.0.0"
   val scalaCheck        = "org.scalacheck"  %% "scalacheck"                % "1.11.3"
   val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.0.6"   % "test"
   val specs2            = "org.specs2"      %% "specs2"                    % "2.3.11"  % "test"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.2"     % "test"
-  val scalaReflect      = "org.scala-lang"  %  "scala-reflect"             % BuildSettings.buildScalaVersion
 }
 
 object MonocleBuild extends Build {
@@ -40,25 +38,16 @@ object MonocleBuild extends Build {
     file("."),
     settings = buildSettings ++ Seq(
       publishArtifact := false,
-      run <<= run in Compile in core) ++ sonatypeSettings
-  ) aggregate(core, generic, law, test, example)
+      run <<= run in Compile in macros) ++ sonatypeSettings
+  ) aggregate(core, law, macros, generic, test, example)
 
   lazy val core: Project = Project(
     "monocle-core",
     file("core"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, scalaReflect),
-      addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0" cross CrossVersion.full)
+      libraryDependencies ++= Seq(scalaz)
     )
   )
-
-  lazy val generic: Project = Project(
-    "monocle-generic",
-    file("generic"),
-    settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, shapeless)
-    )
-  ) dependsOn(core)
 
   lazy val law: Project = Project(
     "monocle-law",
@@ -68,12 +57,51 @@ object MonocleBuild extends Build {
     )
   ) dependsOn(core)
 
+  lazy val macros: Project = Project(
+    "monocle-macro",
+    file("macro"),
+    settings = buildSettings ++ Seq(
+      libraryDependencies ++= Seq(
+        "org.scala-lang"  %  "scala-reflect"  % scalaVersion.value,
+        "org.scala-lang"  %  "scala-compiler" % scalaVersion.value % "provided"
+      ),
+      libraryDependencies := {
+        CrossVersion.partialVersion(scalaVersion.value) match {
+          // if scala 2.11+ is used, quasiquotes are merged into scala-reflect
+          case Some((2, scalaMajor)) if scalaMajor >= 11 => libraryDependencies.value
+          // in Scala 2.10, quasiquotes are provided by macro paradise
+          case Some((2, 10)) => libraryDependencies.value ++ Seq(
+            compilerPlugin("org.scalamacros" % "paradise" % "2.0.0" cross CrossVersion.full),
+            "org.scalamacros" %% "quasiquotes" % "2.0.0" cross CrossVersion.binary
+          )
+        }
+      }
+    )
+  ) dependsOn(core)
+
+  lazy val generic: Project = Project(
+    "monocle-generic",
+    file("generic"),
+    settings = buildSettings ++ Seq(
+      libraryDependencies ++= Seq(scalaz),
+      // TODO extract to reuse shapeless dependency definition in other modules
+      libraryDependencies ++= Seq(CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, scalaMajor)) if scalaMajor >= 11 =>  "com.chuusai" %% "shapeless"        % "2.0.0"
+        case Some((2, 10))                             =>  "com.chuusai" %  "shapeless_2.10.4" % "2.0.0"
+      })
+    )
+  ) dependsOn(core)
+
   lazy val test: Project = Project(
     "monocle-test",
     file("test"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
-      libraryDependencies ++= Seq(scalaz, shapeless, scalaCheck, scalaCheckBinding, specs2, scalazSpec2)
+      libraryDependencies ++= Seq(scalaz, scalaCheck, scalaCheckBinding, specs2, scalazSpec2),
+      libraryDependencies ++= Seq(CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, scalaMajor)) if scalaMajor >= 11 =>  "com.chuusai" %% "shapeless"        % "2.0.0"
+        case Some((2, 10))                             =>  "com.chuusai" %  "shapeless_2.10.4" % "2.0.0"
+      })
     )
   ) dependsOn(core, generic ,law)
 
@@ -82,9 +110,13 @@ object MonocleBuild extends Build {
     file("example"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
-      libraryDependencies ++= Seq(scalaz, shapeless, specs2)
+      libraryDependencies ++= Seq(scalaz, specs2),
+      libraryDependencies ++= Seq(CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, scalaMajor)) if scalaMajor >= 11 =>  "com.chuusai" %% "shapeless"        % "2.0.0"
+        case Some((2, 10))                             =>  "com.chuusai" %  "shapeless_2.10.4" % "2.0.0"
+      })
     )
-  ) dependsOn(core, generic, test % "test->test")
+  ) dependsOn(core, macros, generic, test % "test->test")
 }
 
 object MonoclePublishing  {

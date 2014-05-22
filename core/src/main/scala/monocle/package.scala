@@ -26,4 +26,8 @@ package object monocle {
       SimplePrism(safe, s => Try(unsafe(s)).toOption)
   }
 
+  implicit final class SimplePrismOps[S, A](prism: SimplePrism[S, A]){
+    def reverseModify(from: A, f: S => S): Option[A] =  prism.getOption(f(prism.reverseGet(from)))
+  }
+
 }
