@@ -1,6 +1,7 @@
 package monocle.function
 
 import monocle.SimpleLens
+import monocle.function.Fields._
 
 trait Last[S, A] {
 
@@ -15,16 +16,28 @@ trait Last[S, A] {
 
 object Last extends LastInstances
 
-trait LastInstances extends LastInstances1 {
+trait LastInstances {
 
   def last[S, A](implicit ev: Last[S, A]): SimpleLens[S, A] = ev.last
 
-}
+  implicit def tuple2Last[A1, A2] = new Last[(A1, A2), A2] {
+    def last = _2
+  }
 
-trait LastInstances1 {
+  implicit def tuple3Last[A1, A2, A3] = new Last[(A1, A2, A3), A3] {
+    def last = _3
+  }
 
-  implicit def reverseFirstLast[S, RS, A](implicit evReverse: Reverse[S, RS], evField1: Field1[RS, A]): Last[S, A] = new Last[S, A]{
-    def last: SimpleLens[S, A] = evReverse.reverse composeLens  evField1._1
+  implicit def tuple4Last[A1, A2, A3, A4] = new Last[(A1, A2, A3, A4), A4] {
+    def last = _4
+  }
+
+  implicit def tuple5Last[A1, A2, A3, A4, A5] = new Last[(A1, A2, A3, A4, A5), A5] {
+    def last = _5
+  }
+
+  implicit def tuple6Last[A1, A2, A3, A4, A5, A6] = new Last[(A1, A2, A3, A4, A5, A6), A6] {
+    def last = _6
   }
 
 }
