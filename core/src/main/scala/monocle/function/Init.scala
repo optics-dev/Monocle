@@ -1,12 +1,15 @@
 package monocle.function
 
-import monocle.SimpleTraversal
-import monocle.syntax._
+import monocle.SimpleOptional
 import scalaz.IList
 
-trait Init[S] {
+trait Init[S, A] {
 
-  def init: SimpleTraversal[S, S]
+  /**
+   * Creates an Optional between S and its optional init A
+   * init represents all the the elements of S except the last one
+   */
+  def init: SimpleOptional[S, A]
 
 }
 
@@ -14,16 +17,18 @@ object Init extends InitInstances
 
 trait InitInstances {
 
-  def init[S](implicit ev: Init[S]): SimpleTraversal[S, S] = ev.init
+  def init[S, A](implicit ev: Init[S, A]): SimpleOptional[S, A] = ev.init
 
-  def reverseTail[S](implicit evReverse: Reverse[S, S], evTail: Tail[S]): Init[S] = new Init[S] {
-    def init: SimpleTraversal[S, S] = evReverse.reverse |->> evTail.tail |->> evReverse.reverse
+  def reverseTail[S](implicit evReverse: Reverse[S, S], evTail: Tail[S, S]): Init[S, S] = new Init[S, S] {
+    def init = evReverse.reverse composeOptional evTail.tail composeOptional evReverse.reverse
   }
 
-  implicit def listInit[A]: Init[List[A]]     = reverseTail
-  implicit def iListInit[A]: Init[IList[A]]   = reverseTail
-  implicit def StreamInit[A]: Init[Stream[A]] = reverseTail
-  implicit val stringInit: Init[String]       = reverseTail
-  implicit def vectorInit[A]: Init[Vector[A]] = reverseTail
+  implicit def listInit[A]   = reverseTail[List[A]]
+  implicit def StreamInit[A] = reverseTail[Stream[A]]
+  implicit def vectorInit[A] = reverseTail[Vector[A]]
+  implicit def iListInit[A]  = reverseTail[IList[A]]
+
+
+  implicit val stringInit    = reverseTail[String]
 
 }
