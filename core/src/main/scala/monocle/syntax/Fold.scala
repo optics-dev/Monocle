@@ -3,6 +3,8 @@ package monocle.syntax
 import monocle.Fold
 import scalaz.Monoid
 
+object fold extends FoldSyntax
+
 private[syntax] trait FoldSyntax {
   implicit def toApplyFoldOps[S](value: S): ApplyFoldOps[S] = new ApplyFoldOps(value)
 }

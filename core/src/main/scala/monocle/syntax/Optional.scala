@@ -2,6 +2,7 @@ package monocle.syntax
 
 import monocle.{Traversal, Optional}
 
+object optional extends OptionalSyntax
 
 private[syntax] trait OptionalSyntax {
   implicit def toOptionalOps[S, T, A, B](Optional: Optional[S, T, A, B]): OptionalOps[S, T, A, B] = new OptionalOps(Optional)

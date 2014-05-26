@@ -3,6 +3,8 @@ package monocle.syntax
 import monocle.{Setter, Fold, Traversal}
 import scalaz.Applicative
 
+object traversal extends TraversalSyntax
+
 private[syntax] trait TraversalSyntax {
   implicit def toTraversalOps[S, T, A, B](traversal: Traversal[S, T, A, B]): TraversalOps[S, T, A, B] = new TraversalOps(traversal)
 

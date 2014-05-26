@@ -2,6 +2,8 @@ package monocle.syntax
 
 import monocle.Getter
 
+object getter extends GetterSyntax
+
 private[syntax] trait GetterSyntax {
   implicit def toApplyGetterOps[S](value: S): ApplyGetterOps[S] = new ApplyGetterOps(value)
 }

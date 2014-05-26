@@ -2,6 +2,8 @@ package monocle.syntax
 
 import monocle.{Optional, Prism, Lens, Iso}
 
+object iso extends IsoSyntax
+
 private[syntax] trait IsoSyntax {
 
   implicit def toIsoOps[S, T, A, B](iso:  Iso[S, T, A, B]): IsoOps[S, T, A, B] = new IsoOps(iso)

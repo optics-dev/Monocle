@@ -3,6 +3,8 @@ package monocle.syntax
 import monocle.{ Getter, Optional, Lens }
 import scalaz.Functor
 
+object lens extends LensSyntax
+
 private[syntax] trait LensSyntax {
   implicit def toLensOps[S, T, A, B](lens:  Lens[S, T, A, B]): LensOps[S, T, A, B] = new LensOps(lens)
 

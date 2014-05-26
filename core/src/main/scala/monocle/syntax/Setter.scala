@@ -2,6 +2,8 @@ package monocle.syntax
 
 import monocle.Setter
 
+object setter extends SetterSyntax
+
 private[syntax] trait SetterSyntax {
   implicit def toApplySetterOps[S](value: S): ApplySetterOps[S] = new ApplySetterOps(value)
 }

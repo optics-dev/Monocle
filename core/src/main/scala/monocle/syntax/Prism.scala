@@ -2,6 +2,8 @@ package monocle.syntax
 
 import monocle.{Prism, Optional}
 
+object prism extends PrismSyntax
+
 private[syntax] trait PrismSyntax {
   implicit def toPrismOps[S, T, A, B](prism: Prism[S, T, A, B]): PrismOps[S, T, A, B] = new PrismOps(prism)
 
