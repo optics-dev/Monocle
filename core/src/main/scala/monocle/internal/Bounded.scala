@@ -1,16 +1,16 @@
-package monocle.util
+package monocle.internal
 
 
-trait Bounded[T] {
+private[monocle] trait Bounded[T] {
   def MinValue: T
   def MaxValue: T
 }
 
-object Bounded extends BoundedInstances {
+private[monocle] object Bounded extends BoundedInstances {
   def apply[T](implicit ev: Bounded[T]): Bounded[T] = ev
 }
 
-trait BoundedInstances {
+private[monocle] trait BoundedInstances {
 
   implicit val booleanBounded = new Bounded[Boolean]{
     val MaxValue: Boolean = true

@@ -1,7 +1,7 @@
-package monocle.util
+package monocle.internal
 
 
-trait Bits[A] {
+private[monocle] trait Bits[A] {
 
   def bitSize: Int
 
@@ -27,13 +27,13 @@ trait Bits[A] {
 
 }
 
-object Bits extends BitsInstances {
+private[monocle] object Bits extends BitsInstances {
 
   def apply[A](implicit ev: Bits[A]): Bits[A] = ev
 
 }
 
-trait BitsInstances {
+private[monocle] trait BitsInstances {
 
   implicit val booleanBits = new Bits[Boolean] {
 

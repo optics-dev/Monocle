@@ -1,7 +1,7 @@
 package monocle
 
-import monocle.util.Constant
-import monocle.util.Constant._
+import monocle.internal.Constant
+import monocle.internal.Constant._
 import scalaz.Id._
 import scalaz.std.list._
 import scalaz.{ Monoid, Traverse, Applicative }

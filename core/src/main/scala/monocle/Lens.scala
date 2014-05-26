@@ -1,7 +1,7 @@
 package monocle
 
-import monocle.util.Constant
-import monocle.util.Constant._
+import monocle.internal.Constant
+import monocle.internal.Constant._
 import scalaz.{ Applicative, Functor, Monoid }
 
 /**

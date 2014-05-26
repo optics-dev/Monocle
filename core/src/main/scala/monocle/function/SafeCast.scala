@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle.SimplePrism
-import monocle.util.Bounded
+import monocle.internal.Bounded
 import monocle.SimplePrism._
 import monocle.syntax._
 

@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle.SimpleLens
-import monocle.util.Bits
+import monocle.internal.Bits
 
 trait AtBit[S] {
 

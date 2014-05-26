@@ -1,8 +1,8 @@
-package monocle.util
+package monocle.internal
 
 import scalaz.{ Applicative, Monoid, Functor }
 
-object Constant {
+private[monocle] object Constant {
 
   type Constant[A, B] = A
 
