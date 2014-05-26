@@ -1,8 +1,9 @@
 package monocle.function
 
-import org.specs2.scalaz.Spec
 import monocle.LensLaws
+import monocle.TestUtil._
 import monocle.function.Init._
+import org.specs2.scalaz.Spec
 
 class InitSpec extends Spec {
 
