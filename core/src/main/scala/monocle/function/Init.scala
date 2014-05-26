@@ -19,8 +19,8 @@ trait InitInstances {
 
   def init[S, A](implicit ev: Init[S, A]): SimpleOptional[S, A] = ev.init
 
-  def reverseTail[S](implicit evReverse: Reverse[S, S], evTail: Tail[S, S]): Init[S, S] = new Init[S, S] {
-    def init = evReverse.reverse composeOptional evTail.tail composeOptional evReverse.reverse
+  def reverseTail[S](implicit evReverse: Reverse[S, S], evTail: TailOption[S, S]): Init[S, S] = new Init[S, S] {
+    def init = evReverse.reverse composeOptional evTail.tailOption composeOptional evReverse.reverse
   }
 
   implicit def listInit[A]   = reverseTail[List[A]]

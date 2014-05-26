@@ -1,14 +1,15 @@
 package monocle.function
 
-import monocle.{Optional, SimpleOptional}
-import scalaz.{INil, IList, ICons, Applicative}
+import monocle.SimpleLens
 
 trait Tail[S, A] {
 
   /**
-   * Creates an Optional between S and its optional tail A
+   * Creates an Lens between S and its tail A.
+   * tail is strictly stronger than tailOption as the presence of a
+   * tail for S is mandatory
    */
-  def tail: SimpleOptional[S, A]
+  def tail: SimpleLens[S, A]
 
 }
 
@@ -16,49 +17,26 @@ object Tail extends TailInstances
 
 trait TailInstances {
 
-  def tail[S, A](implicit ev: Tail[S, A]): SimpleOptional[S, A] = ev.tail
+  def tail[S, A](implicit ev: Tail[S, A]): SimpleLens[S, A] = ev.tail
 
-  implicit def listTail[A] = new Tail[List[A], List[A]]{
-    def tail = new Optional[List[A], List[A], List[A], List[A]] {
-      def multiLift[F[_] : Applicative](from: List[A], f: List[A] => F[List[A]]): F[List[A]] = from match {
-        case Nil     => Applicative[F].point(Nil)
-        case x :: xs => Applicative[F].map(f(xs))(x :: _)
-      }
-    }
+  implicit def tuple2Tail[A1, A2] = new Tail[(A1, A2), A2] {
+    def tail = SimpleLens[(A1, A2), A2](_._2, (t, a) => t.copy(_2 = a))
   }
 
-  implicit def streamTail[A] = new Tail[Stream[A], Stream[A]]{
-    def tail = new Optional[Stream[A], Stream[A], Stream[A], Stream[A]] {
-      def multiLift[F[_] : Applicative](from: Stream[A], f: Stream[A] => F[Stream[A]]): F[Stream[A]] = from match {
-        case Stream.Empty => Applicative[F].point(Stream.Empty)
-        case x #:: xs     => Applicative[F].map(f(xs))(x #:: _)
-      }
-    }
+  implicit def tuple3Tail[A1, A2, A3] = new Tail[(A1, A2, A3), (A2, A3)] {
+    def tail = SimpleLens[(A1, A2, A3), (A2, A3)](t => (t._2, t._3), (t, a) => t.copy(_2 = a._1, _3 = a._2))
   }
 
-  implicit def vectorTail[A] = new Tail[Vector[A], Vector[A]]{
-    def tail = new Optional[Vector[A], Vector[A], Vector[A], Vector[A]] {
-      def multiLift[F[_] : Applicative](from: Vector[A], f: Vector[A] => F[Vector[A]]): F[Vector[A]] = from match {
-        case Vector() => Applicative[F].point(Vector[A]())
-        case x +: xs  => Applicative[F].map(f(xs))(x +: _)
-      }
-    }
+  implicit def tuple4Tail[A1, A2, A3, A4] = new Tail[(A1, A2, A3, A4), (A2, A3, A4)] {
+    def tail = SimpleLens[(A1, A2, A3, A4), (A2, A3, A4)](t => (t._2, t._3, t._4), (t, a) => t.copy(_2 = a._1, _3 = a._2, _4 = a._3))
   }
 
-  implicit def IListTail[A] = new Tail[IList[A], IList[A]]{
-    def tail = new Optional[IList[A], IList[A], IList[A], IList[A]] {
-      def multiLift[F[_] : Applicative](from: IList[A], f: IList[A] => F[IList[A]]): F[IList[A]] = from match {
-        case INil()  => Applicative[F].point(INil())
-        case ICons(x, xs) => Applicative[F].map(f(xs))(x :: _)
-      }
-    }
+  implicit def tuple5Tail[A1, A2, A3, A4, A5] = new Tail[(A1, A2, A3, A4, A5), (A2, A3, A4, A5)] {
+    def tail = SimpleLens[(A1, A2, A3, A4, A5), (A2, A3, A4, A5)](t => (t._2, t._3, t._4, t._5), (t, a) => t.copy(_2 = a._1, _3 = a._2, _4 = a._3, _5 = a._4))
   }
 
-  implicit val stringTail = new Tail[String, String]{
-
-    import monocle.std.string.stringToList
-
-    def tail = stringToList composeOptional listTail[Char].tail composeOptional stringToList.reverse
+  implicit def tuple6Tail[A1, A2, A3, A4, A5, A6] = new Tail[(A1, A2, A3, A4, A5, A6), (A2, A3, A4, A5, A6)] {
+    def tail = SimpleLens[(A1, A2, A3, A4, A5, A6), (A2, A3, A4, A5, A6)](t => (t._2, t._3, t._4, t._5, t._6), (t, a) => t.copy(_2 = a._1, _3 = a._2, _4 = a._3, _5 = a._4, _6 = a._5))
   }
 
 }
