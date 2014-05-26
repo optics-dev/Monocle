@@ -1,15 +1,14 @@
 package monocle.function
 
-import monocle.SimpleTraversal
+import monocle.SimpleOptional
 import monocle.function.HeadOption._
 import monocle.function.Reverse._
-import monocle.syntax._
 import scalaz.IList
 
 trait LastOption[S, A] {
 
   /** Creates a Traversal from S to its optional last element */
-  def lastOption: SimpleTraversal[S, A]
+  def lastOption: SimpleOptional[S, A]
 
 }
 
@@ -18,10 +17,10 @@ object LastOption extends LastOptionInstances
 
 trait LastOptionInstances {
 
-  def lastOption[S, A](implicit ev: LastOption[S, A]): SimpleTraversal[S, A] = ev.lastOption
+  def lastOption[S, A](implicit ev: LastOption[S, A]): SimpleOptional[S, A] = ev.lastOption
 
   def reverseHeadLast[S, A](implicit evReverse: Reverse[S, S], evHead: HeadOption[S, A]): LastOption[S, A] = new LastOption[S, A] {
-    def lastOption = evReverse.reverse |->> evHead.headOption
+    def lastOption = evReverse.reverse composeOptional evHead.headOption
   }
 
   implicit def listLast[A]  : LastOption[List[A]  , A]    = reverseHeadLast[List[A]  , A]
@@ -32,7 +31,7 @@ trait LastOptionInstances {
 
 
   implicit def optionLast[A]: LastOption[Option[A], A]    = new LastOption[Option[A], A] {
-    def lastOption: SimpleTraversal[Option[A], A] = monocle.std.option.some
+    def lastOption = monocle.std.option.some
   }
 
 }

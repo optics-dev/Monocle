@@ -3,11 +3,17 @@ import scalaz.{ -\/, \/- }
 
 package object monocle {
 
-  type SimpleSetter[S, A] = Setter[S, S, A, A]
+  type SimpleSetter[S, A]    = Setter[S, S, A, A]
   type SimpleTraversal[S, A] = Traversal[S, S, A, A]
-  type SimpleLens[S, A] = Lens[S, S, A, A]
-  type SimpleIso[S, A] = Iso[S, S, A, A]
-  type SimplePrism[S, A] = Prism[S, S, A, A]
+  type SimpleLens[S, A]      = Lens[S, S, A, A]
+  type SimpleIso[S, A]       = Iso[S, S, A, A]
+  type SimpleOptional[S, A]  = Optional[S, S, A, A]
+  type SimplePrism[S, A]     = Prism[S, S, A, A]
+
+  object SimpleOptional {
+    def apply[S, A](_getOption: S => Option[A], _set: (S, Option[A]) => S): SimpleOptional[S, A] =
+      Optional[S, S, A, A](_getOption, _set)
+  }
 
   object SimpleLens {
     def apply[S, A](_get: S => A, _set: (S, A) => S): SimpleLens[S, A] = Lens[S, S, A, A](_get, _set)

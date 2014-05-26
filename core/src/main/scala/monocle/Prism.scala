@@ -7,13 +7,11 @@ import scalaz.{ Applicative, \/ }
  * 0 or 1 A. In addition, a Prism defines a reverse relation such as
  * you can always get T from B.
  */
-trait Prism[S, T, A, B] extends Traversal[S, T, A, B] { self =>
+trait Prism[S, T, A, B] extends Optional[S, T, A, B] { self =>
 
   def re: Getter[B, T]
 
   def reverseGet(from: B): T = re.get(from)
-
-  def getOption(from: S): Option[A] = headOption(from)
 
   def asPrism: Prism[S, T, A, B] = self
 

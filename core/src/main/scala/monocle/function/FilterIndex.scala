@@ -2,8 +2,12 @@ package monocle.function
 
 import monocle.syntax._
 import monocle.{Traversal, SimpleTraversal}
-import scalaz.{IList, Applicative}
+import scalaz.{Traverse, IList, Applicative}
 import scalaz.syntax.traverse._
+import scalaz.std.list._
+import scalaz.std.stream._
+import scalaz.std.vector._
+import scalaz.IList._
 
 trait FilterIndex[S, I, A] {
 
@@ -20,27 +24,14 @@ trait FilterIndexInstances {
                             (implicit ev: FilterIndex[S, I, A]): SimpleTraversal[S, A] = ev.filterIndex(predicate)
 
 
-  implicit def listFilterIndex[A] = new FilterIndex[List[A], Int, A] {
-    def filterIndex(predicate: Int => Boolean) = new Traversal[List[A], List[A], A, A] {
-      def multiLift[F[_] : Applicative](from: List[A], f: A => F[A]): F[List[A]] =
-        scalaz.std.list.listInstance.traverseImpl(from.zipWithIndex){ case (a, j) =>
-          if(predicate(j)) f(a) else Applicative[F].point(a)
-        }
-    }
-  }
-
-  implicit def streamFilterIndex[A] = new FilterIndex[Stream[A], Int, A] {
-    def filterIndex(predicate: Int => Boolean) = new Traversal[Stream[A], Stream[A], A, A] {
-      def multiLift[F[_] : Applicative](from: Stream[A], f: A => F[A]): F[Stream[A]] =
-        scalaz.std.stream.streamInstance.traverseImpl(from.zipWithIndex){ case (a, j) =>
-          if(predicate(j)) f(a) else Applicative[F].point(a)
-        }
-    }
-  }
+  implicit def listFilterIndex[A]   = traverseFilterIndex[List, A](_.zipWithIndex)
+  implicit def streamFilterIndex[A] = traverseFilterIndex[Stream, A](_.zipWithIndex)
+  implicit def vectorFilterIndex[A] = traverseFilterIndex[Vector, A](_.zipWithIndex)
+  implicit def iListFilterIndex[A]  = traverseFilterIndex[IList, A](_.zipWithIndex)
 
   implicit val stringFilterIndex = new FilterIndex[String, Int, Char]{
     def filterIndex(predicate: Int => Boolean) =
-      monocle.std.string.stringToList |->> listFilterIndex.filterIndex(predicate)
+      monocle.std.string.stringToList composeTraversal listFilterIndex.filterIndex(predicate)
   }
 
   implicit def mapFilterIndex[K, V] = new FilterIndex[Map[K, V], K, V] {
@@ -54,19 +45,10 @@ trait FilterIndexInstances {
     }
   }
 
-  implicit def vectorFilterIndex[A] = new FilterIndex[Vector[A], Int, A] {
-    def filterIndex(predicate: Int => Boolean) = new Traversal[Vector[A], Vector[A], A, A] {
-      def multiLift[F[_] : Applicative](from: Vector[A], f: A => F[A]): F[Vector[A]] =
-        scalaz.std.vector.vectorInstance.traverseImpl(from.zipWithIndex){ case (a, j) =>
-          if(predicate(j)) f(a) else Applicative[F].point(a)
-        }
-    }
-  }
-
-  implicit def iListFilterIndex[A] = new FilterIndex[IList[A], Int, A] {
-    def filterIndex(predicate: Int => Boolean) = new Traversal[IList[A], IList[A], A, A] {
-      def multiLift[F[_] : Applicative](from: IList[A], f: A => F[A]): F[IList[A]] =
-        from.zipWithIndex.traverse{ case (a, j) =>
+  def traverseFilterIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] = new FilterIndex[S[A], Int, A]{
+    def filterIndex(predicate: Int => Boolean) = new Traversal[S[A], S[A], A, A] {
+      def multiLift[F[_] : Applicative](from: S[A], f: A => F[A]): F[S[A]] =
+        zipWithIndex(from).traverse { case (a, j) =>
           if(predicate(j)) f(a) else Applicative[F].point(a)
         }
     }
