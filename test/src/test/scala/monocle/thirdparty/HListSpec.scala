@@ -2,6 +2,8 @@ package monocle.thirdparty
 
 import monocle.TestUtil._
 import monocle.function.Fields._
+import monocle.function.Head._
+import monocle.function.Last._
 import monocle.function.Reverse._
 import monocle.thirdparty.hlist._
 import monocle.{IsoLaws, LensLaws}
@@ -9,8 +11,8 @@ import org.scalacheck.Arbitrary
 import org.specs2.scalaz.Spec
 import scalaz.Equal
 import scalaz.syntax.equal._
-import shapeless.{Generic, ::, HNil}
 import shapeless.HList._
+import shapeless.{Generic, ::, HNil}
 
 class HListSpec extends Spec {
 
@@ -60,5 +62,7 @@ class HListSpec extends Spec {
 
   checkAll("toHList"      , IsoLaws(toHList[Example, H]))
   checkAll("reverse HList", IsoLaws(reverse[H, ReverseH]))
+  checkAll("head from HList", LensLaws(head[H, Int]))
+  checkAll("last from HList", LensLaws(last[H, Double]))
 
 }

@@ -1,6 +1,8 @@
 package monocle
 
 import monocle.function.Fields._
+import monocle.function.Head._
+import monocle.function.Last._
 import monocle.function.Reverse._
 import monocle.syntax._
 import monocle.thirdparty.hlist._
@@ -27,6 +29,14 @@ class HListExample extends Spec {
 
   "reverse creates an Iso between an HList and its reverse version" in {
     (1 :: "bla" :: true :: HNil <-> reverse get) shouldEqual (true :: "bla" :: 1 :: HNil)
+  }
+
+  "head creates a Lens from HList to the first element" in {
+    (1 :: "bla" :: true :: HNil |-> head get) shouldEqual 1
+  }
+
+  "last creates a Lens from HList to the last element" in {
+    (1 :: "bla" :: true :: HNil |-> last get) shouldEqual true
   }
 
 }
