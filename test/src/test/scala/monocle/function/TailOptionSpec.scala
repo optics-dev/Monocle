@@ -8,11 +8,11 @@ import org.specs2.scalaz.Spec
 
 class TailOptionSpec extends Spec {
 
-  checkAll("tail List"  , OptionalLaws(tailOption[List[Int]  , List[Int]]))
-  checkAll("tail Stream", OptionalLaws(tailOption[Stream[Int], Stream[Int]]))
-  checkAll("tail Vector", OptionalLaws(tailOption[Vector[Int], Vector[Int]]))
-  checkAll("tail Stream", OptionalLaws(tailOption[Stream[Int], Stream[Int]]))
+  checkAll("tailOption List"  , OptionalLaws(tailOption[List[Int]  , List[Int]]))
+  checkAll("tailOption Stream", OptionalLaws(tailOption[Stream[Int], Stream[Int]]))
+  checkAll("tailOption Vector", OptionalLaws(tailOption[Vector[Int], Vector[Int]]))
+  checkAll("tailOption Stream", OptionalLaws(tailOption[Stream[Int], Stream[Int]]))
 
-  checkAll("tail String", OptionalLaws(tailOption[String     , String]))
+  checkAll("tailOption String", OptionalLaws(tailOption[String     , String]))
 
 }
