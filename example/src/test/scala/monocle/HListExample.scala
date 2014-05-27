@@ -4,6 +4,7 @@ import monocle.function.Fields._
 import monocle.function.Head._
 import monocle.function.Last._
 import monocle.function.Reverse._
+import monocle.function.Tail._
 import monocle.syntax._
 import monocle.thirdparty.hlist._
 import org.specs2.scalaz.Spec
@@ -21,7 +22,7 @@ class HListExample extends Spec {
     (1 :: "bla" :: true :: HNil  |-> _1 modify(_ + 1)) shouldEqual 2 :: "bla" :: true :: HNil
   }
 
-  "toHList creates an Iso between a Generic (typically case class) and HList" in {
+  "toHList creates an Iso between a Generic (typically a case class) and HList" in {
     (Example(1, "bla", true) <-> toHList get) shouldEqual (1 :: "bla" :: true :: HNil)
 
     (Example(1, "bla", true) <-> toHList |-> _1 set 5) shouldEqual Example(5, "bla", true)
@@ -37,6 +38,10 @@ class HListExample extends Spec {
 
   "last creates a Lens from HList to the last element" in {
     (1 :: "bla" :: true :: HNil |-> last get) shouldEqual true
+  }
+
+  "tail creates a Lens from HList to its tail" in {
+    (1 :: "bla" :: true :: HNil |-> tail get) shouldEqual ("bla" :: true :: HNil)
   }
 
 }

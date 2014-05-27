@@ -2,8 +2,9 @@ package monocle.thirdparty
 
 import monocle._
 import monocle.function._
-import shapeless.ops.hlist.{Reverse => HReverse, ReplaceAt, At}
-import shapeless.{Generic, Nat, HList}
+import shapeless.ops.hlist.{Reverse => HReverse, Prepend, IsHCons, ReplaceAt, At}
+import shapeless._
+import shapeless.::
 
 
 object hlist extends HListInstances
@@ -28,6 +29,11 @@ trait HListInstances {
   implicit def hListLast[S <: HList, RS <: HList, A](implicit evReverse: Reverse[S, RS],
                                                                  evHead: Head[RS, A]) = new Last[S, A] {
     def last = evReverse.reverse composeLens evHead.head
+  }
+
+  implicit def hListTail[S <: HList, H, T <: HList](implicit evIsCons: IsHCons.Aux[S, H, T],
+                                                            evPrepend: Prepend.Aux[H :: HNil, T, S]) = new Tail[S, T] {
+    def tail = SimpleLens[S, T](s => evIsCons.tail(s), (s, a) => evPrepend(evIsCons.head(s) :: HNil, a))
   }
 
   implicit def hListField1[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._0.N, A],
