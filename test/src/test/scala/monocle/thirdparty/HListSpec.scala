@@ -2,6 +2,7 @@ package monocle.thirdparty
 
 import monocle.TestUtil._
 import monocle.function.Fields._
+import monocle.function.Init._
 import monocle.function.Head._
 import monocle.function.Last._
 import monocle.function.Reverse._
@@ -14,7 +15,7 @@ import scalaz.Equal
 import scalaz.syntax.equal._
 import shapeless.HList._
 import shapeless.{Generic, ::, HNil}
-import shapeless.ops.hlist.IsHCons
+import shapeless.ops.hlist.{IsHCons, Init => HListInit}
 
 class HListSpec extends Spec {
 
@@ -23,9 +24,12 @@ class HListSpec extends Spec {
   type H        = Int :: Boolean :: Char :: Float :: Long :: Double :: HNil
   type ReverseH = Double :: Long :: Float :: Char :: Boolean :: Int :: HNil
 
-  val isHCons = IsHCons[H]
+  val isHCons   = IsHCons[H]
+  val hListinit = HListInit[H]
 
   type HTail    = isHCons.T
+  type HInit    = hListinit.Out
+
 
   implicit val exampleGen: Generic.Aux[Example, H] = Generic.product[Example]
 
@@ -33,6 +37,7 @@ class HListSpec extends Spec {
   implicit val hEq        = Equal.equal[H]((a1, a2) => fromHList[H, Example].get(a1) === fromHList[H, Example].get(a2))
   implicit val reverseHEq = Equal.equal[ReverseH]((a1, a2) => a1.reverse === a2.reverse)
   implicit val hTailEq    = Equal.equal[HTail]((a1, a2) => (1 :: a1) === (1 :: a2))
+  implicit val hInitEq    = Equal.equal[HInit]((a1, a2) => (a1.tail :+ 3.5) === (a2.tail :+ 3.5))
 
   implicit val exampleArb: Arbitrary[Example] = Arbitrary(for{
     i <- Arbitrary.arbitrary[Int]
@@ -46,6 +51,7 @@ class HListSpec extends Spec {
   implicit val hArb        = Arbitrary(for {example <- Arbitrary.arbitrary[Example]} yield toHList[Example, H].get(example))
   implicit val reverseHArb = Arbitrary(for {h <- Arbitrary.arbitrary[H]} yield h.reverse)
   implicit val hTailArb    = Arbitrary(for {h <- Arbitrary.arbitrary[H]} yield h.tail)
+  implicit val hInitArb    = Arbitrary(for {h <- Arbitrary.arbitrary[H]} yield h.init)
 
 
   checkAll("_1 from HList", LensLaws(_1[H, Int]))
@@ -60,5 +66,6 @@ class HListSpec extends Spec {
   checkAll("head from HList", LensLaws(head[H, Int]))
   checkAll("last from HList", LensLaws(last[H, Double]))
   checkAll("tail from HList", LensLaws(tail[H, HTail]))
+  checkAll("init from HList", LensLaws(init[H, HInit]))
 
 }

@@ -2,6 +2,7 @@ package monocle
 
 import monocle.function.Fields._
 import monocle.function.Head._
+import monocle.function.Init._
 import monocle.function.Last._
 import monocle.function.Reverse._
 import monocle.function.Tail._
@@ -42,6 +43,10 @@ class HListExample extends Spec {
 
   "tail creates a Lens from HList to its tail" in {
     (1 :: "bla" :: true :: HNil |-> tail get) shouldEqual ("bla" :: true :: HNil)
+  }
+
+  "init creates a Lens from HList to its init" in {
+    (1 :: "bla" :: true :: HNil |-> init get) shouldEqual (1 :: "bla" :: HNil)
   }
 
 }
