@@ -3,6 +3,8 @@ import Keys._
 
 import xerial.sbt.Sonatype._
 import xerial.sbt.Sonatype.SonatypeKeys._
+import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
+import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 
 object BuildSettings {
   import MonoclePublishing._
@@ -44,8 +46,9 @@ object MonocleBuild extends Build {
   lazy val core: Project = Project(
     "monocle-core",
     file("core"),
-    settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz)
+    settings = buildSettings ++ mimaDefaultSettings ++ Seq(
+      libraryDependencies ++= Seq(scalaz),
+      previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.10" % "0.3.0")
     )
   )
 
