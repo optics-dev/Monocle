@@ -21,6 +21,10 @@ private[syntax] trait ApplyOptional[S, T, A, B] extends ApplyTraversal[S, T, A, 
 
   def getOption: Option[A] = _optional.getOption(from)
 
+  def modifyOption(f: A => B): Option[T] = _optional.modifyOption(from, f)
+
+  def setOption(newValue: B): Option[T] = _optional.setOption(from, newValue)
+
   def composeOptional[C, D](other: Optional[A, B, C, D]): ApplyOptional[S, T, C, D] = new ApplyOptional[S, T, C, D] {
     val _optional: Optional[S, T, C, D] = self._optional compose other
     val from: S = self.from

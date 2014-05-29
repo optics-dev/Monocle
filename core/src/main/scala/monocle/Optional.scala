@@ -11,6 +11,10 @@ trait Optional[S, T, A, B] extends Traversal[S, T, A, B] { self =>
 
   def getOption(from: S): Option[A] = headOption(from)
 
+  def modifyOption(from: S, f: A => B): Option[T] = getOption(from).map(a => set(from, f(a)))
+
+  def setOption(from: S, newValue: B): Option[T] = modifyOption(from, _ => newValue)
+
   def asOptional: Optional[S, T, A, B] = self
 
   /** non overloaded compose function */

@@ -14,10 +14,15 @@ class HeadOptionExample extends Spec {
     (Vector(1,2,3)   |-? headOption getOption) shouldEqual Some(1)
     (IList(1,2,3)    |-? headOption getOption) shouldEqual Some(1)
 
-    (List.empty[Int] |-? headOption getOption)    shouldEqual None
+    (List.empty[Int] |-? headOption getOption)     shouldEqual None
     (List.empty[Int] |-? headOption modify(_ + 1)) shouldEqual Nil
 
-    (List(1,2,3)     |-? headOption set 0) shouldEqual List(0,2,3)
+    (List(1,2,3)     |-? headOption set 0)       shouldEqual List(0,2,3)
+    (List(1,2,3)     |-? headOption setOption 0) shouldEqual Some(List(0,2,3))
+
+    (List.empty[Int] |-? headOption set 0)       shouldEqual Nil
+    (List.empty[Int] |-? headOption setOption 0) shouldEqual None
+
   }
 
   "headOption creates a Traversal from a String to its optional head Char" in {
