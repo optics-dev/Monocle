@@ -12,7 +12,7 @@ object BuildSettings {
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization       := "com.github.julien-truffaut",
-    version            := "0.4.0",
+    version            := "0.5-SNAPSHOT",
     scalaVersion       := buildScalaVersion,
     crossScalaVersions := Seq("2.10.4", "2.11.0"),
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
@@ -48,7 +48,7 @@ object MonocleBuild extends Build {
     file("core"),
     settings = buildSettings ++ mimaDefaultSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz),
-      previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.10" % "0.3.0")
+      previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % "0.4.0")
     )
   )
 
