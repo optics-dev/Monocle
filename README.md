@@ -1,6 +1,5 @@
 ![Monocle Logo](https://raw.github.com/julien-truffaut/Monocle/master/image/logo.png)<br>
-Monocle is a Scala lens library greatly inspired by Haskell [Lens](https://github.com/ekmett/lens).
-### Build
+## Build
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
 
 ```scala
@@ -19,54 +18,102 @@ libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % test // since 0.4.0
 )
 ```
-### Usage
-#### Lens
- ```scala
-  case class Character(_name: String, _health: Int, _location: (Int, Int))
+## Motivation
 
-  import monocle.Macro
+Monocle is a `Lens` library, or more generally an Optics library where Optics gather the concepts
+of `Lens`, `Traversal`, `Optional`, `Prism` and `Iso`. Monocle is strongly inspired by Haskell [Lens](https://github.com/ekmett/lens).
 
-  val health   = Macro.mkLens[Character, Int]("_health")
-  val location = Macro.mkLens[Character, (Int, Int)]("_location")
+#### What does it mean?
 
-  val barbarian = Character("Krom" , 30, (8,13))
+Optics are a set of purely functional abstractions to manipulate (get, set, modify) immutable objects.
+Optics compose between each other and particularly shine with nested objects.
 
-  health.get(barbarian) == 30
-  health.set(barbarian, 32)       == Character("Krom" , 32, (8,13))
-  health.modify(barbarian, _ + 1) == Character("Krom" , 31, (8,13))
+#### Why do I need this?
 
-  import monocle.function.Fields._
+Scala already provides getters and setters for case classes but modifying nested object is verbose which makes code
+difficult to understand and reason about. Let's have a look at some examples:
 
-  (location composeLens _1).set(barbarian, 0) == Character("Krom" , 31, (0,13))
+```scala
+case class Street(name: String, ...)     // ... means it contains other fields
+case class Address(street: Street, ...)
+case class Company(address: Address, ...)
+case class Employee(company: Company, ...)
 ```
-#### Traversal
- ```scala
-  case class Game(_score: Int, _players: List[Character])
 
-  val players = Macro.mkLens[Game, List[Character]]("_players")
+Let's say we have an employee and we need to set the first character of his company street name address in upper case.
+Here is how we could write it in vanilla Scala:
 
-  val barbarian = Character("Krom" , 30, (8,13))
-  val wizard    = Character("Waza" , 12, (6,1))
+```scala
+val employee: Employee = ...
 
-  val dnd = Game(10, List(barbarian, wizard))
-
-  import monocle.function.Each._
-
-  (players composeTraversal each composeTraversal health).getAll(dnd) == List(30, 12)
-
-  // reduce by 2 the health points of all players
-  (players composeTraversal each composeTraversal health).modify(dnd, _ - 2) ==
-    Game(10, List(Character("Krom" , 28, (8,13)), Character("Waza" , 10, (6,10))))
-
-  // generate all possible legal moves
-  def legalMoves(n: Int): List[Int] = List(n - 1, n + 1).filter(_ > 0)
-  (players composeTraversal each composeTraversal location composeTraversal each).multiLift(dnd, legalMoves)
-
-  // or with some syntax sugar
-  import monocle.syntax._
-  dnd |-> players |->> each |->> location |->> each multiLift legalMoves
+employee.copy(
+  company = employee.company.copy(
+    address = employee.company.address.copy(
+      name = employee.company.address.name.capitalize // luckily capitalize exists
+    )
+  )
+)
 ```
-#### Overview
+
+As you can see copy is not convenient to update nested objects as we need to repeat at each level the full path
+to reach it. Let's see what could we do with Monocle:
+
+```scala
+val _name   : SimpleLens[Street  , String]  = ...  // we'll see later how to build Lens
+val _street : SimpleLens[Address , Street]  = ...
+val _address: SimpleLens[Company , Address] = ...
+val _company: SimpleLens[Employee, Company] = ...
+
+import monocle.syntax._
+
+employee applyLens   _company
+         composeLens _address
+         composeLens _street
+         composeLens _name
+         modify (_.capitalize)
+```
+
+or with some syntax sugar:
+
+```scala
+employee |-> _company |-> _address |-> _street |-> _name modify (_.capitalize)
+```
+
+ComposeLens takes two `Lens`, one from A to B and another from B to C and creates a third `Lens` from A to C.
+Therefore, after composing _company, _address, _street and _name, we obtain a `Lens` from `Employee` to `String` (the street name).
+
+#### More abstractions
+
+In the above example, we used capitalize to upper case the first letter of a `String`.
+It works but it would be clearer if we could use `Lens` to zoom into the first character of a `String`.
+However, we cannot write such a `Lens` because a `Lens` defines how to focus from an object `S` into a *mandatory*
+object `A` and in our case, the first character of a `String` is optional as a `String` might be empty. For this
+ we need a sort of partial `Lens`, in Monocle it is called `Optional`.
+
+```scala
+import monocle.syntax._
+import monocle.function.HeadOption._ // to use headOption
+
+employee applyLens   _company
+         composeLens _address
+         composeLens _street
+         composeLens _name
+         composeOptional headOption // generic Optional that focus into the first element
+         modify toUpper
+```
+
+or with some syntax sugar:
+
+```scala
+employee |-> _company |-> _address |-> _street |-> _name |-? headOption modify toUpper
+```
+
+Similarly to composeLens, composeOptional takes two `Optional`, one from A to B and another from B to C and
+creates a third `Optional` from A to C. All `Lens` can be seen as `Optional` where the optional element to zoom to is always
+present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class diagram for full inheritance
+relation between Optics).
+
+## Overview
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
 #### Sub Projects
 Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.
