@@ -113,6 +113,24 @@ creates a third `Optional` from A to C. All `Lens` can be seen as `Optional` whe
 present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class diagram for full inheritance
 relation between Optics).
 
+## Lens Creation
+
+`Lens` can be created by a pair of getter and setter:
+
+```scala
+val _company = SimpleLens[Employee, Company](_.company, (e, c) => e.copy(company = c))
+```
+
+This is quite a lot of boiler plate, so Monocle provides a macro to simplify `Lens` creation:
+
+```scala
+import monocle.Macro._ // require monocle-macro dependency
+
+val _company = mkLens[Employee, Company]("company") // company is checked at compiled time to be a valid accessor
+```
+
+In future version of the library, we are planning to introduce helpers to facilitate even further `Lens` creation.
+
 ## Overview
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
 #### Sub Projects
