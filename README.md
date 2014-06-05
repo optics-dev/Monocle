@@ -113,6 +113,8 @@ creates a third `Optional` from A to C. All `Lens` can be seen as `Optional` whe
 present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class diagram for full inheritance
 relation between Optics).
 
+For more examples, see the [```example``` module](example/src/test/scala/monocle).
+
 ## Lens Creation
 
 `Lens` can be created by a pair of getter and setter:
@@ -130,8 +132,6 @@ val _company = mkLens[Employee, Company]("company") // company is checked at com
 ```
 
 In future version of the library, we are planning to introduce helpers to facilitate even further `Lens` creation.
-
-For more examples, see the [example package](example/src/test/scala/monocle).
 
 ## Overview
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
