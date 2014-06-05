@@ -131,6 +131,8 @@ val _company = mkLens[Employee, Company]("company") // company is checked at com
 
 In future version of the library, we are planning to introduce helpers to facilitate even further `Lens` creation.
 
+For more examples, see the [example package](example/src/test/scala/monocle).
+
 ## Overview
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
 #### Sub Projects
