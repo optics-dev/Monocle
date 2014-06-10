@@ -26,6 +26,10 @@ trait SafeCastInstances {
     })
   }
 
+  implicit val doubleToInt: SafeCast[Double, Int] = new SafeCast[Double, Int] {
+    def safeCast = SimplePrism[Double, Int](_.toDouble, d => if(d.isValidInt) Some(d.toInt) else None)
+  }
+
   implicit val longToInt : SafeCast[Long, Int]  = orderingBoundedSafeCast(_.toLong, _.toInt)
   implicit val longToChar: SafeCast[Long, Char] = orderingBoundedSafeCast(_.toInt, _.toChar)
   implicit val longToByte: SafeCast[Long, Byte] = orderingBoundedSafeCast(_.toLong, _.toByte)

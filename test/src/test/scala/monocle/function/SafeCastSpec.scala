@@ -19,6 +19,8 @@ class SafeCastSpec extends Spec {
   checkAll("Long to Byte safe cast"   , PrismLaws(safeCast[Long,Byte]))
   checkAll("Long to Char safe cast"   , PrismLaws(safeCast[Long,Char]))
 
+  checkAll("Double to Int safe cast"  , PrismLaws(safeCast[Double,Int]))
+
   checkAll("String to Boolean safe cast", PrismLaws(safeCast[String,Boolean]))
   checkAll("String to Byte safe cast"   , PrismLaws(safeCast[String,Byte]))
   checkAll("String to Int safe cast"    , PrismLaws(safeCast[String,Int]))

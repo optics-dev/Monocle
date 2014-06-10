@@ -18,13 +18,19 @@ class SafeCastExample extends Spec {
     (65 <-? safeCast[Int, Char] getOption) shouldEqual Some('A')
   }
 
+  "safeCast creates a Prism from Double to Int" in {
+    safeCast[Double, Int].getOption(5d) shouldEqual Some(5)
+
+    safeCast[Double, Int].getOption(5.4d)                    shouldEqual None
+    safeCast[Double, Int].getOption(Double.PositiveInfinity) shouldEqual None
+    safeCast[Double, Int].getOption(Double.NaN)              shouldEqual None
+  }
+
   "safeCast creates a Prism from String to Int" in {
     safeCast[String, Int].getOption("352") shouldEqual Some(352)
     safeCast[String, Int].reverseGet(8921) shouldEqual "8921"
     safeCast[String, Int].getOption("")    shouldEqual None
-  }
 
-  "With safeCast[String,Int] one could map a String with an Int => Int function." in {
     safeCast[String, Int].modify("1024", _ * 2) shouldEqual "2048"
   }
 

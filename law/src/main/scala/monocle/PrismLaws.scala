@@ -17,7 +17,7 @@ object PrismLaws {
       prism.getOption(prism.reverseGet(value)) === Some(value)
     }
 
-    property("getOption - reverseGet") = forAll { (from: S, newValue: A) =>
+    property("getOption - reverseGet") = forAll { from: S =>
     // if we can extract an A from S, then this A fully describes S
       prism.getOption(from).map { someA =>
         prism.reverseGet(someA) === from
