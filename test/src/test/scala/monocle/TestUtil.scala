@@ -48,7 +48,6 @@ object TestUtil {
   // Arbitrary instances
 
   implicit def doubleArb: Arbitrary[Double] = Arbitrary(Gen.frequency(
-    1  -> Gen.const(Double.NaN),
     1  -> Gen.const(Double.PositiveInfinity),
     1  -> Gen.const(Double.NegativeInfinity),
     5  -> Arbitrary.arbitrary[Int].map(_.toDouble),
