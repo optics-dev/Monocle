@@ -8,7 +8,7 @@ resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 )
 
-val scalaVersion   = "2.11.0" // or "2.10.4"
+val scalaVersion   = "2.11.1" // or "2.10.4"
 val libraryVersion = "0.4.0"  // or "0.5-SNAPSHOT"
 
 libraryDependencies ++= Seq(
