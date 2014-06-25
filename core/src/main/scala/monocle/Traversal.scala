@@ -1,10 +1,8 @@
 package monocle
 
-import monocle.internal.Constant
-import monocle.internal.Constant._
 import scalaz.Id._
 import scalaz.std.list._
-import scalaz.{ Monoid, Traverse, Applicative }
+import scalaz.{ Const, Monoid, Traverse, Applicative }
 
 /**
  * A Traversal is generalisation of a Lens in a way that it defines a multi foci between
@@ -17,7 +15,7 @@ trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
   def modify(from: S, f: A => B): T = multiLift[Id](from, { a: A => id.point(f(a)) })
 
   def foldMap[M: Monoid](from: S)(f: A => M): M =
-    multiLift[({ type l[a] = Constant[M, a] })#l](from, { a: A => Constant[M, B](f(a)) })
+    multiLift[({ type l[a] = Const[M, a] })#l](from, { a: A => Const[M, B](f(a)) }).getConst
 
   def asTraversal: Traversal[S, T, A, B] = self
 

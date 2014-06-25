@@ -1,8 +1,6 @@
 package monocle
 
-import monocle.internal.Constant
-import monocle.internal.Constant._
-import scalaz.{ Applicative, Functor, Monoid }
+import scalaz.{Const, Applicative, Functor, Monoid}
 
 /**
  * A Lens defines a single focus between a type S and A such as if you change A to B
@@ -14,9 +12,9 @@ trait Lens[S, T, A, B] extends Optional[S, T, A, B] with Getter[S, A] { self =>
 
   def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] = lift(from, f)
 
-  override def foldMap[M: Monoid](from: S)(f: A => M): M = lift[({ type l[a] = Constant[M, a] })#l](from, { a: A => Constant.apply[M, A](f(a)) })
+  override def foldMap[M: Monoid](from: S)(f: A => M): M = lift[({ type l[a] = Const[M, a] })#l](from, { a: A => Const[M, B](f(a)) }).getConst
 
-  def get(from: S): A = lift[({ type l[b] = Constant[A, b] })#l](from, { a: A => Constant.apply[A, B](a) })
+  def get(from: S): A = lift[({ type l[b] = Const[A, b] })#l](from, { a: A => Const[A, B](a) }).getConst
 
   /** non overloaded compose function */
   def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = compose(other)
