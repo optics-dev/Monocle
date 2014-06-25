@@ -1,6 +1,5 @@
 package monocle.function
 
-import monocle.syntax._
 import monocle.{Traversal, SimpleTraversal}
 import scalaz.{Traverse, IList, Applicative}
 import scalaz.syntax.traverse._
