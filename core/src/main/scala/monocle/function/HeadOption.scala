@@ -2,7 +2,8 @@ package monocle.function
 
 import monocle.SimpleOptional
 import monocle.function.Index._
-import scalaz.IList
+import scala.collection.immutable.Stream.Empty
+import scalaz.{ICons, INil, IList}
 
 
 trait HeadOption[S, A] {
@@ -23,13 +24,38 @@ trait HeadOptionInstances {
     def headOption = index(0)
   }
 
-  implicit def listHeadOption[A]  : HeadOption[List[A]  , A]    = indexHeadOption[List[A]  , A]
-  implicit def iListHeadOption[A] : HeadOption[IList[A] , A]    = indexHeadOption[IList[A] , A]
-  implicit def streamHeadOption[A]: HeadOption[Stream[A], A]    = indexHeadOption[Stream[A], A]
-  implicit def vectorHeadOption[A]: HeadOption[Vector[A], A]    = indexHeadOption[Vector[A]  , A]
-  implicit val stringHeadOption   : HeadOption[String   , Char] = indexHeadOption[String   , Char]
+  implicit def listHeadOption[A] = new HeadOption[List[A], A] {
+    def headOption = SimpleOptional.build[List[A], A](_.headOption, {
+      case (Nil, a)     => Nil
+      case (x :: xs, a) => a :: xs
+    })
+  }
 
-  implicit def optionHeadOption[A]: HeadOption[Option[A], A]    = new HeadOption[Option[A], A] {
+  implicit def iListHeadOption[A] = new HeadOption[IList[A], A] {
+    def headOption = SimpleOptional.build[IList[A], A](_.headOption, {
+      case (INil(), a)      => INil[A]()
+      case (ICons(x,xs), a) => ICons(a, xs)
+    })
+  }
+
+  implicit def streamHeadOption[A] = new HeadOption[Stream[A], A] {
+    def headOption = SimpleOptional.build[Stream[A], A](_.headOption, {
+      case (Empty, a)    => Empty
+      case (x #:: xs, a) => a #:: xs
+    })
+  }
+
+  implicit def vectorHeadOption[A] = new HeadOption[Vector[A], A] {
+    def headOption = SimpleOptional.build[Vector[A], A](_.headOption, (vector, a) =>
+      if(vector.isEmpty) vector else a +: vector.tail
+    )
+  }
+
+  implicit val stringHeadOption = new HeadOption[String, Char] {
+    def headOption = monocle.std.string.stringToList composeOptional listHeadOption.headOption
+  }
+
+  implicit def optionHeadOption[A]: HeadOption[Option[A], A] = new HeadOption[Option[A], A] {
     def headOption = monocle.std.option.some
   }
 

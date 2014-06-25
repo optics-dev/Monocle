@@ -11,8 +11,16 @@ package object monocle {
   type SimplePrism[S, A]     = Prism[S, S, A, A]
 
   object SimpleOptional {
+    @deprecated("use build", "0.5.0")
     def apply[S, A](_getOption: S => Option[A], _set: (S, Option[A]) => S): SimpleOptional[S, A] =
       Optional[S, S, A, A](_getOption, _set)
+
+
+    def build[S, A](_getOption: S => Option[A], _set: (S, A) => S): SimpleOptional[S, A] =
+      Optional[S, S, A, A](_getOption, {
+        case (s, Some(a)) => _set(s, a)
+        case (s, None)    => s
+      })
   }
 
   object SimpleLens {
