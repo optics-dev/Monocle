@@ -14,8 +14,8 @@ val libraryVersion = "0.4.0"  // or "0.5-SNAPSHOT"
 libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion,
   "com.github.julien-truffaut"  %%  "monocle-generic" % libraryVersion,
-  "com.github.julien-truffaut"  %%  "monocle-macro"   % libraryVersion,       // since 0.4.0
-  "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % test // since 0.4.0
+  "com.github.julien-truffaut"  %%  "monocle-macro"   % libraryVersion,         // since 0.4.0
+  "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % "test" // since 0.4.0
 )
 ```
 ## Motivation
