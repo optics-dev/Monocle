@@ -1,6 +1,7 @@
 package monocle.function
 
 import monocle.SimpleLens
+import scalaz.OneAnd
 
 trait Tail[S, A] {
 
@@ -18,6 +19,10 @@ object Tail extends TailInstances
 trait TailInstances {
 
   def tail[S, A](implicit ev: Tail[S, A]): SimpleLens[S, A] = ev.tail
+
+  implicit def oneAndTail[T[_], A] = new Tail[OneAnd[T, A], T[A]]{
+    def tail = SimpleLens[OneAnd[T, A], T[A]](_.tail, (oneAnd, tail) => oneAnd.copy(tail = tail))
+  }
 
   implicit def tuple2Tail[A1, A2] = new Tail[(A1, A2), A2] {
     def tail = SimpleLens[(A1, A2), A2](_._2, (t, a) => t.copy(_2 = a))

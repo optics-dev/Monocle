@@ -4,13 +4,16 @@ import monocle.TestUtil._
 import monocle.OptionalLaws
 import monocle.function.LastOption._
 import org.specs2.scalaz.Spec
+import scalaz.OneAnd
 
 
 class LastOptionSpec extends Spec {
 
-  checkAll("last List"  , OptionalLaws(lastOption[List[Int]  , Int]))
-  checkAll("last Stream", OptionalLaws(lastOption[Stream[Int], Int]))
-  checkAll("last String", OptionalLaws(lastOption[String     , Char]))
-  checkAll("last Vector", OptionalLaws(lastOption[Vector[Int], Int]))
+  checkAll("lastOption List"  , OptionalLaws(lastOption[List[Int]  , Int]))
+  checkAll("lastOption Stream", OptionalLaws(lastOption[Stream[Int], Int]))
+  checkAll("lastOption String", OptionalLaws(lastOption[String     , Char]))
+  checkAll("lastOption Vector", OptionalLaws(lastOption[Vector[Int], Int]))
+
+  checkAll("lastOption OneAnd", OptionalLaws(lastOption[OneAnd[List, Int], Int]))
 
 }

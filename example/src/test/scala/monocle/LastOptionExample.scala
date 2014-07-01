@@ -3,16 +3,17 @@ package monocle
 import monocle.function.LastOption._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
-import scalaz.IList
+import scalaz.{OneAnd, IList}
 
 
 class LastOptionExample extends Spec {
 
-  "lastOption creates a Traversal from a List, IList, Stream or Vector to its optional first element" in {
-    (List(1,2,3)     |-? lastOption getOption) shouldEqual Some(3)
-    (IList(1,2,3)    |-? lastOption getOption) shouldEqual Some(3)
-    (Stream(1,2,3)   |-? lastOption getOption) shouldEqual Some(3)
-    (Vector(1,2,3)   |-? lastOption getOption) shouldEqual Some(3)
+  "lastOption creates a Traversal from a List, IList, Stream, Vector or OneAnd to its optional first element" in {
+    (List(1,2,3)           |-? lastOption getOption) shouldEqual Some(3)
+    (IList(1,2,3)          |-? lastOption getOption) shouldEqual Some(3)
+    (Stream(1,2,3)         |-? lastOption getOption) shouldEqual Some(3)
+    (Vector(1,2,3)         |-? lastOption getOption) shouldEqual Some(3)
+    (OneAnd(1, List(2, 3)) |-? lastOption getOption) shouldEqual Some(3)
 
     (List.empty[Int] |-? lastOption getOption)    shouldEqual None
     (List.empty[Int] |-? lastOption modify(_ + 1)) shouldEqual Nil

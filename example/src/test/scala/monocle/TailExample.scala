@@ -3,6 +3,7 @@ package monocle
 import monocle.function.Tail._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
+import scalaz.OneAnd
 
 class TailExample extends Spec {
 
@@ -11,6 +12,10 @@ class TailExample extends Spec {
     (('r', false, "lala", 5.6, 7, 4) |-> tail get) shouldEqual (false, "lala", 5.6, 7, 4)
 
     ((2, false, "hello") |-> tail set (true, "plop")) shouldEqual (2, true, "plop")
+  }
+
+  "head creates a Lens from a OneAnd its first element" in {
+    (OneAnd(1, List(2, 3)) |-> tail get)  shouldEqual List(2, 3)
   }
 
 }

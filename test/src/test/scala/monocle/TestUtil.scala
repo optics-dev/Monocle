@@ -69,6 +69,11 @@ object TestUtil {
     3 -> Arbitrary.arbitrary[A].map(Option(_))
   ))
 
+  implicit def oneAndArb[T[_], A](implicit a: Arbitrary[A], ta: Arbitrary[T[A]]): Arbitrary[OneAnd[T, A]] = Arbitrary(for {
+    head <- Arbitrary.arbitrary[A]
+    tail <- Arbitrary.arbitrary[T[A]]
+  } yield OneAnd(head, tail))
+
   implicit def vectorArbitrary[A: Arbitrary]: Arbitrary[Vector[A]] =
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toVector))
 

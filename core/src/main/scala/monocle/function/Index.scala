@@ -1,12 +1,14 @@
 package monocle.function
 
 import monocle.{Optional, SimpleOptional}
+import monocle.function.Head._
+import monocle.syntax._
 import scalaz.IList._
 import scalaz.std.list._
 import scalaz.std.stream._
 import scalaz.std.vector._
 import scalaz.syntax.traverse._
-import scalaz.{Traverse, Applicative, IList}
+import scalaz.{OneAnd, Traverse, Applicative, IList}
 
 trait Index[S, I, A] {
 
@@ -24,20 +26,6 @@ trait IndexInstances {
 
   def index[S, I, A](i: I)(implicit ev: Index[S, I, A]): SimpleOptional[S, A] = ev.index(i)
 
-
-  implicit def mapIndex[K, V]: Index[Map[K, V], K  , V] = atIndex
-
-  implicit def listIndex[A]   = traverseIndex[List, A](_.zipWithIndex)
-  implicit def streamIndex[A] = traverseIndex[Stream, A](_.zipWithIndex)
-  implicit def vectorIndex[A] = traverseIndex[Vector, A](_.zipWithIndex)
-  implicit def iListIndex[A]  = traverseIndex[IList, A](_.zipWithIndex)
-
-  implicit val stringIndex  = new Index[String, Int, Char]{
-    def index(i: Int) =
-      monocle.std.string.stringToList composeOptional listIndex.index(i)
-  }
-
-
   def atIndex[S, I, A](implicit ev: At[S, I, A]) = new Index[S, I, A] {
     def index(i: I) = ev.at(i) composeOptional monocle.std.option.some
   }
@@ -50,6 +38,28 @@ trait IndexInstances {
         }
     }
   }
+
+  implicit def mapIndex[K, V]: Index[Map[K, V], K  , V] = atIndex
+
+  implicit def listIndex[A]   = traverseIndex[List, A](_.zipWithIndex)
+  implicit def streamIndex[A] = traverseIndex[Stream, A](_.zipWithIndex)
+  implicit def vectorIndex[A] = traverseIndex[Vector, A](_.zipWithIndex)
+  implicit def iListIndex[A]  = traverseIndex[IList, A](_.zipWithIndex)
+
+  implicit def oneAndIndex[A, T[_]](implicit ev: Index[T[A], Int, A]) = new Index[OneAnd[T, A], Int, A]{
+    def index(i: Int) =
+      if(i == 0) SimpleOptional.build[OneAnd[T, A], A](oneAnd => Some(oneAnd |-> head get), (oneAnd, a) => oneAnd |-> head set a)
+      else SimpleOptional.build[OneAnd[T, A], A](_.tail |-? ev.index(i - 1) getOption,
+        (oneAnd, a) => oneAnd.copy(tail = oneAnd.tail |-? ev.index(i - 1) set a) )
+  }
+
+  implicit val stringIndex  = new Index[String, Int, Char]{
+    def index(i: Int) =
+      monocle.std.string.stringToList composeOptional listIndex.index(i)
+  }
+
+
+
 
 }
 

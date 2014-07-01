@@ -1,6 +1,7 @@
 package monocle.function
 
 import monocle.SimpleLens
+import scalaz.OneAnd
 
 trait Head[S, A] {
 
@@ -21,6 +22,10 @@ trait HeadInstances {
 
   def field1Head[S, A](implicit ev: Field1[S,A]): Head[S, A] = new Head[S, A]{
     def head = ev._1
+  }
+
+  implicit def oneAndHead[T[_], A] = new Head[OneAnd[T, A], A]{
+    def head = SimpleLens[OneAnd[T, A], A](_.head, (oneAnd, a) => oneAnd.copy(head = a))
   }
 
   implicit def tuple2Last[A1, A2]                 = field1Head[(A1, A2), A1]
