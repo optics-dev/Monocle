@@ -5,7 +5,7 @@ import scalaz.std.list._
 import scalaz.std.option._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
-import scalaz.{ Foldable, Monoid }
+import scalaz.{ Foldable, Monoid, Tag }
 
 trait Fold[S, A] { self =>
 
@@ -15,11 +15,11 @@ trait Fold[S, A] { self =>
 
   def getAll(from: S): List[A] = foldMap(from)(List(_))
 
-  def headOption(from: S): Option[A] = foldMap(from)(Option(_).first)
+  def headOption(from: S): Option[A] = Tag.unwrap(foldMap(from)(Option(_).first))
 
-  def exist(from: S)(p: A => Boolean): Boolean = foldMap(from)(p(_).disjunction)
+  def exist(from: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(from)(p(_).disjunction))
 
-  def all(from: S)(p: A => Boolean): Boolean = foldMap(from)(p(_).conjunction)
+  def all(from: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(from)(p(_).conjunction))
 
   def asFold: Fold[S, A] = self
 

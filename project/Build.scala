@@ -24,8 +24,8 @@ object BuildSettings {
 }
 
 object Dependencies {
-  val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.0-M7"
-  val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0-M7" % "test"
+  val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.0-RC1"
+  val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0-RC1" % "test"
   val specs2            = "org.specs2"      %% "specs2"                    % "2.3.11"   % "test"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.2"      % "test"
 }
