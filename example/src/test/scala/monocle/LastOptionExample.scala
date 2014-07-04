@@ -8,7 +8,7 @@ import scalaz.{OneAnd, IList}
 
 class LastOptionExample extends Spec {
 
-  "lastOption creates a Traversal from a List, IList, Stream, Vector or OneAnd to its optional first element" in {
+  "lastOption creates a Traversal from a List, IList, Stream, Vector or OneAnd to its optional last element" in {
     (List(1,2,3)           |-? lastOption getOption) shouldEqual Some(3)
     (IList(1,2,3)          |-? lastOption getOption) shouldEqual Some(3)
     (Stream(1,2,3)         |-? lastOption getOption) shouldEqual Some(3)
@@ -21,7 +21,7 @@ class LastOptionExample extends Spec {
     (List(1,2,3)     |-? lastOption set 0) shouldEqual List(1,2,0)
   }
 
-  "lastOption creates a Traversal from a String to its optional head Char" in {
+  "lastOption creates a Traversal from a String to its optional last Char" in {
     ("Hello" |-? lastOption getOption) shouldEqual Some('o')
 
     ("Hello" |-? lastOption set 'a') shouldEqual "Hella"
