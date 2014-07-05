@@ -6,13 +6,13 @@ trait Curry[F, G] {
   def curry: SimpleIso[F, G]
 }
 
-object Curry extends CurryInstances0
+object Curry extends CurryInstances
 
 /**
  * We do a trait inheritance hierarchy in order to solve ambiguous implicit resolution.
  * The traits higher up (CurryInstances0) will get higher priority in implicit resolution.
  **/
-trait CurryInstances0 extends CurryInstances1 {
+trait CurryInstances extends CurryInstances1 {
   implicit def curry5[A, B, C, D, E, F] = new Curry[(A, B, C, D, E) => F, A => B => C => D => E => F] {
     def curry = SimpleIso(_.curried, f => Function.uncurried(f))
   }

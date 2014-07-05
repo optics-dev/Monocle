@@ -28,10 +28,10 @@ trait HeadInstances {
     def head = SimpleLens[OneAnd[T, A], A](_.head, (oneAnd, a) => oneAnd.copy(head = a))
   }
 
-  implicit def tuple2Last[A1, A2]                 = field1Head[(A1, A2), A1]
-  implicit def tuple3Last[A1, A2, A3]             = field1Head[(A1, A2, A3), A1]
-  implicit def tuple4Last[A1, A2, A3, A4]         = field1Head[(A1, A2, A3, A4), A1]
-  implicit def tuple5Last[A1, A2, A3, A4, A5]     = field1Head[(A1, A2, A3, A4, A5), A1]
-  implicit def tuple6Last[A1, A2, A3, A4, A5, A6] = field1Head[(A1, A2, A3, A4, A5, A6), A1]
+  implicit def tuple2Head[A1, A2]                 = field1Head[(A1, A2), A1]
+  implicit def tuple3Head[A1, A2, A3]             = field1Head[(A1, A2, A3), A1]
+  implicit def tuple4Head[A1, A2, A3, A4]         = field1Head[(A1, A2, A3, A4), A1]
+  implicit def tuple5Head[A1, A2, A3, A4, A5]     = field1Head[(A1, A2, A3, A4, A5), A1]
+  implicit def tuple6Head[A1, A2, A3, A4, A5, A6] = field1Head[(A1, A2, A3, A4, A5, A6), A1]
 
 }
