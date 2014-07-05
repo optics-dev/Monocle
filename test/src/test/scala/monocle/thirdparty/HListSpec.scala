@@ -54,12 +54,12 @@ class HListSpec extends Spec {
   implicit val hInitArb    = Arbitrary(for {h <- Arbitrary.arbitrary[H]} yield h.init)
 
 
-  checkAll("_1 from HList", LensLaws(_1[H, Int]))
-  checkAll("_2 from HList", LensLaws(_2[H, Boolean]))
-  checkAll("_3 from HList", LensLaws(_3[H, Char]))
-  checkAll("_4 from HList", LensLaws(_4[H, Float]))
-  checkAll("_5 from HList", LensLaws(_5[H, Long]))
-  checkAll("_6 from HList", LensLaws(_6[H, Double]))
+  checkAll("first from HList", LensLaws(first[H, Int]))
+  checkAll("second from HList", LensLaws(second[H, Boolean]))
+  checkAll("third from HList", LensLaws(third[H, Char]))
+  checkAll("fourth from HList", LensLaws(fourth[H, Float]))
+  checkAll("fifth from HList", LensLaws(fifth[H, Long]))
+  checkAll("sixth from HList", LensLaws(sixth[H, Double]))
 
   checkAll("toHList"      , IsoLaws(toHList[Example, H]))
   checkAll("reverse HList", IsoLaws(reverse[H, ReverseH]))

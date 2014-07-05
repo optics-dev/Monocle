@@ -24,8 +24,8 @@ class IsoExample extends Spec {
     import monocle.function.Field1._
 
     // here we use tuple Lens on Pair via pointToPair Iso
-    (Point(3, 5) <-> pointToPair |-> _1 get)   shouldEqual 3
-    (Point(3, 5) <-> pointToPair |-> _1 set 4) shouldEqual Point(4, 5)
+    (Point(3, 5) <-> pointToPair |-> first get)   shouldEqual 3
+    (Point(3, 5) <-> pointToPair |-> first set 4) shouldEqual Point(4, 5)
   }
 
 }

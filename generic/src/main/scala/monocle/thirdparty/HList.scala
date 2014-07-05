@@ -23,7 +23,7 @@ trait HListInstances {
   }
 
   implicit def hListHead[S <: HList, A](implicit evFirst: Field1[S, A]) = new Head[S, A] {
-    def head = evFirst._1
+    def head = evFirst.first
   }
 
   implicit def hListLast[S <: HList, RS <: HList, A](implicit evReverse: Reverse[S, RS],
@@ -44,32 +44,32 @@ trait HListInstances {
 
   implicit def hListField1[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._0.N, A],
                                               evReplace: ReplaceAt.Aux[S, shapeless.nat._0.N, A, (A, S)]) = new Field1[S, A] {
-    def _1 = hListAt(shapeless.nat._0)
+    def first = hListAt(shapeless.nat._0)
   }
 
   implicit def hListField2[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._1.N, A],
                                               evReplace: ReplaceAt.Aux[S, shapeless.nat._1.N, A, (A, S)]) = new Field2[S, A] {
-    def _2 = hListAt(shapeless.nat._1)
+    def second = hListAt(shapeless.nat._1)
   }
 
   implicit def hListField3[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._2.N, A],
                                               evReplace: ReplaceAt.Aux[S, shapeless.nat._2.N, A, (A, S)]) = new Field3[S, A] {
-    def _3 = hListAt(shapeless.nat._2)
+    def third = hListAt(shapeless.nat._2)
   }
 
   implicit def hListField4[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._3.N, A],
                                               evReplace: ReplaceAt.Aux[S, shapeless.nat._3.N, A, (A, S)]) = new Field4[S, A] {
-    def _4 = hListAt(shapeless.nat._3)
+    def fourth = hListAt(shapeless.nat._3)
   }
 
   implicit def hListField5[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._4.N, A],
                                               evReplace: ReplaceAt.Aux[S, shapeless.nat._4.N, A, (A, S)]) = new Field5[S, A] {
-    def _5 = hListAt(shapeless.nat._4)
+    def fifth = hListAt(shapeless.nat._4)
   }
 
   implicit def hListField6[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._5.N, A],
                                               evReplace: ReplaceAt.Aux[S, shapeless.nat._5.N, A, (A, S)]) = new Field6[S, A] {
-    def _6 = hListAt(shapeless.nat._5)
+    def sixth = hListAt(shapeless.nat._5)
   }
 
 
