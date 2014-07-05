@@ -29,7 +29,7 @@ trait EachInstances {
   def each[S, A](implicit ev: Each[S, A]): SimpleTraversal[S, A] = ev.each
 
   implicit def traverseEach[S[_]: Traverse, A]: Each[S[A], A] = new Each[S[A], A] {
-    def each: SimpleTraversal[S[A], A] = Traversal[S, A, A]
+    def each = Traversal[S, A, A]
   }
 
   implicit def mapEach[K, V]: Each[Map[K, V], V] = traverseEach[({type F[v] = Map[K,v]})#F, V]
@@ -41,31 +41,35 @@ trait EachInstances {
   implicit def treeEach[A]  : Each[Tree[A]  , A] = traverseEach[Tree, A]
 
   implicit val stringEach: Each[String, Char] = new Each[String, Char] {
-    def each: SimpleTraversal[String, Char] = monocle.std.string.stringToList |->> listEach.each
+    def each = monocle.std.string.stringToList |->> listEach.each
+  }
+
+  implicit def someEach[A]: Each[Some[A], A] = new Each[Some[A], A] {
+    def each = monocle.std.option.someIso
   }
 
   implicit def pairEach[A]: Each[(A, A), A] = new Each[(A, A), A] {
-    def each: SimpleTraversal[(A, A), A] =
+    def each =
       Traversal.apply2[(A, A), (A, A), A, A](_._1,_._2)((_, b1, b2) => (b1, b2))
   }
 
   implicit def tripleEach[A]: Each[(A, A, A), A] = new Each[(A, A, A), A] {
-    def each: SimpleTraversal[(A, A, A), A] =
+    def each =
       Traversal.apply3[(A, A, A), (A, A, A), A, A](_._1,_._2,_._3)((_, b1, b2, b3) => (b1, b2, b3))
   }
 
   implicit def quadrupleEach[A]: Each[(A, A, A, A), A] = new Each[(A, A, A, A), A] {
-    def each: SimpleTraversal[(A, A, A, A), A] =
+    def each =
       Traversal.apply4[(A, A, A, A), (A, A, A, A), A, A](_._1,_._2,_._3,_._4)((_, b1, b2, b3, b4) => (b1, b2, b3, b4))
   }
 
   implicit def quintupleEach[A]: Each[(A, A, A, A, A), A] = new Each[(A, A, A, A, A), A] {
-    def each: SimpleTraversal[(A, A, A, A, A), A] =
+    def each =
       Traversal.apply5[(A, A, A, A, A), (A, A, A, A, A), A, A](_._1,_._2,_._3,_._4,_._5)((_, b1, b2, b3, b4, b5) => (b1, b2, b3, b4, b5))
   }
 
   implicit def sixtupleEach[A]: Each[(A, A, A, A, A, A), A] = new Each[(A, A, A, A, A, A), A] {
-    def each: SimpleTraversal[(A, A, A, A, A, A), A] =
+    def each =
       Traversal.apply6[(A, A, A, A, A, A), (A, A, A, A, A, A), A, A](_._1,_._2,_._3,_._4,_._5, _._6)((_, b1, b2, b3, b4, b5, b6) => (b1, b2, b3, b4, b5, b6))
   }
 

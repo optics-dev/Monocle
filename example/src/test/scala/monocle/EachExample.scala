@@ -11,7 +11,7 @@ import scalaz.IList
 class EachExample extends Spec with ScalazMatchers {
 
   "Each can be used on Option" in {
-    Option(3)            |->> each modify( _ + 1) shouldEqual Some(4)
+    Some(3)              |->> each modify( _ + 1) shouldEqual Some(4)
     (None : Option[Int]) |->> each modify( _ + 1) shouldEqual None
   }
 

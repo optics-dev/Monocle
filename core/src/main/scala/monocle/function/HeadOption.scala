@@ -59,4 +59,8 @@ trait HeadOptionInstances {
     def headOption = monocle.std.option.some
   }
 
+  implicit def someHeadOption[A]: HeadOption[Some[A], A] = new HeadOption[Some[A], A] {
+    def headOption = monocle.std.option.someIso
+  }
+
 }

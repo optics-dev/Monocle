@@ -32,7 +32,7 @@ class HeadOptionExample extends Spec {
   }
 
   "headOption creates a Traversal from an Option to its optional element" in {
-    (Option(1)          |-? headOption getOption) shouldEqual Some(1)
+    (Some(1)            |-? headOption getOption) shouldEqual Some(1)
     ((None: Option[Int])|-? headOption getOption) shouldEqual None
   }
 

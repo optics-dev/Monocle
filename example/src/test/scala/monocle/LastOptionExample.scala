@@ -28,7 +28,7 @@ class LastOptionExample extends Spec {
   }
 
   "lastOption creates a Traversal from an Option to its optional element" in {
-    (Option(1)          |-? lastOption getOption) shouldEqual Some(1)
+    (Some(1)            |-? lastOption getOption) shouldEqual Some(1)
     ((None: Option[Int])|-? lastOption getOption) shouldEqual None
   }
 
