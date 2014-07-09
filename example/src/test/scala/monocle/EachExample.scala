@@ -4,8 +4,10 @@ import monocle.TestUtil._
 import monocle.function.Each._
 import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
+import scalaz.std.list._
 import scalaz.Tree._
 import scalaz.IList
+import scalaz.OneAnd
 
 
 class EachExample extends Spec with ScalazMatchers {
@@ -15,11 +17,12 @@ class EachExample extends Spec with ScalazMatchers {
     (None : Option[Int]) |->> each modify( _ + 1) shouldEqual None
   }
 
-  "Each can be used on List, IList, Vector and Stream" in {
+  "Each can be used on List, IList, Vector, Stream and OneAnd" in {
     List(1,2)    |->> each modify( _ + 1) shouldEqual List(2,3)
     IList(1,2)   |->> each modify( _ + 1) shouldEqual IList(2,3)
     Stream(1,2)  |->> each modify( _ + 1) shouldEqual Stream(2,3)
     Vector(1,2)  |->> each modify( _ + 1) shouldEqual Vector(2,3)
+    OneAnd(1, List(2,3)) |->> each modify( _ + 1) shouldEqual OneAnd(2, List(3,4))
   }
 
   "Each can be used on Map to update all values" in {

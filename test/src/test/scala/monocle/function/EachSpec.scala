@@ -4,7 +4,8 @@ import monocle.TestUtil._
 import monocle.TraversalLaws
 import monocle.function.Each._
 import org.specs2.scalaz.Spec
-import scalaz.{IList, Tree}
+import scalaz.{IList, Tree, OneAnd}
+import scalaz.std.list._
 
 class EachSpec extends Spec {
 
@@ -14,6 +15,7 @@ class EachSpec extends Spec {
   checkAll("each IList" , TraversalLaws(each[IList[Int], Int]))
   checkAll("each Vector", TraversalLaws(each[Vector[Int], Int]))
   checkAll("each Stream", TraversalLaws(each[Stream[Int], Int]))
+  checkAll("each OneAnd", TraversalLaws(each[OneAnd[List, Int], Int]))
   checkAll("each pair"  , TraversalLaws(each[(Int, Int), Int]))
   checkAll("each Triple", TraversalLaws(each[(Int, Int, Int), Int]))
 
