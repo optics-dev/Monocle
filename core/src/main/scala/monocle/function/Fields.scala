@@ -1,8 +1,8 @@
 package monocle.function
 
-object Fields extends Field1Instances
-                 with Field2Instances
-                 with Field3Instances
-                 with Field4Instances
-                 with Field5Instances
-                 with Field6Instances
+object Fields extends Field1Functions
+                 with Field2Functions
+                 with Field3Functions
+                 with Field4Functions
+                 with Field5Functions
+                 with Field6Functions

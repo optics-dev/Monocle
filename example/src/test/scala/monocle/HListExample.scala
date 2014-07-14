@@ -1,13 +1,9 @@
 package monocle
 
-import monocle.function.Fields._
-import monocle.function.Head._
-import monocle.function.Init._
-import monocle.function.Last._
-import monocle.function.Reverse._
-import monocle.function.Tail._
+import monocle.function._
 import monocle.syntax._
-import monocle.thirdparty.hlist._
+import monocle.generic.hlist
+import hlist._
 import org.specs2.scalaz.Spec
 import shapeless.HNil
 

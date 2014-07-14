@@ -2,7 +2,8 @@ package monocle
 
 import org.specs2.scalaz.Spec
 import monocle.function.Init._
-import monocle.syntax.lens._
+import monocle.std._
+import monocle.syntax._
 
 class InitExample extends Spec {
 

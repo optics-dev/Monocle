@@ -9,13 +9,13 @@ trait AtBit[S] {
 
 }
 
-object AtBit extends AtBitInstances
+object AtBit extends AtBitFunctions
 
-trait AtBitInstances {
+trait AtBitFunctions {
 
   def atBit[S](index: Int)(implicit ev: AtBit[S]): SimpleLens[S, Boolean] = ev.atBit(index)
 
-  implicit def bitsAtBit[S: Bits]: AtBit[S] = new AtBit[S] {
+  def bitsAtBit[S: Bits]: AtBit[S] = new AtBit[S] {
     def atBit(index: Int): SimpleLens[S, Boolean] = {
       val n = normalizeIndex(Bits[S].bitSize, index)
       SimpleLens[S, Boolean](Bits[S].testBit(_, n), Bits[S].updateBit(_, n, _))

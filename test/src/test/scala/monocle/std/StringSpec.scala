@@ -1,35 +1,33 @@
 package monocle.std
 
-import monocle.IsoLaws
 import monocle.TestUtil._
-import monocle.std.string._
+import monocle.function._
+import monocle.{PrismLaws, OptionalLaws, TraversalLaws, IsoLaws}
 import org.specs2.scalaz.Spec
 
 class StringSpec extends Spec {
 
   checkAll("stringToList", IsoLaws(stringToList))
 
-  "parseLong should return Some(long) for a positive int string." in {
-    parseLong("143") shouldEqual Some(143)
-    parseLong("+512") shouldEqual Some(512)
-  }
+  checkAll("each String", TraversalLaws(each[String, Char]))
 
-  "parseLong should return Some(long) for a negative int string." in {
-    parseLong("-376") shouldEqual Some(-376)
-  }
+  checkAll("index String", OptionalLaws(index[String, Int, Char](2)))
 
-  "parseLong should return None for non digit strings" in {
-    parseLong("hello") shouldEqual None
-    parseLong("୨") shouldEqual None  // Non ascii digits
-    parseLong("８") shouldEqual None // Non ascii digits
-  }
+  checkAll("filterIndex String", TraversalLaws(filterIndex[String, Int, Char](_ % 2 == 0)))
 
-  "parseLong should return None for an empty string" in {
-    parseLong("") shouldEqual None
-  }
+  checkAll("headOption String", OptionalLaws(headOption[String, Char]))
 
-  "charToDigit should return Some(digit) only for ascii [0..9] digits" in {
-    charToDigit('5') shouldEqual Some(5)
-    charToDigit('８') shouldEqual None // Non ascii digit
-  }
+  checkAll("tailOption String", OptionalLaws(tailOption[String, String]))
+
+  checkAll("lastOption String", OptionalLaws(lastOption[String, Char]))
+
+  checkAll("initOption String", OptionalLaws(initOption[String, String]))
+
+  checkAll("reverse String", IsoLaws(reverse[String, String]))
+
+  checkAll("safeCast String to Boolean ", PrismLaws(safeCast[String,Boolean]))
+  checkAll("safeCast String to Byte"    , PrismLaws(safeCast[String,Byte]))
+  checkAll("safeCast String to Int"     , PrismLaws(safeCast[String,Int]))
+  checkAll("safeCast String to Long"    , PrismLaws(safeCast[String,Long]))
+
 }

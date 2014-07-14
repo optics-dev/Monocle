@@ -1,7 +1,8 @@
 package monocle
 
 import org.specs2.scalaz.Spec
-import monocle.function.Fields._
+import monocle.function._
+import monocle.std._
 import monocle.syntax._
 
 

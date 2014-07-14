@@ -2,6 +2,8 @@ package monocle
 
 import scalaz._
 import org.scalacheck.{Gen, Arbitrary}
+import org.scalacheck.Arbitrary._
+import scala.Some
 
 object TestUtil {
 
@@ -19,6 +21,7 @@ object TestUtil {
   implicit val unitEqual    = Equal.equalA[Unit]
 
   implicit def optEq[A: Equal] = scalaz.std.option.optionEqual[A]
+  implicit def someEq[A: Equal] = Equal.equalA[Some[A]]
   implicit def eitherEq[A: Equal, B: Equal] = scalaz.std.either.eitherEqual[A, B]
   implicit def listEq[A: Equal] = scalaz.std.list.listEqual[A]
   implicit def vectorEq[A: Equal] = scalaz.std.vector.vectorEqual[A]
@@ -64,10 +67,15 @@ object TestUtil {
       Gen.sized(sz => sizedTree(sz))
     }
 
-  implicit def optionArbitrary[A](implicit a: Arbitrary[A]): Arbitrary[Option[A]] = Arbitrary(Gen.frequency(
+  implicit def optionArbitrary[A: Arbitrary]: Arbitrary[Option[A]] = Arbitrary(Gen.frequency(
     1 -> None,
     3 -> Arbitrary.arbitrary[A].map(Option(_))
   ))
+
+  implicit def someArbitrary[A: Arbitrary]: Arbitrary[Some[A]] = Arbitrary(Arbitrary.arbitrary[A].map(Some(_)))
+
+  implicit def arbitraryEither[A: Arbitrary, B: Arbitrary]: Arbitrary[A \/ B] =
+    Arbitrary(arbitrary[Either[A, B]] map \/.fromEither)
 
   implicit def oneAndArb[T[_], A](implicit a: Arbitrary[A], ta: Arbitrary[T[A]]): Arbitrary[OneAnd[T, A]] = Arbitrary(for {
     head <- Arbitrary.arbitrary[A]

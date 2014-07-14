@@ -1,6 +1,7 @@
 package monocle
 
-import monocle.thirdparty.tree._
+import monocle.scalazi.tree
+import tree._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 import scalaz.Tree._
 import monocle.TestUtil._

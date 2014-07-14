@@ -1,6 +1,7 @@
 package monocle
 
 import monocle.function.SafeCast._
+import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
 
@@ -27,9 +28,13 @@ class SafeCastExample extends Spec {
   }
 
   "safeCast creates a Prism from String to Int" in {
-    safeCast[String, Int].getOption("352") shouldEqual Some(352)
-    safeCast[String, Int].reverseGet(8921) shouldEqual "8921"
-    safeCast[String, Int].getOption("")    shouldEqual None
+    safeCast[String, Int].getOption("352")  shouldEqual Some(352)
+    safeCast[String, Int].getOption("+352") shouldEqual Some(352)
+    safeCast[String, Int].getOption("-352") shouldEqual Some(-352)
+    safeCast[String, Int].getOption("୨")    shouldEqual None // Non ascii digits
+    safeCast[String, Int].getOption("")     shouldEqual None
+
+    safeCast[String, Int].reverseGet(8921)  shouldEqual "8921"
 
     safeCast[String, Int].modify("1024", _ * 2) shouldEqual "2048"
   }
