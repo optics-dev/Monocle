@@ -119,7 +119,7 @@ For more examples, see the [```example``` module](example/src/test/scala/monocle
 `Lens` can be created by a pair of getter and setter:
 
 ```scala
-val _company = SimpleLens[Employee, Company](_.company, (e, c) => e.copy(company = c))
+val _company = SimpleLens[Employee](_.company)((e, c) => e.copy(company = c))
 ```
 
 This is quite a lot of boiler plate, so Monocle provides a macro to simplify `Lens` creation:
