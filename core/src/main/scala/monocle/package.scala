@@ -21,15 +21,34 @@ package object monocle {
         case (s, Some(a)) => _set(s, a)
         case (s, None)    => s
       })
+
+    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
+    def build[S]: Constructor[S] = new Constructor[S]
+    final class Constructor[S] {
+      @inline def apply[A](_getOption: S => Option[A])(_set: (S, A) => S): SimpleOptional[S, A] =
+        SimpleOptional.build(_getOption, _set)
+    }
   }
 
   object SimpleLens {
     def apply[S, A](_get: S => A, _set: (S, A) => S): SimpleLens[S, A] = Lens[S, S, A, A](_get, _set)
+
+    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
+    def apply[S]: Constructor[S] = new Constructor[S]
+    final class Constructor[S] {
+      @inline def apply[A](_get: S => A)(_set: (S, A) => S): SimpleLens[S, A] = Lens[S, S, A, A](_get, _set)
+    }
   }
 
   object SimpleIso {
     def apply[S, A](_get: S => A, _reverseGet: A => S): SimpleIso[S, A] = Iso(_get, _reverseGet)
     def dummy[S]: SimpleIso[S, S] = SimpleIso(identity, identity)
+
+    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
+    def apply[S]: Constructor[S] = new Constructor[S]
+    final class Constructor[S] {
+      @inline def apply[A](_get: S => A)(_reverseGet: A => S): SimpleIso[S, A] = Iso[S, S, A, A](_get, _reverseGet)
+    }
   }
 
   object SimplePrism {
@@ -38,6 +57,13 @@ package object monocle {
 
     def trySimplePrism[S, A](safe: A => S, unsafe: S => A): SimplePrism[S, A] =
       SimplePrism(safe, s => Try(unsafe(s)).toOption)
+
+    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
+    def apply[A]: Constructor[A] = new Constructor[A]
+    final class Constructor[A] {
+      @inline def apply[S](_reverseGet: A => S)(_getOption: S => Option[A]) = SimplePrism[S, A](_reverseGet, _getOption)
+      //@inline def rev[B](_getOption: A => Option[B])(_reverseGet: B => A) = SimplePrism[A, B](_reverseGet, _getOption)
+    }
   }
 
   implicit final class SimplePrismOps[S, A](prism: SimplePrism[S, A]){
