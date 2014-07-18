@@ -6,11 +6,11 @@ trait Setter[S, T, A, B] { self =>
 
   def set(from: S, newValue: B): T = modify(from, _ => newValue)
 
-  final def setF(newValue: B)(from: S) = set(from, newValue)
+  final def setF(newValue: B) = (from: S) => set(from, newValue)
 
   def modify(from: S, f: A => B): T
 
-  final def modifyF(f: A => B)(from: S) = modify(from, f)
+  final def modifyF(f: A => B) = (from: S) => modify(from, f)
 
   def asSetter: Setter[S, T, A, B] = self
 
