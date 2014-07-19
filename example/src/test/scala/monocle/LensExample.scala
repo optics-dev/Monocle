@@ -20,13 +20,13 @@ class LensExample extends Spec {
   val krom = Character("Krom", 30, Location(4,0))
 
   "Lens get extract an A from an S" in {
-    (krom |-> name get)           shouldEqual "Krom"
-    (krom |-> location |-> x get) shouldEqual 4
+    (krom ^|-> name get)           shouldEqual "Krom"
+    (krom ^|-> location |-> x get) shouldEqual 4
   }
 
   "Lens set and modify update an A in a S" in {
-    (krom |-> hp set 45)                    shouldEqual Character("Krom", 45, Location(4,0))
-    (krom |-> location |-> x modify(_ + 1)) shouldEqual Character("Krom", 30, Location(5,0))
+    (krom ^|-> hp set 45)                    shouldEqual Character("Krom", 45, Location(4,0))
+    (krom ^|-> location |-> x modify(_ + 1)) shouldEqual Character("Krom", 30, Location(5,0))
   }
 
   "Lens lift modifies an A with a Functor and wraps the context back to S" in {
@@ -35,7 +35,7 @@ class LensExample extends Spec {
     // we need to provide an instance of Functor for List
     import scalaz.std.list._
 
-    (krom |-> location |-> y lift neighbouringBlocks) shouldEqual List(
+    (krom ^|-> location |-> y lift neighbouringBlocks) shouldEqual List(
       Character("Krom", 30, Location(4,0)), Character("Krom", 30, Location(4,1))
     )
   }

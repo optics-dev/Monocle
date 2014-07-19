@@ -40,5 +40,5 @@ private[syntax] final class ApplyIsoOps[S](value: S) {
   }
 
   /** Alias to ApplyIso */
-  def <->[T, A, B](iso: Iso[S, T, A, B]): ApplyIso[S, T, A, B] = applyIso(iso)
+  def ^<->[T, A, B](iso: Iso[S, T, A, B]): ApplyIso[S, T, A, B] = applyIso(iso)
 }

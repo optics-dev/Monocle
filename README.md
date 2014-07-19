@@ -75,7 +75,7 @@ employee applyLens   _company
 or with some syntax sugar:
 
 ```scala
-employee |-> _company |-> _address |-> _street |-> _name modify (_.capitalize)
+employee ^|-> _company |-> _address |-> _street |-> _name modify (_.capitalize)
 ```
 
 ComposeLens takes two `Lens`, one from A to B and another from B to C and creates a third `Lens` from A to C.
@@ -104,7 +104,7 @@ employee applyLens   _company
 or with some syntax sugar:
 
 ```scala
-employee |-> _company |-> _address |-> _street |-> _name |-? headOption modify toUpper
+employee ^|-> _company |-> _address |-> _street |-> _name |-? headOption modify toUpper
 ```
 
 Similarly to composeLens, composeOptional takes two `Optional`, one from A to B and another from B to C and

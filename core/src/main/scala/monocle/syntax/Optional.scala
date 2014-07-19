@@ -40,5 +40,5 @@ private[syntax] final class lyApplyOptionalOps[S](value: S) {
     def _optional: Optional[S, T, A, B] = Optional
   }
 
-  def |-?[T, A, B](Optional: Optional[S, T, A, B]): ApplyOptional[S, T, A, B] = applyOptional(Optional)
+  def ^|-?[T, A, B](Optional: Optional[S, T, A, B]): ApplyOptional[S, T, A, B] = applyOptional(Optional)
 }

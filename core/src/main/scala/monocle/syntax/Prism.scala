@@ -34,5 +34,5 @@ private[syntax] final class lyApplyPrismOps[S](value: S) {
     def _prism: Prism[S, T, A, B] = prism
   }
 
-  def <-?[T, A, B](prism: Prism[S, T, A, B]): ApplyPrism[S, T, A, B] = applyPrism(prism)
+  def ^<-?[T, A, B](prism: Prism[S, T, A, B]): ApplyPrism[S, T, A, B] = applyPrism(prism)
 }
