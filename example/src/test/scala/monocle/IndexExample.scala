@@ -2,8 +2,7 @@ package monocle
 
 import monocle.function.Index._
 import monocle.std._
-import monocle.scalazi.oneand
-import oneand._
+import monocle.scalazi.oneand._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
 import scalaz.OneAnd

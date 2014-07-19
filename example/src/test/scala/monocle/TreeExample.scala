@@ -1,11 +1,10 @@
 package monocle
 
-import monocle.scalazi.tree
-import tree._
+import monocle.TestUtil._
+import monocle.scalazi.tree._
+import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 import scalaz.Tree._
-import monocle.TestUtil._
-import monocle.syntax._
 
 class TreeExample extends Spec with ScalazMatchers {
 

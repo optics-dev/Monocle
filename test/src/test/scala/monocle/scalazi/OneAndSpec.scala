@@ -2,11 +2,11 @@ package monocle.scalazi
 
 import monocle.TestUtil._
 import monocle.function._
+import monocle.std.list._
 import monocle.{LensLaws, OptionalLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
 import scalaz.OneAnd
 import scalaz.std.list._
-import monocle.std.list._
 
 
 class OneAndSpec extends Spec {

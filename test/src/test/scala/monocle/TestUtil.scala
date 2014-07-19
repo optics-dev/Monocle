@@ -3,7 +3,6 @@ package monocle
 import scalaz._
 import org.scalacheck.{Gen, Arbitrary}
 import org.scalacheck.Arbitrary._
-import scala.Some
 
 object TestUtil {
 

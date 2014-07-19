@@ -2,7 +2,6 @@ package monocle.std
 
 import monocle.PrismLaws
 import monocle.TestUtil._
-import monocle.std.either._
 import org.specs2.scalaz.Spec
 
 class EitherSpec extends Spec {

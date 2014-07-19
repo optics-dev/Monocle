@@ -1,8 +1,8 @@
 package monocle.scalazi
 
 import monocle.PrismLaws
-import org.specs2.scalaz.Spec
 import monocle.TestUtil._
+import org.specs2.scalaz.Spec
 
 class EitherSpec extends Spec {
 
