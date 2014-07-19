@@ -6,7 +6,7 @@ import monocle.scalazi._
 package object scalazi extends ScalazInstances
 
 trait ScalazInstances
-  extends EitherFunctions
+  extends DisjunctionFunctions
   with    IListInstances
   with    OneAndInstances
   with    TreeFunctions with TreeInstances

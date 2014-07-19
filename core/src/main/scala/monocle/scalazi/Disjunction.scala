@@ -3,9 +3,9 @@ package monocle.scalazi
 import monocle.Prism
 import scalaz.{ \/-, -\/, \/ }
 
-object either extends EitherFunctions
+object disjunction extends DisjunctionFunctions
 
-trait EitherFunctions {
+trait DisjunctionFunctions {
   
   def left[A, B, C]: Prism[A \/ B, C \/ B, A, C] =
     Prism[A \/ B, C \/ B, A, C](-\/.apply, _.swap.bimap(\/-.apply, identity))
