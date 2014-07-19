@@ -40,4 +40,9 @@ class LensExample extends Spec {
     )
   }
 
+  "Modifications through lenses are chainable" in {
+    val m = x.modifyF(_ + 100) compose y.setF(7)
+    m(Location(1,2)) shouldEqual Location(101,7)
+  }
+
 }

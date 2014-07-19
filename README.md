@@ -3,10 +3,9 @@
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.png?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
 
 ```scala
-resolvers ++= Seq(
-  "Sonatype OSS Releases"  at "http://oss.sonatype.org/content/repositories/releases/",
-  "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
-)
+import sbt._
+resolvers += Resolver.sonatypeRepo("releases")
+resolvers += Resolver.sonatypeRepo("snapshots")
 
 val scalaVersion   = "2.11.1" // or "2.10.4"
 val libraryVersion = "0.4.0"  // or "0.5-SNAPSHOT"
@@ -120,7 +119,7 @@ For more examples, see the [```example``` module](example/src/test/scala/monocle
 `Lens` can be created by a pair of getter and setter:
 
 ```scala
-val _company = SimpleLens[Employee, Company](_.company, (e, c) => e.copy(company = c))
+val _company = SimpleLens[Employee](_.company)((e, c) => e.copy(company = c))
 ```
 
 This is quite a lot of boiler plate, so Monocle provides a macro to simplify `Lens` creation:
