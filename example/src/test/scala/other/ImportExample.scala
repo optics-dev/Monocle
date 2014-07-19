@@ -19,7 +19,7 @@ object Custom {
 
 class ImportExample extends Spec {
 
-  "monocle.function._ can be used to get all polymorphic optics" in {
+  "monocle.function._ imports all polymorphic optics in the scope" in {
     import monocle.function._
 
     // do not compile because Each instance for List is not in the scope
@@ -28,8 +28,19 @@ class ImportExample extends Spec {
     import monocle.std.list._
     each[List[Int], Int].modify(List(1,2,3), _ + 1) shouldEqual List(2,3,4)
 
-    // also compile because the instance is in the companion object Custom
+    // also compile because Head instance for Custom is in the companion of Custom
     head[Custom, Int].modify(Custom(1), _ + 1) shouldEqual Custom(2)
+  }
+
+  "monocle.syntax._ permits to use optics as operator which improve type inference" in {
+    import monocle.function._
+    import monocle.std.list._
+    import monocle.syntax._
+
+    // do not compile because scala cannot infer which instance of Each is required
+    illTyped { """each.modify(List(1,2,3), _ + 1)""" }
+
+    List(1,2,3) |->> each modify(_ + 1) shouldEqual List(2,3,4)
   }
 
   "monocle.std._ brings all polymorphic Optic instances in scope for standard Scala classes" in {
