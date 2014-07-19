@@ -1,7 +1,10 @@
 package monocle.function
 
 import monocle.SimpleOptional
+import scala.annotation.implicitNotFound
 
+@implicitNotFound("Could not find an instance of InitOption[${S},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait InitOption[S, A] {
 
   /**

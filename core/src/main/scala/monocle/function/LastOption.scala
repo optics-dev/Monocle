@@ -1,7 +1,10 @@
 package monocle.function
 
 import monocle.SimpleOptional
+import scala.annotation.implicitNotFound
 
+@implicitNotFound("Could not find an instance of LastOption[${S},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait LastOption[S, A] {
 
   /** Creates a Traversal from S to its optional last element */

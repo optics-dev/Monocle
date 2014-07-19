@@ -9,7 +9,10 @@ import scalaz.std.stream._
 import scalaz.std.vector._
 import scalaz.syntax.traverse._
 import scalaz.{OneAnd, Traverse, Applicative, IList}
+import scala.annotation.implicitNotFound
 
+@implicitNotFound("Could not find an instance of Index[${S},${I},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait Index[S, I, A] {
 
   /**

@@ -132,6 +132,25 @@ val _company = mkLens[Employee, Company]("company") // company is checked at com
 
 In future version of the library, we are planning to introduce helpers to facilitate even further `Lens` creation.
 
+## Polymorphic Optics and Instance Location Policy
+
+A polymorphic optic is an optic that is applicable to different types. For example, `headOption` is an `Optional` from
+some type `S` to its optional first element of type `A`. In order to use `headOption` (or any polymorphic optics), you
+need to:
+
+1.   import the polymorphic optic in your scope via `import monocle.function.headoption._` or `import monocle.function._`
+2.   have the required instance of the type class `HeadOption` in your scope, e.g. if you want to use `headOption` from
+     a `List[Int]`, you need an instance of `HeadOption[List[Int], Int]`. This instance can be either provided
+     by you or by Monocle.
+
+Monocle defines polymorphic optic instances in the following packages:
+
+1.   `monocle.std` for standard Scala library classes, e.g. `List, Vector, Map`
+2.   `monocle.scalazi` for Scalaz classes, e.g. `IList, OneAnd, Tree`
+3.   `monocle.generic` for Shapeless classes, e.g. `HList, CoProduct`
+
+An [example](example/src/test/scala/other/ImportExample) shows how to use Monocle imports.
+
 ## Overview
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
 #### Sub Projects

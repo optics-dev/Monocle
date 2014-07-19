@@ -1,7 +1,10 @@
 package monocle.function
 
 import monocle.SimpleIso
+import scala.annotation.implicitNotFound
 
+@implicitNotFound("Could not find an instance of Reverse[${S},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait Reverse[S, A] {
 
   /** Creates an Iso from S to a reversed S */

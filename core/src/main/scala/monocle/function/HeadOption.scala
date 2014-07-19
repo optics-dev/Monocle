@@ -1,8 +1,10 @@
 package monocle.function
 
 import monocle.SimpleOptional
+import scala.annotation.implicitNotFound
 
-
+@implicitNotFound("Could not find an instance of HeadOption[${S},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait HeadOption[S, A] {
 
   /** Creates a Traversal from S to its optional first element */

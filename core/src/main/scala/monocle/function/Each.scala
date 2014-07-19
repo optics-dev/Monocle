@@ -1,9 +1,11 @@
 package monocle.function
 
 import monocle.{Traversal, SimpleTraversal}
+import scala.annotation.implicitNotFound
 import scalaz.Traverse
 
-
+@implicitNotFound("Could not find an instance of Each[${S},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait Each[S, A] {
 
   /**

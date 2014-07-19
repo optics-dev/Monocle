@@ -1,7 +1,10 @@
 package monocle.function
 
-import monocle._
+import monocle.SimpleLens
+import scala.annotation.implicitNotFound
 
+@implicitNotFound("Could not find an instance of Field3[${S},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait Field3[S, A] {
 
   @deprecated("Use third", since = "0.5.0")
