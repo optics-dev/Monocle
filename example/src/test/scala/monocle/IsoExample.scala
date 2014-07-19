@@ -2,6 +2,7 @@ package monocle
 
 import org.specs2.scalaz.Spec
 import monocle.syntax._
+import monocle.std._
 
 class IsoExample extends Spec {
   

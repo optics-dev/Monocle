@@ -3,9 +3,9 @@ package monocle
 
 import monocle.function.Each._
 import monocle.std.option._
+import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
 import shapeless.test.illTyped
-import org.specs2.execute.{AnyValueAsResult, AsResult}
 
 /**
  * Illustrate the purpose of specific compose function for each main concept (Lens, Traversal, etc)

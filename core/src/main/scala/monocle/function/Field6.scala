@@ -1,7 +1,10 @@
 package monocle.function
 
-import monocle._
+import monocle.SimpleLens
+import scala.annotation.implicitNotFound
 
+@implicitNotFound("Could not find an instance of Field6[${S},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait Field6[S, A] {
 
   @deprecated("Use sixth", since = "0.5.0")
@@ -12,17 +15,13 @@ trait Field6[S, A] {
 
 }
 
-object Field6 extends Field6Instances
+object Field6 extends Field6Functions
 
-trait Field6Instances {
+trait Field6Functions {
 
   @deprecated("Use sixth", since = "0.5.0")
   def _6[S, A](implicit ev: Field6[S, A]): SimpleLens[S, A] = ev._6
 
   def sixth[S, A](implicit ev: Field6[S, A]): SimpleLens[S, A] = ev.sixth
-
-  implicit def tuple6Field6[A1, A2, A3, A4, A5, A6] = new Field6[(A1, A2, A3, A4, A5, A6), A6] {
-    def sixth = SimpleLens[(A1, A2, A3, A4, A5, A6), A6](_._6, (t, a) => t.copy(_6 = a))
-  }
 
 }

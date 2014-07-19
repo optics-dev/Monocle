@@ -1,13 +1,21 @@
 package monocle.std
 
-import monocle.PrismLaws
 import monocle.TestUtil._
-import monocle.std.option._
+import monocle.function._
+import monocle.{OptionalLaws, TraversalLaws, IsoLaws, PrismLaws}
 import org.specs2.scalaz.Spec
 
 class OptionSpec extends Spec {
 
   checkAll("some", PrismLaws(some[Int, Int]))
   checkAll("none", PrismLaws(none[Long]))
+
+  checkAll("someIso", IsoLaws(someIso[Int, Int]))
+
+  checkAll("each Option", TraversalLaws(each[Option[Int], Int]))
+
+  checkAll("headOption Option", OptionalLaws(headOption[Option[Int] , Int]))
+
+  checkAll("lastOption Option", OptionalLaws(lastOption[Option[Int], Int]))
 
 }

@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.function.SafeCast._
-import monocle.thirdparty.coproduct._
+import monocle.generic.coproduct._
 import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
 import shapeless.test.illTyped

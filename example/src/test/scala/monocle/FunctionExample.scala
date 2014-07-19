@@ -1,6 +1,7 @@
 package monocle
 
 import org.specs2.scalaz.Spec
+import monocle.function.Curry._
 import monocle.std.function._
 import monocle.syntax._
 

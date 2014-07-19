@@ -1,37 +1,22 @@
 package monocle.function
 
 import monocle.SimpleIso
+import scala.annotation.implicitNotFound
 
+@implicitNotFound("Could not find an instance of Curry[${F},${G}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait Curry[F, G] {
+
+  /** curry: ((A,B,...,Z) => Res) <=> (A => B => ... => Z => Res) */
   def curry: SimpleIso[F, G]
 }
 
-object Curry extends CurryInstances
+object Curry extends CurryFunctions
 
-/**
- * We do a trait inheritance hierarchy in order to solve ambiguous implicit resolution.
- * The traits higher up (CurryInstances0) will get higher priority in implicit resolution.
- **/
-trait CurryInstances extends CurryInstances1 {
-  implicit def curry5[A, B, C, D, E, F] = new Curry[(A, B, C, D, E) => F, A => B => C => D => E => F] {
-    def curry = SimpleIso(_.curried, f => Function.uncurried(f))
-  }
-}
+trait CurryFunctions {
 
-trait CurryInstances1 extends CurryInstances2 {
-  implicit def curry4[A, B, C, D, E] = new Curry[(A, B, C, D) => E, A => B => C => D => E] {
-    def curry = SimpleIso(_.curried, f => Function.uncurried(f))
-  }
-}
+  def curry[F, G](implicit ev: Curry[F, G]): SimpleIso[F, G] = ev.curry
 
-trait CurryInstances2 extends CurryInstances3 {
-  implicit def curry3[A, B, C, D] = new Curry[(A, B, C) => D, A => B => C => D] {
-    def curry = SimpleIso(_.curried, f => Function.uncurried(f))
-  }
-}
+  def uncurry[F, G](implicit ev: Curry[F, G]): SimpleIso[G, F] = curry.reverse
 
-trait CurryInstances3 {
-  implicit def curry2[A, B, C] = new Curry[(A, B) => C, A => B => C] {
-    def curry = SimpleIso(_.curried, f => Function.uncurried(f))
-  }
 }

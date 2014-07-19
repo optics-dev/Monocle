@@ -2,9 +2,12 @@ package monocle
 
 import monocle.TestUtil._
 import monocle.function.Reverse._
+import monocle.std._
+import monocle.scalazi.tree._
 import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 import scalaz.Tree._
+import monocle.generic.tuplen
 
 class ReverseExample extends Spec with ScalazMatchers {
 
@@ -18,7 +21,7 @@ class ReverseExample extends Spec with ScalazMatchers {
     ((1,'b', true, 5.4, "plop", 7L) <-> reverse get) shouldEqual (7L, "plop", 5.4, true, 'b',1)
 
     // for tuple greater than 6 we need to use shapeless
-    import monocle.thirdparty.tuple._
+    import tuplen._
     ((1,'b', true, 5.4, "plop", 7L, false) <-> reverse get) shouldEqual (false, 7L, "plop", 5.4, true, 'b',1)
   }
 

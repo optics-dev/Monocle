@@ -10,6 +10,17 @@ package object monocle {
   type SimpleOptional[S, A]  = Optional[S, S, A, A]
   type SimplePrism[S, A]     = Prism[S, S, A, A]
 
+  object SimpleLens {
+    def apply[S, A](_get: S => A, _set: (S, A) => S): SimpleLens[S, A] =
+      Lens[S, S, A, A](_get, _set)
+
+    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
+    def apply[S]: Constructor[S] = new Constructor[S]
+    final class Constructor[S] {
+      @inline def apply[A](_get: S => A)(_set: (S, A) => S): SimpleLens[S, A] = Lens[S, S, A, A](_get, _set)
+    }
+  }
+
   object SimpleOptional {
     @deprecated("use build", "0.5.0")
     def apply[S, A](_getOption: S => Option[A], _set: (S, Option[A]) => S): SimpleOptional[S, A] =
@@ -27,16 +38,6 @@ package object monocle {
     final class Constructor[S] {
       @inline def apply[A](_getOption: S => Option[A])(_set: (S, A) => S): SimpleOptional[S, A] =
         SimpleOptional.build(_getOption, _set)
-    }
-  }
-
-  object SimpleLens {
-    def apply[S, A](_get: S => A, _set: (S, A) => S): SimpleLens[S, A] = Lens[S, S, A, A](_get, _set)
-
-    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
-    def apply[S]: Constructor[S] = new Constructor[S]
-    final class Constructor[S] {
-      @inline def apply[A](_get: S => A)(_set: (S, A) => S): SimpleLens[S, A] = Lens[S, S, A, A](_get, _set)
     }
   }
 

@@ -1,13 +1,12 @@
 package monocle.function
 
 import monocle.{Traversal, SimpleTraversal}
-import scalaz.{Traverse, IList, Applicative}
+import scala.annotation.implicitNotFound
 import scalaz.syntax.traverse._
-import scalaz.std.list._
-import scalaz.std.stream._
-import scalaz.std.vector._
-import scalaz.IList._
+import scalaz.{Traverse, Applicative}
 
+@implicitNotFound("Could not find an instance of FilterIndex[${S},${I},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait FilterIndex[S, I, A] {
 
   /** Creates a Traversal from S to all A with an index matching the predicate */
@@ -15,34 +14,13 @@ trait FilterIndex[S, I, A] {
 
 }
 
-object FilterIndex extends FilterIndexInstances
+object FilterIndex extends FilterIndexFunctions
 
-trait FilterIndexInstances {
+trait FilterIndexFunctions {
 
   def filterIndex[S, I, A](predicate: I => Boolean)
                             (implicit ev: FilterIndex[S, I, A]): SimpleTraversal[S, A] = ev.filterIndex(predicate)
 
-
-  implicit def listFilterIndex[A]   = traverseFilterIndex[List, A](_.zipWithIndex)
-  implicit def streamFilterIndex[A] = traverseFilterIndex[Stream, A](_.zipWithIndex)
-  implicit def vectorFilterIndex[A] = traverseFilterIndex[Vector, A](_.zipWithIndex)
-  implicit def iListFilterIndex[A]  = traverseFilterIndex[IList, A](_.zipWithIndex)
-
-  implicit val stringFilterIndex = new FilterIndex[String, Int, Char]{
-    def filterIndex(predicate: Int => Boolean) =
-      monocle.std.string.stringToList composeTraversal listFilterIndex.filterIndex(predicate)
-  }
-
-  implicit def mapFilterIndex[K, V] = new FilterIndex[Map[K, V], K, V] {
-    def filterIndex(predicate: K => Boolean) = new Traversal[Map[K, V], Map[K, V], V, V] {
-      def multiLift[F[_] : Applicative](from: Map[K, V], f: (V) => F[V]): F[Map[K, V]] =
-        Applicative[F].map(
-          scalaz.std.list.listInstance.traverseImpl(from.toList){ case (k, v) =>
-            Applicative[F].map(if(predicate(k)) f(v) else Applicative[F].point(v))(k -> _)
-          }
-        )(_.toMap)
-    }
-  }
 
   def traverseFilterIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] = new FilterIndex[S[A], Int, A]{
     def filterIndex(predicate: Int => Boolean) = new Traversal[S[A], S[A], A, A] {

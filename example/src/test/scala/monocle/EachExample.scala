@@ -2,6 +2,8 @@ package monocle
 
 import monocle.TestUtil._
 import monocle.function.Each._
+import monocle.std._
+import monocle.scalazi._
 import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 import scalaz.std.list._

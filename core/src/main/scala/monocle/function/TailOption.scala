@@ -2,7 +2,10 @@ package monocle.function
 
 import monocle.{Optional, SimpleOptional}
 import scalaz.{INil, IList, ICons, Applicative}
+import scala.annotation.implicitNotFound
 
+@implicitNotFound("Could not find an instance of TailOption[${S},${A}], please check Monocle instance location policy to " +
+  "find out which import is necessary")
 trait TailOption[S, A] {
 
   /**
@@ -12,53 +15,10 @@ trait TailOption[S, A] {
 
 }
 
-object TailOption extends TailOptionInstances
+object TailOption extends TailOptionFunctions
 
-trait TailOptionInstances {
+trait TailOptionFunctions {
 
   def tailOption[S, A](implicit ev: TailOption[S, A]): SimpleOptional[S, A] = ev.tailOption
-
-  implicit def listTailOption[A] = new TailOption[List[A], List[A]]{
-    def tailOption = new Optional[List[A], List[A], List[A], List[A]] {
-      def multiLift[F[_] : Applicative](from: List[A], f: List[A] => F[List[A]]): F[List[A]] = from match {
-        case Nil     => Applicative[F].point(Nil)
-        case x :: xs => Applicative[F].map(f(xs))(x :: _)
-      }
-    }
-  }
-
-  implicit def streamTailOption[A] = new TailOption[Stream[A], Stream[A]]{
-    def tailOption = new Optional[Stream[A], Stream[A], Stream[A], Stream[A]] {
-      def multiLift[F[_] : Applicative](from: Stream[A], f: Stream[A] => F[Stream[A]]): F[Stream[A]] = from match {
-        case Stream.Empty => Applicative[F].point(Stream.Empty)
-        case x #:: xs     => Applicative[F].map(f(xs))(x #:: _)
-      }
-    }
-  }
-
-  implicit def vectorTail[A] = new TailOption[Vector[A], Vector[A]]{
-    def tailOption = new Optional[Vector[A], Vector[A], Vector[A], Vector[A]] {
-      def multiLift[F[_] : Applicative](from: Vector[A], f: Vector[A] => F[Vector[A]]): F[Vector[A]] = from match {
-        case Vector() => Applicative[F].point(Vector[A]())
-        case x +: xs  => Applicative[F].map(f(xs))(x +: _)
-      }
-    }
-  }
-
-  implicit def IListTailOption[A] = new TailOption[IList[A], IList[A]]{
-    def tailOption = new Optional[IList[A], IList[A], IList[A], IList[A]] {
-      def multiLift[F[_] : Applicative](from: IList[A], f: IList[A] => F[IList[A]]): F[IList[A]] = from match {
-        case INil()  => Applicative[F].point(INil())
-        case ICons(x, xs) => Applicative[F].map(f(xs))(x :: _)
-      }
-    }
-  }
-
-  implicit val stringTailOption = new TailOption[String, String]{
-
-    import monocle.std.string.stringToList
-
-    def tailOption = stringToList composeOptional listTailOption[Char].tailOption composeOptional stringToList.reverse
-  }
 
 }
