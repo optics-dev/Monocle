@@ -1,9 +1,9 @@
-package monocle.scalazi
+package monocle.scalaz
 
+import _root_.scalaz.{OneAnd, Traverse}
 import monocle.function._
 import monocle.syntax._
 import monocle.{SimpleOptional, SimpleLens}
-import scalaz.{OneAnd, Traverse}
 
 object oneand extends OneAndInstances
 

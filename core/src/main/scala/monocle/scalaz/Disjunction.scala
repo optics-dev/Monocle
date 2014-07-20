@@ -1,7 +1,7 @@
-package monocle.scalazi
+package monocle.scalaz
 
+import _root_.scalaz.{ \/-, -\/, \/ }
 import monocle.Prism
-import scalaz.{ \/-, -\/, \/ }
 
 object disjunction extends DisjunctionFunctions
 

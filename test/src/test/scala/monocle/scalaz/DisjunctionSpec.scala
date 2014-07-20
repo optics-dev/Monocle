@@ -1,4 +1,4 @@
-package monocle.scalazi
+package monocle.scalaz
 
 import monocle.PrismLaws
 import monocle.TestUtil._

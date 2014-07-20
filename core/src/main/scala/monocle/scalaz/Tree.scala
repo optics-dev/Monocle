@@ -1,12 +1,12 @@
-package monocle.scalazi
+package monocle.scalaz
 
+import _root_.scalaz.Tree
 import monocle.function._
 import monocle.std.stream._
 import monocle.syntax._
 import monocle.{SimpleIso, SimpleLens}
 import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
-import scalaz.Tree
 
 
 object tree extends TreeFunctions with TreeInstances

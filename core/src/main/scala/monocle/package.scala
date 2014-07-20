@@ -1,5 +1,5 @@
+import _root_.scalaz.{ -\/, \/- }
 import scala.util.Try
-import scalaz.{ -\/, \/- }
 
 package object monocle {
 

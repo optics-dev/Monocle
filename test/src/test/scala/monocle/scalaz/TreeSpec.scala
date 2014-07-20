@@ -1,10 +1,10 @@
-package monocle.scalazi
+package monocle.scalaz
 
+import _root_.scalaz.Tree
 import monocle.TestUtil._
 import monocle.function._
 import monocle.{LensLaws, IsoLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
-import scalaz.Tree
 
 
 class TreeSpec extends Spec {

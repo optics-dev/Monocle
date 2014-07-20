@@ -1,16 +1,14 @@
 package monocle
 
-import org.scalacheck.{Properties, Arbitrary}
+import _root_.scalaz.Equal
+import _root_.scalaz.std.option._
+import _root_.scalaz.syntax.equal._
 import org.scalacheck.Prop._
-import scalaz.Equal
-
+import org.scalacheck.{Properties, Arbitrary}
 
 object PrismLaws {
 
   def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](prism: SimplePrism[S, A]) = new Properties("Prism") {
-    import scalaz.syntax.equal._
-    import scalaz.std.option._
-
     include(OptionalLaws(prism))
 
     property("reverseGet - getOption") = forAll { value: A =>

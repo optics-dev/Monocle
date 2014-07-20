@@ -1,9 +1,9 @@
 package monocle
 
-import monocle.scalazi._
+import monocle.scalaz._
 
 
-package object scalazi extends ScalazInstances
+package object scalaz extends ScalazInstances
 
 trait ScalazInstances
   extends DisjunctionFunctions

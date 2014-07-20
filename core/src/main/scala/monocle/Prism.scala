@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{ Applicative, \/ }
+import _root_.scalaz.{ Applicative, \/ }
 
 /**
  * A Prism is a special case of Traversal where the focus is limited to
