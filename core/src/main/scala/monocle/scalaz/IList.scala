@@ -17,7 +17,7 @@ trait IListInstances {
     FilterIndex.traverseFilterIndex[IList, A](_.zipWithIndex)
 
   implicit def iListHeadOption[A]: HeadOption[IList[A], A] = new HeadOption[IList[A], A] {
-    def headOption = SimpleOptional.build[IList[A], A](_.headOption, {
+    def headOption = SimpleOptional[IList[A], A](_.headOption, {
       case (INil(), a)      => INil[A]()
       case (ICons(x,xs), a) => ICons(a, xs)
     })

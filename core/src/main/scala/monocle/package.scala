@@ -22,22 +22,17 @@ package object monocle {
   }
 
   object SimpleOptional {
-    @deprecated("use build", "0.5.0")
-    def apply[S, A](_getOption: S => Option[A], _set: (S, Option[A]) => S): SimpleOptional[S, A] =
-      Optional[S, S, A, A](_getOption, _set)
-
-
-    def build[S, A](_getOption: S => Option[A], _set: (S, A) => S): SimpleOptional[S, A] =
+    def apply[S, A](_getOption: S => Option[A], _set: (S, A) => S): SimpleOptional[S, A] =
       Optional[S, S, A, A](_getOption, {
         case (s, Some(a)) => _set(s, a)
         case (s, None)    => s
       })
 
     /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
-    def build[S]: Constructor[S] = new Constructor[S]
+    def apply[S]: Constructor[S] = new Constructor[S]
     final class Constructor[S] {
       @inline def apply[A](_getOption: S => Option[A])(_set: (S, A) => S): SimpleOptional[S, A] =
-        SimpleOptional.build(_getOption, _set)
+        SimpleOptional(_getOption, _set)
     }
   }
 

@@ -18,7 +18,7 @@ trait ListInstances {
     FilterIndex.traverseFilterIndex[List, A](_.zipWithIndex)
 
   implicit def listHeadOption[A]: HeadOption[List[A], A] = new HeadOption[List[A], A] {
-    def headOption = SimpleOptional.build[List[A], A](_.headOption, {
+    def headOption = SimpleOptional[List[A], A](_.headOption, {
       case (Nil, a)     => Nil
       case (x :: xs, a) => a :: xs
     })

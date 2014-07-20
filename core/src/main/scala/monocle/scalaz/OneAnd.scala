@@ -15,8 +15,8 @@ trait OneAndInstances {
   implicit def oneAndIndex[A, T[_]](implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] =
     new Index[OneAnd[T, A], Int, A]{
       def index(i: Int) =
-        if(i == 0) SimpleOptional.build[OneAnd[T, A], A](oneAnd => Some(oneAnd |-> head get), (oneAnd, a) => oneAnd |-> head set a)
-        else SimpleOptional.build[OneAnd[T, A], A](_.tail |-? ev.index(i - 1) getOption,
+        if(i == 0) SimpleOptional[OneAnd[T, A], A](oneAnd => Some(oneAnd |-> head get), (oneAnd, a) => oneAnd |-> head set a)
+        else SimpleOptional[OneAnd[T, A], A](_.tail |-? ev.index(i - 1) getOption,
           (oneAnd, a) => oneAnd.copy(tail = oneAnd.tail |-? ev.index(i - 1) set a) )
     }
 
@@ -32,7 +32,7 @@ trait OneAndInstances {
   }
 
   implicit def oneAndLastOption[A, T[_]](implicit ev: LastOption[T[A], A]): LastOption[OneAnd[T, A], A] = new LastOption[OneAnd[T, A], A] {
-    def lastOption = SimpleOptional.build[OneAnd[T, A], A](oneAnd => ev.lastOption.getOption(oneAnd.tail),
+    def lastOption = SimpleOptional[OneAnd[T, A], A](oneAnd => ev.lastOption.getOption(oneAnd.tail),
       (oneAnd, a) => oneAnd.copy(tail = ev.lastOption.set(oneAnd.tail, a)))
   }
 
