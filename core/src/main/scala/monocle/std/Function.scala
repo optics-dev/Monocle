@@ -1,6 +1,6 @@
 package monocle.std
 
-import monocle._
+import monocle.SimpleIso
 import monocle.function.Curry
 
 object function extends FunctionFunctions with FunctionInstances

@@ -16,7 +16,7 @@ class SafeCastExample extends Spec {
     safeCast[Int, Char].reverseModify('b', _ + Char.MaxValue.toInt) shouldEqual None
 
     // with some syntax sugar
-    (65 <-? safeCast[Int, Char] getOption) shouldEqual Some('A')
+    (65 ^<-? safeCast[Int, Char] getOption) shouldEqual Some('A')
   }
 
   "safeCast creates a Prism from Double to Int" in {

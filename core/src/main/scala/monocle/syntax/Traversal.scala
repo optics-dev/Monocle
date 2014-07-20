@@ -40,5 +40,5 @@ private[syntax] final class ApplyTraversalOps[S](value: S) {
   }
 
   /** Alias to ApplyTraversal */
-  def |->>[T, A, B](traversal: Traversal[S, T, A, B]): ApplyTraversal[S, T, A, B] = applyTraversal(traversal)
+  def ^|->>[T, A, B](traversal: Traversal[S, T, A, B]): ApplyTraversal[S, T, A, B] = applyTraversal(traversal)
 }

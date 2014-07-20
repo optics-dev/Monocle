@@ -15,9 +15,10 @@ trait OneAndInstances {
   implicit def oneAndIndex[A, T[_]](implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] =
     new Index[OneAnd[T, A], Int, A]{
       def index(i: Int) =
-        if(i == 0) SimpleOptional[OneAnd[T, A], A](oneAnd => Some(oneAnd |-> head get), (oneAnd, a) => oneAnd |-> head set a)
-        else SimpleOptional[OneAnd[T, A], A](_.tail |-? ev.index(i - 1) getOption,
-          (oneAnd, a) => oneAnd.copy(tail = oneAnd.tail |-? ev.index(i - 1) set a) )
+        if(i == 0) SimpleOptional[OneAnd[T, A], A](oneAnd => Some(oneAnd ^|-> head get), (oneAnd, a) => oneAnd ^|-> head set a)
+        else SimpleOptional[OneAnd[T, A], A](_.tail ^|-? ev.index(i - 1) getOption,
+          (oneAnd, a) => oneAnd.copy(tail = oneAnd.tail ^|-? ev.index(i - 1) set a) )
+
     }
 
   implicit def oneAndField1[T[_], A]: Field1[OneAnd[T, A], A] = new Field1[OneAnd[T, A], A]{

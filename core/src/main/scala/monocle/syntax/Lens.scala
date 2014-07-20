@@ -39,5 +39,5 @@ private[syntax] final class ApplyLensOps[S](value: S) {
   }
 
   /** Alias to ApplyLens */
-  def |->[T, A, B](lens: Lens[S, T, A, B]): ApplyLens[S, T, A, B] = applyLens(lens)
+  def ^|->[T, A, B](lens: Lens[S, T, A, B]): ApplyLens[S, T, A, B] = applyLens(lens)
 }
