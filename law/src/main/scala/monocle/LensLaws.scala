@@ -1,15 +1,14 @@
 package monocle
 
-import org.scalacheck.{Properties, Arbitrary}
-import scalaz.Equal
+import _root_.scalaz.Equal
+import _root_.scalaz.Id._
+import _root_.scalaz.syntax.equal._
 import org.scalacheck.Prop._
-import scalaz.Id._
+import org.scalacheck.{Properties, Arbitrary}
 
 object LensLaws {
 
   def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](lens: SimpleLens[S, A]) = new Properties("Lens") {
-    import scalaz.syntax.equal._
-
     include(TraversalLaws(lens))
 
     property("lift - identity") = forAll { from: S =>

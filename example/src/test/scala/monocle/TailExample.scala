@@ -1,11 +1,11 @@
 package monocle
 
+import _root_.scalaz.OneAnd
 import monocle.function.Tail._
 import monocle.std._
-import monocle.scalazi.oneand._
+import monocle.scalaz.oneand._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
-import scalaz.OneAnd
 
 class TailExample extends Spec {
 

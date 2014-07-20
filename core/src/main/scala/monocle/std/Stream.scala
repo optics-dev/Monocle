@@ -19,7 +19,7 @@ trait StreamInstances {
     FilterIndex.traverseFilterIndex[Stream, A](_.zipWithIndex)
 
   implicit def streamHeadOption[A]: HeadOption[Stream[A], A] = new HeadOption[Stream[A], A] {
-    def headOption = SimpleOptional.build[Stream[A], A](_.headOption, {
+    def headOption = SimpleOptional[Stream[A], A](_.headOption, {
       case (Empty, a)    => Empty
       case (x #:: xs, a) => a #:: xs
     })

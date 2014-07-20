@@ -1,10 +1,10 @@
 package monocle
 
+import _root_.scalaz.Equal
 import monocle.TestUtil._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import org.specs2.scalaz._
-import scalaz.Equal
 
 class LensSpec extends Spec {
 

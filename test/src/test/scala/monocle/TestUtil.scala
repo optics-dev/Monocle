@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz._
+import _root_.scalaz._
 import org.scalacheck.{Gen, Arbitrary}
 import org.scalacheck.Arbitrary._
 
@@ -19,19 +19,19 @@ object TestUtil {
   implicit val stringEqual  = Equal.equalA[String]
   implicit val unitEqual    = Equal.equalA[Unit]
 
-  implicit def optEq[A: Equal] = scalaz.std.option.optionEqual[A]
+  implicit def optEq[A: Equal] = _root_.scalaz.std.option.optionEqual[A]
   implicit def someEq[A: Equal] = Equal.equalA[Some[A]]
-  implicit def eitherEq[A: Equal, B: Equal] = scalaz.std.either.eitherEqual[A, B]
-  implicit def listEq[A: Equal] = scalaz.std.list.listEqual[A]
-  implicit def vectorEq[A: Equal] = scalaz.std.vector.vectorEqual[A]
-  implicit def streamEq[A: Equal] = scalaz.std.stream.streamEqual[A]
-  implicit def mapEq[K: Order, V: Equal] = scalaz.std.map.mapEqual[K, V]
+  implicit def eitherEq[A: Equal, B: Equal] = _root_.scalaz.std.either.eitherEqual[A, B]
+  implicit def listEq[A: Equal] = _root_.scalaz.std.list.listEqual[A]
+  implicit def vectorEq[A: Equal] = _root_.scalaz.std.vector.vectorEqual[A]
+  implicit def streamEq[A: Equal] = _root_.scalaz.std.stream.streamEqual[A]
+  implicit def mapEq[K: Order, V: Equal] = _root_.scalaz.std.map.mapEqual[K, V]
 
-  implicit def tuple2Eq[A1: Equal, A2: Equal] = scalaz.std.tuple.tuple2Equal[A1, A2]
-  implicit def tuple3Eq[A1: Equal, A2: Equal, A3: Equal] = scalaz.std.tuple.tuple3Equal[A1, A2, A3]
-  implicit def tuple4Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal] = scalaz.std.tuple.tuple4Equal[A1, A2, A3, A4]
-  implicit def tuple5Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal] = scalaz.std.tuple.tuple5Equal[A1, A2, A3, A4, A5]
-  implicit def tuple6Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal, A6: Equal] = scalaz.std.tuple.tuple6Equal[A1, A2, A3, A4, A5, A6]
+  implicit def tuple2Eq[A1: Equal, A2: Equal] = _root_.scalaz.std.tuple.tuple2Equal[A1, A2]
+  implicit def tuple3Eq[A1: Equal, A2: Equal, A3: Equal] = _root_.scalaz.std.tuple.tuple3Equal[A1, A2, A3]
+  implicit def tuple4Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal] = _root_.scalaz.std.tuple.tuple4Equal[A1, A2, A3, A4]
+  implicit def tuple5Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal] = _root_.scalaz.std.tuple.tuple5Equal[A1, A2, A3, A4, A5]
+  implicit def tuple6Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal, A6: Equal] = _root_.scalaz.std.tuple.tuple6Equal[A1, A2, A3, A4, A5, A6]
 
   // Order instances
 
@@ -45,7 +45,7 @@ object TestUtil {
     override def shows(f: Tree[A]): String = f.drawTree
   }
 
-  implicit def streamShow[A: Show] = scalaz.std.stream.streamShow[A]
+  implicit def streamShow[A: Show] = _root_.scalaz.std.stream.streamShow[A]
 
   // Arbitrary instances
 

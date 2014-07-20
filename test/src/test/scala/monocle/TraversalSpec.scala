@@ -1,10 +1,10 @@
 package monocle
 
+import _root_.scalaz.Equal
 import monocle.TestUtil._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 import org.specs2.scalaz.Spec
-import scalaz.Equal
 
 class TraversalSpec extends Spec {
 

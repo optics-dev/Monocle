@@ -18,7 +18,7 @@ trait VectorInstances {
     FilterIndex.traverseFilterIndex[Vector, A](_.zipWithIndex)
 
   implicit def vectorHeadOption[A]: HeadOption[Vector[A], A] = new HeadOption[Vector[A], A] {
-    def headOption = SimpleOptional.build[Vector[A], A](_.headOption, (vector, a) =>
+    def headOption = SimpleOptional[Vector[A], A](_.headOption, (vector, a) =>
       if(vector.isEmpty) vector else a +: vector.tail
     )
   }

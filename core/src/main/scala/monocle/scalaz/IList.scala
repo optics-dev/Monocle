@@ -1,9 +1,8 @@
-package monocle.scalazi
+package monocle.scalaz
 
+import _root_.scalaz.{IList, Applicative, ICons, INil}
 import monocle.function._
 import monocle.{Optional, SimpleOptional}
-import scalaz.IList
-import scalaz.{Applicative, ICons, INil}
 
 object ilist extends IListInstances
 
@@ -18,7 +17,7 @@ trait IListInstances {
     FilterIndex.traverseFilterIndex[IList, A](_.zipWithIndex)
 
   implicit def iListHeadOption[A]: HeadOption[IList[A], A] = new HeadOption[IList[A], A] {
-    def headOption = SimpleOptional.build[IList[A], A](_.headOption, {
+    def headOption = SimpleOptional[IList[A], A](_.headOption, {
       case (INil(), a)      => INil[A]()
       case (ICons(x,xs), a) => ICons(a, xs)
     })

@@ -1,14 +1,15 @@
 package monocle
 
-import org.scalacheck.{Properties, Arbitrary}
-import scalaz.Equal
+import _root_.scalaz.Equal
 import org.scalacheck.Prop._
+import org.scalacheck.{Properties, Arbitrary}
 
 
 object IsoLaws {
 
   def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](iso: SimpleIso[S, A]) = new Properties("Iso") {
-    import scalaz.syntax.equal._
+
+    import _root_.scalaz.syntax.equal._
 
     include(LensLaws(iso))
     include(PrismLaws(iso))

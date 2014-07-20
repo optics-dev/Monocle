@@ -1,11 +1,11 @@
 package monocle
 
-import scalaz.std.anyVal._
-import scalaz.std.list._
-import scalaz.std.option._
-import scalaz.syntax.std.boolean._
-import scalaz.syntax.std.option._
-import scalaz.{ Foldable, Monoid, Tag }
+import _root_.scalaz.std.anyVal._
+import _root_.scalaz.std.list._
+import _root_.scalaz.std.option._
+import _root_.scalaz.syntax.std.boolean._
+import _root_.scalaz.syntax.std.option._
+import _root_.scalaz.{ Foldable, Monoid, Tag }
 
 trait Fold[S, A] { self =>
 

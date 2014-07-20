@@ -53,9 +53,9 @@ class ImportExample extends Spec {
     each[List[Int], Int].modify(List(1,2,3), _ + 1) shouldEqual List(2,3,4)
   }
 
-  "monocle.scalazi._ brings all polymorphic Optic instances in scope for Scalaz classes" in {
+  "monocle.scalaz._ brings all polymorphic Optic instances in scope for Scalaz classes" in {
     import monocle.function._
-    import monocle.scalazi._
+    import monocle.scalaz._
 
     // do not compile because Each instance for List is not in scope
     illTyped { """each[List[Int], Int].modify(List(1,2,3), _ + 1)""" }

@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Const, Applicative, Functor, Monoid}
+import _root_.scalaz.{Const, Applicative, Functor, Monoid}
 
 /**
  * A Lens defines a single focus between a type S and A such as if you change A to B
