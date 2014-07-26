@@ -63,18 +63,17 @@ val _street : SimpleLens[Address , Street]  = ...
 val _address: SimpleLens[Company , Address] = ...
 val _company: SimpleLens[Employee, Company] = ...
 
-import monocle.syntax._
+(_company composeLens _address composeLens _street composeLens _name).modify(_.capitalize)
+
+import monocle.syntax._ // to use optics as operator 
 
 employee applyLens   _company
          composeLens _address
          composeLens _street
          composeLens _name
          modify (_.capitalize)
-```
-
-or with some syntax sugar:
-
-```scala
+         
+// or with some syntax sugar
 employee |-> _company |-> _address |-> _street |-> _name modify (_.capitalize)
 ```
 
@@ -91,19 +90,18 @@ object `A` and in our case, the first character of a `String` is optional as a `
 
 ```scala
 import monocle.syntax._
-import monocle.function.HeadOption._ // to use headOption
+import monocle.function.HeadOption._ // to use headOption (a polymorphic optic)
+import monocle.std.string._          // to get String instance for HeadOption
+
 
 employee applyLens   _company
          composeLens _address
          composeLens _street
          composeLens _name
-         composeOptional headOption // generic Optional that focus into the first element
+         composeOptional headOption
          modify toUpper
-```
-
-or with some syntax sugar:
-
-```scala
+         
+// or with some syntax sugar         
 employee |-> _company |-> _address |-> _street |-> _name |-? headOption modify toUpper
 ```
 
