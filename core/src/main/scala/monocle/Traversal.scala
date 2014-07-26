@@ -20,11 +20,12 @@ trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
   def asTraversal: Traversal[S, T, A, B] = self
 
   /** non overloaded compose function */
-  def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = compose(other)
-
-  def compose[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = new Traversal[S, T, C, D] {
+  def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = new Traversal[S, T, C, D] {
     def multiLift[F[_]: Applicative](from: S, f: C => F[D]): F[T] = self.multiLift(from, other.multiLift(_, f))
   }
+
+  @deprecated("Use composeTraversal", since = "0.5")
+  def compose[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other)
 
 }
 

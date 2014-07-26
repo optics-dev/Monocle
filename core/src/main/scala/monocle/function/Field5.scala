@@ -7,7 +7,7 @@ import scala.annotation.implicitNotFound
   "find out which import is necessary")
 trait Field5[S, A] {
 
-  @deprecated("Use fifth", since = "0.5.0")
+  @deprecated("Use fifth", since = "0.5")
   def _5: SimpleLens[S, A] = fifth
 
   /** Creates a Lens from S to it is fifth element */
@@ -19,7 +19,7 @@ object Field5 extends Field5Functions
 
 trait Field5Functions {
 
-  @deprecated("Use fifth", since = "0.5.0")
+  @deprecated("Use fifth", since = "0.5")
   def _5[S, A](implicit ev: Field5[S, A]): SimpleLens[S, A] = ev._5
 
   def fifth[S, A](implicit ev: Field5[S, A]): SimpleLens[S, A] = ev.fifth

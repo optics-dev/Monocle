@@ -16,13 +16,14 @@ trait Prism[S, T, A, B] extends Optional[S, T, A, B] { self =>
   def asPrism: Prism[S, T, A, B] = self
 
   /** non overloaded compose function */
-  def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = compose(other)
-
-  def compose[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = new Prism[S, T, C, D] {
-    def re: Getter[D, T] = other.re compose self.re
+  def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = new Prism[S, T, C, D] {
+    def re: Getter[D, T] = other.re composeGetter self.re
 
     def multiLift[F[_]: Applicative](from: S, f: C => F[D]): F[T] = self.multiLift(from, other.multiLift(_, f))
   }
+
+  @deprecated("Use composePrism", since = "0.5")
+  def compose[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = composePrism(other)
 
 }
 

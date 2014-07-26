@@ -13,7 +13,7 @@ private[syntax] trait IsoSyntax {
 }
 
 private[syntax] final class IsoOps[S, T, A, B](val self: Iso[S, T, A, B]) {
-  def <->[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = self compose other
+  def <->[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = self composeIso other
 }
 
 private[syntax] trait ApplyIso[S, T, A, B] extends ApplyLens[S, T, A, B] with ApplyPrism[S, T, A, B] { self =>
@@ -26,7 +26,7 @@ private[syntax] trait ApplyIso[S, T, A, B] extends ApplyLens[S, T, A, B] with Ap
 
   def composeIso[C, D](other: Iso[A, B, C, D]): ApplyIso[S, T, C, D] = new ApplyIso[S, T, C, D] {
     val from: S = self.from
-    def _iso: Iso[S, T, C, D] = self._iso compose other
+    def _iso: Iso[S, T, C, D] = self._iso composeIso other
   }
 
   /** Alias to composeIso */

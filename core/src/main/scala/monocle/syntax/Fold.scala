@@ -28,7 +28,7 @@ private[syntax] trait ApplyFold[S, A] { self =>
 
   def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] = new ApplyFold[S, B] {
     val from: S = self.from
-    val _fold: Fold[S, B] = self._fold compose other
+    val _fold: Fold[S, B] = self._fold composeFold other
   }
 }
 

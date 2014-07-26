@@ -22,11 +22,12 @@ trait Optional[S, T, A, B] extends Traversal[S, T, A, B] { self =>
   def asOptional: Optional[S, T, A, B] = self
 
   /** non overloaded compose function */
-  def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = compose(other)
-
-  def compose[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = new Optional[S, T, C, D] {
+  def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = new Optional[S, T, C, D] {
     def multiLift[F[_] : Applicative](from: S, f: C => F[D]): F[T] = self.multiLift(from, other.multiLift(_, f))
   }
+
+  @deprecated("Use composeOptional", since = "0.5")
+  def compose[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = composeOptional(other)
 
 }
 

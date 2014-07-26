@@ -7,11 +7,12 @@ trait Getter[S, A] { self =>
   def asGetter: Getter[S, A] = self
 
   /** non overloaded compose function */
-  def composeGetter[B](other: Getter[A, B]): Getter[S, B] = compose(other)
-
-  def compose[B](other: Getter[A, B]): Getter[S, B] = new Getter[S, B] {
+  def composeGetter[B](other: Getter[A, B]): Getter[S, B] = new Getter[S, B] {
     def get(from: S): B = other.get(self.get(from))
   }
+
+  @deprecated("Use composeGetter", since = "0.5")
+  def compose[B](other: Getter[A, B]): Getter[S, B] = composeGetter(other)
 
 }
 

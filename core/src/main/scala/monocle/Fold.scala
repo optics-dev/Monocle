@@ -24,11 +24,12 @@ trait Fold[S, A] { self =>
   def asFold: Fold[S, A] = self
 
   /** non overloaded compose function */
-  def composeFold[B](other: Fold[A, B]): Fold[S, B] = compose(other)
-
-  def compose[B](other: Fold[A, B]): Fold[S, B] = new Fold[S, B] {
+  def composeFold[B](other: Fold[A, B]): Fold[S, B] = new Fold[S, B] {
     def foldMap[C: Monoid](from: S)(f: B => C): C = self.foldMap(from)(other.foldMap(_)(f))
   }
+
+  @deprecated("Use composeFold", since = "0.5")
+  def compose[B](other: Fold[A, B]): Fold[S, B] = composeFold(other)
 }
 
 object Fold {

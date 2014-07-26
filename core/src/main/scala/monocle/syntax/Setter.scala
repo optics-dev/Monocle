@@ -18,7 +18,7 @@ private[syntax] trait ApplySetter[S, T, A, B] { self =>
 
   def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = new ApplySetter[S, T, C, D] {
     val from = self.from
-    val _setter = self._setter compose other
+    val _setter = self._setter composeSetter other
   }
 }
 

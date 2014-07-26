@@ -11,7 +11,7 @@ private[syntax] trait PrismSyntax {
 }
 
 private[syntax] final class PrismOps[S, T, A, B](val self: Prism[S, T, A, B]) {
-  def <-?[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = self compose other
+  def <-?[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = self composePrism other
 }
 
 private[syntax] trait ApplyPrism[S, T, A, B] extends ApplyOptional[S, T, A, B]  { self =>
@@ -20,7 +20,7 @@ private[syntax] trait ApplyPrism[S, T, A, B] extends ApplyOptional[S, T, A, B]  
   def _optional: Optional[S, T, A, B] = _prism
 
   def composePrism[C, D](other: Prism[A, B, C, D]): ApplyPrism[S, T, C, D] = new ApplyPrism[S, T, C, D] {
-    val _prism: Prism[S, T, C, D] = self._prism compose other
+    val _prism: Prism[S, T, C, D] = self._prism composePrism other
     val from: S = self.from
   }
 

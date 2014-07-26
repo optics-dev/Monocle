@@ -12,7 +12,7 @@ private[syntax] trait TraversalSyntax {
 }
 
 private[syntax] final class TraversalOps[S, T, A, B](val self: Traversal[S, T, A, B]) {
-  def |->>[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = self compose other
+  def |->>[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = self composeTraversal other
 }
 
 private[syntax] trait ApplyTraversal[S, T, A, B] extends ApplySetter[S, T, A, B] with ApplyFold[S, A] { self =>
@@ -25,7 +25,7 @@ private[syntax] trait ApplyTraversal[S, T, A, B] extends ApplySetter[S, T, A, B]
 
   def composeTraversal[C, D](other: Traversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = new ApplyTraversal[S, T, C, D] {
     val from: S = self.from
-    val _traversal: Traversal[S, T, C, D] = self._traversal compose other
+    val _traversal: Traversal[S, T, C, D] = self._traversal composeTraversal other
   }
 
   /** Alias to composeTraversal */

@@ -16,7 +16,7 @@ private[syntax] trait ApplyGetter[S, A] { self =>
 
   def composeGetter[B](other: Getter[A, B]): ApplyGetter[S, B] = new ApplyGetter[S, B] {
     val from: S = self.from
-    val _getter: Getter[S, B] = self._getter compose other
+    val _getter: Getter[S, B] = self._getter composeGetter other
   }
 
 }

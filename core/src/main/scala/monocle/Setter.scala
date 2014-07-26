@@ -15,11 +15,12 @@ trait Setter[S, T, A, B] { self =>
   def asSetter: Setter[S, T, A, B] = self
 
   /** non overloaded compose function */
-  def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = compose(other)
-
-  def compose[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = new Setter[S, T, C, D] {
+  def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = new Setter[S, T, C, D] {
     def modify(from: S, f: C => D): T = self.modify(from, other.modify(_, f))
   }
+
+  @deprecated("Use composeSetter", since = "0.5")
+  def compose[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other)
 
 }
 
