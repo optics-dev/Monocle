@@ -32,7 +32,7 @@ class ImportExample extends Spec {
     head[Custom, Int].modify(Custom(1), _ + 1) shouldEqual Custom(2)
   }
 
-  "monocle.syntax._ permits to use optics as operator which improve type inference" in {
+  "monocle.syntax._ permits to use optics as operator which improves type inference" in {
     import monocle.function._
     import monocle.std.list._
     import monocle.syntax._
@@ -71,6 +71,13 @@ class ImportExample extends Spec {
     illTyped { """each[List[Int], Int].modify(List(1,2,3), _ + 1)""" }
 
     head[Int :: HNil, Int].modify(1 :: HNil, _ + 1) shouldEqual (2 :: HNil)
+  }
+
+  "monocle._, Monocle._ makes all Monocle core features available (no generic)" in {
+    import monocle._, Monocle._
+
+    List(1,2,3)  |->> each modify(_ + 1) shouldEqual List(2,3,4)
+    IList(1,2,3) |->> each modify(_ + 1) shouldEqual IList(2,3,4)
   }
 
 }

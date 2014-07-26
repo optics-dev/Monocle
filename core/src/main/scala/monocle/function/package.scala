@@ -3,9 +3,9 @@ package monocle
 import monocle.function._
 
 
-package object function extends Function
+package object function extends PolymorphicOptics
 
-trait Function
+trait PolymorphicOptics
   extends AtFunctions
   with    AtBitFunctions
   with    CurryFunctions

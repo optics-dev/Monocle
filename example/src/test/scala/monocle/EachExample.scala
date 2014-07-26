@@ -1,5 +1,6 @@
 package monocle
 
+import _root_.scalaz.std.list._
 import _root_.scalaz.IList
 import _root_.scalaz.OneAnd
 import _root_.scalaz.Tree._
