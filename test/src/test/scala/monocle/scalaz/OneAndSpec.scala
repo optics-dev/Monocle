@@ -1,12 +1,12 @@
 package monocle.scalaz
 
-import _root_.scalaz.OneAnd
-import _root_.scalaz.std.list._
 import monocle.TestUtil._
 import monocle.function._
 import monocle.std.list._
 import monocle.{LensLaws, OptionalLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
+
+import _root_.scalaz.OneAnd
 
 
 class OneAndSpec extends Spec {
@@ -19,6 +19,6 @@ class OneAndSpec extends Spec {
 
   checkAll("tail OneAnd", LensLaws(tail[OneAnd[List, Int], List[Int]]))
 
-  checkAll("lastOption OneAnd", OptionalLaws(lastOption[OneAnd[List, Int], Int]))
+  checkAll("last OneAnd", OptionalLaws(last[OneAnd[List, Int], Int]))
 
 }
