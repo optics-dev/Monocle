@@ -16,7 +16,6 @@ trait OneAndInstances {
           Applicative[F].apply2(f(from.head), ev.each.multiLift(from.tail, f))((head, tail) => new OneAnd(head, tail))
       }
     }
-//    Each.traverseEach[({type λ[α] = OneAnd[T, α]})#λ, A]
 
   implicit def oneAndIndex[T[_], A](implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] =
     new Index[OneAnd[T, A], Int, A]{
