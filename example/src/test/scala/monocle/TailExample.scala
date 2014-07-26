@@ -16,7 +16,7 @@ class TailExample extends Spec {
     ((2, false, "hello") |-> tail set (true, "plop")) shouldEqual (2, true, "plop")
   }
 
-  "head creates a Lens from a OneAnd its first element" in {
+  "tail creates a Lens from a OneAnd its first element" in {
     (OneAnd(1, List(2, 3)) |-> tail get)  shouldEqual List(2, 3)
   }
 

@@ -26,7 +26,8 @@ object BuildSettings {
 object Dependencies {
   val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.0-RC1"
   val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0-RC1" % "test"
-  val specs2            = "org.specs2"      %% "specs2"                    % "2.3.11"   % "test"
+  val specs2            = "org.specs2"      %% "specs2"                    % "2.3.13-scalaz-7.1.0-RC1"   % "test"
+  val specs2Scalacheck  = "org.specs2"      %% "specs2-scalacheck"         % "2.3.13-scalaz-7.1.0-RC1"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.2"      % "test"
 }
 
@@ -55,15 +56,7 @@ object MonocleBuild extends Build {
     "monocle-law",
     file("law"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz),
-      libraryDependencies ++= (CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, scalaMajor)) if scalaMajor >= 11 => Seq(
-          "org.specs2"  % "specs2-scalacheck_2.11" % "2.3.12-scalaz-7.1.0-M7"
-        )
-        case Some((2, 10))                             =>  Seq(
-          "org.specs2"  % "specs2-scalacheck_2.10" % "2.3.12-scalaz-7.1.0-M6"
-        )
-      })
+      libraryDependencies ++= Seq(scalaz, specs2Scalacheck)
     )
   ) dependsOn(core)
 
@@ -107,16 +100,11 @@ object MonocleBuild extends Build {
     file("test"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
-      libraryDependencies ++= Seq(scalaz, scalaCheckBinding, scalazSpec2),
-      libraryDependencies ++= (CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, scalaMajor)) if scalaMajor >= 11 => Seq(
-          "com.chuusai" %% "shapeless"             % "2.0.0",
-          "org.specs2"  % "specs2-scalacheck_2.11" % "2.3.12-scalaz-7.1.0-M7" % "test"
-        )
-        case Some((2, 10))                             =>  Seq(
-          "com.chuusai" %  "shapeless_2.10.4"      % "2.0.0",
-          "org.specs2"  % "specs2-scalacheck_2.10" % "2.3.12-scalaz-7.1.0-M6" % "test"
-        )
+      libraryDependencies ++= Seq(scalaz, scalaCheckBinding, scalazSpec2, specs2Scalacheck),
+      libraryDependencies ++= Seq(CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, scalaMajor)) if scalaMajor >= 11 => "com.chuusai" %% "shapeless"        % "2.0.0"
+        case Some((2, 10))                             => "com.chuusai" %  "shapeless_2.10.4" % "2.0.0"
+
       })
     )
   ) dependsOn(core, generic ,law)

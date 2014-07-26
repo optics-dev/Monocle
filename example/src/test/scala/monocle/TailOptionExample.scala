@@ -10,7 +10,7 @@ import org.specs2.scalaz.Spec
 
 class TailOptionExample extends Spec {
 
-  "tail creates an Optional from a List, IList, Vector or Stream to its tail" in {
+  "tailOption creates an Optional from a List, IList, Vector or Stream to its tail" in {
     (List(1, 2, 3)    |-? tailOption getOption) shouldEqual Some(List(2, 3))
     (List(1)          |-? tailOption getOption) shouldEqual Some(Nil)
     ((Nil: List[Int]) |-? tailOption getOption) shouldEqual None
@@ -22,7 +22,7 @@ class TailOptionExample extends Spec {
   }
 
 
-  "tail creates an Optional from a String to its tail" in {
+  "tailOption creates an Optional from a String to its tail" in {
     ("hello" |-? tailOption modify (_.toUpperCase)) shouldEqual "hELLO"
   }
 
