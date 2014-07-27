@@ -49,7 +49,7 @@ object TestUtil {
 
   // Arbitrary instances
 
-  implicit def treeArb[A](implicit a: Arbitrary[A]): Arbitrary[Tree[A]] =
+  implicit def treeArbitrary[A](implicit a: Arbitrary[A]): Arbitrary[Tree[A]] =
     Arbitrary {
       val genLeaf = for(label <- Arbitrary.arbitrary[A]) yield Tree.leaf(label)
 
@@ -73,10 +73,10 @@ object TestUtil {
 
   implicit def someArbitrary[A: Arbitrary]: Arbitrary[Some[A]] = Arbitrary(Arbitrary.arbitrary[A].map(Some(_)))
 
-  implicit def arbitraryEither[A: Arbitrary, B: Arbitrary]: Arbitrary[A \/ B] =
+  implicit def disjunctionArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \/ B] =
     Arbitrary(arbitrary[Either[A, B]] map \/.fromEither)
 
-  implicit def oneAndArb[T[_], A](implicit a: Arbitrary[A], ta: Arbitrary[T[A]]): Arbitrary[OneAnd[T, A]] = Arbitrary(for {
+  implicit def oneAndArbitrary[T[_], A](implicit a: Arbitrary[A], ta: Arbitrary[T[A]]): Arbitrary[OneAnd[T, A]] = Arbitrary(for {
     head <- Arbitrary.arbitrary[A]
     tail <- Arbitrary.arbitrary[T[A]]
   } yield OneAnd(head, tail))
@@ -87,4 +87,6 @@ object TestUtil {
   implicit def iListArbitrary[A: Arbitrary]: Arbitrary[IList[A]] =
     Arbitrary(Arbitrary.arbitrary[List[A]].map(IList.fromList))
 
+  implicit def mapArbitrary[K: Arbitrary, V: Arbitrary] =
+    Arbitrary(Arbitrary.arbitrary[List[(K,V)]].map(_.toMap))
 }
