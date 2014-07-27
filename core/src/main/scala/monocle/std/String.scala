@@ -13,6 +13,8 @@ trait StringInstances {
 
   val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString)
 
+  implicit val stringReverse: Reverse[String, String] = Reverse.simple[String](_.reverse)
+
   implicit val stringEach: Each[String, Char] = new Each[String, Char] {
     def each = stringToList composeTraversal Each.each[List[Char], Char]
   }
@@ -40,7 +42,6 @@ trait StringInstances {
   implicit val stringInitOption: InitOption[String, String] =
     InitOption.reverseTailInitOption[String]
 
-  implicit val stringReverse: Reverse[String, String] = Reverse.simple[String](_.reverse)
 
   implicit val stringToBoolean = new SafeCast[String, Boolean] {
     def safeCast = trySimplePrism[String, Boolean](_.toString, _.toBoolean)
