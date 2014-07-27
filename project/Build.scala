@@ -8,13 +8,13 @@ import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 
 object BuildSettings {
   import MonoclePublishing._
-  val buildScalaVersion = "2.11.1"
+  val buildScalaVersion = "2.11.2"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization       := "com.github.julien-truffaut",
     version            := "0.5-SNAPSHOT",
     scalaVersion       := buildScalaVersion,
-    crossScalaVersions := Seq("2.10.4", "2.11.1"),
+    crossScalaVersions := Seq("2.10.4", "2.11.2"),
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
       "-language:higherKinds", "-language:implicitConversions", "-language:postfixOps"),
     incOptions         := incOptions.value.withNameHashing(true),
