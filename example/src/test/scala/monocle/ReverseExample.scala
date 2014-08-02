@@ -3,7 +3,6 @@ package monocle
 import _root_.scalaz.Tree._
 import monocle.TestUtil._
 import monocle.function.Reverse._
-import monocle.scalaz.tree._
 import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}

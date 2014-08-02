@@ -2,7 +2,6 @@ package monocle
 
 import _root_.scalaz.IList
 import monocle.function.FilterIndex._
-import monocle.scalaz._
 import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.Spec

@@ -1,4 +1,4 @@
-package monocle.scalaz
+package monocle.std
 
 import _root_.scalaz.{ \/-, -\/, \/ }
 import monocle.Prism

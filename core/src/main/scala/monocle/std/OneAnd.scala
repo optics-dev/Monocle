@@ -1,4 +1,4 @@
-package monocle.scalaz
+package monocle.std
 
 import monocle.function._
 import monocle.{SimpleTraversal, SimpleLens, SimpleOptional}

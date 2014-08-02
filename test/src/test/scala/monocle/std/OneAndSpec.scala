@@ -1,8 +1,7 @@
-package monocle.scalaz
+package monocle.std
 
 import monocle.TestUtil._
 import monocle.function._
-import monocle.std.list._
 import monocle.{LensLaws, OptionalLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
 

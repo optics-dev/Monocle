@@ -1,10 +1,10 @@
-package monocle.scalaz
+package monocle.std
 
-import _root_.scalaz.Tree
 import monocle.function._
-import monocle.std.stream._
 import monocle.syntax._
 import monocle.{SimpleIso, SimpleLens}
+
+import _root_.scalaz.Tree
 import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
 
