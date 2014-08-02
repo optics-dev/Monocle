@@ -5,7 +5,7 @@ import monocle.function._
 import monocle.{LensLaws, OptionalLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
 
-import _root_.scalaz.OneAnd
+import scalaz.OneAnd
 
 
 class OneAndSpec extends Spec {

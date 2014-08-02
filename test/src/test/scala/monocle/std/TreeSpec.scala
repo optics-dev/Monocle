@@ -5,7 +5,7 @@ import monocle.function._
 import monocle.{IsoLaws, LensLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
 
-import _root_.scalaz.Tree
+import scalaz.Tree
 
 
 class TreeSpec extends Spec {

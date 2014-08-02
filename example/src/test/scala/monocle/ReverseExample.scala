@@ -1,6 +1,6 @@
 package monocle
 
-import _root_.scalaz.Tree._
+import scalaz.Tree._
 import monocle.TestUtil._
 import monocle.function.Reverse._
 import monocle.std._

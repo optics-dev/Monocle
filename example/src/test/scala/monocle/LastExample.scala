@@ -5,7 +5,7 @@ import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
 
-import _root_.scalaz.OneAnd
+import scalaz.OneAnd
 
 
 class LastExample extends Spec {

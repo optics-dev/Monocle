@@ -1,6 +1,6 @@
 package monocle
 
-import _root_.scalaz.Functor
+import scalaz.Functor
 
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.

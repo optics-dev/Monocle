@@ -1,6 +1,6 @@
 package monocle
 
-import _root_.scalaz.{Functor, Applicative}
+import scalaz.{Functor, Applicative}
 
 /**
  * Optional can be seen as a partial Lens - Lens toward an Option - or
@@ -34,8 +34,8 @@ trait Optional[S, T, A, B] extends Traversal[S, T, A, B] { self =>
 object Optional {
 
   def apply[S, T, A, B](_getOption: S => Option[A], _set: (S, Option[B]) => T): Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    import _root_.scalaz.syntax.traverse._
-    import _root_.scalaz.std.option._
+    import scalaz.syntax.traverse._
+    import scalaz.std.option._
     def multiLift[F[_] : Applicative](from: S, f: A => F[B]): F[T] =
      Functor[F].map(_getOption(from).map(f).sequence)(_set(from, _))
   }

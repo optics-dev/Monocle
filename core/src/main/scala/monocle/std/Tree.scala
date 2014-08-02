@@ -4,7 +4,7 @@ import monocle.function._
 import monocle.syntax._
 import monocle.{SimpleIso, SimpleLens}
 
-import _root_.scalaz.Tree
+import scalaz.Tree
 import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
 

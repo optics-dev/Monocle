@@ -1,6 +1,6 @@
 package monocle
 
-import _root_.scalaz.{OneAnd, IList}
+import scalaz.{OneAnd, IList}
 import monocle.function.LastOption._
 import monocle.std._
 import monocle.syntax._

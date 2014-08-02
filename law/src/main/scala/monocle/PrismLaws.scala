@@ -1,8 +1,8 @@
 package monocle
 
-import _root_.scalaz.Equal
-import _root_.scalaz.std.option._
-import _root_.scalaz.syntax.equal._
+import scalaz.Equal
+import scalaz.std.option._
+import scalaz.syntax.equal._
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
 

@@ -1,6 +1,6 @@
 package monocle
 
-import _root_.scalaz.OneAnd
+import scalaz.OneAnd
 import monocle.function.Tail._
 import monocle.std._
 import monocle.syntax._

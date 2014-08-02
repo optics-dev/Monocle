@@ -5,7 +5,7 @@ import monocle.function._
 import monocle.{IsoLaws, OptionalLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
 
-import _root_.scalaz.IList
+import scalaz.IList
 
 
 class IListSpec extends Spec {

@@ -2,7 +2,7 @@ package monocle
 
 import monocle.std.tree
 
-import _root_.scalaz.Tree._
+import scalaz.Tree._
 import monocle.TestUtil._
 import tree._
 import monocle.syntax._

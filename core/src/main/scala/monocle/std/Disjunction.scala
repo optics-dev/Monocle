@@ -1,6 +1,6 @@
 package monocle.std
 
-import _root_.scalaz.{ \/-, -\/, \/ }
+import scalaz.{ \/-, -\/, \/ }
 import monocle.Prism
 
 object disjunction extends DisjunctionFunctions

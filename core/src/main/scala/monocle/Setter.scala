@@ -1,6 +1,6 @@
 package monocle
 
-import _root_.scalaz.Functor
+import scalaz.Functor
 
 trait Setter[S, T, A, B] { self =>
 
