@@ -2,17 +2,16 @@ import sbt._
 import Keys._
 
 import xerial.sbt.Sonatype._
-import xerial.sbt.Sonatype.SonatypeKeys._
-import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
+
+import org.typelevel.sbt.TypelevelPlugin._
 
 object BuildSettings {
   import MonoclePublishing._
   val buildScalaVersion = "2.11.2"
 
-  val buildSettings = Defaults.defaultSettings ++ Seq(
+  val buildSettings = typelevelDefaultSettings ++ Seq(
     organization       := "com.github.julien-truffaut",
-    version            := "0.5-SNAPSHOT",
     scalaVersion       := buildScalaVersion,
     crossScalaVersions := Seq("2.10.4", "2.11.2"),
     scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
@@ -40,13 +39,13 @@ object MonocleBuild extends Build {
     file("."),
     settings = buildSettings ++ Seq(
       publishArtifact := false,
-      run <<= run in Compile in macros) ++ sonatypeSettings
+      run <<= run in Compile in macros)
   ) aggregate(core, law, macros, generic, test, example)
 
   lazy val core: Project = Project(
     "monocle-core",
     file("core"),
-    settings = buildSettings ++ mimaDefaultSettings ++ Seq(
+    settings = buildSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz),
       previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % "0.4.0")
     )
