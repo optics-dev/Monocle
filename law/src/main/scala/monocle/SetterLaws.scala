@@ -1,7 +1,7 @@
 package monocle
 
-import  scalaz.Equal
-import  scalaz.syntax.equal._
+import scalaz.Equal
+import scalaz.syntax.equal._
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
 
