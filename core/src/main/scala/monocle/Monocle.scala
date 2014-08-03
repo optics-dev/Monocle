@@ -1,8 +1,7 @@
 package monocle
 
-import monocle.syntax.Syntaxes
 
 object Monocle
-  extends PolymorphicOptics
-  with    StdInstances
-  with    Syntaxes
+  extends syntax.Syntaxes
+  with    function.PolymorphicOptics
+  with    std.StdInstances
