@@ -7,8 +7,8 @@ import sbt._
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-val scalaVersion   = "2.11.1" // or "2.10.4"
-val libraryVersion = "0.4.0"  // or "0.5-SNAPSHOT"
+val scalaVersion   = "2.11.2" // or "2.10.4"
+val libraryVersion = "0.5.0"  // or "0.5.1-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion,
