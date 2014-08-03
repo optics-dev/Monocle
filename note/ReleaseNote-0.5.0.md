@@ -3,7 +3,7 @@
 #### Build and Dependencies
 
 *   Upgrade scalaz dependency from 7.0.6 to 7.1
-*   Upgrade specs2 dependency from 2.3.11 to 2.3.13
+*   Upgrade specs2 dependency from 2.3.11 to 2.4
 *   Build with scala 2.11.2
 *   Use sbt-typelevel plugin
 
