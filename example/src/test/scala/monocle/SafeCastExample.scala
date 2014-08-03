@@ -2,7 +2,6 @@ package monocle
 
 import monocle.function.SafeCast._
 import monocle.std._
-import monocle.syntax._
 import org.specs2.scalaz.Spec
 
 class SafeCastExample extends Spec {
@@ -11,6 +10,7 @@ class SafeCastExample extends Spec {
     safeCast[Int, Char].getOption(65)   shouldEqual Some('A')
     safeCast[Int, Char].reverseGet('a') shouldEqual 97
 
+    import monocle.syntax.prism._
     safeCast[Int, Char].reverseModify('b', _ - 1) shouldEqual Some('a')
     safeCast[Int, Char].reverseModify('b', _ + 1) shouldEqual Some('c')
     safeCast[Int, Char].reverseModify('b', _ + Char.MaxValue.toInt) shouldEqual None

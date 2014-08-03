@@ -16,6 +16,7 @@
     *   `monocle.generic` for shapeless classes
     
     Check out this [example](../example/src/test/scala/other/ImportExample) to see how it affects imports
+*   reverseModify has been moved from Monocle package object to `Prism` syntax
     
 #### New Features
 
