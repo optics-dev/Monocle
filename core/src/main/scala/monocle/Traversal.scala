@@ -1,8 +1,8 @@
 package monocle
 
-import _root_.scalaz.Id._
-import _root_.scalaz.std.list._
-import _root_.scalaz.{ Const, Monoid, Traverse, Applicative }
+import scalaz.Id._
+import scalaz.std.list._
+import scalaz.{ Const, Monoid, Traverse, Applicative }
 
 /**
  * A Traversal is generalisation of a Lens in a way that it defines a multi foci between

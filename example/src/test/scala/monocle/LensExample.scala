@@ -33,7 +33,7 @@ class LensExample extends Spec {
     def neighbouringBlocks(n: Int): List[Int] = List(n - 1, n, n + 1).filter(_ >= 0)
 
     // we need to provide an instance of Functor for List
-    import _root_.scalaz.std.list._
+    import scalaz.std.list._
 
     (krom |-> location |-> y lift neighbouringBlocks) shouldEqual List(
       Character("Krom", 30, Location(4,0)), Character("Krom", 30, Location(4,1))

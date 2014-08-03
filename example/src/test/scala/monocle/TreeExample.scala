@@ -1,8 +1,10 @@
 package monocle
 
-import _root_.scalaz.Tree._
+import monocle.std.tree
+
+import scalaz.Tree._
 import monocle.TestUtil._
-import monocle.scalaz.tree._
+import tree._
 import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 

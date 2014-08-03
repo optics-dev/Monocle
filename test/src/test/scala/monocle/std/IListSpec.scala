@@ -1,10 +1,11 @@
-package monocle.scalaz
+package monocle.std
 
-import _root_.scalaz.IList
 import monocle.TestUtil._
 import monocle.function._
 import monocle.{IsoLaws, OptionalLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
+
+import scalaz.IList
 
 
 class IListSpec extends Spec {

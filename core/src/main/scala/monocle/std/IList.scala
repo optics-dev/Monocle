@@ -1,6 +1,6 @@
-package monocle.scalaz
+package monocle.std
 
-import _root_.scalaz.{IList, Applicative, ICons, INil}
+import scalaz.{IList, Applicative, ICons, INil}
 import monocle.function._
 import monocle.{Optional, SimpleOptional}
 

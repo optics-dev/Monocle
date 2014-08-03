@@ -1,6 +1,6 @@
 package monocle
 
-import _root_.scalaz.Equal
+import scalaz.Equal
 import org.scalacheck.Prop._
 import org.scalacheck.{Properties, Arbitrary}
 

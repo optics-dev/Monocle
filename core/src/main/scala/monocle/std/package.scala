@@ -26,3 +26,8 @@ trait StdInstances
   with    Tuple5Instances
   with    Tuple6Instances
   with    VectorInstances
+  // Scalaz Instances
+  with    DisjunctionFunctions
+  with    IListInstances
+  with    OneAndInstances
+  with    TreeFunctions with TreeInstances

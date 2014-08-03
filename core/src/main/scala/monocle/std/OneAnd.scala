@@ -1,9 +1,9 @@
-package monocle.scalaz
+package monocle.std
 
 import monocle.function._
 import monocle.{SimpleTraversal, SimpleLens, SimpleOptional}
 
-import _root_.scalaz.{Applicative, OneAnd}
+import scalaz.{Applicative, OneAnd}
 
 object oneand extends OneAndInstances
 

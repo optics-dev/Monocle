@@ -47,19 +47,10 @@ class ImportExample extends Spec {
     import monocle.function._
     import monocle.std._
 
-    // do not compile because Each instance for IList is not in scope
-    illTyped { """each[IList[Int], Int].modify(IList(1,2,3), _ + 1)""" }
+    // do not compile because Head instance for HList is not in scope
+    illTyped { """head[Int :: HNil, Int].modify(1 :: HNil, _ + 1) shouldEqual (2 :: HNil)""" }
 
-    each[List[Int], Int].modify(List(1,2,3), _ + 1) shouldEqual List(2,3,4)
-  }
-
-  "monocle.scalaz._ brings all polymorphic Optic instances in scope for Scalaz classes" in {
-    import monocle.function._
-    import monocle.scalaz._
-
-    // do not compile because Each instance for List is not in scope
-    illTyped { """each[List[Int], Int].modify(List(1,2,3), _ + 1)""" }
-
+    each[List[Int], Int].modify(List(1,2,3), _ + 1)   shouldEqual List(2,3,4)
     each[IList[Int], Int].modify(IList(1,2,3), _ + 1) shouldEqual IList(2,3,4)
   }
 

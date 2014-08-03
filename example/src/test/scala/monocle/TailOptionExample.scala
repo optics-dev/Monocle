@@ -1,9 +1,8 @@
 package monocle
 
-import _root_.scalaz.IList
+import scalaz.IList
 import monocle.function.TailOption._
 import monocle.std._
-import monocle.scalaz.ilist._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
 
