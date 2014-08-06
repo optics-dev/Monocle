@@ -3,6 +3,10 @@ package monocle
 import scala.language.experimental.macros
 import monocle.internal.CompatibilityMacro210._
 
+class Lenses extends scala.annotation.StaticAnnotation {
+  def macroTransform(annottees: Any*): Any = macro MacroImpl.annotationMacro
+}
+
 object Macro {
 
   def mkLens[A, B](fieldName: String): Lens[A, A, B, B] = macro MacroImpl.mkLens_impl[A, B]
@@ -12,6 +16,41 @@ object Macro {
 private[monocle] object MacroImpl {
 
   import scala.reflect.macros._
+
+  def annotationMacro(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
+    import c.universe._
+
+    val result = annottees map (_.tree) match {
+      case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
+        :: Nil =>
+        val name = tpname.toTermName
+        val lenses = paramss.head map (param =>
+          q"""val ${param.name} = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
+          )
+        q"""
+         $classDef
+         object $name {
+           ..$lenses
+         }
+         """
+      case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
+        :: q"object $objName {..$objDefs}"
+        :: Nil =>
+        val lenses = paramss.head map (param =>
+          q"""val ${param.name} = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
+          )
+        q"""
+         $classDef
+         object $objName {
+           ..$lenses
+           ..$objDefs
+         }
+         """
+      case _ => c.abort(c.enclosingPosition, "Invalid annotation target")
+    }
+
+    c.Expr[Any](result)
+  }
 
   def mkLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[Lens[A, A, B, B]] = {
     import c.universe._
