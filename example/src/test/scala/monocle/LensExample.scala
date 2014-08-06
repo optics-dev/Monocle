@@ -1,7 +1,9 @@
 package monocle
 
 import monocle.syntax._
+import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
+import shapeless.test.illTyped
 
 class LensExample extends Spec {
   @Lenses case class Location(x: Int, y: Int)
@@ -35,6 +37,12 @@ class LensExample extends Spec {
   "Modifications through lenses are chainable" in {
     val m = x.modifyF(_ + 100) compose y.setF(7)
     m(Location(1,2)) shouldEqual Location(101,7)
+  }
+
+  "@Lenses is for case classes only" in {
+    new AnyValueAsResult[Unit].asResult(
+      illTyped("""@Lenses class C""", "Invalid annotation target: must be a case class")
+    )
   }
 
 }
