@@ -25,7 +25,7 @@ private[monocle] object MacroImpl {
         :: Nil =>
         val name = tpname.toTermName
         val lenses = paramss.head map (param =>
-          q"""val ${param.name} = mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
+          q"""val ${param.name} = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
           )
         q"""
          $classDef
@@ -37,7 +37,7 @@ private[monocle] object MacroImpl {
         :: q"object $objName {..$objDefs}"
         :: Nil =>
         val lenses = paramss.head map (param =>
-          q"""val ${param.name} = mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
+          q"""val ${param.name} = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
           )
         q"""
          $classDef
