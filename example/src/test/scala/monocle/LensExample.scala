@@ -5,17 +5,10 @@ import monocle.syntax._
 import org.specs2.scalaz.Spec
 
 class LensExample extends Spec {
-
-  case class Location(x: Int, y: Int)
-  case class Character(name: String, hp: Int, location: Location)
-
-  // Some boiler plate code to create Lens. We should be able to remove it with Macro annotation
-  val name     = mkLens[Character, String]("name")
-  val hp       = mkLens[Character, Int]("hp")
-  val location = mkLens[Character, Location]("location")
-
-  val x        = mkLens[Location, Int]("x")
-  val y        = mkLens[Location, Int]("y")
+  @Lenses case class Location(x: Int, y: Int)
+  @Lenses case class Character(name: String, hp: Int, location: Location)
+  import Location._
+  import Character._
 
   val krom = Character("Krom", 30, Location(4,0))
 
