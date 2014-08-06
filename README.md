@@ -114,21 +114,48 @@ For more examples, see the [```example``` module](example/src/test/scala/monocle
 
 ## Lens Creation
 
-`Lens` can be created by a pair of getter and setter:
+There are four ways to create `SimpleLens`, each with their pro and cons:
 
-```scala
-val _company = SimpleLens[Employee](_.company)((e, c) => e.copy(company = c))
-```
+1.   The first method is the most verbose but it fully documents the type of the `SimpleLens` created. 
+     Remark, this is the only constructor that can also be used for `Lens` (i.e. with 4 type parameters): 
+     
+     ```scala
+     val _company = SimpleLens[Employee, Company](_.company, (e, c) => e.copy(company = c))
+     ```
+     
+2.   The next solution is slightly shorter as it does not require to define the second type parameter of `SimpleLens`
+     (it is inferred from the type of the first argument):
 
-This is quite a lot of boiler plate, so Monocle provides a macro to simplify `Lens` creation:
+     ```scala
+     val _company = SimpleLens[Employee](_.company)((e, c) => e.copy(company = c))
+     ```
 
-```scala
-import monocle.Macro._ // require monocle-macro dependency
+3.   Now we start using the heavy artillery ... Macro. This method can only be used on case classes and since macros are
+     experimental in scala, there is no guarantee that future version of Monocle will support it (even though we will do 
+     our best):
 
-val _company = mkLens[Employee, Company]("company") // company is checked at compiled time to be a valid accessor
-```
+     ```scala
+      import monocle.Macro._ // require monocle-macro dependency
 
-In future version of the library, we are planning to introduce helpers to facilitate even further `Lens` creation.
+      val _company = mkLens[Employee, Company]("company") // company is checked at compiled time to be a valid accessor
+      ```
+
+4.   Finally, the boiler plate free solution with macro annotation (which are probably the most experimental part of macros).
+     Adding `@Lenses` annotation on case class will generate `SimpleLens` for every single accessor of the case class.
+     These generated `SimpleLens` are in the companion object of the case class (even if there is no companion object declared).
+     Nevertheless, this solution has several disadvantages: 
+     1.   users need to add the macro paradise plugin to their project.
+     2.   IDE have a poor support for Macro annotation, therefore it is likely your IDE will not know that the generated `SimpleLens`
+          exist (but it will compile).
+     3.   this solution can only be applied when you control the case classes since you need to annottate them. This means that
+          you cannot use this technique for classes defined in another project.
+     
+     ```scala
+     @Lenses
+     case class Employee(company: Company, ...)
+     
+     // generates Employee.company: SimpleLens[Employee, Company]
+     ```
 
 ## Polymorphic Optics and Instance Location Policy
 
