@@ -13,8 +13,12 @@ object Macro {
 
 }
 
-trait LensSupport[A] {
-  def lensFor[B](field: A => B): Lens[A, A, B, B] = macro MacroImpl.lensFor_impl[A, B]
+class Lenser[A] {
+  def apply[B](field: A => B): Lens[A, A, B, B] = macro MacroImpl.lensFor_impl[A, B]
+}
+
+object Lenser {
+  def apply[A] = new Lenser[A]
 }
 
 private[monocle] object MacroImpl {
