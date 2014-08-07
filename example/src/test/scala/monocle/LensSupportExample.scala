@@ -10,9 +10,8 @@ class LensSupportExample extends Spec {
   val krom = Character("Krom", 30, Location(4,0))
 
   object Location {
-    val lenser = Lenser[Location]
-    val x = lenser(_.x)
-    val y = lenser(_.y)
+    val x = Lenser[Location](_.x)
+    val y = Lenser[Location](_.y)
   }
 
   object Character {
