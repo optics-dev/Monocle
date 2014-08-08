@@ -65,9 +65,9 @@ private[monocle] object MacroImpl {
     val fieldName = field match {
       case Expr(
       Function(
-      List(ValDef(Modifiers(_, _, _), TermName(termDef: String), TypeTree(), EmptyTree)),
-      Select(Ident(TermName(termUse: String)), TermName(fieldName: String)))) if termDef == termUse =>
-        fieldName
+      List(ValDef(_, termDefName, _, EmptyTree)),
+      Select(Ident(termUseName), fieldNameName))) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
+        fieldNameName.decodedName.toString
       case _ => c.abort(c.enclosingPosition, s"Illegal field reference ${show(field.tree)}; please use _.field instead")
     }
 
