@@ -3,7 +3,7 @@ package monocle
 import monocle.syntax._
 import org.specs2.scalaz.Spec
 
-class LensSupportExample extends Spec {
+class LenserExample extends Spec {
   case class Location(x: Int, y: Int)
   case class Character(name: String, hp: Int, location: Location)
 
