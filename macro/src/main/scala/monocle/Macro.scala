@@ -13,6 +13,14 @@ object Macro {
 
 }
 
+class Lenser[A] {
+  def apply[B](field: A => B): Lens[A, A, B, B] = macro MacroImpl.lensFor_impl[A, B]
+}
+
+object Lenser {
+  def apply[A] = new Lenser[A]
+}
+
 private[monocle] object MacroImpl {
 
   import scala.reflect.macros._
@@ -50,6 +58,20 @@ private[monocle] object MacroImpl {
     }
 
     c.Expr[Any](result)
+  }
+
+  def lensFor_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(field: c.Expr[A => B]): c.Expr[Lens[A, A, B, B]] = {
+    import c.universe._
+    val fieldName = field match {
+      case Expr(
+      Function(
+      List(ValDef(_, termDefName, _, EmptyTree)),
+      Select(Ident(termUseName), fieldNameName))) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
+        fieldNameName.decodedName.toString
+      case _ => c.abort(c.enclosingPosition, s"Illegal field reference ${show(field.tree)}; please use _.field instead")
+    }
+
+    mkLens_impl[A, B](c)(c.Expr[String](q"$fieldName"))
   }
 
   def mkLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[Lens[A, A, B, B]] = {

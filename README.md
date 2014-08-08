@@ -140,7 +140,18 @@ There are four ways to create `SimpleLens`, each with their pro and cons:
       val _company = mkLens[Employee, Company]("company") // company is checked at compiled time to be a valid accessor
       ```
 
-4.   Finally, the boiler plate free solution with macro annotation (which are probably the most experimental part of macros).
+4.   An alternative Macro syntax uses a dedicated object to capture the class, and a simple closure to define the field.
+     This syntax is more IDE-friendly.
+
+     ```scala
+     val lenser = Lenser[Employee]
+     
+     val _company = lenser(_.company) 
+     ```
+     
+     A `Lenser` can be in-lined or re-used to avoid specifying the class type parameter.
+
+5.   Finally, the boiler plate free solution with macro annotation (which are probably the most experimental part of macros).
      Adding `@Lenses` annotation on case class will generate `SimpleLens` for every single accessor of the case class.
      These generated `SimpleLens` are in the companion object of the case class (even if there is no companion object declared).
      Nevertheless, this solution has several disadvantages: 
