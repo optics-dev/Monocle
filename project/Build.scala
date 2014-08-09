@@ -49,7 +49,7 @@ object MonocleBuild extends Build {
     file("core"),
     settings = buildSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz),
-      previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % "0.4.0")
+      previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % "0.5.0")
     )
   )
 
