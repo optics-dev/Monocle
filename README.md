@@ -139,6 +139,7 @@ There are four ways to create `SimpleLens`, each with their pro and cons:
 
       val _company = mkLens[Employee, Company]("company") // company is checked at compiled time to be a valid accessor
       ```
+      Note: this macro is deprecated in 0.5.1
 
 4.   An alternative Macro syntax uses a dedicated object to capture the class, and a simple closure to define the field.
      This syntax is more IDE-friendly.
@@ -157,8 +158,8 @@ There are four ways to create `SimpleLens`, each with their pro and cons:
      Nevertheless, this solution has several disadvantages: 
      1.   users need to add the macro paradise plugin to their project.
      2.   IDE have a poor support for Macro annotation, therefore it is likely your IDE will not know that the generated `SimpleLens`
-          exist (but it will compile).
-     3.   this solution can only be applied when you control the case classes since you need to annottate them. This means that
+          exist (but it will compile). If you want a better IDE support, please vote on the following [issue](http://youtrack.jetbrains.com/issue/SCL-7419). 
+     3.   this solution can only be applied when you control the case classes since you need to annotate them. This means that
           you cannot use this technique for classes defined in another project.
      
      ```scala
