@@ -28,8 +28,8 @@ object Dependencies {
   val specs2Scalacheck  = "org.specs2"      %% "specs2-scalacheck"         % "2.4"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.2"   % "test"
 
-  val scalamacroV = "2.0.1"
-  val paradisePlugin = compilerPlugin("org.scalamacros" % "paradise" % scalamacroV cross CrossVersion.full)
+  val macroVersion = "2.0.1"
+  val paradisePlugin = compilerPlugin("org.scalamacros" % "paradise" % macroVersion cross CrossVersion.full)
 }
 
 object MonocleBuild extends Build {
@@ -73,7 +73,7 @@ object MonocleBuild extends Build {
       libraryDependencies ++= CrossVersion partialVersion scalaVersion.value collect {
         case (2, scalaMajor) if scalaMajor < 11 =>
           // if scala 2.11+ is used, quasiquotes are merged into scala-reflect
-          Seq("org.scalamacros" %% "quasiquotes" % scalamacroV)
+          Seq("org.scalamacros" %% "quasiquotes" % macroVersion)
       } getOrElse Nil
     )
   ) dependsOn(core)

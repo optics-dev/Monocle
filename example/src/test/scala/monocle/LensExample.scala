@@ -6,37 +6,60 @@ import org.specs2.scalaz.Spec
 import shapeless.test.illTyped
 
 class LensExample extends Spec {
-  @Lenses case class Location(x: Int, y: Int)
-  @Lenses case class Character(name: String, hp: Int, location: Location)
-  import Location._
-  import Character._
+  
+  @Lenses // this annotation generate lenses in the companion object of Person
+  case class Person(name: String, age: Int)
 
-  val krom = Character("Krom", 30, Location(4,0))
+  object SimpleLensVerbose {
+    val _name = SimpleLens[Person, String](_.name, (c, n) => c.copy(name = n))
+    val _age  = SimpleLens[Person, Int](_.age, (c, h) => c.copy(age = h))
+  }
 
+  object SimpleLensInferred {
+    val _name = SimpleLens[Person](_.name)((c, n) => c.copy(name = n))
+    val _age  = SimpleLens[Person](_.age)((c, h) => c.copy(age = h))
+  }
+
+  object MkLensMacro {
+    import monocle.Macro._
+
+    val name = mkLens[Person, String]("name")
+    val age  = mkLens[Person, Int]("age")
+  }
+
+  object LenserMacro {
+    val lenser = Lenser[Person]
+
+    val name = lenser(_.name)
+    val age  = lenser(_.age)
+  }
+
+  val john = Person("John", 30)
+  
   "Lens get extract an A from an S" in {
-    (krom |-> name get)           shouldEqual "Krom"
-    (krom |-> location |-> x get) shouldEqual 4
+    (john  |-> SimpleLensVerbose._name get)   shouldEqual "John"
+    (john  |-> SimpleLensInferred._name get)  shouldEqual "John"
+    (john  |-> MkLensMacro.name get)          shouldEqual "John"
+    (john  |-> LenserMacro.name get)          shouldEqual "John"
+    (john  |-> Person.name get)               shouldEqual "John"
   }
 
   "Lens set and modify update an A in a S" in {
-    (krom |-> hp set 45)                    shouldEqual Character("Krom", 45, Location(4,0))
-    (krom |-> location |-> x modify(_ + 1)) shouldEqual Character("Krom", 30, Location(5,0))
-  }
+    val changedJohn = Person("John", 45)
 
-  "Lens lift modifies an A with a Functor and wraps the context back to S" in {
-    def neighbouringBlocks(n: Int): List[Int] = List(n - 1, n, n + 1).filter(_ >= 0)
-
-    // we need to provide an instance of Functor for List
-    import scalaz.std.list._
-
-    (krom |-> location |-> y lift neighbouringBlocks) shouldEqual List(
-      Character("Krom", 30, Location(4,0)), Character("Krom", 30, Location(4,1))
-    )
+    (john  |-> SimpleLensVerbose._age set 45)  shouldEqual changedJohn
+    (john  |-> SimpleLensInferred._age set 45) shouldEqual changedJohn
+    (john  |-> MkLensMacro.age set 45)         shouldEqual changedJohn
+    (john  |-> LenserMacro.age set 45)         shouldEqual changedJohn
+    (john  |-> Person.age set 45)              shouldEqual changedJohn
   }
 
   "Modifications through lenses are chainable" in {
-    val m = x.modifyF(_ + 100) compose y.setF(7)
-    m(Location(1,2)) shouldEqual Location(101,7)
+    @Lenses case class Point(x: Int, y: Int)
+    import Point._
+
+    val update = x.modifyF(_ + 100) compose y.setF(7)
+    update(Point(1,2)) shouldEqual Point(101,7)
   }
 
   "@Lenses is for case classes only" in {
@@ -44,5 +67,4 @@ class LensExample extends Spec {
       illTyped("""@Lenses class C""", "Invalid annotation target: must be a case class")
     )
   }
-
 }

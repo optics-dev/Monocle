@@ -3,64 +3,16 @@ package monocle
 import scala.language.experimental.macros
 import monocle.internal.CompatibilityMacro210._
 
-class Lenses extends scala.annotation.StaticAnnotation {
-  def macroTransform(annottees: Any*): Any = macro MacroImpl.annotationMacro
-}
-
 object Macro {
-
-  def mkLens[A, B](fieldName: String): Lens[A, A, B, B] = macro MacroImpl.mkLens_impl[A, B]
-
-}
-
-class Lenser[A] {
-  def apply[B](field: A => B): Lens[A, A, B, B] = macro MacroImpl.lensFor_impl[A, B]
-}
-
-object Lenser {
-  def apply[A] = new Lenser[A]
+  @deprecated("use Lenser", since = "0.5.1")
+  def mkLens[A, B](fieldName: String): SimpleLens[A, B] = macro MacroImpl.mkLens_impl[A, B]
 }
 
 private[monocle] object MacroImpl {
 
   import scala.reflect.macros._
 
-  def annotationMacro(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
-    import c.universe._
-
-    val result = annottees map (_.tree) match {
-      case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
-        :: Nil if mods.hasFlag(Flag.CASE) =>
-        val name = tpname.toTermName
-        val lenses = paramss.head map (param =>
-          q"""val ${param.name} = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
-          )
-        q"""
-         $classDef
-         object $name {
-           ..$lenses
-         }
-         """
-      case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
-        :: q"object $objName {..$objDefs}"
-        :: Nil if mods.hasFlag(Flag.CASE) =>
-        val lenses = paramss.head map (param =>
-          q"""val ${param.name} = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
-          )
-        q"""
-         $classDef
-         object $objName {
-           ..$lenses
-           ..$objDefs
-         }
-         """
-      case _ => c.abort(c.enclosingPosition, "Invalid annotation target: must be a case class")
-    }
-
-    c.Expr[Any](result)
-  }
-
-  def lensFor_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(field: c.Expr[A => B]): c.Expr[Lens[A, A, B, B]] = {
+  def lenser_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(field: c.Expr[A => B]): c.Expr[SimpleLens[A, B]] = {
     import c.universe._
     val fieldName = field match {
       case Expr(
