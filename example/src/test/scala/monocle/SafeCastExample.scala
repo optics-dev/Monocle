@@ -29,12 +29,14 @@ class SafeCastExample extends Spec {
 
   "safeCast creates a Prism from String to Int" in {
     safeCast[String, Int].getOption("352")  shouldEqual Some(352)
-    safeCast[String, Int].getOption("+352") shouldEqual Some(352)
     safeCast[String, Int].getOption("-352") shouldEqual Some(-352)
     safeCast[String, Int].getOption("୨")    shouldEqual None // Non ascii digits
     safeCast[String, Int].getOption("")     shouldEqual None
+    // we reject case where String starts with +, otherwise it will be an invalid Prism according 2nd Prism law
+    safeCast[String, Int].getOption("+352") shouldEqual None
 
     safeCast[String, Int].reverseGet(8921)  shouldEqual "8921"
+    safeCast[String, Int].reverseGet(-32)   shouldEqual "-32"
 
     safeCast[String, Int].modify("1024", _ * 2) shouldEqual "2048"
   }

@@ -63,8 +63,8 @@ trait StringInstances {
     if (s.isEmpty) None
     else s.toList match {
       case '-' :: xs => parseLongUnsigned(xs).map(-_)
-      case '+' :: xs => parseLongUnsigned(xs)
-      case xs => parseLongUnsigned(xs)
+      case xs        => parseLongUnsigned(xs)
+      // we reject case where String starts with +, otherwise it will be an invalid Prism according 2nd Prism law
     }
 
   private def parseLongUnsigned(s: List[Char]): Option[Long] =
