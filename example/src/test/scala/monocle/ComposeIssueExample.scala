@@ -1,45 +1,55 @@
 package monocle
 
-
-import monocle.function.Each._
-import monocle.std.option._
 import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
 import shapeless.test.illTyped
 
-/**
- * Illustrate the purpose of specific compose function for each main concept (Lens, Traversal, etc)
- */
+// we had to replace compose by non overloaded versions: composeLens, composePrism for the following reason
 class ComposeIssueExample extends Spec {
 
-  case class Example(_opt: Option[Int])
+  class A[S, T] {
+    def compose[U](a: A[T, U]): A[S, U] = new A[S, U]
+    def compose[U](b: B[T, U]): B[S, U] = new B[S, U]
+    // non overloaded method
+    def composeB[U](b: B[T, U]): B[S, U] = new B[S, U]
+  }
 
-  val optLens = Macro.mkLens[Example, Option[Int]]("_opt")
-  val example = Example(Some(2))
+  class B[S, T] {
+    def compose[U](a: A[T, U]): B[S, U] = new B[S, U]
+    def compose[U](b: B[T, U]): B[S, U] = new B[S, U]
+  }
 
-  "compose does not compile between Lens and Prism" in {
+  val aI2S = new A[Int, String]
+  val aS2S = new A[String, String]
+
+  val bI2S = new B[Int, String]
+  val bS2S = new B[String, String]
+
+
+  "compose same class" in {
+    (aI2S compose aS2S).isInstanceOf[A[_, _]] shouldEqual true
+    (aS2S compose aS2S).isInstanceOf[A[_, _]] shouldEqual true
+    (bI2S compose bS2S).isInstanceOf[B[_, _]] shouldEqual true
+  }
+
+  "compose different class" in {
+    (aI2S compose bS2S).isInstanceOf[B[_, _]] shouldEqual true
+    (bI2S compose aS2S).isInstanceOf[B[_, _]] shouldEqual true
+  }
+
+  def b2S[T] = new B[T, String]
+
+  "compose with parametric method" in {
+    // explicit type
+    (aI2S compose b2S[String]).isInstanceOf[B[_, _]] shouldEqual true
+    // non overloaded method
+    (aI2S composeB b2S).isInstanceOf[B[_, _]] shouldEqual true
+
+    // do not compile if we do not specify the type with an overloaded method
+    // see https://stackoverflow.com/questions/7845569/scala-type-inference-on-overloaded-method/7847406#7847406
     new AnyValueAsResult[Unit].asResult(illTyped("""
-      optLens.compose(some).getAll(example)
-    """))
+      aI2S compose b2S
+     """))
   }
-
-  "but composeTraversal does" in {
-    optLens.composeTraversal(some).getAll(example) shouldEqual List(2)
-  }
-
-  "also when type parameter is explicit" in {
-    (optLens.compose(some: SimplePrism[Option[Int], Int])).getAll(example) shouldEqual List(2)
-  }
-
-  "compose and implicit do not work together" in {
-    new AnyValueAsResult[Unit].asResult(illTyped("""
-      optLens.compose(each).getAll(example)
-    """))
-  }
-
-  "but composeTraversal is fine" in {
-    optLens.composeTraversal(each).getAll(example) shouldEqual List(2)
-  }
-
 
 }
