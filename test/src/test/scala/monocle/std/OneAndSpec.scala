@@ -18,6 +18,6 @@ class OneAndSpec extends Spec {
 
   checkAll("tail OneAnd", LensLaws(tail[OneAnd[List, Int], List[Int]]))
 
-  checkAll("last OneAnd", OptionalLaws(last[OneAnd[List, Int], Int]))
+  checkAll("last OneAnd", LensLaws(last[OneAnd[List, Int], Int]))
 
 }
