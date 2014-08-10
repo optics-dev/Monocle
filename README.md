@@ -219,3 +219,4 @@ Thank you for you contribution!
 Julien Truffaut - [@JulienTruffaut](https://twitter.com/JulienTruffaut "@JulienTruffaut") </a><br>
 Ross Huggett - ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
 Ilan Godik - ilan3580@gmail.com / [NightRa](https://github.com/NightRa "NightRa") </a><br>
+Adam Warski - [@adamwarski](http://twitter.com/adamwarski "@adamwarski") </a><br>
