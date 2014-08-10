@@ -1,10 +1,10 @@
-package monocle
+package monocle.function
 
-import scalaz.OneAnd
-import monocle.function.Index._
 import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
+
+import scalaz.OneAnd
 
 
 class IndexExample extends Spec {

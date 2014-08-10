@@ -1,7 +1,6 @@
-package monocle
+package monocle.std
 
 import org.specs2.scalaz.Spec
-import monocle.std.option._
 
 
 class OptionExample extends Spec {

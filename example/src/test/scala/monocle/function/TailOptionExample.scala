@@ -1,10 +1,10 @@
-package monocle
+package monocle.function
 
-import scalaz.IList
-import monocle.function.TailOption._
 import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
+
+import scalaz.IList
 
 
 class TailOptionExample extends Spec {

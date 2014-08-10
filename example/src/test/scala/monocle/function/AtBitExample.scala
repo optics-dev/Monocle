@@ -1,8 +1,7 @@
-package monocle
+package monocle.function
 
-import monocle.syntax._
-import monocle.function.AtBit._
 import monocle.std._
+import monocle.syntax._
 import org.specs2.scalaz.Spec
 
 

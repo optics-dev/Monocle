@@ -1,13 +1,12 @@
-package monocle
+package monocle.function
 
 import monocle.TestUtil._
-import monocle.function.Each._
 import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 
-import scalaz.{IList, OneAnd}
 import scalaz.Tree._
+import scalaz.{IList, OneAnd}
 
 
 class EachExample extends Spec with ScalazMatchers {

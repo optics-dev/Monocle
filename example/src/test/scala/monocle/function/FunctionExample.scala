@@ -1,9 +1,8 @@
-package monocle
+package monocle.function
 
-import org.specs2.scalaz.Spec
-import monocle.function.Curry._
 import monocle.std.function._
 import monocle.syntax._
+import org.specs2.scalaz.Spec
 
 
 class FunctionExample extends Spec {

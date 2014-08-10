@@ -1,11 +1,10 @@
-package monocle
+package monocle.generic
 
 import monocle.function.SafeCast._
-import monocle.generic.coproduct._
 import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
 import shapeless.test.illTyped
-import shapeless.{Coproduct, CNil, :+:}
+import shapeless.{:+:, CNil, Coproduct}
 
 
 class CoproductExample extends Spec {

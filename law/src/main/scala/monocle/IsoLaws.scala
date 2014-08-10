@@ -12,7 +12,6 @@ object IsoLaws {
     import scalaz.syntax.equal._
 
     include(LensLaws(iso))
-    include(PrismLaws(iso))
 
     property("double inverse") = forAll { (from: S, newValue: A) =>
       iso.reverse.reverse.get(from) === iso.get(from)

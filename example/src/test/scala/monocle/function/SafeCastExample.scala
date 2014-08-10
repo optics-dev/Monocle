@@ -1,6 +1,5 @@
-package monocle
+package monocle.function
 
-import monocle.function.SafeCast._
 import monocle.std._
 import org.specs2.scalaz.Spec
 
