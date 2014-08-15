@@ -7,35 +7,34 @@ class Lenses extends scala.annotation.StaticAnnotation {
 }
 
 private[monocle] object LensesImpl {
-
   import scala.reflect.macros._
 
   def annotationMacro(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
 
+    def lenses(tpname: TypeName, paramss: List[List[ValDef]]): List[Tree] = {
+      paramss.head map { param =>
+        q"""val $param = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
+      }
+    }
+
     val result = annottees map (_.tree) match {
       case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
         :: Nil if mods.hasFlag(Flag.CASE) =>
         val name = tpname.toTermName
-        val lenses = paramss.head map (param =>
-          q"""val ${param.name} = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
-          )
         q"""
          $classDef
          object $name {
-           ..$lenses
+           ..${lenses(tpname, paramss)}
          }
          """
       case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
         :: q"object $objName {..$objDefs}"
         :: Nil if mods.hasFlag(Flag.CASE) =>
-        val lenses = paramss.head map (param =>
-          q"""val ${param.name} = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
-          )
         q"""
          $classDef
          object $objName {
-           ..$lenses
+           ..${lenses(tpname, paramss)}
            ..$objDefs
          }
          """
@@ -44,6 +43,4 @@ private[monocle] object LensesImpl {
 
     c.Expr[Any](result)
   }
-
-
 }
