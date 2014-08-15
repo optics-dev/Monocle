@@ -54,6 +54,16 @@ class LensExample extends Spec {
     (john  |-> Person.age set 45)              shouldEqual changedJohn
   }
 
+  @Lenses("_") // this generates lenses prefixed with _ in the Cat companion object
+  case class Cat(age: Int)
+
+  val alpha = Cat(2)
+
+  "@Lenses takes an optional prefix string" in {
+    (alpha |-> Cat._age get)   shouldEqual 2
+    (alpha |-> Cat._age set 3) shouldEqual Cat(3)
+  }
+
   "Modifications through lenses are chainable" in {
     @Lenses case class Point(x: Int, y: Int)
     import Point._

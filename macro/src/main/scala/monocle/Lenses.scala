@@ -2,7 +2,7 @@ package monocle
 
 import scala.language.experimental.macros
 
-class Lenses extends scala.annotation.StaticAnnotation {
+class Lenses(prefix: String = "") extends scala.annotation.StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro LensesImpl.annotationMacro
 }
 
@@ -12,9 +12,19 @@ private[monocle] object LensesImpl {
   def annotationMacro(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
 
+    val LensesTpe = newTypeName("Lenses")
+    val prefix = c.macroApplication match {
+      case Apply(Select(Apply(Select(New(Ident(LensesTpe)), `nme`.CONSTRUCTOR), args), _), _) => args match {
+        case Literal(Constant(s: String)) :: Nil => s
+        case _ => ""
+      }
+      case _ => ""
+    }
+
     def lenses(tpname: TypeName, paramss: List[List[ValDef]]): List[Tree] = {
       paramss.head map { param =>
-        q"""val $param = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
+        val lensName = newTermName(prefix + param.name.decoded)
+        q"""val $lensName = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
       }
     }
 
