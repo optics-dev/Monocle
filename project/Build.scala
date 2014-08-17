@@ -9,6 +9,7 @@ import org.typelevel.sbt.TypelevelPlugin._
 object BuildSettings {
   import MonoclePublishing._
   val buildScalaVersion = "2.11.2"
+  val previousVersion   = "0.5.0"
 
   val buildSettings = typelevelDefaultSettings ++ Seq(
     organization       := "com.github.julien-truffaut",
@@ -49,7 +50,7 @@ object MonocleBuild extends Build {
     file("core"),
     settings = buildSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz),
-      previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % "0.5.0")
+      previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % previousVersion)
     )
   )
 
@@ -57,7 +58,8 @@ object MonocleBuild extends Build {
     "monocle-law",
     file("law"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, specs2Scalacheck)
+      libraryDependencies ++= Seq(scalaz, specs2Scalacheck),
+      previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-law_2.11" % previousVersion)
     )
   ) dependsOn(core)
 
@@ -87,7 +89,8 @@ object MonocleBuild extends Build {
       libraryDependencies ++= Seq(CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, scalaMajor)) if scalaMajor >= 11 =>  "com.chuusai" %% "shapeless"        % "2.0.0"
         case Some((2, 10))                             =>  "com.chuusai" %  "shapeless_2.10.4" % "2.0.0"
-      })
+      }),
+      previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-generic_2.11" % previousVersion)
     )
   ) dependsOn(core)
 
