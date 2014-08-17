@@ -9,7 +9,7 @@ import org.typelevel.sbt.TypelevelPlugin._
 object BuildSettings {
   import MonoclePublishing._
   val buildScalaVersion = "2.11.2"
-  val previousVersion   = "0.5.0"
+  val previousVersion   = "0.5.1"
 
   val buildSettings = typelevelDefaultSettings ++ Seq(
     organization       := "com.github.julien-truffaut",
