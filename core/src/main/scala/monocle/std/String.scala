@@ -1,8 +1,8 @@
 package monocle.std
 
-import monocle.SimplePrism._
 import monocle.function._
 import monocle.{SimplePrism, SimpleIso}
+import scala.util.Try
 import scalaz.std.option._
 import scalaz.std.list._
 import scalaz.syntax.traverse._
@@ -28,6 +28,15 @@ trait StringInstances {
       stringToList composeTraversal FilterIndex.filterIndex[List[Char], Int, Char](predicate)
   }
 
+  implicit val stringCons: Cons[String, Char] = new Cons[String, Char] {
+    def _cons = SimplePrism[String, (Char, String)](s =>
+      if(s.isEmpty) None else Some(s.head, s.tail),
+      { case (h, t) => h + t }
+    )
+  }
+
+  implicit val stringSnoc: Snoc[String, Char] = Snoc.fromReverseCons
+
   implicit val stringHeadOption: HeadOption[String, Char] = new HeadOption[String, Char] {
     def headOption = stringToList composeOptional HeadOption.headOption[List[Char], Char]
   }
@@ -44,11 +53,11 @@ trait StringInstances {
 
 
   implicit val stringToBoolean = new SafeCast[String, Boolean] {
-    def safeCast = trySimplePrism[String, Boolean](_.toString, _.toBoolean)
+    def safeCast = SimplePrism[String, Boolean](s => Try(s.toBoolean).toOption, _.toString)
   }
 
   implicit val stringToLong = new SafeCast[String, Long] {
-    def safeCast = SimplePrism[String, Long](_.toString, parseLong)
+    def safeCast = SimplePrism[String, Long](parseLong, _.toString)
   }
 
   implicit val stringToInt = new SafeCast[String, Int] {

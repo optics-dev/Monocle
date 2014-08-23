@@ -9,19 +9,20 @@ class StringSpec extends Spec {
 
   checkAll("stringToList", IsoLaws(stringToList))
 
-  checkAll("each String", TraversalLaws(each[String, Char]))
 
-  checkAll("index String", OptionalLaws(index[String, Int, Char](2)))
+  checkAll("cons String", PrismLaws(_cons[String, Char]))
+
+  checkAll("each String", TraversalLaws(each[String, Char]))
 
   checkAll("filterIndex String", TraversalLaws(filterIndex[String, Int, Char](_ % 2 == 0)))
 
   checkAll("headOption String", OptionalLaws(headOption[String, Char]))
 
-  checkAll("tailOption String", OptionalLaws(tailOption[String, String]))
-
-  checkAll("lastOption String", OptionalLaws(lastOption[String, Char]))
+  checkAll("index String", OptionalLaws(index[String, Int, Char](2)))
 
   checkAll("initOption String", OptionalLaws(initOption[String, String]))
+
+  checkAll("lastOption String", OptionalLaws(lastOption[String, Char]))
 
   checkAll("reverse String", IsoLaws(reverse[String, String]))
 
@@ -29,5 +30,9 @@ class StringSpec extends Spec {
   checkAll("safeCast String to Byte"    , PrismLaws(safeCast[String,Byte]))
   checkAll("safeCast String to Int"     , PrismLaws(safeCast[String,Int]))
   checkAll("safeCast String to Long"    , PrismLaws(safeCast[String,Long]))
+
+  checkAll("snoc String", PrismLaws(_cons[String, Char]))
+
+  checkAll("tailOption String", OptionalLaws(tailOption[String, String]))
 
 }

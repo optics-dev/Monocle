@@ -4,6 +4,7 @@ package monocle.function
 trait PolymorphicOptics
   extends AtFunctions
   with    AtBitFunctions
+  with    ConsFunctions
   with    CurryFunctions
   with    EachFunctions
   with    Field1Functions
@@ -22,5 +23,6 @@ trait PolymorphicOptics
   with    LastOptionFunctions
   with    ReverseFunctions
   with    SafeCastFunctions
+  with    SnocFunctions
   with    TailFunctions
   with    TailOptionFunctions

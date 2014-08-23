@@ -1,8 +1,8 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Optional, SimpleOptional}
-import scala.collection.immutable.Stream.Empty
+import monocle.{SimplePrism, Optional, SimpleOptional}
+import scala.collection.immutable.Stream.{#::, Empty}
 import scalaz.Applicative
 import scalaz.std.stream._
 
@@ -17,6 +17,15 @@ trait StreamInstances {
 
   implicit def streamFilterIndex[A]: FilterIndex[Stream[A], Int, A] =
     FilterIndex.traverseFilterIndex[Stream, A](_.zipWithIndex)
+
+  implicit def streamCons[A]: Cons[Stream[A], A] = new Cons[Stream[A], A]{
+    def _cons = SimplePrism[Stream[A], (A, Stream[A])]({
+      case Empty    => None
+      case x #:: xs => Some(x, xs)
+    }, { case (a, s) => a #:: s })
+  }
+
+  implicit def streamSnoc[A]: Snoc[Stream[A], A] = Snoc.fromReverseCons
 
   implicit def streamHeadOption[A]: HeadOption[Stream[A], A] = new HeadOption[Stream[A], A] {
     def headOption = SimpleOptional[Stream[A], A](_.headOption, {

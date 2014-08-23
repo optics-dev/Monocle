@@ -2,7 +2,7 @@ package monocle.std
 
 import scalaz.{IList, Applicative, ICons, INil}
 import monocle.function._
-import monocle.{Optional, SimpleOptional}
+import monocle.{SimplePrism, Optional, SimpleOptional}
 
 object ilist extends IListInstances
 
@@ -15,6 +15,15 @@ trait IListInstances {
 
   implicit def iListFilterIndex[A]: FilterIndex[IList[A], Int, A] =
     FilterIndex.traverseFilterIndex[IList, A](_.zipWithIndex)
+
+  implicit def iListCons[A]: Cons[IList[A], A] = new Cons[IList[A], A]{
+    def _cons = SimplePrism[IList[A], (A, IList[A])]({
+      case INil()       => None
+      case ICons(x, xs) => Some(x, xs)
+    }, { case (a, s) => ICons(a, s) })
+  }
+
+  implicit def iListSnoc[A]: Snoc[IList[A], A] = Snoc.fromReverseCons
 
   implicit def iListHeadOption[A]: HeadOption[IList[A], A] = new HeadOption[IList[A], A] {
     def headOption = SimpleOptional[IList[A], A](_.headOption, {

@@ -9,10 +9,10 @@ object option extends OptionInstances
 trait OptionFunctions {
 
   def some[A, B]: Prism[Option[A], Option[B], A, B] =
-    Prism[Option[A], Option[B], A, B](Some.apply, _.map(\/-(_)) getOrElse -\/(None))
+    Prism[Option[A], Option[B], A, B](_.map(\/-(_)) getOrElse -\/(None), Some.apply)
 
   def none[A]: SimplePrism[Option[A], Unit] =
-    SimplePrism[Option[A], Unit](_ => None, { opt => if (opt == None) Some(()) else None })
+    SimplePrism[Option[A], Unit]({ opt => if (opt == None) Some(()) else None}, _ => None)
 
   def someIso[A, B]: Iso[Some[A], Some[B], A, B] =
     Iso[Some[A], Some[B], A, B](_.get, Some(_))

@@ -29,15 +29,15 @@ trait Prism[S, T, A, B] extends Optional[S, T, A, B] { self =>
 
 object Prism {
 
-  def apply[S, T, A, B](_reverseGet: B => T, seta: S => T \/ A): Prism[S, T, A, B] = new Prism[S, T, A, B] {
+  def apply[S, T, A, B](seta: S => T \/ A, _reverseGet: B => T): Prism[S, T, A, B] = new Prism[S, T, A, B] {
     def re: Getter[B, T] = Getter[B, T](_reverseGet)
 
     def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
-      seta(from) // T \/ A
-        .map(f) // T \/ F[B]
-        .map(Applicative[F].map(_)(_reverseGet)) // T \/ F[T]
-        .leftMap(Applicative[F].point(_)) // F[T] \/ F[T]
-        .fold(identity, identity) // F[T]
+      seta(from)                                 // T    \/ A
+        .map(f)                                  // T    \/ F[B]
+        .map(Applicative[F].map(_)(_reverseGet)) // T    \/ F[T]
+        .leftMap(Applicative[F].point(_))        // F[T] \/ F[T]
+        .fold(identity, identity)                // F[T]
   }
 
 }
