@@ -7,7 +7,7 @@ import org.specs2.scalaz.Spec
 
 class StreamSpec extends Spec {
 
-  checkAll("cons Stream", PrismLaws(_cons[Stream[Char], Char]))
+  checkAll("cons - snoc Vector", ConsSnocLaws[Stream[Char], Char])
 
   checkAll("each Stream", TraversalLaws(each[Stream[Int], Int]))
 
@@ -22,8 +22,6 @@ class StreamSpec extends Spec {
   checkAll("lastOption Stream", OptionalLaws(lastOption[Stream[Int], Int]))
 
   checkAll("reverse Stream", IsoLaws(reverse[Stream[Int],Stream[Int]]))
-
-  checkAll("snoc Stream", PrismLaws(_snoc[Stream[Char], Char]))
 
   checkAll("tailOption Stream", OptionalLaws(tailOption[Stream[Int], Stream[Int]]))
 

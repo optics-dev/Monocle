@@ -10,7 +10,7 @@ import scalaz.IList
 
 class IListSpec extends Spec {
 
-  checkAll("cons IList", PrismLaws(_cons[IList[Char], Char]))
+  checkAll("cons - snoc IList", ConsSnocLaws[IList[Char], Char])
 
   checkAll("each IList", TraversalLaws(each[IList[Int], Int]))
 
@@ -25,8 +25,6 @@ class IListSpec extends Spec {
   checkAll("lastOption IList", OptionalLaws(lastOption[IList[Int], Int]))
 
   checkAll("reverse IList", IsoLaws(reverse[IList[Int], IList[Int]]))
-
-  checkAll("snoc IList", PrismLaws(_snoc[IList[Char], Char]))
 
   checkAll("tailOption IList", OptionalLaws(tailOption[IList[Int], IList[Int]]))
 

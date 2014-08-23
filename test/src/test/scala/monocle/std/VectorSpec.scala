@@ -7,7 +7,7 @@ import org.specs2.scalaz.Spec
 
 class VectorSpec extends Spec {
 
-  checkAll("cons Vector", PrismLaws(_cons[Vector[Char], Char]))
+  checkAll("cons - snoc Vector", ConsSnocLaws[Vector[Char], Char])
 
   checkAll("each Vector", TraversalLaws(each[Vector[Int], Int]))
 

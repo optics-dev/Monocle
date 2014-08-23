@@ -7,7 +7,7 @@ import org.specs2.scalaz.Spec
 
 class ListSpec extends Spec {
 
-  checkAll("cons List", PrismLaws(_cons[List[Char], Char]))
+  checkAll("cons - snoc List", ConsSnocLaws[List[Char], Char])
 
   checkAll("each List", TraversalLaws(each[List[Int], Int]))
 
@@ -22,8 +22,6 @@ class ListSpec extends Spec {
   checkAll("lastOption List", OptionalLaws(lastOption[List[Int], Int]))
 
   checkAll("reverse List", IsoLaws(reverse[List[Int], List[Int]]))
-
-  checkAll("snoc List", PrismLaws(_snoc[List[Char], Char]))
 
   checkAll("tailOption List", OptionalLaws(tailOption[List[Int], List[Int]]))
 

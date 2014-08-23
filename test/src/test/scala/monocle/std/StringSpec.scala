@@ -10,7 +10,7 @@ class StringSpec extends Spec {
   checkAll("stringToList", IsoLaws(stringToList))
 
 
-  checkAll("cons String", PrismLaws(_cons[String, Char]))
+  checkAll("cons - snoc String", ConsSnocLaws[String, Char])
 
   checkAll("each String", TraversalLaws(each[String, Char]))
 
