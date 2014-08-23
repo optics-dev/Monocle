@@ -25,7 +25,15 @@ trait StreamInstances {
     }, { case (a, s) => a #:: s })
   }
 
-  implicit def streamSnoc[A]: Snoc[Stream[A], A] = Snoc.fromReverseCons
+  implicit def streamSnoc[A]: Snoc[Stream[A], A] = new Snoc[Stream[A], A]{
+    def _snoc = SimplePrism[Stream[A], (Stream[A], A)]( s =>
+      for {
+        init <- if(s.isEmpty) None else Some(s.init)
+        last <- if(s.isEmpty) None else Some(s.last)
+      } yield (init, last),
+    { case (init, last) => init :+ last }
+    )
+  }
 
   implicit def streamHeadOption[A]: HeadOption[Stream[A], A] = new HeadOption[Stream[A], A] {
     def headOption = SimpleOptional[Stream[A], A](_.headOption, {

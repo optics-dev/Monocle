@@ -24,7 +24,7 @@ class StringSpec extends Spec {
 
   checkAll("lastOption String", OptionalLaws(lastOption[String, Char]))
 
-  checkAll("reverse String", IsoLaws(reverse[String, String]))
+  checkAll("reverse String", IsoLaws(_reverse[String, String]))
 
   checkAll("safeCast String to Boolean ", PrismLaws(safeCast[String,Boolean]))
   checkAll("safeCast String to Byte"    , PrismLaws(safeCast[String,Byte]))

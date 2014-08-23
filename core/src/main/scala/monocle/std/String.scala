@@ -35,7 +35,12 @@ trait StringInstances {
     )
   }
 
-  implicit val stringSnoc: Snoc[String, Char] = Snoc.fromReverseCons
+  implicit val stringSnoc: Snoc[String, Char] = new Snoc[String, Char]{
+    def _snoc = SimplePrism[String, (String, Char)]( s =>
+      if(s.isEmpty) None else Some((s.init, s.last)),
+    { case (init, last) => init :+ last }
+    )
+  }
 
   implicit val stringHeadOption: HeadOption[String, Char] = new HeadOption[String, Char] {
     def headOption = stringToList composeOptional HeadOption.headOption[List[Char], Char]

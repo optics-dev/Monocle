@@ -21,7 +21,7 @@ class VectorSpec extends Spec {
 
   checkAll("lastOption Vector", OptionalLaws(lastOption[Vector[Int], Int]))
 
-  checkAll("reverse Vector", IsoLaws(reverse[Vector[Int], Vector[Int]]))
+  checkAll("reverse Vector", IsoLaws(_reverse[Vector[Int], Vector[Int]]))
 
   checkAll("snoc Vector", PrismLaws(_snoc[Vector[Char], Char]))
 

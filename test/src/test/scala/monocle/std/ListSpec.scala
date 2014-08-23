@@ -21,7 +21,7 @@ class ListSpec extends Spec {
 
   checkAll("lastOption List", OptionalLaws(lastOption[List[Int], Int]))
 
-  checkAll("reverse List", IsoLaws(reverse[List[Int], List[Int]]))
+  checkAll("reverse List", IsoLaws(_reverse[List[Int], List[Int]]))
 
   checkAll("tailOption List", OptionalLaws(tailOption[List[Int], List[Int]]))
 

@@ -24,7 +24,7 @@ class IListSpec extends Spec {
 
   checkAll("lastOption IList", OptionalLaws(lastOption[IList[Int], Int]))
 
-  checkAll("reverse IList", IsoLaws(reverse[IList[Int], IList[Int]]))
+  checkAll("reverse IList", IsoLaws(_reverse[IList[Int], IList[Int]]))
 
   checkAll("tailOption IList", OptionalLaws(tailOption[IList[Int], IList[Int]]))
 

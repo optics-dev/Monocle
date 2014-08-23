@@ -21,7 +21,7 @@ class StreamSpec extends Spec {
 
   checkAll("lastOption Stream", OptionalLaws(lastOption[Stream[Int], Int]))
 
-  checkAll("reverse Stream", IsoLaws(reverse[Stream[Int],Stream[Int]]))
+  checkAll("reverse Stream", IsoLaws(_reverse[Stream[Int],Stream[Int]]))
 
   checkAll("tailOption Stream", OptionalLaws(tailOption[Stream[Int], Stream[Int]]))
 

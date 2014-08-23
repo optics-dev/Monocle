@@ -29,10 +29,6 @@ trait SnocFunctions {
   /** deconstruct an S between its init and last */
   final def unsnoc[S, A](s: S)(implicit ev: Snoc[S, A]): Option[(S, A)] =
     ev._snoc.getOption(s)
-
-  final def fromReverseCons[S, A](implicit evCons: Cons[S, A], evReverse: Reverse[S, S]): Snoc[S, A] = new Snoc[S, A]{
-    def _snoc = evReverse.reverse composePrism evCons._cons composePrism reverse
-  }
 }
 
 // To merge into ConsFunctions when HeadOption and LastOption are deprecated

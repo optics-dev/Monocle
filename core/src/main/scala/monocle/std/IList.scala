@@ -23,7 +23,15 @@ trait IListInstances {
     }, { case (a, s) => ICons(a, s) })
   }
 
-  implicit def iListSnoc[A]: Snoc[IList[A], A] = Snoc.fromReverseCons
+  implicit def iListSnoc[A]: Snoc[IList[A], A] = new Snoc[IList[A], A]{
+    def _snoc = SimplePrism[IList[A], (IList[A], A)]( s =>
+      for {
+        init <- s.initOption
+        last <- s.lastOption
+      } yield (init, last),
+      { case (init, last) => init :+ last }
+    )
+  }
 
   implicit def iListHeadOption[A]: HeadOption[IList[A], A] = new HeadOption[IList[A], A] {
     def headOption = SimpleOptional[IList[A], A](_.headOption, {

@@ -27,7 +27,15 @@ trait ListInstances {
     }, { case (a, s) => a :: s })
   }
 
-  implicit def listSnoc[A]: Snoc[List[A], A] = Snoc.fromReverseCons
+  implicit def listSnoc[A]: Snoc[List[A], A] = new Snoc[List[A], A]{
+    def _snoc = SimplePrism[List[A], (List[A], A)]( s =>
+      for {
+        init <- if(s.isEmpty) None else Some(s.init)
+        last <- if(s.isEmpty) None else Some(s.last)
+      } yield (init, last),
+    { case (init, last) => init :+ last }
+    )
+  }
 
   implicit def listHeadOption[A]: HeadOption[List[A], A] = new HeadOption[List[A], A] {
     def headOption = SimpleOptional[List[A], A](_.headOption, {

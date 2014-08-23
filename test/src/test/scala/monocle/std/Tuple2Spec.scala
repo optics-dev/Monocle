@@ -21,6 +21,6 @@ class Tuple2Spec extends Spec {
 
   checkAll("init tuple2", LensLaws(init[(Int, Char), Int]))
 
-  checkAll("reverse tuple2", IsoLaws(reverse[(Int, Char), (Char, Int)]))
+  checkAll("reverse tuple2", IsoLaws(_reverse[(Int, Char), (Char, Int)]))
 
 }

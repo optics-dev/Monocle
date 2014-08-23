@@ -20,6 +20,9 @@ trait ReverseFunctions {
     def reverse: SimpleIso[S, S] = SimpleIso[S, S](_reverse, _reverse)
   }
 
-  def reverse[S, A](implicit ev: Reverse[S, A]): SimpleIso[S, A] = ev.reverse
+  def _reverse[S, A](implicit ev: Reverse[S, A]): SimpleIso[S, A] = ev.reverse
+
+  
+  def reverse[S](s: S)(implicit ev: Reverse[S, S]): S = ev.reverse.get(s)
 
 }
