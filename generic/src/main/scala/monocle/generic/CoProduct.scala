@@ -13,7 +13,7 @@ trait CoProductInstances {
   
   implicit def coProductSafeCast[C <: Coproduct, A](implicit evInject: Inject[C, A], evSelector: Selector[C, A]): SafeCast[C, A] =
     new SafeCast[C, A] {
-      def safeCast: SimplePrism[C, A] = SimplePrism[C, A](evInject.apply, evSelector.apply)
+      def safeCast = SimplePrism[C, A](evSelector.apply, evInject.apply)
     }
   
 

@@ -3,6 +3,7 @@ package monocle.function
 import monocle.SimpleOptional
 import scala.annotation.implicitNotFound
 
+@deprecated("use Cons", since = "0.6")
 @implicitNotFound("Could not find an instance of HeadOption[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 trait HeadOption[S, A] {

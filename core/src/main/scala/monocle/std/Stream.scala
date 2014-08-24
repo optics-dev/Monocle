@@ -1,14 +1,18 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Optional, SimpleOptional}
-import scala.collection.immutable.Stream.Empty
+import monocle.{SimplePrism, Optional, SimpleOptional}
+import scala.collection.immutable.Stream.{#::, Empty}
 import scalaz.Applicative
 import scalaz.std.stream._
 
 object stream extends StreamInstances
 
 trait StreamInstances {
+
+  implicit def streamEmpty[A]: Empty[Stream[A]] = new Empty[Stream[A]] {
+    def empty = SimplePrism[Stream[A], Unit](s => if(s.isEmpty) Some(()) else None, _ => Stream.empty)
+  }
 
   implicit def streamEach[A]: Each[Stream[A], A] = Each.traverseEach[Stream, A]
 
@@ -17,6 +21,23 @@ trait StreamInstances {
 
   implicit def streamFilterIndex[A]: FilterIndex[Stream[A], Int, A] =
     FilterIndex.traverseFilterIndex[Stream, A](_.zipWithIndex)
+
+  implicit def streamCons[A]: Cons[Stream[A], A] = new Cons[Stream[A], A]{
+    def _cons = SimplePrism[Stream[A], (A, Stream[A])]({
+      case Empty    => None
+      case x #:: xs => Some(x, xs)
+    }, { case (a, s) => a #:: s })
+  }
+
+  implicit def streamSnoc[A]: Snoc[Stream[A], A] = new Snoc[Stream[A], A]{
+    def snoc = SimplePrism[Stream[A], (Stream[A], A)]( s =>
+      for {
+        init <- if(s.isEmpty) None else Some(s.init)
+        last <- if(s.isEmpty) None else Some(s.last)
+      } yield (init, last),
+    { case (init, last) => init :+ last }
+    )
+  }
 
   implicit def streamHeadOption[A]: HeadOption[Stream[A], A] = new HeadOption[Stream[A], A] {
     def headOption = SimpleOptional[Stream[A], A](_.headOption, {
@@ -41,8 +62,6 @@ trait StreamInstances {
     InitOption.reverseTailInitOption[Stream[A]]
 
   implicit def streamReverse[A]: Reverse[Stream[A], Stream[A]] =
-    Reverse.simple[Stream[A]](_.reverse)
-
-
+    reverseFromReverseFunction[Stream[A]](_.reverse)
 
 }
