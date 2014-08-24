@@ -12,6 +12,7 @@ trait StdInstances
   with    LongInstances
   with    MapInstances
   with    OptionFunctions with OptionInstances
+  with    SetInstances
   with    StreamInstances
   with    StringInstances
   with    Tuple2Instances
