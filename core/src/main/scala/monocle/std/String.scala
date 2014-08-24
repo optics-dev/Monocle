@@ -1,8 +1,8 @@
 package monocle.std
 
-import monocle.SimplePrism._
 import monocle.function._
 import monocle.{SimplePrism, SimpleIso}
+import scala.util.Try
 import scalaz.std.option._
 import scalaz.std.list._
 import scalaz.syntax.traverse._
@@ -13,7 +13,11 @@ trait StringInstances {
 
   val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString)
 
-  implicit val stringReverse: Reverse[String, String] = Reverse.simple[String](_.reverse)
+  implicit val stringEmpty: Empty[String] = new Empty[String] {
+    def empty = SimplePrism[String, Unit](s => if(s.isEmpty) Some(()) else None, _ => "")
+  }
+
+  implicit val stringReverse: Reverse[String, String] = reverseFromReverseFunction[String](_.reverse)
 
   implicit val stringEach: Each[String, Char] = new Each[String, Char] {
     def each = stringToList composeTraversal Each.each[List[Char], Char]
@@ -26,6 +30,20 @@ trait StringInstances {
   implicit val stringFilterIndex: FilterIndex[String, Int, Char] = new FilterIndex[String, Int, Char]{
     def filterIndex(predicate: Int => Boolean) =
       stringToList composeTraversal FilterIndex.filterIndex[List[Char], Int, Char](predicate)
+  }
+
+  implicit val stringCons: Cons[String, Char] = new Cons[String, Char] {
+    def _cons = SimplePrism[String, (Char, String)](s =>
+      if(s.isEmpty) None else Some(s.head, s.tail),
+      { case (h, t) => h + t }
+    )
+  }
+
+  implicit val stringSnoc: Snoc[String, Char] = new Snoc[String, Char]{
+    def snoc = SimplePrism[String, (String, Char)]( s =>
+      if(s.isEmpty) None else Some((s.init, s.last)),
+    { case (init, last) => init :+ last }
+    )
   }
 
   implicit val stringHeadOption: HeadOption[String, Char] = new HeadOption[String, Char] {
@@ -44,11 +62,11 @@ trait StringInstances {
 
 
   implicit val stringToBoolean = new SafeCast[String, Boolean] {
-    def safeCast = trySimplePrism[String, Boolean](_.toString, _.toBoolean)
+    def safeCast = SimplePrism[String, Boolean](s => Try(s.toBoolean).toOption, _.toString)
   }
 
   implicit val stringToLong = new SafeCast[String, Long] {
-    def safeCast = SimplePrism[String, Long](_.toString, parseLong)
+    def safeCast = SimplePrism[String, Long](parseLong, _.toString)
   }
 
   implicit val stringToInt = new SafeCast[String, Int] {

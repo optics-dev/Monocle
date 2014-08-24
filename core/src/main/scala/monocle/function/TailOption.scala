@@ -4,6 +4,7 @@ import monocle.{Optional, SimpleOptional}
 import scalaz.{INil, IList, ICons, Applicative}
 import scala.annotation.implicitNotFound
 
+@deprecated("use Cons", since = "0.6")
 @implicitNotFound("Could not find an instance of TailOption[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 trait TailOption[S, A] {

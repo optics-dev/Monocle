@@ -2,11 +2,19 @@ package monocle.std
 
 import scalaz.{IList, Applicative, ICons, INil}
 import monocle.function._
-import monocle.{Optional, SimpleOptional}
+import monocle.{SimplePrism, Optional, SimpleOptional}
 
 object ilist extends IListInstances
 
 trait IListInstances {
+
+  implicit def iListEmpty[A]: Empty[IList[A]] = new Empty[IList[A]] {
+    def empty = SimplePrism[IList[A], Unit](l => if(l.isEmpty) Some(()) else None, _ => IList.empty)
+  }
+
+  implicit def iNilEmpty[A]: Empty[INil[A]] = new Empty[INil[A]] {
+    def empty = SimplePrism[INil[A], Unit](_ => Some(()), _ => INil())
+  }
 
   implicit def iListEach[A]: Each[IList[A], A] = Each.traverseEach[IList, A]
 
@@ -15,6 +23,23 @@ trait IListInstances {
 
   implicit def iListFilterIndex[A]: FilterIndex[IList[A], Int, A] =
     FilterIndex.traverseFilterIndex[IList, A](_.zipWithIndex)
+
+  implicit def iListCons[A]: Cons[IList[A], A] = new Cons[IList[A], A]{
+    def _cons = SimplePrism[IList[A], (A, IList[A])]({
+      case INil()       => None
+      case ICons(x, xs) => Some(x, xs)
+    }, { case (a, s) => ICons(a, s) })
+  }
+
+  implicit def iListSnoc[A]: Snoc[IList[A], A] = new Snoc[IList[A], A]{
+    def snoc = SimplePrism[IList[A], (IList[A], A)]( s =>
+      for {
+        init <- s.initOption
+        last <- s.lastOption
+      } yield (init, last),
+      { case (init, last) => init :+ last }
+    )
+  }
 
   implicit def iListHeadOption[A]: HeadOption[IList[A], A] = new HeadOption[IList[A], A] {
     def headOption = SimpleOptional[IList[A], A](_.headOption, {
@@ -39,6 +64,6 @@ trait IListInstances {
     InitOption.reverseTailInitOption[IList[A]]
 
   implicit def iListReverse[A]: Reverse[IList[A], IList[A]] =
-    Reverse.simple[IList[A]](_.reverse)
+    reverseFromReverseFunction[IList[A]](_.reverse)
 
 }

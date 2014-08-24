@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Traversal, SimpleLens}
+import monocle.{SimplePrism, Traversal, SimpleLens}
 import scalaz.Applicative
 import scalaz.std.list._
 import scalaz.std.map._
@@ -10,6 +10,10 @@ import scalaz.syntax.traverse._
 object map extends MapInstances
 
 trait MapInstances {
+
+  implicit def mapEmpty[K, V]: Empty[Map[K, V]] = new Empty[Map[K, V]] {
+    def empty = SimplePrism[Map[K, V], Unit](m => if(m.isEmpty) Some(()) else None, _ => Map.empty)
+  }
 
   implicit def atMap[K, V]: At[Map[K, V], K, V] = new At[Map[K, V], K, V]{
     def at(i: K) = SimpleLens[Map[K, V], Option[V]](

@@ -23,10 +23,7 @@ package object monocle {
 
   object SimpleOptional {
     def apply[S, A](_getOption: S => Option[A], _set: (S, A) => S): SimpleOptional[S, A] =
-      Optional[S, S, A, A](_getOption, {
-        case (s, Some(a)) => _set(s, a)
-        case (s, None)    => s
-      })
+      Optional[S, S, A, A](s => _getOption(s).map(\/-(_)) getOrElse -\/(s), _set)
 
     /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
     def apply[S]: Constructor[S] = new Constructor[S]
@@ -48,17 +45,13 @@ package object monocle {
   }
 
   object SimplePrism {
-    def apply[S, A](_reverseGet: A => S, _getOption: S => Option[A]): SimplePrism[S, A] =
-      Prism(_reverseGet, { s: S => _getOption(s).map(\/-(_)) getOrElse -\/(s) })
-
-    def trySimplePrism[S, A](safe: A => S, unsafe: S => A): SimplePrism[S, A] =
-      SimplePrism(safe, s => Try(unsafe(s)).toOption)
+    def apply[S, A](_getOption: S => Option[A], _reverseGet: A => S): SimplePrism[S, A] =
+      Prism({ s: S => _getOption(s).map(\/-(_)) getOrElse -\/(s) }, _reverseGet)
 
     /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
     def apply[A]: Constructor[A] = new Constructor[A]
     final class Constructor[A] {
-      @inline def apply[S](_reverseGet: A => S)(_getOption: S => Option[A]) = SimplePrism[S, A](_reverseGet, _getOption)
-      //@inline def rev[B](_getOption: A => Option[B])(_reverseGet: B => A) = SimplePrism[A, B](_reverseGet, _getOption)
+      @inline def apply[S](_getOption: S => Option[A])(_reverseGet: A => S) = SimplePrism[S, A](_getOption, _reverseGet)
     }
   }
 

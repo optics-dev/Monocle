@@ -16,10 +16,15 @@ object Reverse extends ReverseFunctions
 
 trait ReverseFunctions {
 
-  def simple[S](_reverse: S => S): Reverse[S, S] = new Reverse[S, S] {
+  def reverseFromReverseFunction[S](_reverse: S => S): Reverse[S, S] = new Reverse[S, S] {
     def reverse: SimpleIso[S, S] = SimpleIso[S, S](_reverse, _reverse)
   }
 
+  @deprecated("use reverseFromReverseFunction", since = "0.6")
+  def simple[S](_reverse: S => S): Reverse[S, S] = reverseFromReverseFunction(_reverse)
+
   def reverse[S, A](implicit ev: Reverse[S, A]): SimpleIso[S, A] = ev.reverse
 
+
+  def _reverse[S](s: S)(implicit ev: Reverse[S, S]): S = ev.reverse.get(s)
 }
