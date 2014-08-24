@@ -4,20 +4,17 @@ import scalaz.Functor
 
 trait Setter[S, T, A, B] { self =>
 
-  def set(from: S, newValue: B): T = modify(from, _ => newValue)
+  def modifyF(f: A => B): S => T
+  final def modify(s: S, f: A => B): T = modifyF(f)(s)
 
+  final def set(s: S, newValue: B): T = modify(s, _ => newValue)
   final def setF(newValue: B): S => T = set(_, newValue)
 
-  def modify(from: S, f: A => B): T
-
-  final def modifyF(f: A => B): S => T = modify(_, f)
-
-  def asSetter: Setter[S, T, A, B] = self
+  final def asSetter: Setter[S, T, A, B] = self
 
   /** non overloaded compose function */
-  def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = new Setter[S, T, C, D] {
-    def modify(from: S, f: C => D): T = self.modify(from, other.modify(_, f))
-  }
+  final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] =
+    Setter[S, T, C, D](self.modifyF _ compose other.modifyF)
 
   @deprecated("Use composeSetter", since = "0.5")
   def compose[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other)
@@ -26,8 +23,12 @@ trait Setter[S, T, A, B] { self =>
 
 object Setter {
 
+  def apply[S, T, A, B](_modifyF: (A => B) => (S => T)): Setter[S, T, A, B] = new Setter[S, T, A, B] {
+    def modifyF(f: A => B): S => T = _modifyF(f)
+  }
+
   def apply[F[_]: Functor, A, B]: Setter[F[A], F[B], A, B] = new Setter[F[A], F[B], A, B] {
-    def modify(from: F[A], f: A => B): F[B] = Functor[F].map(from)(f)
+    def modifyF(f: A => B): F[A] => F[B] = Functor[F].map(_)(f)
   }
 
 }
