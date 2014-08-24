@@ -9,6 +9,10 @@ object vector extends VectorInstances
 
 trait VectorInstances {
 
+  implicit def vectorEmpty[A]: Empty[Vector[A]] = new Empty[Vector[A]] {
+    def empty = SimplePrism[Vector[A], Unit](v => if(v.isEmpty) Some(()) else None, _ => Vector.empty)
+  }
+
   implicit def vectorEach[A]: Each[Vector[A], A] = Each.traverseEach[Vector, A]
 
   implicit def vectorIndex[A]: Index[Vector[A], Int, A] =
@@ -25,7 +29,7 @@ trait VectorInstances {
   }
 
   implicit def vectorSnoc[A]: Snoc[Vector[A], A] = new Snoc[Vector[A], A]{
-    def _snoc = SimplePrism[Vector[A], (Vector[A], A)](
+    def snoc = SimplePrism[Vector[A], (Vector[A], A)](
       v => if(v.isEmpty) None else Some((v.init, v.last)),
       {case (xs, x) => xs :+ x}
     )
@@ -52,6 +56,6 @@ trait VectorInstances {
     InitOption.reverseTailInitOption[Vector[A]]
 
   implicit def vectorReverse[A]: Reverse[Vector[A], Vector[A]] =
-    Reverse.simple[Vector[A]](_.reverse)
+    reverseFromReverseFunction[Vector[A]](_.reverse)
 
 }

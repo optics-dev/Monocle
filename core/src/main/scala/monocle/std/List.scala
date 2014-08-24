@@ -9,8 +9,16 @@ object list extends ListInstances
 
 trait ListInstances {
 
+  implicit def listEmpty[A]: Empty[List[A]] = new Empty[List[A]] {
+    def empty = SimplePrism[List[A], Unit](l => if(l.isEmpty) Some(()) else None, _ => List.empty)
+  }
+
+  implicit val nilEmpty: Empty[Nil.type] = new Empty[Nil.type] {
+    def empty = SimplePrism[Nil.type, Unit](_ => Some(()), _ => Nil)
+  }
+
   implicit def listReverse[A]: Reverse[List[A], List[A]] =
-    Reverse.simple[List[A]](_.reverse)
+    reverseFromReverseFunction[List[A]](_.reverse)
 
   implicit def listEach[A]: Each[List[A], A] = Each.traverseEach[List, A]
 
@@ -28,7 +36,7 @@ trait ListInstances {
   }
 
   implicit def listSnoc[A]: Snoc[List[A], A] = new Snoc[List[A], A]{
-    def _snoc = SimplePrism[List[A], (List[A], A)]( s =>
+    def snoc = SimplePrism[List[A], (List[A], A)]( s =>
       for {
         init <- if(s.isEmpty) None else Some(s.init)
         last <- if(s.isEmpty) None else Some(s.last)
@@ -58,9 +66,6 @@ trait ListInstances {
 
   implicit def listInitOption[A]: InitOption[List[A], List[A]] =
     InitOption.reverseTailInitOption[List[A]]
-
-
-
 
 
 }

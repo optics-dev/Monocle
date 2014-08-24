@@ -10,6 +10,10 @@ object stream extends StreamInstances
 
 trait StreamInstances {
 
+  implicit def streamEmpty[A]: Empty[Stream[A]] = new Empty[Stream[A]] {
+    def empty = SimplePrism[Stream[A], Unit](s => if(s.isEmpty) Some(()) else None, _ => Stream.empty)
+  }
+
   implicit def streamEach[A]: Each[Stream[A], A] = Each.traverseEach[Stream, A]
 
   implicit def streamIndex[A]: Index[Stream[A], Int, A] =
@@ -26,7 +30,7 @@ trait StreamInstances {
   }
 
   implicit def streamSnoc[A]: Snoc[Stream[A], A] = new Snoc[Stream[A], A]{
-    def _snoc = SimplePrism[Stream[A], (Stream[A], A)]( s =>
+    def snoc = SimplePrism[Stream[A], (Stream[A], A)]( s =>
       for {
         init <- if(s.isEmpty) None else Some(s.init)
         last <- if(s.isEmpty) None else Some(s.last)
@@ -58,8 +62,6 @@ trait StreamInstances {
     InitOption.reverseTailInitOption[Stream[A]]
 
   implicit def streamReverse[A]: Reverse[Stream[A], Stream[A]] =
-    Reverse.simple[Stream[A]](_.reverse)
-
-
+    reverseFromReverseFunction[Stream[A]](_.reverse)
 
 }

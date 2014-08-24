@@ -12,7 +12,7 @@ trait OptionFunctions {
     Prism[Option[A], Option[B], A, B](_.map(\/-(_)) getOrElse -\/(None), Some.apply)
 
   def none[A]: SimplePrism[Option[A], Unit] =
-    SimplePrism[Option[A], Unit]({ opt => if (opt == None) Some(()) else None}, _ => None)
+    SimplePrism[Option[A], Unit](opt => if (opt == None) Some(()) else None, _ => None)
 
   def someIso[A, B]: Iso[Some[A], Some[B], A, B] =
     Iso[Some[A], Some[B], A, B](_.get, Some(_))
@@ -20,6 +20,10 @@ trait OptionFunctions {
 }
 
 trait OptionInstances extends OptionFunctions {
+
+  implicit def optionEmpty[A]: Empty[Option[A]] = new Empty[Option[A]] {
+    def empty = SimplePrism[Option[A], Unit](o => o.map(_ => ()), _ => Option.empty)
+  }
 
   implicit def optEach[A]: Each[Option[A], A] = new Each[Option[A], A] {
     def each = some
@@ -31,6 +35,11 @@ trait OptionInstances extends OptionFunctions {
 
   implicit def optionLastOption[A] = new LastOption[Option[A], A] {
     def lastOption = some
+  }
+
+
+  implicit val noneEmpty: Empty[None.type] = new Empty[None.type] {
+    def empty = SimplePrism[None.type , Unit](_ => Some(()), _ => None)
   }
 
   implicit def someEach[A]: Each[Some[A], A] = new Each[Some[A], A] {

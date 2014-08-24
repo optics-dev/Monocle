@@ -24,7 +24,7 @@ class HListExample extends Spec {
   }
 
   "reverse creates an Iso between an HList and its reverse version" in {
-    (1 :: "bla" :: true :: HNil <-> _reverse get) shouldEqual (true :: "bla" :: 1 :: HNil)
+    (1 :: "bla" :: true :: HNil <-> reverse get) shouldEqual (true :: "bla" :: 1 :: HNil)
   }
 
   "head creates a Lens from HList to the first element" in {

@@ -7,6 +7,7 @@ trait PolymorphicOptics
   with    ConsFunctions
   with    CurryFunctions
   with    EachFunctions
+  with    EmptyFunctions
   with    Field1Functions
   with    Field2Functions
   with    Field3Functions

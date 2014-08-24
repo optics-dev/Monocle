@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.TestUtil._
 import monocle.function._
-import monocle.{IsoLaws, LensLaws, TraversalLaws}
+import monocle.{PrismLaws, IsoLaws, LensLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
 
 import scalaz.Tree
@@ -21,6 +21,6 @@ class TreeSpec extends Spec {
 
   checkAll("each Tree", TraversalLaws(each[Tree[Int], Int]))
 
-  checkAll("reverse Tree", IsoLaws(_reverse[Tree[Int], Tree[Int]]))
+  checkAll("reverse Tree", IsoLaws(reverse[Tree[Int], Tree[Int]]))
 
 }

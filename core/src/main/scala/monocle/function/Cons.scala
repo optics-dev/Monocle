@@ -1,7 +1,7 @@
 package monocle.function
 
-import monocle.{SimpleOptional, SimplePrism}
 import monocle.std.tuple2._
+import monocle.{SimpleOptional, SimplePrism}
 
 import scala.annotation.implicitNotFound
 
@@ -20,17 +20,15 @@ object Cons extends ConsFunctions with ConsFunctionsAfterDeprecation
 
 
 trait ConsFunctions {
-
-  final def _cons[S, A](implicit ev: Cons[S, A]): SimplePrism[S, (A, S)] = ev._cons
+  final def cons[S, A](implicit ev: Cons[S, A]): SimplePrism[S, (A, S)] = ev._cons
 
   /** append an element to the head */
-  final def cons[S, A](head: A, tail: S)(implicit ev: Cons[S, A]): S =
+  final def _cons[S, A](head: A, tail: S)(implicit ev: Cons[S, A]): S =
     ev._cons.reverseGet((head, tail))
 
   /** deconstruct an S between its head and tail */
-  final def uncons[S, A](s: S)(implicit ev: Cons[S, A]): Option[(A, S)] =
+  final def _uncons[S, A](s: S)(implicit ev: Cons[S, A]): Option[(A, S)] =
     ev._cons.getOption(s)
-
 }
 
 // To merge into ConsFunctions when HeadOption and LastOption are deprecated

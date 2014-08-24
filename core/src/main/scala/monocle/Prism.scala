@@ -27,7 +27,7 @@ trait Prism[S, T, A, B] extends Optional[S, T, A, B] { self =>
 
 }
 
-object Prism {
+object Prism extends PrismFunctions {
 
   def apply[S, T, A, B](seta: S => T \/ A, _reverseGet: B => T): Prism[S, T, A, B] = new Prism[S, T, A, B] {
     def re: Getter[B, T] = Getter[B, T](_reverseGet)
@@ -40,4 +40,9 @@ object Prism {
         .fold(identity, identity)                // F[T]
   }
 
+}
+
+trait PrismFunctions {
+  def isMatching[S, T, A, B](prism: Prism[S, T, A, B])(s: S): Boolean =
+    prism.getOption(s).isDefined
 }

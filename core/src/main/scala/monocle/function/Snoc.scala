@@ -10,25 +10,25 @@ import scala.annotation.implicitNotFound
   "find out which import is necessary")
 trait Snoc[S, A] {
 
-  def _snoc: SimplePrism[S, (S, A)]
+  def snoc: SimplePrism[S, (S, A)]
 
-  final def initOption: SimpleOptional[S, S] = _snoc composeOptional first
-  final def lastOption: SimpleOptional[S, A] = _snoc composeOptional second
+  final def initOption: SimpleOptional[S, S] = snoc composeOptional first
+  final def lastOption: SimpleOptional[S, A] = snoc composeOptional second
 
 }
 
 object Snoc extends SnocFunctions with SnocFunctionsAfterDeprecation
 
 trait SnocFunctions {
-  final def _snoc[S, A](implicit ev: Snoc[S, A]): SimplePrism[S, (S, A)] = ev._snoc
+  final def snoc[S, A](implicit ev: Snoc[S, A]): SimplePrism[S, (S, A)] = ev.snoc
 
   /** append an element to the end */
-  final def snoc[S, A](init: S, last: A)(implicit ev: Snoc[S, A]): S =
-    ev._snoc.reverseGet((init, last))
+  final def _snoc[S, A](init: S, last: A)(implicit ev: Snoc[S, A]): S =
+    ev.snoc.reverseGet((init, last))
 
   /** deconstruct an S between its init and last */
-  final def unsnoc[S, A](s: S)(implicit ev: Snoc[S, A]): Option[(S, A)] =
-    ev._snoc.getOption(s)
+  final def _unsnoc[S, A](s: S)(implicit ev: Snoc[S, A]): Option[(S, A)] =
+    ev.snoc.getOption(s)
 }
 
 // To merge into ConsFunctions when HeadOption and LastOption are deprecated

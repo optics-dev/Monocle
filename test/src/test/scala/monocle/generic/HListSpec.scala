@@ -58,7 +58,7 @@ class HListSpec extends Spec {
   checkAll("sixth from HList", LensLaws(sixth[H, Double]))
 
 
-  checkAll("reverse HList", IsoLaws(_reverse[H, ReverseH]))
+  checkAll("reverse HList", IsoLaws(reverse[H, ReverseH]))
   checkAll("head HList", LensLaws(head[H, Int]))
   checkAll("last HList", LensLaws(last[H, Double]))
   checkAll("tail HList", LensLaws(tail[H, HTail]))

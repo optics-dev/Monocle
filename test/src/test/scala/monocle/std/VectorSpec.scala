@@ -7,7 +7,7 @@ import org.specs2.scalaz.Spec
 
 class VectorSpec extends Spec {
 
-  checkAll("cons - snoc Vector", ConsSnocLaws[Vector[Char], Char])
+  checkAll("cons - snoc Vector", SequenceLaws[Vector[Char], Char])
 
   checkAll("each Vector", TraversalLaws(each[Vector[Int], Int]))
 
@@ -21,9 +21,9 @@ class VectorSpec extends Spec {
 
   checkAll("lastOption Vector", OptionalLaws(lastOption[Vector[Int], Int]))
 
-  checkAll("reverse Vector", IsoLaws(_reverse[Vector[Int], Vector[Int]]))
+  checkAll("reverse Vector", IsoLaws(reverse[Vector[Int], Vector[Int]]))
 
-  checkAll("snoc Vector", PrismLaws(_snoc[Vector[Char], Char]))
+  checkAll("snoc Vector", PrismLaws(snoc[Vector[Char], Char]))
 
   checkAll("tailOption Vector", OptionalLaws(tailOption[Vector[Int], Vector[Int]]))
 

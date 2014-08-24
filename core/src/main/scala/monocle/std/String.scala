@@ -13,7 +13,11 @@ trait StringInstances {
 
   val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString)
 
-  implicit val stringReverse: Reverse[String, String] = Reverse.simple[String](_.reverse)
+  implicit val stringEmpty: Empty[String] = new Empty[String] {
+    def empty = SimplePrism[String, Unit](s => if(s.isEmpty) Some(()) else None, _ => "")
+  }
+
+  implicit val stringReverse: Reverse[String, String] = reverseFromReverseFunction[String](_.reverse)
 
   implicit val stringEach: Each[String, Char] = new Each[String, Char] {
     def each = stringToList composeTraversal Each.each[List[Char], Char]
@@ -36,7 +40,7 @@ trait StringInstances {
   }
 
   implicit val stringSnoc: Snoc[String, Char] = new Snoc[String, Char]{
-    def _snoc = SimplePrism[String, (String, Char)]( s =>
+    def snoc = SimplePrism[String, (String, Char)]( s =>
       if(s.isEmpty) None else Some((s.init, s.last)),
     { case (init, last) => init :+ last }
     )

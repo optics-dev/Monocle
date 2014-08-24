@@ -7,22 +7,6 @@ import org.specs2.scalaz.Spec
 
 class StreamSpec extends Spec {
 
-  checkAll("cons - snoc Vector", ConsSnocLaws[Stream[Char], Char])
-
-  checkAll("each Stream", TraversalLaws(each[Stream[Int], Int]))
-
-  checkAll("filterIndex Stream", TraversalLaws(filterIndex[Stream[Char], Int, Char](_ % 2 == 0)))
-
-  checkAll("headOption Vector", OptionalLaws(headOption[Vector[Int], Int]))
-
-  checkAll("index Vector", OptionalLaws(index[Vector[String], Int, String](2)))
-
-  checkAll("initOption Stream", OptionalLaws(initOption[Stream[Int], Stream[Int]]))
-
-  checkAll("lastOption Stream", OptionalLaws(lastOption[Stream[Int], Int]))
-
-  checkAll("reverse Stream", IsoLaws(_reverse[Stream[Int],Stream[Int]]))
-
-  checkAll("tailOption Stream", OptionalLaws(tailOption[Stream[Int], Stream[Int]]))
+  checkAll("sequence Vector", SequenceLaws[Stream[Char], Char])
 
 }

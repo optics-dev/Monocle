@@ -8,6 +8,14 @@ object ilist extends IListInstances
 
 trait IListInstances {
 
+  implicit def iListEmpty[A]: Empty[IList[A]] = new Empty[IList[A]] {
+    def empty = SimplePrism[IList[A], Unit](l => if(l.isEmpty) Some(()) else None, _ => IList.empty)
+  }
+
+  implicit def iNilEmpty[A]: Empty[INil[A]] = new Empty[INil[A]] {
+    def empty = SimplePrism[INil[A], Unit](_ => Some(()), _ => INil())
+  }
+
   implicit def iListEach[A]: Each[IList[A], A] = Each.traverseEach[IList, A]
 
   implicit def iListIndex[A]: Index[IList[A], Int, A] =
@@ -24,7 +32,7 @@ trait IListInstances {
   }
 
   implicit def iListSnoc[A]: Snoc[IList[A], A] = new Snoc[IList[A], A]{
-    def _snoc = SimplePrism[IList[A], (IList[A], A)]( s =>
+    def snoc = SimplePrism[IList[A], (IList[A], A)]( s =>
       for {
         init <- s.initOption
         last <- s.lastOption
@@ -56,6 +64,6 @@ trait IListInstances {
     InitOption.reverseTailInitOption[IList[A]]
 
   implicit def iListReverse[A]: Reverse[IList[A], IList[A]] =
-    Reverse.simple[IList[A]](_.reverse)
+    reverseFromReverseFunction[IList[A]](_.reverse)
 
 }
