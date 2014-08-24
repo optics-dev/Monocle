@@ -164,9 +164,10 @@ There are four ways to create `SimpleLens`, each with their pro and cons:
      
      ```scala
      @Lenses
-     case class Employee(company: Company, ...)
+     case class Employee(company: Company, name: String, ...)
      
      // generates Employee.company: SimpleLens[Employee, Company]
+     // and       Employee.name   : SimpleLens[Employee, String]
      ```
 
 ## Polymorphic Optics and Instance Location Policy
