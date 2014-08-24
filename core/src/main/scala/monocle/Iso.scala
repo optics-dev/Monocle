@@ -1,20 +1,33 @@
 package monocle
 
-import scalaz.Functor
+import monocle.internal.ProChoice
+
+import scalaz.{Applicative, Functor, Profunctor}
+import scalaz.std.function._
 
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.
  */
 trait Iso[S, T, A, B] extends Lens[S, T, A, B] with Prism[S, T, A, B] { self =>
 
-  def reverse: Iso[B, A, T, S]
+  def _iso[P[_, _]: Profunctor, F[_]: Functor](pafb: P[A, F[B]]): P[S, F[T]]
 
-  def re: Getter[B, T] = reverse.asGetter
+  final def _lens[F[_] : Functor](s: S, f: A => F[B]): F[T] =
+    _iso[Function1, F](f).apply(s)
+
+  final def _prism[P[_, _]: ProChoice, F[_]: Applicative](pafb: P[A, F[B]]): P[S, F[T]] =
+    _iso(pafb)
+
+  // need to override because of conflicting inheritance
+  final override def _traversal[F[_] : Applicative](s: S, f: A => F[B]): F[T] =
+    _iso[Function1, F](f).apply(s)
+
+  final def reverse: Iso[B, A, T, S] = Iso[B, A, T, S](reverseGet, get)
 
   /** non overloaded compose function */
-  def composeIso[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = new Iso[S, T, C, D] {
-    def lift[F[_]: Functor](from: S, f: C => F[D]): F[T] = self.lift(from, other.lift(_, f))
-    def reverse: Iso[D, C, T, S] = other.reverse composeIso self.reverse
+  final def composeIso[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = new Iso[S, T, C, D]{
+    def _iso[P[_, _] : Profunctor, F[_] : Functor](pcfd: P[C, F[D]]): P[S, F[T]] =
+      (self._iso[P, F] _ compose other._iso[P, F])(pcfd)
   }
 
   @deprecated("Use composeIso", since = "0.5")
@@ -24,16 +37,9 @@ trait Iso[S, T, A, B] extends Lens[S, T, A, B] with Prism[S, T, A, B] { self =>
 
 object Iso {
 
-  def apply[S, T, A, B](_get: S => A, _reverseGet: B => T): Iso[S, T, A, B] = new Iso[S, T, A, B] { self =>
-    def reverse: Iso[B, A, T, S] = new Iso[B, A, T, S] {
-      def reverse: Iso[S, T, A, B] = self
-
-      def lift[F[_]: Functor](from: B, f: T => F[S]): F[A] =
-        Functor[F].map(f(_reverseGet(from)))(_get)
-    }
-
-    def lift[F[_]: Functor](from: S, f: A => F[B]): F[T] =
-      Functor[F].map(f(_get(from)))(_reverseGet)
+  def apply[S, T, A, B](_get: S => A, _reverseGet: B => T): Iso[S, T, A, B] = new Iso[S, T, A, B] {
+    def _iso[P[_, _], F[_]](pafb: P[A, F[B]])(implicit p: Profunctor[P], f: Functor[F]): P[S, F[T]] =
+      p.mapsnd(p.mapfst(pafb)(_get))(f.map(_)(_reverseGet))
   }
 
 }

@@ -30,7 +30,7 @@ trait MapInstances {
 
   implicit def mapFilterIndex[K, V]: FilterIndex[Map[K,V], K, V] = new FilterIndex[Map[K, V], K, V] {
     def filterIndex(predicate: K => Boolean) = new Traversal[Map[K, V], Map[K, V], V, V] {
-      def multiLift[F[_] : Applicative](from: Map[K, V], f: (V) => F[V]): F[Map[K, V]] =
+      def _traversal[F[_] : Applicative](from: Map[K, V], f: (V) => F[V]): F[Map[K, V]] =
         Applicative[F].map(
           from.toList.traverse{ case (k, v) =>
             Applicative[F].map(if(predicate(k)) f(v) else Applicative[F].point(v))(k -> _)

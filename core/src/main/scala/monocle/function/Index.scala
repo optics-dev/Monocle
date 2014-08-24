@@ -35,7 +35,7 @@ trait IndexFunctions {
 
   def traverseIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): Index[S[A], Int, A] = new Index[S[A], Int, A]{
     def index(i: Int) = new Optional[S[A], S[A], A, A] {
-      def multiLift[F[_] : Applicative](from: S[A], f: A => F[A]): F[S[A]] =
+      def _traversal[F[_] : Applicative](from: S[A], f: A => F[A]): F[S[A]] =
         zipWithIndex(from).traverse { case (a, j) =>
           if(j == i) f(a) else Applicative[F].point(a)
         }

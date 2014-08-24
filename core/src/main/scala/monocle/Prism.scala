@@ -1,6 +1,9 @@
 package monocle
 
-import scalaz.{ Applicative, \/ }
+import monocle.internal.{ProChoice, Tagged}
+
+import scalaz.Id.Id
+import scalaz.{Applicative, \/}
 
 /**
  * A Prism is a special case of Traversal where the focus is limited to
@@ -9,17 +12,23 @@ import scalaz.{ Applicative, \/ }
  */
 trait Prism[S, T, A, B] extends Optional[S, T, A, B] { self =>
 
-  def re: Getter[B, T]
+  def _prism[P[_, _]: ProChoice, F[_]: Applicative](pafb: P[A, F[B]]): P[S, F[T]]
 
-  def reverseGet(from: B): T = re.get(from)
+  def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] =
+    _prism[Function1, F](f).apply(s)
 
-  def asPrism: Prism[S, T, A, B] = self
+
+
+  final def reverseGet(b: B): T = _prism[Tagged, Id](Tagged(b)).untagged
+
+  final def re: Getter[B, T] = Getter(reverseGet)
+
+  final def asPrism: Prism[S, T, A, B] = self
 
   /** non overloaded compose function */
-  def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = new Prism[S, T, C, D] {
-    def re: Getter[D, T] = other.re composeGetter self.re
-
-    def multiLift[F[_]: Applicative](from: S, f: C => F[D]): F[T] = self.multiLift(from, other.multiLift(_, f))
+  final def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = new Prism[S, T, C, D]{
+    def _prism[P[_, _]: ProChoice, F[_]: Applicative](pcfd: P[C, F[D]]): P[S, F[T]] =
+      (self._prism[P, F] _ compose other._prism[P, F])(pcfd)
   }
 
   @deprecated("Use composePrism", since = "0.5")
@@ -30,19 +39,13 @@ trait Prism[S, T, A, B] extends Optional[S, T, A, B] { self =>
 object Prism extends PrismFunctions {
 
   def apply[S, T, A, B](seta: S => T \/ A, _reverseGet: B => T): Prism[S, T, A, B] = new Prism[S, T, A, B] {
-    def re: Getter[B, T] = Getter[B, T](_reverseGet)
-
-    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
-      seta(from)                                 // T    \/ A
-        .map(f)                                  // T    \/ F[B]
-        .map(Applicative[F].map(_)(_reverseGet)) // T    \/ F[T]
-        .leftMap(Applicative[F].point(_))        // F[T] \/ F[T]
-        .fold(identity, identity)                // F[T]
+    def _prism[P[_, _], F[_]](pafb: P[A, F[B]])(implicit p: ProChoice[P], f: Applicative[F]): P[S, F[T]] =
+      p.mapsnd(p.mapfst[T \/ A, T \/ F[B], S](p.right(pafb))(seta))(_.fold(f.point[T](_), f.map(_)(_reverseGet)))
   }
 
 }
 
 trait PrismFunctions {
-  def isMatching[S, T, A, B](prism: Prism[S, T, A, B])(s: S): Boolean =
+  final def isMatching[S, T, A, B](prism: Prism[S, T, A, B])(s: S): Boolean =
     prism.getOption(s).isDefined
 }

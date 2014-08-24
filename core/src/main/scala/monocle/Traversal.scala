@@ -10,18 +10,20 @@ import scalaz.{ Const, Monoid, Traverse, Applicative }
  */
 trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
 
-  def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T]
+  def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T]
 
-  def modify(from: S, f: A => B): T = multiLift[Id](from, { a: A => id.point(f(a)) })
+  final def multiLift[F[_]: Applicative](s: S, f: A => F[B]): F[T] = _traversal(s, f)
 
-  def foldMap[M: Monoid](from: S)(f: A => M): M =
-    multiLift[({ type l[a] = Const[M, a] })#l](from, { a: A => Const[M, B](f(a)) }).getConst
+  final def modify(s: S, f: A => B): T = multiLift[Id](s, { a: A => id.point(f(a)) })
 
-  def asTraversal: Traversal[S, T, A, B] = self
+  final def foldMap[M: Monoid](s: S)(f: A => M): M =
+    multiLift[({ type l[a] = Const[M, a] })#l](s, { a: A => Const[M, B](f(a)) }).getConst
+
+  final def asTraversal: Traversal[S, T, A, B] = self
 
   /** non overloaded compose function */
-  def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = new Traversal[S, T, C, D] {
-    def multiLift[F[_]: Applicative](from: S, f: C => F[D]): F[T] = self.multiLift(from, other.multiLift(_, f))
+  final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = new Traversal[S, T, C, D] {
+    def _traversal[F[_]: Applicative](s: S, f: C => F[D]): F[T] = self.multiLift(s, other.multiLift(_, f))
   }
 
   @deprecated("Use composeTraversal", since = "0.5")
@@ -32,32 +34,32 @@ trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
 object Traversal {
 
   def apply[T[_]: Traverse, A, B]: Traversal[T[A], T[B], A, B] = new Traversal[T[A], T[B], A, B] {
-    def multiLift[F[_]: Applicative](from: T[A], f: A => F[B]): F[T[B]] = Traverse[T].traverse(from)(f)
+    def _traversal[F[_]: Applicative](s: T[A], f: A => F[B]): F[T[B]] = Traverse[T].traverse(s)(f)
   }
 
   def apply2[S, T, A, B](get1: S => A, get2: S => A)(_set: (S, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
-      Applicative[F].apply2(f(get1(from)), f(get2(from)))((v1, v2) => _set(from, v1, v2))
+    def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] =
+      Applicative[F].apply2(f(get1(s)), f(get2(s)))((v1, v2) => _set(s, v1, v2))
   }
 
   def apply3[S, T, A, B](get1: S => A, get2: S => A, get3: S => A)(_set: (S, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
-      Applicative[F].apply3(f(get1(from)), f(get2(from)), f(get3(from)))((v1, v2, v3) => _set(from, v1, v2, v3))
+    def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] =
+      Applicative[F].apply3(f(get1(s)), f(get2(s)), f(get3(s)))((v1, v2, v3) => _set(s, v1, v2, v3))
   }
 
   def apply4[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A)(_set: (S, B, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
-      Applicative[F].apply4(f(get1(from)), f(get2(from)), f(get3(from)), f(get4(from)))((v1, v2, v3, v4) => _set(from, v1, v2, v3, v4))
+    def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] =
+      Applicative[F].apply4(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)))((v1, v2, v3, v4) => _set(s, v1, v2, v3, v4))
   }
 
   def apply5[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(_set: (S, B, B, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
-      Applicative[F].apply5(f(get1(from)), f(get2(from)), f(get3(from)), f(get4(from)), f(get5(from)))((v1, v2, v3, v4, v5) => _set(from, v1, v2, v3, v4, v5))
+    def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] =
+      Applicative[F].apply5(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)))((v1, v2, v3, v4, v5) => _set(s, v1, v2, v3, v4, v5))
   }
 
   def apply6[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(_set: (S, B, B, B, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def multiLift[F[_]: Applicative](from: S, f: A => F[B]): F[T] =
-      Applicative[F].apply6(f(get1(from)), f(get2(from)), f(get3(from)), f(get4(from)), f(get5(from)), f(get6(from)))((v1, v2, v3, v4, v5, v6) => _set(from, v1, v2, v3, v4, v5, v6))
+    def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] =
+      Applicative[F].apply6(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)), f(get6(s)))((v1, v2, v3, v4, v5, v6) => _set(s, v1, v2, v3, v4, v5, v6))
   }
 
 }

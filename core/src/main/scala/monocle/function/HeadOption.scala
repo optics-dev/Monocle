@@ -24,4 +24,8 @@ trait HeadOptionFunctions {
     def headOption = index(0)
   }
 
+  def consHeadOption[S, A](implicit ev: Cons[S, A]): HeadOption[S, A] = new HeadOption[S, A]{
+    def headOption = ev.headOption
+  }
+
 }

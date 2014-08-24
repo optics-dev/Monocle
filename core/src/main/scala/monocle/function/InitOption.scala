@@ -26,4 +26,8 @@ trait InitOptionFunctions {
     def initOption = evReverse.reverse composeOptional evTail.tailOption composeOptional evReverse.reverse
   }
 
+  def snocInitOption[S, A](implicit ev: Snoc[S, A]): InitOption[S, S] = new InitOption[S, S]{
+    def initOption = ev.initOption
+  }
+
 }

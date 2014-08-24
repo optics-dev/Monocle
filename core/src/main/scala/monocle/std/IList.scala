@@ -1,8 +1,9 @@
 package monocle.std
 
-import scalaz.{IList, Applicative, ICons, INil}
+import monocle.SimplePrism
 import monocle.function._
-import monocle.{SimplePrism, Optional, SimpleOptional}
+
+import scalaz.{ICons, IList, INil}
 
 object ilist extends IListInstances
 
@@ -41,27 +42,17 @@ trait IListInstances {
     )
   }
 
-  implicit def iListHeadOption[A]: HeadOption[IList[A], A] = new HeadOption[IList[A], A] {
-    def headOption = SimpleOptional[IList[A], A](_.headOption, {
-      case (INil(), a)      => INil[A]()
-      case (ICons(x,xs), a) => ICons(a, xs)
-    })
-  }
+  implicit def iListHeadOption[A]: HeadOption[IList[A], A] =
+    HeadOption.consHeadOption[IList[A], A]
 
-  implicit def IListTailOption[A]: TailOption[IList[A], IList[A]] = new TailOption[IList[A], IList[A]]{
-    def tailOption = new Optional[IList[A], IList[A], IList[A], IList[A]] {
-      def multiLift[F[_] : Applicative](from: IList[A], f: IList[A] => F[IList[A]]): F[IList[A]] = from match {
-        case INil()  => Applicative[F].point(INil())
-        case ICons(x, xs) => Applicative[F].map(f(xs))(x :: _)
-      }
-    }
-  }
+  implicit def IListTailOption[A]: TailOption[IList[A], IList[A]] =
+    TailOption.consTailOption[IList[A], A]
 
   implicit def iListLastOption[A]: LastOption[IList[A], A]  =
-    LastOption.reverseHeadLastOption[IList[A] , A]
+    LastOption.snocLastOption[IList[A] , A]
 
   implicit def iListInitOption[A]: InitOption[IList[A], IList[A]] =
-    InitOption.reverseTailInitOption[IList[A]]
+    InitOption.snocInitOption[IList[A], A]
 
   implicit def iListReverse[A]: Reverse[IList[A], IList[A]] =
     reverseFromReverseFunction[IList[A]](_.reverse)

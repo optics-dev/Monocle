@@ -1,8 +1,8 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{SimplePrism, Optional, SimpleOptional}
-import scalaz.Applicative
+import monocle.{SimpleOptional, SimplePrism}
+
 import scalaz.std.list._
 
 object list extends ListInstances
@@ -45,27 +45,17 @@ trait ListInstances {
     )
   }
 
-  implicit def listHeadOption[A]: HeadOption[List[A], A] = new HeadOption[List[A], A] {
-    def headOption = SimpleOptional[List[A], A](_.headOption, {
-      case (Nil, a)     => Nil
-      case (x :: xs, a) => a :: xs
-    })
-  }
+  implicit def listHeadOption[A]: HeadOption[List[A], A] =
+    HeadOption.consHeadOption[List[A], A]
 
-  implicit def listTailOption[A]: TailOption[List[A], List[A]] = new TailOption[List[A], List[A]]{
-    def tailOption = new Optional[List[A], List[A], List[A], List[A]] {
-      def multiLift[F[_] : Applicative](from: List[A], f: List[A] => F[List[A]]): F[List[A]] = from match {
-        case Nil     => Applicative[F].point(Nil)
-        case x :: xs => Applicative[F].map(f(xs))(x :: _)
-      }
-    }
-  }
+  implicit def listTailOption[A]: TailOption[List[A], List[A]] =
+    TailOption.consTailOption[List[A], A]
 
   implicit def listLastOption[A]: LastOption[List[A], A] =
-    LastOption.reverseHeadLastOption[List[A]  , A]
+    LastOption.snocLastOption[List[A]  , A]
 
   implicit def listInitOption[A]: InitOption[List[A], List[A]] =
-    InitOption.reverseTailInitOption[List[A]]
+    InitOption.snocInitOption[List[A], A]
 
 
 }

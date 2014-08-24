@@ -22,4 +22,8 @@ trait TailOptionFunctions {
 
   def tailOption[S, A](implicit ev: TailOption[S, A]): SimpleOptional[S, A] = ev.tailOption
 
+  def consTailOption[S, A](implicit ev: Cons[S, A]): TailOption[S, S] = new TailOption[S, S]{
+    def tailOption = ev.tailOption
+  }
+
 }
