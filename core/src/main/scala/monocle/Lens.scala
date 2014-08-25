@@ -1,5 +1,7 @@
 package monocle
 
+import monocle.internal.Strong
+
 import scalaz.{Applicative, Const, Functor}
 
 /**
@@ -8,9 +10,10 @@ import scalaz.{Applicative, Const, Functor}
  */
 trait Lens[S, T, A, B] extends Optional[S, T, A, B] with Getter[S, A] { self =>
 
-  def _lens[F[_]: Functor](s: S, f: A => F[B]): F[T]
+  def _lens[P[_, _]: Strong](pab: P[A, B]): P[S, T]
 
-  def lift[F[_]: Functor](s: S, f: A => F[B]): F[T] = _lens(s, f)
+  def lift[F[_]: Functor](s: S, f: A => F[B]): F[T] =
+    _lens[({ type l[a, b] = a => F[b] })#l](f).apply(s)
 
   def _traversal[F[_]: Applicative](from: S, f: A => F[B]): F[T] = lift(from, f)
 
@@ -19,7 +22,8 @@ trait Lens[S, T, A, B] extends Optional[S, T, A, B] with Getter[S, A] { self =>
 
   /** non overloaded compose function */
   def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
-    def _lens[F[_]: Functor](from: S, f: C => F[D]): F[T] = self.lift(from, other.lift(_, f))
+    def _lens[P[_, _]: Strong](pab: P[C, D]): P[S, T] =
+      (self._lens[P] _ compose other._lens[P])(pab)
   }
 
   @deprecated("Use composeLens", since = "0.5")
@@ -29,8 +33,12 @@ trait Lens[S, T, A, B] extends Optional[S, T, A, B] with Getter[S, A] { self =>
 object Lens {
 
   def apply[S, T, A, B](_get: S => A, _set: (S, B) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
-    def _lens[F[_]: Functor](from: S, f: A => F[B]): F[T] =
-      Functor[F].map(f(_get(from)))(newValue => _set(from, newValue))
+    def _lens[P[_, _]](pab: P[A, B])(implicit p: Strong[P]): P[S, T] = {
+      val psasb: P[(S, A), (S, B)] = p.second[A, B, S](pab)
+      val psat : P[(S, A), T]      = p.mapsnd(psasb)(_set.tupled)
+      val psb  : P[S ,T]           = p.mapfst(psat)(s => (s, _get(s)))
+      psb
+    }
   }
 
 }

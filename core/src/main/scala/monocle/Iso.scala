@@ -1,9 +1,10 @@
 package monocle
 
-import monocle.internal.ProChoice
+import monocle.internal.{Strong, ProChoice}
 
 import scalaz.{Applicative, Functor, Profunctor}
 import scalaz.std.function._
+import scalaz.Id.Id
 
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.
@@ -12,8 +13,7 @@ trait Iso[S, T, A, B] extends Lens[S, T, A, B] with Prism[S, T, A, B] { self =>
 
   def _iso[P[_, _]: Profunctor, F[_]: Functor](pafb: P[A, F[B]]): P[S, F[T]]
 
-  final def _lens[F[_] : Functor](s: S, f: A => F[B]): F[T] =
-    _iso[Function1, F](f).apply(s)
+  def _lens[P[_, _] : Strong](pab: P[A, B]): P[S, T] = _iso[P, Id](pab)
 
   final def _prism[P[_, _]: ProChoice, F[_]: Applicative](pafb: P[A, F[B]]): P[S, F[T]] =
     _iso(pafb)
