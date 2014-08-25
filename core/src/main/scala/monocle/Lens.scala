@@ -15,13 +15,13 @@ trait Lens[S, T, A, B] extends Optional[S, T, A, B] with Getter[S, A] { self =>
   def lift[F[_]: Functor](s: S, f: A => F[B]): F[T] =
     _lens[({ type l[a, b] = a => F[b] })#l](f).apply(s)
 
-  def _traversal[F[_]: Applicative](from: S, f: A => F[B]): F[T] = lift(from, f)
+  def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] = lift(s, f)
 
 
-  def get(from: S): A = lift[({ type l[b] = Const[A, b] })#l](from, { a: A => Const[A, B](a) }).getConst
+  final def get(s: S): A = lift[({ type l[b] = Const[A, b] })#l](s, a => Const(a)).getConst
 
   /** non overloaded compose function */
-  def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
+  final def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
     def _lens[P[_, _]: Strong](pab: P[C, D]): P[S, T] =
       (self._lens[P] _ compose other._lens[P])(pab)
   }
