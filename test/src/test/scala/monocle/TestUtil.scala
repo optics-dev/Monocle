@@ -95,4 +95,7 @@ object TestUtil {
 
   implicit def mapArbitrary[K: Arbitrary, V: Arbitrary] =
     Arbitrary(Arbitrary.arbitrary[List[(K,V)]].map(_.toMap))
+
+  implicit def setArbitrary[A: Arbitrary]: Arbitrary[Set[A]] =
+    Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toSet))
 }
