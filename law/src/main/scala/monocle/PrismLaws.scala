@@ -9,7 +9,7 @@ import org.scalacheck.{Properties, Arbitrary}
 object PrismLaws {
 
   def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](prism: SimplePrism[S, A]) = new Properties("Prism") {
-    include(TraversalLaws(prism))
+    include(TraversalLaws(prism.asTraversal))
 
     property("reverseGet - getOption") = forAll { value: A =>
       prism.getOption(prism.reverseGet(value)) === Some(value)

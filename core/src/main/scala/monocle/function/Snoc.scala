@@ -12,8 +12,8 @@ trait Snoc[S, A] {
 
   def snoc: SimplePrism[S, (S, A)]
 
-  final def initOption: SimpleOptional[S, S] = snoc composeOptional first
-  final def lastOption: SimpleOptional[S, A] = snoc composeOptional second
+  final def initOption: SimpleOptional[S, S] = snoc composeLens first
+  final def lastOption: SimpleOptional[S, A] = snoc composeLens second
 
 }
 

@@ -1,44 +1,28 @@
 package monocle.syntax
 
-import monocle.{Setter, Fold, Traversal}
+import monocle._
 import scalaz.Applicative
 
 object traversal extends TraversalSyntax
 
 private[syntax] trait TraversalSyntax {
-  implicit def toTraversalOps[S, T, A, B](traversal: Traversal[S, T, A, B]): TraversalOps[S, T, A, B] = new TraversalOps(traversal)
-
   implicit def toApplyTraversalOps[S](value: S): ApplyTraversalOps[S] = new ApplyTraversalOps(value)
 }
 
-private[syntax] final class TraversalOps[S, T, A, B](val self: Traversal[S, T, A, B]) {
-  def |->>[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = self composeTraversal other
+final case class ApplyTraversalOps[S](s: S) {
+  def applyTraversal[T, A, B](traversal: Traversal[S, T, A, B]): ApplyTraversal[S, T, A, B] = ApplyTraversal[S, T, A, B](s, traversal)
 }
 
-private[syntax] trait ApplyTraversal[S, T, A, B] extends ApplySetter[S, T, A, B] with ApplyFold[S, A] { self =>
-  def _traversal: Traversal[S, T, A, B]
+final case class ApplyTraversal[S, T, A, B](s: S, traversal: Traversal[S, T, A, B]){
+  def getAll: List[A] = traversal.getAll(s)
+  def set(b: B): T = traversal.set(s, b)
+  def modify(f: A => B): T = traversal.modify(s, f)
 
-  def _fold: Fold[S, A] = _traversal
-  def _setter: Setter[S, T, A, B] = _traversal
-
-  def multiLift[F[_]: Applicative](f: A => F[B]): F[T] = _traversal.multiLift[F](from, f)
-
-  def composeTraversal[C, D](other: Traversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = new ApplyTraversal[S, T, C, D] {
-    val from: S = self.from
-    val _traversal: Traversal[S, T, C, D] = self._traversal composeTraversal other
-  }
-
-  /** Alias to composeTraversal */
-  def |->>[C, D](other: Traversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = composeTraversal(other)
-
-}
-
-private[syntax] final class ApplyTraversalOps[S](value: S) {
-  def applyTraversal[T, A, B](traversal: Traversal[S, T, A, B]): ApplyTraversal[S, T, A, B] = new ApplyTraversal[S, T, A, B] {
-    val from: S = value
-    def _traversal: Traversal[S, T, A, B] = traversal
-  }
-
-  /** Alias to ApplyTraversal */
-  def |->>[T, A, B](traversal: Traversal[S, T, A, B]): ApplyTraversal[S, T, A, B] = applyTraversal(traversal)
+  def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, traversal composeSetter other)
+  def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, traversal composeFold other)
+  def composeTraversal[C, D](other: Traversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = ApplyTraversal(s, traversal composeTraversal other)
+  def composeOptional[C, D](other: Optional[A, B, C, D]): ApplyTraversal[S, T, C, D] = ApplyTraversal(s, traversal composeOptional other)
+  def composePrism[C, D](other: Prism[A, B, C, D]): ApplyTraversal[S, T, C, D] = ApplyTraversal(s, traversal composePrism  other)
+  def composeLens[C, D](other: Lens[A, B, C, D]): ApplyTraversal[S, T, C, D] = ApplyTraversal(s, traversal composeLens other)
+  def composeIso[C, D](other: Iso[A, B, C, D]): ApplyTraversal[S, T, C, D] = ApplyTraversal(s, traversal composeIso other)
 }

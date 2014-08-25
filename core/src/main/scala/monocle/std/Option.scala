@@ -26,15 +26,15 @@ trait OptionInstances extends OptionFunctions {
   }
 
   implicit def optEach[A]: Each[Option[A], A] = new Each[Option[A], A] {
-    def each = some
+    def each = some.asTraversal
   }
 
   implicit def optionHeadOption[A]: HeadOption[Option[A], A] = new HeadOption[Option[A], A] {
-    def headOption = some
+    def headOption = some.asOptional
   }
 
   implicit def optionLastOption[A] = new LastOption[Option[A], A] {
-    def lastOption = some
+    def lastOption = some.asOptional
   }
 
 
@@ -43,15 +43,15 @@ trait OptionInstances extends OptionFunctions {
   }
 
   implicit def someEach[A]: Each[Some[A], A] = new Each[Some[A], A] {
-    def each = someIso
+    def each = someIso.asTraversal
   }
 
   implicit def someHeadOption[A]: HeadOption[Some[A], A] = new HeadOption[Some[A], A] {
-    def headOption = someIso
+    def headOption = someIso.asOptional
   }
 
   implicit def someLastOption[A] = new LastOption[Some[A], A] {
-    def lastOption = someIso
+    def lastOption = someIso.asOptional
   }
 
 }

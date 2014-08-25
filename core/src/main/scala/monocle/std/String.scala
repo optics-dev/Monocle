@@ -51,7 +51,7 @@ trait StringInstances {
   }
 
   implicit val stringTailOption: TailOption[String, String] = new TailOption[String, String]{
-    def tailOption = stringToList composeOptional TailOption.tailOption[List[Char], List[Char]] composeOptional stringToList.reverse
+    def tailOption = stringToList composeOptional TailOption.tailOption[List[Char], List[Char]] composeIso stringToList.reverse
   }
 
   implicit val stringLastOption: LastOption[String, Char] =

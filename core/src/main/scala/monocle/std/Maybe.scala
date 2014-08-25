@@ -24,7 +24,7 @@ trait MaybeFunctions {
 
 trait MaybeInstances extends MaybeFunctions {
   implicit def maybeEach[A]: Each[Maybe[A], A] = new Each[Maybe[A], A]{
-    def each = just
+    def each = just.asTraversal
   }
 
   implicit def maybeEmpty[A]: Empty[Maybe[A]] = new Empty[Maybe[A]]{

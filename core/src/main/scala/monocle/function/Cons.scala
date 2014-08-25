@@ -11,8 +11,8 @@ trait Cons[S, A] {
  
   def _cons: SimplePrism[S, (A, S)]
 
-  final def headOption: SimpleOptional[S, A] = _cons composeOptional first
-  final def tailOption: SimpleOptional[S, S] = _cons composeOptional second
+  final def headOption: SimpleOptional[S, A] = _cons composeLens first
+  final def tailOption: SimpleOptional[S, S] = _cons composeLens second
 
 }
 

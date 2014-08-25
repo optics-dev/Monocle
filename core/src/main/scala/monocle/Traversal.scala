@@ -8,26 +8,38 @@ import scalaz.{ Const, Monoid, Traverse, Applicative }
  * A Traversal is generalisation of a Lens in a way that it defines a multi foci between
  * S and 0 to many A.
  */
-trait Traversal[S, T, A, B] extends Setter[S, T, A, B] with Fold[S, A] { self =>
+abstract class Traversal[S, T, A, B] { self =>
 
   def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T]
 
   final def multiLift[F[_]: Applicative](s: S, f: A => F[B]): F[T] = _traversal(s, f)
 
+  final def getAll(s: S): List[A] = asFold.getAll(s)
+
   final def modifyF(f: A => B): S => T = _traversal[Id](_, a => id.point(f(a)))
+  final def modify(s: S, f: A => B): T = modifyF(f)(s)
 
-  final def foldMap[M: Monoid](s: S)(f: A => M): M =
-    _traversal[({ type l[a] = Const[M, a] })#l](s, a => Const[M, B](f(a))).getConst
+  final def set(s: S, newValue: B): T = setF(newValue)(s)
+  final def setF(newValue: B): S => T = modifyF(_ => newValue)
 
-  final def asTraversal: Traversal[S, T, A, B] = self
-
-  /** non overloaded compose function */
+  // Compose
+  final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
+  final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = asSetter composeSetter other
   final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = new Traversal[S, T, C, D] {
     def _traversal[F[_]: Applicative](s: S, f: C => F[D]): F[T] = self.multiLift(s, other.multiLift(_, f))
   }
+  final def composeOptional[C, D](other: Optional[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
+  final def composePrism[C, D](other: Prism[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
+  final def composeLens[C, D](other: Lens[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
+  final def composeIso[C, D](other: Iso[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
 
-  @deprecated("Use composeTraversal", since = "0.5")
-  def compose[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other)
+  // Optic transformation
+  def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modifyF)
+
+  def asFold: Fold[S, A] = new Fold[S, A]{
+    def foldMap[M: Monoid](s: S)(f: A => M): M =
+      _traversal[({ type l[a] = Const[M, a] })#l](s, a => Const[M, B](f(a))).getConst
+  }
 
 }
 
