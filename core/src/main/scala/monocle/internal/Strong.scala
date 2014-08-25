@@ -13,7 +13,7 @@ trait Strong[P[_, _]] extends Profunctor[P] {
 
 object Strong {
 
-  def apply[P[_, _]](implicit ev: ProChoice[P]): ProChoice[P] = ev
+  def apply[P[_, _]](implicit ev: Strong[P]): Strong[P] = ev
 
   implicit val function1Strong = new Strong[Function1]{
     def first[A, B, C] (f: A => B): ((A, C)) => (B, C) =
