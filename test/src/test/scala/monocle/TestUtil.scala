@@ -25,6 +25,7 @@ object TestUtil {
   implicit def listEq[A: Equal] = scalaz.std.list.listEqual[A]
   implicit def vectorEq[A: Equal] = scalaz.std.vector.vectorEqual[A]
   implicit def streamEq[A: Equal] = scalaz.std.stream.streamEqual[A]
+  implicit def setEq[A: Order] = scalaz.std.set.setOrder[A]
   implicit def mapEq[K: Order, V: Equal] = scalaz.std.map.mapEqual[K, V]
 
   implicit def tuple2Eq[A1: Equal, A2: Equal] = scalaz.std.tuple.tuple2Equal[A1, A2]
@@ -71,6 +72,11 @@ object TestUtil {
     3 -> Arbitrary.arbitrary[A].map(Option(_))
   ))
 
+  implicit def maybeArbitrary[A: Arbitrary]: Arbitrary[Maybe[A]] = Arbitrary(Gen.frequency(
+    1 -> Maybe.empty[A],
+    3 -> Arbitrary.arbitrary[A].map(Maybe.just(_))
+  ))
+
   implicit def someArbitrary[A: Arbitrary]: Arbitrary[Some[A]] = Arbitrary(Arbitrary.arbitrary[A].map(Some(_)))
 
   implicit def disjunctionArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \/ B] =
@@ -89,4 +95,7 @@ object TestUtil {
 
   implicit def mapArbitrary[K: Arbitrary, V: Arbitrary] =
     Arbitrary(Arbitrary.arbitrary[List[(K,V)]].map(_.toMap))
+
+  implicit def setArbitrary[A: Arbitrary]: Arbitrary[Set[A]] =
+    Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toSet))
 }

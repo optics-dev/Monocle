@@ -24,7 +24,7 @@ trait FilterIndexFunctions {
 
   def traverseFilterIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] = new FilterIndex[S[A], Int, A]{
     def filterIndex(predicate: Int => Boolean) = new Traversal[S[A], S[A], A, A] {
-      def multiLift[F[_] : Applicative](from: S[A], f: A => F[A]): F[S[A]] =
+      def _traversal[F[_] : Applicative](from: S[A], f: A => F[A]): F[S[A]] =
         zipWithIndex(from).traverse { case (a, j) =>
           if(predicate(j)) f(a) else Applicative[F].point(a)
         }

@@ -4,10 +4,10 @@ trait Getter[S, A] { self =>
 
   def get(from: S): A
 
-  def asGetter: Getter[S, A] = self
+  final def asGetter: Getter[S, A] = self
 
   /** non overloaded compose function */
-  def composeGetter[B](other: Getter[A, B]): Getter[S, B] = new Getter[S, B] {
+  final def composeGetter[B](other: Getter[A, B]): Getter[S, B] = new Getter[S, B] {
     def get(from: S): B = other.get(self.get(from))
   }
 

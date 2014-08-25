@@ -12,7 +12,7 @@ trait OneAndInstances {
   implicit def oneAndEach[T[_], A](implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
     new Each[OneAnd[T, A], A]{
       def each = new SimpleTraversal[OneAnd[T, A], A]{
-        def multiLift[F[_] : Applicative](from: OneAnd[T, A], f: A => F[A]): F[OneAnd[T, A]] =
+        def _traversal[F[_] : Applicative](from: OneAnd[T, A], f: A => F[A]): F[OneAnd[T, A]] =
           Applicative[F].apply2(f(from.head), ev.each.multiLift(from.tail, f))((head, tail) => new OneAnd(head, tail))
       }
     }

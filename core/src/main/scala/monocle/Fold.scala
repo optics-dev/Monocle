@@ -11,20 +11,20 @@ trait Fold[S, A] { self =>
 
   def foldMap[B: Monoid](from: S)(f: A => B): B
 
-  def fold(from: S)(implicit ev: Monoid[A]): A = foldMap(from)(identity)
+  final def fold(from: S)(implicit ev: Monoid[A]): A = foldMap(from)(identity)
 
-  def getAll(from: S): List[A] = foldMap(from)(List(_))
+  final def getAll(from: S): List[A] = foldMap(from)(List(_))
 
-  def headOption(from: S): Option[A] = Tag.unwrap(foldMap(from)(Option(_).first))
+  final def headOption(from: S): Option[A] = Tag.unwrap(foldMap(from)(Option(_).first))
 
-  def exist(from: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(from)(p(_).disjunction))
+  final def exist(from: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(from)(p(_).disjunction))
 
-  def all(from: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(from)(p(_).conjunction))
+  final def all(from: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(from)(p(_).conjunction))
 
-  def asFold: Fold[S, A] = self
+  final def asFold: Fold[S, A] = self
 
   /** non overloaded compose function */
-  def composeFold[B](other: Fold[A, B]): Fold[S, B] = new Fold[S, B] {
+  final def composeFold[B](other: Fold[A, B]): Fold[S, B] = new Fold[S, B] {
     def foldMap[C: Monoid](from: S)(f: B => C): C = self.foldMap(from)(other.foldMap(_)(f))
   }
 

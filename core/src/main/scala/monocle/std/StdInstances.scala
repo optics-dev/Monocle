@@ -11,7 +11,9 @@ trait StdInstances
   with    ListInstances
   with    LongInstances
   with    MapInstances
+  with    MaybeFunctions  with MaybeInstances
   with    OptionFunctions with OptionInstances
+  with    SetInstances
   with    StreamInstances
   with    StringInstances
   with    Tuple2Instances

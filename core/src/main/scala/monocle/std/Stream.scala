@@ -1,9 +1,9 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{SimplePrism, Optional, SimpleOptional}
+import monocle.{SimpleOptional, SimplePrism}
+
 import scala.collection.immutable.Stream.{#::, Empty}
-import scalaz.Applicative
 import scalaz.std.stream._
 
 object stream extends StreamInstances
@@ -39,27 +39,17 @@ trait StreamInstances {
     )
   }
 
-  implicit def streamHeadOption[A]: HeadOption[Stream[A], A] = new HeadOption[Stream[A], A] {
-    def headOption = SimpleOptional[Stream[A], A](_.headOption, {
-      case (Empty, a)    => Empty
-      case (x #:: xs, a) => a #:: xs
-    })
-  }
+  implicit def streamHeadOption[A]: HeadOption[Stream[A], A] =
+    HeadOption.consHeadOption[Stream[A], A]
 
-  implicit def streamTailOption[A]: TailOption[Stream[A], Stream[A]] = new TailOption[Stream[A], Stream[A]]{
-    def tailOption = new Optional[Stream[A], Stream[A], Stream[A], Stream[A]] {
-      def multiLift[F[_] : Applicative](from: Stream[A], f: Stream[A] => F[Stream[A]]): F[Stream[A]] = from match {
-        case Empty    => Applicative[F].point(Empty)
-        case x #:: xs => Applicative[F].map(f(xs))(x #:: _)
-      }
-    }
-  }
+  implicit def streamTailOption[A]: TailOption[Stream[A], Stream[A]] =
+    TailOption.consTailOption[Stream[A], A]
 
   implicit def streamLastOption[A]: LastOption[Stream[A], A] =
-    LastOption.reverseHeadLastOption[Stream[A], A]
+    LastOption.snocLastOption[Stream[A], A]
 
   implicit def streamInitOption[A]: InitOption[Stream[A], Stream[A]] =
-    InitOption.reverseTailInitOption[Stream[A]]
+    InitOption.snocInitOption[Stream[A], A]
 
   implicit def streamReverse[A]: Reverse[Stream[A], Stream[A]] =
     reverseFromReverseFunction[Stream[A]](_.reverse)

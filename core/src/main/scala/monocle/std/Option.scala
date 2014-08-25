@@ -22,7 +22,7 @@ trait OptionFunctions {
 trait OptionInstances extends OptionFunctions {
 
   implicit def optionEmpty[A]: Empty[Option[A]] = new Empty[Option[A]] {
-    def empty = SimplePrism[Option[A], Unit](o => o.map(_ => ()), _ => Option.empty)
+    def empty = none
   }
 
   implicit def optEach[A]: Each[Option[A], A] = new Each[Option[A], A] {
