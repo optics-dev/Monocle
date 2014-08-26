@@ -25,7 +25,7 @@ trait LastOptionFunctions {
   }
 
   def snocLastOption[S, A](implicit ev: Snoc[S, A]): LastOption[S, A] = new LastOption[S, A]{
-    def lastOption = ev.lastOption
+    def lastOption = ev.lastMaybe
   }
 
 }

@@ -16,7 +16,7 @@ trait SetInstances {
   implicit def atSet[A]: At[Set[A], A, Unit] = new At[Set[A], A, Unit] {
     def at(a: A) = SimpleLens[Set[A], Maybe[Unit]](
       s => if(s(a)) Maybe.just(()) else Maybe.empty,
-      (set, maybeA) => maybeA.cata(_ => set - a, set + a)
+      (set, maybeA) => maybeA.cata(_ => set + a, set - a)
     )
   }
 

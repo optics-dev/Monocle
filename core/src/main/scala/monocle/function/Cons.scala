@@ -12,16 +12,19 @@ trait Cons[S, A] {
  
   def _cons: SimplePrism[S, (A, S)]
 
-  final def headOption: SimpleOptional[S, A] = _cons composeLens first
-  final def tailOption: SimpleOptional[S, S] = _cons composeLens second
+  final def headMaybe: SimpleOptional[S, A] = _cons composeLens first
+  final def tailMaybe: SimpleOptional[S, S] = _cons composeLens second
 
 }
 
-object Cons extends ConsFunctions with ConsFunctionsAfterDeprecation
+object Cons extends ConsFunctions
 
 
 trait ConsFunctions {
   final def cons[S, A](implicit ev: Cons[S, A]): SimplePrism[S, (A, S)] = ev._cons
+
+  final def headMaybe[S, A](implicit ev: Cons[S, A]): SimpleOptional[S, A] = ev.headMaybe
+  final def tailMaybe[S, A](implicit ev: Cons[S, A]): SimpleOptional[S, S] = ev.tailMaybe
 
   /** append an element to the head */
   final def _cons[S, A](head: A, tail: S)(implicit ev: Cons[S, A]): S =
@@ -30,10 +33,4 @@ trait ConsFunctions {
   /** deconstruct an S between its head and tail */
   final def _uncons[S, A](s: S)(implicit ev: Cons[S, A]): Maybe[(A, S)] =
     ev._cons.getMaybe(s)
-}
-
-// To merge into ConsFunctions when HeadOption and LastOption are deprecated
-sealed trait ConsFunctionsAfterDeprecation {
-  final def headOption[S, A](implicit ev: Cons[S, A]): SimpleOptional[S, A] = ev.headOption
-  final def tailOption[S, A](implicit ev: Cons[S, A]): SimpleOptional[S, S] = ev.tailOption
 }

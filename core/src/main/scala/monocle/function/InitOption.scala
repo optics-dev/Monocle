@@ -27,7 +27,7 @@ trait InitOptionFunctions {
   }
 
   def snocInitOption[S, A](implicit ev: Snoc[S, A]): InitOption[S, S] = new InitOption[S, S]{
-    def initOption = ev.initOption
+    def initOption = ev.initMaybe
   }
 
 }

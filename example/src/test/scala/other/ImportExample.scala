@@ -40,7 +40,7 @@ class ImportExample extends Spec {
     // do not compile because scala cannot infer which instance of Each is required
     illTyped { """each.modify(List(1,2,3), _ + 1)""" }
 
-    List(1,2,3) |->> each modify(_ + 1) shouldEqual List(2,3,4)
+    List(1,2,3) applyTraversal each modify(_ + 1) shouldEqual List(2,3,4)
   }
 
   "monocle.std._ brings all polymorphic Optic instances in scope for standard Scala classes" in {
@@ -67,8 +67,8 @@ class ImportExample extends Spec {
   "monocle._, Monocle._ makes all Monocle core features available (no generic)" in {
     import monocle._, Monocle._
 
-    List(1,2,3)  |->> each modify(_ + 1) shouldEqual List(2,3,4)
-    IList(1,2,3) |->> each modify(_ + 1) shouldEqual IList(2,3,4)
+    List(1,2,3)  applyTraversal each modify(_ + 1) shouldEqual List(2,3,4)
+    IList(1,2,3) applyTraversal each modify(_ + 1) shouldEqual IList(2,3,4)
   }
 
 }

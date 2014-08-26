@@ -4,14 +4,16 @@ import org.specs2.scalaz.Spec
 import monocle.syntax._
 import monocle.std._
 
+import scalaz.Maybe
+
 class EmptyExample extends Spec {
 
   "empty is a Prism that is successful only when S is empty" in {
-    (List(1, 2, 3)   <-? empty getOption) shouldEqual None
+    (List(1, 2, 3) applyPrism empty getMaybe) shouldEqual Maybe.empty
 
-    (List.empty[Int]   <-? empty getOption) shouldEqual Some(())
-    (Vector.empty[Int] <-? empty getOption) shouldEqual Some(())
-    (""                <-? empty getOption) shouldEqual Some(())
+    (List.empty[Int]   applyPrism empty getMaybe) shouldEqual Maybe.just(())
+    (Vector.empty[Int] applyPrism empty getMaybe) shouldEqual Maybe.just(())
+    (""                applyPrism empty getMaybe) shouldEqual Maybe.just(())
   }
 
   "_empty return the empty value of a given type" in {

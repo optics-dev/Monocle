@@ -15,9 +15,13 @@ final case class ApplyOptionalOps[S](s: S) {
 }
 
 final case class ApplyOptional[S, T, A, B](s: S, optional: Optional[S, T, A, B]){
-  def getOption: Maybe[A] = optional.getMaybe(s)
-  def set(b: B): T = optional.set(s, b)
+  def getMaybe: Maybe[A] = optional.getMaybe(s)
+
   def modify(f: A => B): T = optional.modify(s, f)
+  def modifyMaybe(f: A => B): Maybe[T] = optional.modifyMaybe(s, f)
+
+  def set(b: B): T = optional.set(s, b)
+  def setMaybe(b: B): Maybe[T] = optional.setMaybe(s, b)
 
   def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, optional composeSetter other)
   def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, optional composeFold other)
