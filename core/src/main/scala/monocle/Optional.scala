@@ -16,13 +16,13 @@ abstract class Optional[S, T, A, B] { self =>
 
   final def modifyF(f: A => B): S => T = _optional[Id](_, a => id.point(f(a)))
   final def modify(s: S, f: A => B): T = modifyF(f)(s)
-  final def modifyOption(s: S, f: A => B): Option[T] = getOption(s).map(a => set(s, f(a)))
   final def modifyOptionF(f: A => B): S => Option[T] = modifyOption(_, f)
+  final def modifyOption(s: S, f: A => B): Option[T] = getOption(s).map(a => set(s, f(a)))
 
-  final def set(s: S, newValue: B): T = setF(newValue)(s)
   final def setF(newValue: B): S => T = modifyF(_ => newValue)
-  final def setOption(s: S, newValue: B): Option[T] = modifyOption(s, _ => newValue)
-  final def setOptionF(newValue: B): S => Option[T] = setOption(_, newValue)
+  final def set(s: S, newValue: B): T = setF(newValue)(s)
+  final def setOptionF(newValue: B): S => Option[T] = modifyOptionF(_ => newValue)
+  final def setOption(s: S, newValue: B): Option[T] = setOptionF(newValue)(s)
 
   // Compose
   final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
@@ -36,15 +36,13 @@ abstract class Optional[S, T, A, B] { self =>
   final def composeIso[C, D](other: Iso[A, B, C, D]): Optional[S, T, C, D] = composeOptional(other.asOptional)
 
   // Optic transformation
-  final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](s: S, f: A => F[B]): F[T] = _optional(s, f)
-  }
-
-  final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modifyF)
-
   final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](s: S)(f: A => M): M =
       _optional[({ type l[a] = Const[M, a] })#l](s, a => Const[M, B](f(a))).getConst
+  }
+  final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modifyF)
+  final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def _traversal[F[_] : Applicative](s: S, f: A => F[B]): F[T] = _optional(s, f)
   }
 
 }

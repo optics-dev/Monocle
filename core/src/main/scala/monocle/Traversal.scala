@@ -19,8 +19,9 @@ abstract class Traversal[S, T, A, B] { self =>
   final def modifyF(f: A => B): S => T = _traversal[Id](_, a => id.point(f(a)))
   final def modify(s: S, f: A => B): T = modifyF(f)(s)
 
-  final def set(s: S, newValue: B): T = setF(newValue)(s)
   final def setF(newValue: B): S => T = modifyF(_ => newValue)
+  final def set(s: S, newValue: B): T = setF(newValue)(s)
+
 
   // Compose
   final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other

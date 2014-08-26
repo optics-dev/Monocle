@@ -22,13 +22,13 @@ abstract class Prism[S, T, A, B]{ self =>
 
   final def modifyF(f: A => B): S => T = _prism[Function1, Id](f)
   final def modify(s: S, f: A => B): T = modifyF(f)(s)
-  final def modifyOption(s: S, f: A => B): Option[T] = getOption(s).map(a => set(s, f(a)))
   final def modifyOptionF(f: A => B): S => Option[T] = modifyOption(_, f)
+  final def modifyOption(s: S, f: A => B): Option[T] = getOption(s).map(a => set(s, f(a)))
 
-  final def set(s: S, newValue: B): T = setF(newValue)(s)
   final def setF(newValue: B): S => T = modifyF(_ => newValue)
-  final def setOption(s: S, newValue: B): Option[T] = modifyOption(s, _ => newValue)
-  final def setOptionF(newValue: B): S => Option[T] = setOption(_, newValue)
+  final def set(s: S, newValue: B): T = setF(newValue)(s)
+  final def setOptionF(newValue: B): S => Option[T] = modifyOptionF(_ => newValue)
+  final def setOption(s: S, newValue: B): Option[T] = setOptionF(newValue)(s)
 
 
   // Compose

@@ -21,8 +21,8 @@ abstract class Iso[S, T, A, B] { self =>
   final def modifyF(f: A => B): S => T = _iso[Function1, Id](f)
   final def modify(s: S, f: A => B): T = modifyF(f)(s)
 
-  final def set(s: S, newValue: B): T = setF(newValue)(s)
   final def setF(newValue: B): S => T = modifyF(_ => newValue)
+  final def set(s: S, newValue: B): T = setF(newValue)(s)
 
 
   // Compose
@@ -38,8 +38,6 @@ abstract class Iso[S, T, A, B] { self =>
       (self._iso[P, F] _ compose other._iso[P, F])(pcfd)
   }
 
-  @deprecated("Use composeIso", since = "0.5")
-  final def compose[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = composeIso(other)
 
   // Optics transformation
   final def asLens: Lens[S, T, A, B] = new Lens[S, T, A, B]{
