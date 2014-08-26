@@ -6,7 +6,7 @@ import org.specs2.scalaz.Spec
 class SafeCastExample extends Spec {
 
   "safeCast creates a Prism from Int to Char" in {
-    safeCast[Int, Char].getOption(65)   shouldEqual Some('A')
+    safeCast[Int, Char].getMaybe(65)   shouldEqual Some('A')
     safeCast[Int, Char].reverseGet('a') shouldEqual 97
 
     import monocle.syntax.prism._
@@ -19,20 +19,20 @@ class SafeCastExample extends Spec {
   }
 
   "safeCast creates a Prism from Double to Int" in {
-    safeCast[Double, Int].getOption(5d) shouldEqual Some(5)
+    safeCast[Double, Int].getMaybe(5d) shouldEqual Some(5)
 
-    safeCast[Double, Int].getOption(5.4d)                    shouldEqual None
-    safeCast[Double, Int].getOption(Double.PositiveInfinity) shouldEqual None
-    safeCast[Double, Int].getOption(Double.NaN)              shouldEqual None
+    safeCast[Double, Int].getMaybe(5.4d)                    shouldEqual None
+    safeCast[Double, Int].getMaybe(Double.PositiveInfinity) shouldEqual None
+    safeCast[Double, Int].getMaybe(Double.NaN)              shouldEqual None
   }
 
   "safeCast creates a Prism from String to Int" in {
-    safeCast[String, Int].getOption("352")  shouldEqual Some(352)
-    safeCast[String, Int].getOption("-352") shouldEqual Some(-352)
-    safeCast[String, Int].getOption("୨")    shouldEqual None // Non ascii digits
-    safeCast[String, Int].getOption("")     shouldEqual None
+    safeCast[String, Int].getMaybe("352")  shouldEqual Some(352)
+    safeCast[String, Int].getMaybe("-352") shouldEqual Some(-352)
+    safeCast[String, Int].getMaybe("୨")    shouldEqual None // Non ascii digits
+    safeCast[String, Int].getMaybe("")     shouldEqual None
     // we reject case where String starts with +, otherwise it will be an invalid Prism according 2nd Prism law
-    safeCast[String, Int].getOption("+352") shouldEqual None
+    safeCast[String, Int].getMaybe("+352") shouldEqual None
 
     safeCast[String, Int].reverseGet(8921)  shouldEqual "8921"
     safeCast[String, Int].reverseGet(-32)   shouldEqual "-32"
@@ -41,7 +41,7 @@ class SafeCastExample extends Spec {
   }
 
   "safeCast creates a Prism from String to Boolean" in {
-    safeCast[String, Boolean].getOption("true") shouldEqual Some(true)
+    safeCast[String, Boolean].getMaybe("true") shouldEqual Some(true)
     safeCast[String, Boolean].reverseGet(false) shouldEqual "false"
   }
 

@@ -7,7 +7,7 @@ class OptionExample extends Spec {
 
   "some creates a Prism from an Option to its element" in {
 
-    some.getOption(Some(1)) shouldEqual Some(1)
+    some.getMaybe(Some(1)) shouldEqual Some(1)
     some.reverseGet(1)      shouldEqual Some(1)
 
     // type can be changed with set and modify
@@ -20,8 +20,8 @@ class OptionExample extends Spec {
 
   "none creates a Prism from an Option to Unit" in {
 
-    none.getOption(None)    shouldEqual Some(())
-    none.getOption(Some(2)) shouldEqual None
+    none.getMaybe(None)    shouldEqual Some(())
+    none.getMaybe(Some(2)) shouldEqual None
 
     none.reverseGet(()) shouldEqual None
 

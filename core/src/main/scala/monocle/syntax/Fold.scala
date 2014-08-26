@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import monocle._
-import scalaz.Monoid
+import scalaz.{Maybe, Monoid}
 
 object fold extends FoldSyntax
 
@@ -20,7 +20,7 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
 
   def getAll: List[A] = _fold.getAll(s)
 
-  def headOption: Option[A] = _fold.headOption(s)
+  def headOption: Maybe[A] = _fold.headMaybe(s)
 
   def exist(p: A => Boolean): Boolean = _fold.exist(s)(p)
 

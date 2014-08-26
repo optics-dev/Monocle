@@ -2,6 +2,8 @@ package monocle.syntax
 
 import monocle._
 
+import scalaz.Maybe
+
 object optional extends OptionalSyntax
 
 private[syntax] trait OptionalSyntax {
@@ -13,7 +15,7 @@ final case class ApplyOptionalOps[S](s: S) {
 }
 
 final case class ApplyOptional[S, T, A, B](s: S, optional: Optional[S, T, A, B]){
-  def getOption: Option[A] = optional.getOption(s)
+  def getOption: Maybe[A] = optional.getMaybe(s)
   def set(b: B): T = optional.set(s, b)
   def modify(f: A => B): T = optional.modify(s, f)
 

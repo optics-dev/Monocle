@@ -12,17 +12,17 @@ abstract class Optional[S, T, A, B] { self =>
 
   def _optional[F[_]: Applicative](s: S, f: A => F[B]): F[T]
 
-  final def getOption(s: S): Option[A] = asFold.headOption(s)
+  final def getMaybe(s: S): Maybe[A] = asFold.headMaybe(s)
 
   final def modifyF(f: A => B): S => T = _optional[Id](_, a => id.point(f(a)))
   final def modify(s: S, f: A => B): T = modifyF(f)(s)
-  final def modifyOptionF(f: A => B): S => Option[T] = modifyOption(_, f)
-  final def modifyOption(s: S, f: A => B): Option[T] = getOption(s).map(a => set(s, f(a)))
+  final def modifyMaybeF(f: A => B): S => Maybe[T] = modifyMaybe(_, f)
+  final def modifyMaybe(s: S, f: A => B): Maybe[T] = getMaybe(s).map(a => set(s, f(a)))
 
   final def setF(newValue: B): S => T = modifyF(_ => newValue)
   final def set(s: S, newValue: B): T = setF(newValue)(s)
-  final def setOptionF(newValue: B): S => Option[T] = modifyOptionF(_ => newValue)
-  final def setOption(s: S, newValue: B): Option[T] = setOptionF(newValue)(s)
+  final def setMaybeF(newValue: B): S => Maybe[T] = modifyMaybeF(_ => newValue)
+  final def setMaybe(s: S, newValue: B): Maybe[T] = setMaybeF(newValue)(s)
 
   // Compose
   final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other

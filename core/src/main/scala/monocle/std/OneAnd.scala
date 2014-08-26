@@ -3,7 +3,8 @@ package monocle.std
 import monocle.function._
 import monocle.{SimpleTraversal, SimpleLens, SimpleOptional}
 
-import scalaz.{Applicative, OneAnd}
+import scalaz.Maybe.{Empty, Just}
+import scalaz.{Maybe, Applicative, OneAnd}
 
 object oneand extends OneAndInstances
 
@@ -20,8 +21,8 @@ trait OneAndInstances {
   implicit def oneAndIndex[T[_], A](implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] =
     new Index[OneAnd[T, A], Int, A]{
       def index(i: Int) = i match {
-        case 0 => SimpleOptional[OneAnd[T, A], A](oneAnd => Some(oneAnd.head), (oneAnd, a) => oneAnd.copy(head = a))
-        case _ => SimpleOptional[OneAnd[T, A], A](oneAnd => ev.index(i - 1).getOption(oneAnd.tail),
+        case 0 => SimpleOptional[OneAnd[T, A], A](oneAnd => Maybe.just(oneAnd.head), (oneAnd, a) => oneAnd.copy(head = a))
+        case _ => SimpleOptional[OneAnd[T, A], A](oneAnd => ev.index(i - 1).getMaybe(oneAnd.tail),
           (oneAnd, a) =>  oneAnd.copy(tail = ev.index(i - 1).set(oneAnd.tail, a)) )
       }
     }
@@ -38,10 +39,10 @@ trait OneAndInstances {
   }
 
   implicit def oneAndLastFromLastOption[T[_], A](implicit ev: LastOption[T[A], A]): Last[OneAnd[T, A], A] = new Last[OneAnd[T, A], A] {
-    def last = SimpleLens[OneAnd[T, A], A](oneAnd => ev.lastOption.getOption(oneAnd.tail).getOrElse(oneAnd.head),
-      (oneAnd, a) => ev.lastOption.setOption(oneAnd.tail, a) match {
-        case Some(newTail) => oneAnd.copy(tail = newTail)
-        case None          => oneAnd.copy(head = a)
+    def last = SimpleLens[OneAnd[T, A], A](oneAnd => ev.lastOption.getMaybe(oneAnd.tail).getOrElse(oneAnd.head),
+      (oneAnd, a) => ev.lastOption.setMaybe(oneAnd.tail, a) match {
+        case Just(newTail) => oneAnd.copy(tail = newTail)
+        case Empty()       => oneAnd.copy(head = a)
       })
   }
 

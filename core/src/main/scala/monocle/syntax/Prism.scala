@@ -2,6 +2,8 @@ package monocle.syntax
 
 import monocle._
 
+import scalaz.Maybe
+
 object prism extends PrismSyntax
 
 private[syntax] trait PrismSyntax {
@@ -13,7 +15,7 @@ final case class ApplyPrismOps[S](s: S) {
 }
 
 final case class ApplyPrism[S, T, A, B](s: S, prism: Prism[S, T, A, B]){
-  def getOption: Option[A] = prism.getOption(s)
+  def getOption: Maybe[A] = prism.getMaybe(s)
   def set(b: B): T = prism.set(s, b)
   def modify(f: A => B): T = prism.modify(s, f)
 

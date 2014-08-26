@@ -1,4 +1,4 @@
-import scalaz.{ -\/, \/- }
+import scalaz.{Maybe, -\/, \/-}
 import scala.util.Try
 
 package object monocle {
@@ -22,14 +22,14 @@ package object monocle {
   }
 
   object SimpleOptional {
-    def apply[S, A](_getOption: S => Option[A], _set: (S, A) => S): SimpleOptional[S, A] =
-      Optional[S, S, A, A](s => _getOption(s).map(\/-(_)) getOrElse -\/(s), _set)
+    def apply[S, A](_getMaybe: S => Maybe[A], _set: (S, A) => S): SimpleOptional[S, A] =
+      Optional[S, S, A, A](s => _getMaybe(s) \/> s, _set)
 
     /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
     def apply[S]: Constructor[S] = new Constructor[S]
     final class Constructor[S] {
-      @inline def apply[A](_getOption: S => Option[A])(_set: (S, A) => S): SimpleOptional[S, A] =
-        SimpleOptional(_getOption, _set)
+      @inline def apply[A](_getMaybe: S => Maybe[A])(_set: (S, A) => S): SimpleOptional[S, A] =
+        SimpleOptional(_getMaybe, _set)
     }
   }
 
@@ -45,13 +45,13 @@ package object monocle {
   }
 
   object SimplePrism {
-    def apply[S, A](_getOption: S => Option[A], _reverseGet: A => S): SimplePrism[S, A] =
-      Prism({ s: S => _getOption(s).map(\/-(_)) getOrElse -\/(s) }, _reverseGet)
+    def apply[S, A](_getMaybe: S => Maybe[A], _reverseGet: A => S): SimplePrism[S, A] =
+      Prism( s => _getMaybe(s) \/> s, _reverseGet)
 
     /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
     def apply[A]: Constructor[A] = new Constructor[A]
     final class Constructor[A] {
-      @inline def apply[S](_getOption: S => Option[A])(_reverseGet: A => S) = SimplePrism[S, A](_getOption, _reverseGet)
+      @inline def apply[S](_getMaybe: S => Maybe[A])(_reverseGet: A => S) = SimplePrism[S, A](_getMaybe, _reverseGet)
     }
   }
 

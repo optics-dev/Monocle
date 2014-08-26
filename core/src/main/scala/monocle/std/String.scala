@@ -2,8 +2,7 @@ package monocle.std
 
 import monocle.function._
 import monocle.{SimplePrism, SimpleIso}
-import scala.util.Try
-import scalaz.std.option._
+import scalaz.Maybe
 import scalaz.std.list._
 import scalaz.syntax.traverse._
 
@@ -14,7 +13,7 @@ trait StringInstances {
   val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString)
 
   implicit val stringEmpty: Empty[String] = new Empty[String] {
-    def empty = SimplePrism[String, Unit](s => if(s.isEmpty) Some(()) else None, _ => "")
+    def empty = SimplePrism[String, Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty, _ => "")
   }
 
   implicit val stringReverse: Reverse[String, String] = reverseFromReverseFunction[String](_.reverse)
@@ -34,14 +33,14 @@ trait StringInstances {
 
   implicit val stringCons: Cons[String, Char] = new Cons[String, Char] {
     def _cons = SimplePrism[String, (Char, String)](s =>
-      if(s.isEmpty) None else Some(s.head, s.tail),
+      if(s.isEmpty) Maybe.empty else Maybe.just(s.head, s.tail),
       { case (h, t) => h + t }
     )
   }
 
   implicit val stringSnoc: Snoc[String, Char] = new Snoc[String, Char]{
     def snoc = SimplePrism[String, (String, Char)]( s =>
-      if(s.isEmpty) None else Some((s.init, s.last)),
+      if(s.isEmpty) Maybe.empty else Maybe.just((s.init, s.last)),
     { case (init, last) => init :+ last }
     )
   }
@@ -62,7 +61,7 @@ trait StringInstances {
 
 
   implicit val stringToBoolean = new SafeCast[String, Boolean] {
-    def safeCast = SimplePrism[String, Boolean](s => Try(s.toBoolean).toOption, _.toString)
+    def safeCast = SimplePrism[String, Boolean](s => Maybe.fromTryCatchNonFatal(s.toBoolean), _.toString)
   }
 
   implicit val stringToLong = new SafeCast[String, Long] {
@@ -77,19 +76,19 @@ trait StringInstances {
     def safeCast = SafeCast.safeCast[String, Long] composePrism SafeCast.safeCast[Long, Byte]
   }
 
-  private def parseLong(s: String): Option[Long] =
-    if (s.isEmpty) None
+  private def parseLong(s: String): Maybe[Long] =
+    if (s.isEmpty) Maybe.empty
     else s.toList match {
       case '-' :: xs => parseLongUnsigned(xs).map(-_)
       case xs        => parseLongUnsigned(xs)
       // we reject case where String starts with +, otherwise it will be an invalid Prism according 2nd Prism law
     }
 
-  private def parseLongUnsigned(s: List[Char]): Option[Long] =
+  private def parseLongUnsigned(s: List[Char]): Maybe[Long] =
     s.traverse(charToDigit).map(_.foldl(0L)(n => d => n * 10 + d))
 
-  private def charToDigit(c: Char): Option[Int] =
-    if (c >= '0' && c <= '9') Some(c - '0')
-    else None
+  private def charToDigit(c: Char): Maybe[Int] =
+    if (c >= '0' && c <= '9') Maybe.just(c - '0')
+    else Maybe.empty
 
 }

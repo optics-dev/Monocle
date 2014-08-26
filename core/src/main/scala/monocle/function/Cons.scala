@@ -4,6 +4,7 @@ import monocle.std.tuple2._
 import monocle.{SimpleOptional, SimplePrism}
 
 import scala.annotation.implicitNotFound
+import scalaz.Maybe
 
 @implicitNotFound("Could not find an instance of Cons[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
@@ -27,8 +28,8 @@ trait ConsFunctions {
     ev._cons.reverseGet((head, tail))
 
   /** deconstruct an S between its head and tail */
-  final def _uncons[S, A](s: S)(implicit ev: Cons[S, A]): Option[(A, S)] =
-    ev._cons.getOption(s)
+  final def _uncons[S, A](s: S)(implicit ev: Cons[S, A]): Maybe[(A, S)] =
+    ev._cons.getMaybe(s)
 }
 
 // To merge into ConsFunctions when HeadOption and LastOption are deprecated

@@ -2,10 +2,9 @@ package monocle
 
 import scalaz.std.anyVal._
 import scalaz.std.list._
-import scalaz.std.option._
 import scalaz.syntax.std.boolean._
-import scalaz.syntax.std.option._
-import scalaz.{ Foldable, Monoid, Tag }
+import scalaz.Maybe._
+import scalaz.{Maybe, Foldable, Monoid, Tag}
 
 abstract class Fold[S, A] { self =>
 
@@ -13,7 +12,7 @@ abstract class Fold[S, A] { self =>
 
   final def fold(s: S)(implicit ev: Monoid[A]): A = foldMap(s)(identity)
   final def getAll(s: S): List[A] = foldMap(s)(List(_))
-  final def headOption(s: S): Option[A] = Tag.unwrap(foldMap(s)(Option(_).first))
+  final def headMaybe(s: S): Maybe[A] = Tag.unwrap(foldMap(s)(Maybe.just(_).first))
   final def exist(s: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(s)(p(_).disjunction))
   final def all(s: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(s)(p(_).conjunction))
 

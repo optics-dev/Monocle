@@ -14,7 +14,7 @@ class IsoExample extends Spec {
   )
 
   "Iso get transforms a S into an A" in {
-    (Point(3, 5) <-> pointToPair get) shouldEqual (3, 5)
+    (Point(3, 5) <-> pointToPair get) shouldEqual (3, 5)N
   }
 
   "Iso reverse reverses the transformation" in {

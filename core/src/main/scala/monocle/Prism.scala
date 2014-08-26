@@ -3,7 +3,7 @@ package monocle
 import monocle.internal.{ProChoice, Tagged}
 
 import scalaz.Id.Id
-import scalaz.{Monoid, Applicative, \/, Const}
+import scalaz.{Monoid, Applicative, \/, Const, Maybe}
 
 /**
  * A Prism is a special case of Traversal where the focus is limited to
@@ -15,20 +15,20 @@ abstract class Prism[S, T, A, B]{ self =>
   def _prism[P[_, _]: ProChoice, F[_]: Applicative](pafb: P[A, F[B]]): P[S, F[T]]
 
 
-  final def getOption(s: S): Option[A] = asFold.headOption(s)
+  final def getMaybe(s: S): Maybe[A] = asFold.headMaybe(s)
 
   final def reverseGet(b: B): T = _prism[Tagged, Id](Tagged(b)).untagged
   final def re: Getter[B, T] = Getter(reverseGet)
 
   final def modifyF(f: A => B): S => T = _prism[Function1, Id](f)
   final def modify(s: S, f: A => B): T = modifyF(f)(s)
-  final def modifyOptionF(f: A => B): S => Option[T] = modifyOption(_, f)
-  final def modifyOption(s: S, f: A => B): Option[T] = getOption(s).map(a => set(s, f(a)))
+  final def modifyMaybeF(f: A => B): S => Maybe[T] = modifyMaybe(_, f)
+  final def modifyMaybe(s: S, f: A => B): Maybe[T] = getMaybe(s).map(a => set(s, f(a)))
 
   final def setF(newValue: B): S => T = modifyF(_ => newValue)
   final def set(s: S, newValue: B): T = setF(newValue)(s)
-  final def setOptionF(newValue: B): S => Option[T] = modifyOptionF(_ => newValue)
-  final def setOption(s: S, newValue: B): Option[T] = setOptionF(newValue)(s)
+  final def setMaybeF(newValue: B): S => Maybe[T] = modifyMaybeF(_ => newValue)
+  final def setMaybe(s: S, newValue: B): Maybe[T] = setMaybeF(newValue)(s)
 
 
   // Compose
@@ -74,5 +74,5 @@ object Prism extends PrismFunctions {
 
 trait PrismFunctions {
   final def isMatching[S, T, A, B](prism: Prism[S, T, A, B])(s: S): Boolean =
-    prism.getOption(s).isDefined
+    prism.getMaybe(s).isJust
 }

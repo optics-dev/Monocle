@@ -4,6 +4,7 @@ import monocle.{SimpleOptional, SimplePrism}
 import monocle.std.tuple2._
 
 import scala.annotation.implicitNotFound
+import scalaz.Maybe
 
 
 @implicitNotFound("Could not find an instance of Snoc[${S},${A}], please check Monocle instance location policy to " +
@@ -27,8 +28,8 @@ trait SnocFunctions {
     ev.snoc.reverseGet((init, last))
 
   /** deconstruct an S between its init and last */
-  final def _unsnoc[S, A](s: S)(implicit ev: Snoc[S, A]): Option[(S, A)] =
-    ev.snoc.getOption(s)
+  final def _unsnoc[S, A](s: S)(implicit ev: Snoc[S, A]): Maybe[(S, A)] =
+    ev.snoc.getMaybe(s)
 }
 
 // To merge into ConsFunctions when HeadOption and LastOption are deprecated

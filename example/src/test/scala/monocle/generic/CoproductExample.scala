@@ -17,11 +17,11 @@ class CoproductExample extends Spec {
     val b = Coproduct[ISB](true)
     val i = Coproduct[ISB](3)
 
-    safeCast[ISB, Int].getOption(i) shouldEqual Some(3)
-    safeCast[ISB, Int].getOption(b) shouldEqual None
+    safeCast[ISB, Int].getMaybe(i) shouldEqual Some(3)
+    safeCast[ISB, Int].getMaybe(b) shouldEqual None
 
-    safeCast[ISB, Boolean].getOption(i) shouldEqual None
-    safeCast[ISB, Boolean].getOption(b) shouldEqual Some(true)
+    safeCast[ISB, Boolean].getMaybe(i) shouldEqual None
+    safeCast[ISB, Boolean].getMaybe(b) shouldEqual Some(true)
 
     safeCast[ISB, Boolean].reverseGet(true) shouldEqual b
 
