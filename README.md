@@ -221,3 +221,4 @@ Julien Truffaut - [@JulienTruffaut](https://twitter.com/JulienTruffaut "@JulienT
 Ross Huggett - ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
 Ilan Godik - ilan3580@gmail.com / [NightRa](https://github.com/NightRa "NightRa") </a><br>
 Adam Warski - [@adamwarski](http://twitter.com/adamwarski "@adamwarski") </a><br>
+Dale Wijnand - [@dwijnand](http://twitter.com/dwijnand "@dwijnand") </a><br>
