@@ -9,27 +9,27 @@ import scalaz.Maybe
 class ConsSnocExample extends Spec {
 
   "cons add an element to the head" in {
-    _cons(1, List(2, 3))        shouldEqual List(1, 2, 3)
-    _cons(1, Vector.empty[Int]) shouldEqual Vector(1)
+    _cons(1, List(2, 3))        ==== List(1, 2, 3)
+    _cons(1, Vector.empty[Int]) ==== Vector(1)
   }
 
   "uncons deconstructs an element between its head and tail" in {
-    _uncons(List(1, 2, 3))   shouldEqual Maybe.just(1, List(2, 3))
-    _uncons(Vector(1, 2, 3)) shouldEqual Maybe.just(1, Vector(2, 3))
+    _uncons(List(1, 2, 3))   ==== Maybe.just(1, List(2, 3))
+    _uncons(Vector(1, 2, 3)) ==== Maybe.just(1, Vector(2, 3))
 
-    _uncons(List.empty[Int]) shouldEqual Maybe.empty
+    _uncons(List.empty[Int]) ==== Maybe.empty
   }
 
   "snoc add an element to the end" in {
-    _snoc(List(1, 2), 3)        shouldEqual List(1, 2, 3)
-    _snoc(Vector.empty[Int], 1) shouldEqual Vector(1)
+    _snoc(List(1, 2), 3)        ==== List(1, 2, 3)
+    _snoc(Vector.empty[Int], 1) ==== Vector(1)
   }
 
   "snoc deconstructs an element between its init and last" in {
-    _unsnoc(List(1, 2, 3))   shouldEqual Maybe.just(List(1, 2), 3)
-    _unsnoc(Vector(1, 2, 3)) shouldEqual Maybe.just(Vector(1, 2), 3)
+    _unsnoc(List(1, 2, 3))   ==== Maybe.just(List(1, 2), 3)
+    _unsnoc(Vector(1, 2, 3)) ==== Maybe.just(Vector(1, 2), 3)
 
-    _unsnoc(List.empty[Int]) shouldEqual Maybe.empty
+    _unsnoc(List.empty[Int]) ==== Maybe.empty
   }
 
 }

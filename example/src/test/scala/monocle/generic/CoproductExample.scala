@@ -6,6 +6,8 @@ import org.specs2.scalaz.Spec
 import shapeless.test.illTyped
 import shapeless.{:+:, CNil, Coproduct}
 
+import scalaz.Maybe
+
 
 class CoproductExample extends Spec {
 
@@ -17,13 +19,13 @@ class CoproductExample extends Spec {
     val b = Coproduct[ISB](true)
     val i = Coproduct[ISB](3)
 
-    safeCast[ISB, Int].getMaybe(i) shouldEqual Some(3)
-    safeCast[ISB, Int].getMaybe(b) shouldEqual None
+    safeCast[ISB, Int].getMaybe(i) ==== Maybe.just(3)
+    safeCast[ISB, Int].getMaybe(b) ==== Maybe.empty
 
-    safeCast[ISB, Boolean].getMaybe(i) shouldEqual None
-    safeCast[ISB, Boolean].getMaybe(b) shouldEqual Some(true)
+    safeCast[ISB, Boolean].getMaybe(i) ==== Maybe.empty
+    safeCast[ISB, Boolean].getMaybe(b) ==== Maybe.just(true)
 
-    safeCast[ISB, Boolean].reverseGet(true) shouldEqual b
+    safeCast[ISB, Boolean].reverseGet(true) ==== b
 
   }
 
