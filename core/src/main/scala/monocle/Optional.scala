@@ -38,7 +38,7 @@ abstract class Optional[S, T, A, B] { self =>
   // Optic transformation
   final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](s: S)(f: A => M): M =
-      _optional[({ type l[a] = Const[M, a] })#l](s, a => Const[M, B](f(a))).getConst
+      _optional[({ type λ[α] = Const[M, α] })#λ](s, a => Const[M, B](f(a))).getConst
   }
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modifyF)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {

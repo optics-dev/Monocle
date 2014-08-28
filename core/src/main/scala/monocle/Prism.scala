@@ -58,7 +58,7 @@ abstract class Prism[S, T, A, B]{ self =>
 
   final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](s: S)(f: A => M): M =
-      _prism[Function1, ({ type l[a] = Const[M, a] })#l](a => Const(f(a))).apply(s).getConst
+      _prism[Function1, ({ type λ[α] = Const[M, α] })#λ](a => Const(f(a))).apply(s).getConst
   }
 
 }

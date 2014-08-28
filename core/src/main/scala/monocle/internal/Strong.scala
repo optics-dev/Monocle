@@ -1,7 +1,7 @@
 package monocle.internal
 
-import scalaz.{Functor, Profunctor}
 import scalaz.std.function._
+import scalaz.{Functor, Kleisli, Profunctor}
 
 /**
  * Generalizing upstar of a strong Functor
@@ -26,15 +26,22 @@ object Strong {
     def mapsnd[A, B, C](fab: A => B)(f: B => C): A => C = Profunctor[Function1].mapsnd(fab)(f)
   }
 
-  implicit def function1ToFunctorStrong[F[_]](implicit F: Functor[F]) = new Strong[({ type l[a, b] = a => F[b] })#l]{
-    def first[A, B, C](f: A => F[B]): ((A, C)) => F[(B, C)] =
-      ac => F.map(f(ac._1))(b => ac.copy(_1 = b))
+  implicit def kleisliStrong[F[_]](implicit F: Functor[F]) = new Strong[({type λ[α,β] = Kleisli[F, α, β]})#λ]{
 
-    def second[A, B, C](f: A => F[B]): ((C, A)) => F[(C, B)] =
-      ac => F.map(f(ac._2))(b => ac.copy(_2 = b))
+    def first[A, B, C](f: Kleisli[F, A, B]): Kleisli[F, (A, C), (B, C)] =
+      Kleisli[F, (A, C), (B, C)] {
+        case (a, c) => F.map(f.run(a))(b => (b, c))
+      }
 
-    def mapfst[A, B, C](fab: A => F[B])(f: C => A): C => F[B] = fab compose f
-    def mapsnd[A, B, C](fab: A => F[B])(f: B => C): A => F[C] = a => F.map(fab(a))(f)
+
+    def second[A, B, C](f: Kleisli[F, A, B]): Kleisli[F, (C, A), (C, B)] =
+      Kleisli[F, (C, A), (C, B)] {
+        case (c, a) => F.map(f.run(a))(b => (c, b))
+      }
+
+    def mapfst[A, B, C](fab: Kleisli[F, A, B])(f: (C) => A): Kleisli[F, C, B] = fab local f
+
+    def mapsnd[A, B, C](fab: Kleisli[F, A, B])(f: (B) => C): Kleisli[F, A, C] = fab map f
   }
 
 }

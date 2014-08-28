@@ -2,7 +2,7 @@ package monocle
 
 import monocle.internal.Strong
 
-import scalaz.{Applicative, Const, Functor, Monoid}
+import scalaz.{Applicative, Const, Functor, Monoid, Kleisli}
 
 /**
  * A Lens defines a single focus between a type S and A such as if you change A to B
@@ -13,10 +13,10 @@ abstract class Lens[S, T, A, B] { self =>
   def _lens[P[_, _]: Strong](pab: P[A, B]): P[S, T]
 
   final def lift[F[_]: Functor](s: S, f: A => F[B]): F[T] =
-    _lens[({ type l[a, b] = a => F[b] })#l](f).apply(s)
+    _lens[({type λ[α, β] = Kleisli[F, α, β]})#λ](Kleisli.kleisli(f)).run(s)
 
 
-  final def get(s: S): A = lift[({ type l[b] = Const[A, b] })#l](s, a => Const(a)).getConst
+  final def get(s: S): A = lift[({ type λ[α] = Const[A, α] })#λ](s, a => Const(a)).getConst
 
   final def modifyF(f: A => B): S => T = _lens[Function1](f)
   final def modify(s: S, f: A => B): T = modifyF(f)(s)
@@ -46,12 +46,10 @@ abstract class Lens[S, T, A, B] { self =>
   final def asGetter: Getter[S, A] = Getter[S, A](get)
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modifyF)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](s: S, f: A => F[B]): F[T] =
-      _lens[({ type l[a, b] = a => F[b] })#l](f).apply(s)
+    def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] = lift(s, f)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    def _optional[F[_] : Applicative](s: S, f: A => F[B]): F[T] =
-      _lens[({ type l[a, b] = a => F[b] })#l](f).apply(s)
+    def _optional[F[_]: Applicative](s: S, f: A => F[B]): F[T] = lift(s, f)
   }
 
 }

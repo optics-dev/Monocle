@@ -39,7 +39,7 @@ abstract class Traversal[S, T, A, B] { self =>
 
   def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](s: S)(f: A => M): M =
-      _traversal[({ type l[a] = Const[M, a] })#l](s, a => Const[M, B](f(a))).getConst
+      _traversal[({ type λ[α] = Const[M, α] })#λ](s, a => Const[M, B](f(a))).getConst
   }
 
 }

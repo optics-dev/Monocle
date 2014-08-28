@@ -15,7 +15,7 @@ abstract class Iso[S, T, A, B] { self =>
 
   final def reverse: Iso[B, A, T, S] = Iso[B, A, T, S](reverseGet, get)
 
-  final def get(s: S): A = _iso[Function1, ({ type l[a] = Const[A, a] })#l](a => Const(a)).apply(s).getConst
+  final def get(s: S): A = _iso[Function1, ({ type λ[α] = Const[A, α] })#λ](a => Const(a)).apply(s).getConst
   final def reverseGet(b: B): T = _iso[Tagged, Id](Tagged(b)).untagged
 
   final def modifyF(f: A => B): S => T = _iso[Function1, Id](f)
@@ -34,7 +34,7 @@ abstract class Iso[S, T, A, B] { self =>
   final def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = asPrism composePrism other
   final def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = asLens composeLens other
   final def composeIso[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = new Iso[S, T, C, D]{
-    def _iso[P[_, _] : Profunctor, F[_] : Functor](pcfd: P[C, F[D]]): P[S, F[T]] =
+    def _iso[P[_, _]: Profunctor, F[_]: Functor](pcfd: P[C, F[D]]): P[S, F[T]] =
       (self._iso[P, F] _ compose other._iso[P, F])(pcfd)
   }
 
@@ -49,11 +49,11 @@ abstract class Iso[S, T, A, B] { self =>
   }
 
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    def _optional[F[_] : Applicative](s: S, f: A => F[B]): F[T] = _iso[Function1, F](f).apply(s)
+    def _optional[F[_]: Applicative](s: S, f: A => F[B]): F[T] = _iso[Function1, F](f).apply(s)
   }
 
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](s: S, f: A => F[B]): F[T] = _iso[Function1, F](f).apply(s)
+    def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] = _iso[Function1, F](f).apply(s)
   }
 
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modifyF)
@@ -62,7 +62,7 @@ abstract class Iso[S, T, A, B] { self =>
 
   final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](s: S)(f: A => M): M =
-      _iso[Function1, ({ type l[a] = Const[M, a] })#l](a => Const(f(a))).apply(s).getConst
+      _iso[Function1, ({ type λ[α] = Const[M, α] })#λ](a => Const(f(a))).apply(s).getConst
   }
 
 }
