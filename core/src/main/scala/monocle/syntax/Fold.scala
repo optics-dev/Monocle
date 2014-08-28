@@ -1,7 +1,7 @@
 package monocle.syntax
 
-import monocle.Fold
-import scalaz.Monoid
+import monocle._
+import scalaz.{Maybe, Monoid}
 
 object fold extends FoldSyntax
 
@@ -9,32 +9,28 @@ private[syntax] trait FoldSyntax {
   implicit def toApplyFoldOps[S](value: S): ApplyFoldOps[S] = new ApplyFoldOps(value)
 }
 
-
-private[syntax] trait ApplyFold[S, A] { self =>
-  def from: S
-  def _fold: Fold[S, A]
-
-  def foldMap[B: Monoid](f: A => B): B = _fold.foldMap(from)(f)
-
-  def fold(implicit ev: Monoid[A]): A = _fold.fold(from)
-
-  def getAll: List[A] = _fold.getAll(from)
-
-  def headOption: Option[A] = _fold.headOption(from)
-
-  def exist(p: A => Boolean): Boolean = _fold.exist(from)(p)
-
-  def all(p: A => Boolean): Boolean = _fold.all(from)(p)
-
-  def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] = new ApplyFold[S, B] {
-    val from: S = self.from
-    val _fold: Fold[S, B] = self._fold composeFold other
-  }
+final case class ApplyFoldOps[S](s: S) {
+  def applyFold[A](fold: Fold[S, A]): ApplyFold[S, A] = new ApplyFold[S, A](s, fold)
 }
 
-private[syntax] final class ApplyFoldOps[S](value: S) {
-  def applyFold[A](f: Fold[S, A]): ApplyFold[S, A] = new ApplyFold[S, A] {
-    val from: S = value
-    def _fold: Fold[S, A] = f
-  }
+case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
+  def foldMap[B: Monoid](f: A => B): B = _fold.foldMap(s)(f)
+
+  def fold(implicit ev: Monoid[A]): A = _fold.fold(s)
+
+  def getAll: List[A] = _fold.getAll(s)
+
+  def headOption: Maybe[A] = _fold.headMaybe(s)
+
+  def exist(p: A => Boolean): Boolean = _fold.exist(s)(p)
+
+  def all(p: A => Boolean): Boolean = _fold.all(s)(p)
+
+  def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] = ApplyFold(s, _fold composeFold other)
+  def composeGetter[B](other: Getter[A, B]): ApplyFold[S, B] = ApplyFold(s, _fold composeGetter other)
+  def composeTraversal[B, C, D](other: Traversal[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composeTraversal other)
+  def composeOptional[B, C, D](other: Optional[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composeOptional other)
+  def composePrism[B, C, D](other: Prism[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composePrism other)
+  def composeLens[B, C, D](other: Lens[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composeLens other)
+  def composeIso[B, C, D](other: Iso[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composeIso other)
 }

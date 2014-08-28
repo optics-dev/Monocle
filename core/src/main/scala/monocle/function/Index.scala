@@ -30,12 +30,12 @@ trait IndexFunctions {
   def index[S, I, A](i: I)(implicit ev: Index[S, I, A]): SimpleOptional[S, A] = ev.index(i)
 
   def atIndex[S, I, A](implicit ev: At[S, I, A]) = new Index[S, I, A] {
-    def index(i: I) = ev.at(i) composeOptional monocle.std.option.some
+    def index(i: I) = ev.at(i) composePrism monocle.std.maybe.just
   }
 
   def traverseIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): Index[S[A], Int, A] = new Index[S[A], Int, A]{
     def index(i: Int) = new Optional[S[A], S[A], A, A] {
-      def _traversal[F[_] : Applicative](from: S[A], f: A => F[A]): F[S[A]] =
+      def _optional[F[_] : Applicative](from: S[A], f: A => F[A]): F[S[A]] =
         zipWithIndex(from).traverse { case (a, j) =>
           if(j == i) f(a) else Applicative[F].point(a)
         }

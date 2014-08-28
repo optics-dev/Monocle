@@ -10,7 +10,7 @@ import org.scalacheck.{Properties, Arbitrary}
 object TraversalLaws {
 
   def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](traversal: SimpleTraversal[S, A]) = new Properties("Traversal") {
-    include(SetterLaws(traversal))
+    include(SetterLaws(traversal.asSetter))
 
     property("multi lift - identity") = forAll { from: S =>
       traversal.multiLift[Id](from, id.point[A](_)) === from

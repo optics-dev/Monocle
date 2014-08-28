@@ -4,6 +4,7 @@ import monocle.function._
 import monocle.{SimpleOptional, SimplePrism}
 
 import scala.collection.immutable.Stream.{#::, Empty}
+import scalaz.Maybe
 import scalaz.std.stream._
 
 object stream extends StreamInstances
@@ -11,7 +12,7 @@ object stream extends StreamInstances
 trait StreamInstances {
 
   implicit def streamEmpty[A]: Empty[Stream[A]] = new Empty[Stream[A]] {
-    def empty = SimplePrism[Stream[A], Unit](s => if(s.isEmpty) Some(()) else None, _ => Stream.empty)
+    def empty = SimplePrism[Stream[A], Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty, _ => Stream.empty)
   }
 
   implicit def streamEach[A]: Each[Stream[A], A] = Each.traverseEach[Stream, A]
@@ -24,16 +25,16 @@ trait StreamInstances {
 
   implicit def streamCons[A]: Cons[Stream[A], A] = new Cons[Stream[A], A]{
     def _cons = SimplePrism[Stream[A], (A, Stream[A])]({
-      case Empty    => None
-      case x #:: xs => Some(x, xs)
+      case Empty    => Maybe.empty
+      case x #:: xs => Maybe.just((x, xs))
     }, { case (a, s) => a #:: s })
   }
 
   implicit def streamSnoc[A]: Snoc[Stream[A], A] = new Snoc[Stream[A], A]{
     def snoc = SimplePrism[Stream[A], (Stream[A], A)]( s =>
       for {
-        init <- if(s.isEmpty) None else Some(s.init)
-        last <- if(s.isEmpty) None else Some(s.last)
+        init <- if(s.isEmpty) Maybe.empty else Maybe.just(s.init)
+        last <- if(s.isEmpty) Maybe.empty else Maybe.just(s.last)
       } yield (init, last),
     { case (init, last) => init :+ last }
     )

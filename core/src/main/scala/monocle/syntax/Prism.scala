@@ -1,43 +1,33 @@
 package monocle.syntax
 
-import monocle.{Prism, SimplePrism, Optional}
+import monocle._
+
+import scalaz.Maybe
 
 object prism extends PrismSyntax
 
 private[syntax] trait PrismSyntax {
-  implicit def toPrismOps[S, T, A, B](prism: Prism[S, T, A, B]): PrismOps[S, T, A, B] = new PrismOps(prism)
-  implicit def toSimplePrismOps[S, T, A, B](prism: SimplePrism[S, A]): SimplePrismOps[S, A] = new SimplePrismOps(prism)
-
   implicit def toApplyPrismOps[S](value: S): ApplyPrismOps[S] = new ApplyPrismOps(value)
 }
 
-private[syntax] final class PrismOps[S, T, A, B](val self: Prism[S, T, A, B]) {
-  def <-?[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = self composePrism other
+final case class ApplyPrismOps[S](s: S) {
+  def applyPrism[T, A, B](prism: Prism[S, T, A, B]): ApplyPrism[S, T, A, B] = ApplyPrism[S, T, A, B](s, prism)
 }
 
-private[syntax] final class SimplePrismOps[S, A](prism: SimplePrism[S, A]){
-  def reverseModify(from: A, f: S => S): Option[A] =  prism.getOption(f(prism.reverseGet(from)))
-}
+final case class ApplyPrism[S, T, A, B](s: S, prism: Prism[S, T, A, B]){
+  def getMaybe: Maybe[A] = prism.getMaybe(s)
 
-private[syntax] trait ApplyPrism[S, T, A, B] extends ApplyOptional[S, T, A, B]  { self =>
-  def _prism: Prism[S, T, A, B]
+  def modify(f: A => B): T = prism.modify(s, f)
+  def modifyMaybe(f: A => B): Maybe[T] = prism.modifyMaybe(s, f)
 
-  def _optional: Optional[S, T, A, B] = _prism
+  def set(b: B): T = prism.set(s, b)
+  def setMaybe(b: B): Maybe[T] = prism.setMaybe(s, b)
 
-  def composePrism[C, D](other: Prism[A, B, C, D]): ApplyPrism[S, T, C, D] = new ApplyPrism[S, T, C, D] {
-    val _prism: Prism[S, T, C, D] = self._prism composePrism other
-    val from: S = self.from
-  }
-
-  /** Alias to composePrism */
-  def <-?[C, D](other: Prism[A, B, C, D]): ApplyPrism[S, T, C, D] = composePrism(other)
-}
-
-private[syntax] final class ApplyPrismOps[S](value: S) {
-  def applyPrism[T, A, B](prism: Prism[S, T, A, B]): ApplyPrism[S, T, A, B] = new ApplyPrism[S, T, A, B] {
-    val from: S = value
-    def _prism: Prism[S, T, A, B] = prism
-  }
-
-  def <-?[T, A, B](prism: Prism[S, T, A, B]): ApplyPrism[S, T, A, B] = applyPrism(prism)
+  def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, prism composeSetter other)
+  def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, prism composeFold other)
+  def composeTraversal[C, D](other: Traversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = ApplyTraversal(s, prism composeTraversal other)
+  def composeOptional[C, D](other: Optional[A, B, C, D]): ApplyOptional[S, T, C, D] = ApplyOptional(s, prism composeOptional  other)
+  def composeLens[C, D](other: Lens[A, B, C, D]): ApplyOptional[S, T, C, D] = ApplyOptional(s, prism composeLens other)
+  def composePrism[C, D](other: Prism[A, B, C, D]): ApplyPrism[S, T, C, D] = ApplyPrism(s, prism composePrism  other)
+  def composeIso[C, D](other: Iso[A, B, C, D]): ApplyPrism[S, T, C, D] = ApplyPrism(s, prism composeIso other)
 }

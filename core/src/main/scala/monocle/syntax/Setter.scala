@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.Setter
+import monocle._
 
 object setter extends SetterSyntax
 
@@ -8,23 +8,18 @@ private[syntax] trait SetterSyntax {
   implicit def toApplySetterOps[S](value: S): ApplySetterOps[S] = new ApplySetterOps(value)
 }
 
-private[syntax] trait ApplySetter[S, T, A, B] { self =>
-  def from: S
-  def _setter: Setter[S, T, A, B]
-
-  def set(newValue: B): T = _setter.set(from, newValue)
-
-  def modify(f: A => B): T = _setter.modify(from, f)
-
-  def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = new ApplySetter[S, T, C, D] {
-    val from = self.from
-    val _setter = self._setter composeSetter other
-  }
+final case class ApplySetterOps[S](s: S) {
+  def applySetter[T, A, B](setter: Setter[S, T, A, B]): ApplySetter[S, T, A, B] = new ApplySetter[S, T, A, B](s, setter)
 }
 
-private[syntax] final class ApplySetterOps[S](value: S) {
-  def applySetter[T, A, B](setter: Setter[S, T, A, B]): ApplySetter[S, T, A, B] = new ApplySetter[S, T, A, B] {
-    val from: S = value
-    def _setter: Setter[S, T, A, B] = setter
-  }
+final case class ApplySetter[S, T, A, B](s: S, setter: Setter[S, T, A, B]) {
+  def set(newValue: B): T = setter.set(s, newValue)
+  def modify(f: A => B): T = setter.modify(s, f)
+
+  def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeSetter other)
+  def composeTraversal[C, D](other: Traversal[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeTraversal other)
+  def composeOptional[C, D](other: Optional[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeOptional other)
+  def composePrism[C, D](other: Prism[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composePrism  other)
+  def composeLens[C, D](other: Lens[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeLens other)
+  def composeIso[C, D](other: Iso[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeIso other)
 }

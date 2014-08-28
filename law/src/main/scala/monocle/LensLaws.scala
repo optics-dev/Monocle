@@ -9,7 +9,7 @@ import org.scalacheck.{Properties, Arbitrary}
 object LensLaws {
 
   def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](lens: SimpleLens[S, A]) = new Properties("Lens") {
-    include(TraversalLaws(lens))
+    include(TraversalLaws(lens.asTraversal))
 
     property("lift - identity") = forAll { from: S =>
       lens.lift[Id](from, id.point[A](_)) === from

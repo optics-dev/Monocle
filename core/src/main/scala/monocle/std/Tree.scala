@@ -45,7 +45,7 @@ trait TreeFunctions {
 
     def _set(tree: Tree[A], newLeaf: A): Tree[A] = tree.subForest match {
       case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel,  xs applyOptional lastOption modify(_set(_, newLeaf)) )
+      case xs    => Tree.node(tree.rootLabel,  xs applyOptional lastMaybe modify(_set(_, newLeaf)) )
     }
 
     SimpleLens[Tree[A], A](_get, _set)
