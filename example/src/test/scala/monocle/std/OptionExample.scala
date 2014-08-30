@@ -13,10 +13,10 @@ class OptionExample extends Spec {
     some.reverseGet(1)     ==== Some(1)
 
     // type can be changed with set and modify
-    some.set(Some(1), 'a')  ==== Some('a')
-    some.set(None, 2)       ==== None
+    some.set('a')(Some(1))  ==== Some('a')
+    some.set(2)(None)       ==== None
 
-    some.modify(Some(1), { (_: Int) + 2.0 }) ==== Some(3.0)
+    some.modify((_: Int) + 2.0)(Some(1)) ==== Some(3.0)
 
   }
 
@@ -27,9 +27,9 @@ class OptionExample extends Spec {
 
     none.reverseGet(()) ==== None
 
-    // none setter doesn't do anything
-    none.set(Some(1), ()) ==== Some(1)
-    none.set(None   , ()) ==== None
+    // none setter does nothing
+    none.set(())(Some(1)) ==== Some(1)
+    none.set(())(None   ) ==== None
 
   }
 

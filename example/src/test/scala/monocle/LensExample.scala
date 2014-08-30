@@ -68,7 +68,7 @@ class LensExample extends Spec {
     @Lenses case class Point(x: Int, y: Int)
     import Point._
 
-    val update = x.modifyF(_ + 100) compose y.setF(7)
+    val update = x.modify(_ + 100) compose y.set(7)
     update(Point(1,2)) ==== Point(101,7)
   }
 

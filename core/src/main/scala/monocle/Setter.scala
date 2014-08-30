@@ -2,16 +2,13 @@ package monocle
 
 import scalaz.Functor
 
-final case class Setter[S, T, A, B](modifyF: (A => B) => (S => T)) {
-  def modify(s: S, f: A => B): T = modifyF(f)(s)
+final case class Setter[S, T, A, B](modify: (A => B) => (S => T)) {
 
-  def setF(newValue: B): S => T = modifyF(_ => newValue)
-  def set(s: S, newValue: B): T = setF(newValue)(s)
-
+  def set(b: B): S => T = modify(_ => b)
 
   // Compose
   def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] =
-    Setter[S, T, C, D](modifyF compose other.modifyF)
+    Setter[S, T, C, D](modify compose other.modify)
   def composeTraversal[C, D](other: Traversal[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
   def composeOptional[C, D](other: Optional[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
   def composePrism[C, D](other: Prism[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)

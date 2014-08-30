@@ -14,8 +14,8 @@ final case class ApplyIsoOps[S](s: S) {
 
 final case class ApplyIso[S, T, A, B](s: S, iso: Iso[S, T, A, B]) {
   def get: A = iso.get(s)
-  def set(b: B): T = iso.set(s, b)
-  def modify(f: A => B): T = iso.modify(s, f)
+  def set(b: B): T = iso.set(b)(s)
+  def modify(f: A => B): T = iso.modify(f)(s)
 
   def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, iso composeSetter other)
   def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, iso composeFold other)

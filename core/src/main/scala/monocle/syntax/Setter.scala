@@ -13,8 +13,8 @@ final case class ApplySetterOps[S](s: S) {
 }
 
 final case class ApplySetter[S, T, A, B](s: S, setter: Setter[S, T, A, B]) {
-  def set(newValue: B): T = setter.set(s, newValue)
-  def modify(f: A => B): T = setter.modify(s, f)
+  def set(b: B): T = setter.set(b)(s)
+  def modify(f: A => B): T = setter.modify(f)(s)
 
   def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeSetter other)
   def composeTraversal[C, D](other: Traversal[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeTraversal other)

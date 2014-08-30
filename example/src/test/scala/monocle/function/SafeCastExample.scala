@@ -35,7 +35,7 @@ class SafeCastExample extends Spec {
     safeCast[String, Int].reverseGet(8921)  ==== "8921"
     safeCast[String, Int].reverseGet(-32)   ==== "-32"
 
-    safeCast[String, Int].modify("1024", _ * 2) ==== "2048"
+    safeCast[String, Int].modify(_ * 2)("1024") ==== "2048"
   }
 
   "safeCast creates a Prism from String to Boolean" in {
