@@ -1,7 +1,8 @@
 package monocle.syntax
 
 import monocle._
-import scalaz.Applicative
+
+import scalaz.IList
 
 object traversal extends TraversalSyntax
 
@@ -14,7 +15,7 @@ final case class ApplyTraversalOps[S](s: S) {
 }
 
 final case class ApplyTraversal[S, T, A, B](s: S, traversal: Traversal[S, T, A, B]){
-  def getAll: List[A] = traversal.getAll(s)
+  def getAll: IList[A] = traversal.getAll(s)
   def set(b: B): T = traversal.set(b)(s)
   def modify(f: A => B): T = traversal.modify(f)(s)
 

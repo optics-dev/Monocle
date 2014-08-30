@@ -11,7 +11,7 @@ object OptionalLaws {
     include(TraversalLaws(optional.asTraversal))
 
     property("getAll size <= 1") = forAll { from: S =>
-      optional.asTraversal.getAll(from).size <= 1
+      optional.asTraversal.getAll(from).length <= 1
     }
 
   }

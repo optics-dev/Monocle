@@ -2,7 +2,7 @@ package monocle
 
 import scalaz.Kleisli._
 import scalaz.std.list._
-import scalaz.{Applicative, Const, Kleisli, Monoid, Reader, Traverse}
+import scalaz.{Applicative, Const, Kleisli, Monoid, Reader, Traverse, IList}
 
 /**
  * A Traversal is generalisation of a Lens in a way that it defines a multi foci between
@@ -14,8 +14,8 @@ abstract class Traversal[S, T, A, B] { self =>
 
   final def modifyK[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = _traversal(f)
 
-  final def getAll(s: S): List[A] = _traversal[({ type λ[α] = Const[List[A], α] })#λ](
-    Kleisli[({ type λ[α] = Const[List[A], α] })#λ, A, B](a => Const(List(a)))
+  final def getAll(s: S): IList[A] = _traversal[({ type λ[α] = Const[IList[A], α] })#λ](
+    Kleisli[({ type λ[α] = Const[IList[A], α] })#λ, A, B](a => Const(IList(a)))
   ).run(s).getConst
 
   final def modify(f: A => B): S => T = _traversal(Reader(f)).run
