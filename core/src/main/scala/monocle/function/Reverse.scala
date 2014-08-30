@@ -20,9 +20,6 @@ trait ReverseFunctions {
     def reverse: SimpleIso[S, S] = SimpleIso[S, S](_reverse, _reverse)
   }
 
-  @deprecated("use reverseFromReverseFunction", since = "0.6")
-  def simple[S](_reverse: S => S): Reverse[S, S] = reverseFromReverseFunction(_reverse)
-
   def reverse[S, A](implicit ev: Reverse[S, A]): SimpleIso[S, A] = ev.reverse
 
 
