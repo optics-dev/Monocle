@@ -7,9 +7,6 @@ import scala.annotation.implicitNotFound
   "find out which import is necessary")
 trait Field3[S, A] {
 
-  @deprecated("Use third", since = "0.5")
-  def _3: SimpleLens[S, A] = third
-
   /** Creates a Lens from S to it is third element */
   def third: SimpleLens[S, A]
 
@@ -18,9 +15,6 @@ trait Field3[S, A] {
 object Field3 extends Field3Functions
 
 trait Field3Functions {
-
-  @deprecated("Use third", since = "0.5")
-  def _3[S, A](implicit ev: Field3[S, A]): SimpleLens[S, A] = ev._3
 
   def third[S, A](implicit ev: Field3[S, A]): SimpleLens[S, A] = ev.third
 
