@@ -3,7 +3,8 @@ package monocle
 import monocle.internal.{ProChoice, Tagged}
 
 import scalaz.Id.Id
-import scalaz.{Monoid, Applicative, \/, Kleisli, Maybe}
+import scalaz.Maybe._
+import scalaz.{Monoid, Applicative, \/, Kleisli, Maybe, FirstMaybe, Const, Tag}
 
 /**
  * A Prism is a special case of Traversal where the focus is limited to
@@ -17,7 +18,11 @@ abstract class Prism[S, T, A, B]{ self =>
   final def modifyK[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
     Kleisli[F, S, T](_prism[Function1, F](f.run))
 
-  final def getMaybe(s: S): Maybe[A] = asFold.headMaybe(s)
+  final def getMaybe(s: S): Maybe[A] = Tag.unwrap(
+    _prism[Function1, ({ type λ[α] = Const[FirstMaybe[A], α] })#λ](
+      a => Const(Maybe.just(a).first)
+    ).apply(s).getConst
+  )
 
   final def reverseGet(b: B): T = _prism[Tagged, Id](Tagged(b)).untagged
   final def re: Getter[B, T] = Getter(reverseGet)
@@ -43,8 +48,7 @@ abstract class Prism[S, T, A, B]{ self =>
   // Optic transformation
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](_prism[Function1, Id])
   final def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[M: Monoid](s: S)(f: A => M): M =
-      getMaybe(s) map f getOrElse Monoid[M].zero
+    def foldMap[M: Monoid](s: S)(f: A => M): M = getMaybe(s) map f getOrElse Monoid[M].zero
   }
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
     def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)

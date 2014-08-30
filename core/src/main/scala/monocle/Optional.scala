@@ -1,6 +1,7 @@
 package monocle
 
-import scalaz.{Applicative, Maybe, Kleisli, Monoid, Reader, \/, Const}
+import scalaz.Maybe._
+import scalaz.{Applicative, Const, FirstMaybe, Kleisli, Maybe, Monoid, Reader, Tag, \/}
 
 /**
  * Optional can be seen as a partial Lens - Lens toward an Option - or
@@ -13,7 +14,14 @@ abstract class Optional[S, T, A, B] { self =>
 
   final def modifyK[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = _optional(f)
 
-  final def getMaybe(s: S): Maybe[A] = asFold.headMaybe(s)
+  final def getMaybe(s: S): Maybe[A] =
+    Tag.unwrap(
+      _optional[({ type λ[α] = Const[FirstMaybe[A], α] })#λ](
+        Kleisli[({ type λ[α] = Const[FirstMaybe[A], α] })#λ, A, B](
+         a => Const(Maybe.just(a).first)
+        )
+      ).run(s).getConst
+    )
 
   final def modify(f: A => B): S => T = _optional(Reader(f)).run
   final def modifyMaybe(f: A => B): S => Maybe[T] = s => getMaybe(s).map(_ => modify(f)(s))
@@ -35,9 +43,7 @@ abstract class Optional[S, T, A, B] { self =>
 
   // Optic transformation
   final def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[M: Monoid](s: S)(f: A => M): M = _optional[({ type λ[α] = Const[M, α] })#λ](
-      Kleisli[({ type λ[α] = Const[M, α] })#λ, A, B](a => Const(f(a)))
-    ).run(s).getConst
+    def foldMap[M: Monoid](s: S)(f: A => M): M = getMaybe(s) map f getOrElse Monoid[M].zero
   }
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {

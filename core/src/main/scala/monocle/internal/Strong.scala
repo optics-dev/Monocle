@@ -39,8 +39,10 @@ object Strong {
         case (c, a) => F.map(f.run(a))(b => (c, b))
       }
 
-    def mapfst[A, B, C](fab: Kleisli[F, A, B])(f: C => A): Kleisli[F, C, B] = fab local f
-    def mapsnd[A, B, C](fab: Kleisli[F, A, B])(f: B => C): Kleisli[F, A, C] = fab map f
+    def mapfst[A, B, C](fab: Kleisli[F, A, B])(f: C => A): Kleisli[F, C, B] =
+      Profunctor[({type λ[α,β] = Kleisli[F, α, β]})#λ].mapfst(fab)(f)
+    def mapsnd[A, B, C](fab: Kleisli[F, A, B])(f: B => C): Kleisli[F, A, C] =
+      Profunctor[({type λ[α,β] = Kleisli[F, α, β]})#λ].mapsnd(fab)(f)
   }
 
 }
