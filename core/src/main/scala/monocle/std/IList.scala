@@ -3,7 +3,7 @@ package monocle.std
 import monocle.SimplePrism
 import monocle.function._
 
-import scalaz.{Maybe, ICons, IList, INil}
+import scalaz.{ICons, IList, INil, Maybe}
 
 object ilist extends IListInstances
 
@@ -41,18 +41,6 @@ trait IListInstances {
       { case (init, last) => init :+ last }
     )
   }
-
-  implicit def iListHeadOption[A]: HeadOption[IList[A], A] =
-    HeadOption.consHeadOption[IList[A], A]
-
-  implicit def IListTailOption[A]: TailOption[IList[A], IList[A]] =
-    TailOption.consTailOption[IList[A], A]
-
-  implicit def iListLastOption[A]: LastOption[IList[A], A]  =
-    LastOption.snocLastOption[IList[A] , A]
-
-  implicit def iListInitOption[A]: InitOption[IList[A], IList[A]] =
-    InitOption.snocInitOption[IList[A], A]
 
   implicit def iListReverse[A]: Reverse[IList[A], IList[A]] =
     reverseFromReverseFunction[IList[A]](_.reverse)

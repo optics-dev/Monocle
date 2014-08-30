@@ -39,9 +39,9 @@ trait OneAndInstances {
     def tail = SimpleLens[OneAnd[T, A], T[A]](_.tail, (oneAnd, tail) => oneAnd.copy(tail = tail))
   }
 
-  implicit def oneAndLastFromLastOption[T[_], A](implicit ev: LastOption[T[A], A]): Last[OneAnd[T, A], A] = new Last[OneAnd[T, A], A] {
-    def last = SimpleLens[OneAnd[T, A], A](oneAnd => ev.lastOption.getMaybe(oneAnd.tail).getOrElse(oneAnd.head),
-      (oneAnd, a) => ev.lastOption.setMaybe(a)(oneAnd.tail) match {
+  implicit def oneAndLastFromLastOption[T[_], A](implicit ev: Snoc[T[A], A]): Last[OneAnd[T, A], A] = new Last[OneAnd[T, A], A] {
+    def last = SimpleLens[OneAnd[T, A], A](oneAnd => ev.lastMaybe.getMaybe(oneAnd.tail).getOrElse(oneAnd.head),
+      (oneAnd, a) => ev.lastMaybe.setMaybe(a)(oneAnd.tail) match {
         case Just(newTail) => oneAnd.copy(tail = newTail)
         case Empty()       => oneAnd.copy(head = a)
       })

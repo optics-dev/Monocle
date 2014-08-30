@@ -35,17 +35,6 @@ trait VectorInstances {
       {case (xs, x) => xs :+ x}
     )
   }
-  implicit def vectorHeadOption[A]: HeadOption[Vector[A], A] =
-    HeadOption.consHeadOption[Vector[A], A]
-
-  implicit def vectorTailOption[A]: TailOption[Vector[A], Vector[A]] =
-    TailOption.consTailOption[Vector[A], A]
-
-  implicit def vectorLastOption[A]: LastOption[Vector[A], A] =
-    LastOption.snocLastOption[Vector[A], A]
-
-  implicit def vectorInitOption[A]: InitOption[Vector[A], Vector[A]] =
-    InitOption.snocInitOption[Vector[A], A]
 
   implicit def vectorReverse[A]: Reverse[Vector[A], Vector[A]] =
     reverseFromReverseFunction[Vector[A]](_.reverse)

@@ -1,7 +1,6 @@
 package monocle.std
 
 import monocle.function._
-import monocle.syntax._
 import monocle.{SimpleIso, SimpleLens}
 
 import scalaz.Tree
@@ -29,7 +28,7 @@ trait TreeFunctions {
 
     def _set(tree: Tree[A], newLeaf: A): Tree[A] = tree.subForest match {
       case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel, xs applyOptional headOption modify(_set(_, newLeaf)) )
+      case xs    => Tree.node(tree.rootLabel, headMaybe[Stream[Tree[A]], Tree[A]].modify(_set(_, newLeaf))(xs) )
     }
 
     SimpleLens[Tree[A], A](_get, _set)
@@ -45,7 +44,7 @@ trait TreeFunctions {
 
     def _set(tree: Tree[A], newLeaf: A): Tree[A] = tree.subForest match {
       case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel,  xs applyOptional lastMaybe modify(_set(_, newLeaf)) )
+      case xs    => Tree.node(tree.rootLabel, lastMaybe[Stream[Tree[A]], Tree[A]].modify(_set(_, newLeaf))(xs) )
     }
 
     SimpleLens[Tree[A], A](_get, _set)

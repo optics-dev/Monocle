@@ -16,14 +16,10 @@ trait PolymorphicOptics
   with    Field6Functions
   with    FilterIndexFunctions
   with    HeadFunctions
-  with    HeadOptionFunctions
   with    IndexFunctions
   with    InitFunctions
-  with    InitOptionFunctions
   with    LastFunctions
-  with    LastOptionFunctions
   with    ReverseFunctions
   with    SafeCastFunctions
   with    SnocFunctions
   with    TailFunctions
-  with    TailOptionFunctions

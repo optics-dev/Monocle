@@ -29,29 +29,12 @@ trait OptionInstances extends OptionFunctions {
     def each = some.asTraversal
   }
 
-  implicit def optionHeadOption[A]: HeadOption[Option[A], A] = new HeadOption[Option[A], A] {
-    def headOption = some.asOptional
-  }
-
-  implicit def optionLastOption[A] = new LastOption[Option[A], A] {
-    def lastOption = some.asOptional
-  }
-
-
   implicit val noneEmpty: Empty[None.type] = new Empty[None.type] {
     def empty = SimplePrism[None.type , Unit](_ => Maybe.Just(()), _ => None)
   }
 
   implicit def someEach[A]: Each[Some[A], A] = new Each[Some[A], A] {
     def each = someIso.asTraversal
-  }
-
-  implicit def someHeadOption[A]: HeadOption[Some[A], A] = new HeadOption[Some[A], A] {
-    def headOption = someIso.asOptional
-  }
-
-  implicit def someLastOption[A] = new LastOption[Some[A], A] {
-    def lastOption = someIso.asOptional
   }
 
 }

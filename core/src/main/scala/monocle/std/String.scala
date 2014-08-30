@@ -45,20 +45,6 @@ trait StringInstances {
     )
   }
 
-  implicit val stringHeadOption: HeadOption[String, Char] = new HeadOption[String, Char] {
-    def headOption = stringToList composeOptional HeadOption.headOption[List[Char], Char]
-  }
-
-  implicit val stringTailOption: TailOption[String, String] = new TailOption[String, String]{
-    def tailOption = stringToList composeOptional TailOption.tailOption[List[Char], List[Char]] composeIso stringToList.reverse
-  }
-
-  implicit val stringLastOption: LastOption[String, Char] =
-    LastOption.reverseHeadLastOption[String   , Char]
-
-  implicit val stringInitOption: InitOption[String, String] =
-    InitOption.reverseTailInitOption[String]
-
 
   implicit val stringToBoolean = new SafeCast[String, Boolean] {
     def safeCast = SimplePrism[String, Boolean](s => Maybe.fromTryCatchNonFatal(s.toBoolean), _.toString)

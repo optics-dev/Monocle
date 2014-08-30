@@ -46,17 +46,4 @@ trait ListInstances {
     )
   }
 
-  implicit def listHeadOption[A]: HeadOption[List[A], A] =
-    HeadOption.consHeadOption[List[A], A]
-
-  implicit def listTailOption[A]: TailOption[List[A], List[A]] =
-    TailOption.consTailOption[List[A], A]
-
-  implicit def listLastOption[A]: LastOption[List[A], A] =
-    LastOption.snocLastOption[List[A]  , A]
-
-  implicit def listInitOption[A]: InitOption[List[A], List[A]] =
-    InitOption.snocInitOption[List[A], A]
-
-
 }

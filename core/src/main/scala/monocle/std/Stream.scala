@@ -40,18 +40,6 @@ trait StreamInstances {
     )
   }
 
-  implicit def streamHeadOption[A]: HeadOption[Stream[A], A] =
-    HeadOption.consHeadOption[Stream[A], A]
-
-  implicit def streamTailOption[A]: TailOption[Stream[A], Stream[A]] =
-    TailOption.consTailOption[Stream[A], A]
-
-  implicit def streamLastOption[A]: LastOption[Stream[A], A] =
-    LastOption.snocLastOption[Stream[A], A]
-
-  implicit def streamInitOption[A]: InitOption[Stream[A], Stream[A]] =
-    InitOption.snocInitOption[Stream[A], A]
-
   implicit def streamReverse[A]: Reverse[Stream[A], Stream[A]] =
     reverseFromReverseFunction[Stream[A]](_.reverse)
 
