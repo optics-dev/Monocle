@@ -58,8 +58,6 @@ object Traversal {
     )
   }
 
-  override def hashCode(): Int = super.hashCode()
-
   def apply3[S, T, A, B](get1: S => A, get2: S => A, get3: S => A)(_set: (S, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
     def _traversal[F[_] : Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T](s =>
       Applicative[F].apply3(f(get1(s)), f(get2(s)), f(get3(s)))(_set(s, _, _, _))
