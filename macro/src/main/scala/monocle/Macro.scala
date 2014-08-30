@@ -4,8 +4,7 @@ import scala.language.experimental.macros
 import monocle.internal.CompatibilityMacro210._
 
 object Macro {
-  @deprecated("use Lenser", since = "0.5.1")
-  def mkLens[A, B](fieldName: String): SimpleLens[A, B] = macro MacroImpl.mkLens_impl[A, B]
+  private[monocle] def mkLens[A, B](fieldName: String): SimpleLens[A, B] = macro MacroImpl.mkLens_impl[A, B]
 }
 
 private[monocle] object MacroImpl {
