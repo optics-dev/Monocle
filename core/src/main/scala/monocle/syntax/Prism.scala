@@ -17,11 +17,11 @@ final case class ApplyPrismOps[S](s: S) {
 final case class ApplyPrism[S, T, A, B](s: S, prism: Prism[S, T, A, B]){
   def getMaybe: Maybe[A] = prism.getMaybe(s)
 
-  def modify(f: A => B): T = prism.modify(s, f)
-  def modifyMaybe(f: A => B): Maybe[T] = prism.modifyMaybe(s, f)
+  def modify(f: A => B): T = prism.modify(f)(s)
+  def modifyMaybe(f: A => B): Maybe[T] = prism.modifyMaybe(f)(s)
 
-  def set(b: B): T = prism.set(s, b)
-  def setMaybe(b: B): Maybe[T] = prism.setMaybe(s, b)
+  def set(b: B): T = prism.set(b)(s)
+  def setMaybe(b: B): Maybe[T] = prism.setMaybe(b)(s)
 
   def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, prism composeSetter other)
   def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, prism composeFold other)

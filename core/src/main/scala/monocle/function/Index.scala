@@ -8,7 +8,7 @@ import scalaz.std.list._
 import scalaz.std.stream._
 import scalaz.std.vector._
 import scalaz.syntax.traverse._
-import scalaz.{OneAnd, Traverse, Applicative, IList}
+import scalaz._
 import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Index[${S},${I},${A}], please check Monocle instance location policy to " +
@@ -34,11 +34,10 @@ trait IndexFunctions {
   }
 
   def traverseIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): Index[S[A], Int, A] = new Index[S[A], Int, A]{
-    def index(i: Int) = new Optional[S[A], S[A], A, A] {
-      def _optional[F[_] : Applicative](from: S[A], f: A => F[A]): F[S[A]] =
-        zipWithIndex(from).traverse { case (a, j) =>
-          if(j == i) f(a) else Applicative[F].point(a)
-        }
+    def index(i: Int) = new SimpleOptional[S[A], A] {
+      def _optional[F[_] : Applicative](f: Kleisli[F, A, A]) = Kleisli[F, S[A], S[A]](s =>
+        zipWithIndex(s).traverse { case (a, j) => if(j == i) f(a) else Applicative[F].point(a) }
+      )
     }
   }
 

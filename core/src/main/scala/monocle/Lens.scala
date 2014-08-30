@@ -12,17 +12,16 @@ abstract class Lens[S, T, A, B] { self =>
 
   def _lens[P[_, _]: Strong](pab: P[A, B]): P[S, T]
 
-  final def lift[F[_]: Functor](s: S, f: A => F[B]): F[T] =
-    _lens[({type λ[α, β] = Kleisli[F, α, β]})#λ](Kleisli.kleisli(f)).run(s)
+  final def modifyK[F[_]: Functor](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
+    _lens[({type λ[α, β] = Kleisli[F, α, β]})#λ](f)
 
 
-  final def get(s: S): A = lift[({ type λ[α] = Const[A, α] })#λ](s, a => Const(a)).getConst
+  final def get(s: S): A = modifyK[({ type λ[α] = Const[A, α] })#λ](
+    Kleisli[({ type λ[α] = Const[A, α] })#λ, A, B](a => Const(a))
+  ).run(s).getConst
 
-  final def modifyF(f: A => B): S => T = _lens[Function1](f)
-  final def modify(s: S, f: A => B): T = modifyF(f)(s)
-
-  final def setF(newValue: B): S => T = modifyF(_ => newValue)
-  final def set(s: S, newValue: B): T = setF(newValue)(s)
+  final def modify(f: A => B): S => T = _lens[Function1](f)
+  final def set(b: B): S => T = modify(_ => b)
 
 
   // Compose
@@ -44,12 +43,12 @@ abstract class Lens[S, T, A, B] { self =>
     def foldMap[M: Monoid](s: S)(f: A => M): M = f(get(s))
   }
   final def asGetter: Getter[S, A] = Getter[S, A](get)
-  final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modifyF)
+  final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_]: Applicative](s: S, f: A => F[B]): F[T] = lift(s, f)
+    def _traversal[F[_] : Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    def _optional[F[_]: Applicative](s: S, f: A => F[B]): F[T] = lift(s, f)
+    def _optional[F[_] : Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
   }
 
 }

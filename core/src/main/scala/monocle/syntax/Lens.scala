@@ -14,8 +14,8 @@ final case class ApplyLensOps[S](s: S) {
 
 final case class ApplyLens[S, T, A, B](s: S, lens: Lens[S, T, A, B]){
   def get: A = lens.get(s)
-  def set(b: B): T = lens.set(s, b)
-  def modify(f: A => B): T = lens.modify(s, f)
+  def set(b: B): T = lens.set(b)(s)
+  def modify(f: A => B): T = lens.modify(f)(s)
 
   def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, lens composeSetter other)
   def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, lens composeFold other)

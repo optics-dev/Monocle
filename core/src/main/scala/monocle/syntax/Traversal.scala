@@ -15,8 +15,8 @@ final case class ApplyTraversalOps[S](s: S) {
 
 final case class ApplyTraversal[S, T, A, B](s: S, traversal: Traversal[S, T, A, B]){
   def getAll: List[A] = traversal.getAll(s)
-  def set(b: B): T = traversal.set(s, b)
-  def modify(f: A => B): T = traversal.modify(s, f)
+  def set(b: B): T = traversal.set(b)(s)
+  def modify(f: A => B): T = traversal.modify(f)(s)
 
   def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, traversal composeSetter other)
   def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, traversal composeFold other)

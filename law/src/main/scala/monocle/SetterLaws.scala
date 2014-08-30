@@ -1,20 +1,20 @@
 package monocle
 
+import org.scalacheck.Prop._
+import org.scalacheck.{Arbitrary, Properties}
+
 import scalaz.Equal
 import scalaz.syntax.equal._
-import org.scalacheck.Prop._
-import org.scalacheck.{Properties, Arbitrary}
 
 object SetterLaws {
 
   def apply[S: Arbitrary: Equal, A: Arbitrary](setter: SimpleSetter[S, A]) = new Properties("Setter") {
-    property("modify - identity") = forAll { from: S =>
-      setter.modify(from, identity) === from
+    property("modify . id  == id") = forAll { s: S =>
+      setter.modify(identity)(s) === s
     }
 
-    property("set - set") = forAll { (from: S, newValue: A) =>
-      val setOnce = setter.set(from, newValue)
-      setOnce === setter.set(setOnce, newValue)
+    property("set . set == set") = forAll { (s: S, a: A) =>
+      (setter.set(a) compose setter.set(a))(s) === setter.set(a)(s)
     }
   }
 
