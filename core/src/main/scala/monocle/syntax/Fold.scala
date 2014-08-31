@@ -14,17 +14,15 @@ final case class ApplyFoldOps[S](s: S) {
 }
 
 case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
-  def foldMap[B: Monoid](f: A => B): B = _fold.foldMap(s)(f)
+  def foldMap[M: Monoid](f: A => M): M = _fold.foldMap(f)(s)
 
   def fold(implicit ev: Monoid[A]): A = _fold.fold(s)
 
   def getAll: IList[A] = _fold.getAll(s)
+  def headMaybe: Maybe[A] = _fold.headMaybe(s)
 
-  def headOption: Maybe[A] = _fold.headMaybe(s)
-
-  def exist(p: A => Boolean): Boolean = _fold.exist(s)(p)
-
-  def all(p: A => Boolean): Boolean = _fold.all(s)(p)
+  def exist(p: A => Boolean): Boolean = _fold.exist(p)(s)
+  def all(p: A => Boolean): Boolean = _fold.all(p)(s)
 
   def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] = ApplyFold(s, _fold composeFold other)
   def composeGetter[B](other: Getter[A, B]): ApplyFold[S, B] = ApplyFold(s, _fold composeGetter other)

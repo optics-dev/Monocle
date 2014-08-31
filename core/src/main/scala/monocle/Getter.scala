@@ -13,7 +13,7 @@ final case class Getter[S, A](get: S => A) {
 
   // Optics transformation
   def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[B: Monoid](s: S)(f: A => B): B = f(get(s))
+    def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
   }
 
 }

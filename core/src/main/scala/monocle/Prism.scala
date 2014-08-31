@@ -48,7 +48,7 @@ abstract class Prism[S, T, A, B]{ self =>
   // Optic transformation
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](_prism[Function1, Id])
   final def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[M: Monoid](s: S)(f: A => M): M = getMaybe(s) map f getOrElse Monoid[M].zero
+    def foldMap[M: Monoid](f: A => M)(s: S): M = getMaybe(s) map f getOrElse Monoid[M].zero
   }
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
     def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)

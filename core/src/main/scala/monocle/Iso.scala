@@ -42,7 +42,7 @@ abstract class Iso[S, T, A, B] { self =>
   // Optics transformation
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[M: Monoid](s: S)(f: A => M): M =
+    def foldMap[M: Monoid](f: A => M)(s: S): M =
       _iso[Function1, ({ type λ[α] = Const[M, α] })#λ](a => Const(f(a))).apply(s).getConst
   }
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {

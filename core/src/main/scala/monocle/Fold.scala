@@ -7,17 +7,19 @@ import scalaz.{Maybe, Foldable, Monoid, Tag, IList}
 
 abstract class Fold[S, A] { self =>
 
-  def foldMap[B: Monoid](s: S)(f: A => B): B
+  def foldMap[M: Monoid](f: A => M)(s: S): M
 
-  final def fold(s: S)(implicit ev: Monoid[A]): A = foldMap(s)(identity)
-  final def getAll(s: S): IList[A] = foldMap(s)(IList(_))
-  final def headMaybe(s: S): Maybe[A] = Tag.unwrap(foldMap(s)(Maybe.just(_).first))
-  final def exist(s: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(s)(p(_).disjunction))
-  final def all(s: S)(p: A => Boolean): Boolean = Tag.unwrap(foldMap(s)(p(_).conjunction))
+  final def fold(s: S)(implicit ev: Monoid[A]): A = foldMap(identity)(s)
+
+  final def getAll(s: S): IList[A] = foldMap(IList(_))(s)
+  final def headMaybe(s: S): Maybe[A] = Tag.unwrap(foldMap(Maybe.just(_).first)(s))
+
+  final def exist(p: A => Boolean)(s: S): Boolean = Tag.unwrap(foldMap(p(_).disjunction)(s))
+  final def all(p: A => Boolean)(s: S): Boolean = Tag.unwrap(foldMap(p(_).conjunction)(s))
 
 
   final def composeFold[B](other: Fold[A, B]): Fold[S, B] = new Fold[S, B] {
-    def foldMap[C: Monoid](s: S)(f: B => C): C = self.foldMap(s)(other.foldMap(_)(f))
+    def foldMap[M: Monoid](f: B => M)(s: S): M = self.foldMap(other.foldMap(f)(_))(s)
   }
   final def composeGetter[C](other: Getter[A, C]): Fold[S, C] = composeFold(other.asFold)
   final def composeTraversal[B, C, D](other: Traversal[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
@@ -30,7 +32,7 @@ abstract class Fold[S, A] { self =>
 object Fold {
 
   def apply[F[_]: Foldable, A]: Fold[F[A], A] = new Fold[F[A], A] {
-    def foldMap[B: Monoid](s: F[A])(f: A => B): B = Foldable[F].foldMap(s)(f)
+    def foldMap[M: Monoid](f: A => M)(s: F[A]): M = Foldable[F].foldMap(s)(f)
   }
 
 }
