@@ -24,7 +24,7 @@ class JsonExample extends Spec {
   val jsArray  = SimplePrism[Json, List[Json]]({ case JsArray(a) => Maybe.just(a); case _ => Maybe.empty}, JsArray.apply)
   val jsObject = SimplePrism[Json, Map[String, Json]]({ case JsObject(m) => Maybe.just(m); case _ => Maybe.empty}, JsObject.apply)
 
-  val json: Json = JsObject(Map(
+  val json = JsObject(Map(
     "first_name" -> JsString("John"),
     "last_name"  -> JsString("Doe"),
     "age"        -> JsNumber(28),
@@ -41,8 +41,8 @@ class JsonExample extends Spec {
   ))
 
   "Json Prism" in {
-    jsNumber.getMaybe(JsString("plop"): Json) ==== Maybe.empty
-    jsNumber.getMaybe(JsNumber(2): Json)      ==== Maybe.just(2)
+    jsNumber.getMaybe(JsString("plop")) ==== Maybe.empty
+    jsNumber.getMaybe(JsNumber(2))      ==== Maybe.just(2)
   }
 
   "Use index to go into an JsObject or JsArray" in {
