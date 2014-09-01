@@ -35,8 +35,8 @@ abstract class Traversal[S, T, A, B] { self =>
   final def composeIso[C, D](other: Iso[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
 
   // Optic transformation
-  def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
-  def asFold: Fold[S, A] = new Fold[S, A]{
+  final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
+  final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](f: A => M)(s: S): M = _traversal[({ type λ[α] = Const[M, α] })#λ](
       Kleisli[({ type λ[α] = Const[M, α] })#λ, A, B](a => Const(f(a)))
     ).run(s).getConst
