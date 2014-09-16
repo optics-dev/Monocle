@@ -33,10 +33,10 @@ class LensBench {
 
   val john = Person("John", 30)
 
-  @Benchmark def directGet()                = john.name                               == "John"
-  @Benchmark def SimpleLensVerboseGet()     = (john |-> SimpleLensVerbose._name get)  == "John"
-  @Benchmark def SimpleLensInferredGet()    = (john |-> SimpleLensInferred._name get) == "John"
-  @Benchmark def MkLensMacroGet()           = (john |-> MkLensMacro.name get)         == "John"
-  @Benchmark def LenserMacroGet()           = (john |-> LenserMacro.name get)         == "John"
-  @Benchmark def LensesAnnotationMacroGet() = (john |-> Person.name get)              == "John"
+  @Benchmark def directGet()                = john.name                                     == "John"
+  @Benchmark def SimpleLensVerboseGet()     = (john applyLens SimpleLensVerbose._name get)  == "John"
+  @Benchmark def SimpleLensInferredGet()    = (john applyLens SimpleLensInferred._name get) == "John"
+  @Benchmark def MkLensMacroGet()           = (john applyLens MkLensMacro.name get)         == "John"
+  @Benchmark def LenserMacroGet()           = (john applyLens LenserMacro.name get)         == "John"
+  @Benchmark def LensesAnnotationMacroGet() = (john applyLens Person.name get)              == "John"
 }
