@@ -28,6 +28,12 @@ object Dependencies {
   val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
   val specs2Scalacheck  = "org.specs2"      %% "specs2-scalacheck"         % "2.4"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.2"   % "test"
+  val shapeless = Def setting (
+    CrossVersion partialVersion scalaVersion.value match {
+      case Some((2, scalaMajor)) if scalaMajor >= 11 => "com.chuusai" %% "shapeless" % "2.0.0"
+      case Some((2, 10))                             => "com.chuusai" %  "shapeless" % "2.0.0" cross CrossVersion.full
+    }
+  )
 
   val macroVersion = "2.0.1"
   val paradisePlugin = compilerPlugin("org.scalamacros" % "paradise" % macroVersion cross CrossVersion.full)
@@ -84,12 +90,7 @@ object MonocleBuild extends Build {
     "monocle-generic",
     file("generic"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz),
-      // TODO extract to reuse shapeless dependency definition in other modules
-      libraryDependencies ++= Seq(CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, scalaMajor)) if scalaMajor >= 11 =>  "com.chuusai" %% "shapeless"        % "2.0.0"
-        case Some((2, 10))                             =>  "com.chuusai" %  "shapeless_2.10.4" % "2.0.0"
-      }),
+      libraryDependencies ++= Seq(scalaz, shapeless.value),
       previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-generic_2.11" % previousVersion)
     )
   ) dependsOn(core)
@@ -99,12 +100,7 @@ object MonocleBuild extends Build {
     file("test"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
-      libraryDependencies ++= Seq(scalaz, scalaCheckBinding, scalazSpec2, specs2Scalacheck),
-      libraryDependencies ++= Seq(CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, scalaMajor)) if scalaMajor >= 11 => "com.chuusai" %% "shapeless"        % "2.0.0"
-        case Some((2, 10))                             => "com.chuusai" %  "shapeless_2.10.4" % "2.0.0"
-
-      })
+      libraryDependencies ++= Seq(scalaz, scalaCheckBinding, scalazSpec2, specs2Scalacheck, shapeless.value)
     )
   ) dependsOn(core, generic ,law)
 
@@ -113,11 +109,7 @@ object MonocleBuild extends Build {
     file("example"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
-      libraryDependencies ++= Seq(scalaz, specs2Scalacheck),
-      libraryDependencies ++= Seq(CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, scalaMajor)) if scalaMajor >= 11 =>  "com.chuusai" %% "shapeless"        % "2.0.0"
-        case Some((2, 10))                             =>  "com.chuusai" %  "shapeless_2.10.4" % "2.0.0"
-      }),
+      libraryDependencies ++= Seq(scalaz, specs2Scalacheck, shapeless.value),
       addCompilerPlugin(paradisePlugin) // Unfortunately necessary :( see: http://stackoverflow.com/q/23485426/463761
     )
   ) dependsOn(core, macros, generic, test % "test->test")
