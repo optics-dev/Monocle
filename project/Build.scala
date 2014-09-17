@@ -6,6 +6,9 @@ import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 
 import org.typelevel.sbt.TypelevelPlugin._
 
+import pl.project13.scala.sbt.SbtJmh._
+import JmhKeys._
+
 object BuildSettings {
   import MonoclePublishing._
   val buildScalaVersion = "2.11.2"
@@ -49,7 +52,7 @@ object MonocleBuild extends Build {
     settings = buildSettings ++ Seq(
       publishArtifact := false,
       run <<= run in Compile in macros)
-  ) aggregate(core, law, macros, generic, test, example)
+  ) aggregate(core, law, macros, generic, test, example, bench)
 
   lazy val core: Project = Project(
     "monocle-core",
@@ -113,6 +116,14 @@ object MonocleBuild extends Build {
       addCompilerPlugin(paradisePlugin) // Unfortunately necessary :( see: http://stackoverflow.com/q/23485426/463761
     )
   ) dependsOn(core, macros, generic, test % "test->test")
+
+  lazy val bench: Project = Project(
+    "monocle-bench",
+    file("bench"),
+    settings = buildSettings ++ jmhSettings ++ Seq(
+      version in Jmh := "1.1", // Remove with sbt-jmh 0.1.6+
+      addCompilerPlugin(paradisePlugin)) // Unfortunately necessary :( see: http://stackoverflow.com/q/23485426/463761
+  ) dependsOn(core, macros, generic)
 }
 
 object MonoclePublishing  {
