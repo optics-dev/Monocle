@@ -36,19 +36,12 @@ trait Tuple6Instances {
     def sixth = SimpleLens[(A1, A2, A3, A4, A5, A6), A6](_._6, (t, a) => t.copy(_6 = a))
   }
 
-  implicit def tuple6Head[A1, A2, A3, A4, A5, A6]: Head[(A1, A2, A3, A4, A5, A6), A1] =
-    Head.field1Head[(A1, A2, A3, A4, A5, A6), A1]
-
-  implicit def tuple6Tail[A1, A2, A3, A4, A5, A6]: Tail[(A1, A2, A3, A4, A5, A6), (A2, A3, A4, A5, A6)] = new Tail[(A1, A2, A3, A4, A5, A6), (A2, A3, A4, A5, A6)] {
-    def tail = SimpleLens[(A1, A2, A3, A4, A5, A6), (A2, A3, A4, A5, A6)](t => (t._2, t._3, t._4, t._5, t._6), (t, a) => t.copy(_2 = a._1, _3 = a._2, _4 = a._3, _5 = a._4, _6 = a._5))
+  implicit def tuple6HCons[A1, A2, A3, A4, A5, A6]: HCons[(A1, A2, A3, A4, A5, A6), A1, (A2, A3, A4, A5, A6)] = new HCons[(A1, A2, A3, A4, A5, A6), A1, (A2, A3, A4, A5, A6)]{
+    def hcons = SimpleIso[(A1, A2, A3, A4, A5, A6), (A1, (A2, A3, A4, A5, A6))](t => (t._1, (t._2, t._3, t._4, t._5, t._6)), { case (h, t) => (h, t._1, t._2, t._3, t._4, t._5) })
   }
 
-  implicit def tuple6Last[A1, A2, A3, A4, A5, A6]: Last[(A1, A2, A3, A4, A5, A6), A6] = new Last[(A1, A2, A3, A4, A5, A6), A6] {
-    def last = sixth
-  }
-
-  implicit def tuple6Init[A1, A2, A3, A4, A5, A6]: Init[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5)] = new Init[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5)] {
-    def init = SimpleLens[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5)](t => (t._1, t._2, t._3, t._4, t._5), (t, a) => t.copy(_1 = a._1, _2 = a._2, _3 = a._3, _4 = a._4, _5 = a._5))
+  implicit def tuple6HSnoc[A1, A2, A3, A4, A5, A6]: HSnoc[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5), A6] = new HSnoc[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5), A6]{
+    def hsnoc = SimpleIso[(A1, A2, A3, A4, A5, A6), ((A1, A2, A3, A4, A5), A6)](t => ((t._1, t._2, t._3, t._4, t._5), t._6), { case (i, l) => (i._1, i._2, i._3, i._4, i._5, l) })
   }
 
   implicit def tuple6Reverse[A, B, C, D, E, F]: Reverse[(A, B, C, D, E, F), (F, E, D, C, B, A)] = new Reverse[(A, B, C, D, E, F), (F, E, D, C, B, A)] {

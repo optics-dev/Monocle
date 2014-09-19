@@ -1,7 +1,6 @@
 package monocle.function
 
 import monocle.{Optional, SimpleOptional}
-import monocle.function.Head._
 import monocle.syntax._
 import scalaz.IList._
 import scalaz.std.list._

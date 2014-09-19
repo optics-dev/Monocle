@@ -24,7 +24,7 @@ trait StreamInstances {
     FilterIndex.traverseFilterIndex[Stream, A](_.zipWithIndex)
 
   implicit def streamCons[A]: Cons[Stream[A], A] = new Cons[Stream[A], A]{
-    def _cons = SimplePrism[Stream[A], (A, Stream[A])]({
+    def cons = SimplePrism[Stream[A], (A, Stream[A])]({
       case Empty    => Maybe.empty
       case x #:: xs => Maybe.just((x, xs))
     }, { case (a, s) => a #:: s })

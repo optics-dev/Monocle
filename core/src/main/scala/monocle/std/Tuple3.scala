@@ -24,19 +24,12 @@ trait Tuple3Instances {
     def third = SimpleLens[(A1, A2, A3), A3](_._3, (t, a) => t.copy(_3 = a))
   }
 
-  implicit def tuple3Head[A1, A2, A3]: Head[(A1, A2, A3), A1] =
-    Head.field1Head[(A1, A2, A3), A1]
-
-  implicit def tuple3Tail[A1, A2, A3]: Tail[(A1, A2, A3), (A2, A3)] = new Tail[(A1, A2, A3), (A2, A3)] {
-    def tail = SimpleLens[(A1, A2, A3), (A2, A3)](t => (t._2, t._3), (t, a) => t.copy(_2 = a._1, _3 = a._2))
+  implicit def tuple3HCons[A1, A2, A3]: HCons[(A1, A2, A3), A1, (A2, A3)] = new HCons[(A1, A2, A3), A1, (A2, A3)] {
+    def hcons = SimpleIso[(A1, A2, A3), (A1, (A2, A3))](t => (t._1, (t._2, t._3)), { case (h, t) => (h, t._1, t._2) })
   }
 
-  implicit def tuple3Last[A1, A2, A3]: Last[(A1, A2, A3), A3] = new Last[(A1, A2, A3), A3] {
-    def last = third
-  }
-
-  implicit def tuple3Init[A1, A2, A3]: Init[(A1, A2, A3), (A1, A2)] = new Init[(A1, A2, A3), (A1, A2)] {
-    def init = SimpleLens[(A1, A2, A3), (A1, A2)](t => (t._1, t._2), (t, a) => t.copy(_1 = a._1, _2 = a._2))
+  implicit def tuple3HSnoc[A1, A2, A3]: HSnoc[(A1, A2, A3), (A1, A2), A3] = new HSnoc[(A1, A2, A3), (A1, A2), A3]{
+    def hsnoc = SimpleIso[(A1, A2, A3), ((A1, A2), A3)](t => ((t._1, t._2), t._3), { case (i, l) => (i._1, i._2, l) })
   }
 
   implicit def tuple3Reverse[A, B, C]: Reverse[(A, B, C), (C, B, A)] = new Reverse[(A, B, C), (C, B, A)] {

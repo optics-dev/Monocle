@@ -1,10 +1,9 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Traversal, SimpleTraversal, SimpleLens, SimpleOptional}
+import monocle.{SimpleIso, SimpleLens, SimpleOptional, SimpleTraversal}
 
-import scalaz.Maybe.{Empty, Just}
-import scalaz.{Kleisli, Maybe, Applicative, OneAnd}
+import scalaz.{Applicative, Kleisli, Maybe, OneAnd}
 
 object oneand extends OneAndInstances
 
@@ -32,24 +31,8 @@ trait OneAndInstances {
     def first = SimpleLens[OneAnd[T, A], A](_.head, (oneAnd, a) => oneAnd.copy(head = a))
   }
 
-  implicit def oneAndHead[T[_], A]: Head[OneAnd[T, A], A] =
-    Head.field1Head[OneAnd[T, A], A]
-
-  implicit def oneAndTail[T[_], A]: Tail[OneAnd[T, A], T[A]] = new Tail[OneAnd[T, A], T[A]]{
-    def tail = SimpleLens[OneAnd[T, A], T[A]](_.tail, (oneAnd, tail) => oneAnd.copy(tail = tail))
-  }
-
-  implicit def oneAndLastFromLastOption[T[_], A](implicit ev: Snoc[T[A], A]): Last[OneAnd[T, A], A] = new Last[OneAnd[T, A], A] {
-    def last = SimpleLens[OneAnd[T, A], A](oneAnd => ev.lastMaybe.getMaybe(oneAnd.tail).getOrElse(oneAnd.head),
-      (oneAnd, a) => ev.lastMaybe.setMaybe(a)(oneAnd.tail) match {
-        case Just(newTail) => oneAnd.copy(tail = newTail)
-        case Empty()       => oneAnd.copy(head = a)
-      })
-  }
-
-  implicit def oneAndLastFromLast[T[_], A](implicit ev: Last[T[A], A]): Last[OneAnd[T, A], A] = new Last[OneAnd[T, A], A] {
-    def last = SimpleLens[OneAnd[T, A], A](oneAnd => ev.last.get(oneAnd.tail),
-      (oneAnd, a) => oneAnd.copy(tail = ev.last.set(a)(oneAnd.tail)))
+  implicit def oneAndHCons[T[_], A]: HCons[OneAnd[T, A], A, T[A]] = new HCons[OneAnd[T, A], A, T[A]]{
+    def hcons = SimpleIso[OneAnd[T, A], (A, T[A])](o => (o.head, o.tail), { case (h, t) => OneAnd(h, t) })
   }
 
 

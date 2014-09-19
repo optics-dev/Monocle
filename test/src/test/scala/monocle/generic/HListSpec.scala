@@ -59,9 +59,7 @@ class HListSpec extends Spec {
 
 
   checkAll("reverse HList", IsoLaws(reverse[H, ReverseH]))
-  checkAll("head HList", LensLaws(head[H, Int]))
-  checkAll("last HList", LensLaws(last[H, Double]))
-  checkAll("tail HList", LensLaws(tail[H, HTail]))
-  checkAll("init HList", LensLaws(init[H, HInit]))
+  checkAll("hcons HList", IsoLaws(hcons[H, Int  , HTail]))
+  checkAll("hsnoc HList", IsoLaws(hsnoc[H, HInit, Double]))
 
 }
