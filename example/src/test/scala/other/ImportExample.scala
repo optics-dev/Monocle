@@ -13,7 +13,7 @@ object Custom {
   import monocle.function.Head
 
   implicit val customHead = new Head[Custom, Int]{
-    def head = SimpleLens[Custom](_.value)((c, v) => c.copy(value = v))
+    def head = SimpleLens[Custom](_.value)((v, c) => c.copy(value = v))
   }
 }
 

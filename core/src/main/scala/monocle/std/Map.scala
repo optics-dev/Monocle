@@ -1,7 +1,8 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{SimpleTraversal, SimplePrism, Traversal, SimpleLens}
+import monocle.internal.Walk
+import monocle._
 import scalaz.Maybe.Just
 import scalaz.{Kleisli, Maybe, Applicative}
 import scalaz.std.list._
@@ -19,7 +20,7 @@ trait MapInstances {
   implicit def atMap[K, V]: At[Map[K, V], K, V] = new At[Map[K, V], K, V]{
     def at(i: K) = SimpleLens[Map[K, V], Maybe[V]](
       m => Maybe.optionMaybeIso.to(m.get(i)),
-      (map, maybeV) => maybeV.cata(v => map + (i -> v), map - i)
+      (maybeV, map) => maybeV.cata(v => map + (i -> v), map - i)
     )
   }
 
@@ -30,11 +31,13 @@ trait MapInstances {
   implicit def mapFilterIndex[K, V]: FilterIndex[Map[K,V], K, V] = new FilterIndex[Map[K, V], K, V] {
     import scalaz.syntax.applicative._
     def filterIndex(predicate: K => Boolean) = new SimpleTraversal[Map[K, V], V] {
-      def _traversal[F[_]: Applicative](f: Kleisli[F, V, V]) = Kleisli[F, Map[K, V], Map[K, V]](s =>
-        s.toList.traverse{ case (k, v) =>
-          (if(predicate(k)) f(v) else v.point[F]).map(k -> _)
-        }.map(_.toMap)
-      )
+      def _traversal[P[_, _] : Walk]: Optic[P, Map[K, V], Map[K, V], V, V] = ???
+
+//      def _traversal[F[_]: Applicative](f: Kleisli[F, V, V]) = Kleisli[F, Map[K, V], Map[K, V]](s =>
+//        s.toList.traverse{ case (k, v) =>
+//          (if(predicate(k)) f(v) else v.point[F]).map(k -> _)
+//        }.map(_.toMap)
+//      )
     }
   }
 

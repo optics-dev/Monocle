@@ -11,8 +11,8 @@ class TraversalSpec extends Spec {
   case class Location(latitude: Int, longitude: Int, name: String)
 
   val locationTraversal = Traversal.apply2[Location, Location, Int, Int](_.latitude, _.longitude) {
-    case (from, newLat, newLong) =>
-      from.copy(latitude = newLat, longitude = newLong)
+    case (newLat, newLong, oldLoc) =>
+      oldLoc.copy(latitude = newLat, longitude = newLong)
   }
 
   implicit val locationGen: Arbitrary[Location] = Arbitrary(for {

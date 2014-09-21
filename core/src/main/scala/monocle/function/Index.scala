@@ -1,6 +1,7 @@
 package monocle.function
 
-import monocle.{Optional, SimpleOptional}
+import monocle.internal.Step
+import monocle.{Optic, Optional, SimpleOptional}
 import monocle.function.Head._
 import monocle.syntax._
 import scalaz.IList._
@@ -35,6 +36,8 @@ trait IndexFunctions {
 
   def traverseIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): Index[S[A], Int, A] = new Index[S[A], Int, A]{
     def index(i: Int) = new SimpleOptional[S[A], A] {
+      def _optional[P[_, _]: Step]: Optic[P, S[A], S[A], A, A] = ???
+
       def _optional[F[_] : Applicative](f: Kleisli[F, A, A]) = Kleisli[F, S[A], S[A]](s =>
         zipWithIndex(s).traverse { case (a, j) => if(j == i) f(a) else Applicative[F].point(a) }
       )

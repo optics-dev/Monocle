@@ -1,6 +1,7 @@
 package monocle.function
 
-import monocle.{Traversal, SimpleTraversal}
+import monocle.internal.Walk
+import monocle.{Optic, Traversal, SimpleTraversal}
 import scala.annotation.implicitNotFound
 import scalaz.syntax.traverse._
 import scalaz.{Kleisli, Traverse, Applicative}
@@ -24,9 +25,11 @@ trait FilterIndexFunctions {
 
   def traverseFilterIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] = new FilterIndex[S[A], Int, A]{
     def filterIndex(predicate: Int => Boolean) = new SimpleTraversal[S[A], A] {
-      def _traversal[F[_] : Applicative](f: Kleisli[F, A, A]) = Kleisli[F, S[A], S[A]](s =>
-        zipWithIndex(s).traverse { case (a, j) => if(predicate(j)) f(a) else Applicative[F].point(a) }
-      )
+      def _traversal[P[_, _]: Walk]: Optic[P, S[A], S[A], A, A] = ???
+
+//      def _traversal[F[_] : Applicative](f: Kleisli[F, A, A]) = Kleisli[F, S[A], S[A]](s =>
+//        zipWithIndex(s).traverse { case (a, j) => if(predicate(j)) f(a) else Applicative[F].point(a) }
+//      )
     }
   }
 

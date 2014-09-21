@@ -11,13 +11,13 @@ class LensExample extends Spec {
   case class Person(name: String, age: Int)
 
   object SimpleLensVerbose {
-    val _name = SimpleLens[Person, String](_.name, (c, n) => c.copy(name = n))
-    val _age  = SimpleLens[Person, Int](_.age, (c, h) => c.copy(age = h))
+    val _name = SimpleLens[Person, String](_.name, (n, c) => c.copy(name = n))
+    val _age  = SimpleLens[Person, Int](_.age, (h, c) => c.copy(age = h))
   }
 
   object SimpleLensInferred {
-    val _name = SimpleLens[Person](_.name)((c, n) => c.copy(name = n))
-    val _age  = SimpleLens[Person](_.age)((c, h) => c.copy(age = h))
+    val _name = SimpleLens[Person](_.name)((n, c) => c.copy(name = n))
+    val _age  = SimpleLens[Person](_.age)((h, c) => c.copy(age = h))
   }
 
   object MkLensMacro {
