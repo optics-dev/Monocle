@@ -24,7 +24,7 @@ trait MapInstances {
     )
   }
 
-  implicit def mapEach[K, V]: Each[Map[K, V], V] = Each.traverseEach[({type λ[α] = Map[K,α]})#λ, V]
+  implicit def mapEach[K, V]: Each[Map[K, V], V] = Each.traverseEach[Map[K, ?], V]
 
   implicit def mapIndex[K, V]: Index[Map[K, V], K  , V] = Index.atIndex
 

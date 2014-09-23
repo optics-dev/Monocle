@@ -15,10 +15,10 @@ abstract class Iso[S, T, A, B] { self =>
   final def reverse: Iso[B, A, T, S] = Iso[B, A, T, S](reverseGet, get)
 
   final def modifyK[F[_]: Functor](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
-    _iso[({type λ[α,β] = Kleisli[F,α,β]})#λ].apply(f)
+    _iso[Kleisli[F, ?, ?]].apply(f)
 
-  final def get(s: S): A = modifyK[({ type λ[α] = Const[A, α] })#λ](
-    Kleisli[({ type λ[α] = Const[A, α] })#λ, A, B](a => Const(a))
+  final def get(s: S): A = modifyK[Const[A, ?]](
+    Kleisli[Const[A, ?], A, B](a => Const(a))
   ).run(s).getConst
   final def reverseGet(b: B): T = _iso[Tagged].apply(Tagged(b)).untagged
 

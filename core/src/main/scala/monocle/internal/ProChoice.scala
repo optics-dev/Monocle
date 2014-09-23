@@ -22,11 +22,11 @@ object ProChoice {
     def mapsnd[A, B, C](fab: A => B)(f: B => C): A => C = Profunctor[Function1].mapsnd(fab)(f)
   }
 
-  implicit def kleisliProChoice[F[_]: Applicative]: ProChoice[({type λ[α,β] = Kleisli[F,α,β]})#λ] = new ProChoice[({type λ[α,β] = Kleisli[F,α,β]})#λ] {
+  implicit def kleisliProChoice[F[_]: Applicative] = new ProChoice[Kleisli[F, ?, ?]] {
     def mapfst[A, B, C](pab: Kleisli[F, A, B])(f: C => A): Kleisli[F, C, B] =
-      Profunctor[({type λ[α,β] = Kleisli[F,α,β]})#λ].mapfst(pab)(f)
+      Profunctor[Kleisli[F, ?, ?]].mapfst(pab)(f)
     def mapsnd[A, B, C](pab: Kleisli[F, A, B])(f: B => C): Kleisli[F, A, C] =
-      Profunctor[({type λ[α,β] = Kleisli[F,α,β]})#λ].mapsnd(pab)(f)
+      Profunctor[Kleisli[F, ?, ?]].mapsnd(pab)(f)
 
     def left[A, B, C](pab: Kleisli[F, A, B]): Kleisli[F, A \/ C, B \/ C] =
       Kleisli[F, A \/ C, B \/ C](_.fold(a => Applicative[F].map(pab.run(a))(\/.left), c => Applicative[F].point(\/-(c))))

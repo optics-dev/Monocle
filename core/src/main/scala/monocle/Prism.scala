@@ -15,11 +15,11 @@ abstract class Prism[S, T, A, B]{ self =>
   def _prism[P[_, _]: ProChoice]: Optic[P, S, T, A, B]
 
   final def modifyK[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
-    _prism[({type λ[α,β] = Kleisli[F,α,β]})#λ].apply(f)
+    _prism[Kleisli[F, ?, ?]].apply(f)
 
   final def getMaybe(s: S): Maybe[A] = Tag.unwrap(
-    modifyK[({ type λ[α] = Const[FirstMaybe[A], α] })#λ](
-      Kleisli[({ type λ[α] = Const[FirstMaybe[A], α] })#λ, A, B](a => Const(Maybe.just(a).first))
+    modifyK[Const[FirstMaybe[A], ?]](
+      Kleisli[Const[FirstMaybe[A], ?], A, B](a => Const(Maybe.just(a).first))
     ).run(s).getConst
   )
 

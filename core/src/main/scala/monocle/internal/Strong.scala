@@ -26,23 +26,20 @@ object Strong {
     def mapsnd[A, B, C](fab: A => B)(f: B => C): A => C = Profunctor[Function1].mapsnd(fab)(f)
   }
 
-  implicit def kleisliStrong[F[_]](implicit F: Functor[F]) = new Strong[({type λ[α,β] = Kleisli[F, α, β]})#λ]{
-
+  implicit def kleisliStrong[F[_]](implicit F: Functor[F]) = new Strong[Kleisli[F, ?, ?]]{
     def first[A, B, C](f: Kleisli[F, A, B]): Kleisli[F, (A, C), (B, C)] =
       Kleisli[F, (A, C), (B, C)] {
         case (a, c) => F.map(f.run(a))(b => (b, c))
       }
-
-
     def second[A, B, C](f: Kleisli[F, A, B]): Kleisli[F, (C, A), (C, B)] =
       Kleisli[F, (C, A), (C, B)] {
         case (c, a) => F.map(f.run(a))(b => (c, b))
       }
 
     def mapfst[A, B, C](fab: Kleisli[F, A, B])(f: C => A): Kleisli[F, C, B] =
-      Profunctor[({type λ[α,β] = Kleisli[F, α, β]})#λ].mapfst(fab)(f)
+      Profunctor[Kleisli[F, ?, ?]].mapfst(fab)(f)
     def mapsnd[A, B, C](fab: Kleisli[F, A, B])(f: B => C): Kleisli[F, A, C] =
-      Profunctor[({type λ[α,β] = Kleisli[F, α, β]})#λ].mapsnd(fab)(f)
+      Profunctor[Kleisli[F, ?, ?]].mapsnd(fab)(f)
   }
 
 }
