@@ -18,8 +18,14 @@ object BuildSettings {
     organization       := "com.github.julien-truffaut",
     scalaVersion       := buildScalaVersion,
     crossScalaVersions := Seq("2.10.4", "2.11.2"),
-    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
-      "-language:higherKinds", "-language:implicitConversions", "-language:postfixOps"),
+    scalacOptions     ++= Seq(
+      "-deprecation",
+      "-encoding", "UTF-8",
+      "-feature",
+      "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
+      "-unchecked",
+      "-Yno-generic-signatures"
+    ),
     incOptions         := incOptions.value.withNameHashing(true),
     resolvers          += Resolver.sonatypeRepo("releases"),
     resolvers          += Resolver.sonatypeRepo("snapshots"),
