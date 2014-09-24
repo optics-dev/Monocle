@@ -1,8 +1,9 @@
 package monocle
 
-import monocle.internal.Strong
+import monocle.internal.{Step, Strong}
 
-import scalaz.{Applicative, Const, Functor, Monoid, Kleisli}
+import scalaz.{Applicative, Const, Kleisli, Functor, Monoid, Profunctor}
+
 
 /**
  * A Lens defines a single focus between a type S and A such as if you change A to B
@@ -10,17 +11,17 @@ import scalaz.{Applicative, Const, Functor, Monoid, Kleisli}
  */
 abstract class Lens[S, T, A, B] { self =>
 
-  def _lens[P[_, _]: Strong](pab: P[A, B]): P[S, T]
+  def _lens[P[_, _]: Strong]: Optic[P, S, T, A, B]
 
   final def modifyK[F[_]: Functor](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
-    _lens[({type λ[α, β] = Kleisli[F, α, β]})#λ](f)
+    _lens[Kleisli[F, ?, ?]].apply(f)
 
 
-  final def get(s: S): A = modifyK[({ type λ[α] = Const[A, α] })#λ](
-    Kleisli[({ type λ[α] = Const[A, α] })#λ, A, B](a => Const(a))
+  final def get(s: S): A = modifyK[Const[A, ?]](
+    Kleisli[Const[A, ?], A, B](a => Const(a))
   ).run(s).getConst
 
-  final def modify(f: A => B): S => T = _lens[Function1](f)
+  final def modify(f: A => B): S => T = _lens[Function1].apply(f)
   final def set(b: B): S => T = modify(_ => b)
 
 
@@ -32,8 +33,7 @@ abstract class Lens[S, T, A, B] { self =>
   final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
   final def composePrism[C, D](other: Prism[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
   final def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
-    def _lens[P[_, _]: Strong](pab: P[C, D]): P[S, T] =
-      (self._lens[P] _ compose other._lens[P])(pab)
+    def _lens[P[_, _] : Strong]: Optic[P, S, T, C, D] = self._lens[P] compose other._lens[P]
   }
   final def composeIso[C, D](other: Iso[A, B, C, D]): Lens[S, T, C, D] = composeLens(other.asLens)
 
@@ -45,23 +45,19 @@ abstract class Lens[S, T, A, B] { self =>
   final def asGetter: Getter[S, A] = Getter[S, A](get)
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    def _optional[F[_] : Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]
   }
 
 }
 
 object Lens {
 
-  def apply[S, T, A, B](_get: S => A, _set: (S, B) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
-    def _lens[P[_, _]](pab: P[A, B])(implicit p: Strong[P]): P[S, T] = {
-      val psasb: P[(S, A), (S, B)] = p.second[A, B, S](pab)
-      val psat : P[(S, A), T]      = p.mapsnd(psasb)(_set.tupled)
-      val psb  : P[S ,T]           = p.mapfst(psat)(s => (s, _get(s)))
-      psb
-    }
+  def apply[S, T, A, B](_get: S => A, _set: (B, S) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
+    def _lens[P[_, _] : Strong]: Optic[P, S, T, A, B] = pab =>
+      Profunctor[P].dimap[(A, S), (B, S), S, T](Strong[P].first[A, B, S](pab))(s => (_get(s), s))(_set.tupled)
   }
 
 }

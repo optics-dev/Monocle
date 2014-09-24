@@ -3,6 +3,8 @@ import scala.util.Try
 
 package object monocle {
 
+  type Optic[P[_, _], S, T, A, B] = P[A, B] => P[S, T]
+
   type SimpleSetter[S, A]    = Setter[S, S, A, A]
   type SimpleTraversal[S, A] = Traversal[S, S, A, A]
   type SimpleLens[S, A]      = Lens[S, S, A, A]
@@ -11,24 +13,24 @@ package object monocle {
   type SimplePrism[S, A]     = Prism[S, S, A, A]
 
   object SimpleLens {
-    def apply[S, A](_get: S => A, _set: (S, A) => S): SimpleLens[S, A] =
+    def apply[S, A](_get: S => A, _set: (A, S) => S): SimpleLens[S, A] =
       Lens[S, S, A, A](_get, _set)
 
     /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
     def apply[S]: Constructor[S] = new Constructor[S]
     final class Constructor[S] {
-      @inline def apply[A](_get: S => A)(_set: (S, A) => S): SimpleLens[S, A] = Lens[S, S, A, A](_get, _set)
+      @inline def apply[A](_get: S => A)(_set: (A, S) => S): SimpleLens[S, A] = Lens[S, S, A, A](_get, _set)
     }
   }
 
   object SimpleOptional {
-    def apply[S, A](_getMaybe: S => Maybe[A], _set: (S, A) => S): SimpleOptional[S, A] =
+    def apply[S, A](_getMaybe: S => Maybe[A], _set: (A, S) => S): SimpleOptional[S, A] =
       Optional[S, S, A, A](s => _getMaybe(s) \/> s, _set)
 
     /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
     def apply[S]: Constructor[S] = new Constructor[S]
     final class Constructor[S] {
-      @inline def apply[A](_getMaybe: S => Maybe[A])(_set: (S, A) => S): SimpleOptional[S, A] =
+      @inline def apply[A](_getMaybe: S => Maybe[A])(_set: (A, S) => S): SimpleOptional[S, A] =
         SimpleOptional(_getMaybe, _set)
     }
   }

@@ -18,11 +18,18 @@ object BuildSettings {
     organization       := "com.github.julien-truffaut",
     scalaVersion       := buildScalaVersion,
     crossScalaVersions := Seq("2.10.4", "2.11.2"),
-    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
-      "-language:higherKinds", "-language:implicitConversions", "-language:postfixOps"),
+    scalacOptions     ++= Seq(
+      "-deprecation",
+      "-encoding", "UTF-8",
+      "-feature",
+      "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
+      "-unchecked",
+      "-Yno-generic-signatures"
+    ),
     incOptions         := incOptions.value.withNameHashing(true),
     resolvers          += Resolver.sonatypeRepo("releases"),
-    resolvers          += Resolver.sonatypeRepo("snapshots")
+    resolvers          += Resolver.sonatypeRepo("snapshots"),
+    resolvers          += "bintray/non" at "http://dl.bintray.com/non/maven"
   ) ++ publishSettings
 }
 
@@ -39,7 +46,8 @@ object Dependencies {
   )
 
   val macroVersion = "2.0.1"
-  val paradisePlugin = compilerPlugin("org.scalamacros" % "paradise" % macroVersion cross CrossVersion.full)
+  val paradisePlugin = compilerPlugin("org.scalamacros" % "paradise"        % macroVersion cross CrossVersion.full)
+  val kindProjector  = compilerPlugin("org.spire-math"  %% "kind-projector" % "0.5.2")
 }
 
 object MonocleBuild extends Build {
@@ -59,6 +67,7 @@ object MonocleBuild extends Build {
     file("core"),
     settings = buildSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz),
+      addCompilerPlugin(kindProjector),
       previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % previousVersion)
     )
   )

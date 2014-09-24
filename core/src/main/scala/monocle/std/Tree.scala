@@ -13,10 +13,10 @@ object tree extends TreeFunctions with TreeInstances
 trait TreeFunctions {
 
   def rootLabel[A]: SimpleLens[Tree[A], A] =
-    SimpleLens[Tree[A], A](_.rootLabel, (tree, l) => Tree.node(l, tree.subForest))
+    SimpleLens[Tree[A], A](_.rootLabel, (l, tree) => Tree.node(l, tree.subForest))
 
   def subForest[A]: SimpleLens[Tree[A], Stream[Tree[A]]] =
-    SimpleLens[Tree[A], Stream[Tree[A]]](_.subForest, (tree, children) => Tree.node(tree.rootLabel, children))
+    SimpleLens[Tree[A], Stream[Tree[A]]](_.subForest, (children, tree) => Tree.node(tree.rootLabel, children))
 
   def leftMostLabel[A]: SimpleLens[Tree[A], A] = {
 
@@ -26,9 +26,9 @@ trait TreeFunctions {
       case x #:: xs => _get(x)
     }
 
-    def _set(tree: Tree[A], newLeaf: A): Tree[A] = tree.subForest match {
+    def _set(newLeaf: A, tree: Tree[A]): Tree[A] = tree.subForest match {
       case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel, headMaybe[Stream[Tree[A]], Tree[A]].modify(_set(_, newLeaf))(xs) )
+      case xs    => Tree.node(tree.rootLabel, headMaybe[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf, _))(xs) )
     }
 
     SimpleLens[Tree[A], A](_get, _set)
@@ -42,9 +42,9 @@ trait TreeFunctions {
       case xs    => _get(xs.last)
     }
 
-    def _set(tree: Tree[A], newLeaf: A): Tree[A] = tree.subForest match {
+    def _set(newLeaf: A, tree: Tree[A]): Tree[A] = tree.subForest match {
       case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel, lastMaybe[Stream[Tree[A]], Tree[A]].modify(_set(_, newLeaf))(xs) )
+      case xs    => Tree.node(tree.rootLabel, lastMaybe[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf, _))(xs) )
     }
 
     SimpleLens[Tree[A], A](_get, _set)

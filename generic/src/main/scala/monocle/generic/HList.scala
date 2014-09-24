@@ -32,13 +32,13 @@ trait HListInstances {
 
   implicit def hListTail[S <: HList, H, T <: HList](implicit evIsCons: IsHCons.Aux[S, H, T],
                                                             evPrepend: Prepend.Aux[H :: HNil, T, S]) = new Tail[S, T] {
-    def tail = SimpleLens[S, T](s => evIsCons.tail(s), (s, a) => evPrepend(evIsCons.head(s) :: HNil, a))
+    def tail = SimpleLens[S, T](s => evIsCons.tail(s), (a, s) => evPrepend(evIsCons.head(s) :: HNil, a))
   }
 
   implicit def hListInit[S <: HList, L, A <: HList](implicit evInit: HInit.Aux[S, A],
                                                              evLast: HLast.Aux[S, L],
                                                     evPrepend: Prepend.Aux[A, L :: HNil, S]) = new Init[S, A] {
-    def init = SimpleLens[S, A](s => evInit(s), (s, a) => evPrepend(a, evLast(s) :: HNil))
+    def init = SimpleLens[S, A](s => evInit(s), (a, s) => evPrepend(a, evLast(s) :: HNil))
   }
 
   implicit def hListField1[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._0.N, A],
@@ -74,6 +74,6 @@ trait HListInstances {
 
   private def hListAt[S <: HList, A](n : Nat)(implicit evAt: At.Aux[S, n.N, A],
                                                   evReplace: ReplaceAt.Aux[S, n.N, A, (A, S)]): SimpleLens[S, A]  =
-    SimpleLens[S, A](_.at(n), (hlist, a) => hlist.updatedAt(n, a) )
+    SimpleLens[S, A](_.at(n), (a, hlist) => hlist.updatedAt(n, a) )
 
 }

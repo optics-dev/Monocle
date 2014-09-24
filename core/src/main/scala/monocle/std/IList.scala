@@ -1,8 +1,10 @@
 package monocle.std
 
-import monocle.SimplePrism
 import monocle.function._
+import monocle.{SimpleOptional, SimplePrism}
 
+import scalaz.Id.Id
+import scalaz.syntax.traverse._
 import scalaz.{ICons, IList, INil, Maybe}
 
 object ilist extends IListInstances
@@ -19,8 +21,15 @@ trait IListInstances {
 
   implicit def iListEach[A]: Each[IList[A], A] = Each.traverseEach[IList, A]
 
-  implicit def iListIndex[A]: Index[IList[A], Int, A] =
-    Index.traverseIndex[IList, A](_.zipWithIndex)
+  implicit def iListIndex[A]: Index[IList[A], Int, A] = new Index[IList[A], Int, A] {
+    def index(i: Int) = SimpleOptional[IList[A], A](
+      il      => if(i < 0) Maybe.empty else Maybe.optionMaybeIso.to(il.drop(i).headOption),
+      (a, il) => il.zipWithIndex.traverse[Id, A]{
+        case (_    , index) if index == i => a
+        case (value, index)               => value
+      }
+    )
+  }
 
   implicit def iListFilterIndex[A]: FilterIndex[IList[A], Int, A] =
     FilterIndex.traverseFilterIndex[IList, A](_.zipWithIndex)

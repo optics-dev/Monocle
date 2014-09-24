@@ -1,9 +1,10 @@
 package monocle.function
 
-import monocle.{Traversal, SimpleTraversal}
+import monocle.SimpleTraversal
+
 import scala.annotation.implicitNotFound
 import scalaz.syntax.traverse._
-import scalaz.{Kleisli, Traverse, Applicative}
+import scalaz.{Applicative, Kleisli, Traverse}
 
 @implicitNotFound("Could not find an instance of FilterIndex[${S},${I},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")

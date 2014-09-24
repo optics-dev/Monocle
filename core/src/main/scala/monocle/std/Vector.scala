@@ -1,10 +1,13 @@
 package monocle.std
 
-import monocle.SimplePrism
 import monocle.function._
+import monocle.{SimpleOptional, SimplePrism}
 
+import scala.util.Try
+import scalaz.Id.Id
 import scalaz.Maybe
 import scalaz.std.vector._
+import scalaz.syntax.traverse._
 
 object vector extends VectorInstances
 
@@ -16,8 +19,15 @@ trait VectorInstances {
 
   implicit def vectorEach[A]: Each[Vector[A], A] = Each.traverseEach[Vector, A]
 
-  implicit def vectorIndex[A]: Index[Vector[A], Int, A] =
-    Index.traverseIndex[Vector, A](_.zipWithIndex)
+  implicit def vectorIndex[A]: Index[Vector[A], Int, A] = new Index[Vector[A], Int, A] {
+    def index(i: Int) = SimpleOptional[Vector[A], A](
+      v      => if(i < 0) Maybe.empty else Maybe.optionMaybeIso.to(Try(v.apply(i)).toOption),
+      (a, v) => v.zipWithIndex.traverse[Id, A]{
+        case (_    , index) if index == i => a
+        case (value, index)               => value
+      }
+    )
+  }
 
   implicit def vectorFilterIndex[A]: FilterIndex[Vector[A], Int, A] =
     FilterIndex.traverseFilterIndex[Vector, A](_.zipWithIndex)

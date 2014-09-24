@@ -1,27 +1,28 @@
 package monocle
 
-import monocle.internal.{Tagged, Strong, ProChoice}
+import monocle.internal.{ProChoice, Step, Strong, Tagged}
 
-import scalaz.{Applicative, Functor, Profunctor, Monoid, Const, Kleisli}
 import scalaz.std.function._
-import scalaz.Id.Id
+import scalaz.{Applicative, Const, Functor, Kleisli, Monoid, Profunctor}
 
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.
  */
 abstract class Iso[S, T, A, B] { self =>
 
-  def _iso[P[_, _]: Profunctor, F[_]: Functor](pafb: P[A, F[B]]): P[S, F[T]]
+  def _iso[P[_, _]: Profunctor]: Optic[P, S, T, A, B]
 
   final def reverse: Iso[B, A, T, S] = Iso[B, A, T, S](reverseGet, get)
 
   final def modifyK[F[_]: Functor](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
-    Kleisli[F, S, T](_iso[Function1, F](f.run))
+    _iso[Kleisli[F, ?, ?]].apply(f)
 
-  final def get(s: S): A = _iso[Function1, ({ type λ[α] = Const[A, α] })#λ](a => Const(a)).apply(s).getConst
-  final def reverseGet(b: B): T = _iso[Tagged, Id](Tagged(b)).untagged
+  final def get(s: S): A = modifyK[Const[A, ?]](
+    Kleisli[Const[A, ?], A, B](a => Const(a))
+  ).run(s).getConst
+  final def reverseGet(b: B): T = _iso[Tagged].apply(Tagged(b)).untagged
 
-  final def modify(f: A => B): S => T = _iso[Function1, Id](f)
+  final def modify(f: A => B): S => T = _iso[Function1].apply(f)
   final def set(b: B): S => T = modify(_ => b)
 
 
@@ -34,29 +35,27 @@ abstract class Iso[S, T, A, B] { self =>
   final def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = asPrism composePrism other
   final def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = asLens composeLens other
   final def composeIso[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = new Iso[S, T, C, D]{
-    def _iso[P[_, _]: Profunctor, F[_]: Functor](pcfd: P[C, F[D]]): P[S, F[T]] =
-      (self._iso[P, F] _ compose other._iso[P, F])(pcfd)
+    def _iso[P[_, _]: Profunctor]: Optic[P, S, T, C, D] = self._iso[P] compose other._iso[P]
   }
 
 
   // Optics transformation
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[M: Monoid](f: A => M)(s: S): M =
-      _iso[Function1, ({ type λ[α] = Const[M, α] })#λ](a => Const(f(a))).apply(s).getConst
+    def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
   }
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    def _optional[F[_] : Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _iso[P]
   }
   final def asPrism: Prism[S, T, A, B] = new Prism[S, T, A, B]{
-    def _prism[P[_, _]: ProChoice, F[_]: Applicative](pafb: P[A, F[B]]): P[S, F[T]] = _iso(pafb)
+    def _prism[P[_, _]: ProChoice]: Optic[P, S, T, A, B] = _iso[P]
   }
   final def asGetter: Getter[S, A] = Getter[S, A](get)
   final def asLens: Lens[S, T, A, B] = new Lens[S, T, A, B]{
-    def _lens[P[_, _] : Strong](pab: P[A, B]): P[S, T] = _iso[P, Id](pab)
+    def _lens[P[_, _] : Strong]: Optic[P, S, T, A, B] = _iso[P]
   }
 
 }
@@ -64,8 +63,8 @@ abstract class Iso[S, T, A, B] { self =>
 object Iso {
 
   def apply[S, T, A, B](_get: S => A, _reverseGet: B => T): Iso[S, T, A, B] = new Iso[S, T, A, B] {
-    def _iso[P[_, _], F[_]](pafb: P[A, F[B]])(implicit p: Profunctor[P], f: Functor[F]): P[S, F[T]] =
-      p.mapsnd(p.mapfst(pafb)(_get))(f.map(_)(_reverseGet))
+    def _iso[P[_, _]: Profunctor]: Optic[P, S, T, A, B] =
+      Profunctor[P].dimap(_)(_get)(_reverseGet)
   }
 
 }

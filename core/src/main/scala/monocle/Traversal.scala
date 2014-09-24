@@ -1,8 +1,7 @@
 package monocle
 
-import scalaz.Kleisli._
-import scalaz.std.list._
-import scalaz.{Applicative, Const, Kleisli, Monoid, Reader, Traverse, IList}
+import scalaz.{Applicative, Const, IList, Kleisli, Monoid, Reader, Traverse}
+
 
 /**
  * A Traversal is generalisation of a Lens in a way that it defines a multi foci between
@@ -12,15 +11,17 @@ abstract class Traversal[S, T, A, B] { self =>
 
   def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T]
 
-  final def modifyK[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = _traversal(f)
+  // TODO use def _traversal[P[_, _]: Walk]: Optic[P, S, T, A, B]
 
-  final def getAll(s: S): IList[A] = _traversal[({ type λ[α] = Const[IList[A], α] })#λ](
-    Kleisli[({ type λ[α] = Const[IList[A], α] })#λ, A, B](a => Const(IList(a)))
+  final def modifyK[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
+    _traversal[F](f)
+
+  final def getAll(s: S): IList[A] = modifyK[Const[IList[A], ?]](
+    Kleisli[Const[IList[A], ?], A, B](a => Const(IList(a)))
   ).run(s).getConst
 
-  final def modify(f: A => B): S => T = _traversal(Reader(f)).run
+  final def modify(f: A => B): S => T = _traversal(Reader(f))
   final def set(b: B): S => T = modify(_ => b)
-
 
   // Compose
   final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
@@ -37,8 +38,8 @@ abstract class Traversal[S, T, A, B] { self =>
   // Optic transformation
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[M: Monoid](f: A => M)(s: S): M = _traversal[({ type λ[α] = Const[M, α] })#λ](
-      Kleisli[({ type λ[α] = Const[M, α] })#λ, A, B](a => Const(f(a)))
+    def foldMap[M: Monoid](f: A => M)(s: S): M = modifyK[Const[M, ?]](
+      Kleisli[Const[M, ?], A, B](a => Const(f(a)))
     ).run(s).getConst
   }
 
@@ -52,33 +53,33 @@ object Traversal {
     )
   }
 
-  def apply2[S, T, A, B](get1: S => A, get2: S => A)(_set: (S, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+  def apply2[S, T, A, B](get1: S => A, get2: S => A)(_set: (B, B, S) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
     def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T]( s =>
-      Applicative[F].apply2(f(get1(s)), f(get2(s)))(_set(s, _, _))
+      Applicative[F].apply2(f(get1(s)), f(get2(s)))(_set(_, _, s))
     )
   }
 
-  def apply3[S, T, A, B](get1: S => A, get2: S => A, get3: S => A)(_set: (S, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T](s =>
-      Applicative[F].apply3(f(get1(s)), f(get2(s)), f(get3(s)))(_set(s, _, _, _))
+  def apply3[S, T, A, B](get1: S => A, get2: S => A, get3: S => A)(_set: (B, B, B, S) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T](s =>
+      Applicative[F].apply3(f(get1(s)), f(get2(s)), f(get3(s)))(_set(_, _, _, s))
     )
   }
 
-  def apply4[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A)(_set: (S, B, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T](s =>
-      Applicative[F].apply4(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)))(_set(s, _, _, _, _))
+  def apply4[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A)(_set: (B, B, B, B, S) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T](s =>
+      Applicative[F].apply4(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)))(_set(_, _, _, _, s))
     )
   }
 
-  def apply5[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(_set: (S, B, B, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T](s =>
-      Applicative[F].apply5(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)))(_set(s, _, _, _, _, _))
+  def apply5[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(_set: (B, B, B, B, B, S) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T](s =>
+      Applicative[F].apply5(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)))(_set(_, _, _, _, _, s))
     )
   }
 
-  def apply6[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(_set: (S, B, B, B, B, B, B) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T](s =>
-      Applicative[F].apply6(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)), f(get6(s)))(_set(s, _, _, _, _, _, _))
+  def apply6[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(_set: (B, B, B, B, B, B, S) => T): Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]) = Kleisli[F, S, T](s =>
+      Applicative[F].apply6(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)), f(get6(s)))(_set(_, _, _, _, _, _, s))
     )
   }
 
