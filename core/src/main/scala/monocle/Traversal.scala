@@ -11,6 +11,8 @@ abstract class Traversal[S, T, A, B] { self =>
 
   def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T]
 
+  // TODO use def _traversal[P[_, _]: Walk]: Optic[P, S, T, A, B]
+
   final def modifyK[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
     _traversal[F](f)
 
