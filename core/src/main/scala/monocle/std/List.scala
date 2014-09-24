@@ -3,8 +3,10 @@ package monocle.std
 import monocle.function._
 import monocle.{SimpleOptional, SimplePrism}
 
+import scalaz.Id.Id
 import scalaz.Maybe
 import scalaz.std.list._
+import scalaz.syntax.traverse._
 
 object list extends ListInstances
 
@@ -23,8 +25,15 @@ trait ListInstances {
 
   implicit def listEach[A]: Each[List[A], A] = Each.traverseEach[List, A]
 
-  implicit def listIndex[A]: Index[List[A], Int, A] =
-    Index.traverseIndex[List, A](_.zipWithIndex)
+  implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
+    def index(i: Int) = SimpleOptional[List[A], A](
+      l      => if(i < 0) Maybe.empty else Maybe.optionMaybeIso.to(l.drop(i).headOption),
+      (a, l) => l.zipWithIndex.traverse[Id, A]{
+        case (_    , index) if index == i => a
+        case (value, index)               => value
+      }
+    )
+  }
 
   implicit def listFilterIndex[A]: FilterIndex[List[A], Int, A] =
     FilterIndex.traverseFilterIndex[List, A](_.zipWithIndex)

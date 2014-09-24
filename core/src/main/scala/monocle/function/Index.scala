@@ -1,15 +1,7 @@
 package monocle.function
 
-import monocle.internal.Step
-import monocle.{Optic, Optional, SimpleOptional}
-import monocle.function.Head._
-import monocle.syntax._
-import scalaz.IList._
-import scalaz.std.list._
-import scalaz.std.stream._
-import scalaz.std.vector._
-import scalaz.syntax.traverse._
-import scalaz._
+import monocle.SimpleOptional
+
 import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Index[${S},${I},${A}], please check Monocle instance location policy to " +
@@ -32,16 +24,6 @@ trait IndexFunctions {
 
   def atIndex[S, I, A](implicit ev: At[S, I, A]) = new Index[S, I, A] {
     def index(i: I) = ev.at(i) composePrism monocle.std.maybe.just
-  }
-
-  def traverseIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): Index[S[A], Int, A] = new Index[S[A], Int, A]{
-    def index(i: Int) = new SimpleOptional[S[A], A] {
-      def _optional[P[_, _]: Step]: Optic[P, S[A], S[A], A, A] = ???
-
-      def _optional[F[_] : Applicative](f: Kleisli[F, A, A]) = Kleisli[F, S[A], S[A]](s =>
-        zipWithIndex(s).traverse { case (a, j) => if(j == i) f(a) else Applicative[F].point(a) }
-      )
-    }
   }
 
 }
