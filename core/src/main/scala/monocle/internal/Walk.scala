@@ -1,14 +1,12 @@
 package monocle.internal
 
 import scalaz.std.function._
-import scalaz.{Applicative, Kleisli, Profunctor, \/}
+import scalaz.{Applicative, Functor, Kleisli, Profunctor, \/, \/-}
 
 trait Walk[P[_,_]] extends Step[P] {
   def pureP[A]: P[A, A]
   def apP[A, B, C](pab: P[A, B])(f: P[A, B => C]): P[A, C]
 }
-
-
 
 object Walk {
   def apply[P[_, _]](implicit ev: Walk[P]): Walk[P] = ev
@@ -20,11 +18,8 @@ object Walk {
     def mapfst[A, B, C](pab: A => B)(f: C => A) = Profunctor[Function1].mapfst(pab)(f)
     def mapsnd[A, B, C](pab: A => B)(f: B => C) = Profunctor[Function1].mapsnd(pab)(f)
 
-    def first[A, B, C](pab: A => B)  = Strong[Function1].first(pab)
-    def second[A, B, C](pab: A => B) = Strong[Function1].second(pab)
-
-    def left[A, B, C](pab: A => B)  = ProChoice[Function1].left(pab)
-    def right[A, B, C](pab: A => B) = ProChoice[Function1].right(pab)
+    override def first[A, B, C](f: A => B) = ac => ac.copy(_1 = f(ac._1))
+    override def left[A, B, C](f: A => B)  = _.leftMap(f)
   }
 
   implicit def kleisliWalk[F[_]: Applicative] = new Walk[Kleisli[F, ?, ?]] {
@@ -39,15 +34,12 @@ object Walk {
     def mapsnd[A, B, C](pab: Kleisli[F, A, B])(f: B => C): Kleisli[F, A, C] =
       Profunctor[Kleisli[F, ?, ?]].mapsnd(pab)(f)
 
-    def first[A, B, C](pab: Kleisli[F, A, B]): Kleisli[F, (A, C), (B, C)] =
-      Strong[Kleisli[F, ?, ?]].first(pab)
-    def second[A, B, C](pab: Kleisli[F, A, B]): Kleisli[F, (C, A), (C, B)] =
-      Strong[Kleisli[F, ?, ?]].second(pab)
-
-    def left[A, B, C](pab: Kleisli[F, A, B]): Kleisli[F, A \/ C, B \/ C] =
-      ProChoice[Kleisli[F, ?, ?]].left(pab)
-    def right[A, B, C](pab: Kleisli[F, A, B]): Kleisli[F, C \/ A, C \/ B] =
-      ProChoice[Kleisli[F, ?, ?]].right(pab)
+    override def first[A, B, C](pab: Kleisli[F, A, B]): Kleisli[F, (A, C), (B, C)] =
+      Kleisli[F, (A, C), (B, C)] {
+        case (a, c) => Functor[F].strengthR(pab.run(a), c)
+      }
+    override def left[A, B, C](pab: Kleisli[F, A, B]): Kleisli[F, A \/ C, B \/ C] =
+      Kleisli[F, A \/ C, B \/ C](_.fold(a => Applicative[F].map(pab.run(a))(\/.left), c => Applicative[F].point(\/-(c))))
   }
 
 

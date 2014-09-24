@@ -1,9 +1,9 @@
 package monocle
 
-import monocle.internal.{ProChoice, Step, Strong, Walk}
+import monocle.internal.{Step, Walk}
 
-import scalaz.{Tag, Maybe, Kleisli, Applicative, Const, FirstMaybe, Monoid, Profunctor, \/}
 import scalaz.Maybe._
+import scalaz.{Applicative, Const, FirstMaybe, Kleisli, Maybe, Monoid, Profunctor, Tag, \/}
 
 /**
  * Optional can be seen as a partial Lens - Lens toward an Option - or
