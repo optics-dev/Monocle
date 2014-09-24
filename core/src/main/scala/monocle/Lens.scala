@@ -1,8 +1,8 @@
 package monocle
 
-import monocle.internal.{Walk, Step, Strong}
+import monocle.internal.{Step, Strong}
 
-import scalaz.{Const, Kleisli, Functor, Monoid, Profunctor}
+import scalaz.{Applicative, Const, Kleisli, Functor, Monoid, Profunctor}
 
 
 /**
@@ -45,7 +45,7 @@ abstract class Lens[S, T, A, B] { self =>
   final def asGetter: Getter[S, A] = Getter[S, A](get)
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[P[_, _] : Walk]: Optic[P, S, T, A, B] = _lens[P]
+    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = modifyK(f)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
     def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]

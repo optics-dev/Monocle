@@ -1,11 +1,10 @@
 package monocle.std
 
 import monocle.function._
-import monocle.internal.Walk
-import monocle._
+import monocle.{SimpleLens, SimpleOptional, SimpleTraversal}
 
 import scalaz.Maybe.{Empty, Just}
-import scalaz.{Kleisli, Maybe, Applicative, OneAnd}
+import scalaz.{Applicative, Kleisli, Maybe, OneAnd}
 
 object oneand extends OneAndInstances
 
@@ -14,12 +13,9 @@ trait OneAndInstances {
   implicit def oneAndEach[T[_], A](implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
     new Each[OneAnd[T, A], A]{
       def each = new SimpleTraversal[OneAnd[T, A], A]{
-
-        def _traversal[P[_, _] : Walk]: Optic[P, OneAnd[T, A], OneAnd[T, A], A, A] = ???
-
-//        def _traversal[F[_] : Applicative](f: Kleisli[F, A, A]) = Kleisli[F, OneAnd[T, A], OneAnd[T, A]]( s =>
-//          Applicative[F].apply2(f(s.head), ev.each.modifyK(f).apply(s.tail))((head, tail) => new OneAnd(head, tail))
-//        )
+        def _traversal[F[_] : Applicative](f: Kleisli[F, A, A]) = Kleisli[F, OneAnd[T, A], OneAnd[T, A]]( s =>
+          Applicative[F].apply2(f(s.head), ev.each.modifyK(f).apply(s.tail))((head, tail) => new OneAnd(head, tail))
+        )
       }
     }
 

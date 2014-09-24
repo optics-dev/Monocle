@@ -1,13 +1,12 @@
 package monocle.std
 
 import monocle.function._
-import monocle.internal.Walk
-import monocle._
-import scalaz.Maybe.Just
-import scalaz.{Kleisli, Maybe, Applicative}
+import monocle.{SimpleLens, SimplePrism, SimpleTraversal}
+
 import scalaz.std.list._
 import scalaz.std.map._
 import scalaz.syntax.traverse._
+import scalaz.{Applicative, Kleisli, Maybe}
 
 object map extends MapInstances
 
@@ -31,13 +30,11 @@ trait MapInstances {
   implicit def mapFilterIndex[K, V]: FilterIndex[Map[K,V], K, V] = new FilterIndex[Map[K, V], K, V] {
     import scalaz.syntax.applicative._
     def filterIndex(predicate: K => Boolean) = new SimpleTraversal[Map[K, V], V] {
-      def _traversal[P[_, _] : Walk]: Optic[P, Map[K, V], Map[K, V], V, V] = ???
-
-//      def _traversal[F[_]: Applicative](f: Kleisli[F, V, V]) = Kleisli[F, Map[K, V], Map[K, V]](s =>
-//        s.toList.traverse{ case (k, v) =>
-//          (if(predicate(k)) f(v) else v.point[F]).map(k -> _)
-//        }.map(_.toMap)
-//      )
+      def _traversal[F[_]: Applicative](f: Kleisli[F, V, V]) = Kleisli[F, Map[K, V], Map[K, V]](s =>
+        s.toList.traverse{ case (k, v) =>
+          (if(predicate(k)) f(v) else v.point[F]).map(k -> _)
+        }.map(_.toMap)
+      )
     }
   }
 

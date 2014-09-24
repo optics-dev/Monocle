@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.internal.{Step, Walk}
+import monocle.internal.Step
 
 import scalaz.Maybe._
 import scalaz.{Applicative, Const, FirstMaybe, Kleisli, Maybe, Monoid, Profunctor, Tag, \/}
@@ -46,7 +46,7 @@ abstract class Optional[S, T, A, B] { self =>
   }
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[P[_, _]: Walk]: Optic[P, S, T, A, B] = _optional[P]
+    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = modifyK(f)
   }
 
 }
