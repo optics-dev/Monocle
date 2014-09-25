@@ -1,4 +1,7 @@
-package monocle
+package monocle.macros
+
+import monocle.SimpleLens
+import monocle.macros.internal.MacroImpl
 
 import scala.language.experimental.macros
 

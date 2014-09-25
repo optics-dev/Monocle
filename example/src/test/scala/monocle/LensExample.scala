@@ -1,5 +1,6 @@
 package monocle
 
+import monocle.macros.{Lenser, Lenses}
 import monocle.syntax._
 import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
@@ -20,13 +21,6 @@ class LensExample extends Spec {
     val _age  = SimpleLens[Person](_.age)((h, c) => c.copy(age = h))
   }
 
-  object MkLensMacro {
-    import monocle.Macro._
-
-    val name = mkLens[Person, String]("name")
-    val age  = mkLens[Person, Int]("age")
-  }
-
   object LenserMacro {
     val lenser = Lenser[Person]
 
@@ -39,7 +33,6 @@ class LensExample extends Spec {
   "Lens get extract an A from an S" in {
     (john applyLens SimpleLensVerbose._name get)   ==== "John"
     (john applyLens SimpleLensInferred._name get)  ==== "John"
-    (john applyLens MkLensMacro.name get)          ==== "John"
     (john applyLens LenserMacro.name get)          ==== "John"
     (john applyLens Person.name get)               ==== "John"
   }
@@ -49,7 +42,6 @@ class LensExample extends Spec {
 
     (john applyLens SimpleLensVerbose._age set 45)  ==== changedJohn
     (john applyLens SimpleLensInferred._age set 45) ==== changedJohn
-    (john applyLens MkLensMacro.age set 45)         ==== changedJohn
     (john applyLens LenserMacro.age set 45)         ==== changedJohn
     (john applyLens Person.age set 45)              ==== changedJohn
   }
