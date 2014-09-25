@@ -2,7 +2,7 @@ package monocle.generic
 
 import monocle.TestUtil._
 import monocle.function._
-import monocle.{IsoLaws, LensLaws}
+import monocle.law.{LensLaws, IsoLaws}
 import org.scalacheck.Arbitrary
 import org.specs2.scalaz.Spec
 import scalaz.Equal

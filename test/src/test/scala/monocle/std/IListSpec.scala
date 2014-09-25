@@ -1,8 +1,7 @@
 package monocle.std
 
 import monocle.TestUtil._
-import monocle.function._
-import monocle.{PrismLaws, IsoLaws, OptionalLaws, TraversalLaws}
+import monocle.law.function.SequenceLaws
 import org.specs2.scalaz.Spec
 
 import scalaz.IList

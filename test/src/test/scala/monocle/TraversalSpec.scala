@@ -1,5 +1,7 @@
 package monocle
 
+import monocle.law.TraversalLaws
+
 import scalaz.Equal
 import monocle.TestUtil._
 import org.scalacheck.Arbitrary

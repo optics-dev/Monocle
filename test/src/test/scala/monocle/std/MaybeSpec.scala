@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.TestUtil._
 import monocle.function._
-import monocle.{IsoLaws, PrismLaws, TraversalLaws}
+import monocle.law.{IsoLaws, PrismLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
 
 import scalaz.Maybe

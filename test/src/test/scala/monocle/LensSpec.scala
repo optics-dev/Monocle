@@ -1,5 +1,7 @@
 package monocle
 
+import monocle.law.LensLaws
+
 import scalaz.Equal
 import monocle.TestUtil._
 import org.scalacheck.Arbitrary

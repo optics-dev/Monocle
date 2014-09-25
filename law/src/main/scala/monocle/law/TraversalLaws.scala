@@ -1,11 +1,11 @@
-package monocle
+package monocle.law
 
+import monocle.SimpleTraversal
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Properties}
 
-import scalaz.{Equal, Reader}
-import scalaz.std.list._
 import scalaz.syntax.equal._
+import scalaz.{Equal, Reader}
 
 object TraversalLaws {
 

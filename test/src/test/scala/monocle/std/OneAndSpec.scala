@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.TestUtil._
 import monocle.function._
-import monocle.{LensLaws, OptionalLaws, TraversalLaws}
+import monocle.law.{LensLaws, OptionalLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
 
 import scalaz.OneAnd

@@ -1,15 +1,14 @@
-package monocle.function
+package monocle.law.function
 
-import monocle.{OptionalLaws, TraversalLaws, IsoLaws, PrismLaws}
 import monocle.function._
+import monocle.law.{IsoLaws, OptionalLaws, PrismLaws, TraversalLaws}
 import org.scalacheck.Prop._
-import org.scalacheck.{Properties, Arbitrary}
-import scalaz.std.tuple._
-import scalaz.syntax.equal._
-import scalaz.std.anyVal._
-import scalaz.std.list._
+import org.scalacheck.{Arbitrary, Properties}
 
 import scalaz.Equal
+import scalaz.std.anyVal._
+import scalaz.std.tuple._
+import scalaz.syntax.equal._
 
 /**
  * Laws that Optics for a sequence like data structure should satisfy

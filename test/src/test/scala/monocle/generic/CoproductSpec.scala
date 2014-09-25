@@ -1,8 +1,8 @@
 package monocle.generic
 
-import monocle.PrismLaws
 import monocle.TestUtil._
 import monocle.function.SafeCast._
+import monocle.law.PrismLaws
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Gen, Arbitrary}
 import org.specs2.scalaz.Spec

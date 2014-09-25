@@ -1,9 +1,11 @@
-package monocle
+package monocle.law
 
-import scalaz.{Maybe, Equal}
-import scalaz.syntax.equal._
+import monocle.SimplePrism
 import org.scalacheck.Prop._
-import org.scalacheck.{Properties, Arbitrary}
+import org.scalacheck.{Arbitrary, Properties}
+
+import scalaz.syntax.equal._
+import scalaz.{Equal, Maybe}
 
 object PrismLaws {
 
