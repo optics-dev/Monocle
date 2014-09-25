@@ -1,5 +1,6 @@
-package monocle
+package monocle.bench
 
+import monocle.SimpleLens
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 
 @State(Scope.Benchmark)
