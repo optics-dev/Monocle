@@ -5,6 +5,7 @@ import monocle.{SimpleLens, SimplePrism, SimpleTraversal}
 
 import scalaz.std.list._
 import scalaz.std.map._
+import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
 import scalaz.{Applicative, Kleisli, Maybe}
 
@@ -18,7 +19,7 @@ trait MapInstances {
 
   implicit def atMap[K, V]: At[Map[K, V], K, V] = new At[Map[K, V], K, V]{
     def at(i: K) = SimpleLens[Map[K, V], Maybe[V]](
-      m => Maybe.optionMaybeIso.to(m.get(i)),
+      m => m.get(i).toMaybe,
       (maybeV, map) => maybeV.cata(v => map + (i -> v), map - i)
     )
   }
@@ -32,7 +33,7 @@ trait MapInstances {
     def filterIndex(predicate: K => Boolean) = new SimpleTraversal[Map[K, V], V] {
       def _traversal[F[_]: Applicative](f: Kleisli[F, V, V]) = Kleisli[F, Map[K, V], Map[K, V]](s =>
         s.toList.traverse{ case (k, v) =>
-          (if(predicate(k)) f(v) else v.point[F]).map(k -> _)
+          (if(predicate(k)) f(v) else v.point[F]).strengthL(k)
         }.map(_.toMap)
       )
     }

@@ -3,10 +3,12 @@ package monocle.std
 import monocle.function._
 import monocle.{SimpleOptional, SimplePrism}
 
+import scala.util.Try
 import scalaz.Id.Id
-import scalaz.Maybe
 import scalaz.std.list._
+import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
+import scalaz.{Applicative, Maybe}
 
 object list extends ListInstances
 
@@ -27,7 +29,7 @@ trait ListInstances {
 
   implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
     def index(i: Int) = SimpleOptional[List[A], A](
-      l      => if(i < 0) Maybe.empty else Maybe.optionMaybeIso.to(l.drop(i).headOption),
+      l      => if(i < 0) Maybe.empty else l.drop(i).headOption.toMaybe,
       (a, l) => l.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
@@ -47,10 +49,7 @@ trait ListInstances {
 
   implicit def listSnoc[A]: Snoc[List[A], A] = new Snoc[List[A], A]{
     def snoc = SimplePrism[List[A], (List[A], A)]( s =>
-      for {
-        init <- if(s.isEmpty) Maybe.empty else Maybe.just(s.init)
-        last <- if(s.isEmpty) Maybe.empty else Maybe.just(s.last)
-      } yield (init, last),
+      Applicative[Maybe].apply2(Try(s.init).toOption.toMaybe, s.lastOption.toMaybe)((_,_)),
     { case (init, last) => init :+ last }
     )
   }

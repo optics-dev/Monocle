@@ -7,6 +7,7 @@ import scala.util.Try
 import scalaz.Id.Id
 import scalaz.Maybe
 import scalaz.std.vector._
+import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
 
 object vector extends VectorInstances
@@ -21,7 +22,7 @@ trait VectorInstances {
 
   implicit def vectorIndex[A]: Index[Vector[A], Int, A] = new Index[Vector[A], Int, A] {
     def index(i: Int) = SimpleOptional[Vector[A], A](
-      v      => if(i < 0) Maybe.empty else Maybe.optionMaybeIso.to(Try(v.apply(i)).toOption),
+      v      => if(i < 0) Maybe.empty else Try(v.apply(i)).toOption.toMaybe,
       (a, v) => v.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value

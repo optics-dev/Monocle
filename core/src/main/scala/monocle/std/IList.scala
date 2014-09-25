@@ -4,8 +4,9 @@ import monocle.function._
 import monocle.{SimpleOptional, SimplePrism}
 
 import scalaz.Id.Id
+import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
-import scalaz.{ICons, IList, INil, Maybe}
+import scalaz.{Applicative, ICons, IList, INil, Maybe}
 
 object ilist extends IListInstances
 
@@ -23,7 +24,7 @@ trait IListInstances {
 
   implicit def iListIndex[A]: Index[IList[A], Int, A] = new Index[IList[A], Int, A] {
     def index(i: Int) = SimpleOptional[IList[A], A](
-      il      => if(i < 0) Maybe.empty else Maybe.optionMaybeIso.to(il.drop(i).headOption),
+      il      => if(i < 0) Maybe.empty else il.drop(i).headOption.toMaybe,
       (a, il) => il.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
@@ -42,11 +43,8 @@ trait IListInstances {
   }
 
   implicit def iListSnoc[A]: Snoc[IList[A], A] = new Snoc[IList[A], A]{
-    def snoc = SimplePrism[IList[A], (IList[A], A)]( s => Maybe.optionMaybeIso.to(
-      for {
-        init <- s.initOption
-        last <- s.lastOption
-      } yield (init, last)),
+    def snoc = SimplePrism[IList[A], (IList[A], A)]( s =>
+      Applicative[Maybe].apply2(s.initOption.toMaybe, s.lastOption.toMaybe)((_,_)),
       { case (init, last) => init :+ last }
     )
   }

@@ -7,6 +7,7 @@ import scala.collection.immutable.Stream.{#::, Empty}
 import scalaz.Id.Id
 import scalaz.Maybe
 import scalaz.std.stream._
+import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
 
 object stream extends StreamInstances
@@ -21,7 +22,7 @@ trait StreamInstances {
 
   implicit def streamIndex[A]: Index[Stream[A], Int, A] = new Index[Stream[A], Int, A] {
     def index(i: Int) = SimpleOptional[Stream[A], A](
-      s      => if(i < 0) Maybe.empty else Maybe.optionMaybeIso.to(s.drop(i).headOption),
+      s      => if(i < 0) Maybe.empty else s.drop(i).headOption.toMaybe,
       (a, s) => s.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
