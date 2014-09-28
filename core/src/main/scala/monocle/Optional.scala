@@ -1,9 +1,9 @@
 package monocle
 
-import monocle.internal.Step
+import monocle.internal.{Forget, Step}
 
 import scalaz.Maybe._
-import scalaz.{Applicative, Const, FirstMaybe, Kleisli, Maybe, Monoid, Profunctor, Tag, \/}
+import scalaz.{Applicative, FirstMaybe, Kleisli, Maybe, Monoid, Profunctor, Tag, \/}
 
 /**
  * Optional can be seen as a partial Lens - Lens toward an Option - or
@@ -18,9 +18,9 @@ abstract class Optional[S, T, A, B] { self =>
     _optional[Kleisli[F, ?, ?]].apply(f)
 
   final def getMaybe(s: S): Maybe[A] = Tag.unwrap(
-    modifyK[Const[FirstMaybe[A], ?]](
-      Kleisli[Const[FirstMaybe[A], ?], A, B](a => Const(Maybe.just(a).first))
-    ).run(s).getConst
+    _optional[Forget[FirstMaybe[A], ?, ?]].apply(Forget[FirstMaybe[A], A, B](
+      a => Maybe.just(a).first
+    )).runForget(s)
   )
 
   final def modify(f: A => B): S => T = _optional[Function1].apply(f)

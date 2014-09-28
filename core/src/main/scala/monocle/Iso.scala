@@ -1,9 +1,9 @@
 package monocle
 
-import monocle.internal.{ProChoice, Step, Strong, Tagged}
+import monocle.internal.{Forget, ProChoice, Step, Strong, Tagged}
 
 import scalaz.std.function._
-import scalaz.{Applicative, Const, Functor, Kleisli, Monoid, Profunctor}
+import scalaz.{Applicative, Functor, Kleisli, Monoid, Profunctor}
 
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.
@@ -17,9 +17,7 @@ abstract class Iso[S, T, A, B] { self =>
   final def modifyK[F[_]: Functor](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
     _iso[Kleisli[F, ?, ?]].apply(f)
 
-  final def get(s: S): A = modifyK[Const[A, ?]](
-    Kleisli[Const[A, ?], A, B](a => Const(a))
-  ).run(s).getConst
+  final def get(s: S): A = _iso[Forget[A, ?, ?]].apply(Forget[A, A, B](identity)).runForget(s)
   final def reverseGet(b: B): T = _iso[Tagged].apply(Tagged(b)).untagged
 
   final def modify(f: A => B): S => T = _iso[Function1].apply(f)

@@ -1,9 +1,9 @@
 package monocle
 
-import monocle.internal.{ProChoice, Step, Tagged}
+import monocle.internal.{Forget, ProChoice, Step, Tagged}
 
 import scalaz.Maybe._
-import scalaz.{Const, Maybe, Kleisli, Applicative, FirstMaybe, Tag, Monoid, Profunctor, \/}
+import scalaz.{ Maybe, Kleisli, Applicative, FirstMaybe, Tag, Monoid, Profunctor, \/}
 
 
 /**
@@ -19,9 +19,9 @@ abstract class Prism[S, T, A, B]{ self =>
     _prism[Kleisli[F, ?, ?]].apply(f)
 
   final def getMaybe(s: S): Maybe[A] = Tag.unwrap(
-    modifyK[Const[FirstMaybe[A], ?]](
-      Kleisli[Const[FirstMaybe[A], ?], A, B](a => Const(Maybe.just(a).first))
-    ).run(s).getConst
+    _prism[Forget[FirstMaybe[A], ?, ?]].apply(Forget[FirstMaybe[A], A, B](
+      a => Maybe.just(a).first
+    )).runForget(s)
   )
 
   final def reverseGet(b: B): T = _prism[Tagged].apply(Tagged(b)).untagged

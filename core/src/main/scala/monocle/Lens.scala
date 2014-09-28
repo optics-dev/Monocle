@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.internal.{Step, Strong}
+import monocle.internal.{Forget, Step, Strong}
 
 import scalaz.{Applicative, Const, Kleisli, Functor, Monoid, Profunctor}
 
@@ -17,9 +17,7 @@ abstract class Lens[S, T, A, B] { self =>
     _lens[Kleisli[F, ?, ?]].apply(f)
 
 
-  final def get(s: S): A = modifyK[Const[A, ?]](
-    Kleisli[Const[A, ?], A, B](a => Const(a))
-  ).run(s).getConst
+  final def get(s: S): A = _lens[Forget[A, ?, ?]].apply(Forget[A, A, B](identity)).runForget(s)
 
   final def modify(f: A => B): S => T = _lens[Function1].apply(f)
   final def set(b: B): S => T = modify(_ => b)
