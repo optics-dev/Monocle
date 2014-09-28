@@ -23,3 +23,17 @@ object Tagged {
   }
 }
 
+sealed abstract class TaggedInstances {
+  implicit def taggedProChoice: ProChoice[Tagged] = new TaggedProChoice{}
+}
+
+
+private sealed trait TaggedProChoice extends ProChoice[Tagged]{
+  override def left[A, B, C](pab : Tagged[A, B]): Tagged[A \/ C, B \/ C] =
+    Tagged[A \/ C, B \/ C](-\/(pab.untagged))
+  override def right[A, B, C](pab: Tagged[A, B]): Tagged[C \/ A, C \/ B] =
+    Tagged[C \/ A, C \/ B](\/-(pab.untagged))
+
+  def mapfst[A, B, C](fab: Tagged[A, B])(f: C => A): Tagged[C, B] = fab.retag[C]
+  def mapsnd[A, B, C](fab: Tagged[A, B])(f: B => C): Tagged[A, C] = Tagged(f(fab.untagged))
+}
