@@ -7,7 +7,7 @@ import scalaz.{-\/, \/, \/-}
  * This can be used in place of the more traditional but less safe idiom of passing in an undefined
  * value with the type, because unlike an (s -> b), a Tagged s b can't try to use the argument s as a real value.
  */
-case class Tagged[S, B](untagged: B) extends AnyVal {
+case class Tagged[S, B](untagged: B) {
   def retag[T]: Tagged[T, B] = Tagged(untagged)
 }
 
