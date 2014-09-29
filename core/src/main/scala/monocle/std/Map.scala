@@ -7,7 +7,7 @@ import scalaz.std.list._
 import scalaz.std.map._
 import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
-import scalaz.{Applicative, Kleisli, Maybe}
+import scalaz.{Applicative, Maybe}
 
 object map extends MapInstances
 
@@ -31,11 +31,10 @@ trait MapInstances {
   implicit def mapFilterIndex[K, V]: FilterIndex[Map[K,V], K, V] = new FilterIndex[Map[K, V], K, V] {
     import scalaz.syntax.applicative._
     def filterIndex(predicate: K => Boolean) = new SimpleTraversal[Map[K, V], V] {
-      def _traversal[F[_]: Applicative](f: Kleisli[F, V, V]) = Kleisli[F, Map[K, V], Map[K, V]](s =>
+      def _traversal[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
         s.toList.traverse{ case (k, v) =>
           (if(predicate(k)) f(v) else v.point[F]).strengthL(k)
         }.map(_.toMap)
-      )
     }
   }
 

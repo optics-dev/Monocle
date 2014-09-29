@@ -2,7 +2,8 @@ package monocle
 
 import monocle.internal.{Forget, Step, Strong}
 
-import scalaz.{Applicative, Const, Kleisli, Functor, Monoid, Profunctor}
+import scalaz.Profunctor.UpStar
+import scalaz.{Applicative, Functor, Monoid, Profunctor, Tag}
 
 
 /**
@@ -13,8 +14,8 @@ abstract class Lens[S, T, A, B] { self =>
 
   def _lens[P[_, _]: Strong]: Optic[P, S, T, A, B]
 
-  final def modifyK[F[_]: Functor](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
-    _lens[Kleisli[F, ?, ?]].apply(f)
+  final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
+    Tag.unwrap(_lens[UpStar[F, ?, ?]](Strong.upStarStrong[F])(UpStar[F, A, B](f))).apply(s)
 
 
   final def get(s: S): A = _lens[Forget[A, ?, ?]].apply(Forget[A, A, B](identity)).runForget(s)
@@ -43,7 +44,7 @@ abstract class Lens[S, T, A, B] { self =>
   final def asGetter: Getter[S, A] = Getter[S, A](get)
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
     def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]

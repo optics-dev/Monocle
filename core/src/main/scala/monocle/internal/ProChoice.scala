@@ -1,6 +1,7 @@
 package monocle.internal
 
-import scalaz.{Applicative, Kleisli, Profunctor, \/}
+import scalaz.Profunctor.UpStar
+import scalaz.{Applicative, Profunctor, \/}
 
 
 trait ProChoice[P[_, _]] extends Profunctor[P] {
@@ -17,6 +18,6 @@ object ProChoice {
   def apply[P[_, _]](implicit ev: ProChoice[P]): ProChoice[P] = ev
 
   implicit val function1ProChoice: ProChoice[Function1] = Walk[Function1]
-  implicit def kleisliProChoice[F[_]: Applicative]: ProChoice[Kleisli[F, ?, ?]] = Walk[Kleisli[F, ?, ?]]
+  implicit def upStarProChoice[F[_]: Applicative]: ProChoice[UpStar[F, ?, ?]] = Walk.upStarWalk[F]
 
 }
