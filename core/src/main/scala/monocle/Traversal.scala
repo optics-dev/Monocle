@@ -12,11 +12,9 @@ abstract class Traversal[S, T, A, B] { self =>
 
   def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T]
 
-  // TODO use def _traversal[P[_, _]: Walk]: Optic[P, S, T, A, B]
-
   final def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] = _traversal(f)(s)
 
-  final def getAll(s: S): IList[A] = modifyF[Const[IList[A], ?]](
+  final def getAll(s: S): IList[A] = _traversal[Const[IList[A], ?]](
     a => Const(IList(a))
   )(s).getConst
 
@@ -39,7 +37,7 @@ abstract class Traversal[S, T, A, B] { self =>
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](f: A => M)(s: S): M =
-      modifyF[Const[M, ?]](a => Const(f(a)))(s).getConst
+      _traversal[Const[M, ?]](a => Const(f(a)))(s).getConst
   }
 
 }
