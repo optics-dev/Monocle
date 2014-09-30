@@ -3,7 +3,8 @@ package monocle
 import monocle.internal.{Forget, Step}
 
 import scalaz.Maybe._
-import scalaz.{Applicative, FirstMaybe, Kleisli, Maybe, Monoid, Profunctor, Tag, \/}
+import scalaz.Profunctor.UpStar
+import scalaz.{Applicative, FirstMaybe, Maybe, Monoid, Profunctor, Tag, \/}
 
 /**
  * Optional can be seen as a partial Lens - Lens toward an Option - or
@@ -14,8 +15,8 @@ abstract class Optional[S, T, A, B] { self =>
 
   def _optional[P[_, _]: Step]: Optic[P, S, T, A, B]
 
-  final def modifyK[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
-    _optional[Kleisli[F, ?, ?]].apply(f)
+  final def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+    Tag.unwrap(_optional[UpStar[F, ?, ?]](Step.upStarStep[F])(UpStar[F, A, B](f))).apply(s)
 
   final def getMaybe(s: S): Maybe[A] = Tag.unwrap(
     _optional[Forget[FirstMaybe[A], ?, ?]].apply(Forget[FirstMaybe[A], A, B](
@@ -46,7 +47,7 @@ abstract class Optional[S, T, A, B] { self =>
   }
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = modifyF(f)(s)
   }
 
 }

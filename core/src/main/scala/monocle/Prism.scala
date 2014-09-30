@@ -3,7 +3,8 @@ package monocle
 import monocle.internal.{Forget, ProChoice, Step, Tagged}
 
 import scalaz.Maybe._
-import scalaz.{ Maybe, Kleisli, Applicative, FirstMaybe, Tag, Monoid, Profunctor, \/}
+import scalaz.Profunctor.UpStar
+import scalaz.{ Maybe, Applicative, FirstMaybe, Tag, Monoid, Profunctor, \/}
 
 
 /**
@@ -15,8 +16,8 @@ abstract class Prism[S, T, A, B]{ self =>
 
   def _prism[P[_, _]: ProChoice]: Optic[P, S, T, A, B]
 
-  final def modifyK[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
-    _prism[Kleisli[F, ?, ?]].apply(f)
+  final def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+    Tag.unwrap(_prism[UpStar[F, ?, ?]](ProChoice.upStarProChoice[F])(UpStar[F, A, B](f))).apply(s)
 
   final def getMaybe(s: S): Maybe[A] = Tag.unwrap(
     _prism[Forget[FirstMaybe[A], ?, ?]].apply(Forget[FirstMaybe[A], A, B](
@@ -50,10 +51,10 @@ abstract class Prism[S, T, A, B]{ self =>
     def foldMap[M: Monoid](f: A => M)(s: S): M = getMaybe(s) map f getOrElse Monoid[M].zero
   }
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    def _optional[P[_, _] : Step]: Optic[P, S, T, A, B] = _prism[P]
+    def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _prism[P]
   }
 
 }

@@ -2,8 +2,9 @@ package monocle
 
 import monocle.internal.{Forget, ProChoice, Step, Strong, Tagged}
 
+import scalaz.Profunctor.UpStar
 import scalaz.std.function._
-import scalaz.{Applicative, Functor, Kleisli, Monoid, Profunctor}
+import scalaz.{Applicative, Functor, Monoid, Profunctor, Tag}
 
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.
@@ -14,8 +15,8 @@ abstract class Iso[S, T, A, B] { self =>
 
   final def reverse: Iso[B, A, T, S] = Iso[B, A, T, S](reverseGet, get)
 
-  final def modifyK[F[_]: Functor](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
-    _iso[Kleisli[F, ?, ?]].apply(f)
+  final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
+    Tag.unwrap(_iso[UpStar[F, ?, ?]](Profunctor.upStarProfunctor[F])(UpStar[F, A, B](f))).apply(s)
 
   final def get(s: S): A = _iso[Forget[A, ?, ?]].apply(Forget[A, A, B](identity)).runForget(s)
   final def reverseGet(b: B): T = _iso[Tagged].apply(Tagged(b)).untagged
@@ -43,7 +44,7 @@ abstract class Iso[S, T, A, B] { self =>
     def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
   }
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_]: Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
     def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _iso[P]
