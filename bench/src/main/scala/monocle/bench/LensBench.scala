@@ -16,10 +16,10 @@ class LensBench {
   @Benchmark def lensGet()   = _name.get(john) == "John"
 
   @Benchmark def directSet() = john.copy(name = "Robert") == Person("Robert", 30)
-  @Benchmark def lensSet()   = _name.set("Robert")(john)  == Person("Robert", 30)
+  @Benchmark def lensSet()   = _name.setF("Robert")(john)  == Person("Robert", 30)
 
   @Benchmark def directModify() = john.copy(age = john.age + 1) == Person("John", 31)
-  @Benchmark def lensModify()   = _age.modify(_ + 1)(john)      == Person("John", 31)
+  @Benchmark def lensModify()   = _age.modifyF(_ + 1)(john)      == Person("John", 31)
 
 
   case class Nested1(s: String, i: Int, n: Nested2, l: Long)
@@ -41,9 +41,9 @@ class LensBench {
   @Benchmark def nestedLensGet()   = n1ToI.get(n1) == 42
 
   @Benchmark def nestedDirectSet() = n1.copy(n = n1.n.copy(n = n1.n.n.copy(n = n1.n.n.n.copy(i = 43)))) == updateN1
-  @Benchmark def nestedLensSet()   = n1ToI.set(43)(n1) == updateN1
+  @Benchmark def nestedLensSet()   = n1ToI.setF(43)(n1) == updateN1
 
   @Benchmark def nestedDirectModify() = n1.copy(n = n1.n.copy(n = n1.n.n.copy(n = n1.n.n.n.copy(i = n1.n.n.n.i + 1)))) == updateN1
-  @Benchmark def nestedLensModify()   = n1ToI.modify(_ + 1)(n1) == updateN1
+  @Benchmark def nestedLensModify()   = n1ToI.modifyF(_ + 1)(n1) == updateN1
 
 }

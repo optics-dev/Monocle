@@ -14,30 +14,30 @@ class PrismBench {
   case class S(s: String) extends ADT
   case class R(r: ADT)    extends ADT
 
-  def getIMaybe(adt: ADT): Maybe[Int]    = adt match { case I(i) => Maybe.just(i); case _ => Maybe.empty }
-  def getSMaybe(adt: ADT): Maybe[String] = adt match { case S(s) => Maybe.just(s); case _ => Maybe.empty }
-  def getRMaybe(adt: ADT): Maybe[ADT]    = adt match { case R(r) => Maybe.just(r); case _ => Maybe.empty }
+  def getIOption(adt: ADT): Option[Int]    = adt match { case I(i) => Option(i); case _ => Option.empty }
+  def getSOption(adt: ADT): Option[String] = adt match { case S(s) => Option(s); case _ => Option.empty }
+  def getROption(adt: ADT): Option[ADT]    = adt match { case R(r) => Option(r); case _ => Option.empty }
 
   def mkI(i: Int)   : ADT = I(i)
   def mkS(s: String): ADT = S(s)
   def mkR(r: ADT)   : ADT = R(r)
 
-  val _i = SimplePrism[ADT, Int]   (getIMaybe, mkI)
-  val _s = SimplePrism[ADT, String](getSMaybe, mkS)
-  val _r = SimplePrism[ADT, ADT]   (getRMaybe, mkR)
+  val _i = SimplePrism[ADT, Int]   (mkI, getIOption)
+  val _s = SimplePrism[ADT, String](mkS, getSOption)
+  val _r = SimplePrism[ADT, ADT]   (mkR, getROption)
 
-  @Benchmark def directSuccessGetOption() = getIMaybe(mkI(5))     == Maybe.just(5)
-  @Benchmark def directFailureGetOption() = getIMaybe(mkS("Yop")) == Maybe.empty[Int]
+  @Benchmark def directSuccessGetOption() = getIOption(mkI(5))     == Option(5)
+  @Benchmark def directFailureGetOption() = getIOption(mkS("Yop")) == Option.empty[Int]
 
-  @Benchmark def prismSuccessGetOption() = _i.getMaybe(mkI(5))     == Maybe.just(5)
-  @Benchmark def prismFailureGetOption() = _i.getMaybe(mkS("Yop")) == Maybe.empty[Int]
+  @Benchmark def prismSuccessGetOption() = _i.getOption(mkI(5))     == Option(5)
+  @Benchmark def prismFailureGetOption() = _i.getOption(mkS("Yop")) == Option.empty[Int]
 
   @Benchmark def nestedDirectGetOption() = (for {
-    r2 <- getRMaybe(mkR(mkR(mkI(5))))
-    r1 <- getRMaybe(r2)
-    i  <- getIMaybe(r1)
-  } yield i) == Maybe.just(5)
+    r2 <- getROption(mkR(mkR(mkI(5))))
+    r1 <- getROption(r2)
+    i  <- getIOption(r1)
+  } yield i) == Option(5)
 
-  @Benchmark def nestedPrismGetOption() = (_r composePrism _r composePrism _i).getMaybe(mkR(mkR(mkI(5)))) == Maybe.just(5)
+  @Benchmark def nestedPrismGetOption() = (_r composePrism _r composePrism _i).getOption(mkR(mkR(mkI(5)))) == Option(5)
 
 }
