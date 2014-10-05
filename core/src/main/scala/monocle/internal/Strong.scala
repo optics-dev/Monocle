@@ -17,7 +17,7 @@ object Strong {
 
   def apply[P[_, _]](implicit ev: Strong[P]): Strong[P] = ev
 
-  implicit val function1Strong: Strong[Function1] = Walk[Function1]
+  implicit val function1Strong: Strong[Function1] = Step[Function1]
 
   implicit def upStarStrong[F[_]: Functor]: Strong[UpStar[F, ?, ?]] = new Strong[UpStar[F, ?, ?]]{
     override def first[A, B, C](pab: UpStar[F, A, B]): UpStar[F, (A, C), (B, C)] =

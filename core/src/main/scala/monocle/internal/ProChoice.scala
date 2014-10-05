@@ -17,7 +17,7 @@ object ProChoice {
 
   def apply[P[_, _]](implicit ev: ProChoice[P]): ProChoice[P] = ev
 
-  implicit val function1ProChoice: ProChoice[Function1] = Walk[Function1]
-  implicit def upStarProChoice[F[_]: Applicative]: ProChoice[UpStar[F, ?, ?]] = Walk.upStarWalk[F]
+  implicit val function1ProChoice: ProChoice[Function1] = Step[Function1]
+  implicit def upStarProChoice[F[_]: Applicative]: ProChoice[UpStar[F, ?, ?]] = Step.upStarStep[F]
 
 }

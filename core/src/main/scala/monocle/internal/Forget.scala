@@ -29,6 +29,8 @@ sealed abstract class ForgetInstances extends ForgetInstances1 {
 
 
 private sealed trait ForgetProFunctor[R] extends Profunctor[Forget[R, ?, ?]]{
+  override def dimap[A, B, C, D](fab: Forget[R, A, B])(f: C => A)(g: B => D): Forget[R, C, D] =
+    Forget[R, C, D](fab.runForget compose f)
   def mapfst[A, B, C](fab: Forget[R, A, B])(f: C => A): Forget[R, C, B] = Forget(fab.runForget compose f)
   def mapsnd[A, B, C](fab: Forget[R, A, B])(f: B => C): Forget[R, A, C] = fab.retag[C]
 }

@@ -14,14 +14,13 @@ abstract class Lens[S, T, A, B] { self =>
 
   def _lens[P[_, _]: Strong]: Optic[P, S, T, A, B]
 
-  final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
+  @inline final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
     Tag.unwrap(_lens[UpStar[F, ?, ?]](Strong.upStarStrong[F])(UpStar[F, A, B](f))).apply(s)
 
+  @inline final def get(s: S): A = _lens[Forget[A, ?, ?]].apply(Forget(identity)).runForget(s)
 
-  final def get(s: S): A = _lens[Forget[A, ?, ?]].apply(Forget[A, A, B](identity)).runForget(s)
-
-  final def modify(f: A => B): S => T = _lens[Function1].apply(f)
-  final def set(b: B): S => T = modify(_ => b)
+  @inline final def modify(f: A => B): S => T = _lens[Function1].apply(f)
+  @inline final def set(b: B): S => T = modify(_ => b)
 
 
   // Compose
@@ -32,30 +31,30 @@ abstract class Lens[S, T, A, B] { self =>
   final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
   final def composePrism[C, D](other: Prism[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
   final def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
-    def _lens[P[_, _] : Strong]: Optic[P, S, T, C, D] = self._lens[P] compose other._lens[P]
+    @inline final def _lens[P[_, _]: Strong]: Optic[P, S, T, C, D] = self._lens[P] compose other._lens[P]
   }
   final def composeIso[C, D](other: Iso[A, B, C, D]): Lens[S, T, C, D] = composeLens(other.asLens)
 
 
   // Optics transformation
   final def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
+    final def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
   }
   final def asGetter: Getter[S, A] = Getter[S, A](get)
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = modifyF(f)(s)
+    final def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]
+    final def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]
   }
 
 }
 
 object Lens {
 
-  def apply[S, T, A, B](_get: S => A, _set: (B, S) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
-    def _lens[P[_, _] : Strong]: Optic[P, S, T, A, B] = pab =>
+  final def apply[S, T, A, B](_get: S => A, _set: (B, S) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
+    @inline final def _lens[P[_, _] : Strong]: Optic[P, S, T, A, B] = pab =>
       Profunctor[P].dimap[(A, S), (B, S), S, T](Strong[P].first[A, B, S](pab))(s => (_get(s), s))(_set.tupled)
   }
 

@@ -13,7 +13,7 @@ package object monocle {
   type SimplePrism[S, A]     = Prism[S, S, A, A]
 
   object SimpleLens {
-    def apply[S, A](_get: S => A, _set: (A, S) => S): SimpleLens[S, A] =
+    @inline final def apply[S, A](_get: S => A, _set: (A, S) => S): SimpleLens[S, A] =
       Lens[S, S, A, A](_get, _set)
 
     /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
@@ -47,8 +47,8 @@ package object monocle {
   }
 
   object SimplePrism {
-    def apply[S, A](_getMaybe: S => Maybe[A], _reverseGet: A => S): SimplePrism[S, A] =
-      Prism( s => _getMaybe(s) \/> s, _reverseGet)
+    @inline def apply[S, A](_getMaybe: S => Maybe[A], _reverseGet: A => S): SimplePrism[S, A] =
+      Prism(s => _getMaybe(s) \/> s, _reverseGet)
 
     /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
     def apply[A]: Constructor[A] = new Constructor[A]
