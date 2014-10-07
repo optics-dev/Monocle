@@ -51,7 +51,7 @@ abstract class Prism[S, T, A, B]{ self =>
     final def foldMap[M: Monoid](f: A => M)(s: S): M = getMaybe(s) map f getOrElse Monoid[M].zero
   }
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    final def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = modifyF(f)(s)
+    final def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
     final def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _prism[P]

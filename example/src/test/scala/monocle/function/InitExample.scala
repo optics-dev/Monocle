@@ -8,9 +8,9 @@ class InitExample extends Spec {
 
   "init creates a Lens from a 2-6 tuple to its tail" in {
     ((2, false) applyLens init get)                      ==== 2
-    (('r', false, "lala", 5.6, 7, 4) applyLens init get) ==== ('r', false, "lala", 5.6, 7)
+    (('r', false, "lala", 5.6, 7, 4) applyLens init get) ==== (('r', false, "lala", 5.6, 7))
 
-    ((2, false, "hello") applyLens init set (4, true)) ==== (4, true, "hello")
+    ((2, false, "hello") applyLens init set((4, true))) ==== ((4, true, "hello"))
   }
 
 }

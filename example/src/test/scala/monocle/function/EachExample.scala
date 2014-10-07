@@ -29,9 +29,9 @@ class EachExample extends Spec with ScalazMatchers {
   }
 
   "Each can be used on tuple of same type" in {
-    ((1, 2)             applyTraversal each modify( _ + 1)) ==== (2, 3)
-    ((1, 2, 3)          applyTraversal each modify( _ + 1)) ==== (2, 3, 4)
-    ((1, 2, 3, 4, 5, 6) applyTraversal each modify( _ + 1)) ==== (2, 3, 4, 5, 6, 7)
+    ((1, 2)             applyTraversal each modify( _ + 1)) ==== ((2, 3))
+    ((1, 2, 3)          applyTraversal each modify( _ + 1)) ==== ((2, 3, 4))
+    ((1, 2, 3, 4, 5, 6) applyTraversal each modify( _ + 1)) ==== ((2, 3, 4, 5, 6, 7))
   }
 
   "Each can be used on Tree" in {

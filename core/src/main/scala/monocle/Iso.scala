@@ -44,7 +44,7 @@ abstract class Iso[S, T, A, B] { self =>
     def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
   }
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = modifyF(f)(s)
+    def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
     def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _iso[P]

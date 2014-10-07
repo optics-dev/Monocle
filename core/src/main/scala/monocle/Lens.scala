@@ -1,10 +1,9 @@
 package monocle
 
-import monocle.internal.{Forget, Step, Strong}
+import monocle.internal.{ Forget, Step, Strong }
 
 import scalaz.Profunctor.UpStar
-import scalaz.{Applicative, Functor, Monoid, Profunctor, Tag}
-
+import scalaz.{ Applicative, Functor, Monoid, Profunctor, Tag }
 
 /**
  * A Lens defines a single focus between a type S and A such as if you change A to B
@@ -22,7 +21,6 @@ abstract class Lens[S, T, A, B] { self =>
   @inline final def modify(f: A => B): S => T = _lens[Function1].apply(f)
   @inline final def set(b: B): S => T = modify(_ => b)
 
-
   // Compose
   final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
   final def composeGetter[C](other: Getter[A, C]): Getter[S, C] = asGetter composeGetter other
@@ -35,15 +33,14 @@ abstract class Lens[S, T, A, B] { self =>
   }
   final def composeIso[C, D](other: Iso[A, B, C, D]): Lens[S, T, C, D] = composeLens(other.asLens)
 
-
   // Optics transformation
-  final def asFold: Fold[S, A] = new Fold[S, A]{
+  final def asFold: Fold[S, A] = new Fold[S, A] {
     final def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
   }
   final def asGetter: Getter[S, A] = Getter[S, A](get)
   final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    final def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = modifyF(f)(s)
+    final def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
     final def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]
@@ -54,7 +51,7 @@ abstract class Lens[S, T, A, B] { self =>
 object Lens {
 
   final def apply[S, T, A, B](_get: S => A, _set: (B, S) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
-    @inline final def _lens[P[_, _] : Strong]: Optic[P, S, T, A, B] = pab =>
+    @inline final def _lens[P[_, _]: Strong]: Optic[P, S, T, A, B] = pab =>
       Profunctor[P].dimap[(A, S), (B, S), S, T](Strong[P].first[A, B, S](pab))(s => (_get(s), s))(_set.tupled)
   }
 

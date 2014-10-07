@@ -1,6 +1,6 @@
 package monocle.internal
 
-import scalaz._
+import scalaz.{\/, Monoid, Profunctor}
 
 
 final case class Forget[R, A, B](runForget: A => R) extends AnyVal{
@@ -30,25 +30,25 @@ sealed abstract class ForgetInstances extends ForgetInstances1 {
 
 private sealed trait ForgetProFunctor[R] extends Profunctor[Forget[R, ?, ?]]{
   override def dimap[A, B, C, D](fab: Forget[R, A, B])(f: C => A)(g: B => D): Forget[R, C, D] =
-    Forget[R, C, D](fab.runForget compose f)
+    Forget(fab.runForget compose f)
   def mapfst[A, B, C](fab: Forget[R, A, B])(f: C => A): Forget[R, C, B] = Forget(fab.runForget compose f)
   def mapsnd[A, B, C](fab: Forget[R, A, B])(f: B => C): Forget[R, A, C] = fab.retag[C]
 }
 
 private sealed trait ForgetStrong[R] extends Strong[Forget[R, ?, ?]] with ForgetProFunctor[R]{
   override def first[A, B, C](pab: Forget[R, A, B]): Forget[R, (A, C), (B, C)] =
-    Forget[R, (A, C), (B, C)](ac => pab.runForget(ac._1))
+    Forget(ac => pab.runForget(ac._1))
   override def second[A, B, C](pab: Forget[R, A, B]): Forget[R, (C, A), (C, B)] =
-    Forget[R, (C, A), (C, B)](ca => pab.runForget(ca._2))
+    Forget(ca => pab.runForget(ca._2))
 }
 
 private sealed trait ForgetProChoice[R] extends ProChoice[Forget[R, ?, ?]] with ForgetProFunctor[R]{
   def R: Monoid[R]
 
   override def left[A, B, C](pab: Forget[R, A, B]): Forget[R, A \/ C, B \/ C] =
-    Forget[R, A \/ C, B \/ C](ac => ac.fold(pab.runForget, _ => R.zero))
+    Forget(ac => ac.fold(pab.runForget, _ => R.zero))
   override def right[A, B, C](pab: Forget[R, A, B]): Forget[R, C \/ A, C \/ B] =
-    Forget[R, C \/ A, C \/ B](ca => ca.fold(_ =>R.zero, pab.runForget))
+    Forget(ca => ca.fold(_ => R.zero, pab.runForget))
 }
 
 private sealed trait ForgetStep[R] extends Step[Forget[R, ?, ?]] with ForgetStrong[R] with ForgetProChoice[R]{

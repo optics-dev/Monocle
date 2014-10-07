@@ -33,7 +33,7 @@ trait StringInstances {
 
   implicit val stringCons: Cons[String, Char] = new Cons[String, Char] {
     def _cons = SimplePrism[String, (Char, String)](s =>
-      if(s.isEmpty) Maybe.empty else Maybe.just(s.head, s.tail),
+      if(s.isEmpty) Maybe.empty else Maybe.just((s.head, s.tail)),
       { case (h, t) => h + t }
     )
   }

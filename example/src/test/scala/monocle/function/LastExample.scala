@@ -13,7 +13,7 @@ class LastExample extends Spec {
     ((2, false) applyLens last get)                      ==== false
     (('r', false, "lala", 5.6, 7, 4) applyLens last get) ==== 4
 
-    ((2, false) applyLens last set true) ==== (2, true)
+    ((2, false) applyLens last set true) ==== ((2, true))
   }
 
   "last creates a Lens from a OneAnd and its last element (tail has one)" in {
