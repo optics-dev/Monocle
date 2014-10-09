@@ -1,5 +1,6 @@
 package monocle
 
+import scalaz.\&/.{Both, This, That}
 import scalaz._
 import org.scalacheck.{Gen, Arbitrary}
 import org.scalacheck.Arbitrary._
@@ -81,6 +82,15 @@ object TestUtil {
 
   implicit def disjunctionArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \/ B] =
     Arbitrary(arbitrary[Either[A, B]] map \/.fromEither)
+
+  implicit def theseArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \&/ B] =
+    Arbitrary(Gen.oneOf(
+      arbitrary[A].map(This(_)),
+      arbitrary[B].map(That(_)),
+      for {
+        a <- arbitrary[A]
+        b <- arbitrary[B]
+      } yield Both(a, b)))
 
   implicit def oneAndArbitrary[T[_], A](implicit a: Arbitrary[A], ta: Arbitrary[T[A]]): Arbitrary[OneAnd[T, A]] = Arbitrary(for {
     head <- Arbitrary.arbitrary[A]
