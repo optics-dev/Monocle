@@ -5,6 +5,7 @@ import monocle.internal.{Forget, ProChoice, Step, Strong, Tagged}
 import scalaz.Profunctor.UpStar
 import scalaz.std.function._
 import scalaz.{Applicative, Functor, Monoid, Profunctor, Tag}
+import scalaz.Isomorphism.{<~>, <=>}
 
 /**
  * An Iso is a Lens that can be reversed and so it defines an isomorphism.
@@ -65,5 +66,11 @@ object Iso {
     @inline def _iso[P[_, _]: Profunctor]: Optic[P, S, T, A, B] =
       Profunctor[P].dimap(_)(_get)(_reverseGet)
   }
+
+  def fromIsoFunctor[F[_], G[_], A, B](isoFunctor: F <~> G): Iso[F[A], F[B], G[A], G[B]] =
+    Iso(isoFunctor.to.apply[A])(isoFunctor.from.apply[B])
+
+  def fromIsoSet[A, B](isoSet: A <=> B): SimpleIso[A, B] =
+    SimpleIso(isoSet.to)(isoSet.from)
 
 }

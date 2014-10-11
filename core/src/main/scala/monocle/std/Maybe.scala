@@ -10,7 +10,7 @@ object maybe extends MaybeFunctions with MaybeInstances
 
 trait MaybeFunctions {
   final def maybeToOption[A, B]: Iso[Maybe[A], Maybe[B], Option[A], Option[B]] =
-    Iso(Maybe.optionMaybeIso.from.apply[A])(Maybe.optionMaybeIso.to.apply[B])
+    Iso.fromIsoFunctor[Maybe, Option, A, B](Maybe.optionMaybeIso.flip)
 
   final def just[A, B]: Prism[Maybe[A], Maybe[B], A, B] =
     Prism[Maybe[A], Maybe[B], A, B](_.cata(\/-(_), -\/(Maybe.empty)))(Maybe.just[B])
