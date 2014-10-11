@@ -10,10 +10,10 @@ object string extends StringInstances
 
 trait StringInstances {
 
-  val stringToList = SimpleIso[String, List[Char]](_.toList, _.mkString)
+  val stringToList: SimpleIso[String, List[Char]] = SimpleIso((_: String).toList)(_.mkString)
 
   implicit val stringEmpty: Empty[String] = new Empty[String] {
-    def empty = SimplePrism[String, Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty, _ => "")
+    def empty = SimplePrism[String, Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty)(_ => "")
   }
 
   implicit val stringReverse: Reverse[String, String] = reverseFromReverseFunction[String](_.reverse)
@@ -32,26 +32,26 @@ trait StringInstances {
   }
 
   implicit val stringCons: Cons[String, Char] = new Cons[String, Char] {
-    def _cons = SimplePrism[String, (Char, String)](s =>
-      if(s.isEmpty) Maybe.empty else Maybe.just((s.head, s.tail)),
-      { case (h, t) => h + t }
-    )
+    def _cons = SimplePrism[String, (Char, String)](
+      s => if(s.isEmpty) Maybe.empty else Maybe.just((s.head, s.tail))){
+      case (h, t) => h + t
+    }
   }
 
   implicit val stringSnoc: Snoc[String, Char] = new Snoc[String, Char]{
-    def snoc = SimplePrism[String, (String, Char)]( s =>
-      if(s.isEmpty) Maybe.empty else Maybe.just((s.init, s.last)),
-    { case (init, last) => init :+ last }
-    )
+    def snoc = SimplePrism[String, (String, Char)](
+      s => if(s.isEmpty) Maybe.empty else Maybe.just((s.init, s.last))){
+      case (init, last) => init :+ last
+    }
   }
 
 
   implicit val stringToBoolean = new SafeCast[String, Boolean] {
-    def safeCast = SimplePrism[String, Boolean](s => Maybe.fromTryCatchNonFatal(s.toBoolean), _.toString)
+    def safeCast = SimplePrism{s: String => Maybe.fromTryCatchNonFatal(s.toBoolean)}(_.toString)
   }
 
   implicit val stringToLong = new SafeCast[String, Long] {
-    def safeCast = SimplePrism[String, Long](parseLong, _.toString)
+    def safeCast = SimplePrism(parseLong)(_.toString)
   }
 
   implicit val stringToInt = new SafeCast[String, Int] {

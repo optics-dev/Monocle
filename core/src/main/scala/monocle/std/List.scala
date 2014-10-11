@@ -3,7 +3,6 @@ package monocle.std
 import monocle.function._
 import monocle.{SimpleOptional, SimplePrism}
 
-import scala.util.Try
 import scalaz.Id.Id
 import scalaz.std.list._
 import scalaz.syntax.std.option._
@@ -15,11 +14,11 @@ object list extends ListInstances
 trait ListInstances {
 
   implicit def listEmpty[A]: Empty[List[A]] = new Empty[List[A]] {
-    def empty = SimplePrism[List[A], Unit](l => if(l.isEmpty) Maybe.just(()) else Maybe.empty, _ => List.empty)
+    def empty = SimplePrism[List[A], Unit](l => if(l.isEmpty) Maybe.just(()) else Maybe.empty)(_ => List.empty)
   }
 
   implicit val nilEmpty: Empty[Nil.type] = new Empty[Nil.type] {
-    def empty = SimplePrism[Nil.type, Unit](_ => Maybe.just(()), _ => Nil)
+    def empty = SimplePrism[Nil.type, Unit](_ => Maybe.just(()))(_ => Nil)
   }
 
   implicit def listReverse[A]: Reverse[List[A], List[A]] =
@@ -29,7 +28,7 @@ trait ListInstances {
 
   implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
     def index(i: Int) = SimpleOptional[List[A], A](
-      l      => if(i < 0) Maybe.empty else l.drop(i).headOption.toMaybe,
+      l      => if(i < 0) Maybe.empty else l.drop(i).headOption.toMaybe)(
       (a, l) => l.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
@@ -41,17 +40,17 @@ trait ListInstances {
     FilterIndex.traverseFilterIndex[List, A](_.zipWithIndex)
 
   implicit def listCons[A]: Cons[List[A], A] = new Cons[List[A], A]{
-    def _cons = SimplePrism[List[A], (A, List[A])]({
+    def _cons = SimplePrism[List[A], (A, List[A])]{
       case Nil     => Maybe.empty
       case x :: xs => Maybe.just((x, xs))
-    }, { case (a, s) => a :: s })
+    }{ case (a, s) => a :: s }
   }
 
   implicit def listSnoc[A]: Snoc[List[A], A] = new Snoc[List[A], A]{
-    def snoc = SimplePrism[List[A], (List[A], A)]( s =>
-      Applicative[Maybe].apply2(Try(s.init).toOption.toMaybe, s.lastOption.toMaybe)((_,_)),
-    { case (init, last) => init :+ last }
-    )
+    def snoc = SimplePrism[List[A], (List[A], A)](
+      s => Applicative[Maybe].apply2(Maybe.fromTryCatchNonFatal(s.init), s.lastOption.toMaybe)((_,_))){
+      case (init, last) => init :+ last
+    }
   }
 
 }

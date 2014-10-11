@@ -54,7 +54,7 @@ abstract class Optional[S, T, A, B] { self =>
 
 object Optional {
 
-  def apply[S, T, A, B](seta: S => T \/ A, _set: (B, S) => T): Optional[S, T, A, B] = new Optional[S, T, A, B] {
+  def apply[S, T, A, B](seta: S => T \/ A)(_set: (B, S) => T): Optional[S, T, A, B] = new Optional[S, T, A, B] {
     def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = pab =>
       Profunctor[P].dimap(Step[P].step[A, B, T, S](pab)){s: S => seta(s).map((_, s))}(_.fold(identity, _set.tupled))
   }

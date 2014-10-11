@@ -41,7 +41,7 @@ abstract class Prism[S, T, A, B]{ self =>
   final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
   final def composeLens[C, D](other: Lens[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
   final def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = new Prism[S, T, C, D]{
-    final def _prism[P[_, _]: ProChoice]: Optic[P, S, T, C, D] = self._prism[P] compose other._prism[P]
+    @inline def _prism[P[_, _]: ProChoice]: Optic[P, S, T, C, D] = self._prism[P] compose other._prism[P]
   }
   final def composeIso[C, D](other: Iso[A, B, C, D]): Prism[S, T, C, D] = composePrism(other.asPrism)
 
@@ -61,8 +61,8 @@ abstract class Prism[S, T, A, B]{ self =>
 
 object Prism extends PrismFunctions {
 
-  def apply[S, T, A, B](seta: S => T \/ A, _reverseGet: B => T): Prism[S, T, A, B] = new Prism[S, T, A, B] {
-    @inline final def _prism[P[_, _] : ProChoice]: Optic[P, S, T, A, B] = pab =>
+  def apply[S, T, A, B](seta: S => T \/ A)(_reverseGet: B => T): Prism[S, T, A, B] = new Prism[S, T, A, B] {
+    @inline def _prism[P[_, _] : ProChoice]: Optic[P, S, T, A, B] = pab =>
       Profunctor[P].dimap(ProChoice[P].right[A, B, T](pab))(seta)(_.fold(identity, _reverseGet))
   }
 

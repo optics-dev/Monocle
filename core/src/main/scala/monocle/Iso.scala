@@ -13,7 +13,7 @@ abstract class Iso[S, T, A, B] { self =>
 
   def _iso[P[_, _]: Profunctor]: Optic[P, S, T, A, B]
 
-  final def reverse: Iso[B, A, T, S] = Iso[B, A, T, S](reverseGet, get)
+  final def reverse: Iso[B, A, T, S] = Iso[B, A, T, S](reverseGet)(get)
 
   final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
     Tag.unwrap(_iso[UpStar[F, ?, ?]](Profunctor.upStarProfunctor[F])(UpStar[F, A, B](f))).apply(s)
@@ -61,7 +61,7 @@ abstract class Iso[S, T, A, B] { self =>
 
 object Iso {
 
-  def apply[S, T, A, B](_get: S => A, _reverseGet: B => T): Iso[S, T, A, B] = new Iso[S, T, A, B] {
+  def apply[S, T, A, B](_get: S => A)(_reverseGet: B => T): Iso[S, T, A, B] = new Iso[S, T, A, B] {
     def _iso[P[_, _]: Profunctor]: Optic[P, S, T, A, B] =
       Profunctor[P].dimap(_)(_get)(_reverseGet)
   }

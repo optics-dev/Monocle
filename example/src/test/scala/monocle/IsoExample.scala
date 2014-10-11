@@ -8,10 +8,7 @@ class IsoExample extends Spec {
   
   case class Point(_x: Int, _y: Int)
 
-  val pointToPair = SimpleIso[Point, (Int, Int)](
-    { l => (l._x, l._y) },
-    { case (_x, _y) => Point(_x, _y) }
-  )
+  val pointToPair = SimpleIso{l: Point => (l._x, l._y) }((Point.apply _).tupled)
 
   "Iso get transforms a S into an A" in {
     (Point(3, 5) applyIso pointToPair get) ==== ((3, 5))

@@ -36,7 +36,7 @@ private[macros] object MacroImpl {
 
     c.Expr[SimpleLens[A, B]](q"""
       import monocle.Lens
-      Lens[$aTpe, $aTpe, $bTpe, $bTpe]($getter, $setter)
+      Lens[$aTpe, $aTpe, $bTpe, $bTpe]($getter)($setter)
     """)
   }
 

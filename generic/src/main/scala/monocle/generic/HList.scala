@@ -11,14 +11,14 @@ object hlist extends HListInstances
 trait HListInstances {
 
   def toHList[S, A <: HList](implicit gen: Generic.Aux[S, A]): SimpleIso[S, A] =
-    SimpleIso[S, A]({ s => gen.to(s)}, {l => gen.from(l)} )
+    SimpleIso[S, A]{ s => gen.to(s)}{l => gen.from(l)}
 
   def fromHList[S <: HList, A](implicit gen: Generic.Aux[A, S]): SimpleIso[S, A] =
     toHList.reverse
 
   implicit def hListReverse[S <: HList, A <: HList](implicit ev1: HReverse.Aux[S, A],
                                                     ev2: HReverse.Aux[A, S]): Reverse[S, A] = new Reverse[S, A]{
-    def reverse = SimpleIso[S, A](ev1.apply, ev2.apply)
+    def reverse = SimpleIso[S, A](ev1.apply)(ev2.apply)
   }
 
   implicit def hListHead[S <: HList, A](implicit evFirst: Field1[S, A]) = new Head[S, A] {
@@ -32,13 +32,13 @@ trait HListInstances {
 
   implicit def hListTail[S <: HList, H, T <: HList](implicit evIsCons: IsHCons.Aux[S, H, T],
                                                             evPrepend: Prepend.Aux[H :: HNil, T, S]) = new Tail[S, T] {
-    def tail = SimpleLens[S, T](s => evIsCons.tail(s), (a, s) => evPrepend(evIsCons.head(s) :: HNil, a))
+    def tail = SimpleLens[S, T](s => evIsCons.tail(s))( (a, s) => evPrepend(evIsCons.head(s) :: HNil, a))
   }
 
   implicit def hListInit[S <: HList, L, A <: HList](implicit evInit: HInit.Aux[S, A],
                                                              evLast: HLast.Aux[S, L],
                                                     evPrepend: Prepend.Aux[A, L :: HNil, S]) = new Init[S, A] {
-    def init = SimpleLens[S, A](s => evInit(s), (a, s) => evPrepend(a, evLast(s) :: HNil))
+    def init = SimpleLens[S, A](evInit.apply)( (a, s) => evPrepend(a, evLast(s) :: HNil))
   }
 
   implicit def hListField1[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._0.N, A],
@@ -74,6 +74,6 @@ trait HListInstances {
 
   private def hListAt[S <: HList, A](n : Nat)(implicit evAt: At.Aux[S, n.N, A],
                                                   evReplace: ReplaceAt.Aux[S, n.N, A, (A, S)]): SimpleLens[S, A]  =
-    SimpleLens[S, A](_.at(n), (a, hlist) => hlist.updatedAt(n, a) )
+    SimpleLens[S, A](_.at(n))( (a, hlist) => hlist.updatedAt(n, a) )
 
 }

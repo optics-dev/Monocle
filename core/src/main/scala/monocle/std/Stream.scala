@@ -15,14 +15,14 @@ object stream extends StreamInstances
 trait StreamInstances {
 
   implicit def streamEmpty[A]: Empty[Stream[A]] = new Empty[Stream[A]] {
-    def empty = SimplePrism[Stream[A], Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty, _ => Stream.empty)
+    def empty = SimplePrism[Stream[A], Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty)(_ => Stream.empty)
   }
 
   implicit def streamEach[A]: Each[Stream[A], A] = Each.traverseEach[Stream, A]
 
   implicit def streamIndex[A]: Index[Stream[A], Int, A] = new Index[Stream[A], Int, A] {
     def index(i: Int) = SimpleOptional[Stream[A], A](
-      s      => if(i < 0) Maybe.empty else s.drop(i).headOption.toMaybe,
+      s      => if(i < 0) Maybe.empty else s.drop(i).headOption.toMaybe)(
       (a, s) => s.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
@@ -34,10 +34,10 @@ trait StreamInstances {
     FilterIndex.traverseFilterIndex[Stream, A](_.zipWithIndex)
 
   implicit def streamCons[A]: Cons[Stream[A], A] = new Cons[Stream[A], A]{
-    def _cons = SimplePrism[Stream[A], (A, Stream[A])]({
+    def _cons = SimplePrism[Stream[A], (A, Stream[A])]{
       case Empty    => Maybe.empty
       case x #:: xs => Maybe.just((x, xs))
-    }, { case (a, s) => a #:: s })
+    }{ case (a, s) => a #:: s }
   }
 
   implicit def streamSnoc[A]: Snoc[Stream[A], A] = new Snoc[Stream[A], A]{
@@ -45,9 +45,9 @@ trait StreamInstances {
       for {
         init <- if(s.isEmpty) Maybe.empty else Maybe.just(s.init)
         last <- if(s.isEmpty) Maybe.empty else Maybe.just(s.last)
-      } yield (init, last),
-    { case (init, last) => init :+ last }
-    )
+      } yield (init, last)){
+      case (init, last) => init :+ last
+    }
   }
 
   implicit def streamReverse[A]: Reverse[Stream[A], Stream[A]] =

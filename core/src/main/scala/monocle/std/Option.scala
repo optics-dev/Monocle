@@ -9,13 +9,13 @@ object option extends OptionInstances
 trait OptionFunctions {
 
   def some[A, B]: Prism[Option[A], Option[B], A, B] =
-    Prism[Option[A], Option[B], A, B](_.map(\/-(_)) getOrElse -\/(None), Some.apply)
+    Prism[Option[A], Option[B], A, B](_.map(\/-(_)) getOrElse -\/(None))(Some.apply)
 
   def none[A]: SimplePrism[Option[A], Unit] =
-    SimplePrism[Option[A], Unit](opt => if (opt == None) Maybe.just(()) else Maybe.empty, _ => None)
+    SimplePrism[Option[A], Unit](opt => if (opt == None) Maybe.just(()) else Maybe.empty)(_ => None)
 
   def someIso[A, B]: Iso[Some[A], Some[B], A, B] =
-    Iso[Some[A], Some[B], A, B](_.get, Some(_))
+    Iso[Some[A], Some[B], A, B](_.get)(Some(_))
 
 }
 
@@ -30,7 +30,7 @@ trait OptionInstances extends OptionFunctions {
   }
 
   implicit val noneEmpty: Empty[None.type] = new Empty[None.type] {
-    def empty = SimplePrism[None.type , Unit](_ => Maybe.Just(()), _ => None)
+    def empty = SimplePrism[None.type , Unit](_ => Maybe.Just(()))(_ => None)
   }
 
   implicit def someEach[A]: Each[Some[A], A] = new Each[Some[A], A] {

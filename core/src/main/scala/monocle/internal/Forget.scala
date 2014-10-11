@@ -4,7 +4,7 @@ import scalaz.{\/, Monoid, Profunctor}
 
 
 final case class Forget[R, A, B](runForget: A => R) extends AnyVal{
-  def retag[C]: Forget[R, A, C] = Forget(runForget)
+  @inline def retag[C]: Forget[R, A, C] = Forget(runForget)
 }
 
 object Forget extends ForgetInstances
@@ -29,28 +29,31 @@ sealed abstract class ForgetInstances extends ForgetInstances1 {
 
 
 private sealed trait ForgetProFunctor[R] extends Profunctor[Forget[R, ?, ?]]{
-  override def dimap[A, B, C, D](fab: Forget[R, A, B])(f: C => A)(g: B => D): Forget[R, C, D] =
+  @inline final override def dimap[A, B, C, D](fab: Forget[R, A, B])(f: C => A)(g: B => D): Forget[R, C, D] =
     Forget(fab.runForget compose f)
-  def mapfst[A, B, C](fab: Forget[R, A, B])(f: C => A): Forget[R, C, B] = Forget(fab.runForget compose f)
-  def mapsnd[A, B, C](fab: Forget[R, A, B])(f: B => C): Forget[R, A, C] = fab.retag[C]
+  @inline final def mapfst[A, B, C](fab: Forget[R, A, B])(f: C => A): Forget[R, C, B] = Forget(fab.runForget compose f)
+  @inline final def mapsnd[A, B, C](fab: Forget[R, A, B])(f: B => C): Forget[R, A, C] = fab.retag[C]
 }
 
 private sealed trait ForgetStrong[R] extends Strong[Forget[R, ?, ?]] with ForgetProFunctor[R]{
-  override def first[A, B, C](pab: Forget[R, A, B]): Forget[R, (A, C), (B, C)] =
+  @inline final override def first[A, B, C](pab: Forget[R, A, B]): Forget[R, (A, C), (B, C)] =
     Forget(ac => pab.runForget(ac._1))
-  override def second[A, B, C](pab: Forget[R, A, B]): Forget[R, (C, A), (C, B)] =
+  @inline final override def second[A, B, C](pab: Forget[R, A, B]): Forget[R, (C, A), (C, B)] =
     Forget(ca => pab.runForget(ca._2))
 }
 
 private sealed trait ForgetProChoice[R] extends ProChoice[Forget[R, ?, ?]] with ForgetProFunctor[R]{
   def R: Monoid[R]
 
-  override def left[A, B, C](pab: Forget[R, A, B]): Forget[R, A \/ C, B \/ C] =
+  @inline final override def left[A, B, C](pab: Forget[R, A, B]): Forget[R, A \/ C, B \/ C] =
     Forget(ac => ac.fold(pab.runForget, _ => R.zero))
-  override def right[A, B, C](pab: Forget[R, A, B]): Forget[R, C \/ A, C \/ B] =
+  @inline final override def right[A, B, C](pab: Forget[R, A, B]): Forget[R, C \/ A, C \/ B] =
     Forget(ca => ca.fold(_ => R.zero, pab.runForget))
 }
 
 private sealed trait ForgetStep[R] extends Step[Forget[R, ?, ?]] with ForgetStrong[R] with ForgetProChoice[R]{
   def R: Monoid[R]
+
+  @inline final override def step[A, B, C, D](pab: Forget[R, A, B]): Forget[R, C \/ (A, D), C \/ (B, D)] =
+    Forget(cad => cad.fold(_ => R.zero, ad => pab.runForget(ad._1)))
 }

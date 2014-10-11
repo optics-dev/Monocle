@@ -1,5 +1,4 @@
-import scalaz.{Maybe, -\/, \/-}
-import scala.util.Try
+import scalaz.Maybe
 
 package object monocle {
 
@@ -13,48 +12,26 @@ package object monocle {
   type SimplePrism[S, A]     = Prism[S, S, A, A]
 
   object SimpleLens {
-    @inline final def apply[S, A](_get: S => A, _set: (A, S) => S): SimpleLens[S, A] =
-      Lens[S, S, A, A](_get, _set)
-
-    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
-    def apply[S]: Constructor[S] = new Constructor[S]
-    final class Constructor[S] {
-      @inline def apply[A](_get: S => A)(_set: (A, S) => S): SimpleLens[S, A] = Lens[S, S, A, A](_get, _set)
-    }
+    @inline def apply[S, A](_get: S => A)(_set: (A, S) => S): SimpleLens[S, A] =
+      Lens(_get)(_set)
   }
 
   object SimpleOptional {
-    def apply[S, A](_getMaybe: S => Maybe[A], _set: (A, S) => S): SimpleOptional[S, A] =
-      Optional[S, S, A, A](s => _getMaybe(s) \/> s, _set)
-
-    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
-    def apply[S]: Constructor[S] = new Constructor[S]
-    final class Constructor[S] {
-      @inline def apply[A](_getMaybe: S => Maybe[A])(_set: (A, S) => S): SimpleOptional[S, A] =
-        SimpleOptional(_getMaybe, _set)
-    }
+    @inline def apply[S, A](_getMaybe: S => Maybe[A])(_set: (A, S) => S): SimpleOptional[S, A] =
+      Optional{s: S => _getMaybe(s) \/> s}( _set)
   }
 
   object SimpleIso {
-    def apply[S, A](_get: S => A, _reverseGet: A => S): SimpleIso[S, A] = Iso(_get, _reverseGet)
-    def dummy[S]: SimpleIso[S, S] = SimpleIso(identity, identity)
+    @inline def apply[S, A](_get: S => A)(_reverseGet: A => S): SimpleIso[S, A] =
+      Iso(_get)(_reverseGet)
 
-    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
-    def apply[S]: Constructor[S] = new Constructor[S]
-    final class Constructor[S] {
-      @inline def apply[A](_get: S => A)(_reverseGet: A => S): SimpleIso[S, A] = Iso[S, S, A, A](_get, _reverseGet)
-    }
+    @inline def dummy[S]: SimpleIso[S, S] =
+      SimpleIso[S, S](identity)(identity)
   }
 
   object SimplePrism {
-    @inline def apply[S, A](_getMaybe: S => Maybe[A], _reverseGet: A => S): SimplePrism[S, A] =
-      Prism(s => _getMaybe(s) \/> s, _reverseGet)
-
-    /** Alternative syntax that allows the field type to be inferred rather and explicitly specified. */
-    def apply[A]: Constructor[A] = new Constructor[A]
-    final class Constructor[A] {
-      @inline def apply[S](_getMaybe: S => Maybe[A])(_reverseGet: A => S) = SimplePrism[S, A](_getMaybe, _reverseGet)
-    }
+    @inline def apply[S, A](_getMaybe: S => Maybe[A])(_reverseGet: A => S): SimplePrism[S, A] =
+      Prism{s: S => _getMaybe(s) \/> s}(_reverseGet)
   }
 
 }
