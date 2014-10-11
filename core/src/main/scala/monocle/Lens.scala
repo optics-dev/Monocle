@@ -35,7 +35,7 @@ abstract class Lens[S, T, A, B] { self =>
 
   // Optics transformation
   final def asFold: Fold[S, A] = new Fold[S, A] {
-    @inline  def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
+    @inline def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
   }
   @inline final def asGetter: Getter[S, A] = Getter[S, A](get)
   @inline final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
@@ -50,7 +50,7 @@ abstract class Lens[S, T, A, B] { self =>
 
 object Lens {
 
-  final def apply[S, T, A, B](_get: S => A)(_set: (B, S) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
+  def apply[S, T, A, B](_get: S => A)(_set: (B, S) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
     @inline final def _lens[P[_, _]: Strong]: Optic[P, S, T, A, B] = pab =>
       Profunctor[P].dimap[(A, S), (B, S), S, T](Strong[P].first[A, B, S](pab))(s => (_get(s), s))(_set.tupled)
   }

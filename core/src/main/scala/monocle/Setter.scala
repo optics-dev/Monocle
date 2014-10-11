@@ -4,16 +4,16 @@ import scalaz.Functor
 
 final case class Setter[S, T, A, B](modify: (A => B) => (S => T)) {
 
-  def set(b: B): S => T = modify(_ => b)
+  @inline def set(b: B): S => T = modify(_ => b)
 
   // Compose
-  def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] =
+  @inline def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] =
     Setter[S, T, C, D](modify compose other.modify)
-  def composeTraversal[C, D](other: Traversal[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
-  def composeOptional[C, D](other: Optional[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
-  def composePrism[C, D](other: Prism[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
-  def composeLens[C, D](other: Lens[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
-  def composeIso[C, D](other: Iso[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
+  @inline def composeTraversal[C, D](other: Traversal[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
+  @inline def composeOptional[C, D](other: Optional[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
+  @inline def composePrism[C, D](other: Prism[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
+  @inline def composeLens[C, D](other: Lens[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
+  @inline def composeIso[C, D](other: Iso[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
 }
 
 object Setter {
