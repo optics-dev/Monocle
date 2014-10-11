@@ -22,28 +22,28 @@ abstract class Lens[S, T, A, B] { self =>
   @inline final def set(b: B): S => T = modify(_ => b)
 
   // Compose
-  final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
-  final def composeGetter[C](other: Getter[A, C]): Getter[S, C] = asGetter composeGetter other
-  final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = asSetter composeSetter other
-  final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = asTraversal composeTraversal other
-  final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
-  final def composePrism[C, D](other: Prism[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
+  @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
+  @inline final def composeGetter[C](other: Getter[A, C]): Getter[S, C] = asGetter composeGetter other
+  @inline final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = asSetter composeSetter other
+  @inline final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = asTraversal composeTraversal other
+  @inline final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
+  @inline final def composePrism[C, D](other: Prism[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
   final def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
-    @inline final def _lens[P[_, _]: Strong]: Optic[P, S, T, C, D] = self._lens[P] compose other._lens[P]
+    @inline def _lens[P[_, _]: Strong]: Optic[P, S, T, C, D] = self._lens[P] compose other._lens[P]
   }
   final def composeIso[C, D](other: Iso[A, B, C, D]): Lens[S, T, C, D] = composeLens(other.asLens)
 
   // Optics transformation
   final def asFold: Fold[S, A] = new Fold[S, A] {
-    final def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
+    @inline  def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
   }
-  final def asGetter: Getter[S, A] = Getter[S, A](get)
-  final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
+  @inline final def asGetter: Getter[S, A] = Getter[S, A](get)
+  @inline final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    final def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
+    @inline def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    final def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]
+    @inline final def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]
   }
 
 }

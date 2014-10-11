@@ -35,26 +35,26 @@ abstract class Prism[S, T, A, B]{ self =>
   @inline final def setMaybe(b: B): S => Maybe[T] = modifyMaybe(_ => b)
 
   // Compose
-  final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
-  final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = asSetter composeSetter other
-  final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = asTraversal composeTraversal other
-  final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
-  final def composeLens[C, D](other: Lens[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
-  final def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = new Prism[S, T, C, D]{
+  @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
+  @inline final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = asSetter composeSetter other
+  @inline final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = asTraversal composeTraversal other
+  @inline final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
+  @inline final def composeLens[C, D](other: Lens[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
+  @inline final def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = new Prism[S, T, C, D]{
     @inline def _prism[P[_, _]: ProChoice]: Optic[P, S, T, C, D] = self._prism[P] compose other._prism[P]
   }
-  final def composeIso[C, D](other: Iso[A, B, C, D]): Prism[S, T, C, D] = composePrism(other.asPrism)
+  @inline final def composeIso[C, D](other: Iso[A, B, C, D]): Prism[S, T, C, D] = composePrism(other.asPrism)
 
   // Optic transformation
-  final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
+  @inline final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asFold: Fold[S, A] = new Fold[S, A]{
-    final def foldMap[M: Monoid](f: A => M)(s: S): M = getMaybe(s) map f getOrElse Monoid[M].zero
+    @inline def foldMap[M: Monoid](f: A => M)(s: S): M = getMaybe(s) map f getOrElse Monoid[M].zero
   }
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    final def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
+    @inline def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    final def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _prism[P]
+    @inline def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _prism[P]
   }
 
 }
