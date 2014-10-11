@@ -3,6 +3,8 @@ package monocle.bench
 import monocle.SimpleLens
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 
+import scalaz.Maybe
+
 @State(Scope.Benchmark)
 class LensBench {
   case class Person(name: String, age: Int)
@@ -12,14 +14,14 @@ class LensBench {
 
   val john = Person("John", 30)
 
-  @Benchmark def stdGet() = john.name  
-  @Benchmark def lensGet()   = _name.get(john)
+  @Benchmark def stdGet()  = john.name
+  @Benchmark def lensGet() = _name.get(john)
 
-  @Benchmark def stdSet() = john.copy(name = "Robert")
-  @Benchmark def lensSet()   = _name.set("Robert")(john)
+  @Benchmark def stdSet()  = john.copy(name = "Robert")
+  @Benchmark def lensSet() = _name.set("Robert")(john)
 
-  @Benchmark def stdModify() = john.copy(age = john.age + 1)
-  @Benchmark def lensModify()   = _age.modify(_ + 1)(john)
+  @Benchmark def stdModify()  = john.copy(age = john.age + 1)
+  @Benchmark def lensModify() = _age.modify(_ + 1)(john)
 
 
   case class Nested1(s: String, i: Int, n: Nested2, l: Long)
@@ -36,13 +38,18 @@ class LensBench {
 
   val n1ToI = _n2 composeLens _n3 composeLens _n4 composeLens _i
 
-  @Benchmark def stdNestedGet() = n1.n.n.n.i    // 42
-  @Benchmark def LensNestedGet()   = n1ToI.get(n1) // 42
+  @Benchmark def stdNestedGet()  = n1.n.n.n.i
+  @Benchmark def lensNestedGet() = n1ToI.get(n1)
 
-  @Benchmark def stdNestedSet() = n1.copy(n = n1.n.copy(n = n1.n.n.copy(n = n1.n.n.n.copy(i = 43))))
-  @Benchmark def lensNestedSet()   = n1ToI.set(43)(n1)
+  @Benchmark def stdNestedSet()  = n1.copy(n = n1.n.copy(n = n1.n.n.copy(n = n1.n.n.n.copy(i = 43))))
+  @Benchmark def lensNestedSet() = n1ToI.set(43)(n1)
 
-  @Benchmark def stdNestedModify() = n1.copy(n = n1.n.copy(n = n1.n.n.copy(n = n1.n.n.n.copy(i = n1.n.n.n.i + 1))))
-  @Benchmark def lensNestedModify()   = n1ToI.modify(_ + 1)(n1)
+  @Benchmark def stdNestedModify()  = n1.copy(n = n1.n.copy(n = n1.n.n.copy(n = n1.n.n.n.copy(i = n1.n.n.n.i + 1))))
+  @Benchmark def lensNestedModify() = n1ToI.modify(_ + 1)(n1)
+
+  def safeDivide(a: Int, b: Int): Maybe[Int] = if(b == 0) Maybe.empty else Maybe.just(a / b)
+
+  @Benchmark def stdModifyF()  = safeDivide(n1.i, 2).map(newI => n1.copy(i = newI))
+  @Benchmark def lensModifyF() = n1ToI.modifyF(safeDivide(_, 2))(n1)
 
 }
