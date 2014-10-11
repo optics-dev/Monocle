@@ -35,12 +35,12 @@ class PrismBench {
   @Benchmark def stdFailureGetOption() = getIMaybe(stringADT)
   @Benchmark def prismFailureGetOption() = _i.getMaybe(stringADT)
 
-  @Benchmark def nestedstdGetOption() = for {
+  @Benchmark def stdNestedGetOption() = for {
     r2 <- getRMaybe(nestedValue)
     r1 <- getRMaybe(r2)
     i  <- getIMaybe(r1)
   } yield i
-  @Benchmark def nestedPrismGetOption() = (_r composePrism _r composePrism _i).getMaybe(nestedValue)
+  @Benchmark def prismNestedGetOption() = (_r composePrism _r composePrism _i).getMaybe(nestedValue)
 
   @Benchmark def stdReverseGet()  = mkI(5)
   @Benchmark def prismReverseGet() = _i.reverseGet(5)
