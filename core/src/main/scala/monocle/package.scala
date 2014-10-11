@@ -6,19 +6,30 @@ package object monocle {
 
   type SimpleSetter[S, A]    = Setter[S, S, A, A]
   type SimpleTraversal[S, A] = Traversal[S, S, A, A]
-  type SimpleLens[S, A]      = Lens[S, S, A, A]
-  type SimpleIso[S, A]       = Iso[S, S, A, A]
   type SimpleOptional[S, A]  = Optional[S, S, A, A]
   type SimplePrism[S, A]     = Prism[S, S, A, A]
+  type SimpleLens[S, A]      = Lens[S, S, A, A]
+  type SimpleIso[S, A]       = Iso[S, S, A, A]
 
-  object SimpleLens {
-    @inline def apply[S, A](_get: S => A)(_set: (A, S) => S): SimpleLens[S, A] =
-      Lens(_get)(_set)
+
+  object SimpleSetter {
+    @inline def apply[S, A](modify: (A => A) => (S => S)): SimpleSetter[S, A] =
+      Setter(modify)
   }
 
   object SimpleOptional {
     @inline def apply[S, A](_getMaybe: S => Maybe[A])(_set: (A, S) => S): SimpleOptional[S, A] =
       Optional{s: S => _getMaybe(s) \/> s}( _set)
+  }
+
+  object SimplePrism {
+    @inline def apply[S, A](_getMaybe: S => Maybe[A])(_reverseGet: A => S): SimplePrism[S, A] =
+      Prism{s: S => _getMaybe(s) \/> s}(_reverseGet)
+  }
+
+  object SimpleLens {
+    @inline def apply[S, A](_get: S => A)(_set: (A, S) => S): SimpleLens[S, A] =
+      Lens(_get)(_set)
   }
 
   object SimpleIso {
@@ -27,11 +38,6 @@ package object monocle {
 
     @inline def dummy[S]: SimpleIso[S, S] =
       SimpleIso[S, S](identity)(identity)
-  }
-
-  object SimplePrism {
-    @inline def apply[S, A](_getMaybe: S => Maybe[A])(_reverseGet: A => S): SimplePrism[S, A] =
-      Prism{s: S => _getMaybe(s) \/> s}(_reverseGet)
   }
 
 }
