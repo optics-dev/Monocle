@@ -23,7 +23,10 @@ trait SafeCastFunctions {
 
   def orderingBoundedSafeCast[S: Order, A: Bounded](unsafeCast: S => A)(revCast: A => S): SafeCast[S, A] = new SafeCast[S, A] {
     def safeCast = SimplePrism[S, A]( from =>
-      if (from > revCast(Bounded[A].MaxValue) || from < revCast(Bounded[A].MinValue)) Maybe.empty else Maybe.just(unsafeCast(from))
+      if (from > revCast(Bounded[A].MaxValue) || from < revCast(Bounded[A].MinValue))
+        Maybe.empty
+      else
+        Maybe.just(unsafeCast(from))
     )(revCast)
   }
 

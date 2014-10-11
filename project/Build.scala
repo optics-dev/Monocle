@@ -134,7 +134,6 @@ object MonocleBuild extends Build {
     "monocle-bench",
     file("bench"),
     settings = buildSettings ++ jmhSettings ++ Seq(
-      version in Jmh := "1.1", // Remove with sbt-jmh 0.1.6+
       addCompilerPlugin(paradisePlugin)) // Unfortunately necessary :( see: http://stackoverflow.com/q/23485426/463761
   ) dependsOn(core, macros, generic)
 }
