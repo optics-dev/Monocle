@@ -10,8 +10,8 @@ import org.specs2.scalaz.Spec
 
 class ISetSpec extends Spec {
 
-  checkAll("at Set", LensLaws(at[ISet[Int], Int, Unit](2)))
+  checkAll("at ISet", LensLaws(at[ISet[Int], Int, Unit](2)))
 
-  checkAll("empty Set", PrismLaws(empty[ISet[Int]]))
+  checkAll("empty ISet", PrismLaws(empty[ISet[Int]]))
 
 }
