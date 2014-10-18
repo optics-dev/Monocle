@@ -6,7 +6,8 @@ import monocle.syntax._
 import org.specs2.scalaz.{ScalazMatchers, Spec}
 
 import scalaz.Tree._
-import scalaz.{IList, OneAnd}
+import scalaz.{==>>, IList, OneAnd}
+import scalaz.std.string._
 
 
 class EachExample extends Spec with ScalazMatchers {
@@ -24,8 +25,9 @@ class EachExample extends Spec with ScalazMatchers {
     (OneAnd(1, List(2,3)) applyTraversal each modify( _ + 1)) ==== OneAnd(2, List(3,4))
   }
 
-  "Each can be used on Map to update all values" in {
+  "Each can be used on Map, IMap(==>>) to update all values" in {
     (Map("One" -> 1, "Two" -> 2) applyTraversal each modify( _ + 1)) ==== Map("One" -> 2, "Two" -> 3)
+    (==>>("One" -> 1, "Two" -> 2) applyTraversal each modify( _ + 1)) ==== ==>>("One" -> 2, "Two" -> 3)
   }
 
   "Each can be used on tuple of same type" in {
