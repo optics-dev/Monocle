@@ -26,5 +26,7 @@ trait StdInstances
   with    DisjunctionFunctions
   with    TheseFunctions
   with    IListInstances
+  with    IMapInstances
+  with    ISetInstances
   with    OneAndInstances
   with    TreeFunctions with TreeInstances

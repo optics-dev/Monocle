@@ -4,7 +4,7 @@ import org.specs2.scalaz.Spec
 import monocle.syntax._
 import monocle.std._
 
-import scalaz.Maybe
+import scalaz.{IMap,Maybe}
 
 class EmptyExample extends Spec {
 
@@ -19,6 +19,7 @@ class EmptyExample extends Spec {
   "_empty return the empty value of a given type" in {
     _empty[List[Int]]        ==== List.empty[Int]
     _empty[Map[Int, String]] ==== Map.empty[Int, String]
+    _empty[Int IMap String]  ==== IMap.empty[Int, String]
     _empty[String]           ==== ""
   }
 
