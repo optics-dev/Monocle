@@ -25,7 +25,7 @@ abstract class Fold[S, A] { self =>
   @inline final def composeTraversal[B, C, D](other: Traversal[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
   @inline final def composeOptional[B, C, D](other: Optional[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
   @inline final def composePrism[B, C, D](other: Prism[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
-  @inline final def composeLens[B, C, D](other: Lens[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
+  @inline final def composeLens[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
   @inline final def composeIso[B, C, D](other: Iso[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
 }
 

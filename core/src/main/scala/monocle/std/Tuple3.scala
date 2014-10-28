@@ -1,6 +1,6 @@
 package monocle.std
 
-import monocle.{SimpleIso, SimpleLens, Traversal}
+import monocle.{SimpleIso, Lens, Traversal}
 import monocle.function._
 
 object tuple3 extends Tuple3Instances
@@ -13,22 +13,22 @@ trait Tuple3Instances {
   }
 
   implicit def tuple3Field1[A1, A2, A3]: Field1[(A1, A2, A3), A1] = new Field1[(A1, A2, A3), A1] {
-    def first = SimpleLens((_: (A1, A2, A3))._1)( (a, t) => t.copy(_1 = a))
+    def first = Lens((_: (A1, A2, A3))._1)( (a, t) => t.copy(_1 = a))
   }
 
   implicit def tuple3Field2[A1, A2, A3]: Field2[(A1, A2, A3), A2] = new Field2[(A1, A2, A3), A2] {
-    def second = SimpleLens((_: (A1, A2, A3))._2)( (a, t) => t.copy(_2 = a))
+    def second = Lens((_: (A1, A2, A3))._2)( (a, t) => t.copy(_2 = a))
   }
 
   implicit def tuple3Field3[A1, A2, A3]: Field3[(A1, A2, A3), A3] = new Field3[(A1, A2, A3), A3] {
-    def third = SimpleLens((_: (A1, A2, A3))._3)( (a, t) => t.copy(_3 = a))
+    def third = Lens((_: (A1, A2, A3))._3)( (a, t) => t.copy(_3 = a))
   }
 
   implicit def tuple3Head[A1, A2, A3]: Head[(A1, A2, A3), A1] =
     Head.field1Head[(A1, A2, A3), A1]
 
   implicit def tuple3Tail[A1, A2, A3]: Tail[(A1, A2, A3), (A2, A3)] = new Tail[(A1, A2, A3), (A2, A3)] {
-    def tail = SimpleLens{t: (A1, A2, A3) => (t._2, t._3)}( (a, t) => t.copy(_2 = a._1, _3 = a._2))
+    def tail = Lens{t: (A1, A2, A3) => (t._2, t._3)}( (a, t) => t.copy(_2 = a._1, _3 = a._2))
   }
 
   implicit def tuple3Last[A1, A2, A3]: Last[(A1, A2, A3), A3] = new Last[(A1, A2, A3), A3] {
@@ -36,7 +36,7 @@ trait Tuple3Instances {
   }
 
   implicit def tuple3Init[A1, A2, A3]: Init[(A1, A2, A3), (A1, A2)] = new Init[(A1, A2, A3), (A1, A2)] {
-    def init = SimpleLens{t: (A1, A2, A3) => (t._1, t._2)}( (a, t) => t.copy(_1 = a._1, _2 = a._2))
+    def init = Lens{t: (A1, A2, A3) => (t._1, t._2)}( (a, t) => t.copy(_1 = a._1, _2 = a._2))
   }
 
   implicit def tuple3Reverse[A, B, C]: Reverse[(A, B, C), (C, B, A)] = new Reverse[(A, B, C), (C, B, A)] {

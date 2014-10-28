@@ -33,7 +33,7 @@ abstract class Iso[S, T, A, B] { self =>
   @inline final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = asTraversal composeTraversal other
   @inline final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
   @inline final def composePrism[C, D](other: Prism[A, B, C, D]): Prism[S, T, C, D] = asPrism composePrism other
-  @inline final def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = asLens composeLens other
+  @inline final def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] = asLens composeLens other
   final def composeIso[C, D](other: Iso[A, B, C, D]): Iso[S, T, C, D] = new Iso[S, T, C, D]{
     @inline def _iso[P[_, _]: Profunctor]: Optic[P, S, T, C, D] = self._iso[P] compose other._iso[P]
   }
@@ -54,7 +54,7 @@ abstract class Iso[S, T, A, B] { self =>
     @inline def _prism[P[_, _]: ProChoice]: Optic[P, S, T, A, B] = _iso[P]
   }
   @inline final def asGetter: Getter[S, A] = Getter[S, A](get)
-  final def asLens: Lens[S, T, A, B] = new Lens[S, T, A, B]{
+  final def asLens: PLens[S, T, A, B] = new PLens[S, T, A, B]{
     @inline def _lens[P[_, _] : Strong]: Optic[P, S, T, A, B] = _iso[P]
   }
 

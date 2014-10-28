@@ -12,8 +12,8 @@ class LensExample extends Spec {
   case class Person(name: String, age: Int)
 
   object CoreSimpleLens {
-    val _name = SimpleLens((_: Person).name)( (n, c) => c.copy(name = n))
-    val _age  = SimpleLens((_: Person).age)(  (h, c) => c.copy(age = h))
+    val _name = Lens((_: Person).name)( (n, c) => c.copy(name = n))
+    val _age  = Lens((_: Person).age)(  (h, c) => c.copy(age = h))
   }
 
   object LenserMacro {

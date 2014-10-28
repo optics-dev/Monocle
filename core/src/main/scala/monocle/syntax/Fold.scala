@@ -29,6 +29,6 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   def composeTraversal[B, C, D](other: Traversal[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composeTraversal other)
   def composeOptional[B, C, D](other: Optional[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composeOptional other)
   def composePrism[B, C, D](other: Prism[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composePrism other)
-  def composeLens[B, C, D](other: Lens[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composeLens other)
+  def composeLens[B, C, D](other: PLens[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composeLens other)
   def composeIso[B, C, D](other: Iso[A, B, C, D]): ApplyFold[S, C] = ApplyFold(s, _fold composeIso other)
 }

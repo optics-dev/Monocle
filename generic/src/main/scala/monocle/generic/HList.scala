@@ -2,7 +2,7 @@ package monocle.generic
 
 import monocle._
 import monocle.function._
-import shapeless._
+import shapeless.{Lens => _, _}
 import shapeless.ops.hlist.{Reverse => HReverse, Prepend, IsHCons, ReplaceAt, At, Init => HInit, Last => HLast}
 
 
@@ -32,13 +32,13 @@ trait HListInstances {
 
   implicit def hListTail[S <: HList, H, T <: HList](implicit evIsCons: IsHCons.Aux[S, H, T],
                                                             evPrepend: Prepend.Aux[H :: HNil, T, S]) = new Tail[S, T] {
-    def tail = SimpleLens[S, T](s => evIsCons.tail(s))( (a, s) => evPrepend(evIsCons.head(s) :: HNil, a))
+    def tail = Lens[S, T](s => evIsCons.tail(s))( (a, s) => evPrepend(evIsCons.head(s) :: HNil, a))
   }
 
   implicit def hListInit[S <: HList, L, A <: HList](implicit evInit: HInit.Aux[S, A],
                                                              evLast: HLast.Aux[S, L],
                                                     evPrepend: Prepend.Aux[A, L :: HNil, S]) = new Init[S, A] {
-    def init = SimpleLens[S, A](evInit.apply)( (a, s) => evPrepend(a, evLast(s) :: HNil))
+    def init = Lens[S, A](evInit.apply)( (a, s) => evPrepend(a, evLast(s) :: HNil))
   }
 
   implicit def hListField1[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._0.N, A],
@@ -73,7 +73,7 @@ trait HListInstances {
 
 
   private def hListAt[S <: HList, A](n : Nat)(implicit evAt: At.Aux[S, n.N, A],
-                                                  evReplace: ReplaceAt.Aux[S, n.N, A, (A, S)]): SimpleLens[S, A]  =
-    SimpleLens[S, A](_.at(n))( (a, hlist) => hlist.updatedAt(n, a) )
+                                                  evReplace: ReplaceAt.Aux[S, n.N, A, (A, S)]): Lens[S, A]  =
+    Lens[S, A](_.at(n))( (a, hlist) => hlist.updatedAt(n, a) )
 
 }

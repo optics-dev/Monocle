@@ -1,6 +1,6 @@
 package monocle.std
 
-import monocle.{SimpleLens, SimplePrism}
+import monocle.{Lens, SimplePrism}
 import monocle.function.{At, Empty}
 
 import scalaz.Maybe
@@ -14,7 +14,7 @@ trait SetInstances {
   }
 
   implicit def atSet[A]: At[Set[A], A, Unit] = new At[Set[A], A, Unit] {
-    def at(a: A) = SimpleLens[Set[A], Maybe[Unit]](s => if(s(a)) Maybe.just(()) else Maybe.empty)(
+    def at(a: A) = Lens[Set[A], Maybe[Unit]](s => if(s(a)) Maybe.just(()) else Maybe.empty)(
       (maybeA, set) => maybeA.cata(_ => set + a, set - a)
     )
   }

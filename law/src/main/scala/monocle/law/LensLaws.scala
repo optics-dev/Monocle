@@ -1,6 +1,6 @@
 package monocle.law
 
-import monocle.SimpleLens
+import monocle.Lens
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Properties}
 
@@ -9,7 +9,7 @@ import scalaz.syntax.equal._
 
 object LensLaws {
 
-  def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](lens: SimpleLens[S, A]) = new Properties("Lens") {
+  def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](lens: Lens[S, A]) = new Properties("Lens") {
     include(TraversalLaws(lens.asTraversal))
 
     property("set - get") = forAll { (s: S, a: A) =>

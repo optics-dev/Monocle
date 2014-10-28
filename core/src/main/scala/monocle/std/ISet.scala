@@ -1,6 +1,6 @@
 package monocle.std
 
-import monocle.{SimpleLens, SimplePrism}
+import monocle.{Lens, SimplePrism}
 import monocle.function.{At, Empty}
 
 import scalaz.{ISet,Maybe,Order}
@@ -14,7 +14,7 @@ trait ISetInstances {
   }
 
   implicit def atISet[A: Order]: At[ISet[A], A, Unit] = new At[ISet[A], A, Unit] {
-    def at(a: A) = SimpleLens[ISet[A], Maybe[Unit]](s => if(s member a) Maybe.just(()) else Maybe.empty)(
+    def at(a: A) = Lens[ISet[A], Maybe[Unit]](s => if(s member a) Maybe.just(()) else Maybe.empty)(
       (maybeA, set) => maybeA.cata(_ => set insert a, set delete a)
     )
   }

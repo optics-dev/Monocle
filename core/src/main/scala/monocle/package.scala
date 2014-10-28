@@ -8,7 +8,7 @@ package object monocle {
   type SimpleTraversal[S, A] = Traversal[S, S, A, A]
   type SimpleOptional[S, A]  = Optional[S, S, A, A]
   type SimplePrism[S, A]     = Prism[S, S, A, A]
-  type SimpleLens[S, A]      = Lens[S, S, A, A]
+  type Lens[S, A]            = PLens[S, S, A, A]
   type SimpleIso[S, A]       = Iso[S, S, A, A]
 
 
@@ -27,10 +27,7 @@ package object monocle {
       Prism{s: S => _getMaybe(s) \/> s}(_reverseGet)
   }
 
-  object SimpleLens {
-    @inline def apply[S, A](_get: S => A)(_set: (A, S) => S): SimpleLens[S, A] =
-      Lens(_get)(_set)
-  }
+
 
   object SimpleIso {
     @inline def apply[S, A](_get: S => A)(_reverseGet: A => S): SimpleIso[S, A] =

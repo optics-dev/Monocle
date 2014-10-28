@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{SimpleIso, SimpleLens, Traversal}
+import monocle.{SimpleIso, Lens, Traversal}
 
 object tuple2 extends Tuple2Instances
 
@@ -13,18 +13,18 @@ trait Tuple2Instances {
   }
 
   implicit def tuple2Field1[A1, A2]: Field1[(A1, A2), A1] = new Field1[(A1, A2), A1] {
-    def first = SimpleLens((_: (A1, A2))._1)( (a, t) => t.copy(_1 = a))
+    def first = Lens((_: (A1, A2))._1)( (a, t) => t.copy(_1 = a))
   }
 
   implicit def tuple2Field2[A1, A2]: Field2[(A1, A2), A2]  = new Field2[(A1, A2), A2] {
-    def second = SimpleLens((_: (A1, A2))._2)( (a, t) => t.copy(_2 = a))
+    def second = Lens((_: (A1, A2))._2)( (a, t) => t.copy(_2 = a))
   }
 
   implicit def tuple2Head[A1, A2]: Head[(A1, A2), A1] =
     Head.field1Head[(A1, A2), A1]
 
   implicit def tuple2Tail[A1, A2]: Tail[(A1, A2), A2] = new Tail[(A1, A2), A2] {
-    def tail = SimpleLens((_: (A1, A2))._2)( (a, t) => t.copy(_2 = a))
+    def tail = Lens((_: (A1, A2))._2)( (a, t) => t.copy(_2 = a))
   }
 
   implicit def tuple2Last[A1, A2]: Last[(A1, A2), A2] = new Last[(A1, A2), A2] {
@@ -32,7 +32,7 @@ trait Tuple2Instances {
   }
 
   implicit def tuple2Init[A1, A2]: Init[(A1, A2), A1] = new Init[(A1, A2), A1] {
-    def init = SimpleLens((_: (A1, A2))._1)( (a, t) => t.copy(_1 = a))
+    def init = Lens((_: (A1, A2))._1)( (a, t) => t.copy(_1 = a))
   }
 
   implicit def tuple2Reverse[A, B]: Reverse[(A, B), (B, A)] = new Reverse[(A, B), (B, A)] {

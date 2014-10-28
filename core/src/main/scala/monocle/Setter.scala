@@ -12,7 +12,7 @@ final case class Setter[S, T, A, B](modify: (A => B) => (S => T)) {
   @inline def composeTraversal[C, D](other: Traversal[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
   @inline def composeOptional[C, D](other: Optional[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
   @inline def composePrism[C, D](other: Prism[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
-  @inline def composeLens[C, D](other: Lens[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
+  @inline def composeLens[C, D](other: PLens[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
   @inline def composeIso[C, D](other: Iso[A, B, C, D]): Setter[S, T, C, D] = composeSetter(other.asSetter)
 }
 

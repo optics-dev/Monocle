@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle.SimpleLens
+import monocle.Lens
 import monocle.internal.Bits
 import scala.annotation.implicitNotFound
 
@@ -8,7 +8,7 @@ import scala.annotation.implicitNotFound
   "find out which import is necessary")
 trait AtBit[S] {
 
-  def atBit(index: Int): SimpleLens[S, Boolean]
+  def atBit(index: Int): Lens[S, Boolean]
 
 }
 
@@ -16,12 +16,12 @@ object AtBit extends AtBitFunctions
 
 trait AtBitFunctions {
 
-  def atBit[S](index: Int)(implicit ev: AtBit[S]): SimpleLens[S, Boolean] = ev.atBit(index)
+  def atBit[S](index: Int)(implicit ev: AtBit[S]): Lens[S, Boolean] = ev.atBit(index)
 
   def bitsAtBit[S: Bits]: AtBit[S] = new AtBit[S] {
-    def atBit(index: Int): SimpleLens[S, Boolean] = {
+    def atBit(index: Int): Lens[S, Boolean] = {
       val n = normalizeIndex(Bits[S].bitSize, index)
-      SimpleLens(Bits[S].testBit(_: S, n))(Bits[S].updateBit(_)(_, n))
+      Lens(Bits[S].testBit(_: S, n))(Bits[S].updateBit(_)(_, n))
     }
   }
 

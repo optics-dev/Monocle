@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{SimpleLens, SimplePrism, SimpleTraversal}
+import monocle.{Lens, SimplePrism, SimpleTraversal}
 
 import scalaz.std.list._
 import scalaz.syntax.std.option._
@@ -17,7 +17,7 @@ trait IMapInstances {
   }
 
   implicit def atIMap[K: Order, V]: At[K ==>> V, K, V] = new At[K ==>> V, K, V]{
-    def at(i: K) = SimpleLens{m: ==>>[K, V] => m.lookup(i).toMaybe}((maybeV, map) => maybeV.cata(v => map + (i -> v), map - i))
+    def at(i: K) = Lens{m: ==>>[K, V] => m.lookup(i).toMaybe}((maybeV, map) => maybeV.cata(v => map + (i -> v), map - i))
   }
 
   implicit def iMapEach[K, V]: Each[K ==>> V, V] = Each.traverseEach[==>>[K, ?], V]

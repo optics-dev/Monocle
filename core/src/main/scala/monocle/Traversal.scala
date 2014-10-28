@@ -30,7 +30,7 @@ abstract class Traversal[S, T, A, B] { self =>
   }
   @inline final def composeOptional[C, D](other: Optional[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
   @inline final def composePrism[C, D](other: Prism[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
-  @inline final def composeLens[C, D](other: Lens[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
+  @inline final def composeLens[C, D](other: PLens[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
   @inline final def composeIso[C, D](other: Iso[A, B, C, D]): Traversal[S, T, C, D] = composeTraversal(other.asTraversal)
 
   // Optic transformation

@@ -38,7 +38,7 @@ abstract class Optional[S, T, A, B] { self =>
     @inline def _optional[P[_, _]: Step]: Optic[P, S, T, C, D] = self._optional[P] compose other._optional[P]
   }
   @inline final def composePrism[C, D](other: Prism[A, B, C, D]): Optional[S, T, C, D] = composeOptional(other.asOptional)
-  @inline final def composeLens[C, D](other: Lens[A, B, C, D]): Optional[S, T, C, D] = composeOptional(other.asOptional)
+  @inline final def composeLens[C, D](other: PLens[A, B, C, D]): Optional[S, T, C, D] = composeOptional(other.asOptional)
   @inline final def composeIso[C, D](other: Iso[A, B, C, D]): Optional[S, T, C, D] = composeOptional(other.asOptional)
 
   // Optic transformation

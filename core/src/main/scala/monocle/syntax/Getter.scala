@@ -17,6 +17,6 @@ final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]){
 
   def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] = ApplyFold(s, getter composeFold other)
   def composeGetter[B](other: Getter[A, B]): ApplyGetter[S, B] = ApplyGetter(s, getter composeGetter other)
-  def composeLens[B, C, D](other: Lens[A, B, C, D]): ApplyGetter[S, C] = ApplyGetter(s, getter composeLens other)
+  def composeLens[B, C, D](other: PLens[A, B, C, D]): ApplyGetter[S, C] = ApplyGetter(s, getter composeLens other)
   def composeIso[B, C, D](other: Iso[A, B, C, D]): ApplyGetter[S, C] = ApplyGetter(s, getter composeIso other)
 }

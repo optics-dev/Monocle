@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle.SimpleLens
+import monocle.Lens
 import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Init[${S},${A}], please check Monocle instance location policy to " +
@@ -13,7 +13,7 @@ trait Init[S, A] {
    * Init is strictly stronger than initOption as the presence of a
    * init for S is mandatory
    */
-  def init: SimpleLens[S, A]
+  def init: Lens[S, A]
 
 }
 
@@ -21,6 +21,6 @@ object Init extends InitFunctions
 
 trait InitFunctions {
 
-  def init[S, A](implicit ev: Init[S, A]): SimpleLens[S, A] = ev.init
+  def init[S, A](implicit ev: Init[S, A]): Lens[S, A] = ev.init
 
 }
