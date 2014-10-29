@@ -28,5 +28,6 @@ trait StdInstances
   with    IListInstances
   with    IMapInstances
   with    ISetInstances
+  with    NonEmptyListInstances
   with    OneAndInstances
   with    TreeFunctions with TreeInstances
