@@ -1,8 +1,10 @@
-package monocle
+package monocle.law
+
+import monocle.SimpleOptional
+import org.scalacheck.Prop._
+import org.scalacheck.{Arbitrary, Properties}
 
 import scalaz.Equal
-import org.scalacheck.Prop._
-import org.scalacheck.{Properties, Arbitrary}
 
 
 object OptionalLaws {

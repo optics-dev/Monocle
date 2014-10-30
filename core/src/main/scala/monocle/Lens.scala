@@ -1,8 +1,9 @@
 package monocle
 
-import monocle.internal.Strong
+import monocle.internal.{ Forget, Step, Strong }
 
-import scalaz.{Applicative, Const, Functor, Monoid, Kleisli}
+import scalaz.Profunctor.UpStar
+import scalaz.{ Applicative, Functor, Monoid, Profunctor, Tag }
 
 /**
  * A Lens defines a single focus between a type S and A such as if you change A to B
@@ -10,58 +11,48 @@ import scalaz.{Applicative, Const, Functor, Monoid, Kleisli}
  */
 abstract class Lens[S, T, A, B] { self =>
 
-  def _lens[P[_, _]: Strong](pab: P[A, B]): P[S, T]
+  def _lens[P[_, _]: Strong]: Optic[P, S, T, A, B]
 
-  final def modifyK[F[_]: Functor](f: Kleisli[F, A, B]): Kleisli[F, S, T] =
-    _lens[({type λ[α, β] = Kleisli[F, α, β]})#λ](f)
+  @inline final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
+    Tag.unwrap(_lens[UpStar[F, ?, ?]](Strong.upStarStrong[F])(UpStar[F, A, B](f))).apply(s)
 
+  @inline final def get(s: S): A = _lens[Forget[A, ?, ?]].apply(Forget(identity)).runForget(s)
 
-  final def get(s: S): A = modifyK[({ type λ[α] = Const[A, α] })#λ](
-    Kleisli[({ type λ[α] = Const[A, α] })#λ, A, B](a => Const(a))
-  ).run(s).getConst
-
-  final def modify(f: A => B): S => T = _lens[Function1](f)
-  final def set(b: B): S => T = modify(_ => b)
-
+  @inline final def modify(f: A => B): S => T = _lens[Function1].apply(f)
+  @inline final def set(b: B): S => T = modify(_ => b)
 
   // Compose
-  final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
-  final def composeGetter[C](other: Getter[A, C]): Getter[S, C] = asGetter composeGetter other
-  final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = asSetter composeSetter other
-  final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = asTraversal composeTraversal other
-  final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
-  final def composePrism[C, D](other: Prism[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
+  @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
+  @inline final def composeGetter[C](other: Getter[A, C]): Getter[S, C] = asGetter composeGetter other
+  @inline final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = asSetter composeSetter other
+  @inline final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = asTraversal composeTraversal other
+  @inline final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
+  @inline final def composePrism[C, D](other: Prism[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
   final def composeLens[C, D](other: Lens[A, B, C, D]): Lens[S, T, C, D] = new Lens[S, T, C, D] {
-    def _lens[P[_, _]: Strong](pab: P[C, D]): P[S, T] =
-      (self._lens[P] _ compose other._lens[P])(pab)
+    @inline def _lens[P[_, _]: Strong]: Optic[P, S, T, C, D] = self._lens[P] compose other._lens[P]
   }
   final def composeIso[C, D](other: Iso[A, B, C, D]): Lens[S, T, C, D] = composeLens(other.asLens)
 
-
   // Optics transformation
-  final def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
+  final def asFold: Fold[S, A] = new Fold[S, A] {
+    @inline def foldMap[M: Monoid](f: A => M)(s: S): M = f(get(s))
   }
-  final def asGetter: Getter[S, A] = Getter[S, A](get)
-  final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
+  @inline final def asGetter: Getter[S, A] = Getter[S, A](get)
+  @inline final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
   final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
-    def _traversal[F[_] : Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    @inline def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
   }
   final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
-    def _optional[F[_] : Applicative](f: Kleisli[F, A, B]): Kleisli[F, S, T] = self.modifyK(f)
+    @inline final def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]
   }
 
 }
 
 object Lens {
 
-  def apply[S, T, A, B](_get: S => A, _set: (S, B) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
-    def _lens[P[_, _]](pab: P[A, B])(implicit p: Strong[P]): P[S, T] = {
-      val psasb: P[(S, A), (S, B)] = p.second[A, B, S](pab)
-      val psat : P[(S, A), T]      = p.mapsnd(psasb)(_set.tupled)
-      val psb  : P[S ,T]           = p.mapfst(psat)(s => (s, _get(s)))
-      psb
-    }
+  def apply[S, T, A, B](_get: S => A)(_set: (B, S) => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
+    @inline final def _lens[P[_, _]: Strong]: Optic[P, S, T, A, B] = pab =>
+      Profunctor[P].dimap[(A, S), (B, S), S, T](Strong[P].first[A, B, S](pab))(s => (_get(s), s))(_set.tupled)
   }
 
 }

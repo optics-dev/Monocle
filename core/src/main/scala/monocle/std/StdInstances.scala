@@ -24,6 +24,9 @@ trait StdInstances
   with    VectorInstances
   // Scalaz Instances
   with    DisjunctionFunctions
+  with    TheseFunctions
   with    IListInstances
+  with    IMapInstances
+  with    ISetInstances
   with    OneAndInstances
   with    TreeFunctions with TreeInstances

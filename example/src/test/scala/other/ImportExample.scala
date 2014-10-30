@@ -13,7 +13,7 @@ object Custom {
   import monocle.function.Field1
 
   implicit val customHead = new Field1[Custom, Int]{
-    def first = SimpleLens[Custom](_.value)((c, v) => c.copy(value = v))
+    def first = SimpleLens((_: Custom).value)((v, c) => c.copy(value = v))
   }
 }
 

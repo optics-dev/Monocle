@@ -1,5 +1,6 @@
-package monocle
+package monocle.law
 
+import monocle.SimpleSetter
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Properties}
 

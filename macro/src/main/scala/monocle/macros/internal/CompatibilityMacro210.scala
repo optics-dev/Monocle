@@ -1,4 +1,4 @@
-package monocle.internal
+package monocle.macros.internal
 
 // defines stubs for stuff that's missing in Scala 2.10
 // form https://github.com/scalamacros/macrology201/blob/part1/macros/src/main/scala/Internal210.scala
@@ -10,31 +10,27 @@ object CompatibilityMacro210 {
   object decorators // Context.decorators object
   object contexts // scala.reflect.macros.contexts package
 }
-import CompatibilityMacro210._
 
 // unifies scala.reflect.macros.runtime.Context (Scala 2.10)
 // and scala.reflect.macros.contexts.Context (Scala 2.11)
 object Power {
 
-  import scala.reflect.macros._
-
   object DummyScope{
 
-    import runtime._
+    import scala.reflect.macros.runtime._
 
     type Result = Context
   }
   type PowerContext = DummyScope.Result
 }
 
-import Power._
+import monocle.macros.internal.Power._
 
 // a cake slice that can be mixed into improvised macro bundles
 // to transparently bring new Scala 2.11 features to Scala 2.10
 trait Internal210 { self =>
 
   import scala.reflect.macros._
-  import blackbox.Context
 
   val c: Context
   import c.universe._

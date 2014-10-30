@@ -11,27 +11,27 @@ object hlist extends HListInstances
 trait HListInstances {
 
   def toHList[S, A <: HList](implicit gen: Generic.Aux[S, A]): SimpleIso[S, A] =
-    SimpleIso[S, A]({ s => gen.to(s)}, {l => gen.from(l)} )
+    SimpleIso[S, A]{ s => gen.to(s)}{l => gen.from(l)}
 
   def fromHList[S <: HList, A](implicit gen: Generic.Aux[A, S]): SimpleIso[S, A] =
     toHList.reverse
 
   implicit def hListReverse[S <: HList, A <: HList](implicit ev1: HReverse.Aux[S, A],
                                                     ev2: HReverse.Aux[A, S]): Reverse[S, A] = new Reverse[S, A]{
-    def reverse = SimpleIso[S, A](ev1.apply, ev2.apply)
+    def reverse = SimpleIso[S, A](ev1.apply)(ev2.apply)
   }
 
-  implicit def hListHCons[S <: HList, H, T <: HList]
+  implicit def hListCons1[S <: HList, H, T <: HList]
      (implicit evIsCons: IsHCons.Aux[S, H, T],
-              evPrepend: Prepend.Aux[H :: HNil, T, S]): HCons[S, H, T] = new HCons[S, H, T] {
-    def hcons = SimpleIso[S, (H, T)](s => (evIsCons.head(s), evIsCons.tail(s)), { case (h, t) => evPrepend(h :: HNil, t) })
+              evPrepend: Prepend.Aux[H :: HNil, T, S]): Cons1[S, H, T] = new Cons1[S, H, T] {
+    def cons1 = SimpleIso[S, (H, T)](s => (evIsCons.head(s), evIsCons.tail(s))){ case (h, t) => evPrepend(h :: HNil, t) }
   }
 
-  implicit def hListHSnoc[S <: HList, I <: HList, L]
+  implicit def hListSnoc1[S <: HList, I <: HList, L]
    (implicit evInit: HInit.Aux[S, I],
              evLast: HLast.Aux[S, L],
-          evPrepend: Prepend.Aux[I, L :: HNil, S]): HSnoc[S, I, L] = new HSnoc[S, I, L] {
-    def hsnoc = SimpleIso[S, (I, L)](s => (evInit(s), evLast(s)), { case (i, l) => evPrepend(i, l :: HNil) })
+          evPrepend: Prepend.Aux[I, L :: HNil, S]): Snoc1[S, I, L] = new Snoc1[S, I, L] {
+    def snoc1 = SimpleIso[S, (I, L)](s => (evInit(s), evLast(s))){ case (i, l) => evPrepend(i, l :: HNil) }
   }
 
   implicit def hListField1[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._0.N, A],
@@ -67,6 +67,6 @@ trait HListInstances {
 
   private def hListAt[S <: HList, A](n : Nat)(implicit evAt: At.Aux[S, n.N, A],
                                                   evReplace: ReplaceAt.Aux[S, n.N, A, (A, S)]): SimpleLens[S, A]  =
-    SimpleLens[S, A](_.at(n), (hlist, a) => hlist.updatedAt(n, a) )
+    SimpleLens[S, A](_.at(n))( (a, hlist) => hlist.updatedAt(n, a) )
 
 }

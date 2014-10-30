@@ -2,7 +2,7 @@ package monocle.generic
 
 import monocle.TestUtil._
 import monocle.function._
-import monocle.{IsoLaws, LensLaws}
+import monocle.law.{LensLaws, IsoLaws}
 import org.scalacheck.Arbitrary
 import org.specs2.scalaz.Spec
 import scalaz.Equal
@@ -59,7 +59,7 @@ class HListSpec extends Spec {
 
 
   checkAll("reverse HList", IsoLaws(reverse[H, ReverseH]))
-  checkAll("hcons HList", IsoLaws(hcons[H, Int  , HTail]))
-  checkAll("hsnoc HList", IsoLaws(hsnoc[H, HInit, Double]))
+  checkAll("hcons HList", IsoLaws(cons1[H, Int  , HTail]))
+  checkAll("hsnoc HList", IsoLaws(snoc1[H, HInit, Double]))
 
 }

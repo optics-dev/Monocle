@@ -48,7 +48,9 @@ val employee: Employee = ...
 employee.copy(
   company = employee.company.copy(
     address = employee.company.address.copy(
-      name = employee.company.address.name.capitalize // luckily capitalize exists
+      street = employee.company.address.street.copy(
+        name = employee.company.address.street.name.capitalize // luckily capitalize exists
+      }
     )
   )
 )

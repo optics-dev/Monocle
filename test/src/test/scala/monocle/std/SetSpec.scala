@@ -2,8 +2,8 @@ package monocle.std
 
 import monocle.TestUtil._
 import monocle.function._
+import monocle.law.{PrismLaws, LensLaws}
 import monocle.std.set._
-import monocle.{LensLaws, PrismLaws}
 import org.specs2.scalaz.Spec
 
 

@@ -1,4 +1,4 @@
-package monocle
+package monocle.macros
 
 import scala.language.experimental.macros
 
@@ -6,7 +6,7 @@ class Lenses(prefix: String = "") extends scala.annotation.StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro LensesImpl.annotationMacro
 }
 
-private[monocle] object LensesImpl {
+private[macros] object LensesImpl {
   import scala.reflect.macros._
 
   def annotationMacro(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
@@ -24,7 +24,7 @@ private[monocle] object LensesImpl {
     def lenses(tpname: TypeName, paramss: List[List[ValDef]]): List[Tree] = {
       paramss.head map { param =>
         val lensName = newTermName(prefix + param.name.decoded)
-        q"""val $lensName = monocle.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
+        q"""val $lensName = monocle.macros.internal.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
       }
     }
 

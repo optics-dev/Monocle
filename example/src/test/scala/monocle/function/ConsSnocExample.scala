@@ -14,8 +14,8 @@ class ConsSnocExample extends Spec {
   }
 
   "uncons deconstructs an element between its head and tail" in {
-    _uncons(List(1, 2, 3))   ==== Maybe.just(1, List(2, 3))
-    _uncons(Vector(1, 2, 3)) ==== Maybe.just(1, Vector(2, 3))
+    _uncons(List(1, 2, 3))   ==== Maybe.just((1, List(2, 3)))
+    _uncons(Vector(1, 2, 3)) ==== Maybe.just((1, Vector(2, 3)))
 
     _uncons(List.empty[Int]) ==== Maybe.empty
   }
@@ -26,8 +26,8 @@ class ConsSnocExample extends Spec {
   }
 
   "snoc deconstructs an element between its init and last" in {
-    _unsnoc(List(1, 2, 3))   ==== Maybe.just(List(1, 2), 3)
-    _unsnoc(Vector(1, 2, 3)) ==== Maybe.just(Vector(1, 2), 3)
+    _unsnoc(List(1, 2, 3))   ==== Maybe.just((List(1, 2), 3))
+    _unsnoc(Vector(1, 2, 3)) ==== Maybe.just((Vector(1, 2), 3))
 
     _unsnoc(List.empty[Int]) ==== Maybe.empty
   }

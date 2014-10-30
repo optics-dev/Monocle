@@ -4,16 +4,19 @@ import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
 
-import scalaz.IList
+import scalaz.{IMap,IList}
+import scalaz.std.string._
 
 
 class FilterIndexExample extends Spec {
 
-  "filterIndexes creates Traversal from a Map to all values where the index matches the predicate" in {
+  "filterIndexes creates Traversal from a Map, IMap to all values where the index matches the predicate" in {
 
     (Map("One" -> 1, "Two" -> 2) applyTraversal filterIndex{k: String => k.toLowerCase.contains("o")} getAll) ==== IList(1, 2)
+    (IMap("One" -> 1, "Two" -> 2) applyTraversal filterIndex{k: String => k.toLowerCase.contains("o")} getAll) ==== IList(1, 2)
 
     (Map("One" -> 1, "Two" -> 2) applyTraversal filterIndex{k: String => k.startsWith("T")} set 3) ==== Map("One" -> 1, "Two" -> 3)
+    (IMap("One" -> 1, "Two" -> 2) applyTraversal filterIndex{k: String => k.startsWith("T")} set 3) ==== IMap("One" -> 1, "Two" -> 3)
 
   }
 

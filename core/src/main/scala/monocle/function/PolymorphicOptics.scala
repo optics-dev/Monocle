@@ -16,7 +16,7 @@ trait PolymorphicOptics
   with    Field6Functions
   with    FilterIndexFunctions
   with    HConsFunctions
-  with    HSnocFunctions
+  with    Snoc1Functions
   with    IndexFunctions
   with    ReverseFunctions
   with    SafeCastFunctions

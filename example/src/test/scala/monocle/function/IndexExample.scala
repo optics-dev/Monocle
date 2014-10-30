@@ -4,15 +4,18 @@ import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
 
-import scalaz.{Maybe, OneAnd}
+import scalaz.{IMap, Maybe, OneAnd}
+import scalaz.std.string._
 
 
 class IndexExample extends Spec {
 
-  "index creates 0 or 1 Traversal from a Map to a value at the index" in {
+  "index creates 0 or 1 Traversal from a Map, IMap to a value at the index" in {
     (Map("One" -> 1, "Two" -> 2) applyOptional index("One") getMaybe) ==== Maybe.just(1)
+    (IMap("One" -> 1, "Two" -> 2) applyOptional index("One") getMaybe) ==== Maybe.just(1)
 
     (Map("One" -> 1, "Two" -> 2) applyOptional index("One") set 2) ==== Map("One" -> 2, "Two" -> 2)
+    (IMap("One" -> 1, "Two" -> 2) applyOptional index("One") set 2) ==== IMap("One" -> 2, "Two" -> 2)
   }
 
   "index creates 0 or 1 Traversal from a List, IList, Vector or Stream to a value at the index" in {

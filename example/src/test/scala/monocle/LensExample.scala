@@ -1,5 +1,6 @@
 package monocle
 
+import monocle.macros.{Lenser, Lenses}
 import monocle.syntax._
 import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
@@ -10,21 +11,9 @@ class LensExample extends Spec {
   @Lenses // this annotation generate lenses in the companion object of Person
   case class Person(name: String, age: Int)
 
-  object SimpleLensVerbose {
-    val _name = SimpleLens[Person, String](_.name, (c, n) => c.copy(name = n))
-    val _age  = SimpleLens[Person, Int](_.age, (c, h) => c.copy(age = h))
-  }
-
-  object SimpleLensInferred {
-    val _name = SimpleLens[Person](_.name)((c, n) => c.copy(name = n))
-    val _age  = SimpleLens[Person](_.age)((c, h) => c.copy(age = h))
-  }
-
-  object MkLensMacro {
-    import monocle.Macro._
-
-    val name = mkLens[Person, String]("name")
-    val age  = mkLens[Person, Int]("age")
+  object CoreSimpleLens {
+    val _name = SimpleLens((_: Person).name)( (n, c) => c.copy(name = n))
+    val _age  = SimpleLens((_: Person).age)(  (h, c) => c.copy(age = h))
   }
 
   object LenserMacro {
@@ -37,21 +26,17 @@ class LensExample extends Spec {
   val john = Person("John", 30)
   
   "Lens get extract an A from an S" in {
-    (john applyLens SimpleLensVerbose._name get)   ==== "John"
-    (john applyLens SimpleLensInferred._name get)  ==== "John"
-    (john applyLens MkLensMacro.name get)          ==== "John"
-    (john applyLens LenserMacro.name get)          ==== "John"
-    (john applyLens Person.name get)               ==== "John"
+    (john applyLens CoreSimpleLens._name get) ==== "John"
+    (john applyLens LenserMacro.name get)     ==== "John"
+    (john applyLens Person.name get)          ==== "John"
   }
 
   "Lens set and modify update an A in a S" in {
     val changedJohn = Person("John", 45)
 
-    (john applyLens SimpleLensVerbose._age set 45)  ==== changedJohn
-    (john applyLens SimpleLensInferred._age set 45) ==== changedJohn
-    (john applyLens MkLensMacro.age set 45)         ==== changedJohn
-    (john applyLens LenserMacro.age set 45)         ==== changedJohn
-    (john applyLens Person.age set 45)              ==== changedJohn
+    (john applyLens CoreSimpleLens._age set 45) ==== changedJohn
+    (john applyLens LenserMacro.age set 45)     ==== changedJohn
+    (john applyLens Person.age set 45)          ==== changedJohn
   }
 
   @Lenses("_") // this generates lenses prefixed with _ in the Cat companion object

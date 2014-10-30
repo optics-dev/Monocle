@@ -15,7 +15,7 @@ private[monocle] trait Bits[A] {
   // create an A with a single bit set at position n
   def singleBit(n: Int): A
 
-  def updateBit(a: A, n: Int, newValue: Boolean): A = if (newValue) setBit(a, n) else clearBit(a, n)
+  def updateBit(newValue: Boolean)(a: A, n: Int): A = if (newValue) setBit(a, n) else clearBit(a, n)
 
   def setBit(a: A, n: Int): A = bitwiseOr(a, singleBit(n))
   def clearBit(a: A, n: Int): A = bitwiseAnd(a, negate(singleBit(n)))

@@ -13,12 +13,12 @@ class ReverseExample extends Spec with ScalazMatchers {
   }
 
   "reverse creates an Iso from a tuple to its reversed version" in {
-    ((1,'b')                        applyIso reverse get) ==== ('b',1)
-    ((1,'b', true)                  applyIso reverse get) ==== (true, 'b',1)
-    ((1,'b', true, 5.4, "plop", 7L) applyIso reverse get) ==== (7L, "plop", 5.4, true, 'b',1)
+    ((1,'b')                        applyIso reverse get) ==== (('b',1))
+    ((1,'b', true)                  applyIso reverse get) ==== ((true, 'b',1))
+    ((1,'b', true, 5.4, "plop", 7L) applyIso reverse get) ==== ((7L, "plop", 5.4, true, 'b',1))
 
     // for tuple greater than 6 we need to use shapeless
-    ((1,'b', true, 5.4, "plop", 7L, false) applyIso reverse get) ==== (false, 7L, "plop", 5.4, true, 'b',1)
+    ((1,'b', true, 5.4, "plop", 7L, false) applyIso reverse get) ==== ((false, 7L, "plop", 5.4, true, 'b',1))
   }
 
   "reverse creates an Iso from a Stream to its reversed version" in {
