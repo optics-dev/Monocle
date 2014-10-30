@@ -32,19 +32,12 @@ trait Tuple5Instances {
     def fifth = SimpleLens((_: (A1, A2, A3, A4, A5))._5)( (a, t) => t.copy(_5 = a))
   }
 
-  implicit def tuple5Head[A1, A2, A3, A4, A5]: Head[(A1, A2, A3, A4, A5), A1] =
-    Head.field1Head[(A1, A2, A3, A4, A5), A1]
-
-  implicit def tuple5Tail[A1, A2, A3, A4, A5]: Tail[(A1, A2, A3, A4, A5), (A2, A3, A4, A5)] = new Tail[(A1, A2, A3, A4, A5), (A2, A3, A4, A5)] {
-    def tail = SimpleLens{t: (A1, A2, A3, A4, A5) => (t._2, t._3, t._4, t._5)}( (a, t) => t.copy(_2 = a._1, _3 = a._2, _4 = a._3, _5 = a._4))
+  implicit def tuple5Cons1[A1, A2, A3, A4, A5]: Cons1[(A1, A2, A3, A4, A5), A1, (A2, A3, A4, A5)] = new Cons1[(A1, A2, A3, A4, A5), A1, (A2, A3, A4, A5)]{
+    def cons1 = SimpleIso[(A1, A2, A3, A4, A5), (A1, (A2, A3, A4, A5))](t => (t._1, (t._2, t._3, t._4, t._5))){ case (h, t) => (h, t._1, t._2, t._3, t._4) }
   }
 
-  implicit def tuple5Last[A1, A2, A3, A4, A5]: Last[(A1, A2, A3, A4, A5), A5] = new Last[(A1, A2, A3, A4, A5), A5] {
-    def last = fifth
-  }
-
-  implicit def tuple5Init[A1, A2, A3, A4, A5]: Init[(A1, A2, A3, A4, A5), (A1, A2, A3, A4)] = new Init[(A1, A2, A3, A4, A5), (A1, A2, A3, A4)] {
-    def init = SimpleLens{t: (A1, A2, A3, A4, A5) => (t._1, t._2, t._3, t._4)}( (a, t) => t.copy(_1 = a._1, _2 = a._2, _3 = a._3, _4 = a._4))
+  implicit def tuple5Snoc1[A1, A2, A3, A4, A5]: Snoc1[(A1, A2, A3, A4, A5), (A1, A2, A3, A4), A5] = new Snoc1[(A1, A2, A3, A4, A5), (A1, A2, A3, A4), A5]{
+    def snoc1 = SimpleIso[(A1, A2, A3, A4, A5), ((A1, A2, A3, A4), A5)](t => ((t._1, t._2, t._3, t._4), t._5)){ case (i, l) => (i._1, i._2, i._3, i._4, l) }
   }
 
   implicit def tuple5Reverse[A, B, C, D, E]: Reverse[(A, B, C, D, E), (E, D, C, B, A)] = new Reverse[(A, B, C, D, E), (E, D, C, B, A)] {

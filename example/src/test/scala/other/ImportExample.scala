@@ -10,10 +10,10 @@ case class Custom(value: Int)
 object Custom {
 
   import monocle.SimpleLens
-  import monocle.function.Head
+  import monocle.function.Field1
 
-  implicit val customHead = new Head[Custom, Int]{
-    def head = SimpleLens((_: Custom).value)((v, c) => c.copy(value = v))
+  implicit val customHead = new Field1[Custom, Int]{
+    def first = SimpleLens((_: Custom).value)((v, c) => c.copy(value = v))
   }
 }
 
@@ -29,7 +29,7 @@ class ImportExample extends Spec {
     each[List[Int], Int].modify(_ + 1)(List(1,2,3)) ==== List(2,3,4)
 
     // also compile because Head instance for Custom is in the companion of Custom
-    head[Custom, Int].modify(_ + 1)(Custom(1)) ==== Custom(2)
+    first[Custom, Int].modify(_ + 1)(Custom(1)) ==== Custom(2)
   }
 
   "monocle.syntax._ permits to use optics as operator which improves type inference" in {
@@ -61,7 +61,7 @@ class ImportExample extends Spec {
     // do not compile because Each instance for List is not in scope
     illTyped { """each[List[Int], Int].modify(List(1,2,3), _ + 1)""" }
 
-    head[Int :: HNil, Int].modify(_ + 1)(1 :: HNil) ==== (2 :: HNil)
+    first[Int :: HNil, Int].modify(_ + 1)(1 :: HNil) ==== (2 :: HNil)
   }
 
   "monocle._, Monocle._ makes all Monocle core features available (no generic)" in {

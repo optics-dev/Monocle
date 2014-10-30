@@ -36,7 +36,7 @@ trait IListInstances {
     FilterIndex.traverseFilterIndex[IList, A](_.zipWithIndex)
 
   implicit def iListCons[A]: Cons[IList[A], A] = new Cons[IList[A], A]{
-    def _cons = SimplePrism[IList[A], (A, IList[A])]{
+    def cons = SimplePrism[IList[A], (A, IList[A])]{
       case INil()       => Maybe.empty
       case ICons(x, xs) => Maybe.just((x, xs))
     }{ case (a, s) => ICons(a, s) }
