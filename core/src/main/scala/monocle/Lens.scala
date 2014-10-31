@@ -16,7 +16,7 @@ import scalaz.{ Applicative, Functor, Monoid, Profunctor, Tag }
  *
  * type Lens[S, A] = PLens[S, S, A, A]
  *
- * A [[PLens]] is also a valid [[Getter]], [[Fold]], [[Optional]], [[Traversal]] and [[Setter]]
+ * A [[PLens]] is also a valid [[Getter]], [[Fold]], [[POptional]], [[PTraversal]] and [[PSetter]]
  *
  * Typically a [[PLens]] or [[Lens]] can be defined between a [[Product]] (e.g. case class, tuple, HList)
  * and one of it is component.
@@ -40,30 +40,30 @@ abstract class PLens[S, T, A, B] { self =>
   @inline final def set(b: B): S => T = modify(_ => b)
 
   /************************************************************************************************/
-  /** Compose methods between a [[PLens]] and another Optics                                       */
+  /** Compose methods between a [[PLens]] and another Optics                                      */
   /************************************************************************************************/
 
   /** compose a [[PLens]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
   /** compose a [[PLens]] with a [[Getter]] */
   @inline final def composeGetter[C](other: Getter[A, C]): Getter[S, C] = asGetter composeGetter other
-  /** compose a [[PLens]] with a [[Setter]] */
-  @inline final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = asSetter composeSetter other
-  /** compose a [[PLens]] with a [[Traversal]] */
-  @inline final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = asTraversal composeTraversal other
-  /** compose a [[PLens]] with an [[Optional]] */
-  @inline final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other
-  /** compose a [[PLens]] with a [[Prism]] */
-  @inline final def composePrism[C, D](other: Prism[A, B, C, D]): Optional[S, T, C, D] = asOptional composeOptional other.asOptional
+  /** compose a [[PLens]] with a [[PSetter]] */
+  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] = asSetter composeSetter other
+  /** compose a [[PLens]] with a [[PTraversal]] */
+  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] = asTraversal composeTraversal other
+  /** compose a [[PLens]] with an [[POptional]] */
+  @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] = asOptional composeOptional other
+  /** compose a [[PLens]] with a [[PPrism]] */
+  @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] = asOptional composeOptional other.asOptional
   /** compose a [[PLens]] with a [[PLens]] */
   final def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] = new PLens[S, T, C, D] {
     @inline def _lens[P[_, _]: Strong]: Optic[P, S, T, C, D] = self._lens[P] compose other._lens[P]
   }
-  /** compose a [[PLens]] with an [[Iso]] */
-  final def composeIso[C, D](other: Iso[A, B, C, D]): PLens[S, T, C, D] = composeLens(other.asLens)
+  /** compose a [[PLens]] with an [[PIso]] */
+  final def composeIso[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] = composeLens(other.asLens)
 
   /************************************************************************************************/
-  /** Transformation methods to view a [[PLens]] as another Optics                                 */
+  /** Transformation methods to view a [[PLens]] as another Optics                                */
   /************************************************************************************************/
 
   /** view a [[PLens]] as a [[Fold]] */
@@ -72,14 +72,14 @@ abstract class PLens[S, T, A, B] { self =>
   }
   /** view a [[PLens]] as a [[Getter]] */
   final def asGetter: Getter[S, A] = Getter[S, A](get)
-  /** view a [[PLens]] as a [[Setter]] */
-  final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
-  /** view a [[PLens]] as a [[Traversal]] */
-  final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+  /** view a [[PLens]] as a [[PSetter]] */
+  final def asSetter: PSetter[S, T, A, B] = PSetter[S, T, A, B](modify)
+  /** view a [[PLens]] as a [[PTraversal]] */
+  final def asTraversal: PTraversal[S, T, A, B] = new PTraversal[S, T, A, B] {
     @inline def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
   }
-  /** view a [[PLens]] as an [[Optional]] */
-  final def asOptional: Optional[S, T, A, B] = new Optional[S, T, A, B] {
+  /** view a [[PLens]] as an [[POptional]] */
+  final def asOptional: POptional[S, T, A, B] = new POptional[S, T, A, B] {
     @inline final def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _lens[P]
   }
 

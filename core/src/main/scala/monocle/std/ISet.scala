@@ -1,6 +1,6 @@
 package monocle.std
 
-import monocle.{Lens, SimplePrism}
+import monocle.{Lens, Prism}
 import monocle.function.{At, Empty}
 
 import scalaz.{ISet,Maybe,Order}
@@ -10,7 +10,7 @@ object iset extends ISetInstances
 trait ISetInstances {
 
   implicit def emptyISet[A]: Empty[ISet[A]] = new Empty[ISet[A]] {
-    def empty = SimplePrism[ISet[A], Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty)(_ => ISet.empty[A])
+    def empty = Prism[ISet[A], Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty)(_ => ISet.empty[A])
   }
 
   implicit def atISet[A: Order]: At[ISet[A], A, Unit] = new At[ISet[A], A, Unit] {

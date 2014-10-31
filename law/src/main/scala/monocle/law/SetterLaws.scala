@@ -1,6 +1,6 @@
 package monocle.law
 
-import monocle.SimpleSetter
+import monocle.Setter
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Properties}
 
@@ -9,7 +9,7 @@ import scalaz.syntax.equal._
 
 object SetterLaws {
 
-  def apply[S: Arbitrary: Equal, A: Arbitrary](setter: SimpleSetter[S, A]) = new Properties("Setter") {
+  def apply[S: Arbitrary: Equal, A: Arbitrary](setter: Setter[S, A]) = new Properties("Setter") {
     property("modify . id  == id") = forAll { s: S =>
       setter.modify(identity)(s) === s
     }

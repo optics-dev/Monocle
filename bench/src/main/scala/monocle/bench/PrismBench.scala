@@ -1,6 +1,6 @@
 package monocle.bench
 
-import monocle.SimplePrism
+import monocle.Prism
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 
 import scalaz.Maybe
@@ -21,9 +21,9 @@ class PrismBench {
   def mkS(s: String): ADT = S(s)
   def mkR(r: ADT)   : ADT = R(r)
 
-  val _i = SimplePrism(getIMaybe)(mkI)
-  val _s = SimplePrism(getSMaybe)(mkS)
-  val _r = SimplePrism(getRMaybe)(mkR)
+  val _i = Prism(getIMaybe)(mkI)
+  val _s = Prism(getSMaybe)(mkS)
+  val _r = Prism(getRMaybe)(mkR)
 
   val intADT      = mkI(5)
   val stringADT   = mkS("Yop")

@@ -19,10 +19,10 @@ class JsonExample extends Spec {
   case class JsArray(l: List[Json]) extends Json
   case class JsObject(m: Map[String, Json]) extends Json
 
-  val jsString = SimplePrism[Json, String]{ case JsString(s) => Maybe.just(s); case _ => Maybe.empty}(JsString.apply)
-  val jsNumber = SimplePrism[Json, Int]{ case JsNumber(n) => Maybe.just(n); case _ => Maybe.empty}(JsNumber.apply)
-  val jsArray  = SimplePrism[Json, List[Json]]{ case JsArray(a) => Maybe.just(a); case _ => Maybe.empty}(JsArray.apply)
-  val jsObject = SimplePrism[Json, Map[String, Json]]{ case JsObject(m) => Maybe.just(m); case _ => Maybe.empty}(JsObject.apply)
+  val jsString = Prism[Json, String]{ case JsString(s) => Maybe.just(s); case _ => Maybe.empty}(JsString.apply)
+  val jsNumber = Prism[Json, Int]{ case JsNumber(n) => Maybe.just(n); case _ => Maybe.empty}(JsNumber.apply)
+  val jsArray  = Prism[Json, List[Json]]{ case JsArray(a) => Maybe.just(a); case _ => Maybe.empty}(JsArray.apply)
+  val jsObject = Prism[Json, Map[String, Json]]{ case JsObject(m) => Maybe.just(m); case _ => Maybe.empty}(JsObject.apply)
 
   val json = JsObject(Map(
     "first_name" -> JsString("John"),

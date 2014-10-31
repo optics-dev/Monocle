@@ -11,7 +11,7 @@ import scalaz.{Applicative, FirstMaybe, Maybe, Monoid, Profunctor, Tag, \/}
  * a 0-1 Traversal. The latter constraint is not enforce at compile time
  * but by OptionalLaws
  */
-abstract class Optional[S, T, A, B] { self =>
+abstract class POptional[S, T, A, B] { self =>
 
   def _optional[P[_, _]: Step]: Optic[P, S, T, A, B]
 
@@ -32,31 +32,34 @@ abstract class Optional[S, T, A, B] { self =>
 
   // Compose
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] = asFold composeFold other
-  @inline final def composeSetter[C, D](other: Setter[A, B, C, D]): Setter[S, T, C, D] = asSetter composeSetter other
-  @inline final def composeTraversal[C, D](other: Traversal[A, B, C, D]): Traversal[S, T, C, D] = asTraversal composeTraversal other
-  final def composeOptional[C, D](other: Optional[A, B, C, D]): Optional[S, T, C, D] = new Optional[S, T, C, D] {
+  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] = asSetter composeSetter other
+  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] = asTraversal composeTraversal other
+  final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] = new POptional[S, T, C, D] {
     @inline def _optional[P[_, _]: Step]: Optic[P, S, T, C, D] = self._optional[P] compose other._optional[P]
   }
-  @inline final def composePrism[C, D](other: Prism[A, B, C, D]): Optional[S, T, C, D] = composeOptional(other.asOptional)
-  @inline final def composeLens[C, D](other: PLens[A, B, C, D]): Optional[S, T, C, D] = composeOptional(other.asOptional)
-  @inline final def composeIso[C, D](other: Iso[A, B, C, D]): Optional[S, T, C, D] = composeOptional(other.asOptional)
+  @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] = composeOptional(other.asOptional)
+  @inline final def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] = composeOptional(other.asOptional)
+  @inline final def composeIso[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] = composeOptional(other.asOptional)
 
   // Optic transformation
   final def asFold: Fold[S, A] = new Fold[S, A]{
     @inline def foldMap[M: Monoid](f: A => M)(s: S): M = getMaybe(s) map f getOrElse Monoid[M].zero
   }
-  @inline final def asSetter: Setter[S, T, A, B] = Setter[S, T, A, B](modify)
-  final def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+  @inline final def asSetter: PSetter[S, T, A, B] = PSetter[S, T, A, B](modify)
+  final def asTraversal: PTraversal[S, T, A, B] = new PTraversal[S, T, A, B] {
     @inline def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
   }
 
 }
 
-object Optional {
-
-  def apply[S, T, A, B](seta: S => T \/ A)(_set: (B, S) => T): Optional[S, T, A, B] = new Optional[S, T, A, B] {
+object POptional {
+  def apply[S, T, A, B](seta: S => T \/ A)(_set: (B, S) => T): POptional[S, T, A, B] = new POptional[S, T, A, B] {
     @inline def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = pab =>
       Profunctor[P].dimap(Step[P].step[A, B, T, S](pab)){s: S => seta(s).map((_, s))}(_.fold(identity, _set.tupled))
   }
+}
 
+object Optional {
+  @inline def apply[S, A](_getMaybe: S => Maybe[A])(_set: (A, S) => S): Optional[S, A] =
+    POptional{s: S => _getMaybe(s) \/> s}( _set)
 }

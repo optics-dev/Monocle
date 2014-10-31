@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle.SimplePrism
+import monocle.Prism
 import monocle.internal.Bounded
 
 import scala.annotation.implicitNotFound
@@ -11,7 +11,7 @@ import scalaz.{Maybe, Order}
   "find out which import is necessary")
 trait SafeCast[S, A] {
   
-  def safeCast: SimplePrism[S, A]
+  def safeCast: Prism[S, A]
 
 }
 
@@ -19,10 +19,10 @@ object SafeCast extends SafeCastFunctions
 
 trait SafeCastFunctions {
   
-  def safeCast[S, A](implicit ev: SafeCast[S, A]): SimplePrism[S, A] = ev.safeCast
+  def safeCast[S, A](implicit ev: SafeCast[S, A]): Prism[S, A] = ev.safeCast
 
   def orderingBoundedSafeCast[S: Order, A: Bounded](unsafeCast: S => A)(revCast: A => S): SafeCast[S, A] = new SafeCast[S, A] {
-    def safeCast = SimplePrism[S, A]( from =>
+    def safeCast = Prism[S, A]( from =>
       if (from > revCast(Bounded[A].MaxValue) || from < revCast(Bounded[A].MinValue))
         Maybe.empty
       else

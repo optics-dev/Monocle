@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{SimplePrism, SimpleIso}
+import monocle.{Prism, Iso}
 import scalaz.Maybe
 import scalaz.std.list._
 import scalaz.syntax.traverse._
@@ -10,10 +10,10 @@ object string extends StringInstances
 
 trait StringInstances {
 
-  val stringToList: SimpleIso[String, List[Char]] = SimpleIso((_: String).toList)(_.mkString)
+  val stringToList: Iso[String, List[Char]] = Iso((_: String).toList)(_.mkString)
 
   implicit val stringEmpty: Empty[String] = new Empty[String] {
-    def empty = SimplePrism[String, Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty)(_ => "")
+    def empty = Prism[String, Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty)(_ => "")
   }
 
   implicit val stringReverse: Reverse[String, String] = reverseFromReverseFunction[String](_.reverse)
@@ -32,13 +32,13 @@ trait StringInstances {
   }
 
   implicit val stringCons: Cons[String, Char] = new Cons[String, Char] {
-    def cons = SimplePrism[String, (Char, String)](s =>
+    def cons = Prism[String, (Char, String)](s =>
       if(s.isEmpty) Maybe.empty else Maybe.just((s.head, s.tail))
     ){ case (h, t) => h + t }
   }
 
   implicit val stringSnoc: Snoc[String, Char] = new Snoc[String, Char]{
-    def snoc = SimplePrism[String, (String, Char)](
+    def snoc = Prism[String, (String, Char)](
       s => if(s.isEmpty) Maybe.empty else Maybe.just((s.init, s.last))){
       case (init, last) => init :+ last
     }
@@ -46,11 +46,11 @@ trait StringInstances {
 
 
   implicit val stringToBoolean = new SafeCast[String, Boolean] {
-    def safeCast = SimplePrism{s: String => Maybe.fromTryCatchNonFatal(s.toBoolean)}(_.toString)
+    def safeCast = Prism{s: String => Maybe.fromTryCatchNonFatal(s.toBoolean)}(_.toString)
   }
 
   implicit val stringToLong = new SafeCast[String, Long] {
-    def safeCast = SimplePrism(parseLong)(_.toString)
+    def safeCast = Prism(parseLong)(_.toString)
   }
 
   implicit val stringToInt = new SafeCast[String, Int] {

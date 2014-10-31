@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle.std.tuple2._
-import monocle.{Lens, SimpleIso}
+import monocle.{Lens, Iso}
 
 import scala.annotation.implicitNotFound
 
@@ -11,10 +11,10 @@ import scala.annotation.implicitNotFound
 trait Snoc1[S, I, L] {
 
   /**
-   * snoc1 defines an [[SimpleIso]] between a S and its init and last element.
+   * snoc1 defines an [[Iso]] between a S and its init and last element.
    * snoc1 is like snoc but for types that have *always* an init and a last element, e.g. a non empty list
    */
-  def snoc1: SimpleIso[S, (I, L)]
+  def snoc1: Iso[S, (I, L)]
 
   def init: Lens[S, I] = snoc1 composeLens first
   def last: Lens[S, L] = snoc1 composeLens second
@@ -24,7 +24,7 @@ trait Snoc1[S, I, L] {
 object Snoc1 extends Snoc1Functions
 
 trait Snoc1Functions {
-  final def snoc1[S, I, L](implicit ev: Snoc1[S, I, L]): SimpleIso[S, (I, L)] = ev.snoc1
+  final def snoc1[S, I, L](implicit ev: Snoc1[S, I, L]): Iso[S, (I, L)] = ev.snoc1
 
   final def init[S, I, L](implicit ev: Snoc1[S, I, L]): Lens[S, I] = ev.init
   final def last[S, I, L](implicit ev: Snoc1[S, I, L]): Lens[S, L] = ev.last

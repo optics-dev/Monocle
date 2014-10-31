@@ -22,11 +22,11 @@ abstract class Fold[S, A] { self =>
     @inline def foldMap[M: Monoid](f: B => M)(s: S): M = self.foldMap(other.foldMap(f)(_))(s)
   }
   @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] = composeFold(other.asFold)
-  @inline final def composeTraversal[B, C, D](other: Traversal[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
-  @inline final def composeOptional[B, C, D](other: Optional[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
-  @inline final def composePrism[B, C, D](other: Prism[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
+  @inline final def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
+  @inline final def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
+  @inline final def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
   @inline final def composeLens[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
-  @inline final def composeIso[B, C, D](other: Iso[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
+  @inline final def composeIso[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] = composeFold(other.asFold)
 }
 
 object Fold {

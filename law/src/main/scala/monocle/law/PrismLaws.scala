@@ -1,6 +1,6 @@
 package monocle.law
 
-import monocle.SimplePrism
+import monocle.Prism
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Properties}
 
@@ -9,7 +9,7 @@ import scalaz.{Equal, Maybe}
 
 object PrismLaws {
 
-  def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](prism: SimplePrism[S, A]) = new Properties("Prism") {
+  def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](prism: Prism[S, A]) = new Properties("Prism") {
     include(TraversalLaws(prism.asTraversal))
 
     property("reverseGet - getOption") = forAll { value: A =>

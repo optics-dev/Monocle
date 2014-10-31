@@ -1,6 +1,6 @@
 package monocle.law
 
-import monocle.SimpleIso
+import monocle.Iso
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Properties}
 
@@ -10,7 +10,7 @@ import scalaz.syntax.equal._
 
 object IsoLaws {
 
-  def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](iso: SimpleIso[S, A]) = new Properties("Iso") {
+  def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](iso: Iso[S, A]) = new Properties("Iso") {
 
     include(LensLaws(iso.asLens))
 

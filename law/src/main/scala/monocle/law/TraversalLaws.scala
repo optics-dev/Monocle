@@ -1,6 +1,6 @@
 package monocle.law
 
-import monocle.SimpleTraversal
+import monocle.Traversal
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Properties}
 
@@ -10,7 +10,7 @@ import scalaz.syntax.equal._
 
 object TraversalLaws {
 
-  def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](traversal: SimpleTraversal[S, A]) = new Properties("Traversal") {
+  def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](traversal: Traversal[S, A]) = new Properties("Traversal") {
     include(SetterLaws(traversal.asSetter))
 
     property("modifyF . id == id") = forAll { s: S =>

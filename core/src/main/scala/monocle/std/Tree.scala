@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{SimpleIso, Lens}
+import monocle.{Iso, Lens}
 
 import scalaz.Tree
 import scala.annotation.tailrec
@@ -57,7 +57,7 @@ trait TreeInstances {
   implicit def treeEach[A]: Each[Tree[A], A] = Each.traverseEach[Tree, A]
 
   implicit def treeReverse[A]: Reverse[Tree[A], Tree[A]] = new Reverse[Tree[A], Tree[A]] {
-    def reverse = SimpleIso[Tree[A], Tree[A]](reverseTree)(reverseTree)
+    def reverse = Iso[Tree[A], Tree[A]](reverseTree)(reverseTree)
     private def reverseTree(tree: Tree[A]): Tree[A] = Tree.node(tree.rootLabel, tree.subForest.reverse.map(reverseTree))
   }
 

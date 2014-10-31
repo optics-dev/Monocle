@@ -1,12 +1,13 @@
 package monocle.syntax
 
+import monocle.function._
 import monocle.macros.Lenser
+import monocle.std._
+import monocle.{Lens, Prism}
 import org.specs2.scalaz.Spec
-import monocle.{SimplePrism, Lens}
+
 import scalaz.Maybe
 import scalaz.syntax.maybe._
-import monocle.function._
-import monocle.std._
 
 class SymbolicSyntaxExample extends Spec {
 
@@ -17,7 +18,7 @@ class SymbolicSyntaxExample extends Spec {
   case class Sofa(color: String, price: Int) extends Article
 
   val _articles = Lens((_: Store).articles)((as, s) => s.copy(articles = as))
-  val _sofa  = SimplePrism[Article, Sofa ]{ case s: Sofa  => s.just; case _ => Maybe.empty}(identity)
+  val _sofa     = Prism[Article, Sofa ]{ case s: Sofa  => s.just; case _ => Maybe.empty}(identity)
 
   val sofaLenser = Lenser[Sofa]
   val (_color, _price) = (sofaLenser(_.color), sofaLenser(_.price))
