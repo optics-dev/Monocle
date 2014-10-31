@@ -13,13 +13,24 @@ final case class ApplySetterOps[S](s: S) {
 }
 
 final case class ApplySetter[S, T, A, B](s: S, setter: Setter[S, T, A, B]) {
-  def set(b: B): T = setter.set(b)(s)
-  def modify(f: A => B): T = setter.modify(f)(s)
+  @inline def set(b: B): T = setter.set(b)(s)
+  @inline def modify(f: A => B): T = setter.modify(f)(s)
 
-  def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeSetter other)
-  def composeTraversal[C, D](other: Traversal[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeTraversal other)
-  def composeOptional[C, D](other: Optional[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeOptional other)
-  def composePrism[C, D](other: Prism[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composePrism  other)
-  def composeLens[C, D](other: PLens[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeLens other)
-  def composeIso[C, D](other: Iso[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeIso other)
+  @inline def composeSetter[C, D](other: Setter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeSetter other)
+  @inline def composeTraversal[C, D](other: Traversal[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeTraversal other)
+  @inline def composeOptional[C, D](other: Optional[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeOptional other)
+  @inline def composePrism[C, D](other: Prism[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composePrism  other)
+  @inline def composeLens[C, D](other: PLens[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeLens other)
+  @inline def composeIso[C, D](other: Iso[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, setter composeIso other)
+
+  /** alias to composeTraversal */
+  @inline def ^|->>[C, D](other: Traversal[A, B, C, D]): ApplySetter[S, T, C, D] = composeTraversal(other)
+  /** alias to composeOptional */
+  @inline def ^|-?[C, D](other: Optional[A, B, C, D]): ApplySetter[S, T, C, D] = composeOptional(other)
+  /** alias to composePrism */
+  @inline def ^<-?[C, D](other: Prism[A, B, C, D]): ApplySetter[S, T, C, D] = composePrism(other)
+  /** alias to composeLens */
+  @inline def ^|->[C, D](other: PLens[A, B, C, D]): ApplySetter[S, T, C, D] = composeLens(other)
+  /** alias to composeIso */
+  @inline def ^<->[C, D](other: Iso[A, B, C, D]): ApplySetter[S, T, C, D] = composeIso(other)
 }

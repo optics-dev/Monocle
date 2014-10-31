@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.TestUtil._
 import monocle.function._
-import monocle.law.{LensLaws, TraversalLaws}
+import monocle.law.{IsoLaws, LensLaws, TraversalLaws}
 import org.specs2.scalaz.Spec
 
 
@@ -17,13 +17,7 @@ class Tuple6Spec extends Spec {
   checkAll("fifth tuple6" , LensLaws(fifth[(Int, Char, Boolean, String, Long, Float), Long]))
   checkAll("sixth tuple6" , LensLaws(sixth[(Int, Char, Boolean, String, Long, Float), Float]))
 
-  checkAll("head tuple6", LensLaws(head[(Int, Char, Boolean, String, Long, Float), Int]))
-
-  checkAll("tail tuple6", LensLaws(tail[(Int, Char, Boolean, String, Long, Float), (Char, Boolean, String, Long, Float)]))
-
-  checkAll("last tuple6", LensLaws(last[(Int, Char, Boolean, String, Long, Float), Float]))
-
-  checkAll("init tuple6", LensLaws(init[(Int, Char, Boolean, String, Long, Float), (Int, Char, Boolean, String, Long)]))
-
+  checkAll("hcons tuple6", IsoLaws(cons1[(Int, Char, Boolean, String, Long, Float), Int, (Char, Boolean, String, Long, Float)]))
+  checkAll("hsnoc tuple6", IsoLaws(snoc1[(Int, Char, Boolean, String, Long, Float), (Int, Char, Boolean, String, Long), Float]))
 
 }

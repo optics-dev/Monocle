@@ -20,19 +20,12 @@ trait Tuple2Instances {
     def second = Lens((_: (A1, A2))._2)( (a, t) => t.copy(_2 = a))
   }
 
-  implicit def tuple2Head[A1, A2]: Head[(A1, A2), A1] =
-    Head.field1Head[(A1, A2), A1]
-
-  implicit def tuple2Tail[A1, A2]: Tail[(A1, A2), A2] = new Tail[(A1, A2), A2] {
-    def tail = Lens((_: (A1, A2))._2)( (a, t) => t.copy(_2 = a))
+  implicit def tuple2Cons1[A1, A2]: Cons1[(A1, A2), A1, A2] = new Cons1[(A1, A2), A1, A2] {
+    def cons1 = SimpleIso[(A1, A2), (A1, A2)](identity)(identity)
   }
 
-  implicit def tuple2Last[A1, A2]: Last[(A1, A2), A2] = new Last[(A1, A2), A2] {
-    def last = second
-  }
-
-  implicit def tuple2Init[A1, A2]: Init[(A1, A2), A1] = new Init[(A1, A2), A1] {
-    def init = Lens((_: (A1, A2))._1)( (a, t) => t.copy(_1 = a))
+  implicit def tuple2Snoc1[A1, A2]: Snoc1[(A1, A2), A1, A2] = new Snoc1[(A1, A2), A1, A2] {
+    def snoc1 = SimpleIso[(A1, A2), (A1, A2)](identity)(identity)
   }
 
   implicit def tuple2Reverse[A, B]: Reverse[(A, B), (B, A)] = new Reverse[(A, B), (B, A)] {

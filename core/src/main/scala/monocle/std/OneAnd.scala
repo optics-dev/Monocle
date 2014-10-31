@@ -1,9 +1,8 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Lens, SimpleOptional, SimpleTraversal}
+import monocle.{Lens, SimpleIso, SimpleOptional, SimpleTraversal}
 
-import scalaz.Maybe.{Empty, Just}
 import scalaz.{Applicative, Maybe, OneAnd}
 
 object oneand extends OneAndInstances
@@ -32,26 +31,8 @@ trait OneAndInstances {
     def first = Lens[OneAnd[T, A], A](_.head)( (a, oneAnd) => oneAnd.copy(head = a))
   }
 
-  implicit def oneAndHead[T[_], A]: Head[OneAnd[T, A], A] =
-    Head.field1Head[OneAnd[T, A], A]
-
-  implicit def oneAndTail[T[_], A]: Tail[OneAnd[T, A], T[A]] = new Tail[OneAnd[T, A], T[A]]{
-    def tail = Lens[OneAnd[T, A], T[A]](_.tail)( (tail, oneAnd) => oneAnd.copy(tail = tail))
+  implicit def oneAndCons1[T[_], A]: Cons1[OneAnd[T, A], A, T[A]] = new Cons1[OneAnd[T, A], A, T[A]] {
+    def cons1 = SimpleIso[OneAnd[T, A], (A, T[A])](o => (o.head, o.tail)){ case (h, t) => OneAnd(h, t)}
   }
-
-  implicit def oneAndLastFromLastOption[T[_], A](implicit ev: Snoc[T[A], A]): Last[OneAnd[T, A], A] = new Last[OneAnd[T, A], A] {
-    def last = Lens[OneAnd[T, A], A](oneAnd => ev.lastMaybe.getMaybe(oneAnd.tail) getOrElse oneAnd.head)(
-      (a, oneAnd) => ev.lastMaybe.setMaybe(a)(oneAnd.tail) match {
-        case Just(newTail) => oneAnd.copy(tail = newTail)
-        case Empty()       => oneAnd.copy(head = a)
-      })
-  }
-
-  implicit def oneAndLastFromLast[T[_], A](implicit ev: Last[T[A], A]): Last[OneAnd[T, A], A] = new Last[OneAnd[T, A], A] {
-    def last = Lens[OneAnd[T, A], A](oneAnd => ev.last.get(oneAnd.tail))(
-      (a, oneAnd) => oneAnd.copy(tail = ev.last.set(a)(oneAnd.tail))
-    )
-  }
-
 
 }

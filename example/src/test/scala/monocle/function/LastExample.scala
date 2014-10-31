@@ -16,11 +16,4 @@ class LastExample extends Spec {
     ((2, false) applyLens last set true) ==== ((2, true))
   }
 
-  "last creates a Lens from a OneAnd and its last element (tail has one)" in {
-    (OneAnd(1, List(2, 3)) applyLens last get) ==== 3
-    
-    type Pair[A] = (A, A)
-    (OneAnd[Pair, Int](1, (2, 3)) applyLens last get) ==== 3
-  }
-
 }

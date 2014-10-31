@@ -32,7 +32,7 @@ trait VectorInstances {
     FilterIndex.traverseFilterIndex[Vector, A](_.zipWithIndex)
 
   implicit def vectorCons[A]: Cons[Vector[A], A] = new Cons[Vector[A], A]{
-    def _cons = SimplePrism[Vector[A], (A, Vector[A])]{
+    def cons = SimplePrism[Vector[A], (A, Vector[A])]{
       case Vector() => Maybe.empty
       case x +: xs  => Maybe.just((x, xs))
     }{ case (a, s) => a +: s }

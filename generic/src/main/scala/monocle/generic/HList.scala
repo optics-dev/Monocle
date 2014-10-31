@@ -21,24 +21,17 @@ trait HListInstances {
     def reverse = SimpleIso[S, A](ev1.apply)(ev2.apply)
   }
 
-  implicit def hListHead[S <: HList, A](implicit evFirst: Field1[S, A]) = new Head[S, A] {
-    def head = evFirst.first
+  implicit def hListCons1[S <: HList, H, T <: HList]
+     (implicit evIsCons: IsHCons.Aux[S, H, T],
+              evPrepend: Prepend.Aux[H :: HNil, T, S]): Cons1[S, H, T] = new Cons1[S, H, T] {
+    def cons1 = SimpleIso[S, (H, T)](s => (evIsCons.head(s), evIsCons.tail(s))){ case (h, t) => evPrepend(h :: HNil, t) }
   }
 
-  implicit def hListLast[S <: HList, RS <: HList, A](implicit evReverse: Reverse[S, RS],
-                                                                 evHead: Head[RS, A]) = new Last[S, A] {
-    def last = evReverse.reverse composeLens evHead.head
-  }
-
-  implicit def hListTail[S <: HList, H, T <: HList](implicit evIsCons: IsHCons.Aux[S, H, T],
-                                                            evPrepend: Prepend.Aux[H :: HNil, T, S]) = new Tail[S, T] {
-    def tail = Lens[S, T](s => evIsCons.tail(s))( (a, s) => evPrepend(evIsCons.head(s) :: HNil, a))
-  }
-
-  implicit def hListInit[S <: HList, L, A <: HList](implicit evInit: HInit.Aux[S, A],
-                                                             evLast: HLast.Aux[S, L],
-                                                    evPrepend: Prepend.Aux[A, L :: HNil, S]) = new Init[S, A] {
-    def init = Lens[S, A](evInit.apply)( (a, s) => evPrepend(a, evLast(s) :: HNil))
+  implicit def hListSnoc1[S <: HList, I <: HList, L]
+   (implicit evInit: HInit.Aux[S, I],
+             evLast: HLast.Aux[S, L],
+          evPrepend: Prepend.Aux[I, L :: HNil, S]): Snoc1[S, I, L] = new Snoc1[S, I, L] {
+    def snoc1 = SimpleIso[S, (I, L)](s => (evInit(s), evLast(s))){ case (i, l) => evPrepend(i, l :: HNil) }
   }
 
   implicit def hListField1[S <: HList, A](implicit evAt: At.Aux[S, shapeless.nat._0.N, A],
