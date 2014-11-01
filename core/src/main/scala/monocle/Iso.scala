@@ -15,15 +15,23 @@ abstract class PIso[S, T, A, B] { self =>
   /** underlying representation of [[PIso]], all [[PIso]] methods are defined in terms of _iso */
   def _iso[P[_, _]: Profunctor]: Optic[P, S, T, A, B]
 
+  /** get the target of [[PIso]] */
+  @inline final def get(s: S): A = _iso[Forget[A, ?, ?]].apply(Forget[A, A, B](identity)).runForget(s)
+
+  /** get the source of [[PIso]] */
+  @inline final def reverseGet(b: B): T = _iso[Tagged].apply(Tagged(b)).untagged
+
+  /** reverse a [[PIso]]: the source becomes the target and the target becomes the source */
   @inline final def reverse: PIso[B, A, T, S] = PIso[B, A, T, S](reverseGet)(get)
 
+  /** modify polymorphically the target of a [[PIso]] using [[Functor]] function */
   @inline final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
     Tag.unwrap(_iso[UpStar[F, ?, ?]](Profunctor.upStarProfunctor[F])(UpStar[F, A, B](f))).apply(s)
 
-  @inline final def get(s: S): A = _iso[Forget[A, ?, ?]].apply(Forget[A, A, B](identity)).runForget(s)
-  @inline final def reverseGet(b: B): T = _iso[Tagged].apply(Tagged(b)).untagged
-
+  /** modify polymorphically the target of a [[PIso]] using a function */
   @inline final def modify(f: A => B): S => T = _iso[Function1].apply(f)
+
+  /** set polymorphically the target of a [[PIso]] with a value */
   @inline final def set(b: B): S => T = modify(_ => b)
 
   /************************************************************************************************/
