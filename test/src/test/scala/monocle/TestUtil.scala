@@ -116,6 +116,6 @@ object TestUtil {
     Arbitrary(Arbitrary.arbitrary[List[A]].map(l => ISet.fromList(l)(Order[A])))
 
   implicit def nelArbitrary[A: Arbitrary]: Arbitrary[NonEmptyList[A]] =
-    Arbitrary((Arbitrary.arbitrary[List[A]] suchThat (_.length > 0)).map(l => NonEmptyList(l.head,l.tail:_*)))
+    Arbitrary(oneAndArbitrary[List,A].arbitrary.map( o => NonEmptyList(o.head, o.tail:_*)))
 
 }
