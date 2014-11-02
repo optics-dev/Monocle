@@ -1,14 +1,12 @@
 package monocle.std
 
 import monocle.function._
-import monocle.SimpleOptional
+import monocle.{SimpleIso, SimpleLens, SimpleOptional, SimplePrism}
 
-import scala.annotation.tailrec
-import scalaz.Id.Id
-import scalaz.std.list._
+import scalaz.{OneAnd, NonEmptyList}
+import scalaz.NonEmptyList._
+import scalaz.syntax.std.list._
 import scalaz.syntax.std.option._
-import scalaz.syntax.traverse._
-import scalaz.{NonEmptyList, Maybe}
 
 object nonemptylist extends NonEmptyListInstances
 
@@ -38,3 +36,9 @@ trait NonEmptyListInstances {
     reverseFromReverseFunction[NonEmptyList[A]](_.reverse)
 
 }
+
+  implicit def nelAndOneIso[A] : SimpleIso[NonEmptyList[A], OneAnd[List,A]] =
+    SimpleIso((nel: NonEmptyList[A]) => OneAnd[List,A](nel.head,nel.tail))(
+              (and: OneAnd[List, A]) => NonEmptyList(and.head,and.tail:_*))
+
+
