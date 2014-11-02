@@ -28,6 +28,21 @@ trait NonEmptyListInstances{
   implicit def nelReverse[A]: Reverse[NonEmptyList[A], NonEmptyList[A]] =
     reverseFromReverseFunction[NonEmptyList[A]](_.reverse)
 
+  implicit def nelCons[A]: Cons[NonEmptyList[A], A] = new Cons[NonEmptyList[A], A]{
+    def _cons = SimplePrism[NonEmptyList[A], (A, NonEmptyList[A])]{ l =>
+      l.tail.toNel.toMaybe.map(t => (l.head,t))
+    }{ case (a, s) => s.<::(a) }
+  }
+
+  implicit def nelSnoc[A]: Snoc[NonEmptyList[A], A] = new Snoc[NonEmptyList[A], A]{
+
+    override def snoc: SimplePrism[NonEmptyList[A], (NonEmptyList[A], A)] =
+      SimplePrism(
+        (nel: NonEmptyList[A]) =>nel.init.toNel.toMaybe.map(i => (i, nel.last))){
+        case (init, last) => init :::> List(last)}
+
+  }
+
   implicit def nelFieldOne[A]: Field1[NonEmptyList[A], A] = new Field1[NonEmptyList[A],A] {
     override def first: SimpleLens[NonEmptyList[A], A] =
       SimpleLens[NonEmptyList[A], A](_.head)((h: A, list: NonEmptyList[A]) => list.<::(h))
