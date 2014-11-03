@@ -45,7 +45,7 @@ trait NonEmptyListInstances{
 
   implicit def nelFieldOne[A]: Field1[NonEmptyList[A], A] = new Field1[NonEmptyList[A],A] {
     override def first: SimpleLens[NonEmptyList[A], A] =
-      SimpleLens[NonEmptyList[A], A](_.head)((h: A, list: NonEmptyList[A]) => list.<::(h))
+      SimpleLens[NonEmptyList[A], A](_.head)((h: A, list: NonEmptyList[A]) => NonEmptyList(h,list.tail:_*))
   }
 
   implicit def nelHead[A]: Head[NonEmptyList[A], A] =  Head.field1Head[NonEmptyList[A],A]
