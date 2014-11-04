@@ -16,7 +16,5 @@ class NonEmptyListSpec extends Spec {
   checkAll("reverse NonEmptyList", IsoLaws(reverse[NonEmptyList[Int], NonEmptyList[Int]]))
   checkAll("cons1 NonEmptyList", IsoLaws(cons1[NonEmptyList[Int], Int, List[Int]]))
   checkAll("snoc1 NonEmptyList", IsoLaws(snoc1[NonEmptyList[Int], List[Int], Int]))
-  checkAll("cons NonEmptyList", PrismLaws(cons[NonEmptyList[Int], Int]))
-  checkAll("snoc NonEmptyList", PrismLaws(snoc[NonEmptyList[Int], Int]))
 
 }
