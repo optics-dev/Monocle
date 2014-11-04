@@ -28,19 +28,12 @@ trait Tuple4Instances {
     def fourth = SimpleLens((_: (A1, A2, A3, A4))._4)( (a, t) => t.copy(_4 = a))
   }
 
-  implicit def tuple4Head[A1, A2, A3, A4]: Head[(A1, A2, A3, A4), A1] =
-    Head.field1Head[(A1, A2, A3, A4), A1]
-
-  implicit def tuple4Tail[A1, A2, A3, A4]: Tail[(A1, A2, A3, A4), (A2, A3, A4)] = new Tail[(A1, A2, A3, A4), (A2, A3, A4)] {
-    def tail = SimpleLens{t: (A1, A2, A3, A4) => (t._2, t._3, t._4)}( (a, t) => t.copy(_2 = a._1, _3 = a._2, _4 = a._3))
+  implicit def tuple4Cons1[A1, A2, A3, A4]: Cons1[(A1, A2, A3, A4), A1, (A2, A3, A4)] = new Cons1[(A1, A2, A3, A4), A1, (A2, A3, A4)]{
+    def cons1 = SimpleIso[(A1, A2, A3, A4), (A1, (A2, A3, A4))](t => (t._1, (t._2, t._3, t._4))){ case (h, t) => (h, t._1, t._2, t._3) }
   }
 
-  implicit def tuple4Last[A1, A2, A3, A4]: Last[(A1, A2, A3, A4), A4] = new Last[(A1, A2, A3, A4), A4] {
-    def last = fourth
-  }
-
-  implicit def tuple4Init[A1, A2, A3, A4]: Init[(A1, A2, A3, A4), (A1, A2, A3)] = new Init[(A1, A2, A3, A4), (A1, A2, A3)] {
-    def init = SimpleLens{t: (A1, A2, A3, A4) => (t._1, t._2, t._3)}( (a, t) => t.copy(_1 = a._1, _2 = a._2, _3 = a._3))
+  implicit def tuple4Snoc1[A1, A2, A3, A4]: Snoc1[(A1, A2, A3, A4), (A1, A2, A3), A4] = new Snoc1[(A1, A2, A3, A4), (A1, A2, A3), A4]{
+    def snoc1 = SimpleIso[(A1, A2, A3, A4), ((A1, A2, A3), A4)](t => ((t._1, t._2, t._3), t._4)){ case (i, l) => (i._1, i._2, i._3, l) }
   }
 
   implicit def tuple4Reverse[A, B, C, D]: Reverse[(A, B, C, D), (D, C, B, A)] = new Reverse[(A, B, C, D), (D, C, B, A)] {

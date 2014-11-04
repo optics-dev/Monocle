@@ -32,10 +32,9 @@ trait StringInstances {
   }
 
   implicit val stringCons: Cons[String, Char] = new Cons[String, Char] {
-    def _cons = SimplePrism[String, (Char, String)](
-      s => if(s.isEmpty) Maybe.empty else Maybe.just((s.head, s.tail))){
-      case (h, t) => h + t
-    }
+    def cons = SimplePrism[String, (Char, String)](s =>
+      if(s.isEmpty) Maybe.empty else Maybe.just((s.head, s.tail))
+    ){ case (h, t) => h + t }
   }
 
   implicit val stringSnoc: Snoc[String, Char] = new Snoc[String, Char]{

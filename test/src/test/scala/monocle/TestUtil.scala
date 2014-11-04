@@ -57,7 +57,7 @@ object TestUtil {
 
       def genInternal(sz: Int): Gen[Tree[A]] = for {
         label    <- Arbitrary.arbitrary[A]
-        n        <- Gen.choose(sz/3, sz/2)
+        n        <- Gen.choose(0, 2)
         children <- Gen.listOfN(n, sizedTree(sz/2))
       } yield Tree.node(label, children.toStream)
 
