@@ -28,12 +28,12 @@ trait NonEmptyListInstances{
 
 
   implicit def nelCons1[A]: Cons1[NonEmptyList[A], A, List[A]] =  new Cons1[NonEmptyList[A],A,List[A]]{
-    def cons1 = SimpleIso((nel: NonEmptyList[A]) => (nel.head,nel.tail)){case (h,t) => NonEmptyList(h,t:_*)}
+    def cons1 = SimpleIso((nel: NonEmptyList[A]) => (nel.head,nel.tail)){case (h,t) => NonEmptyList.nel(h,t)}
   }
 
   implicit def nelSnoc1[A]:Snoc1[NonEmptyList[A], List[A], A] = new Snoc1[NonEmptyList[A],List[A], A]{
     override def snoc1: SimpleIso[NonEmptyList[A], (List[A], A)] =
-      SimpleIso((nel:NonEmptyList[A]) => nel.init -> nel.last){ case (i,l) => NonEmptyList(l,i.reverse:_*).reverse}
+      SimpleIso((nel:NonEmptyList[A]) => nel.init -> nel.last){ case (i,l) => NonEmptyList.nel(l,i.reverse).reverse}
   }
 
   implicit def nelAndOneIso[A] : SimpleIso[NonEmptyList[A], OneAnd[List,A]] =
