@@ -17,8 +17,8 @@ trait NonEmptyListInstances{
   implicit def nelIndex[A]: Index[NonEmptyList[A], Int, A] = new Index[NonEmptyList[A], Int, A] {
 
     def index(i: Int): SimpleOptional[NonEmptyList[A], A] = i match {
-      case 0 => nelHead.head.asOptional
-      case _ => nelTail.tail composeOptional list.listIndex.index(i-1)
+      case 0 => nelCons1.head.asOptional
+      case _ => nelCons1.tail composeOptional list.listIndex.index(i-1)
     }
   }
 
@@ -29,7 +29,7 @@ trait NonEmptyListInstances{
     reverseFromReverseFunction[NonEmptyList[A]](_.reverse)
 
   implicit def nelCons[A]: Cons[NonEmptyList[A], A] = new Cons[NonEmptyList[A], A]{
-    def _cons = SimplePrism[NonEmptyList[A], (A, NonEmptyList[A])]{ l =>
+    def cons = SimplePrism[NonEmptyList[A], (A, NonEmptyList[A])]{ l =>
       l.tail.toNel.toMaybe.map(t => (l.head,t))
     }{ case (a, s) => s.<::(a) }
   }
@@ -43,16 +43,13 @@ trait NonEmptyListInstances{
 
   }
 
-  implicit def nelFieldOne[A]: Field1[NonEmptyList[A], A] = new Field1[NonEmptyList[A],A] {
-    override def first: SimpleLens[NonEmptyList[A], A] =
-      SimpleLens[NonEmptyList[A], A](_.head)((h: A, list: NonEmptyList[A]) => NonEmptyList(h,list.tail:_*))
+  implicit def nelCons1[A]: Cons1[NonEmptyList[A], A, List[A]] =  new Cons1[NonEmptyList[A],A,List[A]]{
+    def cons1 = SimpleIso((nel: NonEmptyList[A]) => (nel.head,nel.tail)){case (h,t) => NonEmptyList(h,t:_*)}
   }
 
-  implicit def nelHead[A]: Head[NonEmptyList[A], A] =  Head.field1Head[NonEmptyList[A],A]
-
-  implicit def nelTail[A] : Tail[NonEmptyList[A], List[A]] = new Tail[NonEmptyList[A], List[A]] {
-    override def tail = SimpleLens[NonEmptyList[A], List[A]](_.tail)(
-      (tail: List[A], nel: NonEmptyList[A]) => NonEmptyList(nel.head,tail:_*))
+  implicit def nelSnoc1[A]:Snoc1[NonEmptyList[A], List[A], A] = new Snoc1[NonEmptyList[A],List[A], A]{
+    override def snoc1: SimpleIso[NonEmptyList[A], (List[A], A)] =
+      SimpleIso((nel:NonEmptyList[A]) => nel.init -> nel.last){ case (i,l) => NonEmptyList(l,i.reverse:_*).reverse}
   }
 
   implicit def nelAndOneIso[A] : SimpleIso[NonEmptyList[A], OneAnd[List,A]] =
