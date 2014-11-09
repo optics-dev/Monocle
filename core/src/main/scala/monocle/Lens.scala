@@ -60,7 +60,7 @@ abstract class PLens[S, T, A, B] { self =>
     @inline def _lens[P[_, _]: Strong]: Optic[P, S, T, C, D] = self._lens[P] compose other._lens[P]
   }
   /** compose a [[PLens]] with an [[PIso]] */
-  final def composeIso[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] = composeLens(other.asLens)
+  @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] = composeLens(other.asLens)
 
   /************************************************************************************************/
   /** Transformation methods to view a [[PLens]] as another Optics                                */
