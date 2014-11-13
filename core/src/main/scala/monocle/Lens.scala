@@ -4,6 +4,7 @@ import monocle.internal.{ Forget, Step, Strong }
 
 import scalaz.Profunctor.UpStar
 import scalaz.{ Applicative, Functor, Monoid, Profunctor, Tag }
+import scalaz.syntax.tag._
 
 /**
  * A [[PLens]] defines a purely functional relation between a type S and an smaller type A.
@@ -31,7 +32,7 @@ abstract class PLens[S, T, A, B] { self =>
 
   /** modify polymorphically the target of a [[PLens]] using [[Functor]] function */
   @inline final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
-    Tag.unwrap(_lens[UpStar[F, ?, ?]](Strong.upStarStrong[F])(UpStar[F, A, B](f))).apply(s)
+    _lens[UpStar[F, ?, ?]](Strong.upStarStrong[F])(UpStar[F, A, B](f)).unwrap.apply(s)
 
   /** modify polymorphically the target of a [[PLens]] using a function */
   @inline final def modify(f: A => B): S => T = _lens[Function1].apply(f)

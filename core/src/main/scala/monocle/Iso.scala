@@ -4,8 +4,9 @@ import monocle.internal.{Forget, ProChoice, Step, Strong, Tagged}
 
 import scalaz.Profunctor.UpStar
 import scalaz.std.function._
-import scalaz.{Applicative, Functor, Monoid, Profunctor, Tag}
+import scalaz.{Applicative, Functor, Monoid, Profunctor}
 import scalaz.Isomorphism.{<~>, <=>}
+import scalaz.syntax.tag._
 
 /**
  * A [[PIso]] defines an isomorphism between types S, A and B, T:
@@ -51,7 +52,7 @@ abstract class PIso[S, T, A, B] { self =>
 
   /** modify polymorphically the target of a [[PIso]] with a [[Functor]] function */
   @inline final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
-    Tag.unwrap(_iso[UpStar[F, ?, ?]](Profunctor.upStarProfunctor[F])(UpStar[F, A, B](f))).apply(s)
+    _iso[UpStar[F, ?, ?]](Profunctor.upStarProfunctor[F])(UpStar[F, A, B](f)).unwrap.apply(s)
 
   /** modify polymorphically the target of a [[PIso]] with a function */
   @inline final def modify(f: A => B): S => T = _iso[Function1].apply(f)
@@ -85,7 +86,6 @@ abstract class PIso[S, T, A, B] { self =>
   /************************************************************************************************/
   /** Transformation methods to view a [[PIso]] as another Optics                                 */
   /************************************************************************************************/
-
 
   /** view a [[PIso]] as a [[Fold]] */
   final def asFold: Fold[S, A] = new Fold[S, A]{

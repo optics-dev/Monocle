@@ -4,7 +4,8 @@ import monocle.internal.{Forget, Step}
 
 import scalaz.Maybe._
 import scalaz.Profunctor.UpStar
-import scalaz.{Applicative, FirstMaybe, Maybe, Monoid, Profunctor, Tag, \/}
+import scalaz.{Applicative, FirstMaybe, Maybe, Monoid, Profunctor, \/}
+import scalaz.syntax.tag._
 
 /**
  * Optional can be seen as a partial Lens - Lens toward an Option - or
@@ -16,13 +17,13 @@ abstract class POptional[S, T, A, B] { self =>
   def _optional[P[_, _]: Step]: Optic[P, S, T, A, B]
 
   @inline final def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-    Tag.unwrap(_optional[UpStar[F, ?, ?]](Step.upStarStep[F])(UpStar[F, A, B](f))).apply(s)
+    _optional[UpStar[F, ?, ?]](Step.upStarStep[F])(UpStar[F, A, B](f)).unwrap.apply(s)
 
-  @inline final def getMaybe(s: S): Maybe[A] = Tag.unwrap(
+  @inline final def getMaybe(s: S): Maybe[A] =
     _optional[Forget[FirstMaybe[A], ?, ?]].apply(Forget[FirstMaybe[A], A, B](
       a => Maybe.just(a).first
-    )).runForget(s)
-  )
+    )).runForget(s).unwrap
+
 
   @inline final def modify(f: A => B): S => T = _optional[Function1].apply(f)
   @inline final def modifyMaybe(f: A => B): S => Maybe[T] = s => getMaybe(s).map(_ => modify(f)(s))
