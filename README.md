@@ -188,7 +188,7 @@ Monocle defines polymorphic optic instances in the following packages:
 1.   `monocle.std` for standard Scala library and Scalaz classes, e.g. `List, Vector, Map, IList, OneAnd`
 3.   `monocle.generic` for Shapeless classes, e.g. `HList, CoProduct`
 
-An [example](example/src/test/scala/other/ImportExample) shows how to use Monocle imports.
+An [example](example/src/test/scala/other/ImportExample.scala) shows how to use Monocle imports.
 
 ## Overview
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
