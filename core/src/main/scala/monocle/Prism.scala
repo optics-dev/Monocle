@@ -1,11 +1,11 @@
 package monocle
 
-import monocle.internal.{Forget, ProChoice, Step, Tagged, Market}
+import monocle.internal.{Forget, HalfMarket, ProChoice, Strong, Tagged}
 
-import scalaz.Maybe._
 import scalaz.Profunctor.UpStar
-import scalaz.{ Maybe, Applicative, FirstMaybe, Monoid, Profunctor, \/}
+import scalaz.Maybe._
 import scalaz.syntax.tag._
+import scalaz.{Applicative, FirstMaybe, Maybe, Monoid, Profunctor, \/}
 
 
 /**
@@ -18,6 +18,8 @@ import scalaz.syntax.tag._
  * Typically a [[PPrism]] or [[Prism]] encodes the relation between a Sum or
  * CoProduct type (e.g. sealed trait) and one of it is element.
  *
+ * [[PPrism]] stands for Polymorphic Prism as it set and modify methods change
+ * a type A to B and S to T.
  * [[Prism]] is a type alias for [[PPrism]] where the type of target cannot be modified:
  *
  * type Prism[S, A] = PPrism[S, S, A, A]
@@ -44,15 +46,13 @@ abstract class PPrism[S, T, A, B]{ self =>
 
   /**
    * get the target of a [[PPrism]] or modify the source in case there is no target.
-   * It is necessary to modify the source when the [[PPrism]] is not matching,
-   * otherwise we could not implement set and modify methods which require to  This method is necessary because a [[PPrism]] is also a [[PSetter]], so
+   * This method is necessary because a [[PPrism]] is also a [[PSetter]], so
    * set and modify need to change the type of the source even though there
    * might be no target.
-   *
    * In the case of a [[Prism]], the left side of either is the original source.
    */
   @inline final def getOrModify(s: S): T \/ A =
-    _prism[Market[A, B, ?, ?]].apply(Market(\/.right, identity)).getOr(s)
+    _prism[HalfMarket[A, ?, ?]].apply(HalfMarket(\/.right)).seta(s)
 
 
   /** get the modified source of a [[PPrism]] */
@@ -67,9 +67,7 @@ abstract class PPrism[S, T, A, B]{ self =>
   @inline final def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
     _prism[UpStar[F, ?, ?]](ProChoice.upStarProChoice[F])(UpStar[F, A, B](f)).unwrap.apply(s)
 
-  /**
-   * modify polymorphically the target of a [[PPrism]] with a function
-   */
+  /** modify polymorphically the target of a [[PPrism]] with a function */
   @inline final def modify(f: A => B): S => T =
     _prism[Function1].apply(f)
 
@@ -80,7 +78,7 @@ abstract class PPrism[S, T, A, B]{ self =>
   @inline final def modifyMaybe(f: A => B): S => Maybe[T] =
     s => getMaybe(s).map(_ => modify(f)(s))
 
-  /** set polymorphically the target of a [[PIso]] with a value */
+  /** set polymorphically the target of a [[PPrism]] with a value */
   @inline final def set(b: B): S => T =
     modify(_ => b)
 
@@ -95,13 +93,17 @@ abstract class PPrism[S, T, A, B]{ self =>
   @inline def isMatching(s: S): Boolean =
     getMaybe(s).isJust
 
-  /************************************************************************************************/
-  /** Compose methods between a [[PPrism]] and another Optics                                     */
-  /************************************************************************************************/
+  /************************************************************/
+  /** Compose methods between a [[PPrism]] and another Optics */
+  /************************************************************/
 
   /** compose a [[PPrism]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     asFold composeFold other
+
+  /** compose a [[PPrism]] with a [[Getter]] */
+  @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+    asFold composeGetter other
 
   /** compose a [[PPrism]] with a [[PSetter]] */
   @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
@@ -120,21 +122,24 @@ abstract class PPrism[S, T, A, B]{ self =>
     asOptional composeOptional other.asOptional
 
   /** compose a [[PPrism]] with a [[PPrism]] */
-  final def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] = new PPrism[S, T, C, D]{
-    @inline def _prism[P[_, _]: ProChoice]: Optic[P, S, T, C, D] = self._prism[P] compose other._prism[P]
-  }
+  final def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+    new PPrism[S, T, C, D]{
+      @inline def _prism[P[_, _]: ProChoice]: Optic[P, S, T, C, D] =
+        self._prism[P] compose other._prism[P]
+    }
 
   /** compose a [[PPrism]] with a [[PIso]] */
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
     composePrism(other.asPrism)
 
-  /************************************************************************************************/
-  /** Transformation methods to view a [[PPrism]] as another Optics                               */
-  /************************************************************************************************/
+  /******************************************************************/
+  /** Transformation methods to view a [[PPrism]] as another Optics */
+  /******************************************************************/
 
   /** view a [[PPrism]] as a [[Fold]] */
   final def asFold: Fold[S, A] = new Fold[S, A]{
-    @inline def foldMap[M: Monoid](f: A => M)(s: S): M = getMaybe(s) map f getOrElse Monoid[M].zero
+    @inline def foldMap[M: Monoid](f: A => M)(s: S): M =
+      getMaybe(s) map f getOrElse Monoid[M].zero
   }
 
   /** view a [[PPrism]] as a [[Setter]] */
@@ -142,14 +147,18 @@ abstract class PPrism[S, T, A, B]{ self =>
     PSetter[S, T, A, B](modify)
 
   /** view a [[PPrism]] as a [[PTraversal]] */
-  final def asTraversal: PTraversal[S, T, A, B] = new PTraversal[S, T, A, B] {
-    @inline def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] = self.modifyF(f)(s)
-  }
+  final def asTraversal: PTraversal[S, T, A, B] =
+    new PTraversal[S, T, A, B] {
+      @inline def _traversal[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+        self.modifyF(f)(s)
+    }
 
   /** view a [[PPrism]] as a [[POptional]] */
-  final def asOptional: POptional[S, T, A, B] = new POptional[S, T, A, B] {
-    @inline def _optional[P[_, _]: Step]: Optic[P, S, T, A, B] = _prism[P]
-  }
+  final def asOptional: POptional[S, T, A, B] =
+    new POptional[S, T, A, B] {
+      @inline def _optional[P[_, _]: ProChoice: Strong]: Optic[P, S, T, A, B] =
+        _prism[P]
+    }
 
 }
 

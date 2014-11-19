@@ -10,13 +10,17 @@ import scalaz.syntax.equal._
 object SetterLaws {
 
   def apply[S: Arbitrary: Equal, A: Arbitrary](setter: Setter[S, A]) = new Properties("Setter") {
-    property("modify . id  == id") = forAll { s: S =>
+
+    /** calling set twice is the same as calling set once */
+    property("set is idempotent") = forAll { (s: S, a: A) =>
+      (setter.set(a) compose setter.set(a))(s) === setter.set(a)(s)
+    }
+
+    /** modify does not change the number of targets */
+    property("modify preserves the structure") = forAll { s: S =>
       setter.modify(identity)(s) === s
     }
 
-    property("set . set == set") = forAll { (s: S, a: A) =>
-      (setter.set(a) compose setter.set(a))(s) === setter.set(a)(s)
-    }
   }
 
 }

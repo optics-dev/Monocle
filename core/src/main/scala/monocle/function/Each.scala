@@ -23,7 +23,7 @@ trait EachFunctions {
   def each[S, A](implicit ev: Each[S, A]): Traversal[S, A] = ev.each
 
   def traverseEach[S[_]: Traverse, A]: Each[S[A], A] = new Each[S[A], A] {
-    def each = PTraversal[S, A, A]
+    def each = PTraversal.fromTraverse[S, A, A]
   }
 
 }

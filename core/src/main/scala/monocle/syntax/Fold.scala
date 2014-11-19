@@ -15,7 +15,6 @@ final case class ApplyFoldOps[S](s: S) {
 
 case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   @inline def foldMap[M: Monoid](f: A => M): M = _fold.foldMap(f)(s)
-  @inline def fold(implicit ev: Monoid[A]): A = _fold.fold(s)
 
   @inline def getAll: IList[A] = _fold.getAll(s)
   @inline def headMaybe: Maybe[A] = _fold.headMaybe(s)
