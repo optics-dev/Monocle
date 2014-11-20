@@ -9,19 +9,13 @@ final case class Forget[R, A, B](runForget: A => R) extends AnyVal{
 
 object Forget extends ForgetInstances
 
-sealed abstract class ForgetInstances2 {
+sealed abstract class ForgetInstances1 {
   implicit def forgetProFunctor[R]: Profunctor[Forget[R, ?, ?]] = new ForgetProFunctor[R]{}
 }
 
-sealed abstract class ForgetInstances1 extends ForgetInstances2 {
+sealed abstract class ForgetInstances extends ForgetInstances1 {
   implicit def forgetStrong[R]: Strong[Forget[R, ?, ?]] = new ForgetStrong[R]{}
   implicit def forgetProChoice[R: Monoid]: ProChoice[Forget[R, ?, ?]] = new ForgetProChoice[R]{
-    def R: Monoid[R] = implicitly
-  }
-}
-
-sealed abstract class ForgetInstances extends ForgetInstances1 {
-  implicit def forgetStep[R: Monoid]: Step[Forget[R, ?, ?]] = new ForgetStep[R]{
     def R: Monoid[R] = implicitly
   }
 }
@@ -49,11 +43,4 @@ private sealed trait ForgetProChoice[R] extends ProChoice[Forget[R, ?, ?]] with 
     Forget(ac => ac.fold(pab.runForget, _ => R.zero))
   @inline final override def right[A, B, C](pab: Forget[R, A, B]): Forget[R, C \/ A, C \/ B] =
     Forget(ca => ca.fold(_ => R.zero, pab.runForget))
-}
-
-private sealed trait ForgetStep[R] extends Step[Forget[R, ?, ?]] with ForgetStrong[R] with ForgetProChoice[R]{
-  def R: Monoid[R]
-
-  @inline final override def step[A, B, C, D](pab: Forget[R, A, B]): Forget[R, C \/ (A, D), C \/ (B, D)] =
-    Forget(cad => cad.fold(_ => R.zero, ad => pab.runForget(ad._1)))
 }

@@ -17,11 +17,11 @@ final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]){
 
   @inline def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] = ApplyFold(s, getter composeFold other)
   @inline def composeGetter[B](other: Getter[A, B]): ApplyGetter[S, B] = ApplyGetter(s, getter composeGetter other)
-  @inline def composeLens[B, C, D](other: Lens[A, B, C, D]): ApplyGetter[S, C] = ApplyGetter(s, getter composeLens other)
-  @inline def composeIso[B, C, D](other: Iso[A, B, C, D]): ApplyGetter[S, C] = ApplyGetter(s, getter composeIso other)
+  @inline def composeLens[B, C, D](other: PLens[A, B, C, D]): ApplyGetter[S, C] = ApplyGetter(s, getter composeLens other)
+  @inline def composeIso[B, C, D](other: PIso[A, B, C, D]): ApplyGetter[S, C] = ApplyGetter(s, getter composeIso other)
 
   /** alias to composeLens */
-  @inline def ^|->[B, C, D](other: Lens[A, B, C, D]): ApplyGetter[S, C] = composeLens(other)
+  @inline def ^|->[B, C, D](other: PLens[A, B, C, D]): ApplyGetter[S, C] = composeLens(other)
   /** alias to composeIso */
-  @inline def ^<->[B, C, D](other: Iso[A, B, C, D]): ApplyGetter[S, C] = composeIso(other)
+  @inline def ^<->[B, C, D](other: PIso[A, B, C, D]): ApplyGetter[S, C] = composeIso(other)
 }

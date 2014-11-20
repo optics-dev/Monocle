@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle.std.tuple2._
-import monocle.{SimpleIso, SimpleLens}
+import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
 
@@ -10,13 +10,13 @@ import scala.annotation.implicitNotFound
 trait Cons1[S, H, T] {
 
   /** 
-   * cons1 defines an [[SimpleIso]] between a S and its head and tail.
+   * cons1 defines an [[Iso]] between a S and its head and tail.
    * cons1 is like cons but for types that have *always* a head and tail, e.g. a non empty list
    */
-  def cons1: SimpleIso[S, (H, T)]
+  def cons1: Iso[S, (H, T)]
 
-  def head: SimpleLens[S, H] = cons1 composeLens first
-  def tail: SimpleLens[S, T] = cons1 composeLens second
+  def head: Lens[S, H] = cons1 composeLens first
+  def tail: Lens[S, T] = cons1 composeLens second
 }
 
 
@@ -24,10 +24,10 @@ object Cons1 extends HConsFunctions
 
 
 trait HConsFunctions {
-  final def cons1[S, H, T](implicit ev: Cons1[S, H, T]): SimpleIso[S, (H, T)] = ev.cons1
+  final def cons1[S, H, T](implicit ev: Cons1[S, H, T]): Iso[S, (H, T)] = ev.cons1
 
-  final def head[S, H, T](implicit ev: Cons1[S, H, T]): SimpleLens[S, H] = ev.head
-  final def tail[S, H, T](implicit ev: Cons1[S, H, T]): SimpleLens[S, T] = ev.tail
+  final def head[S, H, T](implicit ev: Cons1[S, H, T]): Lens[S, H] = ev.head
+  final def tail[S, H, T](implicit ev: Cons1[S, H, T]): Lens[S, T] = ev.tail
 
   /** append an element to the head */
   final def _cons1[S, H, T](head: H, tail: T)(implicit ev: Cons1[S, H, T]): S =

@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle.{SimpleOptional, SimplePrism}
+import monocle.{Optional, Prism}
 import monocle.std.tuple2._
 
 import scala.annotation.implicitNotFound
@@ -11,20 +11,20 @@ import scalaz.Maybe
   "find out which import is necessary")
 trait Snoc[S, A] {
 
-  def snoc: SimplePrism[S, (S, A)]
+  def snoc: Prism[S, (S, A)]
 
-  def initMaybe: SimpleOptional[S, S] = snoc composeLens first
-  def lastMaybe: SimpleOptional[S, A] = snoc composeLens second
+  def initMaybe: Optional[S, S] = snoc composeLens first
+  def lastMaybe: Optional[S, A] = snoc composeLens second
 
 }
 
 object Snoc extends SnocFunctions
 
 trait SnocFunctions {
-  final def snoc[S, A](implicit ev: Snoc[S, A]): SimplePrism[S, (S, A)] = ev.snoc
+  final def snoc[S, A](implicit ev: Snoc[S, A]): Prism[S, (S, A)] = ev.snoc
 
-  final def initMaybe[S, A](implicit ev: Snoc[S, A]): SimpleOptional[S, S] = ev.initMaybe
-  final def lastMaybe[S, A](implicit ev: Snoc[S, A]): SimpleOptional[S, A] = ev.lastMaybe
+  final def initMaybe[S, A](implicit ev: Snoc[S, A]): Optional[S, S] = ev.initMaybe
+  final def lastMaybe[S, A](implicit ev: Snoc[S, A]): Optional[S, A] = ev.lastMaybe
 
   /** append an element to the end */
   final def _snoc[S, A](init: S, last: A)(implicit ev: Snoc[S, A]): S =

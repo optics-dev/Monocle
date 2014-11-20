@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle.SimpleLens
+import monocle.Lens
 import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Field1[${S},${A}], please check Monocle instance location policy to " +
@@ -8,7 +8,7 @@ import scala.annotation.implicitNotFound
 trait Field1[S, A] {
 
   /** Creates a Lens from S to it is first element */
-  def first: SimpleLens[S, A]
+  def first: Lens[S, A]
 
 }
 
@@ -16,6 +16,6 @@ object Field1 extends Field1Functions
 
 trait Field1Functions {
 
-  def first[S, A](implicit ev: Field1[S, A]): SimpleLens[S, A] = ev.first
+  def first[S, A](implicit ev: Field1[S, A]): Lens[S, A] = ev.first
 
 }

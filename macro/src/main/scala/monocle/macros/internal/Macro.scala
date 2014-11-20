@@ -1,18 +1,18 @@
 package monocle.macros.internal
 
-import monocle.SimpleLens
+import monocle.Lens
 
 import scala.language.experimental.macros
 
 object Macro {
-  def mkLens[A, B](fieldName: String): SimpleLens[A, B] = macro MacroImpl.mkLens_impl[A, B]
+  def mkLens[A, B](fieldName: String): Lens[A, B] = macro MacroImpl.mkLens_impl[A, B]
 }
 
 private[macros] object MacroImpl {
 
   import scala.reflect.macros._
 
-  def lenser_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(field: c.Expr[A => B]): c.Expr[SimpleLens[A, B]] = {
+  def lenser_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(field: c.Expr[A => B]): c.Expr[Lens[A, B]] = {
     import c.universe._
     val fieldName = field match {
       case Expr(
@@ -26,7 +26,7 @@ private[macros] object MacroImpl {
     mkLens_impl[A, B](c)(c.Expr[String](q"$fieldName"))
   }
 
-  def mkLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[SimpleLens[A, B]] = {
+  def mkLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[Lens[A, B]] = {
     import c.universe._
 
     val (aTpe, bTpe) = (weakTypeOf[A], weakTypeOf[B])
@@ -34,9 +34,9 @@ private[macros] object MacroImpl {
     val getter = mkGetter_impl[A, B](c)(fieldName)
     val setter = mkSetter_impl[A, B](c)(fieldName)
 
-    c.Expr[SimpleLens[A, B]](q"""
+    c.Expr[Lens[A, B]](q"""
       import monocle.Lens
-      Lens[$aTpe, $aTpe, $bTpe, $bTpe]($getter)($setter)
+      Lens[$aTpe, $bTpe]($getter)($setter)
     """)
   }
 

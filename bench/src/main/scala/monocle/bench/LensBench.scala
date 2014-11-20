@@ -1,6 +1,6 @@
 package monocle.bench
 
-import monocle.SimpleLens
+import monocle.Lens
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 
 import scalaz.Maybe
@@ -9,8 +9,8 @@ import scalaz.Maybe
 class LensBench {
   case class Person(name: String, age: Int)
 
-  val _name = SimpleLens((_: Person).name)( (n, c) => c.copy(name = n))
-  val _age  = SimpleLens((_: Person).age )( (h, c) => c.copy(age = h))
+  val _name = Lens((_: Person).name)( (n, c) => c.copy(name = n))
+  val _age  = Lens((_: Person).age )( (h, c) => c.copy(age = h))
 
   val john = Person("John", 30)
 
@@ -29,10 +29,10 @@ class LensBench {
   case class Nested3(s: String, i: Int, n: Nested4, l: Long)
   case class Nested4(s: String, i: Int, l: Long)
 
-  val _n2 = SimpleLens[Nested1, Nested2](_.n)( (n2, n1) => n1.copy(n = n2))
-  val _n3 = SimpleLens[Nested2, Nested3](_.n)( (n3, n2) => n2.copy(n = n3))
-  val _n4 = SimpleLens[Nested3, Nested4](_.n)( (n4, n3) => n3.copy(n = n4))
-  val _i  = SimpleLens[Nested4, Int](_.i)( (i, n4) => n4.copy(i = i))
+  val _n2 = Lens[Nested1, Nested2](_.n)( (n2, n1) => n1.copy(n = n2))
+  val _n3 = Lens[Nested2, Nested3](_.n)( (n3, n2) => n2.copy(n = n3))
+  val _n4 = Lens[Nested3, Nested4](_.n)( (n4, n3) => n3.copy(n = n4))
+  val _i  = Lens[Nested4, Int](_.i)( (i, n4) => n4.copy(i = i))
 
   val n1 = Nested1("plop", 45, Nested2("Hello", -678, Nested3("World", 0, Nested4("Yoooo", 42, 12345L), 123456789L), 342072347L), 6789L)
 

@@ -9,11 +9,11 @@ case class Custom(value: Int)
 
 object Custom {
 
-  import monocle.SimpleLens
+  import monocle.Lens
   import monocle.function.Field1
 
   implicit val customHead = new Field1[Custom, Int]{
-    def first = SimpleLens((_: Custom).value)((v, c) => c.copy(value = v))
+    def first = Lens((_: Custom).value)((v, c) => c.copy(value = v))
   }
 }
 

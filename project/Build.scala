@@ -23,11 +23,9 @@ object BuildSettings {
       "-encoding", "UTF-8",
       "-feature",
       "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
-      "-optimise",
       "-unchecked",
       "-Yno-generic-signatures",
       "-Yno-adapted-args",
-      "-Yinline", "-Yinline-warnings",
       "-Ywarn-value-discard"
     ),
     incOptions         := incOptions.value.withNameHashing(true),
