@@ -67,6 +67,6 @@ trait HListInstances {
 
   private def hListAt[S <: HList, A](n : Nat)(implicit evAt: At.Aux[S, n.N, A],
                                                   evReplace: ReplaceAt.Aux[S, n.N, A, (A, S)]): Lens[S, A]  =
-    Lens[S, A](_.at(n))( (a, hlist) => hlist.updatedAt(n, a) )
+    Lens[S, A](_.at(n))(a => hlist => hlist.updatedAt(n, a) )
 
 }

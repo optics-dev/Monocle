@@ -21,7 +21,7 @@ trait VectorInstances {
   implicit def vectorIndex[A]: Index[Vector[A], Int, A] = new Index[Vector[A], Int, A] {
     def index(i: Int) = Optional[Vector[A], A](
       v      => if(i < 0) Maybe.empty else Maybe.fromTryCatchNonFatal(v.apply(i)))(
-      (a, v) => v.zipWithIndex.traverse[Id, A]{
+      a => v => v.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
       }

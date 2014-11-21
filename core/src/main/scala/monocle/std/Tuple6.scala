@@ -13,27 +13,27 @@ trait Tuple6Instances {
   }
 
   implicit def tuple6Field1[A1, A2, A3, A4, A5, A6]: Field1[(A1, A2, A3, A4, A5, A6), A1] = new Field1[(A1, A2, A3, A4, A5, A6), A1] {
-    def first = Lens((_: (A1, A2, A3, A4, A5, A6))._1)( (a, t) => t.copy(_1 = a))
+    def first = Lens((_: (A1, A2, A3, A4, A5, A6))._1)(a => t => t.copy(_1 = a))
   }
 
   implicit def tuple6Field2[A1, A2, A3, A4, A5, A6]: Field2[(A1, A2, A3, A4, A5, A6), A2] = new Field2[(A1, A2, A3, A4, A5, A6), A2] {
-    def second = Lens((_: (A1, A2, A3, A4, A5, A6))._2)( (a, t) => t.copy(_2 = a))
+    def second = Lens((_: (A1, A2, A3, A4, A5, A6))._2)(a => t => t.copy(_2 = a))
   }
 
   implicit def tuple6Field3[A1, A2, A3, A4, A5, A6]: Field3[(A1, A2, A3, A4, A5, A6), A3] = new Field3[(A1, A2, A3, A4, A5, A6), A3] {
-    def third = Lens((_: (A1, A2, A3, A4, A5, A6))._3)( (a, t) => t.copy(_3 = a))
+    def third = Lens((_: (A1, A2, A3, A4, A5, A6))._3)(a => t => t.copy(_3 = a))
   }
 
   implicit def tuple6Field4[A1, A2, A3, A4, A5, A6]: Field4[(A1, A2, A3, A4, A5, A6), A4] = new Field4[(A1, A2, A3, A4, A5, A6), A4] {
-    def fourth = Lens((_: (A1, A2, A3, A4, A5, A6))._4)( (a, t) => t.copy(_4 = a))
+    def fourth = Lens((_: (A1, A2, A3, A4, A5, A6))._4)(a => t => t.copy(_4 = a))
   }
 
   implicit def tuple6Field5[A1, A2, A3, A4, A5, A6]: Field5[(A1, A2, A3, A4, A5, A6), A5] = new Field5[(A1, A2, A3, A4, A5, A6), A5] {
-    def fifth = Lens((_: (A1, A2, A3, A4, A5, A6))._5)( (a, t) => t.copy(_5 = a))
+    def fifth = Lens((_: (A1, A2, A3, A4, A5, A6))._5)(a => t => t.copy(_5 = a))
   }
 
   implicit def tuple6Field6[A1, A2, A3, A4, A5, A6]: Field6[(A1, A2, A3, A4, A5, A6), A6] = new Field6[(A1, A2, A3, A4, A5, A6), A6] {
-    def sixth = Lens((_: (A1, A2, A3, A4, A5, A6))._6)( (a, t) => t.copy(_6 = a))
+    def sixth = Lens((_: (A1, A2, A3, A4, A5, A6))._6)(a => t => t.copy(_6 = a))
   }
 
   implicit def tuple6Cons1[A1, A2, A3, A4, A5, A6]: Cons1[(A1, A2, A3, A4, A5, A6), A1, (A2, A3, A4, A5, A6)] = new Cons1[(A1, A2, A3, A4, A5, A6), A1, (A2, A3, A4, A5, A6)]{

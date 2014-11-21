@@ -9,8 +9,10 @@ import scalaz.Monoid
  *
  * A [[Getter]] is also a valid [[Fold]]
  *
- * @tparam S the source of the [[Getter]]
- * @tparam A the target of the [[Getter]]
+ * @tparam S the source of a [[Getter]]
+ * @tparam A the target of a [[Getter]]
+ *
+ * @param get get the target of a [[Getter]]
  */
 final case class Getter[S, A](get: S => A) {
 

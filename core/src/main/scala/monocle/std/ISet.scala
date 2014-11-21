@@ -15,7 +15,7 @@ trait ISetInstances {
 
   implicit def atISet[A: Order]: At[ISet[A], A, Unit] = new At[ISet[A], A, Unit] {
     def at(a: A) = Lens[ISet[A], Maybe[Unit]](s => if(s member a) Maybe.just(()) else Maybe.empty)(
-      (maybeA, set) => maybeA.cata(_ => set insert a, set delete a)
+      maybeA => set => maybeA.cata(_ => set insert a, set delete a)
     )
   }
 

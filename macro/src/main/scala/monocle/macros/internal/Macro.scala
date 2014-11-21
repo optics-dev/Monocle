@@ -53,7 +53,7 @@ private[macros] object MacroImpl {
     c.Expr[B](q"""{(a: $aTpe) => a.$fieldMethod}""")
   }
 
-  def mkSetter_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[(B, A) => A] = {
+  def mkSetter_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[B => A => A] = {
     import c.universe._
     val (aTpe, bTpe) = (weakTypeOf[A], weakTypeOf[B])
 
@@ -65,7 +65,7 @@ private[macros] object MacroImpl {
 
     val field = constructor.paramss.head.find(_.name.decodedName.toString == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
 
-    c.Expr[(B, A) => A](q"{(b: $bTpe, a: $aTpe) => a.copy(${field} = b)}")
+    c.Expr[B => A => A](q"{b: $bTpe => a: $aTpe => a.copy(${field} = b)}")
   }
 
 }

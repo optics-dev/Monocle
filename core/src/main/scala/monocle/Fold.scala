@@ -14,8 +14,8 @@ import scalaz.syntax.tag._
  * [[Getter]], [[PTraversal]], [[POptional]], [[PLens]], [[PPrism]]
  * and [[PIso]] are valid [[Fold]]
  *
- * @tparam S the source of the [[Fold]]
- * @tparam A the target of the [[Fold]]
+ * @tparam S the source of a [[Fold]]
+ * @tparam A the target of a [[Fold]]
  */
 abstract class Fold[S, A] { self =>
 

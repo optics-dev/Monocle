@@ -21,7 +21,7 @@ trait AtBitFunctions {
   def bitsAtBit[S: Bits]: AtBit[S] = new AtBit[S] {
     def atBit(index: Int): Lens[S, Boolean] = {
       val n = normalizeIndex(Bits[S].bitSize, index)
-      Lens(Bits[S].testBit(_: S, n))(Bits[S].updateBit(_)(_, n))
+      Lens(Bits[S].testBit(_: S, n))(a => s => Bits[S].updateBit(a)(s, n))
     }
   }
 

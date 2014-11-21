@@ -23,7 +23,7 @@ trait StreamInstances {
   implicit def streamIndex[A]: Index[Stream[A], Int, A] = new Index[Stream[A], Int, A] {
     def index(i: Int) = Optional[Stream[A], A](
       s      => if(i < 0) Maybe.empty else s.drop(i).headOption.toMaybe)(
-      (a, s) => s.zipWithIndex.traverse[Id, A]{
+      a => s => s.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
       }

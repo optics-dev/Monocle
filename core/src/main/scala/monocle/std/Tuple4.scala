@@ -13,19 +13,19 @@ trait Tuple4Instances {
   }
 
   implicit def tuple4Field1[A1, A2, A3, A4]: Field1[(A1, A2, A3, A4), A1] = new Field1[(A1, A2, A3, A4), A1] {
-    def first = Lens((_: (A1, A2, A3, A4))._1)( (a, t) => t.copy(_1 = a))
+    def first = Lens((_: (A1, A2, A3, A4))._1)(a => t => t.copy(_1 = a))
   }
 
   implicit def tuple4Field2[A1, A2, A3, A4]: Field2[(A1, A2, A3, A4), A2] = new Field2[(A1, A2, A3, A4), A2] {
-    def second = Lens((_: (A1, A2, A3, A4))._2)( (a, t) => t.copy(_2 = a))
+    def second = Lens((_: (A1, A2, A3, A4))._2)(a => t => t.copy(_2 = a))
   }
 
   implicit def tuple4Field3[A1, A2, A3, A4]: Field3[(A1, A2, A3, A4), A3]  = new Field3[(A1, A2, A3, A4), A3] {
-    def third = Lens((_: (A1, A2, A3, A4))._3)( (a, t) => t.copy(_3 = a))
+    def third = Lens((_: (A1, A2, A3, A4))._3)(a => t => t.copy(_3 = a))
   }
 
   implicit def tuple4Field4[A1, A2, A3, A4]: Field4[(A1, A2, A3, A4), A4] = new Field4[(A1, A2, A3, A4), A4] {
-    def fourth = Lens((_: (A1, A2, A3, A4))._4)( (a, t) => t.copy(_4 = a))
+    def fourth = Lens((_: (A1, A2, A3, A4))._4)(a => t => t.copy(_4 = a))
   }
 
   implicit def tuple4Cons1[A1, A2, A3, A4]: Cons1[(A1, A2, A3, A4), A1, (A2, A3, A4)] = new Cons1[(A1, A2, A3, A4), A1, (A2, A3, A4)]{
