@@ -149,3 +149,22 @@ object PTraversal {
     }
 
 }
+
+object Traversal {
+
+  def apply2[S, A](get1: S => A, get2: S => A)(set: (A, A, S) => S): Traversal[S, A] =
+    PTraversal.apply2(get1, get2)(set)
+
+  def apply3[S, A](get1: S => A, get2: S => A, get3: S => A)(set: (A, A, A, S) => S): Traversal[S, A] =
+    PTraversal.apply3(get1, get2, get3)(set)
+
+  def apply4[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A)(set: (A, A, A, A, S) => S): Traversal[S, A] =
+    PTraversal.apply4(get1, get2, get3, get4)(set)
+
+  def apply5[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(set: (A, A, A, A, A, S) => S): Traversal[S, A] =
+    PTraversal.apply5(get1, get2, get3, get4, get5)(set)
+
+  def apply6[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(set: (A, A, A, A, A, A, S) => S): Traversal[S, A] =
+    PTraversal.apply6(get1, get2, get3, get4, get5, get6)(set)
+
+}
