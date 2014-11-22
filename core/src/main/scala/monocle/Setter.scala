@@ -17,10 +17,12 @@ import scalaz.Functor
  *
  * @see SetterLaws in monocle-law module
  *
- * @tparam S the source of the [[PSetter]]
- * @tparam T the modified source of the [[PSetter]]
- * @tparam A the target of the [[PSetter]]
- * @tparam B the modified target of the [[PSetter]]
+ * @tparam S the source of a [[PSetter]]
+ * @tparam T the modified source of a [[PSetter]]
+ * @tparam A the target of a [[PSetter]]
+ * @tparam B the modified target of a [[PSetter]]
+ *
+ * @param modify modify polymorphically the target of a [[PSetter]] with a function
  */
 final case class PSetter[S, T, A, B](modify: (A => B) => S => T) {
 
@@ -65,6 +67,6 @@ object PSetter {
 
 object Setter {
   /** alias for [[PSetter]] apply with a monomorphic modify function*/
-  @inline def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
+  def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
     PSetter(modify)
 }

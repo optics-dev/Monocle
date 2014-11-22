@@ -29,7 +29,7 @@ trait ListInstances {
   implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
     def index(i: Int) = Optional[List[A], A](
       l      => if(i < 0) Maybe.empty else l.drop(i).headOption.toMaybe)(
-      (a, l) => l.zipWithIndex.traverse[Id, A]{
+      a => l => l.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
       }

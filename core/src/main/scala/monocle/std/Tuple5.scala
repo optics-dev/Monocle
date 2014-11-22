@@ -13,23 +13,23 @@ trait Tuple5Instances {
   }
 
   implicit def tuple5Field1[A1, A2, A3, A4, A5]: Field1[(A1, A2, A3, A4, A5), A1] = new Field1[(A1, A2, A3, A4, A5), A1] {
-    def first = Lens((_: (A1, A2, A3, A4, A5))._1)( (a, t) => t.copy(_1 = a))
+    def first = Lens((_: (A1, A2, A3, A4, A5))._1)(a => t => t.copy(_1 = a))
   }
 
   implicit def tuple5Field2[A1, A2, A3, A4, A5]: Field2[(A1, A2, A3, A4, A5), A2] = new Field2[(A1, A2, A3, A4, A5), A2] {
-    def second = Lens((_: (A1, A2, A3, A4, A5))._2)( (a, t) => t.copy(_2 = a))
+    def second = Lens((_: (A1, A2, A3, A4, A5))._2)(a => t => t.copy(_2 = a))
   }
 
   implicit def tuple5Field3[A1, A2, A3, A4, A5]: Field3[(A1, A2, A3, A4, A5), A3] = new Field3[(A1, A2, A3, A4, A5), A3] {
-    def third = Lens((_: (A1, A2, A3, A4, A5))._3)( (a, t) => t.copy(_3 = a))
+    def third = Lens((_: (A1, A2, A3, A4, A5))._3)(a => t => t.copy(_3 = a))
   }
 
   implicit def tuple5Field4[A1, A2, A3, A4, A5]: Field4[(A1, A2, A3, A4, A5), A4] = new Field4[(A1, A2, A3, A4, A5), A4] {
-    def fourth = Lens((_: (A1, A2, A3, A4, A5))._4)( (a, t) => t.copy(_4 = a))
+    def fourth = Lens((_: (A1, A2, A3, A4, A5))._4)(a => t => t.copy(_4 = a))
   }
 
   implicit def tuple5Field5[A1, A2, A3, A4, A5]: Field5[(A1, A2, A3, A4, A5), A5] = new Field5[(A1, A2, A3, A4, A5), A5] {
-    def fifth = Lens((_: (A1, A2, A3, A4, A5))._5)( (a, t) => t.copy(_5 = a))
+    def fifth = Lens((_: (A1, A2, A3, A4, A5))._5)(a => t => t.copy(_5 = a))
   }
 
   implicit def tuple5Cons1[A1, A2, A3, A4, A5]: Cons1[(A1, A2, A3, A4, A5), A1, (A2, A3, A4, A5)] = new Cons1[(A1, A2, A3, A4, A5), A1, (A2, A3, A4, A5)]{

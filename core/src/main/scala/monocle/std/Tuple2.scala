@@ -13,11 +13,11 @@ trait Tuple2Instances {
   }
 
   implicit def tuple2Field1[A1, A2]: Field1[(A1, A2), A1] = new Field1[(A1, A2), A1] {
-    def first = Lens((_: (A1, A2))._1)( (a, t) => t.copy(_1 = a))
+    def first = Lens((_: (A1, A2))._1)(a => t => t.copy(_1 = a))
   }
 
   implicit def tuple2Field2[A1, A2]: Field2[(A1, A2), A2]  = new Field2[(A1, A2), A2] {
-    def second = Lens((_: (A1, A2))._2)( (a, t) => t.copy(_2 = a))
+    def second = Lens((_: (A1, A2))._2)(a => t => t.copy(_2 = a))
   }
 
   implicit def tuple2Cons1[A1, A2]: Cons1[(A1, A2), A1, A2] = new Cons1[(A1, A2), A1, A2] {

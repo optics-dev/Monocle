@@ -17,7 +17,7 @@ class SymbolicSyntaxExample extends Spec {
   case class Table(wood: String) extends Article
   case class Sofa(color: String, price: Int) extends Article
 
-  val _articles = Lens((_: Store).articles)((as, s) => s.copy(articles = as))
+  val _articles = Lens((_: Store).articles)(as => s => s.copy(articles = as))
   val _sofa     = Prism[Article, Sofa ]{ case s: Sofa  => s.just; case _ => Maybe.empty}(identity)
 
   val sofaLenser = Lenser[Sofa]
