@@ -1,11 +1,19 @@
 package monocle
 
-import scalaz.\&/.{Both, This, That}
-import scalaz._
-import org.scalacheck.{Gen, Arbitrary}
 import org.scalacheck.Arbitrary._
+import org.scalacheck.{Arbitrary, Gen}
+
+import scalaz.\&/.{Both, That, This}
+import scalaz._
+import scalaz.syntax.traverse._
+import scalaz.std.list._
 
 object TestUtil {
+
+  implicit val genApplicative: Applicative[Gen] = new Applicative[Gen] {
+    override def ap[A, B](fa: => Gen[A])(f: => Gen[A => B]): Gen[B] = fa.flatMap(a => f.map(_(a)))
+    override def point[A](a: => A): Gen[A] = Gen.const(a)
+  }
 
   // Equal instances
 
@@ -51,19 +59,21 @@ object TestUtil {
 
   // Arbitrary instances
 
-  implicit def treeArbitrary[A](implicit a: Arbitrary[A]): Arbitrary[Tree[A]] =
+  implicit def treeArbitrary[A: Arbitrary]: Arbitrary[Tree[A]] =
     Arbitrary {
-      val genLeaf = for(label <- Arbitrary.arbitrary[A]) yield Tree.leaf(label)
+      def genPartition(sum: Int): Gen[List[Int]] =
+        if(sum <= 0) Gen.const(Nil)
+        else for {
+          n    <- Gen.choose(1, sum)
+          tail <- genPartition(sum - n)
+        } yield n :: tail
 
-      def genInternal(sz: Int): Gen[Tree[A]] = for {
-        label    <- Arbitrary.arbitrary[A]
-        n        <- Gen.choose(0, 2)
-        children <- Gen.listOfN(n, sizedTree(sz/2))
-      } yield Tree.node(label, children.toStream)
-
-      def sizedTree(sz: Int) =
-        if(sz <= 0) genLeaf
-        else Gen.frequency((1, genLeaf), (3, genInternal(sz)))
+      def sizedTree(size: Int): Gen[Tree[A]] =
+        for {
+          value      <- Arbitrary.arbitrary[A]
+          partitions <- genPartition(size - 1)
+          children   <- partitions.traverseU(sizedTree)
+        } yield Tree.node[A](value, children.toStream)
 
       Gen.sized(sz => sizedTree(sz))
     }
