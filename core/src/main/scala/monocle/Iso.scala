@@ -44,7 +44,8 @@ import scalaz.{Applicative, Functor, Monoid, \/}
 final class PIso[S, T, A, B](val get: S => A, val reverseGet: B => T){ self =>
 
   /** reverse a [[PIso]]: the source becomes the target and the target becomes the source */
-  @inline def reverse: PIso[B, A, T, S] = PIso[B, A, T, S](reverseGet)(get)
+  @inline def reverse: PIso[B, A, T, S] =
+    new PIso(reverseGet, get)
 
   /** modify polymorphically the target of a [[PIso]] with a [[Functor]] function */
   @inline def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
@@ -91,7 +92,7 @@ final class PIso[S, T, A, B](val get: S => A, val reverseGet: B => T){ self =>
     asLens composeLens other
 
   /** compose a [[PIso]] with a [[PIso]] */
-  def composeIso[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
+  @inline def composeIso[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
     new PIso(other.get compose get, reverseGet compose other.reverseGet)
 
   /****************************************************************/
@@ -99,30 +100,30 @@ final class PIso[S, T, A, B](val get: S => A, val reverseGet: B => T){ self =>
   /****************************************************************/
 
   /** view a [[PIso]] as a [[Fold]] */
-  def asFold: Fold[S, A] =
+  @inline def asFold: Fold[S, A] =
     new Fold[S, A]{
-      @inline def foldMap[M: Monoid](f: A => M)(s: S): M =
+      def foldMap[M: Monoid](f: A => M)(s: S): M =
         f(get(s))
     }
 
   /** view a [[PIso]] as a [[Getter]] */
   @inline def asGetter: Getter[S, A] =
-    Getter[S, A](get)
+    Getter(get)
 
   /** view a [[PIso]] as a [[Setter]] */
   @inline def asSetter: PSetter[S, T, A, B] =
-    PSetter[S, T, A, B](modify)
+    PSetter(modify)
 
   /** view a [[PIso]] as a [[PTraversal]] */
-  def asTraversal: PTraversal[S, T, A, B] =
+  @inline def asTraversal: PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
-      @inline def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 
   /** view a [[PIso]] as a [[POptional]] */
   @inline def asOptional: POptional[S, T, A, B] =
-    POptional(\/.right compose get)(b => s => reverseGet(b))
+    new POptional(\/.right compose get, set)
 
   /** view a [[PIso]] as a [[PPrism]] */
   @inline def asPrism: PPrism[S, T, A, B] =
@@ -130,7 +131,7 @@ final class PIso[S, T, A, B](val get: S => A, val reverseGet: B => T){ self =>
 
   /** view a [[PIso]] as a [[PLens]] */
   @inline  def asLens: PLens[S, T, A, B] =
-    PLens(get)(set)
+    new PLens(get, set)
 
 }
 
@@ -159,10 +160,10 @@ object Iso {
     new PIso(get, reverseGet)
 
   /** alias for [[PIso]] id when S = T and A = B */
-  @inline def id[S]: Iso[S, S] =
-    PIso.id[S, S]
+  def id[S]: Iso[S, S] =
+    new PIso(identity, identity)
 
   /** transform an [[scalaz.Isomorphisms.Iso]] in a [[Iso]] */
-  @inline def fromIsoSet[A, B](isoSet: A <=> B): Iso[A, B] =
+  def fromIsoSet[A, B](isoSet: A <=> B): Iso[A, B] =
     new PIso(isoSet.to, isoSet.from)
 }

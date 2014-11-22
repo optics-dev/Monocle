@@ -103,7 +103,7 @@ final class PPrism[S, T, A, B](val getOrModify: S => T \/ A, val reverseGet: B =
     asOptional composeOptional other.asOptional
 
   /** compose a [[PPrism]] with a [[PPrism]] */
-  def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+  @inline def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
     new PPrism[S, T, C, D](
       s => getOrModify(s).flatMap(a => other.getOrModify(a).bimap(set(_)(s), identity)),
       reverseGet compose other.reverseGet
@@ -118,24 +118,24 @@ final class PPrism[S, T, A, B](val getOrModify: S => T \/ A, val reverseGet: B =
   /******************************************************************/
 
   /** view a [[PPrism]] as a [[Fold]] */
-  def asFold: Fold[S, A] = new Fold[S, A]{
-    @inline def foldMap[M: Monoid](f: A => M)(s: S): M =
+  @inline def asFold: Fold[S, A] = new Fold[S, A]{
+    def foldMap[M: Monoid](f: A => M)(s: S): M =
       getMaybe(s) map f getOrElse Monoid[M].zero
   }
 
   /** view a [[PPrism]] as a [[Setter]] */
   @inline def asSetter: PSetter[S, T, A, B] =
-    PSetter[S, T, A, B](modify)
+    PSetter(modify)
 
   /** view a [[PPrism]] as a [[PTraversal]] */
-  def asTraversal: PTraversal[S, T, A, B] =
+  @inline def asTraversal: PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
-      @inline def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 
   /** view a [[PPrism]] as a [[POptional]] */
-  def asOptional: POptional[S, T, A, B] =
+  @inline def asOptional: POptional[S, T, A, B] =
     new POptional(getOrModify, set)
 
 }

@@ -48,14 +48,13 @@ final case class Getter[S, A](get: S => A) {
   @inline def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     composeGetter(other.asGetter)
 
-
   /******************************************************************/
   /** Transformation methods to view a [[Getter]] as another Optics */
   /******************************************************************/
 
   /** view a [[Getter]] with a [[Fold]] */
-  def asFold: Fold[S, A] = new Fold[S, A]{
-    @inline def foldMap[M: Monoid](f: A => M)(s: S): M =
+  @inline def asFold: Fold[S, A] = new Fold[S, A]{
+    def foldMap[M: Monoid](f: A => M)(s: S): M =
       f(get(s))
   }
 

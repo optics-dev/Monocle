@@ -67,6 +67,6 @@ object PSetter {
 
 object Setter {
   /** alias for [[PSetter]] apply with a monomorphic modify function*/
-  @inline def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
+  def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
     PSetter(modify)
 }

@@ -28,7 +28,6 @@ import scalaz.{Applicative, Maybe, Monoid, \/}
  */
 final class POptional[S, T, A, B](val getOrModify: S => T \/ A, val set: B => S => T) { self =>
 
-
   /** get the target of a [[PPrism]] or nothing if there is no target */
   @inline def getMaybe(s: S): Maybe[A] =
     getOrModify(s).toMaybe
@@ -51,7 +50,6 @@ final class POptional[S, T, A, B](val getOrModify: S => T \/ A, val set: B => S 
    */
   @inline def modifyMaybe(f: A => B): S => Maybe[T] =
     s => getMaybe(s).map(_ => modify(f)(s))
-
 
   /**
    * set polymorphically the target of a [[POptional]] with a value.
@@ -85,7 +83,7 @@ final class POptional[S, T, A, B](val getOrModify: S => T \/ A, val set: B => S 
     asTraversal composeTraversal other
 
   /** compose a [[POptional]] with a [[POptional]] */
-  def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+  @inline def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     new POptional(
       s      => getOrModify(s).flatMap(a => other.getOrModify(a).bimap(set(_)(s), identity)),
       d => s => modify(other.set(d))(s)
@@ -108,18 +106,18 @@ final class POptional[S, T, A, B](val getOrModify: S => T \/ A, val set: B => S 
   /*********************************************************************/
 
   /** view a [[POptional]] as a [[Fold]] */
-  def asFold: Fold[S, A] = new Fold[S, A]{
-    @inline def foldMap[M: Monoid](f: A => M)(s: S): M =
+  @inline def asFold: Fold[S, A] = new Fold[S, A]{
+    def foldMap[M: Monoid](f: A => M)(s: S): M =
       self.getMaybe(s) map f getOrElse Monoid[M].zero
   }
 
   /** view a [[POptional]] as a [[PSetter]] */
   @inline def asSetter: PSetter[S, T, A, B] =
-    PSetter[S, T, A, B](modify)
+    PSetter(modify)
 
   /** view a [[POptional]] as a [[PTraversal]] */
-  def asTraversal: PTraversal[S, T, A, B] = new PTraversal[S, T, A, B] {
-    @inline def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+  @inline def asTraversal: PTraversal[S, T, A, B] = new PTraversal[S, T, A, B] {
+    def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
       self.modifyF(f)(s)
   }
 

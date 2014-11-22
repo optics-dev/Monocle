@@ -31,7 +31,7 @@ abstract class Fold[S, A] { self =>
 
   /** get the first target of a [[PTraversal]] */
   @inline final def headMaybe(s: S): Maybe[A] =
-    foldMap(Maybe.just(_).first)(s).unwrap
+    foldMap(just(_).first)(s).unwrap
 
   /** check if at least one target satisfies the predicate */
   @inline final def exist(p: A => Boolean)(s: S): Boolean =
@@ -41,14 +41,13 @@ abstract class Fold[S, A] { self =>
   @inline final def all(p: A => Boolean)(s: S): Boolean =
     foldMap(p(_).conjunction)(s).unwrap
 
-
   /**********************************************************/
   /** Compose methods between a [[Fold]] and another Optics */
   /**********************************************************/
 
   /** compose a [[Fold]] with a [[Fold]] */
-  final def composeFold[B](other: Fold[A, B]): Fold[S, B] = new Fold[S, B] {
-    @inline def foldMap[M: Monoid](f: B => M)(s: S): M =
+  @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] = new Fold[S, B] {
+    def foldMap[M: Monoid](f: B => M)(s: S): M =
       self.foldMap(other.foldMap(f)(_))(s)
   }
 
@@ -81,7 +80,7 @@ object Fold {
 
   /** create a [[Fold]] from a [[Foldable]] */
   def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] = new Fold[F[A], A] {
-    @inline def foldMap[M: Monoid](f: A => M)(s: F[A]): M =
+    def foldMap[M: Monoid](f: A => M)(s: F[A]): M =
       Foldable[F].foldMap(s)(f)
   }
 

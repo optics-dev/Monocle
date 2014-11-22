@@ -71,8 +71,8 @@ final class PLens[S, T, A, B](val get: S => A, val set: B => S => T){ self =>
     asOptional composeOptional other.asOptional
 
   /** compose a [[PLens]] with a [[PLens]] */
-  def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
-    PLens[S, T, C, D](other.get compose get)(c => modify(other.set(c)))
+  @inline def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
+    new PLens(other.get compose get, c => modify(other.set(c)))
 
   /** compose a [[PLens]] with an [[PIso]] */
   @inline def composeIso[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] =
@@ -83,29 +83,30 @@ final class PLens[S, T, A, B](val get: S => A, val set: B => S => T){ self =>
   /************************************************************************************************/
 
   /** view a [[PLens]] as a [[Fold]] */
-  def asFold: Fold[S, A] = new Fold[S, A] {
-    @inline def foldMap[M: Monoid](f: A => M)(s: S): M =
-      f(get(s))
-  }
+  @inline def asFold: Fold[S, A] =
+    new Fold[S, A] {
+      def foldMap[M: Monoid](f: A => M)(s: S): M =
+        f(get(s))
+    }
 
   /** view a [[PLens]] as a [[Getter]] */
   @inline def asGetter: Getter[S, A] =
-    Getter[S, A](get)
+    Getter(get)
 
   /** view a [[PLens]] as a [[PSetter]] */
   @inline def asSetter: PSetter[S, T, A, B] =
-    PSetter[S, T, A, B](modify)
+    PSetter(modify)
 
   /** view a [[PLens]] as a [[PTraversal]] */
-  def asTraversal: PTraversal[S, T, A, B] =
+  @inline def asTraversal: PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
-      @inline def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 
   /** view a [[PLens]] as an [[POptional]] */
   @inline def asOptional: POptional[S, T, A, B] =
-    POptional[S, T, A, B](\/.right compose get)(set)
+    new POptional(\/.right compose get, set)
 
 }
 
