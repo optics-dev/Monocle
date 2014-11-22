@@ -2,6 +2,8 @@ package monocle
 
 import scalaz.Id.Id
 import scalaz.Maybe._
+import scalaz.std.anyVal._
+import scalaz.syntax.std.boolean._
 import scalaz.syntax.tag._
 import scalaz.{Applicative, Const, IList, Maybe, Monoid, Traverse}
 
@@ -40,10 +42,21 @@ abstract class PTraversal[S, T, A, B] { self =>
   @inline final def getAll(s: S): IList[A] =
     foldMap(IList(_))(s)
 
+  /** find the first target of a [[PTraversal]] matching the predicate  */
+  @inline final def find(p: A => Boolean)(s: S): Maybe[A] =
+    foldMap(a => if(p(a)) just(a).first else empty[A].first)(s).unwrap
+
   /** get the first target of a [[PTraversal]] */
   @inline final def headMaybe(s: S): Maybe[A] =
-    foldMap(just(_).first)(s).unwrap
+    find(_ => true)(s)
 
+  /** check if at least one target satisfies the predicate */
+  @inline final def exist(p: A => Boolean)(s: S): Boolean =
+    foldMap(p(_).disjunction)(s).unwrap
+
+  /** check if all targets satisfy the predicate */
+  @inline final def all(p: A => Boolean)(s: S): Boolean =
+    foldMap(p(_).conjunction)(s).unwrap
 
   /** modify polymorphically the target of a [[PTraversal]] with a function */
   @inline final def modify(f: A => B): S => T =

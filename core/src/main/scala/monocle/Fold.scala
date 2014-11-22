@@ -29,9 +29,13 @@ abstract class Fold[S, A] { self =>
   @inline final def getAll(s: S): IList[A] =
     foldMap(IList(_))(s)
 
-  /** get the first target of a [[PTraversal]] */
+  /** find the first target of a [[Fold]] matching the predicate  */
+  @inline final def find(p: A => Boolean)(s: S): Maybe[A] =
+    foldMap(a => if(p(a)) just(a).first else empty[A].first)(s).unwrap
+
+  /** get the first target of a [[Fold]] */
   @inline final def headMaybe(s: S): Maybe[A] =
-    foldMap(just(_).first)(s).unwrap
+    find(_ => true)(s)
 
   /** check if at least one target satisfies the predicate */
   @inline final def exist(p: A => Boolean)(s: S): Boolean =
