@@ -26,7 +26,7 @@ import scalaz.{Applicative, Maybe, Monoid, \/}
  * @param getOrModify get the target of a [[POptional]] or modify the source in case there is no target
  * @param set set polymorphically the target of a [[POptional]] with a value
  */
-final class POptional[S, T, A, B](val getOrModify: S => T \/ A, val set: B => S => T) { self =>
+final class POptional[S, T, A, B] private[monocle](val getOrModify: S => T \/ A, val set: B => S => T) { self =>
 
   /** get the target of a [[PPrism]] or nothing if there is no target */
   @inline def getMaybe(s: S): Maybe[A] =
@@ -113,7 +113,7 @@ final class POptional[S, T, A, B](val getOrModify: S => T \/ A, val set: B => S 
 
   /** view a [[POptional]] as a [[PSetter]] */
   @inline def asSetter: PSetter[S, T, A, B] =
-    PSetter(modify)
+    new PSetter(modify)
 
   /** view a [[POptional]] as a [[PTraversal]] */
   @inline def asTraversal: PTraversal[S, T, A, B] = new PTraversal[S, T, A, B] {

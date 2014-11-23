@@ -29,6 +29,7 @@ abstract class PTraversal[S, T, A, B] { self =>
 
   /**
    * modify polymorphically the target of a [[PTraversal]] with an [[Applicative]] function
+   * all traversal methods are written in terms of modifyF
    */
   def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T]
 

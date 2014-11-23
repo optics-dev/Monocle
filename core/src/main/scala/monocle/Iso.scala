@@ -41,7 +41,7 @@ import scalaz.{Applicative, Functor, Monoid, \/}
  * @param get get the target of a [[PIso]]
  * @param reverseGet get the modified source of a [[PIso]]
  */
-final class PIso[S, T, A, B](val get: S => A, val reverseGet: B => T){ self =>
+final class PIso[S, T, A, B] private[monocle](val get: S => A, val reverseGet: B => T){ self =>
 
   /** reverse a [[PIso]]: the source becomes the target and the target becomes the source */
   @inline def reverse: PIso[B, A, T, S] =
@@ -112,7 +112,7 @@ final class PIso[S, T, A, B](val get: S => A, val reverseGet: B => T){ self =>
 
   /** view a [[PIso]] as a [[Setter]] */
   @inline def asSetter: PSetter[S, T, A, B] =
-    PSetter(modify)
+    new PSetter(modify)
 
   /** view a [[PIso]] as a [[PTraversal]] */
   @inline def asTraversal: PTraversal[S, T, A, B] =

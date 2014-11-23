@@ -31,7 +31,7 @@ import scalaz.{Applicative, Maybe, Monoid, \/}
  * @param getOrModify get the target of a [[PPrism]] or modify the source in case there is no target
  * @param reverseGet get the modified source of a [[PIso]]
  */
-final class PPrism[S, T, A, B](val getOrModify: S => T \/ A, val reverseGet: B => T){ self =>
+final class PPrism[S, T, A, B] private[monocle](val getOrModify: S => T \/ A, val reverseGet: B => T){ self =>
 
   /** get the target of a [[PPrism]] or nothing if there is no target */
   @inline def getMaybe(s: S): Maybe[A] =
@@ -125,7 +125,7 @@ final class PPrism[S, T, A, B](val getOrModify: S => T \/ A, val reverseGet: B =
 
   /** view a [[PPrism]] as a [[Setter]] */
   @inline def asSetter: PSetter[S, T, A, B] =
-    PSetter(modify)
+    new PSetter(modify)
 
   /** view a [[PPrism]] as a [[PTraversal]] */
   @inline def asTraversal: PTraversal[S, T, A, B] =

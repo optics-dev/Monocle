@@ -24,7 +24,7 @@ import scalaz.Functor
  *
  * @param modify modify polymorphically the target of a [[PSetter]] with a function
  */
-final case class PSetter[S, T, A, B](modify: (A => B) => S => T) {
+final class PSetter[S, T, A, B] private[monocle](val modify: (A => B) => S => T) {
 
   /** set polymorphically the target of a [[PSetter]] with a value */
   @inline def set(b: B): S => T =
@@ -36,7 +36,7 @@ final case class PSetter[S, T, A, B](modify: (A => B) => S => T) {
 
   /** compose a [[PSetter]] with a [[PSetter]] */
   @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    PSetter[S, T, C, D](modify compose other.modify)
+    new PSetter[S, T, C, D](modify compose other.modify)
 
   /** compose a [[PSetter]] with a [[PTraversal]] */
   @inline def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
@@ -60,13 +60,19 @@ final case class PSetter[S, T, A, B](modify: (A => B) => S => T) {
 }
 
 object PSetter {
+
+  /** create a [[PSetter]] using modify function */
+  def apply[S, T, A, B](modify: (A => B) => S => T): PSetter[S, T, A, B] =
+    new PSetter(modify)
+
   /** create a [[PSetter]] from a [[Functor]] */
   def fromFunctor[F[_]: Functor, A, B]: PSetter[F[A], F[B], A, B] =
-    PSetter[F[A], F[B], A, B](f => Functor[F].map(_)(f))
+    new PSetter(f => Functor[F].map(_)(f))
+
 }
 
 object Setter {
-  /** alias for [[PSetter]] apply with a monomorphic modify function*/
+  /** alias for [[PSetter]] apply with a monomorphic modify function */
   def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
-    PSetter(modify)
+    new PSetter(modify)
 }

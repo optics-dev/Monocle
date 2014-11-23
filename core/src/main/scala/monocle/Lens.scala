@@ -32,7 +32,7 @@ import scalaz.{\/, Applicative, Monoid, Functor}
  * @param get get the target of a [[PLens]]
  * @param set set polymorphically the target of a [[PLens]] with a value
  */
-final class PLens[S, T, A, B](val get: S => A, val set: B => S => T){ self =>
+final class PLens[S, T, A, B] private[monocle](val get: S => A, val set: B => S => T){ self =>
 
   /** modify polymorphically the target of a [[PLens]] using [[Functor]] function */
   @inline def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
@@ -91,11 +91,11 @@ final class PLens[S, T, A, B](val get: S => A, val set: B => S => T){ self =>
 
   /** view a [[PLens]] as a [[Getter]] */
   @inline def asGetter: Getter[S, A] =
-    Getter(get)
+    new Getter(get)
 
   /** view a [[PLens]] as a [[PSetter]] */
   @inline def asSetter: PSetter[S, T, A, B] =
-    PSetter(modify)
+    new PSetter(modify)
 
   /** view a [[PLens]] as a [[PTraversal]] */
   @inline def asTraversal: PTraversal[S, T, A, B] =
