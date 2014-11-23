@@ -28,11 +28,12 @@ class SymbolicSyntaxExample extends Spec {
   "Symbols can replace composeX and applyX methods" in {
     val myStore = Store(List(Sofa("Red", 10), Table("oak"), Sofa("Blue", 26)))
 
-    (myStore &|-> _articles ^|-? headMaybe ^<-? _sofa ^|-> _color getMaybe) ==== "Red".just
+    (_articles ^|-? headMaybe ^<-? _sofa ^|-> _color).getMaybe(myStore) ====
+      (myStore &|-> _articles ^|-? headMaybe ^<-? _sofa ^|-> _color getMaybe)
 
-    (myStore &|-> _articles ^<-> iListToList.reverse ^|->> each ^<-? _sofa ^|-> _price modify(_ / 2)) === Store(
-      List(Sofa("Red", 5), Table("oak"), Sofa("Blue", 13))
-    )
+
+    (_articles ^<-> iListToList.reverse ^|->> each ^<-? _sofa ^|-> _price).modify(_ / 2)(myStore) ===
+    (myStore &|-> _articles ^<-> iListToList.reverse ^|->> each ^<-? _sofa ^|-> _price modify(_ / 2))
 
     (myStore.articles &|-? index(1) ^<-? _sofa getMaybe) ==== Maybe.empty[Sofa]
   }

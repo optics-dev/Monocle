@@ -57,6 +57,31 @@ final class PSetter[S, T, A, B] private[monocle](val modify: (A => B) => S => T)
   /** compose a [[PSetter]] with a [[PIso]] */
   @inline def composeIso[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
     composeSetter(other.asSetter)
+
+  /********************************************/
+  /** Experimental aliases of compose methods */
+  /********************************************/
+
+  /** alias to composeTraversal */
+  @inline def ^|->>[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
+    composeTraversal(other)
+
+  /** alias to composeOptional */
+  @inline def ^|-?[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
+    composeOptional(other)
+
+  /** alias to composePrism */
+  @inline def ^<-?[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
+    composePrism(other)
+
+  /** alias to composeLens */
+  @inline def ^|->[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
+    composeLens(other)
+
+  /** alias to composeIso */
+  @inline def ^<->[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
+    composeIso(other)
+
 }
 
 object PSetter {

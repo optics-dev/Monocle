@@ -48,6 +48,30 @@ final class Getter[S, A] private[monocle](val get: S => A) {
   @inline def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     composeGetter(other.asGetter)
 
+  /********************************************/
+  /** Experimental aliases of compose methods */
+  /********************************************/
+
+  /** alias to composeTraversal */
+  @inline def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+    composeTraversal(other)
+
+  /** alias to composeOptional */
+  @inline def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+    composeOptional(other)
+
+  /** alias to composePrism */
+  @inline def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+    composePrism(other)
+
+  /** alias to composeLens */
+  @inline def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
+    composeLens(other)
+
+  /** alias to composeIso */
+  @inline def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
+    composeIso(other)
+
   /******************************************************************/
   /** Transformation methods to view a [[Getter]] as another Optics */
   /******************************************************************/

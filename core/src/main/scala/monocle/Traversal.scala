@@ -106,6 +106,30 @@ abstract class PTraversal[S, T, A, B] { self =>
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
     composeTraversal(other.asTraversal)
 
+  /********************************************/
+  /** Experimental aliases of compose methods */
+  /********************************************/
+
+  /** alias to composeTraversal */
+  @inline def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    composeTraversal(other)
+
+  /** alias to composeOptional */
+  @inline def ^|-?[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
+    composeOptional(other)
+
+  /** alias to composePrism */
+  @inline def ^<-?[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
+    composePrism(other)
+
+  /** alias to composeLens */
+  @inline def ^|->[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
+    composeLens(other)
+
+  /** alias to composeIso */
+  @inline def ^<->[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
+    composeIso(other)
+
   /**********************************************************************/
   /** Transformation methods to view a [[PTraversal]] as another Optics */
   /**********************************************************************/
