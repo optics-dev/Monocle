@@ -50,10 +50,11 @@ abstract class Fold[S, A] { self =>
   /**********************************************************/
 
   /** compose a [[Fold]] with a [[Fold]] */
-  @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] = new Fold[S, B] {
-    def foldMap[M: Monoid](f: B => M)(s: S): M =
-      self.foldMap(other.foldMap(f)(_))(s)
-  }
+  @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
+    new Fold[S, B] {
+      def foldMap[M: Monoid](f: B => M)(s: S): M =
+        self.foldMap(other.foldMap(f)(_))(s)
+    }
 
   /** compose a [[Fold]] with a [[Getter]] */
   @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
@@ -83,9 +84,10 @@ abstract class Fold[S, A] { self =>
 object Fold {
 
   /** create a [[Fold]] from a [[Foldable]] */
-  def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] = new Fold[F[A], A] {
-    def foldMap[M: Monoid](f: A => M)(s: F[A]): M =
-      Foldable[F].foldMap(s)(f)
-  }
+  def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] =
+    new Fold[F[A], A] {
+      def foldMap[M: Monoid](f: A => M)(s: F[A]): M =
+        Foldable[F].foldMap(s)(f)
+    }
 
 }
