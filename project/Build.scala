@@ -38,8 +38,9 @@ object BuildSettings {
 object Dependencies {
   val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.0"
   val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
-  val specs2Scalacheck  = "org.specs2"      %% "specs2-scalacheck"         % "2.4"
-  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.2"   % "test"
+  val specs2Scalacheck  = Seq("org.specs2"  %% "specs2-core"               % "3.0-M0",
+                              "org.specs2"  %% "specs2-scalacheck"         % "3.0-M0") 
+  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.4.0-SNAPSHOT" % "test" exclude("org.specs2", "specs2")
   val shapeless = Def setting (
     CrossVersion partialVersion scalaVersion.value match {
       case Some((2, scalaMajor)) if scalaMajor >= 11 => "com.chuusai" %% "shapeless" % "2.0.0"
@@ -78,7 +79,7 @@ object MonocleBuild extends Build {
     "monocle-law",
     file("law"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, specs2Scalacheck),
+      libraryDependencies ++= Seq(scalaz) ++ specs2Scalacheck,
       previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-law_2.11" % previousVersion)
     )
   ) dependsOn(core)
@@ -114,7 +115,7 @@ object MonocleBuild extends Build {
     file("test"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
-      libraryDependencies ++= Seq(scalaz, scalaCheckBinding, scalazSpec2, specs2Scalacheck, shapeless.value)
+      libraryDependencies ++= Seq(scalaz, scalaCheckBinding) ++ specs2Scalacheck ++ Seq(scalazSpec2, shapeless.value)
     )
   ) dependsOn(core, generic ,law)
 
@@ -123,7 +124,7 @@ object MonocleBuild extends Build {
     file("example"),
     settings = buildSettings ++ Seq(
       publishArtifact      := false,
-      libraryDependencies ++= Seq(scalaz, specs2Scalacheck, shapeless.value),
+      libraryDependencies ++= Seq(scalaz, shapeless.value) ++ specs2Scalacheck,
       addCompilerPlugin(paradisePlugin) // Unfortunately necessary :( see: http://stackoverflow.com/q/23485426/463761
     )
   ) dependsOn(core, macros, generic, test % "test->test")
