@@ -1,15 +1,20 @@
 package monocle.std
 
-import monocle.function.{AtBit, SafeCast}
+import monocle.Prism
+import monocle.function.AtBit
+import monocle.internal.Bounded
+
 import scalaz.std.anyVal._
 
 object byte extends ByteInstances
 
 trait ByteInstances {
 
-  implicit val byteAtBit: AtBit[Byte] = AtBit.bitsAtBit[Byte]
+  implicit val byteAtBit: AtBit[Byte] =
+    AtBit.bitsAtBit[Byte]
 
-  implicit val byteToBoolean: SafeCast[Byte, Boolean] = SafeCast.orderingBoundedSafeCast[Byte, Boolean]{
+  val byteToBoolean: Prism[Byte, Boolean] =
+    Bounded.orderingBoundedSafeCast[Byte, Boolean]{
       case 0 => false
       case 1 => true
     }(if(_) 1 else 0)

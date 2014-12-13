@@ -19,5 +19,4 @@ trait PolymorphicOptics
   with    Snoc1Functions
   with    IndexFunctions
   with    ReverseFunctions
-  with    SafeCastFunctions
   with    SnocFunctions

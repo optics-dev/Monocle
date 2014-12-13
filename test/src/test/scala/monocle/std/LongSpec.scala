@@ -2,16 +2,16 @@ package monocle.std
 
 import monocle.TestUtil._
 import monocle.function._
-import monocle.law.{PrismLaws, LensLaws}
+import monocle.law.{LensLaws, PrismLaws}
 import org.specs2.scalaz.Spec
 
 class LongSpec extends Spec {
 
   checkAll("atBit Long", LensLaws(atBit[Long](0)))
 
-  checkAll("safeCast Long to Int"     , PrismLaws(safeCast[Long, Int]))
-  checkAll("safeCast Long to Char"    , PrismLaws(safeCast[Long, Char]))
-  checkAll("safeCast Long to Byte"    , PrismLaws(safeCast[Long, Byte]))
-  checkAll("safeCast Long to Boolean ", PrismLaws(safeCast[Long, Boolean]))
+  checkAll("Long to Int"     , PrismLaws(longToInt))
+  checkAll("Long to Char"    , PrismLaws(longToChar))
+  checkAll("Long to Byte"    , PrismLaws(longToByte))
+  checkAll("Long to Boolean ", PrismLaws(longToBoolean))
 
 }

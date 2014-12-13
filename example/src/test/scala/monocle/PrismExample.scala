@@ -1,5 +1,6 @@
 package monocle
 
+import monocle.std._
 import org.specs2.scalaz.Spec
 
 import scalaz.Tags.Multiplication
@@ -34,5 +35,36 @@ class PrismExample extends Spec {
     mAtom.reverseGet(Multiplication(1)) ==== Atom(Multiplication(1))
   }
 
+  "intToChar is a Prism from Int to Char" in {
+    intToChar.getMaybe(65)    ==== Maybe.just('A')
+    intToChar.reverseGet('a') ==== 97
+  }
+
+  "doubleToInt is a Prism from Double to Int" in {
+    doubleToInt.getMaybe(5d) ==== Maybe.just(5)
+
+    doubleToInt.getMaybe(5.4d)                    ==== Maybe.empty
+    doubleToInt.getMaybe(Double.PositiveInfinity) ==== Maybe.empty
+    doubleToInt.getMaybe(Double.NaN)              ==== Maybe.empty
+  }
+
+  "stringToInt is a Prism from String to Int" in {
+    stringToInt.getMaybe("352")  ==== Maybe.just(352)
+    stringToInt.getMaybe("-352") ==== Maybe.just(-352)
+    stringToInt.getMaybe("୨")    ==== Maybe.empty // Non ascii digits
+    stringToInt.getMaybe("")     ==== Maybe.empty
+    // we reject case where String starts with +, otherwise it will be an invalid Prism according 2nd Prism law
+    stringToInt.getMaybe("+352") ==== Maybe.empty
+
+    stringToInt.reverseGet(8921)  ==== "8921"
+    stringToInt.reverseGet(-32)   ==== "-32"
+
+    stringToInt.modify(_ * 2)("1024") ==== "2048"
+  }
+
+  "stringToBoolean is a Prism from String to Boolean" in {
+    stringToBoolean.getMaybe("true")  ==== Maybe.just(true)
+    stringToBoolean.reverseGet(false) ==== "false"
+  }
 
 }

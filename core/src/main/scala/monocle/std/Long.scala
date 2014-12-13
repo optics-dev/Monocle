@@ -1,6 +1,8 @@
 package monocle.std
 
-import monocle.function.{AtBit, SafeCast}
+import monocle.Prism
+import monocle.function.AtBit
+import monocle.internal.Bounded
 
 import scalaz.std.anyVal._
 
@@ -8,19 +10,19 @@ object long extends LongInstances
 
 trait LongInstances {
 
-  implicit val longAtBit: AtBit[Long] = AtBit.bitsAtBit[Long]
+  implicit val longAtBit: AtBit[Long] =
+    AtBit.bitsAtBit[Long]
 
-  implicit val longToInt : SafeCast[Long, Int]  =
-    SafeCast.orderingBoundedSafeCast[Long, Int](_.toInt)(_.toLong)
+  val longToInt: Prism[Long, Int]  =
+    Bounded.orderingBoundedSafeCast[Long, Int](_.toInt)(_.toLong)
 
-  implicit val longToChar: SafeCast[Long, Char] =
-    SafeCast.orderingBoundedSafeCast[Long, Char](_.toChar)(_.toInt)
+  val longToChar: Prism[Long, Char] =
+    Bounded.orderingBoundedSafeCast[Long, Char](_.toChar)(_.toLong)
 
-  implicit val longToByte: SafeCast[Long, Byte] =
-    SafeCast.orderingBoundedSafeCast[Long, Byte](_.toByte)(_.toLong)
+  val longToByte: Prism[Long, Byte] =
+    Bounded.orderingBoundedSafeCast[Long, Byte](_.toByte)(_.toLong)
 
-  implicit val longToBoolean: SafeCast[Long, Boolean] = new SafeCast[Long, Boolean] {
-    def safeCast = SafeCast.safeCast[Long, Byte] composePrism SafeCast.safeCast[Byte, Boolean]
-  }
+  val longToBoolean: Prism[Long, Boolean] =
+    longToByte composePrism byte.byteToBoolean
 
 }
