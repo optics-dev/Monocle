@@ -1,8 +1,8 @@
 package monocle.std
 
 import monocle.Prism
-import monocle.function.AtBit
-import monocle.internal.Bounded
+import monocle.function.Index
+import monocle.internal.{Bits, Bounded}
 
 import scalaz.Order
 
@@ -10,8 +10,8 @@ object char extends CharInstances
 
 trait CharInstances {
 
-  implicit val charAtBit: AtBit[Char] =
-    AtBit.bitsAtBit[Char]
+  implicit val charBitIndex: Index[Char, Int, Boolean] =
+    Bits.bitsIndex[Char]
 
   implicit val charOrder: Order[Char] =
     Order.fromScalaOrdering[Char]

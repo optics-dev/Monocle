@@ -3,7 +3,6 @@ package monocle.function
 
 trait PolymorphicOptics
   extends AtFunctions
-  with    AtBitFunctions
   with    ConsFunctions
   with    CurryFunctions
   with    EachFunctions
