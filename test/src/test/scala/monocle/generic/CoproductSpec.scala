@@ -1,13 +1,13 @@
 package monocle.generic
 
 import monocle.TestUtil._
-import monocle.function.SafeCast._
 import monocle.law.PrismLaws
 import org.scalacheck.Arbitrary._
-import org.scalacheck.{Gen, Arbitrary}
+import org.scalacheck.{Arbitrary, Gen}
 import org.specs2.scalaz.Spec
-import scalaz.Equal
 import shapeless.{:+:, CNil, Coproduct, Inl, Inr}
+
+import scalaz.Equal
 
 
 class CoproductSpec extends Spec {
@@ -27,6 +27,6 @@ class CoproductSpec extends Spec {
     }
   }
 
-  checkAll("safeCast Coproduct", PrismLaws(safeCast[IB, Boolean]))
+  checkAll("Coproduct Prism", PrismLaws(coProductPrism[IB, Boolean]))
 
 }
