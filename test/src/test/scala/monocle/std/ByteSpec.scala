@@ -2,13 +2,13 @@ package monocle.std
 
 import monocle.TestUtil._
 import monocle.function._
-import monocle.law.{LensLaws, PrismLaws}
+import monocle.law.{OptionalLaws, PrismLaws}
 import org.specs2.scalaz.Spec
 
 
 class ByteSpec extends Spec {
 
-  checkAll("atBit Byte", LensLaws(atBit[Byte](0)))
+  checkAll("Byte index bit", OptionalLaws(index[Byte, Int, Boolean](0)))
 
   checkAll("Byte to Boolean", PrismLaws(byteToBoolean))
 
