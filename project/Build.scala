@@ -12,7 +12,7 @@ import JmhKeys._
 object BuildSettings {
   import MonoclePublishing._
   val buildScalaVersion = "2.11.4"
-  val previousVersion   = "0.5.1"
+  val previousVersion   = "1.0.0"
 
   val buildSettings = typelevelDefaultSettings ++ Seq(
     organization       := "com.github.julien-truffaut",
