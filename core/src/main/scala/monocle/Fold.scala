@@ -19,8 +19,15 @@ import scalaz.syntax.tag._
  */
 abstract class Fold[S, A] { self =>
 
-  /** underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap */
+  /**
+   * map each target to a [[Monoid]] and combine the results
+   * underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap
+   */
   def foldMap[M: Monoid](f: A => M)(s: S): M
+
+  /** combine all targets using a target's [[Monoid]] */
+  @inline final def fold(s: S)(implicit ev: Monoid[A]): A =
+    foldMap(identity)(s)
 
   /**
    * get all the targets of a [[Fold]]

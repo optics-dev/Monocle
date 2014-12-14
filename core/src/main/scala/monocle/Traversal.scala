@@ -33,8 +33,13 @@ abstract class PTraversal[S, T, A, B] { self =>
    */
   def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T]
 
+  /** map each target to a [[Monoid]] and combine the results */
   @inline final def foldMap[M: Monoid](f: A => M)(s: S): M =
     modifyF[Const[M, ?]](a => Const(f(a)))(s).getConst
+
+  /** combine all targets using a target's [[Monoid]] */
+  @inline final def fold(s: S)(implicit ev: Monoid[A]): A =
+    foldMap(identity)(s)
 
   /**
    * get all the targets of a [[PTraversal]]
