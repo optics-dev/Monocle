@@ -26,18 +26,18 @@ class PrismBench {
   val _s = SimplePrism[ADT, String](mkS, getSOption)
   val _r = SimplePrism[ADT, ADT]   (mkR, getROption)
 
-  @Benchmark def directSuccessGetOption() = getIOption(mkI(5))     == Option(5)
-  @Benchmark def directFailureGetOption() = getIOption(mkS("Yop")) == Option.empty[Int]
+  @Benchmark def directSuccessGetOption() = getIOption(mkI(5))
+  @Benchmark def directFailureGetOption() = getIOption(mkS("Yop"))
 
-  @Benchmark def prismSuccessGetOption() = _i.getOption(mkI(5))     == Option(5)
-  @Benchmark def prismFailureGetOption() = _i.getOption(mkS("Yop")) == Option.empty[Int]
+  @Benchmark def prismSuccessGetOption() = _i.getOption(mkI(5))
+  @Benchmark def prismFailureGetOption() = _i.getOption(mkS("Yop"))
 
-  @Benchmark def nestedDirectGetOption() = (for {
+  @Benchmark def nestedDirectGetOption() = for {
     r2 <- getROption(mkR(mkR(mkI(5))))
     r1 <- getROption(r2)
     i  <- getIOption(r1)
-  } yield i) == Option(5)
+  } yield i
 
-  @Benchmark def nestedPrismGetOption() = (_r composePrism _r composePrism _i).getOption(mkR(mkR(mkI(5)))) == Option(5)
+  @Benchmark def nestedPrismGetOption() = (_r composePrism _r composePrism _i).getOption(mkR(mkR(mkI(5))))
 
 }
