@@ -37,9 +37,9 @@ object BuildSettings {
 
 object Dependencies {
   val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.0"
-  val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
-  val specs2Scalacheck  = "org.specs2"      %% "specs2-scalacheck"         % "2.4"
-  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.2"   % "test"
+  val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0"  % "test"
+  val specs2Scalacheck  = "org.specs2"      %% "specs2-scalacheck"         % "2.4.14"
+  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.3.0"  % "test"
   val shapeless = Def setting (
     CrossVersion partialVersion scalaVersion.value match {
       case Some((2, scalaMajor)) if scalaMajor >= 11 => "com.chuusai" %% "shapeless" % "2.0.0"
