@@ -7,14 +7,14 @@ import sbt._
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-val scalaVersion   = "2.11.2" // or "2.10.4"
-val libraryVersion = "0.5.1"  // or "1.0.0-M1"
+val scalaVersion   = "2.11.4" // or "2.10.4"
+val libraryVersion = "1.0.0"  // or "1.0.0-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion,
   "com.github.julien-truffaut"  %%  "monocle-generic" % libraryVersion,
-  "com.github.julien-truffaut"  %%  "monocle-macro"   % libraryVersion,         // since 0.4.0
-  "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % "test" // since 0.4.0
+  "com.github.julien-truffaut"  %%  "monocle-macro"   % libraryVersion,        
+  "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % "test" 
 )
 ```
 ## Motivation
@@ -60,23 +60,16 @@ As you can see copy is not convenient to update nested objects as we need to rep
 to reach it. Let's see what could we do with Monocle:
 
 ```scala
-val _name   : SimpleLens[Street  , String]  = ...  // we'll see later how to build Lens
-val _street : SimpleLens[Address , Street]  = ...
-val _address: SimpleLens[Company , Address] = ...
-val _company: SimpleLens[Employee, Company] = ...
+val _name   : Lens[Street  , String]  = ...  // we'll see later how to build Lens
+val _street : Lens[Address , Street]  = ...
+val _address: Lens[Company , Address] = ...
+val _company: Lens[Employee, Company] = ...
 
-(_company composeLens _address composeLens _street composeLens _name).modify(employee, _.capitalize)
+(_company composeLens _address composeLens _street composeLens _name).modify(_.capitalize)(employee)
 
-import monocle.syntax._ // to use optics as operator 
+// you can achieve the same result with less characters using symbolic syntax
 
-employee applyLens   _company
-         composeLens _address
-         composeLens _street
-         composeLens _name
-         modify (_.capitalize)
-         
-// or with some syntax sugar
-employee |-> _company |-> _address |-> _street |-> _name modify (_.capitalize)
+(_company ^|-> _address ^|-> _street ^|-> _name).modify(_.capitalize)(employee)
 ```
 
 ComposeLens takes two `Lens`, one from A to B and another from B to C and creates a third `Lens` from A to C.
@@ -87,24 +80,18 @@ Therefore, after composing _company, _address, _street and _name, we obtain a `L
 In the above example, we used capitalize to upper case the first letter of a `String`.
 It works but it would be clearer if we could use `Lens` to zoom into the first character of a `String`.
 However, we cannot write such a `Lens` because a `Lens` defines how to focus from an object `S` into a *mandatory*
-object `A` and in our case, the first character of a `String` is optional as a `String` might be empty. For this
- we need a sort of partial `Lens`, in Monocle it is called `Optional`.
+object `A` and in our case, the first character of a `String` is optional as a `String` might be empty. For this 
+we need a sort of partial `Lens`, in Monocle it is called `Optional`.
 
 ```scala
-import monocle.syntax._
-import monocle.function.HeadOption._ // to use headOption (a polymorphic optic)
-import monocle.std.string._          // to get String instance for HeadOption
+import monocle.function.HeadMaybe._ // to use headMaybe (a generic optic)
+import monocle.std.string._         // to get String instance for HeadOption
 
 
-employee applyLens   _company
-         composeLens _address
+(_company composeLens _address
          composeLens _street
          composeLens _name
-         composeOptional headOption
-         modify toUpper
-         
-// or with some syntax sugar         
-employee |-> _company |-> _address |-> _street |-> _name |-? headOption modify toUpper
+         composeOptional headMaybe).modify(toUpper)(employee)
 ```
 
 Similarly to composeLens, composeOptional takes two `Optional`, one from A to B and another from B to C and
@@ -116,74 +103,62 @@ For more examples, see the [```example``` module](example/src/test/scala/monocle
 
 ## Lens Creation
 
-There are four ways to create `SimpleLens`, each with their pro and cons:
+There are 3 ways to create `Lens`, each with their pro and cons:
 
-1.   The first method is the most verbose but it fully documents the type of the `SimpleLens` created. 
-     Remark, this is the only constructor that can also be used for `Lens` (i.e. with 4 type parameters): 
+1.   The manual method where we construct a `Lens` by passing `get` and `set` functions: 
      
      ```scala
-     val _company = SimpleLens[Employee, Company](_.company, (e, c) => e.copy(company = c))
-     ```
-     
-2.   The next solution is slightly shorter as it does not require to define the second type parameter of `SimpleLens`
-     (it is inferred from the type of the first argument):
-
-     ```scala
-     val _company = SimpleLens[Employee](_.company)((e, c) => e.copy(company = c))
+     val _company = Lens[Employee, Company](_.company)( c => e => e.copy(company = c))
+     // or with some type inference
+     val _company = Lens((_: Employee).company)( c => e => e.copy(company = c))
      ```
 
-3.   Now we start using the heavy artillery ... Macro. This method can only be used on case classes and since macros are
-     experimental in scala, there is no guarantee that future version of Monocle will support it (even though we will do 
-     our best):
-
-     ```scala
-      import monocle.Macro._ // require monocle-macro dependency
-
-      val _company = mkLens[Employee, Company]("company") // company is checked at compiled time to be a valid accessor
-      ```
-      Note: this macro is deprecated in 0.5.1
-
-4.   An alternative Macro syntax uses a dedicated object to capture the class, and a simple closure to define the field.
-     This syntax is more IDE-friendly.
+2.   We can use the `Lenser` macro to create a sort of `Lens` factory. This solution is limited to case classes:
 
      ```scala
      val lenser = Lenser[Employee]
      
      val _company = lenser(_.company) 
-     ```
+     val _name    = lenser(_.name)
      
-     A `Lenser` can be in-lined or re-used to avoid specifying the class type parameter.
+     // or in a single line
+     val (_company, _name) = (lenser(_.company) , lenser(_.name))
+     ```
 
-5.   Finally, the boiler plate free solution with macro annotation (which are probably the most experimental part of macros).
-     Adding `@Lenses` annotation on case class will generate `SimpleLens` for every single accessor of the case class.
-     These generated `SimpleLens` are in the companion object of the case class (even if there is no companion object declared).
+3.   Finally, the boiler plate free solution with macro annotation (which are probably the most experimental part of macros).
+     Adding `@Lenses` annotation on case classes will generate `Lens` for every single accessor of the case class.
+     These generated `Lens` are in the companion object of the case class (even if there is no companion object declared).
      Nevertheless, this solution has several disadvantages: 
      1.   users need to add the macro paradise plugin to their project.
-     2.   IDE have a poor support for Macro annotation, therefore it is likely your IDE will not know that the generated `SimpleLens`
-          exist (but it will compile). If you want a better IDE support, please vote on the following [issue](http://youtrack.jetbrains.com/issue/SCL-7419). 
-     3.   this solution can only be applied when you control the case classes since you need to annotate them. This means that
-          you cannot use this technique for classes defined in another project.
+     2.   IDE have a poor support for Macro annotation, so it is likely your IDE will not know about the generated `Lens` (but it will compile). If you want a better IDE support, please vote on the following [issue](http://youtrack.jetbrains.com/issue/SCL-7419). 
+     3.   this solution can only be applied when you control the case classes since you need to annotate them. This means you cannot use this technique for classes defined in another project.
      
      ```scala
      @Lenses
      case class Employee(company: Company, name: String, ...)
      
-     // generates Employee.company: SimpleLens[Employee, Company]
-     // and       Employee.name   : SimpleLens[Employee, String]
+     // generates Employee.company: Lens[Employee, Company]
+     // and       Employee.name   : Lens[Employee, String]
+     
+     // you can add a prefix to Lenses constructor
+     
+     @Lenses("_") case class Employee(company: Company, name: String, ...)
+     
+     // generates Employee._company: Lens[Employee, Company]
      ```
 
-## Polymorphic Optics and Instance Location Policy
+## Generic Optics and Instance Location Policy
 
-A polymorphic optic is an optic that is applicable to different types. For example, `headOption` is an `Optional` from
-some type `S` to its optional first element of type `A`. In order to use `headOption` (or any polymorphic optics), you
+A generic optic is an optic that is applicable to different types. For example, `headMaybe` is an `Optional` from
+some type `S` to its optional first element of type `A`. In order to use `headMaybe` (or any generic optics), you
 need to:
 
-1.   import the polymorphic optic in your scope via `import monocle.function.headoption._` or `import monocle.function._`
-2.   have the required instance of the type class `HeadOption` in your scope, e.g. if you want to use `headOption` from
-     a `List[Int]`, you need an instance of `HeadOption[List[Int], Int]`. This instance can be either provided
+1.   import the generic optic in your scope via `import monocle.function.headmaybe._` or `import monocle.function._`
+2.   have the required instance of the type class `monocle.HeadMaybe` in your scope, e.g. if you want to use `headmaybe` from
+     a `List[Int]`, you need an instance of `HeadMaybe[List[Int], Int]`. This instance can be either provided
      by you or by Monocle.
 
-Monocle defines polymorphic optic instances in the following packages:
+Monocle defines generic optic instances in the following packages:
 
 1.   `monocle.std` for standard Scala library and Scalaz classes, e.g. `List, Vector, Map, IList, OneAnd`
 3.   `monocle.generic` for Shapeless classes, e.g. `HList, CoProduct`
@@ -193,17 +168,13 @@ An [example](example/src/test/scala/other/ImportExample.scala) shows how to use 
 ## Overview
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
 #### Sub Projects
-Core contains the main library concepts: Lens, Traversal, Prism, Iso, Getter and Setter.
+* Core contains the main library concepts: `Lens`, `Traversal`, `Prism`, `Optional`, `Iso`, `Getter` and `Setter`.
 Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes.
+* Law defines properties for Optics using [scalacheck](http://www.scalacheck.org/).
+* Macro defines a a set of macros to reduce Optics boiler plate.
+* Generic is an experiment to provide highly generalised Optics using `HList` and `CoProduct` from [shapeless](https://github.com/milessabin/shapeless). Generic focus is on neat abstraction but that may come at additional runtime or compile time cost.
+* Example shows how other sub projects can be used.
 
-Law defines Iso, Lens, Prism, Setter and Traversal laws using [scalacheck](http://www.scalacheck.org/).
-
-Macro defines a macro to reduce Lens creation boiler plate.
-
-Generic is an experiment to provide highly generalised Lens and Iso using HList from [shapeless](https://github.com/milessabin/shapeless).
-Generic focus is on neat abstraction but that may come at additional runtime or compile time cost.
-
-Example shows how other sub projects can be used.
 #### Contributor Handbook
 We are happy to have as many people as possible contributing to Monocle.
 Therefore, we made this small workflow to simplify the process:
