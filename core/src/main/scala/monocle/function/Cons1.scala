@@ -5,7 +5,7 @@ import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
 
-@implicitNotFound("Could not find an instance of HCons[${S}, ${H}, ${T}], please check Monocle instance location policy to " +
+@implicitNotFound("Could not find an instance of Cons1[${S}, ${H}, ${T}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 trait Cons1[S, H, T] {
 

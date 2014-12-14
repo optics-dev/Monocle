@@ -1,3 +1,3 @@
 package monocle
 
-package object function extends PolymorphicOptics
+package object function extends GenericOptics

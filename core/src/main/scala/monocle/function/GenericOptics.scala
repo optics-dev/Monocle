@@ -1,7 +1,7 @@
 package monocle.function
 
 
-trait PolymorphicOptics
+trait GenericOptics
   extends AtFunctions
   with    ConsFunctions
   with    CurryFunctions
