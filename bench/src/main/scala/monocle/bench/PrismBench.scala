@@ -27,23 +27,35 @@ class PrismBench {
 
   val intADT      = mkI(5)
   val stringADT   = mkS("Yop")
-  val nestedValue = mkR(mkR(mkI(5)))
+  val nested3Value = mkR(mkR(mkR(mkI(5))))
+  val nested6Value = mkR(mkR(mkR(mkR(mkR(mkR(mkI(5)))))))
 
-  @Benchmark def stdSuccessGetOption() = getIMaybe(intADT)
-  @Benchmark def prismSuccessGetOption() = _i.getMaybe(intADT)
+  @Benchmark def stdSuccessGetMaybe() = getIMaybe(intADT)
+  @Benchmark def prismSuccessGetMaybe() = _i.getMaybe(intADT)
   
-  @Benchmark def stdFailureGetOption() = getIMaybe(stringADT)
-  @Benchmark def prismFailureGetOption() = _i.getMaybe(stringADT)
-
-  @Benchmark def stdNestedGetOption() = for {
-    r2 <- getRMaybe(nestedValue)
-    r1 <- getRMaybe(r2)
-    i  <- getIMaybe(r1)
-  } yield i
-  @Benchmark def prismNestedGetOption() = (_r composePrism _r composePrism _i).getMaybe(nestedValue)
+  @Benchmark def stdFailureGetMaybe() = getIMaybe(stringADT)
+  @Benchmark def prismFailureGetMaybe() = _i.getMaybe(stringADT)
 
   @Benchmark def stdReverseGet()  = mkI(5)
   @Benchmark def prismReverseGet() = _i.reverseGet(5)
 
+  @Benchmark def stdNested3GetMaybe() = for {
+    r3 <- getRMaybe(nested3Value)
+    r2 <- getRMaybe(r3)
+    r1 <- getRMaybe(r2)
+    i  <- getIMaybe(r1)
+  } yield i
+  @Benchmark def prismNested3GetMaybe() = (_r composePrism _r composePrism _r composePrism _i).getMaybe(nested3Value)
+
+  @Benchmark def stdNested6GetMaybe() = for {
+    r6 <- getRMaybe(nested6Value)
+    r5 <- getRMaybe(r6)
+    r4 <- getRMaybe(r5)
+    r3 <- getRMaybe(r4)
+    r2 <- getRMaybe(r3)
+    r1 <- getRMaybe(r2)
+    i  <- getIMaybe(r1)
+  } yield i
+  @Benchmark def prismNested6GetMaybe() = (_r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _i).getMaybe(nested3Value)
 
 }
