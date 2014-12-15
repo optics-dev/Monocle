@@ -30,11 +30,8 @@ class PrismBench {
   val nested3Value = mkR(mkR(mkR(mkI(5))))
   val nested6Value = mkR(mkR(mkR(mkR(mkR(mkR(mkI(5)))))))
 
-  @Benchmark def stdSuccessGetMaybe() = getIMaybe(intADT)
-  @Benchmark def prismSuccessGetMaybe() = _i.getMaybe(intADT)
-  
-  @Benchmark def stdFailureGetMaybe() = getIMaybe(stringADT)
-  @Benchmark def prismFailureGetMaybe() = _i.getMaybe(stringADT)
+  @Benchmark def stdGetMaybe() = getIMaybe(intADT)
+  @Benchmark def prismGetMaybe() = _i.getMaybe(intADT)
 
   @Benchmark def stdReverseGet()  = mkI(5)
   @Benchmark def prismReverseGet() = _i.reverseGet(5)
