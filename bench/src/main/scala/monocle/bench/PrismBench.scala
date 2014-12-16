@@ -30,11 +30,11 @@ class PrismBench {
   val nested3Value = mkR(mkR(mkR(mkI(5))))
   val nested6Value = mkR(mkR(mkR(mkR(mkR(mkR(mkI(5)))))))
 
+  val nested3I = _r composePrism _r composePrism _r composePrism _i
+  val nested6I = _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _i
+
   @Benchmark def stdGetMaybe() = getIMaybe(intADT)
   @Benchmark def prismGetMaybe() = _i.getMaybe(intADT)
-
-  @Benchmark def stdReverseGet()  = mkI(5)
-  @Benchmark def prismReverseGet() = _i.reverseGet(5)
 
   @Benchmark def stdNested3GetMaybe() = for {
     r3 <- getRMaybe(nested3Value)
@@ -42,7 +42,7 @@ class PrismBench {
     r1 <- getRMaybe(r2)
     i  <- getIMaybe(r1)
   } yield i
-  @Benchmark def prismNested3GetMaybe() = (_r composePrism _r composePrism _r composePrism _i).getMaybe(nested3Value)
+  @Benchmark def prismNested3GetMaybe() = nested3I.getMaybe(nested3Value)
 
   @Benchmark def stdNested6GetMaybe() = for {
     r6 <- getRMaybe(nested6Value)
@@ -53,6 +53,28 @@ class PrismBench {
     r1 <- getRMaybe(r2)
     i  <- getIMaybe(r1)
   } yield i
-  @Benchmark def prismNested6GetMaybe() = (_r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _i).getMaybe(nested3Value)
+  @Benchmark def prismNested6GetMaybe() = nested6I.getMaybe(nested3Value)
+
+  @Benchmark def stdModifySet() = getIMaybe(intADT).map(i => mkI(i+1)).getOrElse(intADT)
+  @Benchmark def prismModifySet() = _i.modify(_ + 1)(intADT)
+
+  @Benchmark def stdNested3Modify() = for {
+    r3 <- getRMaybe(nested3Value)
+    r2 <- getRMaybe(r3)
+    r1 <- getRMaybe(r2)
+    i  <- getIMaybe(r1)
+  } yield mkR(mkR(mkR(mkI(i + 1))))
+  @Benchmark def prismNested3Modify() = nested3I.modify(_ + 1)(nested3Value)
+
+  @Benchmark def stdNested6Modify() = for {
+    r6 <- getRMaybe(nested6Value)
+    r5 <- getRMaybe(r6)
+    r4 <- getRMaybe(r5)
+    r3 <- getRMaybe(r4)
+    r2 <- getRMaybe(r3)
+    r1 <- getRMaybe(r2)
+    i  <- getIMaybe(r1)
+  } yield mkR(mkR(mkR(mkR(mkR(mkR(mkI(i + 1)))))))
+  @Benchmark def prismNested6Modify() = nested6I.modify(_ + 1)(nested6Value)
 
 }
