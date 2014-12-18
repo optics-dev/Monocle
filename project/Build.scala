@@ -132,9 +132,9 @@ object MonocleBuild extends Build {
     "monocle-bench",
     file("bench"),
     settings = buildSettings ++ jmhSettings ++ Seq(
-      addCompilerPlugin(kindProjector),
-      addCompilerPlugin(paradisePlugin)) // Unfortunately necessary :( see: http://stackoverflow.com/q/23485426/463761
-  ) dependsOn(core, macros, generic)
+      addCompilerPlugin(kindProjector)
+    )
+  ) dependsOn(core)
 }
 
 object MonoclePublishing  {
