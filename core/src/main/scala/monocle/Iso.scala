@@ -5,18 +5,17 @@ import scalaz.{Applicative, Functor, Monoid, \/}
 
 /**
  * A [[PIso]] defines an isomorphism between types S, A and B, T:
- *
+ * <pre>
  *              get                           reverse.get
  *     -------------------->             -------------------->
  *   S                       A         T                       B
  *     <--------------------             <--------------------
  *       reverse.reverseGet                   reverseGet
+ * </pre>
  *
- *
- * In addition, if f and g forms an isomorphism between A and B, i.e. if f . g = id and g . f = id,
- * then a [[PIso]] defines an isomorphism between S and T:
- *
- *
+ * In addition, if f and g forms an isomorphism between `A` and `B`, i.e. if `f . g = id` and `g . f = id`,
+ * then a [[PIso]] defines an isomorphism between `S` and `T`:
+ * <pre>
  *     S           T                                   S           T
  *     |           ↑                                   ↑           |
  *     |           |                                   |           |
@@ -24,10 +23,12 @@ import scalaz.{Applicative, Functor, Monoid, \/}
  *     |           |                                   |           |
  *     ↓     f     |                                   |     g     ↓
  *     A --------> B                                   A <-------- B
+ * </pre>
  *
- * [[Iso]] is a type alias for [[PIso]] where S = A and T = B:
- *
+ * [[Iso]] is a type alias for [[PIso]] where `S` = `A` and `T` = `B`:
+ * {{{
  * type Iso[S, A] = PIso[S, S, A, A]
+ * }}}
  *
  * A [[PIso]] is also a valid [[Getter]], [[Fold]], [[PLens]], [[PPrism]], [[POptional]], [[PTraversal]] and [[PSetter]]
  *

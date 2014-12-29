@@ -5,8 +5,8 @@ import scalaz.{Applicative, Maybe, Monoid, \/}
 
 /**
  * A [[PPrism]] can be seen as a pair of functions:
- *  getOrModify: S => T \/ A
- *  reverseGet : B => T
+ *  - `getOrModify: S => T \/ A`
+ *  - `reverseGet : B => T`
  *
  * A [[PPrism]] could also be defined as a weaker [[PIso]] where get can fail.
  *
@@ -14,10 +14,11 @@ import scalaz.{Applicative, Maybe, Monoid, \/}
  * CoProduct type (e.g. sealed trait) and one of it is element.
  *
  * [[PPrism]] stands for Polymorphic Prism as it set and modify methods change
- * a type A to B and S to T.
+ * a type `A` to `B` and `S` to `T`.
  * [[Prism]] is a type alias for [[PPrism]] where the type of target cannot be modified:
- *
+ * {{{
  * type Prism[S, A] = PPrism[S, S, A, A]
+ * }}}
  *
  * A [[PPrism]] is also a valid  [[Fold]], [[POptional]], [[PTraversal]] and [[PSetter]]
  *

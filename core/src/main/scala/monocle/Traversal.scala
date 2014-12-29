@@ -13,10 +13,11 @@ import scalaz.{Applicative, Const, IList, Maybe, Monoid, Traverse}
  * where n can be infinite.
  *
  * [[PTraversal]] stands for Polymorphic Traversal as it set and modify methods change
- * a type A to B and S to T.
+ * a type `A` to `B` and `S` to `T`.
  * [[Traversal]] is a type alias for [[PTraversal]] restricted to monomoprhic updates:
- *
+ * {{{
  * type Traversal[S, A] = PTraversal[S, S, A, A]
+ * }}}
  *
  * @see TraversalLaws in monocle-law module
  *
