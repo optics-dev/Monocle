@@ -4,14 +4,15 @@ import scalaz.Functor
 
 /**
  * A [[PSetter]] is a generalisation of [[Functor]] map:
- *   map:    (A => B) => F[A] => F[B]
- *   modify: (A => B) => S    => T
+ *  - `map:    (A => B) => F[A] => F[B]`
+ *  - `modify: (A => B) => S    => T`
  *
  * [[PSetter]] stands for Polymorphic Setter as it set and modify methods change
- * a type A to B and S to T.
+ * a type `A` to `B` and `S` to `T`.
  * [[Setter]] is a type alias for [[PSetter]] restricted to monomoprhic updates:
- *
+ * {{{
  * type Setter[S, A] = PSetter[S, S, A, A]
+ * }}}
  *
  * [[PTraversal]], [[POptional]], [[PPrism]], [[PLens]] and [[PIso]] are valid [[PSetter]]
  *

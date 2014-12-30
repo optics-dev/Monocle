@@ -4,17 +4,18 @@ import scalaz.{Applicative, Maybe, Monoid, \/}
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
- *  getOrModify: S      => T \/ A
- *  set        : (B, S) => T
+ *  - `getOrModify: S      => T \/ A`
+ *  - `set        : (B, S) => T`
  *
  * A [[POptional]] could also be defined as a weaker [[PLens]] and
  * weaker [[PPrism]]
  *
  * [[POptional]] stands for Polymorphic Optional as it set and modify methods change
- * a type A to B and S to T.
+ * a type `A` to `B` and `S` to `T`.
  * [[Optional]] is a type alias for [[POptional]] restricted to monomoprhic updates:
- *
+ * {{{
  * type Optional[S, A] = POptional[S, S, A, A]
+ * }}}
  *
  * @see OptionalLaws in monocle-law module
  *

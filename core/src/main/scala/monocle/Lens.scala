@@ -4,17 +4,18 @@ import scalaz.{\/, Applicative, Monoid, Functor}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
- *  get: S      => A  i.e. from an S, we can extract an A
- *  set: (B, S) => T  i.e. if we replace an A by a B in a S, we obtain a T
+ *  - `get: S      => A` i.e. from an `S`, we can extract an `A`
+ *  - `set: (B, S) => T` i.e. if we replace an `A` by a `B` in an `S`, we obtain a `T`
  *
  * A [[PLens]] could also be defined as a weaker [[PIso]] where set requires
  * an additional parameter than reverseGet.
  *
  * [[PLens]] stands for Polymorphic Lens as it set and modify methods change
- * a type A to B and S to T.
+ * a type `A` to `B` and `S` to `T`.
  * [[Lens]] is a type alias for [[PLens]] restricted to monomoprhic updates:
- *
+ * {{{
  * type Lens[S, A] = PLens[S, S, A, A]
+ * }}}
  *
  * A [[PLens]] is also a valid [[Getter]], [[Fold]], [[POptional]],
  * [[PTraversal]] and [[PSetter]]
