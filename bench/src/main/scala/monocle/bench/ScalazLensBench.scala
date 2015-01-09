@@ -6,7 +6,7 @@ import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 import scalaz.Lens
 
 @State(Scope.Benchmark)
-class ScalazLensBench {
+class ScalazLensBench extends LensBench {
 
   val _n1 = Lens.lensg[Nested0, Nested1](n0 => n1 => n0.copy(n = n1), _.n)
   val _n2 = Lens.lensg[Nested1, Nested2](n1 => n2 => n1.copy(n = n2), _.n)
@@ -23,23 +23,23 @@ class ScalazLensBench {
   val _n0Ton6I = _n1 >=> _n2 >=> _n3 >=> _n4 >=> _n5 >=> _n6 >=> _n6_i
 
 
-  @Benchmark def get0() = _n0_i.get(n0)
-  @Benchmark def get3() = _n0Ton3I.get(n0)
-  @Benchmark def get6() = _n0Ton6I.get(n0)
+  @Benchmark def lensGet0() = _n0_i.get(n0)
+  @Benchmark def lensGet3() = _n0Ton3I.get(n0)
+  @Benchmark def lensGet6() = _n0Ton6I.get(n0)
 
 
-  @Benchmark def set0() = _n0_i.set(n0, 43)
-  @Benchmark def set3() = _n0Ton3I.set(n0, 43)
-  @Benchmark def set6() = _n0Ton6I.set(n0, 43)
+  @Benchmark def lensSet0() = _n0_i.set(n0, 43)
+  @Benchmark def lensSet3() = _n0Ton3I.set(n0, 43)
+  @Benchmark def lensSet6() = _n0Ton6I.set(n0, 43)
 
 
-  @Benchmark def modify0() = _n0_i.mod(_ + 1, n0)
-  @Benchmark def modify3() = _n0Ton3I.mod(_ + 1, n0)
-  @Benchmark def modify6() = _n0Ton6I.mod(_ + 1, n0)
+  @Benchmark def lensModify0() = _n0_i.mod(_ + 1, n0)
+  @Benchmark def lensModify3() = _n0Ton3I.mod(_ + 1, n0)
+  @Benchmark def lensModify6() = _n0Ton6I.mod(_ + 1, n0)
 
 
-  @Benchmark def modifyF0() = _n0_i.modf(safeDivide(_, 2), n0)
-  @Benchmark def modifyF3() = _n0Ton3I.modf(safeDivide(_, 2), n0)
-  @Benchmark def modifyF6() = _n0Ton6I.modf(safeDivide(_, 2), n0)
+  @Benchmark def lensModifyF0() = _n0_i.modf(safeDivide(_, 2), n0)
+  @Benchmark def lensModifyF3() = _n0Ton3I.modf(safeDivide(_, 2), n0)
+  @Benchmark def lensModifyF6() = _n0Ton6I.modf(safeDivide(_, 2), n0)
 
 }

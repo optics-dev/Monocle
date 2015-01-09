@@ -12,3 +12,4 @@
 *.class
 target/
 project/project/
+benchData/

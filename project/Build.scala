@@ -132,6 +132,7 @@ object MonocleBuild extends Build {
     "monocle-bench",
     file("bench"),
     settings = buildSettings ++ jmhSettings ++ Seq(
+      libraryDependencies += shapeless.value,
       addCompilerPlugin(kindProjector)
     )
   ) dependsOn(core)
