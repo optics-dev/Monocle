@@ -92,12 +92,6 @@ object FormatBenchResult extends App {
     )
   }
 
-  /**
-   * {{{
-   *   Method     Std   Monocle  Scalaz  Shapeless  Monocle / Std  Scalaz / Std  Shapeless / Std
-   *   lensGet0    10         5       4          3           50 %          40 %             30 %
-   * }}}
-   */
   def format(results: IList[BenchResult]): IList[(String, String, String, String, String, String, String, String)] = {
     def f(l: Long): String =
       l.toString
@@ -111,10 +105,9 @@ object FormatBenchResult extends App {
     def scp(r: BenchResult, impl: Impl): String =
       r.implScores.lookup(impl).map(_.toDouble / r.stdScore * 100).map(fp).getOrElse("N/A")
 
-    ("Method", "Std", "Monocle", "Scalaz", "Shapeless", "Monocle / Std", "Scalaz / Std", "Shapeless / Std") ::
+    ("Method", "Monocle / Std", "Scalaz / Std", "Shapeless / Std", "Std", "Monocle", "Scalaz", "Shapeless") ::
       results.map( r =>
-        (r.method.value, f(r.stdScore), sc(r.implScores, MONOCLE), sc(r.implScores, SCALAZ), sc(r.implScores, SHAPELESS),
-          scp(r, MONOCLE), scp(r, SCALAZ), scp(r, SHAPELESS))
+        (r.method.value, scp(r, MONOCLE), scp(r, SCALAZ), scp(r, SHAPELESS), f(r.stdScore), sc(r.implScores, MONOCLE), sc(r.implScores, SCALAZ), sc(r.implScores, SHAPELESS))
       )
   }
 

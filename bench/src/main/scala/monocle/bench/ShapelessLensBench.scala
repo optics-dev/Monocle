@@ -25,19 +25,19 @@ class ShapelessLensBench extends LensBench {
   val _n0Ton6I = _n6_i compose _n6 compose _n5 compose _n4 compose _n3 compose _n2 compose _n1
 
 
-  @Benchmark def lensGet0() = _n0_i.get(n0)
-  @Benchmark def lensGet3() = _n0Ton3I.get(n0)
-  @Benchmark def lensGet6() = _n0Ton6I.get(n0)
+  @Benchmark def lensGet0() = arrayGet(_n0_i.get)
+  @Benchmark def lensGet3() = arrayGet(_n0Ton3I.get)
+  @Benchmark def lensGet6() = arrayGet(_n0Ton6I.get)
 
 
-  @Benchmark def lensSet0() = _n0_i.set(n0)(43)
-  @Benchmark def lensSet3() = _n0Ton3I.set(n0)(43)
-  @Benchmark def lensSet6() = _n0Ton6I.set(n0)(43)
+  @Benchmark def lensSet0() = arraySetModify(_n0_i.set(_)(43))
+  @Benchmark def lensSet3() = arraySetModify(_n0Ton3I.set(_)(43))
+  @Benchmark def lensSet6() = arraySetModify(_n0Ton6I.set(_)(43))
 
 
-  @Benchmark def lensModify0() = _n0_i.modify(n0)(_ + 1)
-  @Benchmark def lensModify3() = _n0Ton3I.modify(n0)(_ + 1)
-  @Benchmark def lensModify6() = _n0Ton6I.modify(n0)(_ + 1)
+  @Benchmark def lensModify0() = arraySetModify(_n0_i.modify(_)(_ + 1))
+  @Benchmark def lensModify3() = arraySetModify(_n0Ton3I.modify(_)(_ + 1))
+  @Benchmark def lensModify6() = arraySetModify(_n0Ton6I.modify(_)(_ + 1))
 
 
   def lensModifyF0(): Maybe[Nested0] = ???
