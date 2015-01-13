@@ -1,7 +1,7 @@
 package monocle
 
 import scalaz.Isomorphism.{<=>, <~>}
-import scalaz.{Applicative, Functor, Monoid, \/}
+import scalaz.{Applicative, Functor, Maybe, Monoid, \/}
 
 /**
  * A [[PIso]] defines an isomorphism between types S, A and B, T:
@@ -137,7 +137,7 @@ abstract class PIso[S, T, A, B] private[monocle](val get: S => A, val reverseGet
 
   /** view a [[PIso]] as a [[Getter]] */
   @inline final def asGetter: Getter[S, A] =
-    Getter(get)
+    new Getter(get)
 
   /** view a [[PIso]] as a [[Setter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
@@ -152,15 +152,39 @@ abstract class PIso[S, T, A, B] private[monocle](val get: S => A, val reverseGet
 
   /** view a [[PIso]] as a [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
-    POptional(\/.right compose get)(set)
+    new POptional(\/.right compose get, set){
+      def getMaybe(s: S): Maybe[A] =
+        Maybe.just(self.get(s))
+
+      def modify(f: A => B): S => T =
+        self.modify(f)
+
+      def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+        self.modifyF(f)(s)
+    }
 
   /** view a [[PIso]] as a [[PPrism]] */
   @inline final def asPrism: PPrism[S, T, A, B] =
-    PPrism(\/.right compose get)(reverseGet)
+    new PPrism(\/.right compose get, reverseGet){
+      def getMaybe(s: S): Maybe[A] =
+        Maybe.just(self.get(s))
+
+      def modify(f: A => B): S => T =
+        self.modify(f)
+
+      def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+        self.modifyF(f)(s)
+    }
 
   /** view a [[PIso]] as a [[PLens]] */
   @inline final def asLens: PLens[S, T, A, B] =
-    PLens(get)(set)
+    new PLens(get, set){
+      def modify(f: A => B): S => T =
+        self.modify(f)
+
+      def modifyF[F[_] : Functor](f: A => F[B])(s: S): F[T] =
+        self.modifyF(f)(s)
+    }
 
 }
 

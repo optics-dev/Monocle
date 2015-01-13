@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{\/, Applicative, Monoid, Functor}
+import scalaz.{\/, Applicative, Maybe, Monoid, Functor}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
@@ -135,7 +135,16 @@ abstract class PLens[S, T, A, B] private[monocle](val get: S => A, val set: B =>
 
   /** view a [[PLens]] as an [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
-    POptional(\/.right compose get)(set)
+    new POptional(\/.right compose get, set){
+      def getMaybe(s: S): Maybe[A] =
+        Maybe.just(self.get(s))
+
+      def modify(f: A => B): S => T =
+        self.modify(f)
+
+      def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+        self.modifyF(f)(s)
+    }
 
 }
 

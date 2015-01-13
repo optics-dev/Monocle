@@ -164,7 +164,16 @@ abstract class PPrism[S, T, A, B] private[monocle](val getOrModify: S => T \/ A,
 
   /** view a [[PPrism]] as a [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
-    POptional(getOrModify)(set)
+    new POptional(getOrModify, set){
+      def getMaybe(s: S): Maybe[A] =
+        self.getMaybe(s)
+
+      def modify(f: A => B): S => T =
+        self.modify(f)
+
+      def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+        self.modifyF(f)(s)
+    }
 }
 
 object PPrism {

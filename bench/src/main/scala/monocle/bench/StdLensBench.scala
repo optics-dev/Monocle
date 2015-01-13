@@ -19,7 +19,6 @@ class StdLensBench extends LensBench {
   @Benchmark def lensSet3() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val _n0 = n0s(i)
     val v = _n0.copy(n = _n0.n.copy(n = _n0.n.n.copy(n = _n0.n.n.n.copy(i = 43))))
     if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
-    arraySetModify(_n0 => _n0.copy(n = _n0.n.copy(n = _n0.n.n.copy(n = _n0.n.n.n.copy(i = 43)))))
   @Benchmark def lensSet6() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val _n0 = n0s(i)
     val v = _n0.copy(
       n = _n0.n.copy(
