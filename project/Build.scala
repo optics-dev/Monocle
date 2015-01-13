@@ -31,8 +31,7 @@ object BuildSettings {
     incOptions         := incOptions.value.withNameHashing(true),
     resolvers          += Resolver.sonatypeRepo("releases"),
     resolvers          += Resolver.sonatypeRepo("snapshots"),
-    resolvers          += "bintray/non" at "http://dl.bintray.com/non/maven",
-    unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
+    resolvers          += "bintray/non" at "http://dl.bintray.com/non/maven"
   ) ++ publishSettings
 }
 
@@ -98,7 +97,8 @@ object MonocleBuild extends Build {
         case (2, scalaMajor) if scalaMajor < 11 =>
           // if scala 2.11+ is used, quasiquotes are merged into scala-reflect
           Seq("org.scalamacros" %% "quasiquotes" % macroVersion)
-      } getOrElse Nil
+      } getOrElse Nil,
+      unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
     )
   ) dependsOn(core)
 
