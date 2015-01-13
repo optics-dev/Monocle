@@ -3,7 +3,7 @@ package monocle.bench
 import monocle.bench.BenchModel._
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 
-import scalaz.Lens
+import scalaz.{Lens, Maybe}
 
 @State(Scope.Benchmark)
 class ScalazLensBench extends LensBench {
@@ -23,23 +23,23 @@ class ScalazLensBench extends LensBench {
   val _n0Ton6I = _n1 >=> _n2 >=> _n3 >=> _n4 >=> _n5 >=> _n6 >=> _n6_i
 
 
-  @Benchmark def lensGet0() = arrayGet(_n0_i.get)
-  @Benchmark def lensGet3() = arrayGet(_n0Ton3I.get)
-  @Benchmark def lensGet6() = arrayGet(_n0Ton6I.get)
+  @Benchmark def lensGet0() = {var r,i = 0; while (i < n0s.length) { val v = _n0_i.get(n0s(i))   ; if (v > r){r = v}; i = i + 1;}; r}
+  @Benchmark def lensGet3() = {var r,i = 0; while (i < n0s.length) { val v = _n0Ton3I.get(n0s(i)); if (v > r){r = v}; i = i + 1;}; r}
+  @Benchmark def lensGet6() = {var r,i = 0; while (i < n0s.length) { val v = _n0Ton6I.get(n0s(i)); if (v > r){r = v}; i = i + 1;}; r}
 
 
-  @Benchmark def lensSet0() = arraySetModify(_n0_i.set(_, 43))
-  @Benchmark def lensSet3() = arraySetModify(_n0Ton3I.set(_, 43))
-  @Benchmark def lensSet6() = arraySetModify(_n0Ton6I.set(_, 43))
+  @Benchmark def lensSet0() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0_i.set(n0s(i), 43)   ; if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
+  @Benchmark def lensSet3() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0Ton3I.set(n0s(i), 43); if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
+  @Benchmark def lensSet6() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0Ton6I.set(n0s(i), 43); if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
 
 
-  @Benchmark def lensModify0() = arraySetModify(_n0_i.mod(_ + 1, _))
-  @Benchmark def lensModify3() = arraySetModify(_n0Ton3I.mod(_ + 1, _))
-  @Benchmark def lensModify6() = arraySetModify(_n0Ton6I.mod(_ + 1, _))
+  @Benchmark def lensModify0() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0_i.mod(   _ + 1, n0s(i)); if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
+  @Benchmark def lensModify3() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0Ton3I.mod(_ + 1, n0s(i)); if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
+  @Benchmark def lensModify6() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0Ton6I.mod(_ + 1, n0s(i)); if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
 
 
-  @Benchmark def lensModifyF0() = arrayModifyMaybe(_n0_i.modf(safeDivide(_, 2), _))
-  @Benchmark def lensModifyF3() = arrayModifyMaybe(_n0Ton3I.modf(safeDivide(_, 2), _))
-  @Benchmark def lensModifyF6() = arrayModifyMaybe(_n0Ton6I.modf(safeDivide(_, 2), _))
+  @Benchmark def lensModifyF0() = {var r,i = 0; var res: Maybe[Nested0] = Maybe.empty; while (i < n0s.length) {val v = _n0_i.modf(   safeDivide(_, 2), n0s(i)); v.map{_v => if (_v.i > r){r = _v.i; res = v}}; i = i + 1;}; res}
+  @Benchmark def lensModifyF3() = {var r,i = 0; var res: Maybe[Nested0] = Maybe.empty; while (i < n0s.length) {val v = _n0Ton3I.modf(safeDivide(_, 2), n0s(i)); v.map{_v => if (_v.i > r){r = _v.i; res = v}}; i = i + 1;}; res}
+  @Benchmark def lensModifyF6() = {var r,i = 0; var res: Maybe[Nested0] = Maybe.empty; while (i < n0s.length) {val v = _n0Ton6I.modf(safeDivide(_, 2), n0s(i)); v.map{_v => if (_v.i > r){r = _v.i; res = v}}; i = i + 1;}; res}
 
 }

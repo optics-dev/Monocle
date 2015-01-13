@@ -97,7 +97,7 @@ object FormatBenchResult extends App {
       l.toString
 
     def fp(d: Double): String =
-      d.toInt.toString + " %"
+      "%.2f".format(d)
 
     def sc(implScores: IMap[Impl, Long], impl: Impl): String =
       implScores.lookup(impl).map(f).getOrElse("N/A")
@@ -105,7 +105,7 @@ object FormatBenchResult extends App {
     def scp(r: BenchResult, impl: Impl): String =
       r.implScores.lookup(impl).map(_.toDouble / r.stdScore * 100).map(fp).getOrElse("N/A")
 
-    ("Method", "Monocle / Std", "Scalaz / Std", "Shapeless / Std", "Std", "Monocle", "Scalaz", "Shapeless") ::
+    ("Method", "Monocle / Std (%)", "Scalaz / Std (%)", "Shapeless / Std (%)", "Std (ops/s)", "Monocle (ops/s)", "Scalaz (ops/s)", "Shapeless (ops/s)") ::
       results.map( r =>
         (r.method.value, scp(r, MONOCLE), scp(r, SCALAZ), scp(r, SHAPELESS), f(r.stdScore), sc(r.implScores, MONOCLE), sc(r.implScores, SCALAZ), sc(r.implScores, SHAPELESS))
       )
