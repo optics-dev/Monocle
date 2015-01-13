@@ -1,20 +1,19 @@
 package monocle.macros
 
-import scala.language.experimental.macros
+import monocle.macros.internal.MacrosCompatibility
 
 class Lenses(prefix: String = "") extends scala.annotation.StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro LensesImpl.annotationMacro
 }
 
-private[macros] object LensesImpl {
-  import scala.reflect.macros._
+private[macros] object LensesImpl extends MacrosCompatibility {
 
   def annotationMacro(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
 
-    val LensesTpe = newTypeName("Lenses")
+    val LensesTpe = createTypeName(c)("Lenses")
     val prefix = c.macroApplication match {
-      case Apply(Select(Apply(Select(New(Ident(LensesTpe)), `nme`.CONSTRUCTOR), args), _), _) => args match {
+      case Apply(Select(Apply(Select(New(Ident(LensesTpe)), t), args), _), _) if t == getTermNames(c).CONSTRUCTOR => args match {
         case Literal(Constant(s: String)) :: Nil => s
         case _ => ""
       }
@@ -23,7 +22,7 @@ private[macros] object LensesImpl {
 
     def lenses(tpname: TypeName, paramss: List[List[ValDef]]): List[Tree] = {
       paramss.head map { param =>
-        val lensName = newTermName(prefix + param.name.decoded)
+        val lensName = createTermName(c)(prefix + param.name.decodedName)
         q"""val $lensName = monocle.macros.internal.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
       }
     }
