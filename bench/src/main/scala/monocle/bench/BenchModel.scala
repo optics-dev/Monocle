@@ -1,5 +1,6 @@
 package monocle.bench
 
+import scala.util.Random
 import scalaz._
 import scalaz.std.anyVal._
 
@@ -16,16 +17,25 @@ object BenchModel {
   case class Nested5(s: String, i: Int, n: Nested6, l: Long)
   case class Nested6(s: String, i: Int)
 
-  val n0 = Nested0("plop", 45,
-    Nested1("Hello", -678,
-      Nested2("World", 0,
-        Nested3("Yoooo", 42,
-          Nested4("Yo", 9999,
-            Nested5("WoooooooooooooooW", 76,
-              Nested6("", 0)
-              ,0), -990993L), 12345L), 123456789L), 342072347L), 6789L)
+  val r = new Random
+
+  def genInt(): Int = r.nextInt()
+  def genLong(): Long = r.nextLong()
+  def genStr(): String = r.nextString(r.nextInt(100))
 
 
+  def genNested0(): Nested0 = Nested0(genStr(), genInt(),
+    Nested1(genStr(), genInt(),
+      Nested2(genStr(), genInt(),
+        Nested3(genStr(), genInt(),
+          Nested4(genStr(), genInt(),
+            Nested5(genStr(), genInt(),
+              Nested6(genStr(), genInt())
+              ,genLong()), genLong()), genLong()), genLong()), genLong()), genLong())
+
+  val n0s: Array[Nested0] = (1 to 10).map( _ => genNested0()).toArray
+
+  val n0 = genNested0()
 
   sealed trait ADT
   case class I(i: Int)    extends ADT

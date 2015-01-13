@@ -25,19 +25,19 @@ class ShapelessLensBench extends LensBench {
   val _n0Ton6I = _n6_i compose _n6 compose _n5 compose _n4 compose _n3 compose _n2 compose _n1
 
 
-  @Benchmark def lensGet0() = _n0_i.get(n0)
-  @Benchmark def lensGet3() = _n0Ton3I.get(n0)
-  @Benchmark def lensGet6() = _n0Ton6I.get(n0)
+  @Benchmark def lensGet0() = {var r,i = 0; while (i < n0s.length) { val v = _n0_i.get(n0s(i))   ; if (v > r){r = v}; i = i + 1;}; r}
+  @Benchmark def lensGet3() = {var r,i = 0; while (i < n0s.length) { val v = _n0Ton3I.get(n0s(i)); if (v > r){r = v}; i = i + 1;}; r}
+  @Benchmark def lensGet6() = {var r,i = 0; while (i < n0s.length) { val v = _n0Ton6I.get(n0s(i)); if (v > r){r = v}; i = i + 1;}; r}
 
 
-  @Benchmark def lensSet0() = _n0_i.set(n0)(43)
-  @Benchmark def lensSet3() = _n0Ton3I.set(n0)(43)
-  @Benchmark def lensSet6() = _n0Ton6I.set(n0)(43)
+  @Benchmark def lensSet0() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0_i.set(n0s(i))(43)   ; if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
+  @Benchmark def lensSet3() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0Ton3I.set(n0s(i))(43); if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
+  @Benchmark def lensSet6() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0Ton6I.set(n0s(i))(43); if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
 
 
-  @Benchmark def lensModify0() = _n0_i.modify(n0)(_ + 1)
-  @Benchmark def lensModify3() = _n0Ton3I.modify(n0)(_ + 1)
-  @Benchmark def lensModify6() = _n0Ton6I.modify(n0)(_ + 1)
+  @Benchmark def lensModify0() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0_i.modify(n0s(i))(_ + 1)   ; if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
+  @Benchmark def lensModify3() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0Ton3I.modify(n0s(i))(_ + 1); if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
+  @Benchmark def lensModify6() = {var r,i = 0; var res: Nested0 = null; while (i < n0s.length) { val v = _n0Ton6I.modify(n0s(i))(_ + 1); if (v.i > r){r = v.i; res = v}; i = i + 1;}; res}
 
 
   def lensModifyF0(): Maybe[Nested0] = ???
