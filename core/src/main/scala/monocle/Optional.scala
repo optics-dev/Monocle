@@ -85,7 +85,7 @@ abstract class POptional[S, T, A, B] private[monocle](val getOrModify: S => T \/
       def getMaybe(s: S): Maybe[C] =
         self.getMaybe(s) flatMap other.getMaybe
 
-      def modifyF[F[_] : Applicative](f: C => F[D])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: C => F[D])(s: S): F[T] =
         self.modifyF(other.modifyF(f))(s)
 
       def modify(f: C => D): S => T =
@@ -157,7 +157,7 @@ object POptional {
       def getMaybe(s: S): Maybe[A] =
         getOrModify(s).toMaybe
 
-      def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         getOrModify(s).fold(
           t => Applicative[F].point(t),
           a => Applicative[F].map(f(a))(set(_)(s))
@@ -175,7 +175,7 @@ object Optional {
       def getMaybe(s: S): Maybe[A] =
         _getMaybe(s)
 
-      def modifyF[F[_] : Applicative](f: A => F[A])(s: S): F[S] =
+      def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
         getOrModify(s).fold(
           t => Applicative[F].point(t),
           a => Applicative[F].map(f(a))(set(_)(s))

@@ -106,7 +106,7 @@ abstract class PPrism[S, T, A, B] private[monocle](val getOrModify: S => T \/ A,
       def getMaybe(s: S): Maybe[C] =
         self.getMaybe(s) flatMap other.getMaybe
 
-      def modifyF[F[_] : Applicative](f: C => F[D])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: C => F[D])(s: S): F[T] =
         self.modifyF(other.modifyF(f))(s)
 
       def modify(f: C => D): S => T =
@@ -171,7 +171,7 @@ abstract class PPrism[S, T, A, B] private[monocle](val getOrModify: S => T \/ A,
       def modify(f: A => B): S => T =
         self.modify(f)
 
-      def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 }
