@@ -95,7 +95,7 @@ object FormatBenchResult extends App {
     )
   }
 
-  def format(results: IList[BenchResult]): IList[(String, String, String, String, String, String, String, String, String)] = {
+  def format(results: IList[BenchResult]): IList[(String, String, String, String, String, String, String, String, String, String)] = {
     def f(l: Long): String =
       l.toString
 
@@ -108,9 +108,9 @@ object FormatBenchResult extends App {
     def scp(r: BenchResult, impl: Impl): String =
       r.implScores.lookup(impl).map(_.toDouble / r.stdScore * 100).map(fp).getOrElse("N/A")
 
-    ("Method", "Monocle Macro / Std (%)", "Monocle / Std (%)", "Scalaz / Std (%)", "Shapeless / Std (%)", "Std (ops/s)", "Monocle (ops/s)", "Scalaz (ops/s)", "Shapeless (ops/s)") ::
+    ("Method", "Monocle Macro / Std (%)", "Monocle / Std (%)", "Scalaz / Std (%)", "Shapeless / Std (%)", "Std (ops/s)", "Monocle Macro (ops/s)", "Monocle (ops/s)", "Scalaz (ops/s)", "Shapeless (ops/s)") ::
       results.map( r =>
-        (r.method.value, scp(r, MACRO), scp(r, MONOCLE), scp(r, SCALAZ), scp(r, SHAPELESS), f(r.stdScore), sc(r.implScores, MONOCLE), sc(r.implScores, SCALAZ), sc(r.implScores, SHAPELESS))
+        (r.method.value, scp(r, MACRO), scp(r, MONOCLE), scp(r, SCALAZ), scp(r, SHAPELESS), f(r.stdScore), sc(r.implScores, MONOCLE), sc(r.implScores, MONOCLE), sc(r.implScores, SCALAZ), sc(r.implScores, SHAPELESS))
       )
   }
 
