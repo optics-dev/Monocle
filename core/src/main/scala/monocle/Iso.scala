@@ -178,7 +178,13 @@ abstract class PIso[S, T, A, B] private[monocle](val get: S => A, val reverseGet
 
   /** view a [[PIso]] as a [[PLens]] */
   @inline final def asLens: PLens[S, T, A, B] =
-    new PLens(get, set){
+    new PLens[S, T, A, B]{
+      def get(s: S): A =
+        self.get(s)
+
+      def set(b: B): S => T =
+        self.set(b)
+
       def modify(f: A => B): S => T =
         self.modify(f)
 
