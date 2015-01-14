@@ -48,7 +48,7 @@ object Dependencies {
   )
 
   val macroVersion = "2.0.1"
-  val paradisePlugin = compilerPlugin("org.scalamacros" % "paradise"        % macroVersion cross CrossVersion.full)
+  val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
   val kindProjector  = compilerPlugin("org.spire-math"  %% "kind-projector" % "0.5.2")
 }
 
@@ -87,6 +87,7 @@ object MonocleBuild extends Build {
     "monocle-macro",
     file("macro"),
     settings = buildSettings ++ Seq(
+      scalacOptions  += "-language:experimental.macros",
       libraryDependencies ++= Seq(
         "org.scala-lang"  %  "scala-reflect"  % scalaVersion.value,
         "org.scala-lang"  %  "scala-compiler" % scalaVersion.value % "provided"
@@ -96,7 +97,8 @@ object MonocleBuild extends Build {
         case (2, scalaMajor) if scalaMajor < 11 =>
           // if scala 2.11+ is used, quasiquotes are merged into scala-reflect
           Seq("org.scalamacros" %% "quasiquotes" % macroVersion)
-      } getOrElse Nil
+      } getOrElse Nil,
+      unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
     )
   ) dependsOn(core)
 

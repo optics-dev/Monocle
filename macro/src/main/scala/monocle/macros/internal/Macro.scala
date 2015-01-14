@@ -2,15 +2,11 @@ package monocle.macros.internal
 
 import monocle.Lens
 
-import scala.language.experimental.macros
-
 object Macro {
   def mkLens[A, B](fieldName: String): Lens[A, B] = macro MacroImpl.mkLens_impl[A, B]
 }
 
-private[macros] object MacroImpl {
-
-  import scala.reflect.macros._
+private[macros] object MacroImpl extends MacrosCompatibility {
 
   def lenser_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(field: c.Expr[A => B]): c.Expr[Lens[A, B]] = {
     import c.universe._
@@ -44,9 +40,9 @@ private[macros] object MacroImpl {
     import c.universe._
     val aTpe = weakTypeOf[A]
 
-    val strFieldName = c.eval(c.Expr[String](c.resetLocalAttrs(fieldName.tree.duplicate)))
+    val strFieldName = c.eval(c.Expr[String](resetLocalAttrs(c)(fieldName.tree.duplicate)))
 
-    val fieldMethod = aTpe.declarations.collectFirst {
+    val fieldMethod = getDeclarations(c)(aTpe).collectFirst {
       case m: MethodSymbol if m.isCaseAccessor && m.name.decodedName.toString == strFieldName => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $strFieldName in $aTpe"))
 
@@ -57,13 +53,13 @@ private[macros] object MacroImpl {
     import c.universe._
     val (aTpe, bTpe) = (weakTypeOf[A], weakTypeOf[B])
 
-    val constructor = aTpe.declarations.collectFirst {
+    val constructor = getDeclarations(c)(aTpe).collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in $aTpe"))
 
-    val strFieldName = c.eval(c.Expr[String](c.resetLocalAttrs(fieldName.tree.duplicate)))
+    val strFieldName = c.eval(c.Expr[String](resetLocalAttrs(c)(fieldName.tree.duplicate)))
 
-    val field = constructor.paramss.head.find(_.name.decodedName.toString == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
+    val field = getParameterLists(c)(constructor).head.find(_.name.decodedName.toString == strFieldName).getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
 
     c.Expr[B => A => A](q"{b: $bTpe => a: $aTpe => a.copy(${field} = b)}")
   }
