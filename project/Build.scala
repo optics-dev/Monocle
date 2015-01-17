@@ -137,7 +137,7 @@ object MonocleBuild extends Build {
       libraryDependencies += shapeless.value,
       addCompilerPlugin(kindProjector)
     )
-  ) dependsOn(core)
+  ) dependsOn(core, macros)
 }
 
 object MonoclePublishing  {

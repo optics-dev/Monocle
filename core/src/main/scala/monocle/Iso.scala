@@ -159,7 +159,7 @@ abstract class PIso[S, T, A, B] private[monocle](val get: S => A, val reverseGet
       def modify(f: A => B): S => T =
         self.modify(f)
 
-      def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 
@@ -172,17 +172,23 @@ abstract class PIso[S, T, A, B] private[monocle](val get: S => A, val reverseGet
       def modify(f: A => B): S => T =
         self.modify(f)
 
-      def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 
   /** view a [[PIso]] as a [[PLens]] */
   @inline final def asLens: PLens[S, T, A, B] =
-    new PLens(get, set){
+    new PLens[S, T, A, B]{
+      def get(s: S): A =
+        self.get(s)
+
+      def set(b: B): S => T =
+        self.set(b)
+
       def modify(f: A => B): S => T =
         self.modify(f)
 
-      def modifyF[F[_] : Functor](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 
@@ -192,7 +198,7 @@ object PIso {
   /** create a [[PIso]] using a pair of functions: one to get the target and one to get the source. */
   def apply[S, T, A, B](get: S => A)(reverseGet: B => T): PIso[S, T, A, B] =
     new PIso[S, T, A, B](get, reverseGet){
-      def modifyF[F[_] : Functor](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
         Functor[F].map(f(get(s)))(reverseGet)
 
       def modify(f: A => B): S => T =

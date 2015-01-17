@@ -10,11 +10,13 @@ sealed trait Impl
 object Impl {
   implicit val ord = Order.orderBy[Impl, Int]{
     case STD       => 0
-    case MONOCLE   => 1
-    case SCALAZ    => 2
-    case SHAPELESS => 3
+    case MACRO     => 1
+    case MONOCLE   => 2
+    case SCALAZ    => 3
+    case SHAPELESS => 4
   }
   case object STD       extends Impl
+  case object MACRO     extends Impl
   case object MONOCLE   extends Impl
   case object SCALAZ    extends Impl
   case object SHAPELESS extends Impl
@@ -73,7 +75,8 @@ object FormatBenchResult extends App {
     }.toMaybe
 
   def extractImpl(benchName: String): Maybe[Impl] =
-    if(benchName.contains("Monocle")) Maybe.just(MONOCLE)
+    if(benchName.contains("Macro")) Maybe.just(MACRO)
+    else if(benchName.contains("Monocle")) Maybe.just(MONOCLE)
     else if(benchName.contains("Scalaz")) Maybe.just(SCALAZ)
     else if(benchName.contains("Shapeless")) Maybe.just(SHAPELESS)
     else if(benchName.contains("Std")) Maybe.just(STD)
@@ -92,7 +95,7 @@ object FormatBenchResult extends App {
     )
   }
 
-  def format(results: IList[BenchResult]): IList[(String, String, String, String, String, String, String, String)] = {
+  def format(results: IList[BenchResult]): IList[(String, String, String, String, String, String, String, String, String, String)] = {
     def f(l: Long): String =
       l.toString
 
@@ -105,9 +108,9 @@ object FormatBenchResult extends App {
     def scp(r: BenchResult, impl: Impl): String =
       r.implScores.lookup(impl).map(_.toDouble / r.stdScore * 100).map(fp).getOrElse("N/A")
 
-    ("Method", "Monocle / Std (%)", "Scalaz / Std (%)", "Shapeless / Std (%)", "Std (ops/s)", "Monocle (ops/s)", "Scalaz (ops/s)", "Shapeless (ops/s)") ::
+    ("Method", "Monocle Macro / Std (%)", "Monocle / Std (%)", "Scalaz / Std (%)", "Shapeless / Std (%)", "Std (ops/s)", "Monocle Macro (ops/s)", "Monocle (ops/s)", "Scalaz (ops/s)", "Shapeless (ops/s)") ::
       results.map( r =>
-        (r.method.value, scp(r, MONOCLE), scp(r, SCALAZ), scp(r, SHAPELESS), f(r.stdScore), sc(r.implScores, MONOCLE), sc(r.implScores, SCALAZ), sc(r.implScores, SHAPELESS))
+        (r.method.value, scp(r, MACRO), scp(r, MONOCLE), scp(r, SCALAZ), scp(r, SHAPELESS), f(r.stdScore), sc(r.implScores, MONOCLE), sc(r.implScores, MONOCLE), sc(r.implScores, SCALAZ), sc(r.implScores, SHAPELESS))
       )
   }
 

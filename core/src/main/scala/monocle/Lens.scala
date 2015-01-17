@@ -29,11 +29,14 @@ import scalaz.{\/, Applicative, Maybe, Monoid, Functor}
  * @tparam T the modified source of a [[PLens]]
  * @tparam A the target of a [[PLens]]
  * @tparam B the modified target of a [[PLens]]
- *
- * @param get get the target of a [[PLens]]
- * @param set set polymorphically the target of a [[PLens]] with a value
  */
-abstract class PLens[S, T, A, B] private[monocle](val get: S => A, val set: B => S => T){ self =>
+abstract class PLens[S, T, A, B] private[monocle]{ self =>
+
+  /** get the target of a [[PLens]] */
+  def get(s: S): A
+
+  /** set polymorphically the target of a [[PLens]] using a function */
+  def set(b: B): S => T
 
   /** modify polymorphically the target of a [[PLens]] using [[Functor]] function */
   def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T]
@@ -71,8 +74,14 @@ abstract class PLens[S, T, A, B] private[monocle](val get: S => A, val set: B =>
 
   /** compose a [[PLens]] with a [[PLens]] */
   @inline final def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
-    new PLens[S, T, C, D](other.get compose self.get, c => modify(other.set(c))){
-      def modifyF[F[_] : Functor](f: C => F[D])(s: S): F[T] =
+    new PLens[S, T, C, D]{
+      def get(s: S): C =
+        other.get(self.get(s))
+
+      def set(b: D): S => T =
+        self.modify(other.set(b))
+
+      def modifyF[F[_]: Functor](f: C => F[D])(s: S): F[T] =
         self.modifyF(other.modifyF(f))(s)
 
       def modify(f: C => D): S => T =
@@ -142,7 +151,7 @@ abstract class PLens[S, T, A, B] private[monocle](val get: S => A, val set: B =>
       def modify(f: A => B): S => T =
         self.modify(f)
 
-      def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 
@@ -153,13 +162,19 @@ object PLens {
    * create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
    * @see macro module for methods generating [[PLens]] with less boiler plate
    */
-  def apply[S, T, A, B](get: S => A)(set: B => S => T): PLens[S, T, A, B] =
-    new PLens(get, set){
-      def modifyF[F[_] : Functor](f: A => F[B])(s: S): F[T] =
-        Functor[F].map(f(get(s)))(set(_)(s))
+  def apply[S, T, A, B](_get: S => A)(_set: B => S => T): PLens[S, T, A, B] =
+    new PLens[S, T, A, B]{
+      def get(s: S): A =
+        _get(s)
+
+      def set(b: B): S => T =
+        _set(b)
+
+      def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
+        Functor[F].map(f(_get(s)))(_set(_)(s))
 
       def modify(f: A => B): S => T =
-       s => set(f(get(s)))(s)
+       s => set(f(_get(s)))(s)
     }
 
 }
