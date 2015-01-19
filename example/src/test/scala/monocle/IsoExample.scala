@@ -1,10 +1,22 @@
 package monocle
 
-import org.specs2.scalaz.Spec
-import monocle.syntax._
+import monocle.macros.Isoer
 import monocle.std._
+import monocle.syntax._
+import org.specs2.scalaz.Spec
 
 class IsoExample extends Spec {
+
+  case class Euro(value: Int)
+  val euroIso = Isoer[Euro, Int]
+
+  "macro Iso get" in {
+    euroIso.get(Euro(5)) ==== 5
+  }
+
+  "macro Iso reverseGet" in {
+    euroIso.reverseGet(5) ==== Euro(5)
+  }
   
   case class Point(_x: Int, _y: Int)
 

@@ -118,7 +118,7 @@ object MonocleBuild extends Build {
       publishArtifact      := false,
       libraryDependencies ++= Seq(scalaz, scalaCheckBinding, scalazSpec2, specs2Scalacheck, shapeless.value)
     )
-  ) dependsOn(core, generic ,law)
+  ) dependsOn(core, generic ,law, macros)
 
   lazy val example: Project = Project(
     "monocle-example",

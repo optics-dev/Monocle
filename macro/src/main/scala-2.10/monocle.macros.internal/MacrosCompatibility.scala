@@ -23,4 +23,7 @@ trait MacrosCompatibility {
 
   def getTermNames(c: Context): c.universe.TermNamesApi =
     c.universe.`nme`
+
+  def companionTpe(c: Context)(tpe: c.universe.Type): c.universe.Symbol =
+    tpe.typeSymbol.companionSymbol
 }

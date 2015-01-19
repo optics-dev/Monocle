@@ -14,8 +14,8 @@ object IsoLaws {
   def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](iso: Iso[S, A]) = new Properties("Iso") {
 
     property("get and reverseGet forms an Isomorphism") = forAll { (s: S, a: A) =>
-      (iso.reverseGet compose iso.get)(s)        === s
-      (iso.get        compose iso.reverseGet)(a) === a
+      (iso.reverseGet _ compose iso.get)(s)        === s
+      (iso.get _        compose iso.reverseGet)(a) === a
     }
 
     property("set is a weaker version of reverseGet") = forAll { (s: S, a: A) =>

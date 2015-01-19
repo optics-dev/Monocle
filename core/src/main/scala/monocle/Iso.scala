@@ -38,11 +38,14 @@ import scalaz.{Applicative, Functor, Maybe, Monoid, \/}
  * @tparam T the modified source of a [[PIso]]
  * @tparam A the target of a [[PIso]]
  * @tparam B the modified target of a [[PIso]]
- *
- * @param get get the target of a [[PIso]]
- * @param reverseGet get the modified source of a [[PIso]]
  */
-abstract class PIso[S, T, A, B] private[monocle](val get: S => A, val reverseGet: B => T){ self =>
+abstract class PIso[S, T, A, B] private[monocle]{ self =>
+
+  /** get the target of a [[PIso]] */
+  def get(s: S): A
+
+  /** get the modified source of a [[PIso]] */
+  def reverseGet(b: B): T
 
   /** modify polymorphically the target of a [[PIso]] with a [[Functor]] function */
   def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T]
@@ -92,7 +95,13 @@ abstract class PIso[S, T, A, B] private[monocle](val get: S => A, val reverseGet
 
   /** compose a [[PIso]] with a [[PIso]] */
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
-    new PIso(other.get compose get, reverseGet compose other.reverseGet){
+    new PIso[S, T, C, D]{
+      def get(s: S): C =
+        other.get(self.get(s))
+
+      def reverseGet(b: D): T =
+        self.reverseGet(other.reverseGet(b))
+
       def modifyF[F[_] : Functor](f: C => F[D])(s: S): F[T] =
         self.modifyF(other.modifyF(f))(s)
 
@@ -196,13 +205,19 @@ abstract class PIso[S, T, A, B] private[monocle](val get: S => A, val reverseGet
 
 object PIso {
   /** create a [[PIso]] using a pair of functions: one to get the target and one to get the source. */
-  def apply[S, T, A, B](get: S => A)(reverseGet: B => T): PIso[S, T, A, B] =
-    new PIso[S, T, A, B](get, reverseGet){
+  def apply[S, T, A, B](_get: S => A)(_reverseGet: B => T): PIso[S, T, A, B] =
+    new PIso[S, T, A, B]{
+      def get(s: S): A =
+        _get(s)
+
+      def reverseGet(b: B): T =
+        _reverseGet(b)
+
       def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
-        Functor[F].map(f(get(s)))(reverseGet)
+        Functor[F].map(f(_get(s)))(_reverseGet)
 
       def modify(f: A => B): S => T =
-        reverseGet compose f compose get
+        _reverseGet compose f compose _get
     }
 
   /**
@@ -212,7 +227,12 @@ object PIso {
    * Iso.id composeO   o        == o (replace composeO by composeLens, composeIso, composePrism, ...)
    */
   def id[S, T]: PIso[S, T, S, T] =
-    PIso(identity[S])(identity[T])
+    new PIso[S, T, S, T] {
+      def get(s: S): S = s
+      def reverseGet(t: T): T = t
+      def modifyF[F[_]: Functor](f: S => F[T])(s: S): F[T] = f(s)
+      def modify(f: S => T): S => T = f
+    }
 
   /** transform an [[scalaz.Isomorphisms.Iso2]] in a [[PIso]] */
   def fromIsoFunctor[F[_], G[_], A, B](isoFunctor: F <~> G): PIso[F[A], F[B], G[A], G[B]] =
