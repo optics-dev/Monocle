@@ -14,9 +14,14 @@ private object IsoerImpl extends MacrosCompatibility {
 
     val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
 
-    val fieldMethod = getDeclarations(c)(sTpe).collectFirst {
+    val fieldMethod = getDeclarations(c)(sTpe).collect {
       case m: MethodSymbol if m.isCaseAccessor => m
-    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find accessor in $sTpe"))
+    }.toList match {
+      case m :: Nil if m.returnType == aTpe => m
+      case m :: Nil => c.abort(c.enclosingPosition, s"Found a case class accessor of type ${m.returnType} instead of $aTpe")
+      case Nil      => c.abort(c.enclosingPosition, s"Cannot find a case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor")
+      case _        => c.abort(c.enclosingPosition, s"Found several case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor")
+    }
 
     val sTpeSym = companionTpe(c)(sTpe)
 
