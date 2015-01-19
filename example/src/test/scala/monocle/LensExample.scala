@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.macros.{Lenser, Lenses}
+import monocle.macros.{Lenser, Lenses, CaseClassLenser}
 import monocle.syntax._
 import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
@@ -22,12 +22,15 @@ class LensExample extends Spec {
     val name = lenser(_.name)
     val age  = lenser(_.age)
   }
+  
+  val CCLenserMacro = CaseClassLenser.getLenses[Person]
 
   val john = Person("John", 30)
   
   "Lens get extract an A from an S" in {
     (john applyLens CoreSimpleLens._name get) ==== "John"
     (john applyLens LenserMacro.name get)     ==== "John"
+    (john applyLens CCLenserMacro.name get)   ==== "John"
     (john applyLens Person.name get)          ==== "John"
   }
 
@@ -36,6 +39,7 @@ class LensExample extends Spec {
 
     (john applyLens CoreSimpleLens._age set 45) ==== changedJohn
     (john applyLens LenserMacro.age set 45)     ==== changedJohn
+    (john applyLens CCLenserMacro.age set 45)   ==== changedJohn
     (john applyLens Person.age set 45)          ==== changedJohn
   }
 
@@ -47,6 +51,13 @@ class LensExample extends Spec {
   "@Lenses takes an optional prefix string" in {
     (alpha applyLens Cat._age get)   ==== 2
     (alpha applyLens Cat._age set 3) ==== Cat(3)
+  }
+
+  "CaseClassLenser takes an optional prefix string" in {
+    val lenses = CaseClassLenser.getLenses[Cat]("_")
+    
+    (alpha applyLens lenses._age get) ==== 2
+    (alpha applyLens lenses._age set 3) ==== Cat(3)
   }
 
   "Modifications through lenses are chainable" in {
@@ -61,5 +72,22 @@ class LensExample extends Spec {
     new AnyValueAsResult[Unit].asResult(
       illTyped("""@Lenses class C""", "Invalid annotation target: must be a case class")
     )
+  }
+
+  "CaseClassLenser is for case classes only" in {
+    class C
+    new AnyValueAsResult[Unit].asResult(
+      illTyped("""CaseClassLenser.getLenses[C]""", """Invalid lensing target \[C\]: must be a case class""")
+    )
+  }
+
+  "CaseClassLenser does not require an annotation on the traget" in {
+    case class Point(x: Int, y: Int) // note no annotation
+    val lenses = CaseClassLenser.getLenses[Point]
+
+    import lenses._
+
+    val update = x.modify(_ + 100) compose y.set(7)
+    update(Point(1, 2)) ==== Point(101, 7)
   }
 }
