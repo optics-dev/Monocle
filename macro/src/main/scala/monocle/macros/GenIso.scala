@@ -42,6 +42,24 @@ private object GenIsoImpl extends MacrosCompatibility {
 
         def modify(f: $aTpe => $aTpe): $sTpe => $sTpe =
          s => $sTpeSym(f(s.$fieldMethod))
+
+        val reverse: Iso[$aTpe, $sTpe] =
+          new Iso[$aTpe, $sTpe]{
+            def get(a: $aTpe): $sTpe =
+              $sTpeSym(a)
+
+            def reverseGet(s: $sTpe): $aTpe =
+              s.$fieldMethod
+
+            def modifyF[F[_]: Functor](f: $sTpe => F[$sTpe])(a: $aTpe): F[$aTpe] =
+              Functor[F].map(f($sTpeSym(a)))(_.$fieldMethod)
+
+            def modify(f: $sTpe => $sTpe): $aTpe => $aTpe =
+              a => f($sTpeSym(a)).$fieldMethod
+
+            def reverse: Iso[$sTpe, $aTpe] =
+              self
+          }
       }
     """)
   }
