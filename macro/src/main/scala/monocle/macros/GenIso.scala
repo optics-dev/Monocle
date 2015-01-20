@@ -6,11 +6,11 @@ import monocle.macros.internal.MacrosCompatibility
 
 object GenIso {
   /** generate an [[Iso]] between a case class `S` and its unique field of type `A` */
-  def apply[S, A]: Iso[S, A] = macro GenIsoImpl.mkIso_impl[S, A]
+  def apply[S, A]: Iso[S, A] = macro GenIsoImpl.genIso_impl[S, A]
 }
 
 private object GenIsoImpl extends MacrosCompatibility {
-  def mkIso_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context): c.Expr[Iso[S, A]] = {
+  def genIso_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context): c.Expr[Iso[S, A]] = {
     import c.universe._
 
     val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])

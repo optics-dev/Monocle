@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.macros.{Lenser, Lenses}
+import monocle.macros.{GenLens, Lenses}
 import monocle.syntax._
 import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
@@ -17,10 +17,10 @@ class LensExample extends Spec {
   }
 
   object LenserMacro {
-    val lenser = Lenser[Person]
+    val genLens = GenLens[Person]
 
-    val name = lenser(_.name)
-    val age  = lenser(_.age)
+    val name = genLens(_.name)
+    val age  = genLens(_.age)
   }
 
   val john = Person("John", 30)
