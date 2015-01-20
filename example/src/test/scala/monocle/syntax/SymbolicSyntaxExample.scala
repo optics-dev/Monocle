@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import monocle.function._
-import monocle.macros.Lenser
+import monocle.macros.GenLens
 import monocle.std._
 import monocle.{Lens, Prism}
 import org.specs2.scalaz.Spec
@@ -20,8 +20,8 @@ class SymbolicSyntaxExample extends Spec {
   val _articles = Lens((_: Store).articles)(as => s => s.copy(articles = as))
   val _sofa     = Prism[Article, Sofa ]{ case s: Sofa  => s.just; case _ => Maybe.empty}(identity)
 
-  val sofaLenser = Lenser[Sofa]
-  val (_color, _price) = (sofaLenser(_.color), sofaLenser(_.price))
+  val sofaGenLens = GenLens[Sofa]
+  val (_color, _price) = (sofaGenLens(_.color), sofaGenLens(_.price))
 
 
 

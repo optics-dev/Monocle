@@ -8,7 +8,7 @@ object Macro {
 
 private[macros] object MacroImpl extends MacrosCompatibility {
 
-  def lenser_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context)(field: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
+  def genLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context)(field: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
     import c.universe._
     val fieldName = field match {
       case Expr(

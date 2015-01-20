@@ -1,22 +1,20 @@
 package monocle
 
-import monocle.law.LensLaws
-
-import scalaz.Equal
 import monocle.TestUtil._
+import monocle.law.{LensLaws, OptionalLaws, SetterLaws, TraversalLaws}
+import monocle.macros.{GenLens, Lenses}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import org.specs2.scalaz._
 
+import scalaz.Equal
+
 class LensSpec extends Spec {
 
+  @Lenses
   case class Example(s: String, i: Int)
 
-  val StringLens = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
-
-  // we could also use this syntax
-  Lens((_: Example).s)(s => ex => ex.copy(s = s))
-
+  val stringLens = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
 
   implicit val exampleGen: Arbitrary[Example] = Arbitrary(for {
     s <- arbitrary[String]
@@ -25,6 +23,13 @@ class LensSpec extends Spec {
 
   implicit val exampleEq = Equal.equalA[Example]
 
-  checkAll(LensLaws(StringLens))
+  checkAll("apply Lens", LensLaws(stringLens))
+  checkAll("GenLens", LensLaws(GenLens[Example](_.s)))
+  checkAll("Lenses",  LensLaws(Example.s))
+
+  checkAll("lens.asOptional" , OptionalLaws(stringLens.asOptional))
+  checkAll("lens.asTraversal", TraversalLaws(stringLens.asTraversal))
+  checkAll("lens.asSetter"   , SetterLaws(stringLens.asSetter))
+
 
 }
