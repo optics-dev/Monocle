@@ -107,7 +107,7 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
       def modify(f: C => D): S => T =
         self.modify(other.modify(f))
 
-      val reverse: PIso[D, C, T, S] =
+      def reverse: PIso[D, C, T, S] =
         new PIso[D, C, T, S]{
           def get(d: D): T =
             self.reverseGet(other.reverseGet(d))
@@ -236,7 +236,7 @@ object PIso {
       def modify(f: A => B): S => T =
         s => _reverseGet(f(_get(s)))
 
-      val reverse: PIso[B, A, T, S] =
+      def reverse: PIso[B, A, T, S] =
         new PIso[B, A, T, S] {
           def get(b: B): T =
             _reverseGet(b)
@@ -267,7 +267,7 @@ object PIso {
       def reverseGet(t: T): T = t
       def modifyF[F[_]: Functor](f: S => F[T])(s: S): F[T] = f(s)
       def modify(f: S => T): S => T = f
-      val reverse: PIso[T, S, T, S] =
+      def reverse: PIso[T, S, T, S] =
         new PIso[T, S, T, S] {
           def get(t: T): T = t
           def reverseGet(s: S): S = s

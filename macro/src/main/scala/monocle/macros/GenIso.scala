@@ -43,7 +43,7 @@ private object GenIsoImpl extends MacrosCompatibility {
         def modify(f: $aTpe => $aTpe): $sTpe => $sTpe =
          s => $sTpeSym(f(s.$fieldMethod))
 
-        val reverse: Iso[$aTpe, $sTpe] =
+        def reverse: Iso[$aTpe, $sTpe] =
           new Iso[$aTpe, $sTpe]{
             def get(a: $aTpe): $sTpe =
               $sTpeSym(a)
