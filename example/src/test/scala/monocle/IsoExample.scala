@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.macros.Isoer
+import monocle.macros.GenIso
 import monocle.std._
 import monocle.syntax._
 import org.specs2.scalaz.Spec
@@ -8,7 +8,7 @@ import org.specs2.scalaz.Spec
 class IsoExample extends Spec {
 
   case class Euro(value: Int)
-  val euroIso = Isoer[Euro, Int]
+  val euroIso = GenIso[Euro, Int]
 
   "macro Iso get" in {
     euroIso.get(Euro(5)) ==== 5

@@ -4,11 +4,12 @@ package monocle.macros
 import monocle.Iso
 import monocle.macros.internal.MacrosCompatibility
 
-object Isoer {
-  def apply[S, A]: Iso[S, A] = macro IsoerImpl.mkIso_impl[S, A]
+object GenIso {
+  /** generate an [[Iso]] between a case class `S` and its unique field of type `A` */
+  def apply[S, A]: Iso[S, A] = macro GenIsoImpl.mkIso_impl[S, A]
 }
 
-private object IsoerImpl extends MacrosCompatibility {
+private object GenIsoImpl extends MacrosCompatibility {
   def mkIso_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context): c.Expr[Iso[S, A]] = {
     import c.universe._
 

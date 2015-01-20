@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.law.IsoLaws
-import monocle.macros.Isoer
+import monocle.macros.GenIso
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import org.specs2.scalaz.Spec
@@ -18,7 +18,7 @@ class IsoSpec extends Spec {
 
   implicit val intWrapperEq = Equal.equalA[IntWrapper]
 
-  checkAll("macro iso", IsoLaws(Isoer[IntWrapper, Int]))
+  checkAll("macro iso", IsoLaws(GenIso[IntWrapper, Int]))
   checkAll("apply iso", IsoLaws(Iso[IntWrapper, Int](_.i)(IntWrapper.apply)))
 
   checkAll("iso id", IsoLaws(Iso.id[Int]))
