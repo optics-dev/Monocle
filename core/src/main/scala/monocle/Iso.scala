@@ -163,11 +163,20 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
 
   /** view a [[PIso]] as a [[Getter]] */
   @inline final def asGetter: Getter[S, A] =
-    new Getter(get)
+    new Getter[S, A]{
+      def get(s: S): A =
+        self.get(s)
+    }
 
   /** view a [[PIso]] as a [[Setter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
-    new PSetter(modify)
+    new PSetter[S, T, A, B]{
+      def modify(f: A => B): S => T =
+        self.modify(f)
+
+      def set(b: B): S => T =
+        self.set(b)
+    }
 
   /** view a [[PIso]] as a [[PTraversal]] */
   @inline final def asTraversal: PTraversal[S, T, A, B] =
@@ -178,7 +187,13 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
 
   /** view a [[PIso]] as a [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
-    new POptional(\/.right compose get, set){
+    new POptional[S, T, A, B]{
+      def getOrModify(s: S): T \/ A =
+        \/.right(get(s))
+
+      def set(b: B): S => T =
+        self.set(b)
+
       def getMaybe(s: S): Maybe[A] =
         Maybe.just(self.get(s))
 
@@ -191,7 +206,13 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
 
   /** view a [[PIso]] as a [[PPrism]] */
   @inline final def asPrism: PPrism[S, T, A, B] =
-    new PPrism(\/.right compose get, reverseGet){
+    new PPrism[S, T, A, B]{
+      def getOrModify(s: S): T \/ A =
+        \/.right(get(s))
+
+      def reverseGet(b: B): T =
+        self.reverseGet(b)
+
       def getMaybe(s: S): Maybe[A] =
         Maybe.just(self.get(s))
 

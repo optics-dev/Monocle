@@ -28,11 +28,14 @@ import scalaz.{Applicative, Maybe, Monoid, \/}
  * @tparam T the modified source of a [[PPrism]]
  * @tparam A the target of a [[PPrism]]
  * @tparam B the modified target of a [[PPrism]]
- *
- * @param getOrModify get the target of a [[PPrism]] or modify the source in case there is no target
- * @param reverseGet get the modified source of a [[PIso]]
  */
-abstract class PPrism[S, T, A, B] private[monocle](val getOrModify: S => T \/ A, val reverseGet: B => T){ self =>
+abstract class PPrism[S, T, A, B] private[monocle]{ self =>
+
+  /** get the target of a [[PPrism]] or modify the source in case there is no target */
+  def getOrModify(s: S): T \/ A
+
+  /** get the modified source of a [[PPrism]] */
+  def reverseGet(b: B): T
 
   /** get the target of a [[PPrism]] or nothing if there is no target */
   def getMaybe(s: S): Maybe[A]
@@ -99,10 +102,13 @@ abstract class PPrism[S, T, A, B] private[monocle](val getOrModify: S => T \/ A,
 
   /** compose a [[PPrism]] with a [[PPrism]] */
   @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
-    new PPrism[S, T, C, D](
-      s => getOrModify(s).flatMap(a => other.getOrModify(a).bimap(set(_)(s), identity)),
-      reverseGet compose other.reverseGet
-    ){
+    new PPrism[S, T, C, D]{
+      def getOrModify(s: S): T \/ C =
+        self.getOrModify(s).flatMap(a => other.getOrModify(a).bimap(self.set(_)(s), identity))
+
+      def reverseGet(d: D): T =
+        self.reverseGet(other.reverseGet(d))
+
       def getMaybe(s: S): Maybe[C] =
         self.getMaybe(s) flatMap other.getMaybe
 
@@ -153,7 +159,13 @@ abstract class PPrism[S, T, A, B] private[monocle](val getOrModify: S => T \/ A,
 
   /** view a [[PPrism]] as a [[Setter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
-    new PSetter(modify)
+    new PSetter[S, T, A, B]{
+      def modify(f: A => B): S => T =
+        self.modify(f)
+
+      def set(b: B): S => T =
+        self.set(b)
+    }
 
   /** view a [[PPrism]] as a [[PTraversal]] */
   @inline final def asTraversal: PTraversal[S, T, A, B] =
@@ -164,7 +176,13 @@ abstract class PPrism[S, T, A, B] private[monocle](val getOrModify: S => T \/ A,
 
   /** view a [[PPrism]] as a [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
-    new POptional(getOrModify, set){
+    new POptional[S, T, A, B]{
+      def getOrModify(s: S): T \/ A =
+        self.getOrModify(s)
+
+      def set(b: B): S => T =
+        self.set(b)
+
       def getMaybe(s: S): Maybe[A] =
         self.getMaybe(s)
 
@@ -178,26 +196,38 @@ abstract class PPrism[S, T, A, B] private[monocle](val getOrModify: S => T \/ A,
 
 object PPrism {
   /** create a [[PPrism]] using the canonical functions: getOrModify and reverseGet */
-  def apply[S, T, A, B](getOrModify: S => T \/ A)(reverseGet: B => T): PPrism[S, T, A, B] =
-    new PPrism(getOrModify, reverseGet){
+  def apply[S, T, A, B](_getOrModify: S => T \/ A)(_reverseGet: B => T): PPrism[S, T, A, B] =
+    new PPrism[S, T, A, B]{
+      def getOrModify(s: S): T \/ A =
+        _getOrModify(s)
+
+      def reverseGet(b: B): T =
+        _reverseGet(b)
+
       def getMaybe(s: S): Maybe[A] =
         getOrModify(s).toMaybe
 
       def modifyF[F[_] : Applicative](f: (A) => F[B])(s: S): F[T] =
         getOrModify(s).fold(
           t => Applicative[F].point(t),
-          a => Applicative[F].map(f(a))(reverseGet)
+          a => Applicative[F].map(f(a))(_reverseGet)
         )
 
-      def modify(f: (A) => B): S => T =
-        getOrModify(_).fold(identity, reverseGet compose f)
+      def modify(f: A => B): S => T =
+        getOrModify(_).fold(identity, _reverseGet compose f)
     }
 }
 
 object Prism {
   /** alias for [[PPrism]] apply restricted to monomorphic update */
   def apply[S, A](_getMaybe: S => Maybe[A])(_reverseGet: A => S): Prism[S, A] =
-    new PPrism[S, S, A, A](s => _getMaybe(s) \/> s, _reverseGet){
+    new Prism[S, A]{
+      def getOrModify(s: S): S \/ A =
+        _getMaybe(s) \/> s
+
+      def reverseGet(b: A): S =
+        _reverseGet(b)
+
       def getMaybe(s: S): Maybe[A] =
         _getMaybe(s)
 
