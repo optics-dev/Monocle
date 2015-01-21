@@ -11,10 +11,10 @@ import scalaz.Monoid
  *
  * @tparam S the source of a [[Getter]]
  * @tparam A the target of a [[Getter]]
- *
- * @param get get the target of a [[Getter]]
  */
-final class Getter[S, A] private[monocle](val get: S => A) {
+abstract class Getter[S, A] private[monocle]{ self =>
+  /** get the target of a [[Getter]] */
+  def get(s: S): A
 
   /*************************************************************/
   /** Compose methods between a [[Getter]] and another Optics  */
@@ -26,7 +26,10 @@ final class Getter[S, A] private[monocle](val get: S => A) {
 
   /** compose a [[Getter]] with a [[Getter]] */
   @inline def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
-    new Getter(other.get compose get)
+    new Getter[S, B]{
+      def get(s: S): B =
+        other.get(self.get(s))
+    }
 
   /** compose a [[Getter]] with a [[PTraversal]] */
   @inline def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
@@ -85,6 +88,9 @@ final class Getter[S, A] private[monocle](val get: S => A) {
 }
 
 object Getter {
-  def apply[S, A](get: S => A): Getter[S, A] =
-    new Getter(get)
+  def apply[S, A](_get: S => A): Getter[S, A] =
+    new Getter[S, A]{
+      def get(s: S): A =
+        _get(s)
+    }
 }

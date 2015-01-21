@@ -78,8 +78,8 @@ abstract class PLens[S, T, A, B] private[monocle]{ self =>
       def get(s: S): C =
         other.get(self.get(s))
 
-      def set(b: D): S => T =
-        self.modify(other.set(b))
+      def set(d: D): S => T =
+        self.modify(other.set(d))
 
       def modifyF[F[_]: Functor](f: C => F[D])(s: S): F[T] =
         self.modifyF(other.modifyF(f))(s)
@@ -129,11 +129,20 @@ abstract class PLens[S, T, A, B] private[monocle]{ self =>
 
   /** view a [[PLens]] as a [[Getter]] */
   @inline final def asGetter: Getter[S, A] =
-    new Getter(get)
+    new Getter[S, A]{
+      def get(s: S): A =
+        self.get(s)
+    }
 
   /** view a [[PLens]] as a [[PSetter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
-    new PSetter(modify)
+    new PSetter[S, T, A, B]{
+      def modify(f: A => B): S => T =
+        self.modify(f)
+
+      def set(b: B): S => T =
+        self.set(b)
+    }
 
   /** view a [[PLens]] as a [[PTraversal]] */
   @inline final def asTraversal: PTraversal[S, T, A, B] =
@@ -144,7 +153,13 @@ abstract class PLens[S, T, A, B] private[monocle]{ self =>
 
   /** view a [[PLens]] as an [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
-    new POptional(\/.right compose get, set){
+    new POptional[S, T, A, B] {
+      def getOrModify(s: S): T \/ A =
+        \/.right(get(s))
+
+      def set(b: B): S => T =
+        self.set(b)
+
       def getMaybe(s: S): Maybe[A] =
         Maybe.just(self.get(s))
 

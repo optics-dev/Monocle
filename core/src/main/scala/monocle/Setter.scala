@@ -22,41 +22,47 @@ import scalaz.Functor
  * @tparam T the modified source of a [[PSetter]]
  * @tparam A the target of a [[PSetter]]
  * @tparam B the modified target of a [[PSetter]]
- *
- * @param modify modify polymorphically the target of a [[PSetter]] with a function
  */
-final class PSetter[S, T, A, B] private[monocle](val modify: (A => B) => S => T) {
+abstract class PSetter[S, T, A, B] private[monocle] { self =>
+
+  /** modify polymorphically the target of a [[PSetter]] with a function */
+  def modify(f: A => B): S => T
 
   /** set polymorphically the target of a [[PSetter]] with a value */
-  @inline def set(b: B): S => T =
-    modify(_ => b)
+  def set(b: B): S => T
 
   /*************************************************************/
   /** Compose methods between a [[PSetter]] and another Optics */
   /*************************************************************/
 
   /** compose a [[PSetter]] with a [[PSetter]] */
-  @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    new PSetter[S, T, C, D](modify compose other.modify)
+  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    new PSetter[S, T, C, D]{
+      def modify(f: C => D): S => T =
+        self.modify(other.modify(f))
+
+      def set(d: D): S => T =
+        self.modify(other.set(d))
+    }
 
   /** compose a [[PSetter]] with a [[PTraversal]] */
-  @inline def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
     composeSetter(other.asSetter)
 
   /** compose a [[PSetter]] with a [[POptional]] */
-  @inline def composeOptional[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
     composeSetter(other.asSetter)
 
   /** compose a [[PSetter]] with a [[PPrism]] */
-  @inline def composePrism[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
     composeSetter(other.asSetter)
 
   /** compose a [[PSetter]] with a [[PLens]] */
-  @inline def composeLens[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def composeLens[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
     composeSetter(other.asSetter)
 
   /** compose a [[PSetter]] with a [[PIso]] */
-  @inline def composeIso[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
     composeSetter(other.asSetter)
 
   /********************************************/
@@ -64,23 +70,23 @@ final class PSetter[S, T, A, B] private[monocle](val modify: (A => B) => S => T)
   /********************************************/
 
   /** alias to composeTraversal */
-  @inline def ^|->>[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
     composeTraversal(other)
 
   /** alias to composeOptional */
-  @inline def ^|-?[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def ^|-?[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
     composeOptional(other)
 
   /** alias to composePrism */
-  @inline def ^<-?[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def ^<-?[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
     composePrism(other)
 
   /** alias to composeLens */
-  @inline def ^|->[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def ^|->[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
     composeLens(other)
 
   /** alias to composeIso */
-  @inline def ^<->[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
+  @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
     composeIso(other)
 
 }
@@ -88,17 +94,23 @@ final class PSetter[S, T, A, B] private[monocle](val modify: (A => B) => S => T)
 object PSetter {
 
   /** create a [[PSetter]] using modify function */
-  def apply[S, T, A, B](modify: (A => B) => S => T): PSetter[S, T, A, B] =
-    new PSetter(modify)
+  def apply[S, T, A, B](_modify: (A => B) => S => T): PSetter[S, T, A, B] =
+    new PSetter[S, T, A, B]{
+      def modify(f: A => B): S => T =
+        _modify(f)
+
+      def set(b: B): S => T =
+        _modify(_ => b)
+    }
 
   /** create a [[PSetter]] from a [[Functor]] */
   def fromFunctor[F[_]: Functor, A, B]: PSetter[F[A], F[B], A, B] =
-    new PSetter(f => Functor[F].map(_)(f))
+    PSetter[F[A], F[B], A, B](f => Functor[F].map(_)(f))
 
 }
 
 object Setter {
   /** alias for [[PSetter]] apply with a monomorphic modify function */
   def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
-    new PSetter(modify)
+    PSetter(modify)
 }

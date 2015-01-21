@@ -23,13 +23,16 @@ import scalaz.{Applicative, Maybe, Monoid, \/}
  * @tparam T the modified source of a [[POptional]]
  * @tparam A the target of a [[POptional]]
  * @tparam B the modified target of a [[POptional]]
- *
- * @param getOrModify get the target of a [[POptional]] or modify the source in case there is no target
- * @param set set polymorphically the target of a [[POptional]] with a value
  */
-abstract class POptional[S, T, A, B] private[monocle](val getOrModify: S => T \/ A, val set: B => S => T) { self =>
+abstract class POptional[S, T, A, B] private[monocle]{ self =>
 
-  /** get the target of a [[PPrism]] or nothing if there is no target */
+  /** get the target of a [[POptional]] or modify the source in case there is no target */
+  def getOrModify(s: S): T \/ A
+
+  /** get the modified source of a [[POptional]] */
+  def set(b: B): S => T
+
+  /** get the target of a [[POptional]] or nothing if there is no target */
   def getMaybe(s: S): Maybe[A]
 
   /** modify polymorphically the target of a [[POptional]] with an [[Applicative]] function */
@@ -78,10 +81,13 @@ abstract class POptional[S, T, A, B] private[monocle](val getOrModify: S => T \/
 
   /** compose a [[POptional]] with a [[POptional]] */
   @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    new POptional[S, T, C, D](
-      s      => getOrModify(s).flatMap(a => other.getOrModify(a).bimap(set(_)(s), identity)),
-      d => s => modify(other.set(d))(s)
-    ){
+    new POptional[S, T, C, D]{
+      def getOrModify(s: S): T \/ C =
+        self.getOrModify(s).flatMap(a => other.getOrModify(a).bimap(self.set(_)(s), identity))
+
+      def set(d: D): S => T =
+        self.modify(other.set(d))
+
       def getMaybe(s: S): Maybe[C] =
         self.getMaybe(s) flatMap other.getMaybe
 
@@ -140,7 +146,13 @@ abstract class POptional[S, T, A, B] private[monocle](val getOrModify: S => T \/
 
   /** view a [[POptional]] as a [[PSetter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
-    new PSetter(modify)
+    new PSetter[S, T, A, B]{
+      def modify(f: A => B): S => T =
+        self.modify(f)
+
+      def set(b: B): S => T =
+        self.set(b)
+    }
 
   /** view a [[POptional]] as a [[PTraversal]] */
   @inline final def asTraversal: PTraversal[S, T, A, B] = new PTraversal[S, T, A, B] {
@@ -153,7 +165,13 @@ abstract class POptional[S, T, A, B] private[monocle](val getOrModify: S => T \/
 object POptional {
   /** create a [[POptional]] using the canonical functions: getOrModify and set */
   def apply[S, T, A, B](_getOrModify: S => T \/ A)(_set: B => S => T): POptional[S, T, A, B] =
-    new POptional(_getOrModify, _set){
+    new POptional[S, T, A, B]{
+      def getOrModify(s: S): T \/ A =
+        _getOrModify(s)
+
+      def set(b: B): S => T =
+        _set(b)
+
       def getMaybe(s: S): Maybe[A] =
         getOrModify(s).toMaybe
 
@@ -171,7 +189,13 @@ object POptional {
 object Optional {
   /** alias for [[POptional]] apply restricted to monomorphic update */
   def apply[S, A](_getMaybe: S => Maybe[A])(_set: A => S => S): Optional[S, A] =
-    new POptional[S, S, A, A](s => _getMaybe(s) \/> s, _set){
+    new Optional[S, A]{
+      def getOrModify(s: S): S \/ A =
+        _getMaybe(s) \/> s
+
+      def set(a: A): S => S =
+        _set(a)
+
       def getMaybe(s: S): Maybe[A] =
         _getMaybe(s)
 
