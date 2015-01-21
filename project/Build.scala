@@ -11,13 +11,13 @@ import JmhKeys._
 
 object BuildSettings {
   import MonoclePublishing._
-  val buildScalaVersion = "2.11.4"
+  val buildScalaVersion = "2.11.5"
   val previousVersion   = "1.0.0"
 
   val buildSettings = typelevelDefaultSettings ++ Seq(
     organization       := "com.github.julien-truffaut",
     scalaVersion       := buildScalaVersion,
-    crossScalaVersions := Seq("2.10.4", "2.11.4"),
+    crossScalaVersions := Seq("2.10.4", "2.11.5"),
     scalacOptions     ++= Seq(
       "-deprecation",
       "-encoding", "UTF-8",
@@ -38,7 +38,7 @@ object BuildSettings {
 object Dependencies {
   val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.0"
   val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0"  % "test"
-  val specs2Scalacheck  = "org.specs2"      %% "specs2-scalacheck"         % "2.4.14"
+  val specs2Scalacheck  = "org.specs2"      %% "specs2-scalacheck"         % "2.4.15"
   val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.3.0"  % "test"
   val shapeless = Def setting (
     CrossVersion partialVersion scalaVersion.value match {
