@@ -47,14 +47,16 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
   /** get the modified source of a [[PIso]] */
   def reverseGet(b: B): T
 
-  /** modify polymorphically the target of a [[PIso]] with a [[Functor]] function */
-  def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T]
-
-  /** modify polymorphically the target of a [[PIso]] with a function */
-  def modify(f: A => B): S => T
-
   /** reverse a [[PIso]]: the source becomes the target and the target becomes the source */
   def reverse: PIso[B, A, T, S]
+
+  /** modify polymorphically the target of a [[PIso]] with a [[Functor]] function */
+  @inline final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
+    Functor[F].map(f(get(s)))(reverseGet)
+
+  /** modify polymorphically the target of a [[PIso]] with a function */
+  @inline final def modify(f: A => B): S => T =
+    s => reverseGet(f(get(s)))
 
   /** set polymorphically the target of a [[PIso]] with a value */
   @inline final def set(b: B): S => T =
@@ -101,12 +103,6 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
       def reverseGet(d: D): T =
         self.reverseGet(other.reverseGet(d))
 
-      def modifyF[F[_]: Functor](f: C => F[D])(s: S): F[T] =
-        self.modifyF(other.modifyF(f))(s)
-
-      def modify(f: C => D): S => T =
-        self.modify(other.modify(f))
-
       def reverse: PIso[D, C, T, S] =
         new PIso[D, C, T, S]{
           def get(d: D): T =
@@ -114,12 +110,6 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
 
           def reverseGet(s: S): C =
             other.get(self.get(s))
-
-          def modifyF[F[_] : Functor](f: (T) => F[S])(s: D): F[C] =
-            other.reverse.modifyF(self.reverse.modifyF(f))(s)
-
-          def modify(f: T => S): D => C =
-            other.reverse.modify(self.reverse.modify(f))
 
           def reverse: PIso[S, T, C, D] =
             composeSelf
@@ -251,12 +241,6 @@ object PIso {
       def reverseGet(b: B): T =
         _reverseGet(b)
 
-      def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
-        Functor[F].map(f(_get(s)))(_reverseGet)
-
-      def modify(f: A => B): S => T =
-        s => _reverseGet(f(_get(s)))
-
       def reverse: PIso[B, A, T, S] =
         new PIso[B, A, T, S] {
           def get(b: B): T =
@@ -264,12 +248,6 @@ object PIso {
 
           def reverseGet(s: S): A =
             _get(s)
-
-          def modifyF[F[_] : Functor](f: T => F[S])(s: B): F[A] =
-            Functor[F].map(f(_reverseGet(s)))(_get)
-
-          def modify(f: T => S): B => A =
-            b => _get(f(_reverseGet(b)))
 
           def reverse: PIso[S, T, A, B] =
             self
@@ -286,14 +264,10 @@ object PIso {
     new PIso[S, T, S, T] { self =>
       def get(s: S): S = s
       def reverseGet(t: T): T = t
-      def modifyF[F[_]: Functor](f: S => F[T])(s: S): F[T] = f(s)
-      def modify(f: S => T): S => T = f
       def reverse: PIso[T, S, T, S] =
         new PIso[T, S, T, S] {
           def get(t: T): T = t
           def reverseGet(s: S): S = s
-          def modify(f: T => S): T => S = f
-          def modifyF[F[_]: Functor](f: T => F[S])(t: T): F[S] = f(t)
           def reverse: PIso[S, T, S, T] = self
         }
     }

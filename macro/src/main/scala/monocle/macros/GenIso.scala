@@ -37,12 +37,6 @@ private object GenIsoImpl extends MacrosCompatibility {
         def reverseGet(a: $aTpe): $sTpe =
          $sTpeSym(a)
 
-        def modifyF[F[_]: Functor](f: $aTpe => F[$aTpe])(s: $sTpe): F[$sTpe] =
-          Functor[F].map(f(s.$fieldMethod))(a => $sTpeSym(a))
-
-        def modify(f: $aTpe => $aTpe): $sTpe => $sTpe =
-         s => $sTpeSym(f(s.$fieldMethod))
-
         def reverse: Iso[$aTpe, $sTpe] =
           new Iso[$aTpe, $sTpe]{
             def get(a: $aTpe): $sTpe =
@@ -50,12 +44,6 @@ private object GenIsoImpl extends MacrosCompatibility {
 
             def reverseGet(s: $sTpe): $aTpe =
               s.$fieldMethod
-
-            def modifyF[F[_]: Functor](f: $sTpe => F[$sTpe])(a: $aTpe): F[$aTpe] =
-              Functor[F].map(f($sTpeSym(a)))(_.$fieldMethod)
-
-            def modify(f: $sTpe => $sTpe): $aTpe => $aTpe =
-              a => f($sTpeSym(a)).$fieldMethod
 
             def reverse: Iso[$sTpe, $aTpe] =
               self

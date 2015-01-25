@@ -59,4 +59,19 @@ object BenchModel {
   val p = Point3(2, 10, 24)
 
   val iMap = IMap.fromList(Stream.from(1).take(200).map(_ -> 5).toList)
+
+
+  case class IntWrapper0(i: Int)
+  case class IntWrapper1(i: Int)
+  case class IntWrapper2(i: Int)
+  case class IntWrapper3(i: Int)
+  case class IntWrapper4(i: Int)
+  case class IntWrapper5(i: Int)
+  case class IntWrapper6(i: Int)
+
+  val i = genInt()
+  val w0 = IntWrapper0(i)
+  val w3 = IntWrapper0(i)
+  val w6 = IntWrapper6(i)
+
 }
