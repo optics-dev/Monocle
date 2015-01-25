@@ -5,7 +5,7 @@ import scalaz.Maybe._
 import scalaz.std.anyVal._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.tag._
-import scalaz.{Applicative, Const, IList, Maybe, Monoid, Traverse}
+import scalaz.{Applicative, Category, Const, IList, Maybe, Monoid, Traverse}
 
 
 /**
@@ -210,5 +210,13 @@ object Traversal {
 
   def apply6[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(set: (A, A, A, A, A, A, S) => S): Traversal[S, A] =
     PTraversal.apply6(get1, get2, get3, get4, get5, get6)(set)
+
+  implicit val traversalCategory: Category[Traversal] = new Category[Traversal] {
+    def id[A]: Traversal[A, A] =
+      Iso.id[A].asTraversal
+
+    def compose[A, B, C](f: Traversal[B, C], g: Traversal[A, B]): Traversal[A, C] =
+      g composeTraversal f
+  }
 
 }

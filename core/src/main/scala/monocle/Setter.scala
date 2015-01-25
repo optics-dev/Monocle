@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.Functor
+import scalaz.{Category, Functor}
 
 /**
  * A [[PSetter]] is a generalisation of [[Functor]] map:
@@ -113,4 +113,12 @@ object Setter {
   /** alias for [[PSetter]] apply with a monomorphic modify function */
   def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
     PSetter(modify)
+
+  implicit val setterCategory: Category[Setter] = new Category[Setter] {
+    def id[A]: Setter[A, A] =
+      Iso.id[A].asSetter
+
+    def compose[A, B, C](f: Setter[B, C], g: Setter[A, B]): Setter[A, C] =
+      g composeSetter f
+  }
 }

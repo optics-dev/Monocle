@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{\/, Applicative, Maybe, Monoid, Functor}
+import scalaz.{\/, Applicative, Category, Maybe, Monoid, Functor}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
@@ -198,4 +198,12 @@ object Lens {
   /** alias for [[PLens]] apply with a monomorphic set function */
   def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] =
     PLens(get)(set)
+
+  implicit val lensCategory: Category[Lens] = new Category[Lens] {
+    def id[A]: Lens[A, A] =
+      Iso.id[A].asLens
+
+    def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
+      g composeLens f
+  }
 }

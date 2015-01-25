@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.Monoid
+import scalaz.{Category, Monoid}
 
 
 /**
@@ -93,4 +93,12 @@ object Getter {
       def get(s: S): A =
         _get(s)
     }
+
+  implicit val getterCategory: Category[Getter] = new Category[Getter] {
+    def id[A]: Getter[A, A] =
+      Iso.id[A].asGetter
+
+    def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
+      g composeGetter f
+  }
 }

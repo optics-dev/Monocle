@@ -1,7 +1,7 @@
 package monocle
 
 import scalaz.Isomorphism.{<=>, <~>}
-import scalaz.{Applicative, Functor, Maybe, Monoid, \/}
+import scalaz.{Applicative, Category, Functor, Maybe, Monoid, \/}
 
 /**
  * A [[PIso]] defines an isomorphism between types S, A and B, T:
@@ -289,4 +289,12 @@ object Iso {
   /** transform an [[scalaz.Isomorphisms.Iso]] in a [[Iso]] */
   def fromIsoSet[A, B](isoSet: A <=> B): Iso[A, B] =
     Iso(isoSet.to)(isoSet.from)
+
+  implicit val isoCategory: Category[Iso] = new Category[Iso] {
+    def id[A]: Iso[A, A] =
+      Iso.id[A]
+
+    def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
+      g composeIso f
+  }
 }

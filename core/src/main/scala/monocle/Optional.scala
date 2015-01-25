@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Applicative, Maybe, Monoid, \/}
+import scalaz.{Applicative, Category, Maybe, Monoid, \/}
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
@@ -208,4 +208,12 @@ object Optional {
       def modify(f: A => A): S => S =
         s => getOrModify(s).fold(identity, a => set(f(a))(s))
     }
+
+  implicit val optionalCategory: Category[Optional] = new Category[Optional] {
+    def id[A]: Optional[A, A] =
+      Iso.id[A].asOptional
+
+    def compose[A, B, C](f: Optional[B, C], g: Optional[A, B]): Optional[A, C] =
+      g composeOptional f
+  }
 }

@@ -3,7 +3,7 @@ package monocle
 import scalaz.std.anyVal._
 import scalaz.syntax.std.boolean._
 import scalaz.Maybe._
-import scalaz.{Maybe, Foldable, Monoid, IList}
+import scalaz.{Category, Maybe, Foldable, Monoid, IList}
 import scalaz.syntax.tag._
 
 /**
@@ -121,5 +121,13 @@ object Fold {
       def foldMap[M: Monoid](f: A => M)(s: F[A]): M =
         Foldable[F].foldMap(s)(f)
     }
+
+  implicit val foldCategory: Category[Fold] = new Category[Fold] {
+    def id[A]: Fold[A, A] =
+      Iso.id[A].asFold
+
+    def compose[A, B, C](f: Fold[B, C], g: Fold[A, B]): Fold[A, C] =
+      g composeFold f
+  }
 
 }

@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Applicative, Maybe, Monoid, \/}
+import scalaz.{Applicative, Category, Maybe, Monoid, \/}
 
 
 /**
@@ -240,4 +240,12 @@ object Prism {
       def modify(f: A => A): S => S =
         s => _getMaybe(s).cata(_reverseGet compose f, s)
     }
+
+  implicit val prismCategory: Category[Prism] = new Category[Prism] {
+    def id[A]: Prism[A, A] =
+      Iso.id[A].asPrism
+
+    def compose[A, B, C](f: Prism[B, C], g: Prism[A, B]): Prism[A, C] =
+      g composePrism f
+  }
 }
