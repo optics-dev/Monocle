@@ -3,7 +3,7 @@ package monocle
 import scalaz.std.anyVal._
 import scalaz.syntax.std.boolean._
 import scalaz.Maybe._
-import scalaz.{Category, Maybe, Foldable, Monoid, IList}
+import scalaz.{\/, Category, Choice, Compose, Maybe, Foldable, Monoid, IList}
 import scalaz.syntax.tag._
 
 /**
@@ -113,7 +113,7 @@ abstract class Fold[S, A] { self =>
 
 }
 
-object Fold {
+object Fold extends FoldInstances {
 
   /** create a [[Fold]] from a [[Foldable]] */
   def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] =
@@ -122,12 +122,42 @@ object Fold {
         Foldable[F].foldMap(s)(f)
     }
 
-  implicit val foldCategory: Category[Fold] = new Category[Fold] {
-    def id[A]: Fold[A, A] =
-      Iso.id[A].asFold
+}
 
-    def compose[A, B, C](f: Fold[B, C], g: Fold[A, B]): Fold[A, C] =
-      g composeFold f
-  }
+//
+// Prioritized Implicits for type class instances
+//
 
+sealed abstract class FoldInstances1 {
+  implicit val foldCompose: Compose[Fold] = new FoldCompose {}
+}
+
+sealed abstract class FoldInstances0 {
+  implicit val foldCategory: Category[Fold] = new FoldCategory {}
+}
+
+sealed abstract class FoldInstances extends FoldInstances0 {
+  implicit val foldChoice: Choice[Fold] = new FoldChoice {}
+}
+
+//
+// Implementation traits for type class instances
+//
+
+private trait FoldCompose extends Compose[Fold]{
+  def compose[A, B, C](f: Fold[B, C], g: Fold[A, B]): Fold[A, C] =
+    g composeFold f
+}
+
+private trait FoldCategory extends Category[Fold] with FoldCompose {
+  def id[A]: Fold[A, A] =
+    Iso.id[A].asFold
+}
+
+private trait FoldChoice extends Choice[Fold] with FoldCategory {
+  def choice[A, B, C](f1: => Fold[A, C], f2: => Fold[B, C]): Fold[A \/ B, C] =
+    new Fold[A \/ B, C]{
+      def foldMap[M: Monoid](f: C => M)(s: A \/ B): M =
+        s.fold(f1.foldMap(f), f2.foldMap(f))
+    }
 }
