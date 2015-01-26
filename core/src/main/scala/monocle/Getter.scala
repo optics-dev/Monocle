@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Category, Monoid}
+import scalaz._
 
 
 /**
@@ -87,18 +87,48 @@ abstract class Getter[S, A] private[monocle]{ self =>
 
 }
 
-object Getter {
+object Getter extends GetterInstances {
   def apply[S, A](_get: S => A): Getter[S, A] =
     new Getter[S, A]{
       def get(s: S): A =
         _get(s)
     }
+}
 
-  implicit val getterCategory: Category[Getter] = new Category[Getter] {
-    def id[A]: Getter[A, A] =
-      Iso.id[A].asGetter
+//
+// Prioritized Implicits for type class instances
+//
 
-    def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
-      g composeGetter f
-  }
+sealed abstract class GetterInstances1 {
+  implicit val getterCompose: Compose[Getter] = new GetterCompose {}
+}
+
+sealed abstract class GetterInstances0 {
+  implicit val getterCategory: Category[Getter] = new GetterCategory {}
+}
+
+sealed abstract class GetterInstances extends GetterInstances0 {
+  implicit val getterChoice: Choice[Getter] = new GetterChoice {}
+}
+
+//
+// Implementation traits for type class instances
+//
+
+private trait GetterCompose extends Compose[Getter]{
+  def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
+    g composeGetter f
+}
+
+private trait GetterCategory extends Category[Getter] with GetterCompose {
+  def id[A]: Getter[A, A] =
+    Iso.id[A].asGetter
+}
+
+private trait GetterChoice extends Choice[Getter] with GetterCategory {
+  def choice[A, B, C](f1: => Getter[A, C], f2: => Getter[B, C]): Getter[A \/ B, C] =
+    new Getter[A \/ B, C]{
+      def get(s: A \/ B): C =
+        s.fold(f1.get, f2.get)
+    }
 }
