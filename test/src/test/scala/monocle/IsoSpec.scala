@@ -40,12 +40,10 @@ class IsoSpec extends Spec {
 
   "Iso has a Category instance" in {
     Category[Iso].id[Int].get(3) ==== 3
-    Category[Iso].compose(iso, iso.reverse).get(3) ==== 3
   }
 
   "Iso has a Split instance" in {
     Split[Iso].split(iso, iso.reverse).get((IntWrapper(3), 3)) ==== ((3, IntWrapper(3)))
-    Split[Iso].compose(iso, iso.reverse).get(3) ==== 3
   }
 
 

@@ -42,12 +42,10 @@ class FoldSpec extends Spec {
 
   "Fold has a Category instance" in {
     Category[Fold].id[Int].fold(3) ==== 3
-    Category[Fold].compose(iListFold, nestedIListFold[Int]).fold(IList(IList(1,2,3), IList(4,5), IList(6))) ==== 21
   }
 
   "Fold has a Choice instance" in {
     Choice[Fold].choice(iListFold, Choice[Fold].id[Int]).fold(-\/(IList(1,2,3))) ==== 6
-    Choice[Fold].compose(iListFold, nestedIListFold[Int]).fold(IList(IList(1,2,3), IList(4,5), IList(6))) ==== 21
   }
 
 }
