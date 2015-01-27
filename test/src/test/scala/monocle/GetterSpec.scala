@@ -28,4 +28,8 @@ class GetterSpec extends Spec {
     Choice[Getter].choice(_i, Choice[Getter].id[Int]).get(-\/(Bar(3))) ==== 3
   }
 
+  "Getter has a Split instance" in {
+    Split[Getter].split(_i, _bar).get((Bar(3), Foo(Bar(3)))) ==== ((3, Bar(3)))
+  }
+
 }

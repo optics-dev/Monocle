@@ -62,6 +62,18 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
   @inline final def set(b: B): S => T =
     _ => reverseGet(b)
 
+  /** pair two disjoint [[PIso]] */
+  @inline final def product[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
+    PIso[(S, S1), (T, T1), (A, A1), (B, B1)]{
+      case (s, s1) => (self.get(s), other.get(s1))
+    }{
+      case (b, b1) => (self.reverseGet(b), other.reverseGet(b1))
+    }
+
+  /** alias for product */
+  @inline final def ***[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
+    product(other)
+
   /**********************************************************/
   /** Compose methods between a [[PIso]] and another Optics */
   /**********************************************************/
@@ -323,5 +335,5 @@ private trait IsoCategory extends Category[Iso] with IsoCompose {
 
 private trait IsoSplit extends Split[Iso] with IsoCompose {
   def split[A, B, C, D](f: Iso[A, B], g: Iso[C, D]): Iso[(A, C), (B, D)] =
-    Iso[(A, C), (B, D)]{ case (a, c) => (f.get(a), g.get(c))}{ case (c, d) => (f.reverseGet(c), g.reverseGet(d)) }
+    f product g
 }

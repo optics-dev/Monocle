@@ -16,6 +16,22 @@ abstract class Getter[S, A] private[monocle]{ self =>
   /** get the target of a [[Getter]] */
   def get(s: S): A
 
+  /** join two [[Getter]] with the same target */
+  @inline final def sum[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
+    Getter[S \/ S1, A](_.fold(self.get, other.get))
+
+  /** alias for sum */
+  @inline final def |||[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
+    sum(other)
+
+  /** pair two disjoint [[Getter]] */
+  @inline final def product[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
+    Getter[(S, S1), (A, A1)]{case (s, s1) => (self.get(s), other.get(s1))}
+
+  /** alias for product */
+  @inline final def ***[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
+    product(other)
+
   /*************************************************************/
   /** Compose methods between a [[Getter]] and another Optics  */
   /*************************************************************/
@@ -99,12 +115,16 @@ object Getter extends GetterInstances {
 // Prioritized Implicits for type class instances
 //
 
-sealed abstract class GetterInstances1 {
+sealed abstract class GetterInstances2 {
   implicit val getterCompose: Compose[Getter] = new GetterCompose {}
 }
 
-sealed abstract class GetterInstances0 {
+sealed abstract class GetterInstances1 extends GetterInstances2 {
   implicit val getterCategory: Category[Getter] = new GetterCategory {}
+}
+
+sealed abstract class GetterInstances0 extends GetterInstances1 {
+  implicit val getterSplit: Split[Getter]  = new GetterSplit {}
 }
 
 sealed abstract class GetterInstances extends GetterInstances0 {
@@ -125,10 +145,12 @@ private trait GetterCategory extends Category[Getter] with GetterCompose {
     Iso.id[A].asGetter
 }
 
+private trait GetterSplit extends Split[Getter] with GetterCompose {
+  def split[A, B, C, D](f: Getter[A, B], g: Getter[C, D]): Getter[(A, C), (B, D)] =
+    f product g
+}
+
 private trait GetterChoice extends Choice[Getter] with GetterCategory {
   def choice[A, B, C](f1: => Getter[A, C], f2: => Getter[B, C]): Getter[A \/ B, C] =
-    new Getter[A \/ B, C]{
-      def get(s: A \/ B): C =
-        s.fold(f1.get, f2.get)
-    }
+    f1 sum f2
 }

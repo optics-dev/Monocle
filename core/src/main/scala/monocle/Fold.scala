@@ -52,6 +52,17 @@ abstract class Fold[S, A] { self =>
   @inline final def all(p: A => Boolean)(s: S): Boolean =
     foldMap(p(_).conjunction)(s).unwrap
 
+  /** join two [[Fold]] with the same target */
+  @inline final def sum[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
+    new Fold[S \/ S1, A]{
+      def foldMap[M: Monoid](f: A => M)(s: S \/ S1): M =
+        s.fold(self.foldMap(f), other.foldMap(f))
+    }
+
+  /** alias for sum */
+  @inline final def |||[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
+    sum(other)
+
   /**********************************************************/
   /** Compose methods between a [[Fold]] and another Optics */
   /**********************************************************/
@@ -114,14 +125,12 @@ abstract class Fold[S, A] { self =>
 }
 
 object Fold extends FoldInstances {
-
   /** create a [[Fold]] from a [[Foldable]] */
   def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] =
     new Fold[F[A], A] {
       def foldMap[M: Monoid](f: A => M)(s: F[A]): M =
         Foldable[F].foldMap(s)(f)
     }
-
 }
 
 //
@@ -132,7 +141,7 @@ sealed abstract class FoldInstances1 {
   implicit val foldCompose: Compose[Fold] = new FoldCompose {}
 }
 
-sealed abstract class FoldInstances0 {
+sealed abstract class FoldInstances0 extends FoldInstances1 {
   implicit val foldCategory: Category[Fold] = new FoldCategory {}
 }
 
@@ -156,8 +165,5 @@ private trait FoldCategory extends Category[Fold] with FoldCompose {
 
 private trait FoldChoice extends Choice[Fold] with FoldCategory {
   def choice[A, B, C](f1: => Fold[A, C], f2: => Fold[B, C]): Fold[A \/ B, C] =
-    new Fold[A \/ B, C]{
-      def foldMap[M: Monoid](f: C => M)(s: A \/ B): M =
-        s.fold(f1.foldMap(f), f2.foldMap(f))
-    }
+    f1 sum f2
 }
