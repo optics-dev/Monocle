@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Applicative, Category, Maybe, Monoid, \/}
+import scalaz.{Applicative, Category, Choice, Compose, Maybe, Monoid, \/}
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
@@ -58,6 +58,16 @@ abstract class POptional[S, T, A, B] private[monocle]{ self =>
   /** check if a [[POptional]] has a target */
   @inline final def isMatching(s: S): Boolean =
     getMaybe(s).isJust
+
+  /** join two [[POptional]] with the same target */
+  @inline final def sum[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
+    POptional[S \/ S1, T \/ T1, A, B](_.fold(self.getOrModify(_).leftMap(\/.left), other.getOrModify(_).leftMap(\/.right))){
+      b => _.bimap(self.set(b), other.set(b))
+    }
+
+  /** alias for sum */
+  @inline final def |||[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
+    sum(other)
 
   /***************************************************************/
   /** Compose methods between a [[POptional]] and another Optics */
@@ -162,7 +172,7 @@ abstract class POptional[S, T, A, B] private[monocle]{ self =>
 
 }
 
-object POptional {
+object POptional extends OptionalInstances {
   /** create a [[POptional]] using the canonical functions: getOrModify and set */
   def apply[S, T, A, B](_getOrModify: S => T \/ A)(_set: B => S => T): POptional[S, T, A, B] =
     new POptional[S, T, A, B]{
@@ -208,12 +218,39 @@ object Optional {
       def modify(f: A => A): S => S =
         s => getOrModify(s).fold(identity, a => set(f(a))(s))
     }
+}
 
-  implicit val optionalCategory: Category[Optional] = new Category[Optional] {
-    def id[A]: Optional[A, A] =
-      Iso.id[A].asOptional
+//
+// Prioritized Implicits for type class instances
+//
 
-    def compose[A, B, C](f: Optional[B, C], g: Optional[A, B]): Optional[A, C] =
-      g composeOptional f
-  }
+sealed abstract class OptionalInstances1 {
+  implicit val optionalCompose: Compose[Optional] = new OptionalCompose {}
+}
+
+sealed abstract class OptionalInstances0 extends OptionalInstances1 {
+  implicit val optionalCategory: Category[Optional] = new OptionalCategory {}
+}
+
+sealed abstract class OptionalInstances extends OptionalInstances0 {
+  implicit val optionalChoice: Choice[Optional] = new OptionalChoice {}
+}
+
+//
+// Implementation traits for type class instances
+//
+
+private trait OptionalCompose extends Compose[Optional]{
+  def compose[A, B, C](f: Optional[B, C], g: Optional[A, B]): Optional[A, C] =
+    g composeOptional f
+}
+
+private trait OptionalCategory extends Category[Optional] with OptionalCompose {
+  def id[A]: Optional[A, A] =
+    Iso.id[A].asOptional
+}
+
+private trait OptionalChoice extends Choice[Optional] with OptionalCategory {
+  def choice[A, B, C](f1: => Optional[A, C], f2: => Optional[B, C]): Optional[A \/ B, C] =
+    f1 sum f2
 }
