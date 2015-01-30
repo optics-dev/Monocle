@@ -115,20 +115,25 @@ object Getter extends GetterInstances {
 // Prioritized Implicits for type class instances
 //
 
-sealed abstract class GetterInstances2 {
+sealed abstract class GetterInstances3 {
   implicit val getterCompose: Compose[Getter] = new GetterCompose {}
 }
 
-sealed abstract class GetterInstances1 extends GetterInstances2 {
+sealed abstract class GetterInstances2 extends GetterInstances3 {
   implicit val getterCategory: Category[Getter] = new GetterCategory {}
 }
 
+sealed abstract class GetterInstances1 extends GetterInstances2 {
+  implicit val getterSplit: Split[Getter] = new GetterSplit {}
+}
+
 sealed abstract class GetterInstances0 extends GetterInstances1 {
-  implicit val getterSplit: Split[Getter]  = new GetterSplit {}
+  implicit val getterProfunctor: Profunctor[Getter] = new GetterProfunctor {}
+  implicit val getterChoice: Choice[Getter] = new GetterChoice {}
 }
 
 sealed abstract class GetterInstances extends GetterInstances0 {
-  implicit val getterChoice: Choice[Getter] = new GetterChoice {}
+  implicit val getterArrow: Arrow[Getter] = new GetterArrow {}
 }
 
 //
@@ -153,4 +158,23 @@ private trait GetterSplit extends Split[Getter] with GetterCompose {
 private trait GetterChoice extends Choice[Getter] with GetterCategory {
   def choice[A, B, C](f1: => Getter[A, C], f2: => Getter[B, C]): Getter[A \/ B, C] =
     f1 sum f2
+}
+
+private trait GetterProfunctor extends Profunctor[Getter] {
+  override def dimap[A, B, C, D](fab: Getter[A, B])(f: C => A)(g: B => D): Getter[C, D] =
+    Getter(g compose fab.get _ compose f)
+
+  def mapfst[A, B, C](fab: Getter[A, B])(f: C => A): Getter[C, B] =
+    Getter(fab.get _ compose f)
+
+  def mapsnd[A, B, C](fab: Getter[A, B])(f: B => C): Getter[A, C] =
+    Getter(f compose fab.get)
+}
+
+private trait GetterArrow extends Arrow[Getter] with GetterCategory {
+  def arr[A, B](f: A => B): Getter[A, B] =
+    Getter(f)
+
+  def first[A, B, C](f: Getter[A, B]): Getter[(A, C), (B, C)] =
+    Getter[(A, C), (B, C)]{case (a, c) => (f.get(a), c)}
 }

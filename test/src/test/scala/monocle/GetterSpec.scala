@@ -32,4 +32,12 @@ class GetterSpec extends Spec {
     Split[Getter].split(_i, _bar).get((Bar(3), Foo(Bar(3)))) ==== ((3, Bar(3)))
   }
 
+  "Getter has a Profunctor instance" in {
+    Profunctor[Getter].mapsnd(_bar)(_.i).get(Foo(Bar(3))) ==== 3
+  }
+
+  "Getter has a Arrow instance" in {
+    Arrow[Getter].arr((_: Int) * 2).get(4) ==== 8
+  }
+
 }
