@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Category, Functor}
+import scalaz.{Category, Choice, Compose, Functor, \/}
 
 /**
  * A [[PSetter]] is a generalisation of [[Functor]] map:
@@ -30,6 +30,16 @@ abstract class PSetter[S, T, A, B] private[monocle] { self =>
 
   /** set polymorphically the target of a [[PSetter]] with a value */
   def set(b: B): S => T
+
+  /** join two [[PSetter]] with the same target */
+  @inline final def sum[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[S \/ S1, T \/ T1, A, B] =
+    PSetter[S \/ S1, T \/ T1, A, B](
+      b => _.bimap(self.modify(b), other.modify(b))
+    )
+
+  /** alias for sum */
+  @inline final def |||[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[S \/ S1, T \/ T1, A, B] =
+    sum(other)
 
   /*************************************************************/
   /** Compose methods between a [[PSetter]] and another Optics */
@@ -91,8 +101,7 @@ abstract class PSetter[S, T, A, B] private[monocle] { self =>
 
 }
 
-object PSetter {
-
+object PSetter extends SetterInstances{
   /** create a [[PSetter]] using modify function */
   def apply[S, T, A, B](_modify: (A => B) => S => T): PSetter[S, T, A, B] =
     new PSetter[S, T, A, B]{
@@ -113,12 +122,39 @@ object Setter {
   /** alias for [[PSetter]] apply with a monomorphic modify function */
   def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
     PSetter(modify)
+}
 
-  implicit val setterCategory: Category[Setter] = new Category[Setter] {
-    def id[A]: Setter[A, A] =
-      Iso.id[A].asSetter
+//
+// Prioritized Implicits for type class instances
+//
 
-    def compose[A, B, C](f: Setter[B, C], g: Setter[A, B]): Setter[A, C] =
-      g composeSetter f
-  }
+sealed abstract class SetterInstances1 {
+  implicit val SetterCompose: Compose[Setter] = new SetterCompose {}
+}
+
+sealed abstract class SetterInstances0 extends SetterInstances1 {
+  implicit val SetterCategory: Category[Setter] = new SetterCategory {}
+}
+
+sealed abstract class SetterInstances extends SetterInstances0 {
+  implicit val SetterChoice: Choice[Setter] = new SetterChoice {}
+}
+
+//
+// Implementation traits for type class instances
+//
+
+private trait SetterCompose extends Compose[Setter]{
+  def compose[A, B, C](f: Setter[B, C], g: Setter[A, B]): Setter[A, C] =
+    g composeSetter f
+}
+
+private trait SetterCategory extends Category[Setter] with SetterCompose {
+  def id[A]: Setter[A, A] =
+    Iso.id[A].asSetter
+}
+
+private trait SetterChoice extends Choice[Setter] with SetterCategory {
+  def choice[A, B, C](f1: => Setter[A, C], f2: => Setter[B, C]): Setter[A \/ B, C] =
+    f1 sum f2
 }
