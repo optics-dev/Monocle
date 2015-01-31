@@ -5,7 +5,7 @@ import scalaz.Maybe._
 import scalaz.std.anyVal._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.tag._
-import scalaz.{Applicative, Category, Const, IList, Maybe, Monoid, Traverse}
+import scalaz.{Applicative, Category, Choice, Compose, Const, Functor, IList, Maybe, Monoid, Traverse, \/}
 
 
 /**
@@ -72,6 +72,20 @@ abstract class PTraversal[S, T, A, B] { self =>
   /** set polymorphically the target of a [[PTraversal]] with a value */
   @inline final def set(b: B): S => T =
     modify(_ => b)
+
+  /** join two [[PTraversal]] with the same target */
+  @inline final def sum[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[S \/ S1, T \/ T1, A, B] =
+    new PTraversal[S \/ S1, T \/ T1, A, B]{
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S \/ S1): F[T \/ T1] =
+        s.fold(
+          s  => Functor[F].map(self.modifyF(f)(s))(\/.left),
+          s1 => Functor[F].map(other.modifyF(f)(s1))(\/.right)
+        )
+    }
+
+  /** alias for sum */
+  @inline final def |||[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[S \/ S1, T \/ T1, A, B] =
+    sum(other)
 
   /****************************************************************/
   /** Compose methods between a [[PTraversal]] and another Optics */
@@ -153,7 +167,7 @@ abstract class PTraversal[S, T, A, B] { self =>
 
 }
 
-object PTraversal {
+object PTraversal extends TraversalInstances {
 
   /** create a [[PTraversal]] from a [[Traverse]] */
   def fromTraverse[T[_]: Traverse, A, B]: PTraversal[T[A], T[B], A, B] =
@@ -210,13 +224,40 @@ object Traversal {
 
   def apply6[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(set: (A, A, A, A, A, A, S) => S): Traversal[S, A] =
     PTraversal.apply6(get1, get2, get3, get4, get5, get6)(set)
-
-  implicit val traversalCategory: Category[Traversal] = new Category[Traversal] {
-    def id[A]: Traversal[A, A] =
-      Iso.id[A].asTraversal
-
-    def compose[A, B, C](f: Traversal[B, C], g: Traversal[A, B]): Traversal[A, C] =
-      g composeTraversal f
-  }
-
 }
+
+//
+// Prioritized Implicits for type class instances
+//
+
+sealed abstract class TraversalInstances1 {
+  implicit val traversalCompose: Compose[Traversal] = new TraversalCompose {}
+}
+
+sealed abstract class TraversalInstances0 extends TraversalInstances1 {
+  implicit val traversalCategory: Category[Traversal] = new TraversalCategory {}
+}
+
+sealed abstract class TraversalInstances extends TraversalInstances0 {
+  implicit val traversalChoice: Choice[Traversal] = new TraversalChoice {}
+}
+
+//
+// Implementation traits for type class instances
+//
+
+private trait TraversalCompose extends Compose[Traversal]{
+  def compose[A, B, C](f: Traversal[B, C], g: Traversal[A, B]): Traversal[A, C] =
+    g composeTraversal f
+}
+
+private trait TraversalCategory extends Category[Traversal] with TraversalCompose {
+  def id[A]: Traversal[A, A] =
+    Iso.id[A].asTraversal
+}
+
+private trait TraversalChoice extends Choice[Traversal] with TraversalCategory {
+  def choice[A, B, C](f1: => Traversal[A, C], f2: => Traversal[B, C]): Traversal[A \/ B, C] =
+    f1 sum f2
+}
+
