@@ -7,6 +7,7 @@ import monocle.macros.internal.MacrosCompatibility
 
 
 object GenPrism {
+  /** generate a [[Prism]] between `S` and a subtype `A` of `S` */
   def apply[S, A <: S]: Prism[S, A] = macro GenPrismImpl.genPrism_impl[S, A]
 }
 
