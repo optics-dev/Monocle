@@ -41,10 +41,15 @@ abstract class PPrism[S, T, A, B] private[monocle]{ self =>
   def getMaybe(s: S): Maybe[A]
 
   /** modify polymorphically the target of a [[PPrism]] with an [[Applicative]] function */
-  def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T]
+  @inline final def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
+    getOrModify(s).fold(
+      t => Applicative[F].point(t),
+      a => Applicative[F].map(f(a))(reverseGet)
+    )
 
   /** modify polymorphically the target of a [[PPrism]] with a function */
-  def modify(f: A => B): S => T
+  @inline final def modify(f: A => B): S => T =
+    getOrModify(_).fold(identity,a => reverseGet(f(a)))
 
   /**
    * modify polymorphically the target of a [[PPrism]] with a function.
@@ -111,12 +116,6 @@ abstract class PPrism[S, T, A, B] private[monocle]{ self =>
 
       def getMaybe(s: S): Maybe[C] =
         self.getMaybe(s) flatMap other.getMaybe
-
-      def modifyF[F[_]: Applicative](f: C => F[D])(s: S): F[T] =
-        self.modifyF(other.modifyF(f))(s)
-
-      def modify(f: C => D): S => T =
-        self.modify(other.modify(f))
     }
 
   /** compose a [[PPrism]] with a [[PIso]] */
@@ -206,15 +205,6 @@ object PPrism {
 
       def getMaybe(s: S): Maybe[A] =
         getOrModify(s).toMaybe
-
-      def modifyF[F[_] : Applicative](f: (A) => F[B])(s: S): F[T] =
-        getOrModify(s).fold(
-          t => Applicative[F].point(t),
-          a => Applicative[F].map(f(a))(_reverseGet)
-        )
-
-      def modify(f: A => B): S => T =
-        getOrModify(_).fold(identity, _reverseGet compose f)
     }
 }
 
@@ -230,14 +220,5 @@ object Prism {
 
       def getMaybe(s: S): Maybe[A] =
         _getMaybe(s)
-
-      def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
-        _getMaybe(s).cata(
-          a => Applicative[F].map(f(a))(_reverseGet),
-          Applicative[F].point(s)
-        )
-
-      def modify(f: A => A): S => S =
-        s => _getMaybe(s).cata(_reverseGet compose f, s)
     }
 }

@@ -205,12 +205,6 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
 
       def getMaybe(s: S): Maybe[A] =
         Maybe.just(self.get(s))
-
-      def modify(f: A => B): S => T =
-        self.modify(f)
-
-      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        self.modifyF(f)(s)
     }
 
   /** view a [[PIso]] as a [[PLens]] */
