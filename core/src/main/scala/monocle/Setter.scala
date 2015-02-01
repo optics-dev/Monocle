@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Category, Choice, Compose, Functor, \/}
+import scalaz.{Choice, Functor, \/}
 
 /**
  * A [[PSetter]] is a generalisation of [[Functor]] map:
@@ -124,37 +124,15 @@ object Setter {
     PSetter(modify)
 }
 
-//
-// Prioritized Implicits for type class instances
-//
+sealed abstract class SetterInstances {
+  implicit val SetterChoice: Choice[Setter] = new Choice[Setter] {
+    def compose[A, B, C](f: Setter[B, C], g: Setter[A, B]): Setter[A, C] =
+      g composeSetter f
 
-sealed abstract class SetterInstances1 {
-  implicit val SetterCompose: Compose[Setter] = new SetterCompose {}
-}
+    def id[A]: Setter[A, A] =
+      Iso.id[A].asSetter
 
-sealed abstract class SetterInstances0 extends SetterInstances1 {
-  implicit val SetterCategory: Category[Setter] = new SetterCategory {}
-}
-
-sealed abstract class SetterInstances extends SetterInstances0 {
-  implicit val SetterChoice: Choice[Setter] = new SetterChoice {}
-}
-
-//
-// Implementation traits for type class instances
-//
-
-private trait SetterCompose extends Compose[Setter]{
-  def compose[A, B, C](f: Setter[B, C], g: Setter[A, B]): Setter[A, C] =
-    g composeSetter f
-}
-
-private trait SetterCategory extends Category[Setter] with SetterCompose {
-  def id[A]: Setter[A, A] =
-    Iso.id[A].asSetter
-}
-
-private trait SetterChoice extends Choice[Setter] with SetterCategory {
-  def choice[A, B, C](f1: => Setter[A, C], f2: => Setter[B, C]): Setter[A \/ B, C] =
-    f1 sum f2
+    def choice[A, B, C](f1: => Setter[A, C], f2: => Setter[B, C]): Setter[A \/ B, C] =
+      f1 sum f2
+  }
 }

@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Applicative, Category, Choice, Compose, Maybe, Monoid, \/}
+import scalaz.{Applicative, Choice, Maybe, Monoid, \/}
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
@@ -220,37 +220,15 @@ object Optional {
     }
 }
 
-//
-// Prioritized Implicits for type class instances
-//
+sealed abstract class OptionalInstances {
+  implicit val optionalChoice: Choice[Optional] = new Choice[Optional] {
+    def choice[A, B, C](f: => Optional[A, C], g: => Optional[B, C]): Optional[A \/ B, C] =
+      f sum g
 
-sealed abstract class OptionalInstances1 {
-  implicit val optionalCompose: Compose[Optional] = new OptionalCompose {}
-}
+    def id[A]: Optional[A, A] =
+      Iso.id[A].asOptional
 
-sealed abstract class OptionalInstances0 extends OptionalInstances1 {
-  implicit val optionalCategory: Category[Optional] = new OptionalCategory {}
-}
-
-sealed abstract class OptionalInstances extends OptionalInstances0 {
-  implicit val optionalChoice: Choice[Optional] = new OptionalChoice {}
-}
-
-//
-// Implementation traits for type class instances
-//
-
-private trait OptionalCompose extends Compose[Optional]{
-  def compose[A, B, C](f: Optional[B, C], g: Optional[A, B]): Optional[A, C] =
-    g composeOptional f
-}
-
-private trait OptionalCategory extends Category[Optional] with OptionalCompose {
-  def id[A]: Optional[A, A] =
-    Iso.id[A].asOptional
-}
-
-private trait OptionalChoice extends Choice[Optional] with OptionalCategory {
-  def choice[A, B, C](f1: => Optional[A, C], f2: => Optional[B, C]): Optional[A \/ B, C] =
-    f1 sum f2
+    def compose[A, B, C](f: Optional[B, C], g: Optional[A, B]): Optional[A, C] =
+      g composeOptional f
+  }
 }

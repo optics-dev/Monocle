@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{\/, Applicative, Category, Choice, Compose, Maybe, Monoid, Functor, Split}
+import scalaz.{Applicative, Choice, Functor, Maybe, Monoid, Split, \/}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
@@ -223,46 +223,25 @@ object Lens {
     PLens(get)(set)
 }
 
-//
-// Prioritized Implicits for type class instances
-//
-
-sealed abstract class LensInstances2 {
-  implicit val lensCompose: Compose[Lens] = new LensCompose {}
-}
-
-sealed abstract class LensInstances1 extends LensInstances2 {
-  implicit val lensCategory: Category[Lens] = new LensCategory {}
-}
-
-sealed abstract class LensInstances0 extends LensInstances1 {
-  implicit val lensSplit: Split[Lens]  = new LensSplit {}
-}
-
 sealed abstract class LensInstances extends LensInstances0 {
-  implicit val lensChoice: Choice[Lens] = new LensChoice {}
+  implicit val lensChoice: Choice[Lens] = new Choice[Lens] {
+    def choice[A, B, C](f: => Lens[A, C], g: => Lens[B, C]): Lens[A \/ B, C] =
+      f sum g
+
+    def id[A]: Lens[A, A] =
+      Iso.id[A].asLens
+
+    def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
+      g composeLens f
+  }
 }
 
-//
-// Implementation traits for type class instances
-//
+sealed abstract class LensInstances0 {
+  implicit val lensSplit: Split[Lens]  = new Split[Lens] {
+    def split[A, B, C, D](f: Lens[A, B], g: Lens[C, D]): Lens[(A, C), (B, D)] =
+      f product g
 
-private trait LensCompose extends Compose[Lens]{
-  def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
-    g composeLens f
-}
-
-private trait LensCategory extends Category[Lens] with LensCompose {
-  def id[A]: Lens[A, A] =
-    Iso.id[A].asLens
-}
-
-private trait LensSplit extends Split[Lens] with LensCompose {
-  def split[A, B, C, D](f: Lens[A, B], g: Lens[C, D]): Lens[(A, C), (B, D)] =
-    f product g
-}
-
-private trait LensChoice extends Choice[Lens] with LensCategory {
-  def choice[A, B, C](f1: => Lens[A, C], f2: => Lens[B, C]): Lens[A \/ B, C] =
-    f1 sum f2
+    def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
+      g composeLens f
+  }
 }

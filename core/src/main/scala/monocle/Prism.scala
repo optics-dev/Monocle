@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Applicative, Category, Compose, Maybe, Monoid, \/}
+import scalaz.{Applicative, Category, Maybe, Monoid, \/}
 
 
 /**
@@ -242,28 +242,12 @@ object Prism {
     }
 }
 
-//
-// Prioritized Implicits for type class instances
-//
+sealed abstract class PrismInstances {
+  implicit val prismCategory: Category[Prism] = new Category[Prism] {
+    def id[A]: Prism[A, A] =
+      Iso.id[A].asPrism
 
-sealed abstract class PrismInstances0 {
-  implicit val prismCompose: Compose[Prism] = new PrismCompose {}
-}
-
-sealed abstract class PrismInstances extends PrismInstances0 {
-  implicit val prismCategory: Category[Prism] = new PrismCategory {}
-}
-
-//
-// Implementation traits for type class instances
-//
-
-private trait PrismCompose extends Compose[Prism]{
-  def compose[A, B, C](f: Prism[B, C], g: Prism[A, B]): Prism[A, C] =
-    g composePrism f
-}
-
-private trait PrismCategory extends Category[Prism] with PrismCompose {
-  def id[A]: Prism[A, A] =
-    Iso.id[A].asPrism
+    def compose[A, B, C](f: Prism[B, C], g: Prism[A, B]): Prism[A, C] =
+      g composePrism f
+  }
 }

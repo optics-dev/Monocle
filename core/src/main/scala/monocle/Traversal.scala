@@ -226,38 +226,16 @@ object Traversal {
     PTraversal.apply6(get1, get2, get3, get4, get5, get6)(set)
 }
 
-//
-// Prioritized Implicits for type class instances
-//
+sealed abstract class TraversalInstances {
+  implicit val traversalChoice: Choice[Traversal] = new Choice[Traversal] {
+    def compose[A, B, C](f: Traversal[B, C], g: Traversal[A, B]): Traversal[A, C] =
+      g composeTraversal f
 
-sealed abstract class TraversalInstances1 {
-  implicit val traversalCompose: Compose[Traversal] = new TraversalCompose {}
-}
+    def id[A]: Traversal[A, A] =
+      Iso.id[A].asTraversal
 
-sealed abstract class TraversalInstances0 extends TraversalInstances1 {
-  implicit val traversalCategory: Category[Traversal] = new TraversalCategory {}
-}
-
-sealed abstract class TraversalInstances extends TraversalInstances0 {
-  implicit val traversalChoice: Choice[Traversal] = new TraversalChoice {}
-}
-
-//
-// Implementation traits for type class instances
-//
-
-private trait TraversalCompose extends Compose[Traversal]{
-  def compose[A, B, C](f: Traversal[B, C], g: Traversal[A, B]): Traversal[A, C] =
-    g composeTraversal f
-}
-
-private trait TraversalCategory extends Category[Traversal] with TraversalCompose {
-  def id[A]: Traversal[A, A] =
-    Iso.id[A].asTraversal
-}
-
-private trait TraversalChoice extends Choice[Traversal] with TraversalCategory {
-  def choice[A, B, C](f1: => Traversal[A, C], f2: => Traversal[B, C]): Traversal[A \/ B, C] =
-    f1 sum f2
+    def choice[A, B, C](f1: => Traversal[A, C], f2: => Traversal[B, C]): Traversal[A \/ B, C] =
+      f1 sum f2
+  }
 }
 

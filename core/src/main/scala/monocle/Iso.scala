@@ -1,7 +1,7 @@
 package monocle
 
 import scalaz.Isomorphism.{<=>, <~>}
-import scalaz.{Applicative, Category, Compose, Functor, Maybe, Monoid, Split, \/}
+import scalaz.{Applicative, Category, Functor, Maybe, Monoid, Split, \/}
 
 /**
  * A [[PIso]] defines an isomorphism between types S, A and B, T:
@@ -303,37 +303,22 @@ object Iso {
     Iso(isoSet.to)(isoSet.from)
 }
 
-//
-// Prioritized Implicits for type class instances
-//
+sealed abstract class IsoInstances extends IsoInstances0 {
+  implicit val isoSplit: Split[Iso] = new Split[Iso] {
+    def split[A, B, C, D](f: Iso[A, B], g: Iso[C, D]): Iso[(A, C), (B, D)] =
+      f product g
 
-sealed abstract class IsoInstances1 {
-  implicit val isoCompose: Compose[Iso] = new IsoCompose {}
+    def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
+      g composeIso f
+  }
 }
 
 sealed abstract class IsoInstances0 {
-  implicit val isoCategory: Category[Iso] = new IsoCategory {}
-}
+  implicit val isoCategory: Category[Iso] = new Category[Iso]{
+    def id[A]: Iso[A, A] =
+      Iso.id[A]
 
-sealed abstract class IsoInstances extends IsoInstances0 {
-  implicit val isoSplit: Split[Iso] = new IsoSplit {}
-}
-
-//
-// Implementation traits for type class instances
-//
-
-private trait IsoCompose extends Compose[Iso]{
-  def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
-    g composeIso f
-}
-
-private trait IsoCategory extends Category[Iso] with IsoCompose {
-  def id[A]: Iso[A, A] =
-    Iso.id[A]
-}
-
-private trait IsoSplit extends Split[Iso] with IsoCompose {
-  def split[A, B, C, D](f: Iso[A, B], g: Iso[C, D]): Iso[(A, C), (B, D)] =
-    f product g
+    def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
+      g composeIso f
+  }
 }
