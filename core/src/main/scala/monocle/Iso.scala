@@ -1,7 +1,7 @@
 package monocle
 
 import scalaz.Isomorphism.{<=>, <~>}
-import scalaz.{Applicative, Functor, Maybe, Monoid, \/}
+import scalaz.{Applicative, Category, Functor, Maybe, Monoid, Split, \/}
 
 /**
  * A [[PIso]] defines an isomorphism between types S, A and B, T:
@@ -61,6 +61,18 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
   /** set polymorphically the target of a [[PIso]] with a value */
   @inline final def set(b: B): S => T =
     _ => reverseGet(b)
+
+  /** pair two disjoint [[PIso]] */
+  @inline final def product[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
+    PIso[(S, S1), (T, T1), (A, A1), (B, B1)]{
+      case (s, s1) => (self.get(s), other.get(s1))
+    }{
+      case (b, b1) => (self.reverseGet(b), other.reverseGet(b1))
+    }
+
+  /** alias for product */
+  @inline final def ***[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
+    product(other)
 
   /**********************************************************/
   /** Compose methods between a [[PIso]] and another Optics */
@@ -225,7 +237,7 @@ abstract class PIso[S, T, A, B] private[monocle]{ self =>
 
 }
 
-object PIso {
+object PIso extends IsoInstances {
   /** create a [[PIso]] using a pair of functions: one to get the target and one to get the source. */
   def apply[S, T, A, B](_get: S => A)(_reverseGet: B => T): PIso[S, T, A, B] =
     new PIso[S, T, A, B]{ self =>
@@ -283,4 +295,24 @@ object Iso {
   /** transform an [[scalaz.Isomorphisms.Iso]] in a [[Iso]] */
   def fromIsoSet[A, B](isoSet: A <=> B): Iso[A, B] =
     Iso(isoSet.to)(isoSet.from)
+}
+
+sealed abstract class IsoInstances extends IsoInstances0 {
+  implicit val isoSplit: Split[Iso] = new Split[Iso] {
+    def split[A, B, C, D](f: Iso[A, B], g: Iso[C, D]): Iso[(A, C), (B, D)] =
+      f product g
+
+    def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
+      g composeIso f
+  }
+}
+
+sealed abstract class IsoInstances0 {
+  implicit val isoCategory: Category[Iso] = new Category[Iso]{
+    def id[A]: Iso[A, A] =
+      Iso.id[A]
+
+    def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
+      g composeIso f
+  }
 }

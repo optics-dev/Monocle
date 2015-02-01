@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.Functor
+import scalaz.{Choice, Functor, \/}
 
 /**
  * A [[PSetter]] is a generalisation of [[Functor]] map:
@@ -30,6 +30,16 @@ abstract class PSetter[S, T, A, B] private[monocle] { self =>
 
   /** set polymorphically the target of a [[PSetter]] with a value */
   def set(b: B): S => T
+
+  /** join two [[PSetter]] with the same target */
+  @inline final def sum[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[S \/ S1, T \/ T1, A, B] =
+    PSetter[S \/ S1, T \/ T1, A, B](
+      b => _.bimap(self.modify(b), other.modify(b))
+    )
+
+  /** alias for sum */
+  @inline final def |||[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[S \/ S1, T \/ T1, A, B] =
+    sum(other)
 
   /*************************************************************/
   /** Compose methods between a [[PSetter]] and another Optics */
@@ -91,8 +101,7 @@ abstract class PSetter[S, T, A, B] private[monocle] { self =>
 
 }
 
-object PSetter {
-
+object PSetter extends SetterInstances{
   /** create a [[PSetter]] using modify function */
   def apply[S, T, A, B](_modify: (A => B) => S => T): PSetter[S, T, A, B] =
     new PSetter[S, T, A, B]{
@@ -113,4 +122,17 @@ object Setter {
   /** alias for [[PSetter]] apply with a monomorphic modify function */
   def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
     PSetter(modify)
+}
+
+sealed abstract class SetterInstances {
+  implicit val SetterChoice: Choice[Setter] = new Choice[Setter] {
+    def compose[A, B, C](f: Setter[B, C], g: Setter[A, B]): Setter[A, C] =
+      g composeSetter f
+
+    def id[A]: Setter[A, A] =
+      Iso.id[A].asSetter
+
+    def choice[A, B, C](f1: => Setter[A, C], f2: => Setter[B, C]): Setter[A \/ B, C] =
+      f1 sum f2
+  }
 }

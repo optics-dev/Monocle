@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{\/, Applicative, Maybe, Monoid, Functor}
+import scalaz.{Applicative, Choice, Functor, Maybe, Monoid, Split, \/}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
@@ -43,6 +43,29 @@ abstract class PLens[S, T, A, B] private[monocle]{ self =>
 
   /** modify polymorphically the target of a [[PLens]] using a function */
   def modify(f: A => B): S => T
+
+  /** join two [[PLens]] with the same target */
+  @inline final def sum[S1, T1](other: PLens[S1, T1, A, B]): PLens[S \/ S1, T \/ T1, A, B] =
+    PLens[S \/ S1, T \/ T1, A, B](_.fold(self.get, other.get)){
+      b => _.bimap(self.set(b), other.set(b))
+    }
+
+  /** alias for sum */
+  @inline final def |||[S1, T1](other: PLens[S1, T1, A, B]): PLens[S \/ S1, T \/ T1, A, B] =
+    sum(other)
+
+  /** pair two disjoint [[PLens]] */
+  @inline final def product[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
+    PLens[(S, S1), (T, T1), (A, A1), (B, B1)]{
+      case (s, s1) => (self.get(s), other.get(s1))
+    }{ case (b, b1) => {
+        case (s, s1) => (self.set(b)(s), other.set(b1)(s1))
+      }
+    }
+
+  /** alias for product */
+  @inline final def ***[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
+    product(other)
 
   /***********************************************************/
   /** Compose methods between a [[PLens]] and another Optics */
@@ -172,7 +195,7 @@ abstract class PLens[S, T, A, B] private[monocle]{ self =>
 
 }
 
-object PLens {
+object PLens extends LensInstances {
   /**
    * create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
    * @see macro module for methods generating [[PLens]] with less boiler plate
@@ -198,4 +221,27 @@ object Lens {
   /** alias for [[PLens]] apply with a monomorphic set function */
   def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] =
     PLens(get)(set)
+}
+
+sealed abstract class LensInstances extends LensInstances0 {
+  implicit val lensChoice: Choice[Lens] = new Choice[Lens] {
+    def choice[A, B, C](f: => Lens[A, C], g: => Lens[B, C]): Lens[A \/ B, C] =
+      f sum g
+
+    def id[A]: Lens[A, A] =
+      Iso.id[A].asLens
+
+    def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
+      g composeLens f
+  }
+}
+
+sealed abstract class LensInstances0 {
+  implicit val lensSplit: Split[Lens]  = new Split[Lens] {
+    def split[A, B, C, D](f: Lens[A, B], g: Lens[C, D]): Lens[(A, C), (B, D)] =
+      f product g
+
+    def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
+      g composeLens f
+  }
 }

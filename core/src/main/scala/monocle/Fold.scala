@@ -1,10 +1,10 @@
 package monocle
 
+import scalaz.Maybe._
 import scalaz.std.anyVal._
 import scalaz.syntax.std.boolean._
-import scalaz.Maybe._
-import scalaz.{Maybe, Foldable, Monoid, IList}
 import scalaz.syntax.tag._
+import scalaz.{Choice, Foldable, IList, Maybe, Monoid, \/}
 
 /**
  * A [[Fold]] can be seen as a [[Getter]] with many targets or
@@ -51,6 +51,17 @@ abstract class Fold[S, A] { self =>
   /** check if all targets satisfy the predicate */
   @inline final def all(p: A => Boolean)(s: S): Boolean =
     foldMap(p(_).conjunction)(s).unwrap
+
+  /** join two [[Fold]] with the same target */
+  @inline final def sum[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
+    new Fold[S \/ S1, A]{
+      def foldMap[M: Monoid](f: A => M)(s: S \/ S1): M =
+        s.fold(self.foldMap(f), other.foldMap(f))
+    }
+
+  /** alias for sum */
+  @inline final def |||[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
+    sum(other)
 
   /**********************************************************/
   /** Compose methods between a [[Fold]] and another Optics */
@@ -113,13 +124,25 @@ abstract class Fold[S, A] { self =>
 
 }
 
-object Fold {
-
+object Fold extends FoldInstances {
   /** create a [[Fold]] from a [[Foldable]] */
   def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] =
     new Fold[F[A], A] {
       def foldMap[M: Monoid](f: A => M)(s: F[A]): M =
         Foldable[F].foldMap(s)(f)
     }
+}
 
+
+sealed abstract class FoldInstances {
+  implicit val foldChoice: Choice[Fold] = new Choice[Fold]{
+    def choice[A, B, C](f: => Fold[A, C], g: => Fold[B, C]): Fold[A \/ B, C] =
+      f sum g
+
+    def id[A]: Fold[A, A] =
+      Iso.id[A].asFold
+
+    def compose[A, B, C](f: Fold[B, C], g: Fold[A, B]): Fold[A, C] =
+      g composeFold f
+  }
 }

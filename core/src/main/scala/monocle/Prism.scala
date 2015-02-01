@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Applicative, Maybe, Monoid, \/}
+import scalaz.{Applicative, Category, Maybe, Monoid, \/}
 
 
 /**
@@ -193,7 +193,7 @@ abstract class PPrism[S, T, A, B] private[monocle]{ self =>
     }
 }
 
-object PPrism {
+object PPrism extends PrismInstances {
   /** create a [[PPrism]] using the canonical functions: getOrModify and reverseGet */
   def apply[S, T, A, B](_getOrModify: S => T \/ A)(_reverseGet: B => T): PPrism[S, T, A, B] =
     new PPrism[S, T, A, B]{
@@ -221,4 +221,14 @@ object Prism {
       def getMaybe(s: S): Maybe[A] =
         _getMaybe(s)
     }
+}
+
+sealed abstract class PrismInstances {
+  implicit val prismCategory: Category[Prism] = new Category[Prism] {
+    def id[A]: Prism[A, A] =
+      Iso.id[A].asPrism
+
+    def compose[A, B, C](f: Prism[B, C], g: Prism[A, B]): Prism[A, C] =
+      g composePrism f
+  }
 }

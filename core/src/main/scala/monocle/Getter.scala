@@ -1,7 +1,6 @@
 package monocle
 
-import scalaz.Monoid
-
+import scalaz.{Arrow, Choice, Monoid, \/}
 
 /**
  * A [[Getter]] can be seen as a glorified get method between
@@ -15,6 +14,22 @@ import scalaz.Monoid
 abstract class Getter[S, A] private[monocle]{ self =>
   /** get the target of a [[Getter]] */
   def get(s: S): A
+
+  /** join two [[Getter]] with the same target */
+  @inline final def sum[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
+    Getter[S \/ S1, A](_.fold(self.get, other.get))
+
+  /** alias for sum */
+  @inline final def |||[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
+    sum(other)
+
+  /** pair two disjoint [[Getter]] */
+  @inline final def product[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
+    Getter[(S, S1), (A, A1)]{case (s, s1) => (self.get(s), other.get(s1))}
+
+  /** alias for product */
+  @inline final def ***[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
+    product(other)
 
   /*************************************************************/
   /** Compose methods between a [[Getter]] and another Optics  */
@@ -87,10 +102,39 @@ abstract class Getter[S, A] private[monocle]{ self =>
 
 }
 
-object Getter {
+object Getter extends GetterInstances {
   def apply[S, A](_get: S => A): Getter[S, A] =
     new Getter[S, A]{
       def get(s: S): A =
         _get(s)
     }
+}
+
+sealed abstract class GetterInstances extends GetterInstances0 {
+  implicit val getterArrow: Arrow[Getter] = new Arrow[Getter]{
+    def arr[A, B](f: (A) => B): Getter[A, B] =
+      Getter(f)
+
+    def first[A, B, C](f: Getter[A, B]): Getter[(A, C), (B, C)] =
+      Getter[(A, C), (B, C)]{case (a, c) => (f.get(a), c)}
+
+    def id[A]: Getter[A, A] =
+      Iso.id[A].asGetter
+
+    def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
+      g composeGetter f
+  }
+}
+
+sealed abstract class GetterInstances0 {
+  implicit val getterChoice: Choice[Getter] = new Choice[Getter]{
+    def choice[A, B, C](f: => Getter[A, C], g: => Getter[B, C]): Getter[A \/ B, C] =
+      f sum g
+
+    def id[A]: Getter[A, A] =
+      Iso.id[A].asGetter
+
+    def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
+      g composeGetter f
+  }
 }
