@@ -88,6 +88,11 @@ object TestUtil {
     3 -> Arbitrary.arbitrary[A].map(Maybe.just(_))
   ))
 
+  implicit def validationArbitrary[E: Arbitrary, A: Arbitrary]: Arbitrary[Validation[E, A]] = Arbitrary(Gen.frequency(
+    1 -> Arbitrary.arbitrary[E].map(Failure.apply),
+    3 -> Arbitrary.arbitrary[A].map(Success.apply)
+  ))
+
   implicit def someArbitrary[A: Arbitrary]: Arbitrary[Some[A]] = Arbitrary(Arbitrary.arbitrary[A].map(Some(_)))
 
   implicit def disjunctionArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \/ B] =
