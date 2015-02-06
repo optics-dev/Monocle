@@ -27,7 +27,7 @@ trait IListInstances {
 
   implicit def iListIndex[A]: Index[IList[A], Int, A] = new Index[IList[A], Int, A] {
     def index(i: Int) = Optional[IList[A], A](
-      il      => if(i < 0) Maybe.empty else il.drop(i).headOption.toMaybe)(
+      il      => if(i < 0) Maybe.empty else il.drop(i).headMaybe)(
       a => il => il.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
