@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Iso, Optional}
+import monocle.{PIso, Iso, Optional}
 
 import scalaz.NonEmptyList._
 import scalaz.{NonEmptyList, OneAnd}
@@ -10,9 +10,14 @@ object nonemptylist extends NonEmptyListInstances
 
 trait NonEmptyListInstances {
 
-  def nelAndOneIso[A]: Iso[NonEmptyList[A], OneAnd[List,A]] =
-    Iso((nel: NonEmptyList[A])    => OneAnd[List,A](nel.head, nel.tail))(
-        (oneAnd: OneAnd[List, A]) => NonEmptyList.nel(oneAnd.head, oneAnd.tail))
+  /** [[PIso]] between a [[scalaz.NonEmptyList]] and an [[scalaz.OneAnd]] */
+  def pNelToAndOne[A, B]: PIso[NonEmptyList[A], NonEmptyList[B], OneAnd[List,A], OneAnd[List,B]] =
+    PIso((nel: NonEmptyList[A])    => OneAnd[List,A](nel.head, nel.tail))(
+         (oneAnd: OneAnd[List, B]) => NonEmptyList.nel(oneAnd.head, oneAnd.tail))
+
+  /** monomorphic alias for pNelToAndOne */
+  def nelToAndOne[A]: Iso[NonEmptyList[A], OneAnd[List,A]] =
+    pNelToAndOne[A, A]
 
   implicit def nelEach[A]: Each[NonEmptyList[A], A] =
     Each.traverseEach[NonEmptyList, A]

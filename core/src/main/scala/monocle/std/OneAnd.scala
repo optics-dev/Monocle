@@ -1,13 +1,21 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Lens, Iso, Optional, Traversal}
+import monocle.{Iso, Lens, PIso, Traversal}
 
-import scalaz.{Applicative, Maybe, OneAnd}
+import scalaz.{Applicative, NonEmptyList, OneAnd}
 
 object oneand extends OneAndInstances
 
 trait OneAndInstances {
+
+  /** [[PIso]] between a [[scalaz.NonEmptyList]] and an [[scalaz.OneAnd]] */
+  def pAndOneToNel[A, B]: PIso[OneAnd[List,A], OneAnd[List,B], NonEmptyList[A], NonEmptyList[B]] =
+    pNelToAndOne[B, A].reverse
+
+  /** monomorphic alias for pAndOneToNel */
+  def andOneToNel[A]: Iso[OneAnd[List,A], NonEmptyList[A]] =
+    pAndOneToNel[A, A]
 
   implicit def oneAndEach[T[_], A](implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
     new Each[OneAnd[T, A], A]{

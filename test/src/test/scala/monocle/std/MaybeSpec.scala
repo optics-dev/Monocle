@@ -9,9 +9,9 @@ import scalaz.Maybe
 
 class MaybeSpec extends Spec {
 
-  checkAll("maybeToOption", IsoLaws(maybeToOption[Int, Int]))
+  checkAll("maybeToOption", IsoLaws(maybeToOption[Int]))
 
-  checkAll("just"   , PrismLaws(just[Int, Int]))
+  checkAll("just"   , PrismLaws(just[Int]))
   checkAll("nothing", PrismLaws(nothing[Long]))
 
   checkAll("each Maybe", TraversalLaws(each[Maybe[Int], Int]))
