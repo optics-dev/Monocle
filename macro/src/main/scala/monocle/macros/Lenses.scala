@@ -20,10 +20,14 @@ private[macros] object LensesImpl extends MacrosCompatibility {
       case _ => ""
     }
 
-    def lenses(tpname: TypeName, paramss: List[List[ValDef]]): List[Tree] = {
+    def lenses(tpname: TypeName, tparams: List[TypeDef], paramss: List[List[ValDef]]): List[Tree] = {
       paramss.head map { param =>
         val lensName = createTermName(c)(prefix + param.name.decodedName)
-        q"""val $lensName = monocle.macros.internal.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
+        if (tparams.isEmpty)
+          q"""val $lensName = monocle.macros.internal.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
+        else
+          q"""def $lensName[..$tparams] = 
+                 monocle.macros.internal.Macro.mkLens[$tpname[..${tparams.map(_.name)}], ${param.tpt}](${param.name.toString})"""
       }
     }
 
@@ -34,7 +38,7 @@ private[macros] object LensesImpl extends MacrosCompatibility {
         q"""
          $classDef
          object $name {
-           ..${lenses(tpname, paramss)}
+           ..${lenses(tpname, tparams, paramss)}
          }
          """
       case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
@@ -43,7 +47,7 @@ private[macros] object LensesImpl extends MacrosCompatibility {
         q"""
          $classDef
          object $objName {
-           ..${lenses(tpname, paramss)}
+           ..${lenses(tpname, tparams, paramss)}
            ..$objDefs
          }
          """
