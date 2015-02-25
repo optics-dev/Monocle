@@ -1,58 +1,51 @@
 package monocle
 
 import monocle.macros.{GenLens, Lenses}
-import monocle.syntax._
 import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
 import shapeless.test.illTyped
 
 class LensExample extends Spec {
-  
-  "Modifications through lenses are chainable" in {
-    @Lenses case class Point(x: Int, y: Int)
-    import Point._
-
-    val update = x.modify(_ + 100) compose y.set(7)
-    update(Point(1,2)) ==== Point(101,7)
-  }
-
-  "@Lenses is for case classes only" in {
-    new AnyValueAsResult[Unit].asResult(
-      illTyped("""@Lenses class C""", "Invalid annotation target: must be a case class")
-    )
-  }
 
   "Lens for monomorphic case class fields" in {
+     // @Lenses generate Lens automatically in the companion object
+     @Lenses case class Address(streetNumber: Int, streetName: String)
+     @Lenses case class Person(name: String, age: Int, address: Address)
 
-    @Lenses // this annotation generate lenses in the companion object of Person
-    case class Person(name: String, age: Int)
-
-    object CoreSimpleLens {
-      val _name = Lens((_: Person).name)(n => c => c.copy(name = n))
-      val _age  = Lens((_: Person).age)( h => c => c.copy(age = h))
+    object Manual { // Lens created manually (i.e. without macro)
+      val _name = Lens[Person, String](_.name)(n => p => p.copy(name = n))
+      val _age  = Lens[Person, Int](_.age)(a => p => p.copy(age = a))
+      val _address = Lens[Person, Address](_.address)(a => p => p.copy(address = a))
+      val _streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
     }
 
-    object LenserMacro {
-      val genLens = GenLens[Person]
-
-      val name = genLens(_.name)
-      val age  = genLens(_.age)
+    object Semi { // Lens generated semi automatically using GenLens macro
+      val name = GenLens[Person](_.name)
+      val age  = GenLens[Person](_.age)
+      val address = GenLens[Person](_.address)
+      val streetNumber = GenLens[Address](_.streetNumber)
     }
 
-    val john = Person("John", 30)
+    val john = Person("John", 30, Address(126, "High Street"))
     
-    "Lens get an A from an S" in {
-      (john applyLens CoreSimpleLens._name get) ==== "John"
-      (john applyLens LenserMacro.name get)     ==== "John"
-      (john applyLens Person.name get)          ==== "John"
+    "get" in {
+      Manual._name.get(john) ==== "John"
+      Semi.name.get(john)    ==== "John"
+      Person.name.get(john)  ==== "John"
     }
 
-    "Lens set an A in a S" in {
-      val changedJohn = Person("John", 45)
+    "set" in {
+      val changedJohn = john.copy(age = 45)
 
-      (john applyLens CoreSimpleLens._age set 45) ==== changedJohn
-      (john applyLens LenserMacro.age set 45)     ==== changedJohn
-      (john applyLens Person.age set 45)          ==== changedJohn
+      Manual._age.set(45)(john) ==== changedJohn
+      Semi.age.set(45)(john)    ==== changedJohn
+      Person.age.set(45)(john)  ==== changedJohn
+    }
+
+    "compose" in {
+      (Manual._address composeLens Manual._streetNumber).get(john) ==== 126
+      (Semi.address composeLens Semi.streetNumber).get(john)       ==== 126
+      (Person.address composeLens Address.streetNumber).get(john)  ==== 126
     }
 
     @Lenses("_") // this generates lenses prefixed with _ in the Cat companion object
@@ -61,8 +54,7 @@ class LensExample extends Spec {
     val alpha = Cat(2)
 
     "@Lenses takes an optional prefix string" in {
-      (alpha applyLens Cat._age get)   ==== 2
-      (alpha applyLens Cat._age set 3) ==== Cat(3)
+      Cat._age.get(alpha) ==== 2
     }
 
     "Lenses are created as `val`s" in {
@@ -75,35 +67,30 @@ class LensExample extends Spec {
   }
 
   "Lens for polymorphic case class fields" in {
-    @Lenses // this annotation generate lenses in the companion object of Foo
-    case class Foo[A,B](q: Map[(A,B),Double], default: Double)
+    @Lenses case class Foo[A,B](q: Map[(A,B),Double], default: Double)
 
-    object CoreSimpleLens {
-      def _q[A,B] = Lens((_: Foo[A,B]).q)(q => f => f.copy(q = q))
-      def _default[A,B]  = Lens((_: Foo[A,B]).default)(d => f => f.copy(default = d))
+    object Manual { // Lens created manually (i.e. without macro)
+      def q[A,B] = Lens((_: Foo[A,B]).q)(q => f => f.copy(q = q))
+      def default[A,B] = Lens((_: Foo[A,B]).default)(d => f => f.copy(default = d))
     }
 
-    object LenserMacro {
-      def genLens[A,B] = GenLens[Foo[A,B]]
-
-      def q[A,B] = genLens[A,B](_.q)
-      def default[A,B]  = genLens[A,B](_.default)
+    object Semi { // Lens generated semi automatically using GenLens macro
+      def q[A,B] = GenLens[Foo[A,B]](_.q)
+      def default[A,B] = GenLens[Foo[A,B]](_.default)
     }
 
-    val candyTrade = Foo[Int,Symbol](Map[(Int,Symbol),Double]((0,'Buy) -> -3.0, (12,'Sell) -> 7), 0.0)
+    val candyTrade = Foo(Map[(Int,Symbol),Double]((0,'Buy) -> -3.0, (12,'Sell) -> 7), 0.0)
     
-    "Lens gets an A from an S" in {
-      (candyTrade applyLens CoreSimpleLens._default get) ==== 0.0
-      (candyTrade applyLens LenserMacro.default get)     ==== 0.0
-      (candyTrade applyLens Foo.default get)             ==== 0.0
+    "get" in {
+      Manual.default.get(candyTrade) ==== 0.0
+      Semi.default.get(candyTrade)   ==== 0.0
+      Foo.default.get(candyTrade)    ==== 0.0
     }
 
 
-    "Lens modifies an A in S" in {
-      val changedTrade = Foo[Int,Symbol](Map((0,'Buy) -> -2.0, (12,'Sell) -> 7), 0.0)
-      import Foo._
-      changedTrade ==== changedTrade
-      q.modify((_: Map[(Int,Symbol),Double]).updated((0,'Buy), -2.0))(candyTrade) ==== changedTrade
+    "set" in {
+      val changedTrade = candyTrade.copy(q = candyTrade.q.updated((0,'Buy), -2.0))
+      Foo.q.modify((_: Map[(Int,Symbol),Double]).updated((0,'Buy), -2.0))(candyTrade) ==== changedTrade
     }
 
     "Lenses are created as `def`s" in {
@@ -112,5 +99,19 @@ class LensExample extends Spec {
       decls.exists(_.toString == "method q") ==== true
       decls.exists(_.toString == "method default") ==== true
     }
+  }
+
+  "Modifications through lenses are chainable" in {
+    @Lenses case class Point(x: Int, y: Int)
+    import Point._
+
+    val update = x.modify(_ + 100) compose y.set(7)
+    update(Point(1,2)) ==== Point(101,7)
+  }
+
+  "@Lenses is for case classes only" in {
+    new AnyValueAsResult[Unit].asResult(
+      illTyped("""@Lenses class C""", "Invalid annotation target: must be a case class")
+    )
   }
 }
