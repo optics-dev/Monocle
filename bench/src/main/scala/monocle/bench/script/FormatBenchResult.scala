@@ -28,8 +28,8 @@ object Method {
   implicit val ord = Order.orderBy[Method, String](_.value)
 }
 
-final case class BenchLine(method: Method, impl: Impl, score: Long)
-final case class BenchResult(method: Method, stdScore: Long, implScores: IMap[Impl, Long])
+final case class BenchLine(method: Method, impl: Impl, score: Double)
+final case class BenchResult(method: Method, stdScore: Double, implScores: IMap[Impl, Double])
 
 
 /**
@@ -68,10 +68,10 @@ object FormatBenchResult extends App {
     } yield BenchLine(method, impl, score)
 
 
-  def extractBenchNameAndScore(line: String): Maybe[(String, Long)] =
+  def extractBenchNameAndScore(line: String): Maybe[(String, Double)] =
     \/.fromTryCatchNonFatal{
       val columns = line.split(',')
-      (columns(0), columns(4).toDouble.toLong)
+      (columns(0), columns(4).toDouble)
     }.toMaybe
 
   def extractImpl(benchName: String): Maybe[Impl] =
@@ -96,17 +96,17 @@ object FormatBenchResult extends App {
   }
 
   def format(results: IList[BenchResult]): IList[(String, String, String, String, String, String, String, String, String, String)] = {
-    def f(l: Long): String =
+    def f(l: Double): String =
       l.toString
 
     def fp(d: Double): String =
       "%.2f".format(d)
 
-    def sc(implScores: IMap[Impl, Long], impl: Impl): String =
+    def sc(implScores: IMap[Impl, Double], impl: Impl): String =
       implScores.lookup(impl).map(f).getOrElse("N/A")
 
     def scp(r: BenchResult, impl: Impl): String =
-      r.implScores.lookup(impl).map(_.toDouble / r.stdScore * 100).map(fp).getOrElse("N/A")
+      r.implScores.lookup(impl).map(r.stdScore / _  * 100).map(fp).getOrElse("N/A")
 
     ("Method", "Monocle Macro / Std (%)", "Monocle / Std (%)", "Scalaz / Std (%)", "Shapeless / Std (%)", "Std (ops/s)", "Monocle Macro (ops/s)", "Monocle (ops/s)", "Scalaz (ops/s)", "Shapeless (ops/s)") ::
       results.map( r =>

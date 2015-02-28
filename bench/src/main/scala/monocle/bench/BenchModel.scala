@@ -33,10 +33,6 @@ object BenchModel {
               Nested6(genStr(), genInt())
               ,genLong()), genLong()), genLong()), genLong()), genLong()), genLong())
 
-  val n0s: Array[Nested0] = (1 to 10).map( _ => genNested0()).toArray
-
-  val n0 = genNested0()
-
   sealed trait ADT
   case class I(i: Int)    extends ADT
   case class S(s: String) extends ADT
