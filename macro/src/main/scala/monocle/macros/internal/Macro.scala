@@ -45,19 +45,7 @@ private[macros] object MacroImpl extends MacrosCompatibility {
       import monocle.PLens
       import scalaz.Functor
 
-      new PLens[$sTpe, $sTpe, $aTpe, $aTpe]{
-        def get(s: $sTpe): $aTpe =
-          s.$fieldMethod
-
-        def set(a: $aTpe): $sTpe => $sTpe =
-          _.copy($field = a)
-
-        def modifyF[F[_]: Functor](f: $aTpe => F[$aTpe])(s: $sTpe): F[$sTpe] =
-          Functor[F].map(f(s.$fieldMethod))(a => s.copy($field = a))
-
-        def modify(f: $aTpe => $aTpe): $sTpe => $sTpe =
-         s => s.copy($field = f(s.$fieldMethod))
-      }
+      PLens[$sTpe, $sTpe, $aTpe, $aTpe](_.$fieldMethod)(a => _.copy($field = a))
     """)
   }
 
