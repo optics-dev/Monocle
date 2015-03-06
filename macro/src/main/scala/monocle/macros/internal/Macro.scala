@@ -42,10 +42,7 @@ private[macros] object MacroImpl extends MacrosCompatibility {
       .getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $sTpe"))
 
     c.Expr[Lens[S, A]](q"""
-      import monocle.PLens
-      import scalaz.Functor
-
-      PLens[$sTpe, $sTpe, $aTpe, $aTpe](_.$fieldMethod)(a => _.copy($field = a))
+      monocle.PLens[$sTpe, $sTpe, $aTpe, $aTpe](_.$fieldMethod)(a => _.copy($field = a))
     """)
   }
 
