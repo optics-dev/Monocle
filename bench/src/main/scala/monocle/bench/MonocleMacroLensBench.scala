@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import monocle.bench.BenchModel._
 import monocle.bench.input.Nested0Input
-import monocle.macros.GenLens
+import monocle.macros.Lenser
 import org.openjdk.jmh.annotations._
 
 @BenchmarkMode(Array(Mode.AverageTime))
@@ -12,16 +12,16 @@ import org.openjdk.jmh.annotations._
 @State(Scope.Benchmark)
 class MonocleMacroLensBench extends LensBench {
 
-  val _n1 = GenLens[Nested0](_.n)
-  val _n2 = GenLens[Nested1](_.n)
-  val _n3 = GenLens[Nested2](_.n)
-  val _n4 = GenLens[Nested3](_.n)
-  val _n5 = GenLens[Nested4](_.n)
-  val _n6 = GenLens[Nested5](_.n)
+  val _n1 = Lenser[Nested0](_.n)
+  val _n2 = Lenser[Nested1](_.n)
+  val _n3 = Lenser[Nested2](_.n)
+  val _n4 = Lenser[Nested3](_.n)
+  val _n5 = Lenser[Nested4](_.n)
+  val _n6 = Lenser[Nested5](_.n)
 
-  val _n0_i = GenLens[Nested0](_.i)
-  val _n3_i = GenLens[Nested3](_.i)
-  val _n6_i = GenLens[Nested6](_.i)
+  val _n0_i = Lenser[Nested0](_.i)
+  val _n3_i = Lenser[Nested3](_.i)
+  val _n6_i = Lenser[Nested6](_.i)
 
   val _n0Ton3I = _n1 composeLens _n2 composeLens _n3 composeLens _n3_i
   val _n0Ton6I = _n1 composeLens _n2 composeLens _n3 composeLens _n4 composeLens _n5 composeLens _n6 composeLens _n6_i

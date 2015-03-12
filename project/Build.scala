@@ -135,10 +135,14 @@ object MonocleBuild extends Build {
     "monocle-bench",
     file("bench"),
     settings = buildSettings ++ jmhSettings ++ Seq(
-      libraryDependencies += shapeless.value,
+      libraryDependencies ++= Seq(
+        "com.github.julien-truffaut" %%  "monocle-core"  % "1.0.1",
+        "com.github.julien-truffaut" %%  "monocle-macro" % "1.0.1",
+        shapeless.value
+      ),
       addCompilerPlugin(kindProjector)
     )
-  ) dependsOn(core, macros)
+  )
 }
 
 object MonoclePublishing  {
