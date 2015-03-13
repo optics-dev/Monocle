@@ -11,13 +11,13 @@ import JmhKeys._
 
 object BuildSettings {
   import MonoclePublishing._
-  val buildScalaVersion = "2.11.5"
+  val buildScalaVersion = "2.11.6"
   val previousVersion   = "1.0.0"
 
   val buildSettings = typelevelDefaultSettings ++ Seq(
     organization       := "com.github.julien-truffaut",
     scalaVersion       := buildScalaVersion,
-    crossScalaVersions := Seq("2.10.4", "2.11.5"),
+    crossScalaVersions := Seq("2.10.4", "2.11.6"),
     scalacOptions     ++= Seq(
       "-deprecation",
       "-encoding", "UTF-8",
