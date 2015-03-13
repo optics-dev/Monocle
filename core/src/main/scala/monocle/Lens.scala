@@ -30,7 +30,7 @@ import scalaz.{Applicative, Choice, Functor, Maybe, Monoid, Split, \/}
  * @tparam A the target of a [[PLens]]
  * @tparam B the modified target of a [[PLens]]
  */
-abstract class PLens[S, T, A, B] private[monocle]{ self =>
+abstract class PLens[S, T, A, B] { self =>
 
   /** get the target of a [[PLens]] */
   def get(s: S): A
