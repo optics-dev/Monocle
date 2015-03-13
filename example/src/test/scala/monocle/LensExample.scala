@@ -56,14 +56,6 @@ class LensExample extends Spec {
     "@Lenses takes an optional prefix string" in {
       Cat._age.get(alpha) ==== 2
     }
-
-    "Lenses are created as `val`s" in {
-      import scala.reflect.runtime.universe._
-      val decls: List[Symbol] = implicitly[WeakTypeTag[Person.type]].tpe.declarations.toList
-      decls.exists(_.toString == "value name") ==== true
-      decls.exists(_.toString == "value age") ==== true
-    }
-
   }
 
   "Lens for polymorphic case class fields" in {
@@ -87,18 +79,11 @@ class LensExample extends Spec {
       Foo.default.get(candyTrade)    ==== 0.0
     }
 
-
     "set" in {
       val changedTrade = candyTrade.copy(q = candyTrade.q.updated((0,'Buy), -2.0))
       Foo.q.modify((_: Map[(Int,Symbol),Double]).updated((0,'Buy), -2.0))(candyTrade) ==== changedTrade
     }
 
-    "Lenses are created as `def`s" in {
-      import scala.reflect.runtime.universe._
-      val decls: List[Symbol] = implicitly[WeakTypeTag[Foo.type]].tpe.declarations.toList
-      decls.exists(_.toString == "method q") ==== true
-      decls.exists(_.toString == "method default") ==== true
-    }
   }
 
   "Modifications through lenses are chainable" in {

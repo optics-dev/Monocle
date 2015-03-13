@@ -9,12 +9,11 @@ import org.specs2.scalaz._
 
 import scalaz._
 
+case class Point(x: Int, y: Int)
+@Lenses case class Example(s: String, p: Point)
+@Lenses case class Foo[A,B](q: Map[(A,B),Double], default: Double)
+
 class LensSpec extends Spec {
-
-  case class Point(x: Int, y: Int)
-
-  @Lenses
-  case class Example(s: String, p: Point)
 
   val _s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
   val _p = Lens[Example, Point](_.p)(p => ex => ex.copy(p = p))
@@ -54,6 +53,21 @@ class LensSpec extends Spec {
 
   "Lens has a Split instance" in {
     Split[Lens].split(_x, _y).get((Point(0, 1), Point(5, 6))) ==== ((0, 6))
+  }
+
+  "Lenses for monomorphic case class are created as `val`s" in {
+    import scala.reflect.runtime.universe._
+    typeTag[Example.type].tpe.declarations.collectFirst {
+      case m: MethodSymbol if m.isAccessor && m.name.decodedName.toString == "s" => m
+    }.isDefined ==== true
+  }
+
+
+  "Lenses for polymorphic case class are created as `def`s" in {
+    import scala.reflect.runtime.universe._
+    typeTag[Foo.type].tpe.declarations.collectFirst {
+      case m: MethodSymbol if m.isMethod && !m.isAccessor && m.name.decodedName.toString == "q" => m
+    }.isDefined ==== true
   }
 
 }

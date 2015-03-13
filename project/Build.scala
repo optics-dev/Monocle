@@ -28,7 +28,6 @@ object BuildSettings {
       "-Yno-adapted-args",
       "-Ywarn-value-discard"
     ),
-    incOptions         := incOptions.value.withNameHashing(true),
     resolvers          += Resolver.sonatypeRepo("releases"),
     resolvers          += Resolver.sonatypeRepo("snapshots"),
     resolvers          += "bintray/non" at "http://dl.bintray.com/non/maven"
