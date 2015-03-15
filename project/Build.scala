@@ -4,35 +4,16 @@ import Keys._
 import xerial.sbt.Sonatype._
 import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 
-import org.typelevel.sbt.TypelevelPlugin._
+import com.typesafe.sbt.pgp.PgpKeys.publishSigned
+
+import sbtrelease.ReleasePlugin._
+import sbtrelease.ReleaseStep
+import sbtrelease.ReleasePlugin.ReleaseKeys.releaseProcess
+import sbtrelease.ReleaseStateTransformations._
+import sbtrelease.Utilities._
 
 import pl.project13.scala.sbt.SbtJmh._
 import JmhKeys._
-
-object BuildSettings {
-  import MonoclePublishing._
-  val buildScalaVersion = "2.11.6"
-  val previousVersion   = "1.0.0"
-
-  val buildSettings = typelevelDefaultSettings ++ Seq(
-    organization       := "com.github.julien-truffaut",
-    scalaVersion       := buildScalaVersion,
-    crossScalaVersions := Seq("2.10.4", "2.11.6"),
-    scalacOptions     ++= Seq(
-      "-deprecation",
-      "-encoding", "UTF-8",
-      "-feature",
-      "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
-      "-unchecked",
-      "-Yno-generic-signatures",
-      "-Yno-adapted-args",
-      "-Ywarn-value-discard"
-    ),
-    resolvers          += Resolver.sonatypeRepo("releases"),
-    resolvers          += Resolver.sonatypeRepo("snapshots"),
-    resolvers          += "bintray/non" at "http://dl.bintray.com/non/maven"
-  ) ++ publishSettings
-}
 
 object Dependencies {
   val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.1"
@@ -52,8 +33,31 @@ object Dependencies {
 }
 
 object MonocleBuild extends Build {
-  import BuildSettings._
   import Dependencies._
+
+  val buildScalaVersion = "2.11.6"
+  val previousVersion   = "1.0.0"
+
+  val buildSettings = Seq(
+    organization       := "com.github.julien-truffaut",
+    scalaVersion       := buildScalaVersion,
+    crossScalaVersions := Seq("2.10.4", "2.11.6"),
+    scalacOptions     ++= Seq(
+      "-deprecation",
+      "-encoding", "UTF-8",
+      "-feature",
+      "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
+      "-unchecked",
+      "-Yno-generic-signatures",
+      "-Yno-adapted-args",
+      "-Ywarn-value-discard"
+    ),
+    resolvers          += Resolver.sonatypeRepo("releases"),
+    resolvers          += Resolver.sonatypeRepo("snapshots"),
+    resolvers          += "bintray/non" at "http://dl.bintray.com/non/maven"
+  )
+
+  lazy val defaultSettings = buildSettings ++ publishSettings ++ releaseSettings
 
   lazy val root: Project = Project(
     "monocle",
@@ -66,17 +70,17 @@ object MonocleBuild extends Build {
   lazy val core: Project = Project(
     "monocle-core",
     file("core"),
-    settings = buildSettings ++ Seq(
+    settings = defaultSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz),
       addCompilerPlugin(kindProjector),
-      previousArtifact     := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % previousVersion)
+      previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % previousVersion)
     )
   )
 
   lazy val law: Project = Project(
     "monocle-law",
     file("law"),
-    settings = buildSettings ++ Seq(
+    settings = defaultSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, specs2Scalacheck),
       previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-law_2.11" % previousVersion)
     )
@@ -85,7 +89,7 @@ object MonocleBuild extends Build {
   lazy val macros: Project = Project(
     "monocle-macro",
     file("macro"),
-    settings = buildSettings ++ Seq(
+    settings = defaultSettings ++ Seq(
       scalacOptions  += "-language:experimental.macros",
       libraryDependencies ++= Seq(
         "org.scala-lang"  %  "scala-reflect"  % scalaVersion.value,
@@ -104,7 +108,7 @@ object MonocleBuild extends Build {
   lazy val generic: Project = Project(
     "monocle-generic",
     file("generic"),
-    settings = buildSettings ++ Seq(
+    settings = defaultSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, shapeless.value),
       previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-generic_2.11" % previousVersion)
     )
@@ -113,8 +117,7 @@ object MonocleBuild extends Build {
   lazy val test: Project = Project(
     "monocle-test",
     file("test"),
-    settings = buildSettings ++ Seq(
-      publishArtifact      := false,
+    settings = buildSettings ++ noPublishSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, scalaCheckBinding, scalazSpec2, specs2Scalacheck, shapeless.value),
       addCompilerPlugin(paradisePlugin)
     )
@@ -123,8 +126,7 @@ object MonocleBuild extends Build {
   lazy val example: Project = Project(
     "monocle-example",
     file("example"),
-    settings = buildSettings ++ Seq(
-      publishArtifact      := false,
+    settings = buildSettings ++ noPublishSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, specs2Scalacheck, shapeless.value),
       addCompilerPlugin(paradisePlugin) // Unfortunately necessary :( see: http://stackoverflow.com/q/23485426/463761
     )
@@ -133,7 +135,7 @@ object MonocleBuild extends Build {
   lazy val bench: Project = Project(
     "monocle-bench",
     file("bench"),
-    settings = buildSettings ++ jmhSettings ++ Seq(
+    settings = buildSettings ++ jmhSettings ++ noPublishSettings ++ Seq(
       libraryDependencies ++= Seq(
         "com.github.julien-truffaut" %%  "monocle-core"  % "1.0.1",
         "com.github.julien-truffaut" %%  "monocle-macro" % "1.0.1",
@@ -142,11 +144,20 @@ object MonocleBuild extends Build {
       addCompilerPlugin(kindProjector)
     )
   )
-}
-
-object MonoclePublishing  {
 
   lazy val publishSettings: Seq[Setting[_]] = Seq(
+    releaseProcess := Seq[ReleaseStep](
+      checkSnapshotDependencies,
+      inquireVersions,
+      runTest,
+      setReleaseVersion,
+      commitReleaseVersion,
+      tagRelease,
+      publishSignedArtifacts,
+      setNextVersion,
+      commitNextVersion,
+      pushChanges
+    ),
     pomExtra := {
       <url>https://github.com/julien-truffaut/Monocle</url>
         <licenses>
@@ -166,7 +177,28 @@ object MonoclePublishing  {
             <name>Julien Truffaut</name>
           </developer>
         </developers>
-    }
-  ) ++ sonatypeSettings
+    }) ++ sonatypeSettings
+
+  lazy val publishSignedArtifacts = ReleaseStep(
+    action = { st =>
+      val extracted = st.extract
+      val ref = extracted.get(thisProjectRef)
+      extracted.runAggregated(publishSigned in Global in ref, st)
+    },
+    check = { st =>
+      // getPublishTo fails if no publish repository is set up.
+      val ex = st.extract
+      val ref = ex.get(thisProjectRef)
+      Classpaths.getPublishTo(ex.get(publishTo in Global in ref))
+      st
+    },
+    enableCrossBuild = true
+  )
+
+  lazy val noPublishSettings = Seq(
+    publish := (),
+    publishLocal := (),
+    publishArtifact := false
+  )
 
 }
