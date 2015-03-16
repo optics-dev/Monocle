@@ -1,17 +1,25 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Optional, Prism}
+import monocle.{Iso, Optional, PIso, Prism}
 
 import scalaz.Id.Id
 import scalaz.std.list._
 import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
-import scalaz.{Applicative, Maybe}
+import scalaz.{Applicative, IList, Maybe}
 
 object list extends ListInstances
 
 trait ListInstances {
+
+  /** [[PIso]] between a [[scala.List]] and an [[scalaz.IList]] */
+  def pListToIList[A, B]: PIso[List[A], List[B], IList[A], IList[B]] =
+    pIListToList[B, A].reverse
+
+  /** monormorphic alias for pListToIList */
+  def listToIList[A]: Iso[List[A], IList[A]] =
+    pListToIList[A, A]
 
   implicit def listEmpty[A]: Empty[List[A]] = new Empty[List[A]] {
     def empty = Prism[List[A], Unit](l => if(l.isEmpty) Maybe.just(()) else Maybe.empty)(_ => List.empty)

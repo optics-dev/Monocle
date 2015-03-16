@@ -27,9 +27,9 @@ class EmptyExample extends Spec {
     _isEmpty(List(1,2,3)) ==== false
     _isEmpty("hello")     ==== false
 
-    _isEmpty(Nil)  ==== true
-    _isEmpty(None) ==== true
-    _isEmpty("")   ==== true
+    _isEmpty(List.empty)   ==== true
+    _isEmpty(Option.empty) ==== true
+    _isEmpty("")           ==== true
   }
   
 }

@@ -13,7 +13,7 @@ import scalaz.std.string._
 class EachExample extends Spec with ScalazMatchers {
 
   "Each can be used on Option" in {
-    (Some(3)              applyTraversal each modify( _ + 1)) ==== Some(4)
+    (Option(3)            applyTraversal each modify( _ + 1)) ==== Some(4)
     ((None : Option[Int]) applyTraversal each modify( _ + 1)) ==== None
   }
 
