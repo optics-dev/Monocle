@@ -62,10 +62,9 @@ object MonocleBuild extends Build {
   lazy val root: Project = Project(
     "monocle",
     file("."),
-    settings = buildSettings ++ Seq(
-      publishArtifact := false,
-      run <<= run in Compile in macros)
-  ) aggregate(core, law, macros, generic, test, example, bench)
+    settings = buildSettings ++ noPublishSettings ++ Seq(
+      run <<= run in Compile in macros
+    )) aggregate(core, law, macros, generic, test, example, bench)
 
   lazy val core: Project = Project(
     "monocle-core",
