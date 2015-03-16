@@ -19,7 +19,7 @@ private object GenPrismImpl extends MacrosCompatibility {
 
     val sTpeSym = companionTpe(c)(sTpe)
     c.Expr[Prism[S, A]](q"""
-      import monocle.Iso
+      import monocle.Prism
       import scalaz.{\/, \/-, -\/, Maybe}
 
       new Prism[$sTpe, $aTpe]{
