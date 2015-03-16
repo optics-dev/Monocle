@@ -29,7 +29,7 @@ import scalaz.{Applicative, Category, Maybe, Monoid, \/}
  * @tparam A the target of a [[PPrism]]
  * @tparam B the modified target of a [[PPrism]]
  */
-abstract class PPrism[S, T, A, B] private[monocle]{ self =>
+abstract class PPrism[S, T, A, B] extends Serializable { self =>
 
   /** get the target of a [[PPrism]] or modify the source in case there is no target */
   def getOrModify(s: S): T \/ A

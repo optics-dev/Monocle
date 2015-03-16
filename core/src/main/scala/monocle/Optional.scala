@@ -24,7 +24,7 @@ import scalaz.{Applicative, Choice, Maybe, Monoid, \/}
  * @tparam A the target of a [[POptional]]
  * @tparam B the modified target of a [[POptional]]
  */
-abstract class POptional[S, T, A, B] private[monocle]{ self =>
+abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   /** get the target of a [[POptional]] or modify the source in case there is no target */
   def getOrModify(s: S): T \/ A

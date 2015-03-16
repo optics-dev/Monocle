@@ -11,7 +11,7 @@ import scalaz.{Arrow, Choice, Monoid, \/}
  * @tparam S the source of a [[Getter]]
  * @tparam A the target of a [[Getter]]
  */
-abstract class Getter[S, A] private[monocle]{ self =>
+abstract class Getter[S, A] extends Serializable { self =>
   /** get the target of a [[Getter]] */
   def get(s: S): A
 

@@ -17,7 +17,7 @@ import scalaz.{Choice, Foldable, IList, Maybe, Monoid, \/}
  * @tparam S the source of a [[Fold]]
  * @tparam A the target of a [[Fold]]
  */
-abstract class Fold[S, A] { self =>
+abstract class Fold[S, A] extends Serializable { self =>
 
   /**
    * map each target to a [[Monoid]] and combine the results

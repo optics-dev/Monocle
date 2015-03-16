@@ -26,7 +26,7 @@ import scalaz.{Applicative, Category, Choice, Compose, Const, Functor, IList, Ma
  * @tparam A the target of a [[PTraversal]]
  * @tparam B the modified target of a [[PTraversal]]
  */
-abstract class PTraversal[S, T, A, B] { self =>
+abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 
   /**
    * modify polymorphically the target of a [[PTraversal]] with an [[Applicative]] function

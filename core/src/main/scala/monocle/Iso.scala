@@ -39,7 +39,7 @@ import scalaz.{Applicative, Category, Functor, Maybe, Monoid, Split, \/}
  * @tparam A the target of a [[PIso]]
  * @tparam B the modified target of a [[PIso]]
  */
-abstract class PIso[S, T, A, B] private[monocle]{ self =>
+abstract class PIso[S, T, A, B] extends Serializable { self =>
 
   /** get the target of a [[PIso]] */
   def get(s: S): A

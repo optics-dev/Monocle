@@ -23,7 +23,7 @@ import scalaz.{Choice, Functor, \/}
  * @tparam A the target of a [[PSetter]]
  * @tparam B the modified target of a [[PSetter]]
  */
-abstract class PSetter[S, T, A, B] private[monocle] { self =>
+abstract class PSetter[S, T, A, B] extends Serializable { self =>
 
   /** modify polymorphically the target of a [[PSetter]] with a function */
   def modify(f: A => B): S => T
