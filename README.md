@@ -101,7 +101,7 @@ creates a third `Optional` from A to C. All `Lens` can be seen as `Optional` whe
 present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class diagram for full inheritance
 relation between Optics).
 
-For more examples, see the [```example``` module](example/src/test/scala/monocle).
+For more examples, see the [`example` module](example/src/test/scala/monocle).
 
 ## Lens Creation
 
@@ -126,27 +126,28 @@ There are 3 ways to create `Lens`, each with their pro and cons:
      val (_company, _name) = (lenser(_.company) , lenser(_.name))
      ```
 
-3.   Finally, the fully automatic method using `@Lenses` macro annotation. This solution is the most boiler plate
-     free solution but it has several disadvantages:
+3.   Finally, the fully automatic method using `@Lenses` macro annotation.
+     `@Lenses` generate `Lens` for every accessor of a case class in its companion object (even if there is no companion object defined).
+     This solution is the most boiler plate free but it has several disadvantages:
      1.   users need to add the macro paradise plugin to their project.
-     2.   poor IDE supports, at the moment only IntelliJ recognises it.
-     3.   requires to have access to the case classes since you need to annotate it.
+     2.   poor IDE supports, at the moment only IntelliJ recognises the generated `Lens`.
+     3.   requires to have access to the case classes since you need to annotate them.
      
      ```scala
-     @Lenses
-     case class Employee(company: Company, name: String, ...)
+     @Lenses case class Employee(company: Company, name: String, ...)
      
      // generates Employee.company: Lens[Employee, Company]
      // and       Employee.name   : Lens[Employee, String]
      
      // you can add a prefix to Lenses constructor
      
-     @Lenses("_") case class Employee(company: Company, name: String, ...)
+     @Lenses("_")
+     case class Employee(company: Company, name: String, ...)
      
      // generates Employee._company: Lens[Employee, Company]
      ```
 
-Note: `Lenser` and `Lenses` are both limited to case classes
+Note: `Lenser` and `@Lenses` are both limited to case classes
 
 ## Generic Optics and Instance Location Policy
 
