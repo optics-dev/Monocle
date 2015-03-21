@@ -101,13 +101,13 @@ creates a third `Optional` from A to C. All `Lens` can be seen as `Optional` whe
 present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class diagram for full inheritance
 relation between Optics).
 
-For more examples, see the [```example``` module](example/src/test/scala/monocle).
+For more examples, see the [`example` module](example/src/test/scala/monocle).
 
 ## Lens Creation
 
 There are 3 ways to create `Lens`, each with their pro and cons:
 
-1.   The manual method where we construct a `Lens` by passing `get` and `set` functions: 
+1.   The manual method where we construct a `Lens` by passing `get` and `set` functions:
      
      ```scala
      val _company = Lens[Employee, Company](_.company)( c => e => e.copy(company = c))
@@ -115,39 +115,39 @@ There are 3 ways to create `Lens`, each with their pro and cons:
      val _company = Lens((_: Employee).company)( c => e => e.copy(company = c))
      ```
 
-2.   We can use the `Lenser` macro to create a sort of `Lens` factory. This solution is limited to case classes:
+2.   The semi-automatic method using the `Lenser` blackbox macro:
 
      ```scala
+     val _company = Lenser[Employee](_.company)
+     val _name    = Lenser[Employee](_.name)
+     
+     // or
      val lenser = Lenser[Employee]
-     
-     val _company = lenser(_.company) 
-     val _name    = lenser(_.name)
-     
-     // or in a single line
      val (_company, _name) = (lenser(_.company) , lenser(_.name))
      ```
 
-3.   Finally, the boiler plate free solution with macro annotation (which are probably the most experimental part of macros).
-     Adding `@Lenses` annotation on case classes will generate `Lens` for every single accessor of the case class.
-     These generated `Lens` are in the companion object of the case class (even if there is no companion object declared).
-     Nevertheless, this solution has several disadvantages: 
+3.   Finally, the fully automatic method using the `@Lenses` macro annotation.
+     `@Lenses` generates `Lens` for every accessor of a case class in its companion object (even if there is no companion object defined).
+     This solution is the most boiler plate free but it has several disadvantages:
      1.   users need to add the macro paradise plugin to their project.
-     2.   IDE have a poor support for Macro annotation, so it is likely your IDE will not know about the generated `Lens` (but it will compile). If you want a better IDE support, please vote on the following [issue](http://youtrack.jetbrains.com/issue/SCL-7419). 
-     3.   this solution can only be applied when you control the case classes since you need to annotate them. This means you cannot use this technique for classes defined in another project.
+     2.   poor IDE supports, at the moment only IntelliJ recognises the generated `Lens`.
+     3.   requires access to the case classes since you need to annotate them.
      
      ```scala
-     @Lenses
-     case class Employee(company: Company, name: String, ...)
+     @Lenses case class Employee(company: Company, name: String, ...)
      
      // generates Employee.company: Lens[Employee, Company]
      // and       Employee.name   : Lens[Employee, String]
      
      // you can add a prefix to Lenses constructor
      
-     @Lenses("_") case class Employee(company: Company, name: String, ...)
+     @Lenses("_")
+     case class Employee(company: Company, name: String, ...)
      
      // generates Employee._company: Lens[Employee, Company]
      ```
+
+Note: `Lenser` and `@Lenses` are both limited to case classes
 
 ## Generic Optics and Instance Location Policy
 
