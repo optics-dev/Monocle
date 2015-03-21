@@ -164,6 +164,8 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 }
 
 object PTraversal extends TraversalInstances {
+  def id[S, T]: PTraversal[S, T, S, T] =
+    PIso.id[S, T].asTraversal
 
   /** create a [[PTraversal]] from a [[Traverse]] */
   def fromTraverse[T[_]: Traverse, A, B]: PTraversal[T[A], T[B], A, B] =
@@ -205,6 +207,8 @@ object PTraversal extends TraversalInstances {
 }
 
 object Traversal {
+  def id[A]: Traversal[A, A] =
+    Iso.id[A].asTraversal
 
   def apply2[S, A](get1: S => A, get2: S => A)(set: (A, A, S) => S): Traversal[S, A] =
     PTraversal.apply2(get1, get2)(set)
@@ -228,7 +232,7 @@ sealed abstract class TraversalInstances {
       g composeTraversal f
 
     def id[A]: Traversal[A, A] =
-      Iso.id[A].asTraversal
+      Traversal.id
 
     def choice[A, B, C](f1: => Traversal[A, C], f2: => Traversal[B, C]): Traversal[A \/ B, C] =
       f1 sum f2

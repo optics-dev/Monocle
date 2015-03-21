@@ -169,6 +169,9 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
 }
 
 object POptional extends OptionalInstances {
+  def id[S, T]: POptional[S, T, S, T] =
+    PIso.id[S, T].asOptional
+
   /** create a [[POptional]] using the canonical functions: getOrModify and set */
   def apply[S, T, A, B](_getOrModify: S => T \/ A)(_set: B => S => T): POptional[S, T, A, B] =
     new POptional[S, T, A, B]{
@@ -193,6 +196,9 @@ object POptional extends OptionalInstances {
 }
 
 object Optional {
+  def id[A]: Optional[A, A] =
+    Iso.id[A].asOptional
+
   /** alias for [[POptional]] apply restricted to monomorphic update */
   def apply[S, A](_getMaybe: S => Maybe[A])(_set: A => S => S): Optional[S, A] =
     new Optional[S, A]{
@@ -222,7 +228,7 @@ sealed abstract class OptionalInstances {
       f sum g
 
     def id[A]: Optional[A, A] =
-      Iso.id[A].asOptional
+      Optional.id[A]
 
     def compose[A, B, C](f: Optional[B, C], g: Optional[A, B]): Optional[A, C] =
       g composeOptional f

@@ -121,6 +121,9 @@ abstract class Fold[S, A] extends Serializable { self =>
 }
 
 object Fold extends FoldInstances {
+  def id[A]: Fold[A, A] =
+    Iso.id[A].asFold
+
   /** create a [[Fold]] from a [[Foldable]] */
   def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] =
     new Fold[F[A], A] {
@@ -136,7 +139,7 @@ sealed abstract class FoldInstances {
       f sum g
 
     def id[A]: Fold[A, A] =
-      Iso.id[A].asFold
+      Fold.id[A]
 
     def compose[A, B, C](f: Fold[B, C], g: Fold[A, B]): Fold[A, C] =
       g composeFold f

@@ -194,6 +194,9 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
 }
 
 object PPrism extends PrismInstances {
+  def id[S, T]: PPrism[S, T, S, T] =
+    PIso.id[S, T].asPrism
+
   /** create a [[PPrism]] using the canonical functions: getOrModify and reverseGet */
   def apply[S, T, A, B](_getOrModify: S => T \/ A)(_reverseGet: B => T): PPrism[S, T, A, B] =
     new PPrism[S, T, A, B]{
@@ -209,6 +212,9 @@ object PPrism extends PrismInstances {
 }
 
 object Prism {
+  def id[A]: Prism[A, A] =
+    Iso.id[A].asPrism
+
   /** alias for [[PPrism]] apply restricted to monomorphic update */
   def apply[S, A](_getMaybe: S => Maybe[A])(_reverseGet: A => S): Prism[S, A] =
     new Prism[S, A]{
@@ -226,7 +232,7 @@ object Prism {
 sealed abstract class PrismInstances {
   implicit val prismCategory: Category[Prism] = new Category[Prism] {
     def id[A]: Prism[A, A] =
-      Iso.id[A].asPrism
+      Prism.id
 
     def compose[A, B, C](f: Prism[B, C], g: Prism[A, B]): Prism[A, C] =
       g composePrism f

@@ -97,7 +97,10 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
 
 }
 
-object PSetter extends SetterInstances{
+object PSetter extends SetterInstances {
+  def id[S, T]: PSetter[S, T, S, T] =
+    PIso.id[S, T].asSetter
+
   /** create a [[PSetter]] using modify function */
   def apply[S, T, A, B](_modify: (A => B) => S => T): PSetter[S, T, A, B] =
     new PSetter[S, T, A, B]{
@@ -115,6 +118,9 @@ object PSetter extends SetterInstances{
 }
 
 object Setter {
+  def id[A]: Setter[A, A] =
+    Iso.id[A].asSetter
+
   /** alias for [[PSetter]] apply with a monomorphic modify function */
   def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
     PSetter(modify)
@@ -126,7 +132,7 @@ sealed abstract class SetterInstances {
       g composeSetter f
 
     def id[A]: Setter[A, A] =
-      Iso.id[A].asSetter
+      Setter.id
 
     def choice[A, B, C](f1: => Setter[A, C], f2: => Setter[B, C]): Setter[A \/ B, C] =
       f1 sum f2

@@ -95,6 +95,9 @@ abstract class Getter[S, A] extends Serializable { self =>
 }
 
 object Getter extends GetterInstances {
+  def id[A]: Getter[A, A] =
+    Iso.id[A].asGetter
+
   def apply[S, A](_get: S => A): Getter[S, A] =
     new Getter[S, A]{
       def get(s: S): A =
@@ -111,7 +114,7 @@ sealed abstract class GetterInstances extends GetterInstances0 {
       Getter[(A, C), (B, C)]{case (a, c) => (f.get(a), c)}
 
     def id[A]: Getter[A, A] =
-      Iso.id[A].asGetter
+      Getter.id[A]
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
       g composeGetter f
@@ -124,7 +127,7 @@ sealed abstract class GetterInstances0 {
       f sum g
 
     def id[A]: Getter[A, A] =
-      Iso.id[A].asGetter
+      Getter.id[A]
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
       g composeGetter f

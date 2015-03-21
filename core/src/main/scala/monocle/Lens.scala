@@ -188,6 +188,9 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
 }
 
 object PLens extends LensInstances {
+  def id[S, T]: PLens[S, T, S, T] =
+    PIso.id[S, T].asLens
+
   /**
    * create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
    * @see macro module for methods generating [[PLens]] with less boiler plate
@@ -210,6 +213,9 @@ object PLens extends LensInstances {
 }
 
 object Lens {
+  def id[A]: Lens[A, A] =
+    Iso.id[A].asLens
+
   /** alias for [[PLens]] apply with a monomorphic set function */
   def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] =
     PLens(get)(set)
@@ -221,7 +227,7 @@ sealed abstract class LensInstances extends LensInstances0 {
       f sum g
 
     def id[A]: Lens[A, A] =
-      Iso.id[A].asLens
+      Lens.id
 
     def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
       g composeLens f
