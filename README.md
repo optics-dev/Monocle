@@ -115,7 +115,7 @@ There are 3 ways to create `Lens`, each with their pro and cons:
      val _company = Lens((_: Employee).company)( c => e => e.copy(company = c))
      ```
 
-2.   The semi-automatic method using `Lenser` blackbox macro:
+2.   The semi-automatic method using the `Lenser` blackbox macro:
 
      ```scala
      val _company = Lenser[Employee](_.company)
@@ -126,12 +126,12 @@ There are 3 ways to create `Lens`, each with their pro and cons:
      val (_company, _name) = (lenser(_.company) , lenser(_.name))
      ```
 
-3.   Finally, the fully automatic method using `@Lenses` macro annotation.
-     `@Lenses` generate `Lens` for every accessor of a case class in its companion object (even if there is no companion object defined).
+3.   Finally, the fully automatic method using the `@Lenses` macro annotation.
+     `@Lenses` generates `Lens` for every accessor of a case class in its companion object (even if there is no companion object defined).
      This solution is the most boiler plate free but it has several disadvantages:
      1.   users need to add the macro paradise plugin to their project.
      2.   poor IDE supports, at the moment only IntelliJ recognises the generated `Lens`.
-     3.   requires to have access to the case classes since you need to annotate them.
+     3.   requires access to the case classes since you need to annotate them.
      
      ```scala
      @Lenses case class Employee(company: Company, name: String, ...)
