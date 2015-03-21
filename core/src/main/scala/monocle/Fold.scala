@@ -59,10 +59,6 @@ abstract class Fold[S, A] extends Serializable { self =>
         s.fold(self.foldMap(f), other.foldMap(f))
     }
 
-  /** alias for sum */
-  @inline final def |||[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
-    sum(other)
-
   /**********************************************************/
   /** Compose methods between a [[Fold]] and another Optics */
   /**********************************************************/

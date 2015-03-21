@@ -83,10 +83,6 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
         )
     }
 
-  /** alias for sum */
-  @inline final def |||[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[S \/ S1, T \/ T1, A, B] =
-    sum(other)
-
   /****************************************************************/
   /** Compose methods between a [[PTraversal]] and another Optics */
   /****************************************************************/

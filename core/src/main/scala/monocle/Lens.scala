@@ -50,10 +50,6 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       b => _.bimap(self.set(b), other.set(b))
     }
 
-  /** alias for sum */
-  @inline final def |||[S1, T1](other: PLens[S1, T1, A, B]): PLens[S \/ S1, T \/ T1, A, B] =
-    sum(other)
-
   /** pair two disjoint [[PLens]] */
   @inline final def product[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
     PLens[(S, S1), (T, T1), (A, A1), (B, B1)]{
@@ -62,10 +58,6 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
         case (s, s1) => (self.set(b)(s), other.set(b1)(s1))
       }
     }
-
-  /** alias for product */
-  @inline final def ***[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
-    product(other)
 
   /***********************************************************/
   /** Compose methods between a [[PLens]] and another Optics */

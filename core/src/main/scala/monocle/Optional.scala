@@ -65,10 +65,6 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       b => _.bimap(self.set(b), other.set(b))
     }
 
-  /** alias for sum */
-  @inline final def |||[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
-    sum(other)
-
   /***************************************************************/
   /** Compose methods between a [[POptional]] and another Optics */
   /***************************************************************/

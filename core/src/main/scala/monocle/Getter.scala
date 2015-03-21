@@ -19,17 +19,9 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def sum[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
     Getter[S \/ S1, A](_.fold(self.get, other.get))
 
-  /** alias for sum */
-  @inline final def |||[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
-    sum(other)
-
   /** pair two disjoint [[Getter]] */
   @inline final def product[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
     Getter[(S, S1), (A, A1)]{case (s, s1) => (self.get(s), other.get(s1))}
-
-  /** alias for product */
-  @inline final def ***[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
-    product(other)
 
   /*************************************************************/
   /** Compose methods between a [[Getter]] and another Optics  */
