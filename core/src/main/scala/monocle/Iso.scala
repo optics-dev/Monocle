@@ -290,7 +290,7 @@ object Iso {
 
   /** alias for [[PIso]] id when S = T and A = B */
   def id[S]: Iso[S, S] =
-    Iso(identity[S])(identity[S])
+    PIso.id[S, S]
 
   /** transform an [[scalaz.Isomorphisms.Iso]] in a [[Iso]] */
   def fromIsoSet[A, B](isoSet: A <=> B): Iso[A, B] =
