@@ -70,10 +70,6 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       case (b, b1) => (self.reverseGet(b), other.reverseGet(b1))
     }
 
-  /** alias for product */
-  @inline final def ***[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
-    product(other)
-
   /**********************************************************/
   /** Compose methods between a [[PIso]] and another Optics */
   /**********************************************************/
