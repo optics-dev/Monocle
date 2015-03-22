@@ -23,32 +23,18 @@ object BenchModel {
   def genLong(): Long = r.nextLong()
   def genStr(): String = r.nextString(r.nextInt(100))
 
-
-  def genNested0(): Nested0 = Nested0(genStr(), genInt(),
-    Nested1(genStr(), genInt(),
-      Nested2(genStr(), genInt(),
-        Nested3(genStr(), genInt(),
-          Nested4(genStr(), genInt(),
-            Nested5(genStr(), genInt(),
-              Nested6(genStr(), genInt())
-              ,genLong()), genLong()), genLong()), genLong()), genLong()), genLong())
-
   sealed trait ADT
   case class I(i: Int)    extends ADT
-  case class S(s: String) extends ADT
   case class R(r: ADT)    extends ADT
 
   def getIMaybe(adt: ADT): Maybe[Int]    = adt match { case I(i) => Maybe.just(i); case _ => Maybe.empty }
-  def getSMaybe(adt: ADT): Maybe[String] = adt match { case S(s) => Maybe.just(s); case _ => Maybe.empty }
   def getRMaybe(adt: ADT): Maybe[ADT]    = adt match { case R(r) => Maybe.just(r); case _ => Maybe.empty }
 
-  def mkI(i: Int)   : ADT = I(i)
-  def mkS(s: String): ADT = S(s)
-  def mkR(r: ADT)   : ADT = R(r)
+  def getIOption(adt: ADT): Option[Int]    = adt match { case I(i) => Some(i); case _ => None }
+  def getROption(adt: ADT): Option[ADT]    = adt match { case R(r) => Some(r); case _ => None }
 
-  val adt0 = mkI(5)
-  val adt3 = mkR(mkR(mkR(mkI(5))))
-  val adt6 = mkR(mkR(mkR(mkR(mkR(mkR(mkI(5)))))))
+  def mkI(i: Int)   : ADT = I(i)
+  def mkR(r: ADT)   : ADT = R(r)
 
 
   case class Point3(x: Int, y: Int, z: Int)

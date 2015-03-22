@@ -1,45 +1,49 @@
 package monocle.bench
 
+import java.util.concurrent.TimeUnit
+
 import monocle.bench.BenchModel._
-import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
+import monocle.bench.input.ADTInput
+import org.openjdk.jmh.annotations._
 
+@BenchmarkMode(Array(Mode.AverageTime))
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
-class StdPrismBench {
+class StdPrismBench  extends PrismBench {
 
-  @Benchmark def getMaybe0() =
-    getIMaybe(adt0)
-  @Benchmark def getMaybe3() =
-    getRMaybe(adt3)
-      .flatMap(getRMaybe)
-      .flatMap(getRMaybe)
-      .flatMap(getIMaybe)
-  @Benchmark def getMaybe6() =
-    getRMaybe(adt6)
-      .flatMap(getRMaybe)
-      .flatMap(getRMaybe)
-      .flatMap(getRMaybe)
-      .flatMap(getRMaybe)
-      .flatMap(getRMaybe)
-      .flatMap(getIMaybe)
+  @Benchmark def getMaybe0(in: ADTInput): Option[Int] =
+    getIOption(in.adt)
+  @Benchmark def getMaybe3(in: ADTInput): Option[Int] =
+    getROption(in.adt)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getIOption)
+  @Benchmark def getMaybe6(in: ADTInput): Option[Int] =
+    getROption(in.adt)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getIOption)
 
-
-  @Benchmark def modify0() =
-    getIMaybe(adt0).map(i => mkI(i+1)).getOrElse(adt0)
-  @Benchmark def modify3() =
-    getRMaybe(adt3)
-    .flatMap(getRMaybe)
-    .flatMap(getRMaybe)
-    .flatMap(getIMaybe).map(i =>
+  @Benchmark def modify0(in: ADTInput): ADT =
+    getIOption(in.adt).map(i => mkI(i+1)).getOrElse(in.adt)
+  @Benchmark def modify3(in: ADTInput): ADT =
+    getROption(in.adt)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getIOption).map(i =>
       mkR(mkR(mkR(mkI(i + 1))))
-    ).getOrElse(adt3)
-  @Benchmark def modify6() =
-    getRMaybe(adt6)
-      .flatMap(getRMaybe)
-      .flatMap(getRMaybe)
-      .flatMap(getRMaybe)
-      .flatMap(getRMaybe)
-      .flatMap(getRMaybe)
-      .flatMap(getIMaybe).map(i =>
-        mkR(mkR(mkR(mkR(mkR(mkR(mkI(i + 1)))))))
-      ).getOrElse(adt6)
+      ).getOrElse(in.adt)
+  @Benchmark def modify6(in: ADTInput): ADT =
+    getROption(in.adt)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getROption)
+      .flatMap(getIOption).map(i =>
+      mkR(mkR(mkR(mkR(mkR(mkR(mkI(i + 1)))))))
+      ).getOrElse(in.adt)
 }

@@ -1,27 +1,35 @@
 package monocle.bench
 
+import java.util.concurrent.TimeUnit
+
 import monocle.Prism
 import monocle.bench.BenchModel._
-import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
+import monocle.bench.input.ADTInput
+import org.openjdk.jmh.annotations._
 
+@BenchmarkMode(Array(Mode.AverageTime))
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
-class MonoclePrismBench {
+class MonoclePrismBench extends PrismBench {
 
   val _i = Prism(getIMaybe)(mkI)
-  val _s = Prism(getSMaybe)(mkS)
   val _r = Prism(getRMaybe)(mkR)
 
   val nested3I = _r composePrism _r composePrism _r composePrism _i
   val nested6I = _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _i
 
 
-  @Benchmark def getMaybe0() = _i.getMaybe(adt0)
-  @Benchmark def getMaybe3() = nested3I.getMaybe(adt3)
-  @Benchmark def getMaybe6() = nested6I.getMaybe(adt3)
+  @Benchmark def getMaybe0(in: ADTInput): Option[Int] =
+    _i.getMaybe(in.adt).toOption
+  @Benchmark def getMaybe3(in: ADTInput): Option[Int] =
+    nested3I.getMaybe(in.adt).toOption
+  @Benchmark def getMaybe6(in: ADTInput): Option[Int] =
+    nested6I.getMaybe(in.adt).toOption
 
-
-  @Benchmark def modify0() = _i.modify(_ + 1)(adt0)
-  @Benchmark def modify3() = nested3I.modify(_ + 1)(adt3)
-  @Benchmark def modify6() = nested6I.modify(_ + 1)(adt6)
-
+  @Benchmark def modify0(in: ADTInput): ADT =
+    _i.modify(_ + 1)(in.adt)
+  @Benchmark def modify3(in: ADTInput): ADT =
+    nested3I.modify(_ + 1)(in.adt)
+  @Benchmark def modify6(in: ADTInput): ADT =
+    nested6I.modify(_ + 1)(in.adt)
 }

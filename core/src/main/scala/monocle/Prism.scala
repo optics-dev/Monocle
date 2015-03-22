@@ -207,7 +207,7 @@ object PPrism extends PrismInstances {
         _reverseGet(b)
 
       def getMaybe(s: S): Maybe[A] =
-        getOrModify(s).toMaybe
+        _getOrModify(s).toMaybe
     }
 }
 
