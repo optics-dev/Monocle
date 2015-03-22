@@ -56,7 +56,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
    * return empty if the [[PPrism]] is not matching
    */
   @inline final def modifyMaybe(f: A => B): S => Maybe[T] =
-    s => getMaybe(s).map(_ => modify(f)(s))
+    s => getMaybe(s).map(a => reverseGet(f(a)))
 
   /** set polymorphically the target of a [[PPrism]] with a value */
   @inline final def set(b: B): S => T =

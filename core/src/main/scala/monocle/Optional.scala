@@ -46,7 +46,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
    * return empty if the [[POptional]] is not matching
    */
   @inline final def modifyMaybe(f: A => B): S => Maybe[T] =
-    s => getMaybe(s).map(_ => modify(f)(s))
+    s => getMaybe(s).map(a => set(f(a))(s))
 
   /**
    * set polymorphically the target of a [[POptional]] with a value.
