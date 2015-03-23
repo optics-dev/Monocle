@@ -23,6 +23,9 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def product[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
     Getter[(S, S1), (A, A1)]{case (s, s1) => (self.get(s), other.get(s1))}
 
+  @inline def first[B]: Getter[(S, B), (A, B)] =
+    Getter[(S, B), (A, B)]{case (a, c) => (self.get(a), c)}
+
   /*************************************************************/
   /** Compose methods between a [[Getter]] and another Optics  */
   /*************************************************************/
@@ -111,10 +114,10 @@ sealed abstract class GetterInstances extends GetterInstances0 {
       Getter(f)
 
     def first[A, B, C](f: Getter[A, B]): Getter[(A, C), (B, C)] =
-      Getter[(A, C), (B, C)]{case (a, c) => (f.get(a), c)}
+      f.first
 
     def id[A]: Getter[A, A] =
-      Getter.id[A]
+      Getter.id
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
       g composeGetter f
@@ -127,7 +130,7 @@ sealed abstract class GetterInstances0 {
       f sum g
 
     def id[A]: Getter[A, A] =
-      Getter.id[A]
+      Getter.id
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
       g composeGetter f
