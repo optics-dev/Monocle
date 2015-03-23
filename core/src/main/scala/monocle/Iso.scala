@@ -65,9 +65,23 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** pair two disjoint [[PIso]] */
   @inline final def product[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
     PIso[(S, S1), (T, T1), (A, A1), (B, B1)]{
-      case (s, s1) => (self.get(s), other.get(s1))
+      case (s, s1) => (get(s), other.get(s1))
     }{
-      case (b, b1) => (self.reverseGet(b), other.reverseGet(b1))
+      case (b, b1) => (reverseGet(b), other.reverseGet(b1))
+    }
+
+  @inline def first[C]: PIso[(S, C), (T, C), (A, C), (B, C)] =
+    PIso[(S, C), (T, C), (A, C), (B, C)]{
+      case (s, c) => (get(s), c)
+    }{
+      case (b, c) => (reverseGet(b), c)
+    }
+
+  @inline def second[C]: PIso[(C, S), (C, T), (C, A), (C, B)] =
+    PIso[(C, S), (C, T), (C, A), (C, B)]{
+      case (c, s) => (c, get(s))
+    }{
+      case (c, b) => (c, reverseGet(b))
     }
 
   /**********************************************************/
