@@ -103,6 +103,9 @@ abstract class Getter[S, A] extends Serializable { self =>
 object Getter extends GetterInstances {
   def id[A]: Getter[A, A] =
     Iso.id[A].asGetter
+  
+  def codiagonal[A]: Getter[A \/ A, A] =
+    Getter[A \/ A, A](_.fold(identity, identity))
 
   def apply[S, A](_get: S => A): Getter[S, A] =
     new Getter[S, A]{
