@@ -6,8 +6,8 @@ import org.scalacheck.{Arbitrary, Properties}
 
 import scalaz.Equal
 import scalaz.Id._
+import scalaz.std.option._
 import scalaz.syntax.equal._
-
 
 object OptionalLaws {
 
@@ -18,7 +18,7 @@ object OptionalLaws {
     }
 
     property("you get what you set") = forAll { (s: S, a: A) =>
-      optional.getMaybe(optional.set(a)(s)) === optional.getMaybe(s).map(_ => a)
+      optional.getOption(optional.set(a)(s)) === optional.getOption(s).map(_ => a)
     }
 
     /** calling set twice is the same as calling set once */
@@ -36,12 +36,12 @@ object OptionalLaws {
       optional.modify(identity)(s) === s
     }
 
-    property("setMaybe only succeeds when the Optional is matching") = forAll { (s: S, a: A) =>
-      optional.setMaybe(a)(s) === optional.getMaybe(s).map(_ => optional.set(a)(s))
+    property("setOption only succeeds when the Optional is matching") = forAll { (s: S, a: A) =>
+      optional.setOption(a)(s) === optional.getOption(s).map(_ => optional.set(a)(s))
     }
 
-    property("modifyMaybe with id is isomorphomic to isMatching") = forAll { s: S =>
-      optional.modifyMaybe(identity)(s) === optional.getMaybe(s).map(_ => s)
+    property("modifyOption with id is isomorphomic to isMatching") = forAll { s: S =>
+      optional.modifyOption(identity)(s) === optional.getOption(s).map(_ => s)
     }
 
   }

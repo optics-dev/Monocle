@@ -1,19 +1,19 @@
 package monocle.function
 
-import org.specs2.scalaz.Spec
-import monocle.syntax._
 import monocle.std._
+import monocle.syntax._
+import org.specs2.scalaz.Spec
 
-import scalaz.{==>>, IMap, Maybe}
+import scalaz.{==>>, IMap}
 
 class EmptyExample extends Spec {
 
   "empty is a Prism that is successful only when S is empty" in {
-    (List(1, 2, 3) applyPrism empty getMaybe) ==== Maybe.empty
+    (List(1, 2, 3) applyPrism empty getOption) ==== None
 
-    (List.empty[Int]   applyPrism empty getMaybe) ==== Maybe.just(())
-    (Vector.empty[Int] applyPrism empty getMaybe) ==== Maybe.just(())
-    (""                applyPrism empty getMaybe) ==== Maybe.just(())
+    (List.empty[Int]   applyPrism empty getOption) ==== Some(())
+    (Vector.empty[Int] applyPrism empty getOption) ==== Some(())
+    (""                applyPrism empty getOption) ==== Some(())
   }
 
   "_empty return the empty value of a given type" in {

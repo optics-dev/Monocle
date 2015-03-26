@@ -4,20 +4,19 @@ import monocle.function._
 import monocle.{Lens, Prism, Traversal}
 
 import scalaz.std.list._
-import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
-import scalaz.{Applicative, Maybe, Order, ==>>}
+import scalaz.{==>>, Applicative, Order}
 
 object imap extends IMapInstances
 
 trait IMapInstances {
 
   implicit def iMapEmpty[K, V]: Empty[K ==>> V] = new Empty[K ==>> V] {
-    def empty = Prism[K ==>> V, Unit](m => if(m.isEmpty) Maybe.just(()) else Maybe.empty)(_ => ==>>.empty)
+    def empty = Prism[K ==>> V, Unit](m => if(m.isEmpty) Some(()) else None)(_ => ==>>.empty)
   }
 
   implicit def atIMap[K: Order, V]: At[K ==>> V, K, V] = new At[K ==>> V, K, V]{
-    def at(i: K) = Lens{m: ==>>[K, V] => m.lookup(i).toMaybe}(maybeV => map => maybeV.cata(v => map + (i -> v), map - i))
+    def at(i: K) = Lens{m: ==>>[K, V] => m.lookup(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   }
 
   implicit def iMapEach[K, V]: Each[K ==>> V, V] = Each.traverseEach[==>>[K, ?], V]

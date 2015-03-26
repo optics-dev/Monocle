@@ -175,8 +175,8 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       def set(b: B): S => T =
         self.set(b)
 
-      def getMaybe(s: S): Maybe[A] =
-        Maybe.just(self.get(s))
+      def getOption(s: S): Option[A] =
+        Some(self.get(s))
 
       def modify(f: A => B): S => T =
         self.modify(f)

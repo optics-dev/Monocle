@@ -5,9 +5,7 @@ import monocle.{Optional, Prism}
 
 import scala.collection.immutable.Stream.{#::, Empty}
 import scalaz.Id.Id
-import scalaz.Maybe
 import scalaz.std.stream._
-import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
 
 object stream extends StreamInstances
@@ -15,14 +13,14 @@ object stream extends StreamInstances
 trait StreamInstances {
 
   implicit def streamEmpty[A]: Empty[Stream[A]] = new Empty[Stream[A]] {
-    def empty = Prism[Stream[A], Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty)(_ => Stream.empty)
+    def empty = Prism[Stream[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Stream.empty)
   }
 
   implicit def streamEach[A]: Each[Stream[A], A] = Each.traverseEach[Stream, A]
 
   implicit def streamIndex[A]: Index[Stream[A], Int, A] = new Index[Stream[A], Int, A] {
     def index(i: Int) = Optional[Stream[A], A](
-      s      => if(i < 0) Maybe.empty else s.drop(i).headOption.toMaybe)(
+      s      => if(i < 0) None else s.drop(i).headOption)(
       a => s => s.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
@@ -35,16 +33,16 @@ trait StreamInstances {
 
   implicit def streamCons[A]: Cons[Stream[A], A] = new Cons[Stream[A], A]{
     def cons = Prism[Stream[A], (A, Stream[A])]{
-      case Empty    => Maybe.empty
-      case x #:: xs => Maybe.just((x, xs))
+      case Empty    => None
+      case x #:: xs => Some((x, xs))
     }{ case (a, s) => a #:: s }
   }
 
   implicit def streamSnoc[A]: Snoc[Stream[A], A] = new Snoc[Stream[A], A]{
     def snoc = Prism[Stream[A], (Stream[A], A)]( s =>
       for {
-        init <- if(s.isEmpty) Maybe.empty else Maybe.just(s.init)
-        last <- if(s.isEmpty) Maybe.empty else Maybe.just(s.last)
+        init <- if(s.isEmpty) None else Some(s.init)
+        last <- if(s.isEmpty) None else Some(s.last)
       } yield (init, last)){
       case (init, last) => init :+ last
     }

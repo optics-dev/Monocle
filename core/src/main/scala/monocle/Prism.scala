@@ -1,7 +1,7 @@
 package monocle
 
 import scalaz.{Applicative, Category, Maybe, Monoid, \/}
-
+import scalaz.syntax.std.option._
 
 /**
  * A [[PPrism]] can be seen as a pair of functions:
@@ -38,7 +38,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   def reverseGet(b: B): T
 
   /** get the target of a [[PPrism]] or nothing if there is no target */
-  def getMaybe(s: S): Maybe[A]
+  def getOption(s: S): Option[A]
 
   /** modify polymorphically the target of a [[PPrism]] with an [[Applicative]] function */
   @inline final def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
@@ -55,8 +55,8 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
    * modify polymorphically the target of a [[PPrism]] with a function.
    * return empty if the [[PPrism]] is not matching
    */
-  @inline final def modifyMaybe(f: A => B): S => Maybe[T] =
-    s => getMaybe(s).map(a => reverseGet(f(a)))
+  @inline final def modifyOption(f: A => B): S => Option[T] =
+    s => getOption(s).map(a => reverseGet(f(a)))
 
   /** set polymorphically the target of a [[PPrism]] with a value */
   @inline final def set(b: B): S => T =
@@ -66,16 +66,28 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
    * set polymorphically the target of a [[PPrism]] with a value.
    * return empty if the [[PPrism]] is not matching
    */
-  @inline final def setMaybe(b: B): S => Maybe[T] =
-    modifyMaybe(_ => b)
+  @inline final def setOption(b: B): S => Option[T] =
+    modifyOption(_ => b)
 
   /** check if a [[PPrism]] has a target */
   @inline final def isMatching(s: S): Boolean =
-    getMaybe(s).isJust
+    getOption(s).isDefined
 
   /** create a [[Getter]] from the modified target to the modified source of a [[PPrism]] */
   @inline final def re: Getter[B, T] =
     Getter(reverseGet)
+
+  @deprecated("use getOption", since = "1.1.0")
+  @inline final def getMaybe(s: S): Maybe[A] =
+    getOption(s).toMaybe
+
+  @deprecated("use modifyOption", since = "1.1.0")
+  @inline final def modifyMaybe(f: A => B): S => Maybe[T] =
+    s => modifyOption(f)(s).toMaybe
+
+  @deprecated("use setOption", since = "1.1.0")
+  @inline final def setMaybe(b: B): S => Maybe[T] =
+    s => setOption(b)(s).toMaybe
 
   /************************************************************/
   /** Compose methods between a [[PPrism]] and another Optics */
@@ -114,8 +126,8 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
       def reverseGet(d: D): T =
         self.reverseGet(other.reverseGet(d))
 
-      def getMaybe(s: S): Maybe[C] =
-        self.getMaybe(s) flatMap other.getMaybe
+      def getOption(s: S): Option[C] =
+        self.getOption(s) flatMap other.getOption
     }
 
   /** compose a [[PPrism]] with a [[PIso]] */
@@ -153,7 +165,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /** view a [[PPrism]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](f: A => M)(s: S): M =
-      getMaybe(s) map f getOrElse Monoid[M].zero
+      getOption(s) map f getOrElse Monoid[M].zero
   }
 
   /** view a [[PPrism]] as a [[Setter]] */
@@ -182,8 +194,8 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
       def set(b: B): S => T =
         self.set(b)
 
-      def getMaybe(s: S): Maybe[A] =
-        self.getMaybe(s)
+      def getOption(s: S): Option[A] =
+        self.getOption(s)
 
       def modify(f: A => B): S => T =
         self.modify(f)
@@ -206,8 +218,8 @@ object PPrism extends PrismInstances {
       def reverseGet(b: B): T =
         _reverseGet(b)
 
-      def getMaybe(s: S): Maybe[A] =
-        _getOrModify(s).toMaybe
+      def getOption(s: S): Option[A] =
+        _getOrModify(s).toOption
     }
 }
 
@@ -216,16 +228,16 @@ object Prism {
     Iso.id[A].asPrism
 
   /** alias for [[PPrism]] apply restricted to monomorphic update */
-  def apply[S, A](_getMaybe: S => Maybe[A])(_reverseGet: A => S): Prism[S, A] =
+  def apply[S, A](_getOption: S => Option[A])(_reverseGet: A => S): Prism[S, A] =
     new Prism[S, A]{
       def getOrModify(s: S): S \/ A =
-        _getMaybe(s) \/> s
+        _getOption(s).fold[S \/ A](\/.left(s))(\/.right)
 
       def reverseGet(b: A): S =
         _reverseGet(b)
 
-      def getMaybe(s: S): Maybe[A] =
-        _getMaybe(s)
+      def getOption(s: S): Option[A] =
+        _getOption(s)
     }
 }
 

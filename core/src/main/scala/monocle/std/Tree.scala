@@ -28,7 +28,7 @@ trait TreeFunctions {
 
     def _set(newLeaf: A)(tree: Tree[A]): Tree[A] = tree.subForest match {
       case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel, headMaybe[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf))(xs) )
+      case xs    => Tree.node(tree.rootLabel, headOption[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf))(xs) )
     }
 
     Lens(_get)(_set)
@@ -44,7 +44,7 @@ trait TreeFunctions {
 
     def _set(newLeaf: A)(tree: Tree[A]): Tree[A] = tree.subForest match {
       case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel, lastMaybe[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf))(xs) )
+      case xs    => Tree.node(tree.rootLabel, lastOption[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf))(xs) )
     }
 
     Lens(_get)(_set)

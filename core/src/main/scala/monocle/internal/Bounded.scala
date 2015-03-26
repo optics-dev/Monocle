@@ -17,9 +17,9 @@ private[monocle] object Bounded extends BoundedInstances {
   def orderingBoundedSafeCast[S: Order, A: Bounded](unsafeCast: S => A)(reverseCast: A => S): Prism[S, A] =
     Prism[S, A]( from =>
       if (from > reverseCast(Bounded[A].MaxValue) || from < reverseCast(Bounded[A].MinValue))
-        Maybe.empty
+        None
       else
-        Maybe.just(unsafeCast(from))
+        Some(unsafeCast(from))
     )(reverseCast)
 }
 

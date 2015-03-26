@@ -1,6 +1,7 @@
 package monocle
 
 import scalaz.{Applicative, Choice, Maybe, Monoid, \/}
+import scalaz.syntax.std.option._
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
@@ -33,7 +34,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   def set(b: B): S => T
 
   /** get the target of a [[POptional]] or nothing if there is no target */
-  def getMaybe(s: S): Maybe[A]
+  def getOption(s: S): Option[A]
 
   /** modify polymorphically the target of a [[POptional]] with an [[Applicative]] function */
   def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T]
@@ -45,25 +46,37 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
    * modify polymorphically the target of a [[POptional]] with a function.
    * return empty if the [[POptional]] is not matching
    */
-  @inline final def modifyMaybe(f: A => B): S => Maybe[T] =
-    s => getMaybe(s).map(a => set(f(a))(s))
+  @inline final def modifyOption(f: A => B): S => Option[T] =
+    s => getOption(s).map(a => set(f(a))(s))
 
   /**
    * set polymorphically the target of a [[POptional]] with a value.
    * return empty if the [[POptional]] is not matching
    */
-  @inline final def setMaybe(b: B): S => Maybe[T] =
-    modifyMaybe(_ => b)
+  @inline final def setOption(b: B): S => Option[T] =
+    modifyOption(_ => b)
 
   /** check if a [[POptional]] has a target */
   @inline final def isMatching(s: S): Boolean =
-    getMaybe(s).isJust
+    getOption(s).isDefined
 
   /** join two [[POptional]] with the same target */
   @inline final def sum[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
     POptional[S \/ S1, T \/ T1, A, B](_.fold(self.getOrModify(_).leftMap(\/.left), other.getOrModify(_).leftMap(\/.right))){
       b => _.bimap(self.set(b), other.set(b))
     }
+
+  @deprecated("use getOption", since = "1.1.0")
+  @inline final def getMaybe(s: S): Maybe[A] =
+    getOption(s).toMaybe
+
+  @deprecated("use modifyOption", since = "1.1.0")
+  @inline final def modifyMaybe(f: A => B): S => Maybe[T] =
+    s => modifyOption(f)(s).toMaybe
+
+  @deprecated("use setOption", since = "1.1.0")
+  @inline final def setMaybe(b: B): S => Maybe[T] =
+    s => setOption(b)(s).toMaybe
 
   /***************************************************************/
   /** Compose methods between a [[POptional]] and another Optics */
@@ -94,8 +107,8 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       def set(d: D): S => T =
         self.modify(other.set(d))
 
-      def getMaybe(s: S): Maybe[C] =
-        self.getMaybe(s) flatMap other.getMaybe
+      def getOption(s: S): Option[C] =
+        self.getOption(s) flatMap other.getOption
 
       def modifyF[F[_]: Applicative](f: C => F[D])(s: S): F[T] =
         self.modifyF(other.modifyF(f))(s)
@@ -147,7 +160,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   /** view a [[POptional]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](f: A => M)(s: S): M =
-      self.getMaybe(s) map f getOrElse Monoid[M].zero
+      self.getOption(s) map f getOrElse Monoid[M].zero
   }
 
   /** view a [[POptional]] as a [[PSetter]] */
@@ -181,8 +194,8 @@ object POptional extends OptionalInstances {
       def set(b: B): S => T =
         _set(b)
 
-      def getMaybe(s: S): Maybe[A] =
-        getOrModify(s).toMaybe
+      def getOption(s: S): Option[A] =
+        getOrModify(s).toOption
 
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         getOrModify(s).fold(
@@ -200,16 +213,16 @@ object Optional {
     Iso.id[A].asOptional
 
   /** alias for [[POptional]] apply restricted to monomorphic update */
-  def apply[S, A](_getMaybe: S => Maybe[A])(_set: A => S => S): Optional[S, A] =
+  def apply[S, A](_getOption: S => Option[A])(_set: A => S => S): Optional[S, A] =
     new Optional[S, A]{
       def getOrModify(s: S): S \/ A =
-        _getMaybe(s) \/> s
+        _getOption(s).fold[S \/ A](\/.left(s))(\/.right)
 
       def set(a: A): S => S =
         _set(a)
 
-      def getMaybe(s: S): Maybe[A] =
-        _getMaybe(s)
+      def getOption(s: S): Option[A] =
+        _getOption(s)
 
       def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
         getOrModify(s).fold(

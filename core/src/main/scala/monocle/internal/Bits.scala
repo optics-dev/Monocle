@@ -37,9 +37,9 @@ private[monocle] object Bits extends BitsInstances {
   def apply[A](implicit ev: Bits[A]): Bits[A] = ev
 
   def bitsIndex[S: Bits]: Index[S, Int, Boolean] = new Index[S, Int, Boolean] {
-    private def doIfInRange[A](i: Int)(a: => A): Maybe[A] =
-      if(i >= 0 && i < Bits[S].bitSize) Maybe.just(a)
-      else Maybe.empty
+    private def doIfInRange[A](i: Int)(a: => A): Option[A] =
+      if(i >= 0 && i < Bits[S].bitSize) Some(a)
+      else None
 
     def index(i: Int): Optional[S, Boolean] =
       Optional[S, Boolean](

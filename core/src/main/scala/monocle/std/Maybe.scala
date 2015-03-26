@@ -17,7 +17,7 @@ trait MaybeFunctions {
     PPrism[Maybe[A], Maybe[B], A, B](_.cata(\/-(_), -\/(Maybe.empty)))(Maybe.just[B])
 
   final def nothing[A]: Prism[Maybe[A], Unit] =
-    Prism[Maybe[A], Unit](m => if(m.isEmpty) Maybe.just(()) else Maybe.empty)(_ => Maybe.empty)
+    Prism[Maybe[A], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Maybe.empty)
 }
 
 trait MaybeInstances extends MaybeFunctions {

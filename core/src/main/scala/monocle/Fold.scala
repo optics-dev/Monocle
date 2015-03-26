@@ -1,10 +1,12 @@
 package monocle
 
-import scalaz.Maybe._
 import scalaz.std.anyVal._
+import scalaz.std.list._
+import scalaz.std.option._
 import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
 import scalaz.syntax.tag._
-import scalaz.{Choice, Foldable, IList, Maybe, Monoid, \/}
+import scalaz.{Choice, Foldable, Maybe, Monoid, \/}
 
 /**
  * A [[Fold]] can be seen as a [[Getter]] with many targets or
@@ -33,15 +35,15 @@ abstract class Fold[S, A] extends Serializable { self =>
    * get all the targets of a [[Fold]]
    * TODO: Shall it return a Stream as there might be an infinite number of targets?
    */
-  @inline final def getAll(s: S): IList[A] =
-    foldMap(IList(_))(s)
+  @inline final def getAll(s: S): List[A] =
+    foldMap(List(_))(s)
 
   /** find the first target of a [[Fold]] matching the predicate  */
-  @inline final def find(p: A => Boolean)(s: S): Maybe[A] =
-    foldMap(a => if(p(a)) just(a).first else empty[A].first)(s).unwrap
+  @inline final def find(p: A => Boolean)(s: S): Option[A] =
+    foldMap(a => (if(p(a)) Some(a) else None).first)(s).unwrap
 
   /** get the first target of a [[Fold]] */
-  @inline final def headMaybe(s: S): Maybe[A] =
+  @inline final def headOption(s: S): Option[A] =
     find(_ => true)(s)
 
   /** check if at least one target satisfies the predicate */
@@ -58,6 +60,10 @@ abstract class Fold[S, A] extends Serializable { self =>
       def foldMap[M: Monoid](f: A => M)(s: S \/ S1): M =
         s.fold(self.foldMap(f), other.foldMap(f))
     }
+
+  @deprecated("use headOption", since = "1.1.0")
+  @inline final def headMaybe(s: S): Maybe[A] =
+    find(_ => true)(s).toMaybe
 
   /**********************************************************/
   /** Compose methods between a [[Fold]] and another Optics */

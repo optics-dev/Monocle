@@ -15,8 +15,8 @@ class FoldSpec extends Spec {
   }
 
   "headMaybe" in {
-    iListFold.headMaybe(IList(1,2,3,4,5)) ==== Maybe.just(1)
-    iListFold.headMaybe(INil())           ==== Maybe.empty
+    iListFold.headOption(IList(1,2,3,4,5)) ==== Some(1)
+    iListFold.headOption(INil())           ==== None
   }
 
   "exist" in {
