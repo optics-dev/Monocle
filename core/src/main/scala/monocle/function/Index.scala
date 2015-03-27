@@ -23,7 +23,7 @@ trait IndexFunctions {
   def index[S, I, A](i: I)(implicit ev: Index[S, I, A]): Optional[S, A] = ev.index(i)
 
   def atIndex[S, I, A](implicit ev: At[S, I, A]) = new Index[S, I, A] {
-    def index(i: I) = ev.at(i) composePrism monocle.std.maybe.just
+    def index(i: I) = ev.at(i) composePrism monocle.std.option.some
   }
 
 }

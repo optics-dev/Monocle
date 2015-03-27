@@ -4,17 +4,17 @@ import monocle.Prism
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Properties}
 
+import scalaz.Equal
 import scalaz.Id._
-import scalaz.Maybe.Just
+import scalaz.std.option._
 import scalaz.syntax.equal._
-import scalaz.{Equal, Maybe}
 
 object PrismLaws {
 
   def apply[S: Arbitrary: Equal, A: Arbitrary: Equal](prism: Prism[S, A]) = new Properties("Prism") {
 
     property("reverseGet produces a value") = forAll { a: A =>
-      prism.getMaybe(prism.reverseGet(a)) === Maybe.just(a)
+      prism.getOption(prism.reverseGet(a)) === Some(a)
     }
 
     property("if a Prism match you can always go back to the source") = forAll { s: S =>
@@ -31,12 +31,12 @@ object PrismLaws {
       prism.modify(identity)(s) === s
     }
 
-    property("setMaybe only succeeds when the prism is matching") = forAll { (s: S, a: A) =>
-      prism.setMaybe(a)(s) === prism.getMaybe(s).map(_ => prism.set(a)(s))
+    property("setOption only succeeds when the prism is matching") = forAll { (s: S, a: A) =>
+      prism.setOption(a)(s) === prism.getOption(s).map(_ => prism.set(a)(s))
     }
 
-    property("modifyMaybe with id is isomorphomic to isMatching") = forAll { s: S =>
-      prism.modifyMaybe(identity)(s) === prism.getMaybe(s).map(_ => s)
+    property("modifyOption with id is isomorphomic to isMatching") = forAll { s: S =>
+      prism.modifyOption(identity)(s) === prism.getOption(s).map(_ => s)
     }
 
   }

@@ -41,7 +41,7 @@ class TraversalSpec extends Spec {
   }
 
   "Traversal has a Category instance" in {
-    Category[Traversal].id[Int].getAll(3) ==== IList(3)
+    Category[Traversal].id[Int].getAll(3) ==== List(3)
   }
 
   "Traversal has a Choice instance" in {

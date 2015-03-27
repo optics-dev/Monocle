@@ -206,8 +206,8 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       def set(b: B): S => T =
         self.set(b)
 
-      def getMaybe(s: S): Maybe[A] =
-        Maybe.just(self.get(s))
+      def getOption(s: S): Option[A] =
+        Some(self.get(s))
 
       def modify(f: A => B): S => T =
         self.modify(f)
@@ -225,8 +225,8 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       def reverseGet(b: B): T =
         self.reverseGet(b)
 
-      def getMaybe(s: S): Maybe[A] =
-        Maybe.just(self.get(s))
+      def getOption(s: S): Option[A] =
+        Some(self.get(s))
     }
 
   /** view a [[PIso]] as a [[PLens]] */

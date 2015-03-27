@@ -5,20 +5,19 @@ import monocle.{Lens, Prism, Traversal}
 
 import scalaz.std.list._
 import scalaz.std.map._
-import scalaz.syntax.std.option._
 import scalaz.syntax.traverse._
-import scalaz.{Applicative, Maybe}
+import scalaz.Applicative
 
 object map extends MapInstances
 
 trait MapInstances {
 
   implicit def mapEmpty[K, V]: Empty[Map[K, V]] = new Empty[Map[K, V]] {
-    def empty = Prism[Map[K, V], Unit](m => if(m.isEmpty) Maybe.just(()) else Maybe.empty)(_ => Map.empty)
+    def empty = Prism[Map[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Map.empty)
   }
 
   implicit def atMap[K, V]: At[Map[K, V], K, V] = new At[Map[K, V], K, V]{
-    def at(i: K) = Lens{m: Map[K, V] => m.get(i).toMaybe}(maybeV => map => maybeV.cata(v => map + (i -> v), map - i))
+    def at(i: K) = Lens{m: Map[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   }
 
   implicit def mapEach[K, V]: Each[Map[K, V], V] = Each.traverseEach[Map[K, ?], V]

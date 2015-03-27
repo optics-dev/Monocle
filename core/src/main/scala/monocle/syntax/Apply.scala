@@ -3,6 +3,7 @@ package monocle.syntax
 import monocle._
 
 import scalaz.{Maybe, IList, Monoid}
+import scalaz.syntax.std.option._
 
 object apply extends ApplySyntax
 
@@ -63,11 +64,14 @@ final case class ApplyTraversalOps[S](s: S) {
 case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   @inline def foldMap[M: Monoid](f: A => M): M = _fold.foldMap(f)(s)
 
-  @inline def getAll: IList[A] = _fold.getAll(s)
-  @inline def headMaybe: Maybe[A] = _fold.headMaybe(s)
+  @inline def getAll: List[A] = _fold.getAll(s)
+  @inline def headOption: Option[A] = _fold.headOption(s)
 
   @inline def exist(p: A => Boolean): Boolean = _fold.exist(p)(s)
   @inline def all(p: A => Boolean): Boolean = _fold.all(p)(s)
+
+  @deprecated("use headOption", since = "1.1.0")
+  @inline def headMaybe: Maybe[A] = _fold.headOption(s).toMaybe
 
   @inline def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] = ApplyFold(s, _fold composeFold other)
   @inline def composeGetter[B](other: Getter[A, B]): ApplyFold[S, B] = ApplyFold(s, _fold composeGetter other)
@@ -156,13 +160,20 @@ final case class ApplyLens[S, T, A, B](s: S, lens: PLens[S, T, A, B]){
 }
 
 final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]){
-  @inline def getMaybe: Maybe[A] = optional.getMaybe(s)
+  @inline def getOption: Option[A] = optional.getOption(s)
 
   @inline def modify(f: A => B): T = optional.modify(f)(s)
-  @inline def modifyMaybe(f: A => B): Maybe[T] = optional.modifyMaybe(f)(s)
+  @inline def modifyOption(f: A => B): Option[T] = optional.modifyOption(f)(s)
 
   @inline def set(b: B): T = optional.set(b)(s)
-  @inline def setMaybe(b: B): Maybe[T] = optional.setMaybe(b)(s)
+  @inline def setOption(b: B): Option[T] = optional.setOption(b)(s)
+
+  @deprecated("use getOption", since = "1.1.0")
+  @inline def getMaybe: Maybe[A] = optional.getOption(s).toMaybe
+  @deprecated("use modifyOption", since = "1.1.0")
+  @inline def modifyMaybe(f: A => B): Maybe[T] = optional.modifyOption(f)(s).toMaybe
+  @deprecated("use setOption", since = "1.1.0")
+  @inline def setMaybe(b: B): Maybe[T] = optional.setOption(b)(s).toMaybe
 
   @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, optional composeSetter other)
   @inline def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, optional composeFold other)
@@ -185,13 +196,13 @@ final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]
 }
 
 final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]){
-  @inline def getMaybe: Maybe[A] = prism.getMaybe(s)
+  @inline def getOption: Option[A] = prism.getOption(s)
 
   @inline def modify(f: A => B): T = prism.modify(f)(s)
-  @inline def modifyMaybe(f: A => B): Maybe[T] = prism.modifyMaybe(f)(s)
+  @inline def modifyOption(f: A => B): Option[T] = prism.modifyOption(f)(s)
 
   @inline def set(b: B): T = prism.set(b)(s)
-  @inline def setMaybe(b: B): Maybe[T] = prism.setMaybe(b)(s)
+  @inline def setOption(b: B): Option[T] = prism.setOption(b)(s)
 
   @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, prism composeSetter other)
   @inline def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, prism composeFold other)
@@ -200,6 +211,13 @@ final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]){
   @inline def composeLens[C, D](other: PLens[A, B, C, D]): ApplyOptional[S, T, C, D] = ApplyOptional(s, prism composeLens other)
   @inline def composePrism[C, D](other: PPrism[A, B, C, D]): ApplyPrism[S, T, C, D] = ApplyPrism(s, prism composePrism  other)
   @inline def composeIso[C, D](other: PIso[A, B, C, D]): ApplyPrism[S, T, C, D] = ApplyPrism(s, prism composeIso other)
+
+  @deprecated("use getOption", since = "1.1.0")
+  @inline def getMaybe: Maybe[A] = prism.getOption(s).toMaybe
+  @deprecated("use modifyOption", since = "1.1.0")
+  @inline def modifyMaybe(f: A => B): Maybe[T] = prism.modifyOption(f)(s).toMaybe
+  @deprecated("use setOption", since = "1.1.0")
+  @inline def setMaybe(b: B): Maybe[T] = prism.setOption(b)(s).toMaybe
 
   /** alias to composeTraversal */
   @inline def ^|->>[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = composeTraversal(other)
@@ -238,7 +256,9 @@ final case class ApplySetter[S, T, A, B](s: S, setter: PSetter[S, T, A, B]) {
 
 
 final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A, B]){
-  @inline def getAll: IList[A] = traversal.getAll(s)
+  @inline def getAll: List[A] = traversal.getAll(s)
+  @inline def headOption: Option[A] = traversal.headOption(s)
+
   @inline def set(b: B): T = traversal.set(b)(s)
   @inline def modify(f: A => B): T = traversal.modify(f)(s)
 

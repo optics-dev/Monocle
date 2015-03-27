@@ -8,7 +8,7 @@ import scalaz._
 
 class PrismSpec extends Spec {
 
-  def right[E, A]: Prism[E \/ A, A] = Prism[E \/ A, A](_.toMaybe)(\/.right)
+  def right[E, A]: Prism[E \/ A, A] = Prism[E \/ A, A](_.toOption)(\/.right)
 
   checkAll("apply Prism", PrismLaws(right[String, Int]))
 
@@ -19,11 +19,11 @@ class PrismSpec extends Spec {
   // test implicit resolution of type classes
 
   "Prism has a Compose instance" in {
-    Compose[Prism].compose(right[String, Int], right[String, String \/ Int]).getMaybe(\/-(\/-(3))) ==== Maybe.just(3)
+    Compose[Prism].compose(right[String, Int], right[String, String \/ Int]).getOption(\/-(\/-(3))) ==== Some(3)
   }
 
   "Prism has a Category instance" in {
-    Category[Prism].id[Int].getMaybe(3) ==== Maybe.just(3)
+    Category[Prism].id[Int].getOption(3) ==== Some(3)
   }
 
 

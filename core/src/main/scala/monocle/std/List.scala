@@ -5,20 +5,20 @@ import monocle.{Optional, Prism}
 
 import scalaz.Id.Id
 import scalaz.std.list._
-import scalaz.syntax.std.option._
+import scalaz.std.option._
 import scalaz.syntax.traverse._
-import scalaz.{Applicative, Maybe}
+import scalaz.{Applicative, \/}
 
 object list extends ListInstances
 
 trait ListInstances {
 
   implicit def listEmpty[A]: Empty[List[A]] = new Empty[List[A]] {
-    def empty = Prism[List[A], Unit](l => if(l.isEmpty) Maybe.just(()) else Maybe.empty)(_ => List.empty)
+    def empty = Prism[List[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => List.empty)
   }
 
   implicit val nilEmpty: Empty[Nil.type] = new Empty[Nil.type] {
-    def empty = Prism[Nil.type, Unit](_ => Maybe.just(()))(_ => Nil)
+    def empty = Prism[Nil.type, Unit](_ => Some(()))(_ => Nil)
   }
 
   implicit def listReverse[A]: Reverse[List[A], List[A]] =
@@ -28,7 +28,7 @@ trait ListInstances {
 
   implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
     def index(i: Int) = Optional[List[A], A](
-      l      => if(i < 0) Maybe.empty else l.drop(i).headOption.toMaybe)(
+      l      => if(i < 0) None else l.drop(i).headOption)(
       a => l => l.zipWithIndex.traverse[Id, A]{
         case (_    , index) if index == i => a
         case (value, index)               => value
@@ -41,14 +41,14 @@ trait ListInstances {
 
   implicit def listCons[A]: Cons[List[A], A] = new Cons[List[A], A]{
     def cons = Prism[List[A], (A, List[A])]{
-      case Nil     => Maybe.empty
-      case x :: xs => Maybe.just((x, xs))
+      case Nil     => None
+      case x :: xs => Some((x, xs))
     }{ case (a, s) => a :: s }
   }
 
   implicit def listSnoc[A]: Snoc[List[A], A] = new Snoc[List[A], A]{
     def snoc = Prism[List[A], (List[A], A)](
-      s => Applicative[Maybe].apply2(Maybe.fromTryCatchNonFatal(s.init), s.lastOption.toMaybe)((_,_))){
+      s => Applicative[Option].apply2(\/.fromTryCatchNonFatal(s.init).toOption, s.lastOption)((_,_))){
       case (init, last) => init :+ last
     }
   }

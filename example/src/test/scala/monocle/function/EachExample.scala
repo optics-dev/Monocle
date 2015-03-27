@@ -38,7 +38,7 @@ class EachExample extends Spec with ScalazMatchers {
 
   "Each can be used on Tree" in {
     node(1, Stream(leaf(2), leaf(3)))  applyTraversal each modify( _ + 1) must equal (node(2, Stream(leaf(3), leaf(4))))
-    (node(1, Stream(leaf(2), leaf(3))) applyTraversal each getAll) ==== IList(1,2,3)
+    (node(1, Stream(leaf(2), leaf(3))) applyTraversal each getAll) ==== List(1,2,3)
   }
 
 }

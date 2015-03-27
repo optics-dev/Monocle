@@ -13,8 +13,8 @@ trait Snoc[S, A] {
 
   def snoc: Prism[S, (S, A)]
 
-  def initMaybe: Optional[S, S] = snoc composeLens first
-  def lastMaybe: Optional[S, A] = snoc composeLens second
+  def initOption: Optional[S, S] = snoc composeLens first
+  def lastOption: Optional[S, A] = snoc composeLens second
 
 }
 
@@ -23,14 +23,19 @@ object Snoc extends SnocFunctions
 trait SnocFunctions {
   final def snoc[S, A](implicit ev: Snoc[S, A]): Prism[S, (S, A)] = ev.snoc
 
-  final def initMaybe[S, A](implicit ev: Snoc[S, A]): Optional[S, S] = ev.initMaybe
-  final def lastMaybe[S, A](implicit ev: Snoc[S, A]): Optional[S, A] = ev.lastMaybe
+  final def initOption[S, A](implicit ev: Snoc[S, A]): Optional[S, S] = ev.initOption
+  final def lastOption[S, A](implicit ev: Snoc[S, A]): Optional[S, A] = ev.lastOption
+
+  @deprecated("use initOption", since = "1.1.0")
+  final def initMaybe[S, A](implicit ev: Snoc[S, A]): Optional[S, S] = ev.initOption
+  @deprecated("use lastOption", since = "1.1.0")
+  final def lastMaybe[S, A](implicit ev: Snoc[S, A]): Optional[S, A] = ev.lastOption
 
   /** append an element to the end */
   final def _snoc[S, A](init: S, last: A)(implicit ev: Snoc[S, A]): S =
     ev.snoc.reverseGet((init, last))
 
   /** deconstruct an S between its init and last */
-  final def _unsnoc[S, A](s: S)(implicit ev: Snoc[S, A]): Maybe[(S, A)] =
-    ev.snoc.getMaybe(s)
+  final def _unsnoc[S, A](s: S)(implicit ev: Snoc[S, A]): Option[(S, A)] =
+    ev.snoc.getOption(s)
 }

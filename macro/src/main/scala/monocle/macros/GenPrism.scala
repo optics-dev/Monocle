@@ -20,7 +20,7 @@ private object GenPrismImpl extends MacrosCompatibility {
     val sTpeSym = companionTpe(c)(sTpe)
     c.Expr[Prism[S, A]](q"""
       import monocle.Prism
-      import scalaz.{\/, \/-, -\/, Maybe}
+      import scalaz.{\/, \/-, -\/}
 
       new Prism[$sTpe, $aTpe]{
         def getOrModify(s: $sTpe): $sTpe \/ $aTpe =
@@ -30,9 +30,9 @@ private object GenPrismImpl extends MacrosCompatibility {
         def reverseGet(a: $aTpe): $sTpe =
           a.asInstanceOf[$sTpe]
 
-        def getMaybe(s: $sTpe): Maybe[$aTpe] =
-          if(s.isInstanceOf[$aTpe]) Maybe.just(s.asInstanceOf[$aTpe])
-          else Maybe.empty
+        def getOption(s: $sTpe): Option[$aTpe] =
+          if(s.isInstanceOf[$aTpe]) Some(s.asInstanceOf[$aTpe])
+          else None
       }
     """)
   }

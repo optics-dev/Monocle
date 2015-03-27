@@ -1,11 +1,8 @@
 package monocle
 
-import org.specs2.scalaz.Spec
-
 import monocle.function._
 import monocle.std._
-
-import scalaz.Maybe
+import org.specs2.scalaz.Spec
 
 /**
  * Show how could we use Optics to manipulate some Json AST
@@ -19,10 +16,10 @@ class JsonExample extends Spec {
   case class JsArray(l: List[Json]) extends Json
   case class JsObject(m: Map[String, Json]) extends Json
 
-  val jsString = Prism[Json, String]{ case JsString(s) => Maybe.just(s); case _ => Maybe.empty}(JsString.apply)
-  val jsNumber = Prism[Json, Int]{ case JsNumber(n) => Maybe.just(n); case _ => Maybe.empty}(JsNumber.apply)
-  val jsArray  = Prism[Json, List[Json]]{ case JsArray(a) => Maybe.just(a); case _ => Maybe.empty}(JsArray.apply)
-  val jsObject = Prism[Json, Map[String, Json]]{ case JsObject(m) => Maybe.just(m); case _ => Maybe.empty}(JsObject.apply)
+  val jsString = Prism[Json, String]{ case JsString(s) => Some(s); case _ => None}(JsString.apply)
+  val jsNumber = Prism[Json, Int]{ case JsNumber(n) => Some(n); case _ => None}(JsNumber.apply)
+  val jsArray  = Prism[Json, List[Json]]{ case JsArray(a) => Some(a); case _ => None}(JsArray.apply)
+  val jsObject = Prism[Json, Map[String, Json]]{ case JsObject(m) => Some(m); case _ => None}(JsObject.apply)
 
   val json = JsObject(Map(
     "first_name" -> JsString("John"),
@@ -41,12 +38,12 @@ class JsonExample extends Spec {
   ))
 
   "Json Prism" in {
-    jsNumber.getMaybe(JsString("plop")) ==== Maybe.empty
-    jsNumber.getMaybe(JsNumber(2))      ==== Maybe.just(2)
+    jsNumber.getOption(JsString("plop")) ==== None
+    jsNumber.getOption(JsNumber(2))      ==== Some(2)
   }
 
   "Use index to go into an JsObject or JsArray" in {
-    (jsObject composeOptional index("age") composePrism jsNumber).getMaybe(json) ==== Maybe.just(28)
+    (jsObject composeOptional index("age") composePrism jsNumber).getOption(json) ==== Some(28)
 
     (jsObject composeOptional index("siblings")
               composePrism    jsArray
@@ -72,7 +69,7 @@ class JsonExample extends Spec {
   }
 
   "Use at to add delete fields" in {
-    (jsObject composeLens at("nick_name")).set(Maybe.just(JsString("Jojo")))(json) ==== JsObject(Map(
+    (jsObject composeLens at("nick_name")).set(Some(JsString("Jojo")))(json) ==== JsObject(Map(
       "first_name" -> JsString("John"),
       "nick_name"  -> JsString("Jojo"), // new field
       "last_name"  -> JsString("Doe"),
@@ -89,7 +86,7 @@ class JsonExample extends Spec {
       ))
     ))
 
-    (jsObject composeLens at("age")).set(Maybe.empty)(json) ==== JsObject(Map(
+    (jsObject composeLens at("age")).set(None)(json) ==== JsObject(Map(
       "first_name" -> JsString("John"),
       "last_name"  -> JsString("Doe"), // John is ageless now
       "siblings"   -> JsArray(List(
@@ -108,7 +105,7 @@ class JsonExample extends Spec {
   "Use each and filterIndex to modify several fields at a time" in {
     (jsObject composeTraversal filterIndex((_: String).contains("name"))
               composePrism     jsString
-              composeOptional  headMaybe
+              composeOptional  headOption
     ).modify(_.toLower)(json) ==== JsObject(Map(
       "first_name" -> JsString("john"), // starts with lower case
       "last_name"  -> JsString("doe"),  // starts with lower case

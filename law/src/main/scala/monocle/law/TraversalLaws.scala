@@ -7,7 +7,8 @@ import org.scalacheck.{Arbitrary, Properties}
 import scalaz.Equal
 import scalaz.Id._
 import scalaz.syntax.equal._
-import scalaz.syntax.std.option._
+import scalaz.std.list._
+import scalaz.std.option._
 
 object TraversalLaws {
 
@@ -34,7 +35,7 @@ object TraversalLaws {
     }
 
     property("headMaybe returns the first element of getAll (if getAll is finite)") = forAll { s: S =>
-      traversal.headMaybe(s) === traversal.getAll(s).headOption.toMaybe
+      traversal.headOption(s) === traversal.getAll(s).headOption
     }
 
   }

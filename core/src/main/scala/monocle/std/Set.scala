@@ -1,21 +1,19 @@
 package monocle.std
 
-import monocle.{Lens, Prism}
 import monocle.function.{At, Empty}
-
-import scalaz.Maybe
+import monocle.{Lens, Prism}
 
 object set extends SetInstances
 
 trait SetInstances {
 
   implicit def emptySet[A]: Empty[Set[A]] = new Empty[Set[A]] {
-    def empty = Prism[Set[A], Unit](s => if(s.isEmpty) Maybe.just(()) else Maybe.empty)(_ => Set.empty[A])
+    def empty = Prism[Set[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Set.empty[A])
   }
 
   implicit def atSet[A]: At[Set[A], A, Unit] = new At[Set[A], A, Unit] {
-    def at(a: A) = Lens[Set[A], Maybe[Unit]](s => if(s(a)) Maybe.just(()) else Maybe.empty)(
-      maybeA => set => maybeA.cata(_ => set + a, set - a)
+    def at(a: A) = Lens[Set[A], Option[Unit]](s => if(s(a)) Some(()) else None)(
+      optA => set => optA.fold(set - a)(_ => set + a)
     )
   }
 

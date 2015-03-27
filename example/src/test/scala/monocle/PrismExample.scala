@@ -4,9 +4,6 @@ import monocle.macros.{GenIso, GenPrism}
 import monocle.std._
 import org.specs2.scalaz.Spec
 
-import scalaz._
-
-
 class PrismExample extends Spec {
 
   sealed trait IntOrString
@@ -14,14 +11,14 @@ class PrismExample extends Spec {
   case class S(s: String) extends IntOrString
 
   val _i = GenPrism[IntOrString, I] composeIso GenIso[I, Int]
-  val _s = Prism[IntOrString, String]{case S(s) => Maybe.just(s); case _ => Maybe.empty}(S.apply)
+  val _s = Prism[IntOrString, String]{case S(s) => Some(s); case _ => None}(S.apply)
 
-  "getMaybe return the target of a Prism, as it name implies, it can fail" in {
-    _i.getMaybe(I(1))  ==== Maybe.just(1)
-    _i.getMaybe(S("")) ==== Maybe.empty
+  "getOption return the target of a Prism, as it name implies, it can fail" in {
+    _i.getOption(I(1))  ==== Some(1)
+    _i.getOption(S("")) ==== None
 
-    _s.getMaybe(S("hello")) ==== Maybe.just("hello")
-    _s.getMaybe(I(10))      ==== Maybe.empty
+    _s.getOption(S("hello")) ==== Some("hello")
+    _s.getOption(I(10))      ==== None
   }
 
   "reverseGet return the source of Prism, in this case the constructor of IntOrString" in {
@@ -35,31 +32,31 @@ class PrismExample extends Spec {
   }
 
   "modify returns the original object with its target modified or nothing if there is no target" in {
-    _s.modifyMaybe(_.reverse)(S("hello")) ==== Maybe.just(S("olleh"))
-    _s.modifyMaybe(_.reverse)(I(3))       ==== Maybe.empty
+    _s.modifyOption(_.reverse)(S("hello")) ==== Some(S("olleh"))
+    _s.modifyOption(_.reverse)(I(3))       ==== None
   }
 
 
   "intToChar is a Prism from Int to Char" in {
-    intToChar.getMaybe(65)    ==== Maybe.just('A')
+    intToChar.getOption(65)    ==== Some('A')
     intToChar.reverseGet('a') ==== 97
   }
 
   "doubleToInt is a Prism from Double to Int" in {
-    doubleToInt.getMaybe(5d) ==== Maybe.just(5)
+    doubleToInt.getOption(5d) ==== Some(5)
 
-    doubleToInt.getMaybe(5.4d)                    ==== Maybe.empty
-    doubleToInt.getMaybe(Double.PositiveInfinity) ==== Maybe.empty
-    doubleToInt.getMaybe(Double.NaN)              ==== Maybe.empty
+    doubleToInt.getOption(5.4d)                    ==== None
+    doubleToInt.getOption(Double.PositiveInfinity) ==== None
+    doubleToInt.getOption(Double.NaN)              ==== None
   }
 
   "stringToInt is a Prism from String to Int" in {
-    stringToInt.getMaybe("352")  ==== Maybe.just(352)
-    stringToInt.getMaybe("-352") ==== Maybe.just(-352)
-    stringToInt.getMaybe("୨")    ==== Maybe.empty // Non ascii digits
-    stringToInt.getMaybe("")     ==== Maybe.empty
+    stringToInt.getOption("352")  ==== Some(352)
+    stringToInt.getOption("-352") ==== Some(-352)
+    stringToInt.getOption("୨")    ==== None // Non ascii digits
+    stringToInt.getOption("")     ==== None
     // we reject case where String starts with +, otherwise it will be an invalid Prism according 2nd Prism law
-    stringToInt.getMaybe("+352") ==== Maybe.empty
+    stringToInt.getOption("+352") ==== None
 
     stringToInt.reverseGet(8921)  ==== "8921"
     stringToInt.reverseGet(-32)   ==== "-32"
@@ -68,7 +65,7 @@ class PrismExample extends Spec {
   }
 
   "stringToBoolean is a Prism from String to Boolean" in {
-    stringToBoolean.getMaybe("true")  ==== Maybe.just(true)
+    stringToBoolean.getOption("true")  ==== Some(true)
     stringToBoolean.reverseGet(false) ==== "false"
   }
 

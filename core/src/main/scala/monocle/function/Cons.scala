@@ -12,8 +12,8 @@ trait Cons[S, A] {
  
   def cons: Prism[S, (A, S)]
 
-  def headMaybe: Optional[S, A] = cons composeLens first
-  def tailMaybe: Optional[S, S] = cons composeLens second
+  def headOption: Optional[S, A] = cons composeLens first
+  def tailOption: Optional[S, S] = cons composeLens second
 
 }
 
@@ -23,14 +23,19 @@ object Cons extends ConsFunctions
 trait ConsFunctions {
   final def cons[S, A](implicit ev: Cons[S, A]): Prism[S, (A, S)] = ev.cons
 
-  final def headMaybe[S, A](implicit ev: Cons[S, A]): Optional[S, A] = ev.headMaybe
-  final def tailMaybe[S, A](implicit ev: Cons[S, A]): Optional[S, S] = ev.tailMaybe
+  final def headOption[S, A](implicit ev: Cons[S, A]): Optional[S, A] = ev.headOption
+  final def tailOption[S, A](implicit ev: Cons[S, A]): Optional[S, S] = ev.tailOption
+
+  @deprecated("use headOption", since = "1.1.0")
+  final def headMaybe[S, A](implicit ev: Cons[S, A]): Optional[S, A] = ev.headOption
+  @deprecated("use tailOption", since = "1.1.0")
+  final def tailMaybe[S, A](implicit ev: Cons[S, A]): Optional[S, S] = ev.tailOption
 
   /** append an element to the head */
   final def _cons[S, A](head: A, tail: S)(implicit ev: Cons[S, A]): S =
     ev.cons.reverseGet((head, tail))
 
   /** deconstruct an S between its head and tail */
-  final def _uncons[S, A](s: S)(implicit ev: Cons[S, A]): Maybe[(A, S)] =
-    ev.cons.getMaybe(s)
+  final def _uncons[S, A](s: S)(implicit ev: Cons[S, A]): Option[(A, S)] =
+    ev.cons.getOption(s)
 }

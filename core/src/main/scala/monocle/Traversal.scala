@@ -1,11 +1,13 @@
 package monocle
 
 import scalaz.Id.Id
-import scalaz.Maybe._
 import scalaz.std.anyVal._
+import scalaz.std.list._
+import scalaz.std.option._
 import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
 import scalaz.syntax.tag._
-import scalaz.{Applicative, Category, Choice, Compose, Const, Functor, IList, Maybe, Monoid, Traverse, \/}
+import scalaz.{Applicative, Choice, Const, Functor, Maybe, Monoid, Traverse, \/}
 
 
 /**
@@ -42,19 +44,16 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   @inline final def fold(s: S)(implicit ev: Monoid[A]): A =
     foldMap(identity)(s)
 
-  /**
-   * get all the targets of a [[PTraversal]]
-   * TODO: Shall it return a Stream as there might be an infinite number of targets?
-   */
-  @inline final def getAll(s: S): IList[A] =
-    foldMap(IList(_))(s)
+  /** get all the targets of a [[PTraversal]] */
+  @inline final def getAll(s: S): List[A] =
+    foldMap(List(_))(s)
 
   /** find the first target of a [[PTraversal]] matching the predicate  */
-  @inline final def find(p: A => Boolean)(s: S): Maybe[A] =
-    foldMap(a => if(p(a)) just(a).first else empty[A].first)(s).unwrap
+  @inline final def find(p: A => Boolean)(s: S): Option[A] =
+    foldMap(a => (if(p(a)) Some(a) else None).first)(s).unwrap
 
   /** get the first target of a [[PTraversal]] */
-  @inline final def headMaybe(s: S): Maybe[A] =
+  @inline final def headOption(s: S): Option[A] =
     find(_ => true)(s)
 
   /** check if at least one target satisfies the predicate */
@@ -82,6 +81,10 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
           s1 => Functor[F].map(other.modifyF(f)(s1))(\/.right)
         )
     }
+
+  @deprecated("use headOption", since = "1.1.0")
+  @inline final def headMaybe(s: S): Maybe[A] =
+    find(_ => true)(s).toMaybe
 
   /****************************************************************/
   /** Compose methods between a [[PTraversal]] and another Optics */
