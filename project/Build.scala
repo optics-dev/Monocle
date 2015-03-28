@@ -51,9 +51,12 @@ object MonocleBuild extends Build {
       "-Yno-adapted-args",
       "-Ywarn-value-discard"
     ),
-    resolvers          += Resolver.sonatypeRepo("releases"),
-    resolvers          += Resolver.sonatypeRepo("snapshots"),
-    resolvers          += "bintray/non" at "http://dl.bintray.com/non/maven"
+    resolvers ++= Seq(
+      Resolver.sonatypeRepo("releases"),
+      Resolver.sonatypeRepo("snapshots"),
+      "bintray/non"    at "http://dl.bintray.com/non/maven",
+      "bintray/scalaz" at "http://dl.bintray.com/scalaz/releases"
+    )
   )
 
   lazy val defaultSettings = buildSettings ++ publishSettings ++ releaseSettings
