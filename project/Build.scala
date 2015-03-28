@@ -16,10 +16,9 @@ import pl.project13.scala.sbt.SbtJmh._
 import JmhKeys._
 
 object Dependencies {
-  val scalaz            = "org.scalaz"      %% "scalaz-core"               % "7.1.1"
-  val scalaCheckBinding = "org.scalaz"      %% "scalaz-scalacheck-binding" % "7.1.0"  % "test"
-  val specs2Scalacheck  = "org.specs2"      %% "specs2-scalacheck"         % "2.4.15"
-  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"             % "0.3.0"  % "test"
+  val scalaz            = "org.scalaz"      %% "scalaz-core"     % "7.1.1"
+  val scalacheck        = "org.scalacheck"  %% "scalacheck"      % "1.12.2"
+  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"   % "0.4.0"  % "test"
   val shapeless = Def setting (
     CrossVersion partialVersion scalaVersion.value match {
       case Some((2, scalaMajor)) if scalaMajor >= 11 => "com.chuusai" %% "shapeless" % "2.0.0"
@@ -80,7 +79,7 @@ object MonocleBuild extends Build {
     "monocle-law",
     file("law"),
     settings = defaultSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, specs2Scalacheck),
+      libraryDependencies ++= Seq(scalaz, scalacheck),
       previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-law_2.11" % previousVersion)
     )
   ) dependsOn(core)
@@ -117,7 +116,7 @@ object MonocleBuild extends Build {
     "monocle-test",
     file("test"),
     settings = buildSettings ++ noPublishSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, scalaCheckBinding, scalazSpec2, specs2Scalacheck, shapeless.value),
+      libraryDependencies ++= Seq(scalaz, scalazSpec2, shapeless.value),
       addCompilerPlugin(paradisePlugin)
     )
   ) dependsOn(core, generic ,law, macros)
@@ -126,7 +125,7 @@ object MonocleBuild extends Build {
     "monocle-example",
     file("example"),
     settings = buildSettings ++ noPublishSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, specs2Scalacheck, shapeless.value),
+      libraryDependencies ++= Seq(scalaz, shapeless.value),
       addCompilerPlugin(paradisePlugin) // Unfortunately necessary :( see: http://stackoverflow.com/q/23485426/463761
     )
   ) dependsOn(core, macros, generic, test % "test->test")

@@ -7,8 +7,8 @@ import org.specs2.scalaz.Spec
 
 class OptionSpec extends Spec {
 
-  checkAll("some", PrismLaws(some[Int, Int]))
-  checkAll("none", PrismLaws(none[Long]))
+  checkAll("some", PrismLaws(monocle.std.some[Int, Int]))
+  checkAll("none", PrismLaws(monocle.std.none[Long]))
 
   checkAll("someIso", IsoLaws(someIso[Int, Int]))
 

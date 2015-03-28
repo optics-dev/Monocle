@@ -7,7 +7,7 @@ import shapeless.test.illTyped
 
 class LensExample extends Spec {
 
-  "Lens for monomorphic case class fields" in {
+  "Lens for monomorphic case class fields" should {
      // @Lenses generate Lens automatically in the companion object
      @Lenses case class Address(streetNumber: Int, streetName: String)
      @Lenses case class Person(name: String, age: Int, address: Address)
@@ -58,7 +58,7 @@ class LensExample extends Spec {
     }
   }
 
-  "Lens for polymorphic case class fields" in {
+  "Lens for polymorphic case class fields" should {
     @Lenses case class Foo[A,B](q: Map[(A,B),Double], default: Double)
 
     object Manual { // Lens created manually (i.e. without macro)
