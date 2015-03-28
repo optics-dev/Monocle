@@ -126,7 +126,7 @@ object MonocleBuild extends Build {
     file("example"),
     settings = buildSettings ++ noPublishSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, shapeless.value),
-      addCompilerPlugin(paradisePlugin) // Unfortunately necessary :( see: http://stackoverflow.com/q/23485426/463761
+      addCompilerPlugin(paradisePlugin) // see: http://stackoverflow.com/q/23485426/463761
     )
   ) dependsOn(core, macros, generic, test % "test->test")
 
