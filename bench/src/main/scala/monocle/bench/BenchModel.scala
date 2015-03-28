@@ -27,9 +27,6 @@ object BenchModel {
   case class I(i: Int)    extends ADT
   case class R(r: ADT)    extends ADT
 
-  def getIMaybe(adt: ADT): Maybe[Int]    = adt match { case I(i) => Maybe.just(i); case _ => Maybe.empty }
-  def getRMaybe(adt: ADT): Maybe[ADT]    = adt match { case R(r) => Maybe.just(r); case _ => Maybe.empty }
-
   def getIOption(adt: ADT): Option[Int]    = adt match { case I(i) => Some(i); case _ => None }
   def getROption(adt: ADT): Option[ADT]    = adt match { case R(r) => Some(r); case _ => None }
 

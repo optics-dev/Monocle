@@ -12,19 +12,19 @@ import org.openjdk.jmh.annotations._
 @State(Scope.Benchmark)
 class MonoclePrismBench extends PrismBench {
 
-  val _i = Prism(getIMaybe)(mkI)
-  val _r = Prism(getRMaybe)(mkR)
+  val _i = Prism(getIOption)(mkI)
+  val _r = Prism(getROption)(mkR)
 
   val nested3I = _r composePrism _r composePrism _r composePrism _i
   val nested6I = _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _i
 
 
-  @Benchmark def getMaybe0(in: ADTInput): Option[Int] =
-    _i.getMaybe(in.adt).toOption
-  @Benchmark def getMaybe3(in: ADTInput): Option[Int] =
-    nested3I.getMaybe(in.adt).toOption
-  @Benchmark def getMaybe6(in: ADTInput): Option[Int] =
-    nested6I.getMaybe(in.adt).toOption
+  @Benchmark def getOption0(in: ADTInput): Option[Int] =
+    _i.getOption(in.adt)
+  @Benchmark def getOption3(in: ADTInput): Option[Int] =
+    nested3I.getOption(in.adt)
+  @Benchmark def getOption6(in: ADTInput): Option[Int] =
+    nested6I.getOption(in.adt)
 
   @Benchmark def modify0(in: ADTInput): ADT =
     _i.modify(_ + 1)(in.adt)

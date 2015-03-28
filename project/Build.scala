@@ -135,8 +135,8 @@ object MonocleBuild extends Build {
     file("bench"),
     settings = buildSettings ++ jmhSettings ++ noPublishSettings ++ Seq(
       libraryDependencies ++= Seq(
-        "com.github.julien-truffaut" %%  "monocle-core"  % "1.0.1",
-        "com.github.julien-truffaut" %%  "monocle-macro" % "1.0.1",
+        "com.github.julien-truffaut" %%  "monocle-core"  % "1.1.0-SNAPSHOT",
+        "com.github.julien-truffaut" %%  "monocle-macro" % "1.1.0-SNAPSHOT",
         shapeless.value
       ),
       addCompilerPlugin(kindProjector)

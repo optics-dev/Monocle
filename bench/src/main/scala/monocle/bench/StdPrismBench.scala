@@ -11,14 +11,14 @@ import org.openjdk.jmh.annotations._
 @State(Scope.Benchmark)
 class StdPrismBench  extends PrismBench {
 
-  @Benchmark def getMaybe0(in: ADTInput): Option[Int] =
+  @Benchmark def getOption0(in: ADTInput): Option[Int] =
     getIOption(in.adt)
-  @Benchmark def getMaybe3(in: ADTInput): Option[Int] =
+  @Benchmark def getOption3(in: ADTInput): Option[Int] =
     getROption(in.adt)
       .flatMap(getROption)
       .flatMap(getROption)
       .flatMap(getIOption)
-  @Benchmark def getMaybe6(in: ADTInput): Option[Int] =
+  @Benchmark def getOption6(in: ADTInput): Option[Int] =
     getROption(in.adt)
       .flatMap(getROption)
       .flatMap(getROption)
