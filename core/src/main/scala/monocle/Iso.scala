@@ -70,14 +70,14 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       case (b, b1) => (reverseGet(b), other.reverseGet(b1))
     }
 
-  @inline def first[C]: PIso[(S, C), (T, C), (A, C), (B, C)] =
+  @inline final def first[C]: PIso[(S, C), (T, C), (A, C), (B, C)] =
     PIso[(S, C), (T, C), (A, C), (B, C)]{
       case (s, c) => (get(s), c)
     }{
       case (b, c) => (reverseGet(b), c)
     }
 
-  @inline def second[C]: PIso[(C, S), (C, T), (C, A), (C, B)] =
+  @inline final def second[C]: PIso[(C, S), (C, T), (C, A), (C, B)] =
     PIso[(C, S), (C, T), (C, A), (C, B)]{
       case (c, s) => (c, get(s))
     }{

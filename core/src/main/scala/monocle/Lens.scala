@@ -59,7 +59,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  @inline def first[C]: PLens[(S, C), (T, C), (A, C), (B, C)] =
+  @inline final def first[C]: PLens[(S, C), (T, C), (A, C), (B, C)] =
     PLens[(S, C), (T, C), (A, C), (B, C)]{
       case (s, c) => (get(s), c)
     }{ case (b, c) => {
@@ -67,7 +67,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  @inline def second[C]: PLens[(C, S), (C, T), (C, A), (C, B)] =
+  @inline final def second[C]: PLens[(C, S), (C, T), (C, A), (C, B)] =
     PLens[(C, S), (C, T), (C, A), (C, B)]{
       case (c, s) => (c, get(s))
     }{ case (c, b) => {

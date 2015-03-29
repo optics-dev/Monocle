@@ -66,6 +66,22 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       b => _.bimap(self.set(b), other.set(b))
     }
 
+  @inline final def first[C]: POptional[(S, C), (T, C), (A, C), (B, C)] =
+    POptional[(S, C), (T, C), (A, C), (B, C)]{
+      case (s, c) => getOrModify(s).bimap(_ -> c, _ -> c)
+    }{ case (b, c) => {
+        case (s, _) => (set(b)(s), c)
+      }
+    }
+
+  @inline final def second[C]: POptional[(C, S), (C, T), (C, A), (C, B)] =
+    POptional[(C, S), (C, T), (C, A), (C, B)]{
+      case (c, s) => getOrModify(s).bimap(c -> _, c -> _)
+    }{ case (c, b) => {
+        case (_, s) => (c, set(b)(s))
+      }
+    }
+
   @deprecated("use getOption", since = "1.1.0")
   @inline final def getMaybe(s: S): Maybe[A] =
     getOption(s).toMaybe

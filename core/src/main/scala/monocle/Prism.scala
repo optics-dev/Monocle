@@ -77,6 +77,20 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   @inline final def re: Getter[B, T] =
     Getter(reverseGet)
 
+  @inline final def first[C]: PPrism[(S, C), (T, C), (A, C), (B, C)] =
+    PPrism[(S, C), (T, C), (A, C), (B, C)]{
+      case (s, c) => getOrModify(s).bimap(_ -> c, _ -> c)
+    }{
+      case (b, c) => (reverseGet(b), c)
+    }
+
+  @inline final def second[C]: PPrism[(C, S), (C, T), (C, A), (C, B)] =
+    PPrism[(C, S), (C, T), (C, A), (C, B)]{
+      case (c, s) => getOrModify(s).bimap(c -> _, c -> _)
+    }{
+      case (c, b) => (c, reverseGet(b))
+    }
+
   @deprecated("use getOption", since = "1.1.0")
   @inline final def getMaybe(s: S): Maybe[A] =
     getOption(s).toMaybe
