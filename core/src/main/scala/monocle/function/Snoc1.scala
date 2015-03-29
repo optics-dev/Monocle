@@ -8,7 +8,7 @@ import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Snoc1[${S}, ${I}, ${L}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Snoc1[S, I, L] {
+trait Snoc1[S, I, L] extends Serializable {
 
   /**
    * snoc1 defines an [[Iso]] between a S and its init and last element.

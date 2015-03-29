@@ -8,7 +8,7 @@ import scalaz.Maybe
 
 @implicitNotFound("Could not find an instance of Cons[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Cons[S, A] {
+trait Cons[S, A] extends Serializable {
  
   def cons: Prism[S, (A, S)]
 

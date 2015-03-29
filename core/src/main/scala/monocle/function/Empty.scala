@@ -6,7 +6,7 @@ import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Empty[${S}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Empty[S] {
+trait Empty[S] extends Serializable {
   def empty: Prism[S, Unit]
 }
 

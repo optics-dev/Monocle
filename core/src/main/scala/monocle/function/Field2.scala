@@ -5,7 +5,7 @@ import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Field2[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Field2[S, A] {
+trait Field2[S, A] extends Serializable {
 
   /** Creates a Lens from S to it is second element */
   def second: Lens[S, A]

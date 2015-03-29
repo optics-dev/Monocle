@@ -6,7 +6,7 @@ import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Index[${S},${I},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Index[S, I, A] {
+trait Index[S, I, A] extends Serializable {
 
   /**
    * Creates a Traversal from S to 0 or 1 A

@@ -9,7 +9,7 @@ import scalaz.Maybe
 
 @implicitNotFound("Could not find an instance of Snoc[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Snoc[S, A] {
+trait Snoc[S, A] extends Serializable {
 
   def snoc: Prism[S, (S, A)]
 
