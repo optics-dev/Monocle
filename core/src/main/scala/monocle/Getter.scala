@@ -23,10 +23,10 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def product[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
     Getter[(S, S1), (A, A1)]{case (s, s1) => (self.get(s), other.get(s1))}
 
-  @inline def first[B]: Getter[(S, B), (A, B)] =
+  @inline final def first[B]: Getter[(S, B), (A, B)] =
     Getter[(S, B), (A, B)]{case (s, b) => (self.get(s), b)}
 
-  @inline def second[B]: Getter[(B, S), (B, A)] =
+  @inline final def second[B]: Getter[(B, S), (B, A)] =
     Getter[(B, S), (B, A)]{case (b, s) => (b, self.get(s))}
 
   /*************************************************************/
@@ -34,34 +34,34 @@ abstract class Getter[S, A] extends Serializable { self =>
   /*************************************************************/
 
   /** compose a [[Getter]] with a [[Fold]] */
-  @inline def composeFold[B](other: Fold[A, B]): Fold[S, B] =
+  @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
     asFold composeFold other
 
   /** compose a [[Getter]] with a [[Getter]] */
-  @inline def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
+  @inline final def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
     new Getter[S, B]{
       def get(s: S): B =
         other.get(self.get(s))
     }
 
   /** compose a [[Getter]] with a [[PTraversal]] */
-  @inline def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+  @inline final def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     asFold composeTraversal other
 
   /** compose a [[Getter]] with a [[POptional]] */
-  @inline def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+  @inline final def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
     asFold composeOptional other
 
   /** compose a [[Getter]] with a [[PPrism]] */
-  @inline def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+  @inline final def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
     asFold composePrism other
 
   /** compose a [[Getter]] with a [[PLens]] */
-  @inline def composeLens[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
+  @inline final def composeLens[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
     composeGetter(other.asGetter)
 
   /** compose a [[Getter]] with a [[PIso]] */
-  @inline def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
+  @inline final def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     composeGetter(other.asGetter)
 
   /********************************************/
@@ -69,23 +69,23 @@ abstract class Getter[S, A] extends Serializable { self =>
   /********************************************/
 
   /** alias to composeTraversal */
-  @inline def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+  @inline final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     composeTraversal(other)
 
   /** alias to composeOptional */
-  @inline def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+  @inline final def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
     composeOptional(other)
 
   /** alias to composePrism */
-  @inline def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+  @inline final def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
     composePrism(other)
 
   /** alias to composeLens */
-  @inline def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
+  @inline final def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
     composeLens(other)
 
   /** alias to composeIso */
-  @inline def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
+  @inline final def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     composeIso(other)
 
   /******************************************************************/
@@ -93,7 +93,7 @@ abstract class Getter[S, A] extends Serializable { self =>
   /******************************************************************/
 
   /** view a [[Getter]] with a [[Fold]] */
-  @inline def asFold: Fold[S, A] = new Fold[S, A]{
+  @inline final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](f: A => M)(s: S): M =
       f(get(s))
   }
