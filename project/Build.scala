@@ -13,7 +13,6 @@ import sbtrelease.ReleaseStateTransformations._
 import sbtrelease.Utilities._
 
 import pl.project13.scala.sbt.SbtJmh._
-import JmhKeys._
 
 object Dependencies {
   val scalaz            = "org.scalaz"      %% "scalaz-core"     % "7.1.1"
@@ -35,7 +34,9 @@ object MonocleBuild extends Build {
   import Dependencies._
 
   val buildScalaVersion = "2.11.6"
-  val previousVersion   = "1.0.0"
+
+  def previousVersion(module: String): Setting[_] =
+    previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.0.0")
 
   val buildSettings = Seq(
     organization       := "com.github.julien-truffaut",
@@ -74,7 +75,7 @@ object MonocleBuild extends Build {
     settings = defaultSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz),
       addCompilerPlugin(kindProjector),
-      previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-core_2.11" % previousVersion)
+      previousVersion("core")
     )
   )
 
@@ -83,7 +84,7 @@ object MonocleBuild extends Build {
     file("law"),
     settings = defaultSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, scalacheck),
-      previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-law_2.11" % previousVersion)
+      previousVersion("law")
     )
   ) dependsOn(core)
 
@@ -111,7 +112,7 @@ object MonocleBuild extends Build {
     file("generic"),
     settings = defaultSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, shapeless.value),
-      previousArtifact := Some("com.github.julien-truffaut"  %  "monocle-generic_2.11" % previousVersion)
+      previousVersion("generic")
     )
   ) dependsOn(core)
 
