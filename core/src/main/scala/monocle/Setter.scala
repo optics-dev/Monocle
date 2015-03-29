@@ -101,6 +101,9 @@ object PSetter extends SetterInstances {
   def id[S, T]: PSetter[S, T, S, T] =
     PIso.id[S, T].asSetter
 
+  def codiagonal[S, T]: PSetter[S \/ S, T \/ T, S, T] =
+    PSetter[S \/ S, T \/ T, S, T](f => _.bimap(f,f))
+
   /** create a [[PSetter]] using modify function */
   def apply[S, T, A, B](_modify: (A => B) => S => T): PSetter[S, T, A, B] =
     new PSetter[S, T, A, B]{
@@ -120,6 +123,9 @@ object PSetter extends SetterInstances {
 object Setter {
   def id[A]: Setter[A, A] =
     Iso.id[A].asSetter
+
+  def codiagonal[S]: Setter[S \/ S, S] =
+    PSetter.codiagonal
 
   /** alias for [[PSetter]] apply with a monomorphic modify function */
   def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =

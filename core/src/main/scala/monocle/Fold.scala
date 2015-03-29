@@ -130,6 +130,12 @@ object Fold extends FoldInstances {
   def id[A]: Fold[A, A] =
     Iso.id[A].asFold
 
+  def codiagonal[A]: Fold[A \/ A, A] =
+    new Fold[A \/ A, A]{
+      def foldMap[M: Monoid](f: A => M)(s: A \/ A): M =
+        s.fold(f,f)
+    }
+
   /** create a [[Fold]] from a [[Foldable]] */
   def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] =
     new Fold[F[A], A] {

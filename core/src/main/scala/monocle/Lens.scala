@@ -207,6 +207,11 @@ object PLens extends LensInstances {
   def id[S, T]: PLens[S, T, S, T] =
     PIso.id[S, T].asLens
 
+  def codiagonal[S, T]: PLens[S \/ S, T \/ T, S, T] =
+    PLens[S \/ S, T \/ T, S, T](
+      _.fold(identity, identity)
+    )(t => _.bimap(_ => t, _ => t))
+
   /**
    * create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
    * @see macro module for methods generating [[PLens]] with less boiler plate
@@ -231,6 +236,9 @@ object PLens extends LensInstances {
 object Lens {
   def id[A]: Lens[A, A] =
     Iso.id[A].asLens
+
+  def codiagonal[S]: Lens[S \/ S, S] =
+    PLens.codiagonal
 
   /** alias for [[PLens]] apply with a monomorphic set function */
   def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] =

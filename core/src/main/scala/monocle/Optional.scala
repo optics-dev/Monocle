@@ -201,6 +201,11 @@ object POptional extends OptionalInstances {
   def id[S, T]: POptional[S, T, S, T] =
     PIso.id[S, T].asOptional
 
+  def codiagonal[S, T]: POptional[S \/ S, T \/ T, S, T] =
+    POptional[S \/ S, T \/ T, S, T](
+      _.fold(\/.right, \/.right)
+    )(t => _.bimap(_ => t, _ => t))
+
   /** create a [[POptional]] using the canonical functions: getOrModify and set */
   def apply[S, T, A, B](_getOrModify: S => T \/ A)(_set: B => S => T): POptional[S, T, A, B] =
     new POptional[S, T, A, B]{
@@ -227,6 +232,9 @@ object POptional extends OptionalInstances {
 object Optional {
   def id[A]: Optional[A, A] =
     Iso.id[A].asOptional
+
+  def codiagonal[S]: Optional[S \/ S, S] =
+    POptional.codiagonal
 
   /** alias for [[POptional]] apply restricted to monomorphic update */
   def apply[S, A](_getOption: S => Option[A])(_set: A => S => S): Optional[S, A] =

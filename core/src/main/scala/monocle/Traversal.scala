@@ -170,6 +170,12 @@ object PTraversal extends TraversalInstances {
   def id[S, T]: PTraversal[S, T, S, T] =
     PIso.id[S, T].asTraversal
 
+  def codiagonal[S, T]: PTraversal[S \/ S, T \/ T, S, T] =
+    new PTraversal[S \/ S, T \/ T, S, T]{
+      def modifyF[F[_]: Applicative](f: S => F[T])(s: S \/ S): F[T \/ T] =
+        s.bimap(f,f).fold(Applicative[F].map(_)(\/.left), Applicative[F].map(_)(\/.right))
+    }
+
   /** create a [[PTraversal]] from a [[Traverse]] */
   def fromTraverse[T[_]: Traverse, A, B]: PTraversal[T[A], T[B], A, B] =
     new PTraversal[T[A], T[B], A, B] {
@@ -212,6 +218,9 @@ object PTraversal extends TraversalInstances {
 object Traversal {
   def id[A]: Traversal[A, A] =
     Iso.id[A].asTraversal
+
+  def codiagonal[S, T]: Traversal[S \/ S, S] =
+    PTraversal.codiagonal
 
   def apply2[S, A](get1: S => A, get2: S => A)(set: (A, A, S) => S): Traversal[S, A] =
     PTraversal.apply2(get1, get2)(set)
