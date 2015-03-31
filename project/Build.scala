@@ -178,6 +178,10 @@ object MonocleBuild extends Build {
             <id>julien-truffaut</id>
             <name>Julien Truffaut</name>
           </developer>
+          <developer>
+            <id>NightRa</id>
+            <name>Ilan Godik</name>
+          </developer>
         </developers>
     }) ++ sonatypeSettings
 
