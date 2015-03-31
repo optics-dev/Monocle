@@ -65,7 +65,7 @@ object MonocleBuild extends Build {
   lazy val root: Project = Project(
     "monocle",
     file("."),
-    settings = buildSettings ++ noPublishSettings ++ Seq(
+    settings = defaultSettings ++ noPublishSettings ++ Seq(
       run <<= run in Compile in macros
     )) aggregate(core, law, macros, generic, test, example, bench)
 
@@ -119,7 +119,7 @@ object MonocleBuild extends Build {
   lazy val test: Project = Project(
     "monocle-test",
     file("test"),
-    settings = buildSettings ++ noPublishSettings ++ Seq(
+    settings = defaultSettings ++ noPublishSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, scalazSpec2, shapeless.value),
       addCompilerPlugin(paradisePlugin)
     )
@@ -128,7 +128,7 @@ object MonocleBuild extends Build {
   lazy val example: Project = Project(
     "monocle-example",
     file("example"),
-    settings = buildSettings ++ noPublishSettings ++ Seq(
+    settings = defaultSettings ++ noPublishSettings ++ Seq(
       libraryDependencies ++= Seq(scalaz, shapeless.value),
       addCompilerPlugin(paradisePlugin) // see: http://stackoverflow.com/q/23485426/463761
     )
@@ -137,7 +137,7 @@ object MonocleBuild extends Build {
   lazy val bench: Project = Project(
     "monocle-bench",
     file("bench"),
-    settings = buildSettings ++ jmhSettings ++ noPublishSettings ++ Seq(
+    settings = defaultSettings ++ jmhSettings ++ noPublishSettings ++ Seq(
       libraryDependencies ++= Seq(
         "com.github.julien-truffaut" %%  "monocle-core"  % "1.1.0-SNAPSHOT",
         "com.github.julien-truffaut" %%  "monocle-macro" % "1.1.0-SNAPSHOT",
