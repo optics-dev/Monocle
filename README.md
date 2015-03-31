@@ -9,8 +9,8 @@ import sbt._
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-val scalaVersion   = "2.11.4"  // or "2.10.4"
-val libraryVersion = "1.0.1"   // or "1.1.0-SNAPSHOT"
+val scalaVersion   = "2.11.6"  // or "2.10.4"
+val libraryVersion = "1.1.0"   // or "1.2.0-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion,
@@ -86,14 +86,14 @@ object `A` and in our case, the first character of a `String` is optional as a `
 we need a sort of partial `Lens`, in Monocle it is called `Optional`.
 
 ```scala
-import monocle.function.HeadMaybe._ // to use headMaybe (a generic optic)
-import monocle.std.string._         // to get String instance for HeadOption
+import monocle.function.headOption._ // to use headOption (a generic optic)
+import monocle.std.string._          // to get String instance for HeadOption
 
 
-(_company composeLens _address
-         composeLens _street
-         composeLens _name
-         composeOptional headMaybe).modify(toUpper)(employee)
+((_company composeLens _address
+           composeLens _street
+           composeLens _name
+           composeOptional headOption).modify(toUpper)(employee)
 ```
 
 Similarly to composeLens, composeOptional takes two `Optional`, one from A to B and another from B to C and
@@ -115,15 +115,15 @@ There are 3 ways to create `Lens`, each with their pro and cons:
      val _company = Lens((_: Employee).company)( c => e => e.copy(company = c))
      ```
 
-2.   The semi-automatic method using the `Lenser` blackbox macro:
+2.   The semi-automatic method using the `GenLens` blackbox macro:
 
      ```scala
-     val _company = Lenser[Employee](_.company)
-     val _name    = Lenser[Employee](_.name)
+     val _company = GenLens[Employee](_.company)
+     val _name    = GenLens[Employee](_.name)
      
      // or
-     val lenser = Lenser[Employee]
-     val (_company, _name) = (lenser(_.company) , lenser(_.name))
+     val genLens = GenLens[Employee]
+     val (_company, _name) = (genLens(_.company) , genLens(_.name))
      ```
 
 3.   Finally, the fully automatic method using the `@Lenses` macro annotation.
@@ -147,17 +147,17 @@ There are 3 ways to create `Lens`, each with their pro and cons:
      // generates Employee._company: Lens[Employee, Company]
      ```
 
-Note: `Lenser` and `@Lenses` are both limited to case classes
+Note: `GenLens` and `@Lenses` are both limited to case classes
 
 ## Generic Optics and Instance Location Policy
 
-A generic optic is an optic that is applicable to different types. For example, `headMaybe` is an `Optional` from
-some type `S` to its optional first element of type `A`. In order to use `headMaybe` (or any generic optics), you
+A generic optic is an optic that is applicable to different types. For example, `headOption` is an `Optional` from
+some type `S` to its optional first element of type `A`. In order to use `headOption` (or any generic optics), you
 need to:
 
-1.   import the generic optic in your scope via `import monocle.function.headmaybe._` or `import monocle.function._`
-2.   have the required instance of the type class `monocle.HeadMaybe` in your scope, e.g. if you want to use `headmaybe` from
-     a `List[Int]`, you need an instance of `HeadMaybe[List[Int], Int]`. This instance can be either provided
+1.   import the generic optic in your scope via `import monocle.function.headOption._` or `import monocle.function._`
+2.   have the required instance of the type class `monocle.HeadOption` in your scope, e.g. if you want to use `headOption` from
+     a `List[Int]`, you need an instance of `HeadOption[List[Int], Int]`. This instance can be either provided
      by you or by Monocle.
 
 Monocle defines generic optic instances in the following packages:
