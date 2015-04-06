@@ -36,7 +36,7 @@ object MonocleBuild extends Build {
   val buildScalaVersion = "2.11.6"
 
   def previousVersion(module: String): Setting[_] =
-    previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.0.0")
+    previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.1.0")
 
   val buildSettings = Seq(
     organization       := "com.github.julien-truffaut",
@@ -60,7 +60,7 @@ object MonocleBuild extends Build {
     )
   )
 
-  lazy val defaultSettings = buildSettings ++ publishSettings ++ releaseSettings
+  lazy val defaultSettings = buildSettings ++ releaseSettings ++ publishSettings
 
   lazy val root: Project = Project(
     "monocle",
@@ -139,8 +139,8 @@ object MonocleBuild extends Build {
     file("bench"),
     settings = defaultSettings ++ jmhSettings ++ noPublishSettings ++ Seq(
       libraryDependencies ++= Seq(
-        "com.github.julien-truffaut" %%  "monocle-core"  % "1.1.0-SNAPSHOT",
-        "com.github.julien-truffaut" %%  "monocle-macro" % "1.1.0-SNAPSHOT",
+        "com.github.julien-truffaut" %%  "monocle-core"  % "1.2.0-SNAPSHOT",
+        "com.github.julien-truffaut" %%  "monocle-macro" % "1.2.0-SNAPSHOT",
         shapeless.value
       ),
       addCompilerPlugin(kindProjector)
