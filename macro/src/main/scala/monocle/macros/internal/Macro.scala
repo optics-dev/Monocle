@@ -7,19 +7,47 @@ object Macro {
 }
 
 private[macros] object MacroImpl extends MacrosCompatibility {
-
   def genLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context)(field: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
     import c.universe._
-    val fieldName = field match {
-      case Expr(
-      Function(
-      List(ValDef(_, termDefName, _, EmptyTree)),
-      Select(Ident(termUseName), fieldNameName))) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
-        fieldNameName.decodedName.toString
-      case _ => c.abort(c.enclosingPosition, s"Illegal field reference ${show(field.tree)}; please use _.field instead")
+    
+    /** Extractor for member select chains.
+        e.g.: SelectChain.unapply(a.b.c) == Some("a",Seq(a.type -> "b", a.b.type -> "c")) */
+    object SelectChain{
+      def unapply(tree: Tree): Option[(Name,Seq[(Type,TermName)])] = tree match {
+        case Select(tail@Ident(termUseName), field:TermName) =>
+          Some((termUseName,Seq(tail.tpe.widen -> field)))
+        case Select(tail, field:TermName) => SelectChain.unapply(tail).map(
+          t => t.copy(_2 = t._2 :+ (tail.tpe.widen -> field))
+        )
+        case _ => None
+      }
     }
 
-    mkLens_impl[S, A](c)(c.Expr[String](q"$fieldName"))
+    field match {
+      // _.field
+      case Expr(
+        Function(
+          List(ValDef(_, termDefName, _, EmptyTree)),
+          Select(Ident(termUseName), fieldNameName)
+        )
+      ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
+        val fieldName = fieldNameName.decodedName.toString
+        mkLens_impl[S, A](c)(c.Expr[String](q"$fieldName"))
+
+      // _.field1.field2...
+      case Expr(
+        Function(
+          List(ValDef(_, termDefName, _, EmptyTree)),
+          SelectChain(termUseName, typesFields)
+        )
+      ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
+        c.Expr[Lens[S, A]](
+          typesFields.map{ case (t,f) => q"monocle.macros.GenLens[$t](_.$f)" }
+                     .reduce((a,b) => q"$a composeLens $b")
+        )
+
+      case _ => c.abort(c.enclosingPosition, s"Illegal field reference ${show(field.tree)}; please use _.field1.field2... instead")
+    }
   }
 
   def mkLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[Lens[S, A]] = {
