@@ -31,6 +31,7 @@ class LensSpec extends Spec {
 
   checkAll("apply Lens", LensLaws(_s))
   checkAll("GenLens", LensLaws(GenLens[Example](_.s)))
+  checkAll("GenLens chain", LensLaws(GenLens[Example](_.p.x)))
   checkAll("Lenses",  LensLaws(Example.s))
 
   checkAll("lens.asOptional" , OptionalLaws(_s.asOptional))
