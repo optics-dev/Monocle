@@ -26,7 +26,7 @@ private[macros] object LensesImpl extends MacrosCompatibility {
         if (tparams.isEmpty)
           q"""val $lensName = monocle.macros.internal.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
         else
-          q"""def $lensName[..$tparams] = 
+          q"""def $lensName[..$tparams] =
                  monocle.macros.internal.Macro.mkLens[$tpname[..${tparams.map(_.name)}], ${param.tpt}](${param.name.toString})"""
       }
     }
@@ -42,11 +42,11 @@ private[macros] object LensesImpl extends MacrosCompatibility {
          }
          """
       case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
-        :: q"object $objName {..$objDefs}"
+        :: q"object $objName extends { ..$objEarlyDefs } with ..$objParents { $objSelf => ..$objDefs }"
         :: Nil if mods.hasFlag(Flag.CASE) =>
         q"""
          $classDef
-         object $objName {
+         object $objName extends { ..$objEarlyDefs} with ..$objParents { $objSelf =>
            ..${lenses(tpname, tparams, paramss)}
            ..$objDefs
          }

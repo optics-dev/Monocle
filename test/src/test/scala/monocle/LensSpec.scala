@@ -13,6 +13,17 @@ case class Point(x: Int, y: Int)
 @Lenses case class Example(s: String, p: Point)
 @Lenses case class Foo[A,B](q: Map[(A,B),Double], default: Double)
 
+// a few more examples that should compile
+@Lenses case class HasCompanion1[A](a: A)
+object HasCompanion1
+
+@Lenses case class HasCompanion2[A](a: A)
+object HasCompanion2 { def foo = () }
+
+trait Bar; trait Baz
+@Lenses case class HasCompanion3[A](a: A)
+object HasCompanion3 extends Bar with Baz
+
 class LensSpec extends Spec {
 
   val _s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
@@ -70,5 +81,4 @@ class LensSpec extends Spec {
       case m: MethodSymbol if m.isMethod && !m.isAccessor && m.name.decodedName.toString == "q" => m
     }.isDefined ==== true
   }
-
 }
