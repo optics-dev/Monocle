@@ -12,6 +12,8 @@ import sbtrelease.ReleasePlugin.ReleaseKeys.releaseProcess
 import sbtrelease.ReleaseStateTransformations._
 import sbtrelease.Utilities._
 
+import sbtunidoc.Plugin.UnidocKeys._
+
 import pl.project13.scala.sbt.SbtJmh._
 
 object Dependencies {
@@ -133,6 +135,14 @@ object MonocleBuild extends Build {
       addCompilerPlugin(paradisePlugin) // see: http://stackoverflow.com/q/23485426/463761
     )
   ) dependsOn(core, macros, generic, test % "test->test")
+
+  lazy val doc: Project = Project(
+    "monocle-doc",
+    file("doc"),
+    settings = buildSettings ++ noPublishSettings ++ Seq(
+      unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(example)
+    )
+  ) dependsOn(example)
 
   lazy val bench: Project = Project(
     "monocle-bench",
