@@ -1,9 +1,56 @@
-package monocle.macros.internal
+package monocle.macros
+package internal
 
 import monocle.Lens
 
 object Macro {
   def mkLens[S, A](fieldName: String): Lens[S, A] = macro MacroImpl.mkLens_impl[S, A]
+}
+
+object FocusImpl extends MacrosCompatibility{
+  def apply
+    [S,A: c.WeakTypeTag,C]
+    (c: Context)
+    (field: c.Expr[A => C]) = {
+    import c.universe._
+    c.Expr[Focus[S,C]](q"""
+      new _root_.monocle.macros.Focus(
+        ${c.prefix.tree}.applyLens composeLens
+          _root_.monocle.macros.GenLens[${c.weakTypeOf[A]}](${field})
+      )
+    """)
+  }
+
+  def selectDynamicImpl
+    (c: WhiteboxContext)
+    (field: c.Expr[String]) = {
+    import c.universe._
+    val name = field.tree match {
+      case Literal(Constant(name:String)) => createTermName(c)(name)
+      case _ => c.error(c.enclosingPosition, "argument needs to be a field name string: "+field); ???
+    }
+    c.Expr(q"""
+      ${c.prefix.tree}(_.$name)
+    """)
+  }
+
+  def update[S,A,C]
+    (c: Context)
+    (field: c.Expr[A => C], value: c.Expr[C]) = {
+    import c.universe._
+    c.Expr[S](q"${c.prefix.tree}($field).set($value)")
+  }
+
+  def updateDynamicImpl[S,C]
+    (c: Context)
+    (field: c.Expr[String])(value: c.Expr[C]) = {
+    import c.universe._
+    val name = field.tree match {
+      case Literal(Constant(name:String)) => createTermName(c)(name)
+      case _ => c.error(c.enclosingPosition, "argument needs to be a field name string: "+field); ???
+    }
+    c.Expr[S](q"${c.prefix.tree}(_.$name).set($value)")
+  }
 }
 
 private[macros] object MacroImpl extends MacrosCompatibility {

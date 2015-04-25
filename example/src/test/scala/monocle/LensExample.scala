@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.macros.{GenLens, Lenses}
+import monocle.macros.{GenLens, Lenses, Focus, focus, FocusOps}
 import org.specs2.execute.AnyValueAsResult
 import org.specs2.scalaz.Spec
 import shapeless.test.illTyped
@@ -32,6 +32,10 @@ class LensExample extends Spec {
       Manual._name.get(john) ==== "John"
       Semi.name.get(john)    ==== "John"
       Person.name.get(john)  ==== "John"
+      Focus(john)(_.name).get ==== "John"
+      focus(john)(_.name).get ==== "John"
+      john.focus.name.get ==== "John"
+      john.name ==== "John"
     }
 
     "set" in {
@@ -40,12 +44,23 @@ class LensExample extends Spec {
       Manual._age.set(45)(john) ==== changedJohn
       Semi.age.set(45)(john)    ==== changedJohn
       Person.age.set(45)(john)  ==== changedJohn
+      Focus(john)(_.age).set(45) ==== changedJohn
+      (Focus(john)(_.age) = 45) ==== changedJohn
+      focus(john)(_.age).set(45) ==== changedJohn
+      (focus(john)(_.age) = 45) ==== changedJohn
+      (john.focus(_.age) = 45) ==== changedJohn
+      (john.focus.age = 45) ==== changedJohn
     }
 
     "compose" in {
       (Manual._address composeLens Manual._streetNumber).get(john) ==== 126
       (Semi.address composeLens Semi.streetNumber).get(john)       ==== 126
       (Person.address composeLens Address.streetNumber).get(john)  ==== 126
+      Focus(john)(_.address.streetNumber).get ==== 126
+      john.focus(_.address.streetNumber).get ==== 126
+      focus(john).address.streetNumber.get ==== 126
+      john.focus.address.streetNumber.get ==== 126
+      john.address.streetNumber ==== 126
     }
 
     @Lenses("_") // this generates lenses prefixed with _ in the Cat companion object
