@@ -1,14 +1,13 @@
 package monocle.std
 
-import monocle.TestUtil._
+import monocle.MonocleSuite
 import monocle.function._
-import monocle.law.{OptionalLaws, PrismLaws}
-import org.specs2.scalaz.Spec
+import monocle.law.discipline.{OptionalTests, PrismTests}
 
-class CharSpec extends Spec {
+class CharSpec extends MonocleSuite {
 
-  checkAll("Char index bit", OptionalLaws(index[Char, Int, Boolean](0)))
+  checkAll("Char index bit", OptionalTests(index[Char, Int, Boolean](0)))
 
-  checkAll("Char to Boolean ", PrismLaws(charToBoolean))
+  checkAll("Char to Boolean ", PrismTests(charToBoolean))
 
 }

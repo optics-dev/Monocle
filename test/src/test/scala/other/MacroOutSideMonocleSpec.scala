@@ -1,15 +1,14 @@
 package other
 
-import monocle.law.{PrismLaws, IsoLaws, LensLaws}
-import monocle.macros.{GenPrism, GenIso, GenLens}
-import org.scalacheck.{Gen, Arbitrary}
+import monocle.MonocleSuite
+import monocle.law.discipline.{IsoTests, LensTests, PrismTests}
+import monocle.macros.{GenIso, GenLens, GenPrism}
 import org.scalacheck.Arbitrary._
-import org.specs2.scalaz.Spec
-import scalaz.std.anyVal._
+import org.scalacheck.{Arbitrary, Gen}
 
 import scalaz.Equal
 
-class MacroOutSideMonocleSpec extends Spec {
+class MacroOutSideMonocleSpec extends MonocleSuite {
 
   case class Example(i: Int)
 
@@ -27,8 +26,8 @@ class MacroOutSideMonocleSpec extends Spec {
   implicit val fooEq: Equal[Foo] = Equal.equalA[Foo]
 
 
-  checkAll("GenIso"  , IsoLaws(GenIso[Example, Int]))
-  checkAll("GenLens" , LensLaws(GenLens[Example](_.i)))
-  checkAll("GenPrism", PrismLaws(GenPrism[Foo, Bar1]))
+  checkAll("GenIso"  , IsoTests(GenIso[Example, Int]))
+  checkAll("GenLens" , LensTests(GenLens[Example](_.i)))
+  checkAll("GenPrism", PrismTests(GenPrism[Foo, Bar1]))
 
 }

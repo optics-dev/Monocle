@@ -1,9 +1,10 @@
 package other
 
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
 import shapeless.test.illTyped
+import shapeless.{::, HNil}
+
 import scalaz.IList
-import shapeless.{HNil, ::}
 
 case class Custom(value: Int)
 
@@ -17,58 +18,58 @@ object Custom {
   }
 }
 
-class ImportExample extends Spec {
+class ImportExample extends MonocleSuite {
 
-  "monocle.function._ imports all polymorphic optics in the scope" in {
+  test("monocle.function._ imports all polymorphic optics in the scope") {
     import monocle.function._
 
     // do not compile because Each instance for List is not in the scope
     illTyped { """each[List[Int], Int].modify(List(1,2,3), _ + 1)""" }
 
     import monocle.std.list._
-    each[List[Int], Int].modify(_ + 1)(List(1,2,3)) ==== List(2,3,4)
+    each[List[Int], Int].modify(_ + 1)(List(1,2,3)) shouldEqual List(2,3,4)
 
     // also compile because Head instance for Custom is in the companion of Custom
-    first[Custom, Int].modify(_ + 1)(Custom(1)) ==== Custom(2)
+    first[Custom, Int].modify(_ + 1)(Custom(1)) shouldEqual Custom(2)
   }
 
-  "monocle.syntax._ permits to use optics as operator which improves type inference" in {
+  test("monocle.syntax._ permits to use optics as operator which improves type inference") {
     import monocle.function._
     import monocle.std.list._
-    import monocle.syntax._
 
     // do not compile because scala cannot infer which instance of Each is required
     illTyped { """each.modify(List(1,2,3), _ + 1)""" }
 
-    each[List[Int], Int].modify(_ + 1)(List(1,2,3)) ==== List(2,3,4)
+    each[List[Int], Int].modify(_ + 1)(List(1,2,3)) shouldEqual List(2,3,4)
   }
 
-  "monocle.std._ brings all polymorphic Optic instances in scope for standard Scala classes" in {
+  test("monocle.std._ brings all polymorphic Optic instances in scope for standard Scala classes") {
     import monocle.function._
     import monocle.std._
 
     // do not compile because Head instance for HList is not in scope
-    illTyped { """head[Int :: HNil, Int].modify(1 :: HNil, _ + 1) ==== (2 :: HNil)""" }
+    illTyped { """head[Int :: HNil, Int].modify(1 :: HNil, _ + 1) shouldEqual (2 :: HNil)""" }
 
-    each[List[Int], Int].modify(_ + 1)(List(1,2,3))   ==== List(2,3,4)
-    each[IList[Int], Int].modify(_ + 1)(IList(1,2,3)) ==== IList(2,3,4)
+    each[List[Int], Int].modify(_ + 1)(List(1,2,3))   shouldEqual List(2,3,4)
+    each[IList[Int], Int].modify(_ + 1)(IList(1,2,3)) shouldEqual IList(2,3,4)
   }
 
-  "monocle.generic._ brings all polymorphic Optic instances in scope for Shapeless classes" in {
+  test("monocle.generic._ brings all polymorphic Optic instances in scope for Shapeless classes") {
     import monocle.function._
     import monocle.generic._
 
     // do not compile because Each instance for List is not in scope
     illTyped { """each[List[Int], Int].modify(List(1,2,3), _ + 1)""" }
 
-    first[Int :: HNil, Int].modify(_ + 1)(1 :: HNil) ==== (2 :: HNil)
+    first[Int :: HNil, Int].modify(_ + 1)(1 :: HNil) shouldEqual (2 :: HNil)
   }
 
-  "monocle._, Monocle._ makes all Monocle core features available (no generic)" in {
-    import monocle._, Monocle._
+  test("monocle._, Monocle._ makes all Monocle core features available (no generic)") {
+    import monocle._
+    import Monocle._
 
-    each[List[Int], Int].modify(_ + 1)(List(1,2,3))   ==== List(2,3,4)
-    each[IList[Int], Int].modify(_ + 1)(IList(1,2,3)) ==== IList(2,3,4)
+    each[List[Int], Int].modify(_ + 1)(List(1,2,3))   shouldEqual List(2,3,4)
+    each[IList[Int], Int].modify(_ + 1)(IList(1,2,3)) shouldEqual IList(2,3,4)
   }
 
 }

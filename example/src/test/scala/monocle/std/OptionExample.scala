@@ -1,31 +1,31 @@
 package monocle.std
 
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
 
-class OptionExample extends Spec {
+class OptionExample extends MonocleSuite {
 
-  import monocle.std.{some => mSome, none => mNone}
+  import monocle.std.{none => mNone, some => mSome}
 
-  "some creates a Prism from an Option to its element" in {
-    mSome.getOption(Some(1)) ==== Some(1)
-    mSome.reverseGet(1)      ==== Some(1)
+  test("some creates a Prism from an Option to its element") {
+    mSome.getOption(Some(1)) shouldEqual Some(1)
+    mSome.reverseGet(1)      shouldEqual Some(1)
 
     // type can be changed with set and modify
-    mSome.set('a')(Some(1))  ==== Some('a')
-    mSome.set(2)(None)       ==== None
+    mSome.set('a')(Some(1))  shouldEqual Some('a')
+    mSome.set(2)(None)       shouldEqual None
 
-    mSome.modify((_: Int) + 2.0)(Some(1)) ==== Some(3.0)
+    mSome.modify((_: Int) + 2.0)(Some(1)) shouldEqual Some(3.0)
   }
 
-  "none creates a Prism from an Option to Unit" in {
-    mNone.getOption(None)    ==== Some(())
-    mNone.getOption(Some(2)) ==== None
+  test("none creates a Prism from an Option to Unit") {
+    mNone.getOption(None)    shouldEqual Some(())
+    mNone.getOption(Some(2)) shouldEqual None
 
-    mNone.reverseGet(()) ==== None
+    mNone.reverseGet(()) shouldEqual None
 
     // none setter does nothing
-    mNone.set(())(Some(1)) ==== Some(1)
-    mNone.set(())(None   ) ==== None
+    mNone.set(())(Some(1)) shouldEqual Some(1)
+    mNone.set(())(None   ) shouldEqual None
   }
 
 }

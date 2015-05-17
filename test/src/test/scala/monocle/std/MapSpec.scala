@@ -1,20 +1,12 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.function._
-import monocle.law.{LensLaws, OptionalLaws, PrismLaws, TraversalLaws}
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.function._
 
-class MapSpec extends Spec {
-
-  checkAll("at Map", LensLaws(at[Map[Int, String], Int, String](2)))
-
-  checkAll("each Map", TraversalLaws(each[Map[Int, String], String]))
-
-  checkAll("empty Map", PrismLaws(empty[Map[Int, String]]))
-
-  checkAll("filterIndex Map", TraversalLaws(filterIndex[Map[Int, Char], Int, Char](_ % 2 == 0)))
-
-  checkAll("index Map", OptionalLaws(index[Map[Int, String], Int, String](3)))
-
+class MapSpec extends MonocleSuite {
+  checkAll("at Map", AtTests.defaultIntIndex[Map[Int, String], String])
+  checkAll("each Map", EachTests[Map[Int, String], String])
+  checkAll("empty Map", EmptyTests[Map[Int, String]])
+  checkAll("index Map", IndexTests.defaultIntIndex[Map[Int, String], String])
+  checkAll("filterIndex Map", FilterIndexTests.evenIndex[Map[Int, Char], Char])
 }

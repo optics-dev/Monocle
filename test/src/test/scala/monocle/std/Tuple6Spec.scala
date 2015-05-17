@@ -1,23 +1,23 @@
 package monocle.std
 
-import monocle.TestUtil._
+import monocle.MonocleSuite
 import monocle.function._
-import monocle.law.{IsoLaws, LensLaws, TraversalLaws}
-import org.specs2.scalaz.Spec
+import monocle.law.discipline.LensTests
+import monocle.law.discipline.function.{Cons1Tests, EachTests, Snoc1Tests}
 
 
-class Tuple6Spec extends Spec {
+class Tuple6Spec extends MonocleSuite {
 
-  checkAll("each tuple6" , TraversalLaws(each[(Int, Int, Int, Int, Int, Int), Int]))
+  checkAll("each tuple6" , EachTests[(Int, Int, Int, Int, Int, Int), Int])
 
-  checkAll("first tuple6" , LensLaws(first[(Int, Char, Boolean, String, Long, Float), Int]))
-  checkAll("second tuple6", LensLaws(second[(Int, Char, Boolean, String, Long, Float), Char]))
-  checkAll("third tuple6" , LensLaws(third[(Int, Char, Boolean, String, Long, Float), Boolean]))
-  checkAll("fourth tuple6", LensLaws(fourth[(Int, Char, Boolean, String, Long, Float), String]))
-  checkAll("fifth tuple6" , LensLaws(fifth[(Int, Char, Boolean, String, Long, Float), Long]))
-  checkAll("sixth tuple6" , LensLaws(sixth[(Int, Char, Boolean, String, Long, Float), Float]))
+  checkAll("first tuple6" , LensTests(first[(Int, Char, Boolean, String, Long, Float), Int]))
+  checkAll("second tuple6", LensTests(second[(Int, Char, Boolean, String, Long, Float), Char]))
+  checkAll("third tuple6" , LensTests(third[(Int, Char, Boolean, String, Long, Float), Boolean]))
+  checkAll("fourth tuple6", LensTests(fourth[(Int, Char, Boolean, String, Long, Float), String]))
+  checkAll("fifth tuple6" , LensTests(fifth[(Int, Char, Boolean, String, Long, Float), Long]))
+  checkAll("sixth tuple6" , LensTests(sixth[(Int, Char, Boolean, String, Long, Float), Float]))
 
-  checkAll("hcons tuple6", IsoLaws(cons1[(Int, Char, Boolean, String, Long, Float), Int, (Char, Boolean, String, Long, Float)]))
-  checkAll("hsnoc tuple6", IsoLaws(snoc1[(Int, Char, Boolean, String, Long, Float), (Int, Char, Boolean, String, Long), Float]))
+  checkAll("cons1 tuple6", Cons1Tests[(Int, Char, Boolean, String, Long, Float), Int, (Char, Boolean, String, Long, Float)])
+  checkAll("snoc1 tuple6", Snoc1Tests[(Int, Char, Boolean, String, Long, Float), (Int, Char, Boolean, String, Long), Float])
 
 }

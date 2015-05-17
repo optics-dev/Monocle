@@ -1,17 +1,16 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.function._
-import monocle.law.{OptionalLaws, PrismLaws}
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.PrismTests
+import monocle.law.discipline.function.IndexTests
 
-class LongSpec extends Spec {
+class LongSpec extends MonocleSuite {
 
-  checkAll("Long index bit", OptionalLaws(index[Long, Int, Boolean](0)))
+  checkAll("Long index bit", IndexTests.defaultIntIndex[Long, Boolean])
 
-  checkAll("Long to Int"    , PrismLaws(longToInt))
-  checkAll("Long to Char"   , PrismLaws(longToChar))
-  checkAll("Long to Byte"   , PrismLaws(longToByte))
-  checkAll("Long to Boolean", PrismLaws(longToBoolean))
+  checkAll("Long to Int"    , PrismTests(longToInt))
+  checkAll("Long to Char"   , PrismTests(longToChar))
+  checkAll("Long to Byte"   , PrismTests(longToByte))
+  checkAll("Long to Boolean", PrismTests(longToBoolean))
 
 }

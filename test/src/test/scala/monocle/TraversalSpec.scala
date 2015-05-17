@@ -1,14 +1,12 @@
 package monocle
 
-import monocle.TestUtil._
-import monocle.law.{SetterLaws, TraversalLaws}
+import monocle.law.discipline.{SetterTests, TraversalTests}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
-import org.specs2.scalaz.Spec
 
 import scalaz._
 
-class TraversalSpec extends Spec {
+class TraversalSpec extends MonocleSuite {
 
   case class Location(latitude: Int, longitude: Int, name: String)
 
@@ -28,24 +26,24 @@ class TraversalSpec extends Spec {
   implicit val exampleEq = Equal.equalA[Location]
 
 
-  checkAll("apply2 Traversal", TraversalLaws(coordinates))
-  checkAll("fromTraverse Traversal" , TraversalLaws(all[Int]))
+  checkAll("apply2 Traversal", TraversalTests(coordinates))
+  checkAll("fromTraverse Traversal" , TraversalTests(all[Int]))
 
-  checkAll("traversal.asSetter", SetterLaws(coordinates.asSetter))
+  checkAll("traversal.asSetter", SetterTests(coordinates.asSetter))
 
   // test implicit resolution of type classes
 
-  "Traversal has a Compose instance" in {
+  test("Traversal has a Compose instance") {
     Compose[Traversal].compose(coordinates, all[Location])
-      .modify(_ + 1)(IList(Location(1,2,""), Location(3,4,""))) ==== IList(Location(2,3,""), Location(4,5,""))
+      .modify(_ + 1)(IList(Location(1,2,""), Location(3,4,""))) shouldEqual IList(Location(2,3,""), Location(4,5,""))
   }
 
-  "Traversal has a Category instance" in {
-    Category[Traversal].id[Int].getAll(3) ==== List(3)
+  test("Traversal has a Category instance") {
+    Category[Traversal].id[Int].getAll(3) shouldEqual List(3)
   }
 
-  "Traversal has a Choice instance" in {
-    Choice[Traversal].choice(all[Int], coordinates).modify(_ + 1)(-\/(IList(1,2,3))) ==== -\/(IList(2,3,4))
+  test("Traversal has a Choice instance") {
+    Choice[Traversal].choice(all[Int], coordinates).modify(_ + 1)(-\/(IList(1,2,3))) shouldEqual -\/(IList(2,3,4))
   }
 
 }

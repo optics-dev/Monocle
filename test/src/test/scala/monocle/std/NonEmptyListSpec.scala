@@ -1,20 +1,18 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.function._
-import monocle.law._
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.function._
 
 import scalaz.NonEmptyList
 
 
-class NonEmptyListSpec extends Spec {
+class NonEmptyListSpec extends MonocleSuite {
 
-  checkAll("each NonEmptyList", TraversalLaws(each[NonEmptyList[Int], Int]))
-  checkAll("index NonEmptyList", OptionalLaws(index[NonEmptyList[Int], Int, Int](1)))
-  checkAll("filterIndex NonEmptyList", TraversalLaws(filterIndex[NonEmptyList[Int], Int, Int](_ % 2 == 0)))
-  checkAll("reverse NonEmptyList", IsoLaws(reverse[NonEmptyList[Int], NonEmptyList[Int]]))
-  checkAll("cons1 NonEmptyList", IsoLaws(cons1[NonEmptyList[Int], Int, List[Int]]))
-  checkAll("snoc1 NonEmptyList", IsoLaws(snoc1[NonEmptyList[Int], List[Int], Int]))
+  checkAll("each NonEmptyList", EachTests[NonEmptyList[Int], Int])
+  checkAll("index NonEmptyList", IndexTests.defaultIntIndex[NonEmptyList[Int], Int])
+  checkAll("filterIndex NonEmptyList", FilterIndexTests.evenIndex[NonEmptyList[Int], Int])
+  checkAll("reverse NonEmptyList", ReverseTests[NonEmptyList[Int]])
+  checkAll("cons1 NonEmptyList", Cons1Tests[NonEmptyList[Int], Int, List[Int]])
+  checkAll("snoc1 NonEmptyList", Snoc1Tests[NonEmptyList[Int], List[Int], Int])
 
 }

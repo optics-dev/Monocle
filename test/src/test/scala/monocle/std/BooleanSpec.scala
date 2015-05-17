@@ -1,12 +1,11 @@
 package monocle.std
 
-import monocle.TestUtil._
+import monocle.MonocleSuite
 import monocle.function._
-import monocle.law.OptionalLaws
-import org.specs2.scalaz.Spec
+import monocle.law.discipline.OptionalTests
 
-class BooleanSpec extends Spec {
+class BooleanSpec extends MonocleSuite {
 
-  checkAll("Boolean index bit", OptionalLaws(index[Boolean, Int, Boolean](0)))
+  checkAll("Boolean index bit", OptionalTests(index[Boolean, Int, Boolean](0)))
 
 }

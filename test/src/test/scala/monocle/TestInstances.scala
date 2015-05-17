@@ -2,13 +2,20 @@ package monocle
 
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Gen}
+import org.scalactic.Equality
 
 import scalaz.\&/.{Both, That, This}
 import scalaz._
-import scalaz.syntax.traverse._
 import scalaz.std.list._
+import scalaz.syntax.traverse._
 
-object TestUtil {
+trait TestInstances {
+
+  implicit def equality[A](implicit A: Equal[A]): Equality[A] =
+    new Equality[A]{
+      override def areEqual(a: A, b: Any): Boolean =
+        A.equal(a, b.asInstanceOf[A])
+    }
 
   implicit val genApplicative: Applicative[Gen] = new Applicative[Gen] {
     override def ap[A, B](fa: => Gen[A])(f: => Gen[A => B]): Gen[B] = fa.flatMap(a => f.map(_(a)))
@@ -16,7 +23,6 @@ object TestUtil {
   }
 
   // Equal instances
-
   implicit val booleanEqual = Equal.equalA[Boolean]
   implicit val byteEqual    = Equal.equalA[Byte]
   implicit val shortEqual   = Equal.equalA[Short]

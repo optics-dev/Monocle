@@ -1,26 +1,18 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.function._
-import monocle.law.{TraversalLaws, LensLaws, IsoLaws}
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.LensTests
+import monocle.law.discipline.function.{EachTests, ReverseTests}
 
 import scalaz.Tree
 
 
-class TreeSpec extends Spec {
+class TreeSpec extends MonocleSuite {
+  checkAll("rootLabel", LensTests(rootLabel[Int]))
+  checkAll("subForest", LensTests(subForest[Int]))
+  checkAll("leftMostLabel", LensTests(leftMostLabel[Int]))
+  checkAll("rightMostLabel", LensTests(rightMostLabel[Int]))
 
-  checkAll("rootLabel", LensLaws(rootLabel[Int]))
-
-  checkAll("subForest", LensLaws(subForest[Int]))
-
-  checkAll("leftMostLabel", LensLaws(leftMostLabel[Int]))
-
-  checkAll("rightMostLabel", LensLaws(rightMostLabel[Int]))
-
-
-  checkAll("each Tree", TraversalLaws(each[Tree[Int], Int]))
-
-  checkAll("reverse Tree", IsoLaws(reverse[Tree[Int], Tree[Int]]))
-
+  checkAll("each Tree", EachTests[Tree[Int], Int])
+  checkAll("reverse Tree", ReverseTests[Tree[Int], Tree[Int]])
 }

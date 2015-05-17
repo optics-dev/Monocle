@@ -1,11 +1,14 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.law.function.SequenceLaws
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.function._
 
-class ListSpec extends Spec {
-
-  checkAll("sequence List", SequenceLaws[List[Char], Char])
-
+class ListSpec extends MonocleSuite {
+  checkAll("reverse List", ReverseTests[List[Int]])
+  checkAll("empty List", EmptyTests[List[Int]])
+  checkAll("cons List", ConsTests[List[Int], Int])
+  checkAll("snoc List", SnocTests[List[Int], Int])
+  checkAll("each List", EachTests[List[Int], Int])
+  checkAll("index List", IndexTests.defaultIntIndex[List[Int], Int])
+  checkAll("filterIndex List", FilterIndexTests.evenIndex[List[Int], Int])
 }

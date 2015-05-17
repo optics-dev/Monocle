@@ -2,12 +2,11 @@ package monocle
 
 import monocle.function._
 import monocle.std._
-import org.specs2.scalaz.Spec
 
 /**
  * Show how could we use Optics to manipulate some Json AST
  */
-class JsonExample extends Spec {
+class JsonExample extends MonocleSuite {
 
   sealed trait Json
 
@@ -37,13 +36,13 @@ class JsonExample extends Spec {
     ))
   ))
 
-  "Json Prism" in {
-    jsNumber.getOption(JsString("plop")) ==== None
-    jsNumber.getOption(JsNumber(2))      ==== Some(2)
+  test("Json Prism") {
+    jsNumber.getOption(JsString("plop")) shouldEqual None
+    jsNumber.getOption(JsNumber(2))      shouldEqual Some(2)
   }
 
-  "Use index to go into an JsObject or JsArray" in {
-    (jsObject composeOptional index("age") composePrism jsNumber).getOption(json) ==== Some(28)
+  test("Use index to go into an JsObject or JsArray") {
+    (jsObject composeOptional index("age") composePrism jsNumber).getOption(json) shouldEqual Some(28)
 
     (jsObject composeOptional index("siblings")
               composePrism    jsArray
@@ -51,7 +50,7 @@ class JsonExample extends Spec {
               composePrism    jsObject
               composeOptional index("first_name")
               composePrism    jsString
-    ).set("Robert Jr.")(json) ==== JsObject(Map(
+    ).set("Robert Jr.")(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("John"),
       "last_name"  -> JsString("Doe"),
       "age"        -> JsNumber(28),
@@ -68,8 +67,8 @@ class JsonExample extends Spec {
     ))
   }
 
-  "Use at to add delete fields" in {
-    (jsObject composeLens at("nick_name")).set(Some(JsString("Jojo")))(json) ==== JsObject(Map(
+  test("Use at to add delete fields") {
+    (jsObject composeLens at("nick_name")).set(Some(JsString("Jojo")))(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("John"),
       "nick_name"  -> JsString("Jojo"), // new field
       "last_name"  -> JsString("Doe"),
@@ -86,7 +85,7 @@ class JsonExample extends Spec {
       ))
     ))
 
-    (jsObject composeLens at("age")).set(None)(json) ==== JsObject(Map(
+    (jsObject composeLens at("age")).set(None)(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("John"),
       "last_name"  -> JsString("Doe"), // John is ageless now
       "siblings"   -> JsArray(List(
@@ -102,11 +101,11 @@ class JsonExample extends Spec {
     ))
   }
 
-  "Use each and filterIndex to modify several fields at a time" in {
+  test("Use each and filterIndex to modify several fields at a time") {
     (jsObject composeTraversal filterIndex((_: String).contains("name"))
               composePrism     jsString
               composeOptional  headOption
-    ).modify(_.toLower)(json) ==== JsObject(Map(
+    ).modify(_.toLower)(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("john"), // starts with lower case
       "last_name"  -> JsString("doe"),  // starts with lower case
       "age"        -> JsNumber(28),
@@ -129,7 +128,7 @@ class JsonExample extends Spec {
               composePrism     jsObject
               composeOptional  index("age")
               composePrism     jsNumber
-    ).modify(_ + 1)(json) ==== JsObject(Map(
+    ).modify(_ + 1)(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("John"),
       "last_name"  -> JsString("Doe"),
       "age"        -> JsNumber(28),

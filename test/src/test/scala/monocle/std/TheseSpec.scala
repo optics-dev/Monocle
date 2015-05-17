@@ -1,9 +1,8 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.law.PrismLaws
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.PrismTests
 
-class TheseSpec extends Spec {
-  checkAll("These - Disjunction" , PrismLaws( theseDisjunction[Int, String]))
+class TheseSpec extends MonocleSuite {
+  checkAll("These - Disjunction" , PrismTests(theseDisjunction[Int, String]))
 }

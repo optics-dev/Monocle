@@ -18,7 +18,7 @@ import scalaz.syntax.std.option._
  * type Optional[S, A] = POptional[S, S, A, A]
  * }}}
  *
- * @see OptionalLaws in monocle-law module
+ * @see [[monocle.law.OptionalLaws]]
  *
  * @tparam S the source of a [[POptional]]
  * @tparam T the modified source of a [[POptional]]
