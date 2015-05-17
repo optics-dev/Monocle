@@ -216,16 +216,16 @@ object POptional extends OptionalInstances {
         _set(b)
 
       def getOption(s: S): Option[A] =
-        getOrModify(s).toOption
+        _getOrModify(s).toOption
 
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        getOrModify(s).fold(
+        _getOrModify(s).fold(
           t => Applicative[F].point(t),
-          a => Applicative[F].map(f(a))(set(_)(s))
+          a => Applicative[F].map(f(a))(_set(_)(s))
         )
 
       def modify(f: A => B): S => T =
-        s => getOrModify(s).fold(identity, a => set(f(a))(s))
+        s => _getOrModify(s).fold(identity, a => _set(f(a))(s))
     }
 }
 
@@ -249,13 +249,13 @@ object Optional {
         _getOption(s)
 
       def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
-        getOrModify(s).fold(
-          t => Applicative[F].point(t),
-          a => Applicative[F].map(f(a))(set(_)(s))
+        _getOption(s).fold(
+          Applicative[F].point(s))(
+          a => Applicative[F].map(f(a))(_set(_)(s))
         )
 
       def modify(f: A => A): S => S =
-        s => getOrModify(s).fold(identity, a => set(f(a))(s))
+        s => _getOption(s).fold(s)(a => _set(f(a))(s))
     }
 }
 
