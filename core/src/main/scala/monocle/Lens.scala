@@ -228,7 +228,7 @@ object PLens extends LensInstances {
         Functor[F].map(f(_get(s)))(_set(_)(s))
 
       def modify(f: A => B): S => T =
-       s => set(f(_get(s)))(s)
+       s => _set(f(_get(s)))(s)
     }
 
 }
