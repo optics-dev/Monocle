@@ -31,3 +31,4 @@ trait StdInstances
   with    NonEmptyListInstances
   with    OneAndInstances
   with    TreeFunctions with TreeInstances
+  with    ValidationFunctions

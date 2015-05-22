@@ -93,6 +93,9 @@ object TestUtil {
   implicit def disjunctionArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \/ B] =
     Arbitrary(arbitrary[Either[A, B]] map \/.fromEither)
 
+  implicit def validationArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[Validation[A, B]] =
+    Arbitrary(arbitrary[A \/ B].map(_.validation))
+
   implicit def theseArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \&/ B] =
     Arbitrary(Gen.oneOf(
       arbitrary[A].map(This(_)),
