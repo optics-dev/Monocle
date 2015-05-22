@@ -13,7 +13,7 @@ class ValidationExample extends Spec {
     mValidation.success.getOption("abc".failure) ==== None
 
     mValidation.success.set('a')(123.success) ==== 'a'.success
-    mValidation.success.set(123)("abc".failure) ==== "e".failure
+    mValidation.success.set(123)("abc".failure) ==== "abc".failure
   }
 
   "failure defines a Prism that can modify the underlying value of a Failure instance" in {
