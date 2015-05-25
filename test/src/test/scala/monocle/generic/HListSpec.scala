@@ -23,9 +23,6 @@ class HListSpec extends MonocleSuite {
   type HTail    = isHCons.T
   type HInit    = hListinit.Out
 
-
-  implicit val exampleGen: Generic.Aux[Example, H] = Generic.product[Example]
-
   implicit val exampleEq  = Equal.equalA[Example]
   implicit val hEq        = Equal.equal[H]((a1, a2) => fromHList[H, Example].get(a1) === fromHList[H, Example].get(a2))
   implicit val reverseHEq = Equal.equal[ReverseH]((a1, a2) => a1.reverse === a2.reverse)

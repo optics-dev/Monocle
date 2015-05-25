@@ -16,14 +16,10 @@ import pl.project13.scala.sbt.SbtJmh._
 
 object Dependencies {
   val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.2"
+  val shapeless  =  "com.chuusai"    %% "shapeless"   % "2.2.0-RC6"
+
   val discpline  = "org.typelevel"   %% "discipline"  % "0.2.1"
   val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
-  val shapeless  = Def setting (
-    CrossVersion partialVersion scalaVersion.value match {
-      case Some((2, scalaMajor)) if scalaMajor >= 11 => "com.chuusai" %% "shapeless" % "2.0.0"
-      case Some((2, 10))                             => "com.chuusai" %  "shapeless" % "2.0.0" cross CrossVersion.full
-    }
-  )
 
   val macroVersion = "2.0.1"
   val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
@@ -41,7 +37,7 @@ object MonocleBuild extends Build {
   val buildSettings = Seq(
     organization       := "com.github.julien-truffaut",
     scalaVersion       := buildScalaVersion,
-    crossScalaVersions := Seq("2.10.4", "2.11.6"),
+    crossScalaVersions := Seq("2.10.5", "2.11.6"),
     scalacOptions     ++= Seq(
       "-deprecation",
       "-encoding", "UTF-8",
@@ -111,7 +107,7 @@ object MonocleBuild extends Build {
     "monocle-generic",
     file("generic"),
     settings = defaultSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, shapeless.value),
+      libraryDependencies ++= Seq(scalaz, shapeless),
       previousVersion("generic")
     )
   ) dependsOn(core)
@@ -120,7 +116,7 @@ object MonocleBuild extends Build {
     "monocle-test",
     file("test"),
     settings = defaultSettings ++ noPublishSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, shapeless.value, scalatest),
+      libraryDependencies ++= Seq(scalaz, shapeless, scalatest),
       addCompilerPlugin(paradisePlugin)
     )
   ) dependsOn(core, generic ,law, macros)
@@ -129,7 +125,7 @@ object MonocleBuild extends Build {
     "monocle-example",
     file("example"),
     settings = defaultSettings ++ noPublishSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, shapeless.value, scalatest),
+      libraryDependencies ++= Seq(scalaz, shapeless, scalatest),
       addCompilerPlugin(paradisePlugin) // see: http://stackoverflow.com/q/23485426/463761
     )
   ) dependsOn(core, macros, generic, test % "test->test")
@@ -141,7 +137,7 @@ object MonocleBuild extends Build {
       libraryDependencies ++= Seq(
         "com.github.julien-truffaut" %%  "monocle-core"  % "1.2.0-SNAPSHOT",
         "com.github.julien-truffaut" %%  "monocle-macro" % "1.2.0-SNAPSHOT",
-        shapeless.value
+        shapeless
       ),
       addCompilerPlugin(kindProjector)
     )
