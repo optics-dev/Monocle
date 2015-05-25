@@ -2,6 +2,7 @@ package monocle.macros.internal
 
 trait MacrosCompatibility {
   type Context = scala.reflect.macros.blackbox.Context
+  type WhiteboxContext = scala.reflect.macros.whitebox.Context
 
   def getDeclarations(c: Context)(tpe: c.universe.Type): c.universe.MemberScope =
     tpe.decls
