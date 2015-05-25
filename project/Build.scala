@@ -15,7 +15,7 @@ import sbtrelease.Utilities._
 import pl.project13.scala.sbt.SbtJmh._
 
 object Dependencies {
-  val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.1"
+  val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.2"
   val discpline  = "org.typelevel"   %% "discipline"  % "0.2.1"
   val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
   val shapeless  = Def setting (
