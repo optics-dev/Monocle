@@ -1,12 +1,11 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.law.PrismLaws
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.PrismTests
 
-class EitherSpec extends Spec {
+class EitherSpec extends MonocleSuite {
 
-  checkAll("std left" , PrismLaws(stdLeft[Int, String, Int]))
-  checkAll("std right", PrismLaws(stdRight[Int, String, String]))
+  checkAll("std left" , PrismTests(stdLeft[Int, String, Int]))
+  checkAll("std right", PrismTests(stdRight[Int, String, String]))
 
 }

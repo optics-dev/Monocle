@@ -1,19 +1,15 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.function._
-import monocle.law.{IsoLaws, PrismLaws, TraversalLaws}
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.PrismTests
+import monocle.law.discipline.function.{EachTests, EmptyTests}
 
-class OptionSpec extends Spec {
+class OptionSpec extends MonocleSuite {
 
-  checkAll("some", PrismLaws(monocle.std.some[Int, Int]))
-  checkAll("none", PrismLaws(monocle.std.none[Long]))
+  checkAll("some", PrismTests(monocle.std.some[Int, Int]))
+  checkAll("none", PrismTests(monocle.std.none[Long]))
 
-  checkAll("someIso", IsoLaws(someIso[Int, Int]))
-
-  checkAll("each Option", TraversalLaws(each[Option[Int], Int]))
-
-  checkAll("empty Option", PrismLaws(empty[Map[Int, String]]))
+  checkAll("each Option", EachTests[Option[Int], Int])
+  checkAll("empty Option",EmptyTests[Option[Int]])
 
 }

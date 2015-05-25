@@ -1,18 +1,16 @@
 package monocle.generic
 
-import monocle.TestUtil._
+import monocle.MonocleSuite
 import monocle.function._
-import monocle.law.{LensLaws, IsoLaws}
+import monocle.law.discipline.{IsoTests, LensTests}
 import org.scalacheck.Arbitrary
-import org.specs2.scalaz.Spec
-import scalaz.Equal
-import scalaz.syntax.equal._
-import shapeless.::
 import shapeless.HList._
-import shapeless.ops.hlist.{IsHCons, Init => HListInit}
-import shapeless.{Generic, HNil}
+import shapeless.ops.hlist.{Init => HListInit, IsHCons}
+import shapeless.{::, Generic, HNil}
 
-class HListSpec extends Spec {
+import scalaz.Equal
+
+class HListSpec extends MonocleSuite {
 
   case class Example(i: Int, b: Boolean, c: Char, f: Float, l: Long, d: Double)
 
@@ -48,18 +46,18 @@ class HListSpec extends Spec {
   implicit val hTailArb    = Arbitrary(for {h <- Arbitrary.arbitrary[H]} yield h.tail)
   implicit val hInitArb    = Arbitrary(for {h <- Arbitrary.arbitrary[H]} yield h.init)
 
-  checkAll("toHList"      , IsoLaws(toHList[Example, H]))
+  checkAll("toHList", IsoTests(toHList[Example, H]))
 
-  checkAll("first from HList", LensLaws(first[H, Int]))
-  checkAll("second from HList", LensLaws(second[H, Boolean]))
-  checkAll("third from HList", LensLaws(third[H, Char]))
-  checkAll("fourth from HList", LensLaws(fourth[H, Float]))
-  checkAll("fifth from HList", LensLaws(fifth[H, Long]))
-  checkAll("sixth from HList", LensLaws(sixth[H, Double]))
+  checkAll("first from HList", LensTests(first[H, Int]))
+  checkAll("second from HList", LensTests(second[H, Boolean]))
+  checkAll("third from HList", LensTests(third[H, Char]))
+  checkAll("fourth from HList", LensTests(fourth[H, Float]))
+  checkAll("fifth from HList", LensTests(fifth[H, Long]))
+  checkAll("sixth from HList", LensTests(sixth[H, Double]))
 
 
-  checkAll("reverse HList", IsoLaws(reverse[H, ReverseH]))
-  checkAll("hcons HList", IsoLaws(cons1[H, Int  , HTail]))
-  checkAll("hsnoc HList", IsoLaws(snoc1[H, HInit, Double]))
+  checkAll("reverse HList", IsoTests(reverse[H, ReverseH]))
+  checkAll("hcons HList", IsoTests(cons1[H, Int  , HTail]))
+  checkAll("hsnoc HList", IsoTests(snoc1[H, HInit, Double]))
 
 }

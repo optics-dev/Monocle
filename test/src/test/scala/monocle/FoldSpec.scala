@@ -1,32 +1,30 @@
 package monocle
 
-import org.specs2.scalaz.Spec
-
 import scalaz._
 import scalaz.std.anyVal._
 import scalaz.std.string._
 
-class FoldSpec extends Spec {
+class FoldSpec extends MonocleSuite {
 
   val iListFold = Fold.fromFoldable[IList, Int]
 
-  "foldMap" in {
-    iListFold.foldMap(_.toString)(IList(1,2,3,4,5)) ==== "12345"
+  test("foldMap") {
+    iListFold.foldMap(_.toString)(IList(1,2,3,4,5)) shouldEqual "12345"
   }
 
-  "headMaybe" in {
-    iListFold.headOption(IList(1,2,3,4,5)) ==== Some(1)
-    iListFold.headOption(INil())           ==== None
+  test("headMaybe") {
+    iListFold.headOption(IList(1,2,3,4,5)) shouldEqual Some(1)
+    iListFold.headOption(INil())           shouldEqual None
   }
 
-  "exist" in {
-    iListFold.exist(_ % 2 == 0)(IList(1,2,3)) ==== true
-    iListFold.exist(_ == 7)(IList(1,2,3))     ==== false
+  test("exist") {
+    iListFold.exist(_ % 2 == 0)(IList(1,2,3)) shouldEqual true
+    iListFold.exist(_ == 7)(IList(1,2,3))     shouldEqual false
   }
 
-  "all" in {
-    iListFold.all(_ % 2 == 0)(IList(1,2,3)) ==== false
-    iListFold.all(_ <= 7)(IList(1,2,3))     ==== true
+  test("all") {
+    iListFold.all(_ % 2 == 0)(IList(1,2,3)) shouldEqual false
+    iListFold.all(_ <= 7)(IList(1,2,3))     shouldEqual true
   }
 
   def nestedIListFold[A] = new Fold[IList[IList[A]], IList[A]]{
@@ -36,16 +34,16 @@ class FoldSpec extends Spec {
 
   // test implicit resolution of type classes
 
-  "Fold has a Compose instance" in {
-    Compose[Fold].compose(iListFold, nestedIListFold[Int]).fold(IList(IList(1,2,3), IList(4,5), IList(6))) ==== 21
+  test("Fold has a Compose instance") {
+    Compose[Fold].compose(iListFold, nestedIListFold[Int]).fold(IList(IList(1,2,3), IList(4,5), IList(6))) shouldEqual 21
   }
 
-  "Fold has a Category instance" in {
-    Category[Fold].id[Int].fold(3) ==== 3
+  test("Fold has a Category instance") {
+    Category[Fold].id[Int].fold(3) shouldEqual 3
   }
 
-  "Fold has a Choice instance" in {
-    Choice[Fold].choice(iListFold, Choice[Fold].id[Int]).fold(-\/(IList(1,2,3))) ==== 6
+  test("Fold has a Choice instance") {
+    Choice[Fold].choice(iListFold, Choice[Fold].id[Int]).fold(-\/(IList(1,2,3))) shouldEqual 6
   }
 
 }

@@ -1,16 +1,15 @@
 package monocle
 
-import monocle.law._
+import monocle.law.discipline._
 import monocle.macros.GenIso
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
-import org.specs2.scalaz.Spec
 
 import scalaz.std.anyVal._
 import scalaz.{Category, Compose, Equal, Split}
 
 
-class IsoSpec extends Spec {
+class IsoSpec extends MonocleSuite {
 
   case class IntWrapper(i: Int)
 
@@ -20,30 +19,30 @@ class IsoSpec extends Spec {
 
   val iso = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)
 
-  checkAll("apply Iso", IsoLaws(iso))
-  checkAll("GenIso", IsoLaws(GenIso[IntWrapper, Int]))
+  checkAll("apply Iso", IsoTests(iso))
+  checkAll("GenIso", IsoTests(GenIso[IntWrapper, Int]))
 
-  checkAll("Iso id", IsoLaws(Iso.id[Int]))
+  checkAll("Iso id", IsoTests(Iso.id[Int]))
 
-  checkAll("Iso.asLens"     , LensLaws(iso.asLens))
-  checkAll("Iso.asPrism"    , PrismLaws(iso.asPrism))
-  checkAll("Iso.asOptional" , OptionalLaws(iso.asOptional))
-  checkAll("Iso.asTraversal", TraversalLaws(iso.asTraversal))
-  checkAll("Iso.asSetter"   , SetterLaws(iso.asSetter))
+  checkAll("Iso.asLens"     , LensTests(iso.asLens))
+  checkAll("Iso.asPrism"    , PrismTests(iso.asPrism))
+  checkAll("Iso.asOptional" , OptionalTests(iso.asOptional))
+  checkAll("Iso.asTraversal", TraversalTests(iso.asTraversal))
+  checkAll("Iso.asSetter"   , SetterTests(iso.asSetter))
 
 
   // test implicit resolution of type classes
 
-  "Iso has a Compose instance" in {
-    Compose[Iso].compose(iso, iso.reverse).get(3) ==== 3
+  test("Iso has a Compose)stance") {
+    Compose[Iso].compose(iso, iso.reverse).get(3) shouldEqual  3
   }
 
-  "Iso has a Category instance" in {
-    Category[Iso].id[Int].get(3) ==== 3
+  test("Iso has a Category)stance") {
+    Category[Iso].id[Int].get(3) shouldEqual 3
   }
 
-  "Iso has a Split instance" in {
-    Split[Iso].split(iso, iso.reverse).get((IntWrapper(3), 3)) ==== ((3, IntWrapper(3)))
+  test("Iso has a Split)stance") {
+    Split[Iso].split(iso, iso.reverse).get((IntWrapper(3), 3)) shouldEqual ((3, IntWrapper(3)))
   }
 
 

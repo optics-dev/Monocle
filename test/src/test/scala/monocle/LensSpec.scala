@@ -1,11 +1,9 @@
 package monocle
 
-import monocle.TestUtil._
-import monocle.law.{LensLaws, OptionalLaws, SetterLaws, TraversalLaws}
+import monocle.law.discipline.{LensTests, OptionalTests, SetterTests, TraversalTests}
 import monocle.macros.{GenLens, Lenses}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
-import org.specs2.scalaz._
 
 import scalaz._
 
@@ -24,7 +22,7 @@ trait Bar; trait Baz
 @Lenses case class HasCompanion3[A](a: A)
 object HasCompanion3 extends Bar with Baz
 
-class LensSpec extends Spec {
+class LensSpec extends MonocleSuite {
 
   val _s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
   val _p = Lens[Example, Point](_.p)(p => ex => ex.copy(p = p))
@@ -40,45 +38,45 @@ class LensSpec extends Spec {
 
   implicit val exampleEq = Equal.equalA[Example]
 
-  checkAll("apply Lens", LensLaws(_s))
-  checkAll("GenLens", LensLaws(GenLens[Example](_.s)))
-  checkAll("GenLens chain", LensLaws(GenLens[Example](_.p.x)))
-  checkAll("Lenses",  LensLaws(Example.s))
+  checkAll("apply Lens", LensTests(_s))
+  checkAll("GenLens", LensTests(GenLens[Example](_.s)))
+  checkAll("GenLens chain", LensTests(GenLens[Example](_.p.x)))
+  checkAll("Lenses",  LensTests(Example.s))
 
-  checkAll("lens.asOptional" , OptionalLaws(_s.asOptional))
-  checkAll("lens.asTraversal", TraversalLaws(_s.asTraversal))
-  checkAll("lens.asSetter"   , SetterLaws(_s.asSetter))
+  checkAll("lens.asOptional" , OptionalTests(_s.asOptional))
+  checkAll("lens.asTraversal", TraversalTests(_s.asTraversal))
+  checkAll("lens.asSetter"   , SetterTests(_s.asSetter))
 
   // test implicit resolution of type classes
 
-  "Lens has a Compose instance" in {
-    Compose[Lens].compose(_x, _p).get(Example("plop", Point(3, 4))) ==== 3
+  test("Lens has a Compose instance") {
+    Compose[Lens].compose(_x, _p).get(Example("plop", Point(3, 4))) shouldEqual 3
   }
 
-  "Lens has a Category instance" in {
-    Category[Lens].id[Int].get(3) ==== 3
+  test("Lens has a Category instance") {
+    Category[Lens].id[Int].get(3) shouldEqual 3
   }
 
-  "Lens has a Choice instance" in {
-    Choice[Lens].choice(_x, _y).get(\/-(Point(5, 6))) ==== 6
+  test("Lens has a Choice instance") {
+    Choice[Lens].choice(_x, _y).get(\/-(Point(5, 6))) shouldEqual 6
   }
 
-  "Lens has a Split instance" in {
-    Split[Lens].split(_x, _y).get((Point(0, 1), Point(5, 6))) ==== ((0, 6))
+  test("Lens has a Split instance") {
+    Split[Lens].split(_x, _y).get((Point(0, 1), Point(5, 6))) shouldEqual ((0, 6))
   }
 
-  "Lenses for monomorphic case class are created as `val`s" in {
+  test("Lenses for monomorphic case class are created as `val`s") {
     import scala.reflect.runtime.universe._
     typeTag[Example.type].tpe.declarations.collectFirst {
       case m: MethodSymbol if m.isAccessor && m.name.decodedName.toString == "s" => m
-    }.isDefined ==== true
+    }.isDefined shouldEqual true
   }
 
 
-  "Lenses for polymorphic case class are created as `def`s" in {
+  test("Lenses for polymorphic case class are created as `def`s") {
     import scala.reflect.runtime.universe._
     typeTag[Foo.type].tpe.declarations.collectFirst {
       case m: MethodSymbol if m.isMethod && !m.isAccessor && m.name.decodedName.toString == "q" => m
-    }.isDefined ==== true
+    }.isDefined shouldEqual true
   }
 }

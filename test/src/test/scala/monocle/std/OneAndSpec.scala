@@ -1,19 +1,14 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.function._
-import monocle.law.{IsoLaws, OptionalLaws, TraversalLaws}
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.function.{Cons1Tests, EachTests, IndexTests}
 
 import scalaz.OneAnd
 
+class OneAndSpec extends MonocleSuite {
 
-class OneAndSpec extends Spec {
-
-  checkAll("each OneAnd", TraversalLaws(each[OneAnd[List, Int], Int]))
-
-  checkAll("index OneAnd", OptionalLaws(index[OneAnd[List, Int], Int, Int](1)))
-
-  checkAll("hcons OneAnd", IsoLaws(cons1[OneAnd[List, Int], Int, List[Int]]))
+  checkAll("each OneAnd", EachTests[OneAnd[List, Int], Int])
+  checkAll("index OneAnd", IndexTests.defaultIntIndex[OneAnd[List, Int], Int])
+  checkAll("cons1 OneAnd", Cons1Tests[OneAnd[List, Int], Int, List[Int]])
 
 }

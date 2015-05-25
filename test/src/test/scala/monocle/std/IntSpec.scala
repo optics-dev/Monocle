@@ -1,16 +1,15 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.function._
-import monocle.law.{OptionalLaws, PrismLaws}
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.PrismTests
+import monocle.law.discipline.function.IndexTests
 
-class IntSpec extends Spec {
+class IntSpec extends MonocleSuite {
 
-  checkAll("Int index bit", OptionalLaws(index[Int, Int, Boolean](0)))
+  checkAll("Int index bit", IndexTests.defaultIntIndex[Int, Boolean])
 
-  checkAll("Int to Boolean", PrismLaws(intToBoolean))
-  checkAll("Int to Byte"   , PrismLaws(intToByte))
-  checkAll("Int to Char"   , PrismLaws(intToChar))
+  checkAll("Int to Boolean", PrismTests(intToBoolean))
+  checkAll("Int to Byte"   , PrismTests(intToByte))
+  checkAll("Int to Char"   , PrismTests(intToChar))
 
 }

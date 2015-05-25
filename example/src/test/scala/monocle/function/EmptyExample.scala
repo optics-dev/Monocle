@@ -1,35 +1,36 @@
 package monocle.function
 
+import monocle.MonocleSuite
+import monocle.function.{empty => mempty}
 import monocle.std._
 import monocle.syntax._
-import org.specs2.scalaz.Spec
 
 import scalaz.{==>>, IMap}
 
-class EmptyExample extends Spec {
+class EmptyExample extends MonocleSuite {
 
-  "empty is a Prism that is successful only when S is empty" in {
-    (List(1, 2, 3) applyPrism empty getOption) ==== None
+  test("empty is a Prism that is successful only when S is empty") {
+    (List(1, 2, 3) applyPrism mempty getOption) shouldEqual None
 
-    (List.empty[Int]   applyPrism empty getOption) ==== Some(())
-    (Vector.empty[Int] applyPrism empty getOption) ==== Some(())
-    (""                applyPrism empty getOption) ==== Some(())
+    (List.empty[Int]   applyPrism mempty getOption) shouldEqual Some(())
+    (Vector.empty[Int] applyPrism mempty getOption) shouldEqual Some(())
+    (""                applyPrism mempty getOption) shouldEqual Some(())
   }
 
-  "_empty return the empty value of a given type" in {
-    _empty[List[Int]]        ==== List.empty[Int]
-    _empty[Map[Int, String]] ==== Map.empty[Int, String]
-    _empty[Int ==>> String]  ==== IMap.empty[Int, String]
-    _empty[String]           ==== ""
+  test("_empty return the empty value of a given type") {
+    _empty[List[Int]]        shouldEqual List.empty[Int]
+    _empty[Map[Int, String]] shouldEqual Map.empty[Int, String]
+    _empty[Int ==>> String]  shouldEqual IMap.empty[Int, String]
+    _empty[String]           shouldEqual ""
   }
 
-  "_isEmpty is a function that takes an S and return true is S is empty, false otherwise" in {
-    _isEmpty(List(1,2,3)) ==== false
-    _isEmpty("hello")     ==== false
+  test("_isEmpty is a function that takes an S and return true is S is empty, false otherwise") {
+    _isEmpty(List(1,2,3)) shouldEqual false
+    _isEmpty("hello")     shouldEqual false
 
-    _isEmpty(Nil)  ==== true
-    _isEmpty(None) ==== true
-    _isEmpty("")   ==== true
+    _isEmpty(Nil)  shouldEqual true
+    _isEmpty(None) shouldEqual true
+    _isEmpty("")   shouldEqual true
   }
   
 }

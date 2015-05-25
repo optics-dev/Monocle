@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{PIso, PPrism, Prism}
+import monocle.{PPrism, Prism}
 
 import scalaz.{-\/, \/-}
 
@@ -14,9 +14,6 @@ trait OptionFunctions {
 
   def none[A]: Prism[Option[A], Unit] =
     Prism[Option[A], Unit]{ case None => Some(()); case Some(_) => None }(_ => None)
-
-  def someIso[A, B]: PIso[Some[A], Some[B], A, B] =
-    PIso[Some[A], Some[B], A, B](_.get)(Some(_))
 
 }
 
@@ -32,10 +29,6 @@ trait OptionInstances extends OptionFunctions {
 
   implicit val noneEmpty: Empty[None.type] = new Empty[None.type] {
     def empty = Prism[None.type , Unit](_ => Some(()))(_ => None)
-  }
-
-  implicit def someEach[A]: Each[Some[A], A] = new Each[Some[A], A] {
-    def each = someIso.asTraversal
   }
 
 }

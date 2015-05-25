@@ -1,16 +1,14 @@
 package monocle.generic
 
-import monocle.TestUtil._
-import monocle.law.PrismLaws
+import monocle.MonocleSuite
+import monocle.law.discipline.PrismTests
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Gen}
-import org.specs2.scalaz.Spec
 import shapeless.{:+:, CNil, Coproduct, Inl, Inr}
 
 import scalaz.Equal
 
-
-class CoproductSpec extends Spec {
+class CoproductSpec extends MonocleSuite {
 
   type IB = Int :+: Boolean :+: CNil
 
@@ -27,6 +25,6 @@ class CoproductSpec extends Spec {
     }
   }
 
-  checkAll("Coproduct Prism", PrismLaws(coProductPrism[IB, Boolean]))
+  checkAll("Coproduct Prism", PrismTests(coProductPrism[IB, Boolean]))
 
 }

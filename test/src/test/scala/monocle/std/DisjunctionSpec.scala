@@ -1,12 +1,11 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.law.PrismLaws
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.PrismTests
 
-class DisjunctionSpec extends Spec {
+class DisjunctionSpec extends MonocleSuite {
 
-  checkAll("disjunction left" , PrismLaws(monocle.std.left[Int, String, Int]))
-  checkAll("disjunction right", PrismLaws(monocle.std.right[Int, String, String]))
+  checkAll("disjunction left" , PrismTests(monocle.std.left[Int, String, Int]))
+  checkAll("disjunction right", PrismTests(monocle.std.right[Int, String, String]))
 
 }

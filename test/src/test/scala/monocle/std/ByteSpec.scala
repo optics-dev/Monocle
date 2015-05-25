@@ -1,15 +1,14 @@
 package monocle.std
 
-import monocle.TestUtil._
+import monocle.MonocleSuite
 import monocle.function._
-import monocle.law.{OptionalLaws, PrismLaws}
-import org.specs2.scalaz.Spec
+import monocle.law.discipline.{OptionalTests, PrismTests}
 
 
-class ByteSpec extends Spec {
+class ByteSpec extends MonocleSuite {
 
-  checkAll("Byte index bit", OptionalLaws(index[Byte, Int, Boolean](0)))
+  checkAll("Byte index bit", OptionalTests(index[Byte, Int, Boolean](0)))
 
-  checkAll("Byte to Boolean", PrismLaws(byteToBoolean))
+  checkAll("Byte to Boolean", PrismTests(byteToBoolean))
 
 }

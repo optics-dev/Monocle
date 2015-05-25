@@ -1,11 +1,10 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.law.{IsoLaws, PrismLaws}
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.{IsoTests, PrismTests}
 
-class ValidationSpec extends Spec {
-  checkAll("Validation is isomorphic to Disjunction", IsoLaws(monocle.std.validation.disjunctionIso[String, String, Int, Int]))
-  checkAll("success", PrismLaws(monocle.std.validation.success[Int, String, String]))
-  checkAll("failure", PrismLaws(monocle.std.validation.failure[Int, String, Int]))
+class ValidationSpec extends MonocleSuite {
+  checkAll("Validation is isomorphic to Disjunction", IsoTests(monocle.std.validation.disjunctionIso[String, String, Int, Int]))
+  checkAll("success", PrismTests(monocle.std.validation.success[Int, String, String]))
+  checkAll("failure", PrismTests(monocle.std.validation.failure[Int, String, Int]))
 }

@@ -1,17 +1,14 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.function._
-import monocle.law.{PrismLaws, LensLaws}
-import monocle.std.set._
+import monocle.MonocleSuite
+import monocle.law.discipline.function.{AtTests, EmptyTests}
+
 import scalaz.ISet
-import org.specs2.scalaz.Spec
 
+class ISetSpec extends MonocleSuite {
 
-class ISetSpec extends Spec {
+  checkAll("at ISet", AtTests.defaultIntIndex[ISet[Int], Unit])
 
-  checkAll("at ISet", LensLaws(at[ISet[Int], Int, Unit](2)))
-
-  checkAll("empty ISet", PrismLaws(empty[ISet[Int]]))
+  checkAll("empty ISet", EmptyTests[ISet[Int]])
 
 }

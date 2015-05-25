@@ -1,11 +1,10 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.law.PrismLaws
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.PrismTests
 
-class DoubleSpec extends Spec {
+class DoubleSpec extends MonocleSuite {
 
-  checkAll("Double to Int", PrismLaws(doubleToInt))
+  checkAll("Double to Int", PrismTests(doubleToInt))
 
 }

@@ -22,7 +22,7 @@ import scalaz.syntax.std.option._
  *
  * A [[PPrism]] is also a valid  [[Fold]], [[POptional]], [[PTraversal]] and [[PSetter]]
  *
- * @see PrismLaws in monocle-law module
+ * @see [[monocle.law.PrismLaws]]
  *
  * @tparam S the source of a [[PPrism]]
  * @tparam T the modified source of a [[PPrism]]

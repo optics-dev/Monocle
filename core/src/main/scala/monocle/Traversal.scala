@@ -21,7 +21,7 @@ import scalaz.{Applicative, Choice, Const, Functor, Maybe, Monoid, Traverse, \/}
  * type Traversal[S, A] = PTraversal[S, S, A, A]
  * }}}
  *
- * @see TraversalLaws in monocle-law module
+ * @see [[monocle.law.TraversalLaws]]
  *
  * @tparam S the source of a [[PTraversal]]
  * @tparam T the modified source of a [[PTraversal]]

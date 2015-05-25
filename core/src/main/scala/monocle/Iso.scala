@@ -32,7 +32,7 @@ import scalaz.{Applicative, Category, Functor, Maybe, Monoid, Split, \/}
  *
  * A [[PIso]] is also a valid [[Getter]], [[Fold]], [[PLens]], [[PPrism]], [[POptional]], [[PTraversal]] and [[PSetter]]
  *
- * @see IsoLaws in monocle-law module
+ * @see [[monocle.law.IsoLaws]]
  *
  * @tparam S the source of a [[PIso]]
  * @tparam T the modified source of a [[PIso]]

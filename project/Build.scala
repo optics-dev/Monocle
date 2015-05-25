@@ -15,10 +15,10 @@ import sbtrelease.Utilities._
 import pl.project13.scala.sbt.SbtJmh._
 
 object Dependencies {
-  val scalaz            = "org.scalaz"      %% "scalaz-core"     % "7.1.1"
-  val scalacheck        = "org.scalacheck"  %% "scalacheck"      % "1.12.2"
-  val scalazSpec2       = "org.typelevel"   %% "scalaz-specs2"   % "0.4.0"  % "test"
-  val shapeless = Def setting (
+  val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.1"
+  val discpline  = "org.typelevel"   %% "discipline"  % "0.2.1"
+  val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
+  val shapeless  = Def setting (
     CrossVersion partialVersion scalaVersion.value match {
       case Some((2, scalaMajor)) if scalaMajor >= 11 => "com.chuusai" %% "shapeless" % "2.0.0"
       case Some((2, 10))                             => "com.chuusai" %  "shapeless" % "2.0.0" cross CrossVersion.full
@@ -83,7 +83,7 @@ object MonocleBuild extends Build {
     "monocle-law",
     file("law"),
     settings = defaultSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, scalacheck),
+      libraryDependencies ++= Seq(discpline),
       previousVersion("law")
     )
   ) dependsOn(core)
@@ -120,7 +120,7 @@ object MonocleBuild extends Build {
     "monocle-test",
     file("test"),
     settings = defaultSettings ++ noPublishSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, scalazSpec2, shapeless.value),
+      libraryDependencies ++= Seq(scalaz, shapeless.value, scalatest),
       addCompilerPlugin(paradisePlugin)
     )
   ) dependsOn(core, generic ,law, macros)
@@ -129,7 +129,7 @@ object MonocleBuild extends Build {
     "monocle-example",
     file("example"),
     settings = defaultSettings ++ noPublishSettings ++ Seq(
-      libraryDependencies ++= Seq(scalaz, shapeless.value),
+      libraryDependencies ++= Seq(scalaz, shapeless.value, scalatest),
       addCompilerPlugin(paradisePlugin) // see: http://stackoverflow.com/q/23485426/463761
     )
   ) dependsOn(core, macros, generic, test % "test->test")

@@ -23,7 +23,7 @@ import scalaz.{Applicative, Choice, Functor, Maybe, Monoid, Split, \/}
  * Typically a [[PLens]] or [[Lens]] can be defined between a [[Product]]
  * (e.g. case class, tuple, HList) and one of it is component.
  *
- * @see LensLaws in monocle-law module
+ * @see [[monocle.law.LensLaws]]
  *
  * @tparam S the source of a [[PLens]]
  * @tparam T the modified source of a [[PLens]]

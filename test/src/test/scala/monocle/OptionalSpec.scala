@@ -1,12 +1,10 @@
 package monocle
 
-import monocle.TestUtil._
-import monocle.law.{OptionalLaws, SetterLaws, TraversalLaws}
-import org.specs2.scalaz.Spec
+import monocle.law.discipline.{OptionalTests, SetterTests, TraversalTests}
 
 import scalaz._
 
-class OptionalSpec extends Spec {
+class OptionalSpec extends MonocleSuite {
 
   def headOption[A]: Optional[IList[A], A] = Optional[IList[A], A](_.headOption){
     a => {
@@ -15,23 +13,23 @@ class OptionalSpec extends Spec {
     }
   }
 
-  checkAll("apply Optional", OptionalLaws(headOption[Int]))
+  checkAll("apply Optional", OptionalTests(headOption[Int]))
 
-  checkAll("optional.asTraversal", TraversalLaws(headOption[Int].asTraversal))
-  checkAll("optional.asSetter"   , SetterLaws(headOption[Int].asSetter))
+  checkAll("optional.asTraversal", TraversalTests(headOption[Int].asTraversal))
+  checkAll("optional.asSetter"   , SetterTests(headOption[Int].asSetter))
 
   // test implicit resolution of type classes
 
-  "Optional has a Compose instance" in {
-    Compose[Optional].compose(headOption[Int], headOption[IList[Int]]).getOption(IList(IList(1,2,3), IList(4))) ==== Some(1)
+  test("Optional has a Compose instance") {
+    Compose[Optional].compose(headOption[Int], headOption[IList[Int]]).getOption(IList(IList(1,2,3), IList(4))) shouldEqual Some(1)
   }
 
-  "Optional has a Category instance" in {
-    Category[Optional].id[Int].getOption(3) ==== Some(3)
+  test("Optional has a Category instance") {
+    Category[Optional].id[Int].getOption(3) shouldEqual Some(3)
   }
 
-  "Optional has a Choice instance" in {
-    Choice[Optional].choice(headOption[Int], Category[Optional].id[Int]).getOption(-\/(IList(1,2,3))) ==== Some(1)
+  test("Optional has a Choice instance") {
+    Choice[Optional].choice(headOption[Int], Category[Optional].id[Int]).getOption(-\/(IList(1,2,3))) shouldEqual Some(1)
   }
 
 

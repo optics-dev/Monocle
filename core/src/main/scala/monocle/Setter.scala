@@ -16,7 +16,7 @@ import scalaz.{Choice, Functor, \/}
  *
  * [[PTraversal]], [[POptional]], [[PPrism]], [[PLens]] and [[PIso]] are valid [[PSetter]]
  *
- * @see SetterLaws in monocle-law module
+ * @see [[monocle.law.SetterLaws]]
  *
  * @tparam S the source of a [[PSetter]]
  * @tparam T the modified source of a [[PSetter]]

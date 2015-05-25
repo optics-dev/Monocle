@@ -1,16 +1,9 @@
 package monocle.std
 
-import monocle.TestUtil._
-import monocle.function._
-import monocle.law.{PrismLaws, LensLaws}
-import monocle.std.set._
-import org.specs2.scalaz.Spec
+import monocle.MonocleSuite
+import monocle.law.discipline.function.{AtTests, EmptyTests}
 
-
-class SetSpec extends Spec {
-
-  checkAll("at Set", LensLaws(at[Set[Int], Int, Unit](2)))
-
-  checkAll("empty Set", PrismLaws(empty[Set[Int]]))
-
+class SetSpec extends MonocleSuite {
+  checkAll("at Set", AtTests.defaultIntIndex[Set[Int], Unit])
+  checkAll("empty Set", EmptyTests[Set[Int]])
 }
