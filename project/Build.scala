@@ -139,7 +139,8 @@ object MonocleBuild extends Build {
         "com.github.julien-truffaut" %%  "monocle-macro" % "1.2.0-SNAPSHOT",
         shapeless
       ),
-      addCompilerPlugin(kindProjector)
+      addCompilerPlugin(kindProjector),
+      addCompilerPlugin(paradisePlugin)
     )
   )
 
