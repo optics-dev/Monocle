@@ -10,6 +10,10 @@ object hlist extends HListInstances
 
 trait HListInstances {
 
+  def hListAt[S <: HList, A](n : Nat)(implicit evAt: At.Aux[S, n.N, A],
+                                          evReplace: ReplaceAt.Aux[S, n.N, A, (A, S)]): Lens[S, A]  =
+    Lens[S, A](_.at(n))(a => hlist => hlist.updatedAt(n, a))
+
   def toHList[S, A <: HList](implicit gen: Generic.Aux[S, A]): Iso[S, A] =
     Iso[S, A]{ s => gen.to(s)}{l => gen.from(l)}
 
@@ -63,9 +67,5 @@ trait HListInstances {
                                               evReplace: ReplaceAt.Aux[S, shapeless.nat._5.N, A, (A, S)]) = new Field6[S, A] {
     def sixth = hListAt(shapeless.nat._5)
   }
-
-  private def hListAt[S <: HList, A](n : Nat)(implicit evAt: At.Aux[S, n.N, A],
-                                                  evReplace: ReplaceAt.Aux[S, n.N, A, (A, S)]): Lens[S, A]  =
-    Lens[S, A](_.at(n))(a => hlist => hlist.updatedAt(n, a) )
 
 }
