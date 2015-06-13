@@ -12,21 +12,31 @@ trait StateSyntax {
 }
 
 final class StateLensOps[S, T, A, B](lens: PLens[S, T, A, B]) {
-  def toState: State[S, A] = State(s => (s, lens.get(s)))
+  /** transforms a [[PLens]] into a [[State]] */
+  def toState: State[S, A] =
+    State(s => (s, lens.get(s)))
 
   /** alias for toState */
-  def st: State[S, A] = toState
+  def st: State[S, A] =
+    toState
 
-  def updateState(f: A => B): IndexedState[S, T, A] =
+  /** modify the value viewed through the lens and returns its *new* value */
+  def mod(f: A => B): IndexedState[S, T, B] =
+    IndexedState(s => {
+      val a = lens.get(s)
+      val b = f(a)
+      (lens.set(b)(s), b)
+    })
+
+  /** modify the value viewed through the lens and returns its *old* value */
+  def modo(f: A => B): IndexedState[S, T, A] =
     toState.leftMap(lens.modify(f))
 
-  /** alias for updateState */
-  def ~=(f: A => B): IndexedState[S, T, A] =
-    updateState(f)
+  /** set the value viewed through the lens and returns its *new* value */
+  def assign(b: B): IndexedState[S, T, B] =
+    mod(_ => b)
 
-  def assign(value: B): IndexedState[S, T, A] =
-    toState.leftMap(lens.set(value))
-
-  /** alias for assign */
-  def :=(value: B): IndexedState[S, T, A] = assign(value)
+  /** set the value viewed through the lens and returns its *old* value */
+  def assigno(b: B): IndexedState[S, T, A] =
+    modo(_ => b)
 }
