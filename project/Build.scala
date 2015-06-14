@@ -23,7 +23,7 @@ object Dependencies {
 
   val macroVersion = "2.0.1"
   val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
-  val kindProjector  = compilerPlugin("org.spire-math"  %% "kind-projector" % "0.5.2")
+  val kindProjector  = compilerPlugin("org.spire-math"  %% "kind-projector" % "0.6.0")
 }
 
 object MonocleBuild extends Build {
