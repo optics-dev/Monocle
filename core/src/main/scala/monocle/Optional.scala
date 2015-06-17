@@ -13,7 +13,7 @@ import scalaz.syntax.std.option._
  *
  * [[POptional]] stands for Polymorphic Optional as it set and modify methods change
  * a type `A` to `B` and `S` to `T`.
- * [[Optional]] is a type alias for [[POptional]] restricted to monomoprhic updates:
+ * [[Optional]] is a type alias for [[POptional]] restricted to monomorphic updates:
  * {{{
  * type Optional[S, A] = POptional[S, S, A, A]
  * }}}
