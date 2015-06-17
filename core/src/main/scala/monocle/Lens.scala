@@ -12,7 +12,7 @@ import scalaz.{Applicative, Choice, Functor, Maybe, Monoid, Split, \/}
  *
  * [[PLens]] stands for Polymorphic Lens as it set and modify methods change
  * a type `A` to `B` and `S` to `T`.
- * [[Lens]] is a type alias for [[PLens]] restricted to monomoprhic updates:
+ * [[Lens]] is a type alias for [[PLens]] restricted to monomorphic updates:
  * {{{
  * type Lens[S, A] = PLens[S, S, A, A]
  * }}}

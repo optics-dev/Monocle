@@ -16,7 +16,7 @@ import scalaz.{Applicative, Choice, Const, Functor, Maybe, Monoid, Traverse, \/}
  *
  * [[PTraversal]] stands for Polymorphic Traversal as it set and modify methods change
  * a type `A` to `B` and `S` to `T`.
- * [[Traversal]] is a type alias for [[PTraversal]] restricted to monomoprhic updates:
+ * [[Traversal]] is a type alias for [[PTraversal]] restricted to monomorphic updates:
  * {{{
  * type Traversal[S, A] = PTraversal[S, S, A, A]
  * }}}

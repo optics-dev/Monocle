@@ -9,7 +9,7 @@ import scalaz.{Choice, Functor, \/}
  *
  * [[PSetter]] stands for Polymorphic Setter as it set and modify methods change
  * a type `A` to `B` and `S` to `T`.
- * [[Setter]] is a type alias for [[PSetter]] restricted to monomoprhic updates:
+ * [[Setter]] is a type alias for [[PSetter]] restricted to monomorphic updates:
  * {{{
  * type Setter[S, A] = PSetter[S, S, A, A]
  * }}}
