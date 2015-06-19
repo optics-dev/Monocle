@@ -236,6 +236,10 @@ object Optional {
   def codiagonal[S]: Optional[S \/ S, S] =
     POptional.codiagonal
 
+  /** [[Optional]] that points to nothing */
+  def void[S, A]: Optional[S, A] =
+    Optional[S, A](_ => None)(_ => identity)
+
   /** alias for [[POptional]] apply restricted to monomorphic update */
   def apply[S, A](_getOption: S => Option[A])(_set: A => S => S): Optional[S, A] =
     new Optional[S, A]{

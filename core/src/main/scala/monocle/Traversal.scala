@@ -222,6 +222,10 @@ object Traversal {
   def codiagonal[S, T]: Traversal[S \/ S, S] =
     PTraversal.codiagonal
 
+  /** [[Traversal]] that points to nothing */
+  def void[S, A]: Traversal[S, A] =
+    Optional.void.asTraversal
+
   def apply2[S, A](get1: S => A, get2: S => A)(set: (A, A, S) => S): Traversal[S, A] =
     PTraversal.apply2(get1, get2)(set)
 

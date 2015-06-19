@@ -127,6 +127,10 @@ object Setter {
   def codiagonal[S]: Setter[S \/ S, S] =
     PSetter.codiagonal
 
+  /** [[Setter]] that points to nothing */
+  def void[S, A]: Setter[S, A] =
+    Optional.void.asSetter
+
   /** alias for [[PSetter]] apply with a monomorphic modify function */
   def apply[S, A](modify: (A => A) => S => S): Setter[S, A] =
     PSetter(modify)
