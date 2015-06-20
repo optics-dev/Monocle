@@ -6,10 +6,10 @@ import scalaz._
 
 class OptionalSpec extends MonocleSuite {
 
-  def headOption[A]: Optional[IList[A], A] = Optional[IList[A], A](_.headOption){
+  def headOption[A]: Optional[List[A], A] = Optional[List[A], A](_.headOption){
     a => {
-      case ICons(x, xs) => ICons(a, xs)
-      case INil()       => INil()
+      case x :: xs => a :: xs
+      case Nil     => Nil
     }
   }
 
@@ -18,10 +18,15 @@ class OptionalSpec extends MonocleSuite {
   checkAll("optional.asTraversal", TraversalTests(headOption[Int].asTraversal))
   checkAll("optional.asSetter"   , SetterTests(headOption[Int].asSetter))
 
+  test("void"){
+    (headOption[Int] composeOptional Optional.void[Int, Char])
+      .getOption(List(1,2,3)) shouldEqual None
+  }
+
   // test implicit resolution of type classes
 
   test("Optional has a Compose instance") {
-    Compose[Optional].compose(headOption[Int], headOption[IList[Int]]).getOption(IList(IList(1,2,3), IList(4))) shouldEqual Some(1)
+    Compose[Optional].compose(headOption[Int], headOption[List[Int]]).getOption(List(List(1,2,3), List(4))) shouldEqual Some(1)
   }
 
   test("Optional has a Category instance") {
@@ -29,7 +34,7 @@ class OptionalSpec extends MonocleSuite {
   }
 
   test("Optional has a Choice instance") {
-    Choice[Optional].choice(headOption[Int], Category[Optional].id[Int]).getOption(-\/(IList(1,2,3))) shouldEqual Some(1)
+    Choice[Optional].choice(headOption[Int], Category[Optional].id[Int]).getOption(-\/(List(1,2,3))) shouldEqual Some(1)
   }
 
 
