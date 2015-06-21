@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Choice, Functor, \/}
+import scalaz.{Choice, Contravariant, Functor, Profunctor, \/}
 
 /**
  * A [[PSetter]] is a generalisation of [[Functor]] map:
@@ -115,8 +115,16 @@ object PSetter extends SetterInstances {
     }
 
   /** create a [[PSetter]] from a [[Functor]] */
-  def fromFunctor[F[_]: Functor, A, B]: PSetter[F[A], F[B], A, B] =
-    PSetter[F[A], F[B], A, B](f => Functor[F].map(_)(f))
+  def fromFunctor[F[_], A, B](implicit F: Functor[F]): PSetter[F[A], F[B], A, B] =
+    PSetter[F[A], F[B], A, B](f => F.map(_)(f))
+
+  /** create a [[PSetter]] from a [[Contravariant]] functor */
+  def fromContravariant[F[_], A, B](implicit F: Contravariant[F]): PSetter[F[B], F[A], A, B] =
+    PSetter[F[B], F[A], A, B](f => F.contramap(_)(f))
+
+  /** create a [[PSetter]] from a [[Profunctor]] */
+  def fromProfunctor[P[_, _], A, B, C](implicit P: Profunctor[P]): PSetter[P[B, C], P[A, C], A, B] =
+    PSetter[P[B, C], P[A, C], A, B](f => P.mapfst(_)(f))
 
 }
 
