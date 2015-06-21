@@ -19,8 +19,7 @@ class OptionalSpec extends MonocleSuite {
   checkAll("optional.asSetter"   , SetterTests(headOption[Int].asSetter))
 
   test("void"){
-    (headOption[Int] composeOptional Optional.void[Int, Char])
-      .getOption(List(1,2,3)) shouldEqual None
+    (Iso.id[Int] composeOptional Optional.void[Int, Int]).getOption(1) shouldEqual None
   }
 
   // test implicit resolution of type classes
