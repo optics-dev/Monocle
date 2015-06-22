@@ -65,7 +65,7 @@ private object GenIsoImpl extends MacrosCompatibility {
     if (!sTpe.typeSymbol.isModuleClass)
        c.abort(c.enclosingPosition, s"${sTpe} needs to be an object to generate an Iso[${sTpe}, Unit]")
 
-    val obj = table.gen.mkAttributedQualifier(sTpe.asInstanceOf[table.Type]).asInstanceOf[Tree]
+    val obj = makeAttributedQualifier(c)(table.gen, sTpe)
 
     c.Expr[Iso[S, Unit]](q"""
       monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${obj}))
