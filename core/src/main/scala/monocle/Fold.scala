@@ -136,6 +136,10 @@ object Fold extends FoldInstances {
         s.fold(f,f)
     }
 
+  /** [[Fold]] that points to nothing */
+  def void[S, A]: Fold[S, A] =
+    Optional.void.asFold
+
   /** create a [[Fold]] from a [[Foldable]] */
   def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] =
     new Fold[F[A], A] {
