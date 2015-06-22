@@ -2,12 +2,11 @@ package monocle
 
 import monocle.law.discipline._
 import monocle.macros.GenIso
-import org.scalacheck.Arbitrary
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary._
 
 import scalaz.std.anyVal._
 import scalaz.{Category, Compose, Equal, Split}
-
 
 class IsoSpec extends MonocleSuite {
 
@@ -17,10 +16,17 @@ class IsoSpec extends MonocleSuite {
 
   implicit val intWrapperEq = Equal.equalA[IntWrapper]
 
+  case object AnObject
+
+  implicit val anObjectGen: Arbitrary[AnObject.type] = Arbitrary(Gen.const(AnObject))
+
+  implicit val anObjectEq = Equal.equalA[AnObject.type]
+
   val iso = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)
 
   checkAll("apply Iso", IsoTests(iso))
   checkAll("GenIso", IsoTests(GenIso[IntWrapper, Int]))
+  checkAll("GenIso.obj", IsoTests(GenIso.obj[AnObject.type]))
 
   checkAll("Iso id", IsoTests(Iso.id[Int]))
 

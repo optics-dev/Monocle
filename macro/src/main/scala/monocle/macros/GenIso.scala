@@ -1,12 +1,16 @@
 package monocle.macros
 
-
 import monocle.Iso
 import monocle.macros.internal.MacrosCompatibility
+
+import scala.reflect.internal.SymbolTable
 
 object GenIso {
   /** generate an [[Iso]] between a case class `S` and its unique field of type `A` */
   def apply[S, A]: Iso[S, A] = macro GenIsoImpl.genIso_impl[S, A]
+
+  /** generate an [[Iso]] between an object `S` and Unit */
+  def obj[S]: Iso[S, Unit] = macro GenIsoImpl.genIso_obj_impl[S]
 }
 
 private object GenIsoImpl extends MacrosCompatibility {
@@ -49,6 +53,22 @@ private object GenIsoImpl extends MacrosCompatibility {
               self
           }
       }
+    """)
+  }
+
+  def genIso_obj_impl[S: c.WeakTypeTag](c: Context): c.Expr[Iso[S, Unit]] = {
+    import c.universe._
+
+    val table = c.universe.asInstanceOf[SymbolTable]
+    val sTpe = weakTypeOf[S]
+
+    if (!sTpe.typeSymbol.isModuleClass)
+       c.abort(c.enclosingPosition, s"${sTpe} needs to be an object to generate an Iso[${sTpe}, Unit]")
+
+    val obj = table.gen.mkAttributedQualifier(sTpe.asInstanceOf[table.Type]).asInstanceOf[Tree]
+
+    c.Expr[Iso[S, Unit]](q"""
+      monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${obj}))
     """)
   }
 }
