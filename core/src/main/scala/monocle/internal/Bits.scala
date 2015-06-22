@@ -139,7 +139,7 @@ private[monocle] trait BitsInstances {
     def signed(a: Long): Boolean = a.signum > 0
     def negate(a: Long): Long = ~a
     def testBit(a: Long, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
-    def singleBit(n: Int): Long = 1 << n
+    def singleBit(n: Int): Long = (1 << n).toLong
 
     def shiftR(a: Long, n: Int): Long = a >> n
     def shiftL(a: Long, n: Int): Long = a << n

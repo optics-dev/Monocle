@@ -64,19 +64,5 @@ class LensSpec extends MonocleSuite {
   test("Lens has a Split instance") {
     Split[Lens].split(_x, _y).get((Point(0, 1), Point(5, 6))) shouldEqual ((0, 6))
   }
-
-  test("Lenses for monomorphic case class are created as `val`s") {
-    import scala.reflect.runtime.universe._
-    typeTag[Example.type].tpe.declarations.collectFirst {
-      case m: MethodSymbol if m.isAccessor && m.name.decodedName.toString == "s" => m
-    }.isDefined shouldEqual true
-  }
-
-
-  test("Lenses for polymorphic case class are created as `def`s") {
-    import scala.reflect.runtime.universe._
-    typeTag[Foo.type].tpe.declarations.collectFirst {
-      case m: MethodSymbol if m.isMethod && !m.isAccessor && m.name.decodedName.toString == "q" => m
-    }.isDefined shouldEqual true
-  }
+  
 }

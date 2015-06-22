@@ -44,9 +44,13 @@ object MonocleBuild extends Build {
       "-feature",
       "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
       "-unchecked",
-      "-Yno-generic-signatures",
+      "-Xfatal-warnings",
+      "-Yinline-warnings",
       "-Yno-adapted-args",
-      "-Ywarn-value-discard"
+      "-Ywarn-dead-code",
+      "-Ywarn-numeric-widen",
+      "-Ywarn-value-discard",
+      "-Xfuture"
     ),
     resolvers ++= Seq(
       Resolver.sonatypeRepo("releases"),
