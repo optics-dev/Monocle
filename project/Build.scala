@@ -18,7 +18,7 @@ object Dependencies {
   val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.2"
   val shapeless  = "com.chuusai"     %% "shapeless"   % "2.2.3"
 
-  val discpline  = "org.typelevel"   %% "discipline"  % "0.2.1"
+  val discpline  = "org.typelevel"   %% "discipline"  % "0.3"
   val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
 
   val macroVersion = "2.0.1"
