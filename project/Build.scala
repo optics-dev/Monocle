@@ -15,7 +15,7 @@ import sbtrelease.Utilities._
 import pl.project13.scala.sbt.SbtJmh._
 
 object Dependencies {
-  val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.2"
+  val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.3"
   val shapeless  = "com.chuusai"     %% "shapeless"   % "2.2.3"
 
   val discpline  = "org.typelevel"   %% "discipline"  % "0.3"
