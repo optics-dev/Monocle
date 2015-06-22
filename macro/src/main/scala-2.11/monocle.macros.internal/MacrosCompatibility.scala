@@ -1,5 +1,7 @@
 package monocle.macros.internal
 
+import scala.reflect.internal.TreeGen
+
 trait MacrosCompatibility {
   type Context = scala.reflect.macros.blackbox.Context
 
@@ -26,4 +28,7 @@ trait MacrosCompatibility {
 
   def companionTpe(c: Context)(tpe: c.universe.Type): c.universe.Symbol =
     tpe.typeSymbol.companion
+
+  def makeAttributedQualifier(c: Context)(tree: TreeGen, tpe: c.universe.Type): c.universe.Tree =
+    tree.mkAttributedQualifier(tpe.asInstanceOf[tree.global.Type]).asInstanceOf[c.universe.Tree]
 }
