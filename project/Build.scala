@@ -48,7 +48,6 @@ object MonocleBuild extends Build {
       "-Yinline-warnings",
       "-Yno-adapted-args",
       "-Ywarn-dead-code",
-      "-Ywarn-numeric-widen",
       "-Ywarn-value-discard",
       "-Xfuture"
     ),
