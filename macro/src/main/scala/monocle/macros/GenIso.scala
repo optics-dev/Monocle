@@ -10,18 +10,21 @@ object GenIso {
   def apply[S, A]: Iso[S, A] = macro GenIsoImpl.genIso_impl[S, A]
 
   /** generate an [[Iso]] between an object `S` and Unit */
-  def obj[S]: Iso[S, Unit] = macro GenIsoImpl.genIso_obj_impl[S]
+  def unit[S]: Iso[S, Unit] = macro GenIsoImpl.genIso_unit_impl[S]
 }
 
 private object GenIsoImpl extends MacrosCompatibility {
+  private def caseAccessorsOf[S: c.WeakTypeTag](c: Context): List[c.universe.MethodSymbol] = {
+    import c.universe._
+    getDeclarations(c)(weakTypeOf[S]).collect { case m: MethodSymbol if m.isCaseAccessor => m }.toList
+  }
+
   def genIso_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context): c.Expr[Iso[S, A]] = {
     import c.universe._
 
     val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
 
-    val fieldMethod = getDeclarations(c)(sTpe).collect {
-      case m: MethodSymbol if m.isCaseAccessor => m
-    }.toList match {
+    val fieldMethod = caseAccessorsOf[S](c) match {
       case m :: Nil if m.returnType == aTpe => m
       case m :: Nil => c.abort(c.enclosingPosition, s"Found a case class accessor of type ${m.returnType} instead of $aTpe")
       case Nil      => c.abort(c.enclosingPosition, s"Cannot find a case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor")
@@ -56,19 +59,26 @@ private object GenIsoImpl extends MacrosCompatibility {
     """)
   }
 
-  def genIso_obj_impl[S: c.WeakTypeTag](c: Context): c.Expr[Iso[S, Unit]] = {
+  def genIso_unit_impl[S: c.WeakTypeTag](c: Context): c.Expr[Iso[S, Unit]] = {
     import c.universe._
 
-    val table = c.universe.asInstanceOf[SymbolTable]
     val sTpe = weakTypeOf[S]
 
-    if (!sTpe.typeSymbol.isModuleClass)
-       c.abort(c.enclosingPosition, s"${sTpe} needs to be an object to generate an Iso[${sTpe}, Unit]")
-
-    val obj = makeAttributedQualifier(c)(table.gen, sTpe)
-
-    c.Expr[Iso[S, Unit]](q"""
-      monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${obj}))
-    """)
+    if (sTpe.typeSymbol.isModuleClass) {
+      val table = c.universe.asInstanceOf[SymbolTable]
+      val obj = makeAttributedQualifier(c)(table.gen, sTpe)
+      c.Expr[Iso[S, Unit]](q"""
+        monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${obj}))
+      """)
+    } else {
+      caseAccessorsOf[S](c) match {
+        case Nil =>
+          val sTpeSym = companionTpe(c)(sTpe)
+          c.Expr[Iso[S, Unit]](q"""
+            monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${sTpeSym}()))
+          """)
+        case _   => c.abort(c.enclosingPosition, s"$sTpe needs to be a case class with no accessor or an object.")
+      }
+    }
   }
 }
