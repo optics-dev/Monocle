@@ -19,7 +19,7 @@ trait OptionFunctions {
     PIso[Option[A], Option[B], Unit \/ A, Unit \/ B](_.map(\/-(_)) getOrElse -\/(()))(_.toOption)
 
   def optionToDisjunction[A]: Iso[Option[A], Unit \/ A] =
-    Iso[Option[A], Unit \/ A](_.map(\/-(_)) getOrElse -\/(()))(_.toOption)
+    pOptionToDisjunction[A, A]
 }
 
 trait OptionInstances extends OptionFunctions {
