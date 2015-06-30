@@ -1,9 +1,9 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{PPrism, Prism}
+import monocle.{PPrism, Prism, PIso, Iso}
 
-import scalaz.{-\/, \/-}
+import scalaz.{-\/, \/-, \/}
 
 object option extends OptionInstances
 
@@ -15,6 +15,11 @@ trait OptionFunctions {
   def none[A]: Prism[Option[A], Unit] =
     Prism[Option[A], Unit]{ case None => Some(()); case Some(_) => None }(_ => None)
 
+  def pOptionToDisjunction[A, B]: PIso[Option[A], Option[B], Unit \/ A, Unit \/ B] =
+    PIso[Option[A], Option[B], Unit \/ A, Unit \/ B](_.map(\/-(_)) getOrElse -\/(()))(_.toOption)
+
+  def optionToDisjunction[A]: Iso[Option[A], Unit \/ A] =
+    pOptionToDisjunction[A, A]
 }
 
 trait OptionInstances extends OptionFunctions {
