@@ -103,7 +103,8 @@ lazy val bench = project
     "com.github.julien-truffaut" %%  "monocle-core"  % "1.2.0-SNAPSHOT",
     "com.github.julien-truffaut" %%  "monocle-macro" % "1.2.0-SNAPSHOT",
     shapeless,
-    compilerPlugin(kindProjector)
+    compilerPlugin(kindProjector),
+    compilerPlugin(paradisePlugin)
   ))
 
 lazy val example = project.dependsOn(core, generic, macros, test % "test->test")
