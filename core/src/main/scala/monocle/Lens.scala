@@ -20,7 +20,7 @@ import scalaz.{Applicative, Choice, Functor, Maybe, Monoid, Split, \/}
  * A [[PLens]] is also a valid [[Getter]], [[Fold]], [[POptional]],
  * [[PTraversal]] and [[PSetter]]
  *
- * Typically a [[PLens]] or [[Lens]] can be defined between a [[Product]]
+ * Typically a [[PLens]] or [[Lens]] can be defined between a [[scala.Product]]
  * (e.g. case class, tuple, HList) and one of it is component.
  *
  * @see [[monocle.law.LensLaws]]
@@ -38,7 +38,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /** set polymorphically the target of a [[PLens]] using a function */
   def set(b: B): S => T
 
-  /** modify polymorphically the target of a [[PLens]] using [[Functor]] function */
+  /** modify polymorphically the target of a [[PLens]] using Functor function */
   def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T]
 
   /** modify polymorphically the target of a [[PLens]] using a function */

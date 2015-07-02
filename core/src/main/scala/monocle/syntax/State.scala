@@ -12,7 +12,7 @@ trait StateSyntax {
 }
 
 final class StateLensOps[S, T, A, B](lens: PLens[S, T, A, B]) {
-  /** transforms a [[PLens]] into a [[State]] */
+  /** transforms a [[PLens]] into a State */
   def toState: State[S, A] =
     State(s => (s, lens.get(s)))
 

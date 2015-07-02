@@ -1,0 +1,9 @@
+name: Monocle documentation
+markdown: redcarpet
+highlighter: pygments
+baseurl: /Monocle/
+apidocs: /Monocle/api/
+
+collections:
+  tut:
+    output: true
