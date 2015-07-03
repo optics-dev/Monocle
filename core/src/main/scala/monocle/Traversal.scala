@@ -31,16 +31,16 @@ import scalaz.{Applicative, Choice, Const, Functor, Maybe, Monoid, Traverse, \/}
 abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 
   /**
-   * modify polymorphically the target of a [[PTraversal]] with an [[Applicative]] function
+   * modify polymorphically the target of a [[PTraversal]] with an Applicative function
    * all traversal methods are written in terms of modifyF
    */
   def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T]
 
-  /** map each target to a [[Monoid]] and combine the results */
+  /** map each target to a Monoid and combine the results */
   @inline final def foldMap[M: Monoid](f: A => M)(s: S): M =
     modifyF[Const[M, ?]](a => Const(f(a)))(s).getConst
 
-  /** combine all targets using a target's [[Monoid]] */
+  /** combine all targets using a target's Monoid */
   @inline final def fold(s: S)(implicit ev: Monoid[A]): A =
     foldMap(identity)(s)
 
@@ -176,7 +176,7 @@ object PTraversal extends TraversalInstances {
         s.bimap(f,f).fold(Applicative[F].map(_)(\/.left), Applicative[F].map(_)(\/.right))
     }
 
-  /** create a [[PTraversal]] from a [[Traverse]] */
+  /** create a [[PTraversal]] from a Traverse */
   def fromTraverse[T[_]: Traverse, A, B]: PTraversal[T[A], T[B], A, B] =
     new PTraversal[T[A], T[B], A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: T[A]): F[T[B]] =

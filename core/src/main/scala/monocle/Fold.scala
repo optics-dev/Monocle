@@ -22,18 +22,17 @@ import scalaz.{Choice, Foldable, Maybe, Monoid, \/}
 abstract class Fold[S, A] extends Serializable { self =>
 
   /**
-   * map each target to a [[Monoid]] and combine the results
+   * map each target to a Monoid and combine the results
    * underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap
    */
   def foldMap[M: Monoid](f: A => M)(s: S): M
 
-  /** combine all targets using a target's [[Monoid]] */
+  /** combine all targets using a target's Monoid */
   @inline final def fold(s: S)(implicit ev: Monoid[A]): A =
     foldMap(identity)(s)
 
   /**
    * get all the targets of a [[Fold]]
-   * TODO: Shall it return a Stream as there might be an infinite number of targets?
    */
   @inline final def getAll(s: S): List[A] =
     foldMap(List(_))(s)
@@ -140,7 +139,7 @@ object Fold extends FoldInstances {
   def void[S, A]: Fold[S, A] =
     Optional.void.asFold
 
-  /** create a [[Fold]] from a [[Foldable]] */
+  /** create a [[Fold]] from a Foldable */
   def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] =
     new Fold[F[A], A] {
       def foldMap[M: Monoid](f: A => M)(s: F[A]): M =

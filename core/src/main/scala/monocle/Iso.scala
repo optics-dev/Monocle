@@ -50,7 +50,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** reverse a [[PIso]]: the source becomes the target and the target becomes the source */
   def reverse: PIso[B, A, T, S]
 
-  /** modify polymorphically the target of a [[PIso]] with a [[Functor]] function */
+  /** modify polymorphically the target of a [[PIso]] with a Functor function */
   @inline final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
     Functor[F].map(f(get(s)))(reverseGet)
 
@@ -288,7 +288,7 @@ object PIso extends IsoInstances {
         }
     }
 
-  /** transform an [[scalaz.Isomorphisms.Iso2]] in a [[PIso]] */
+  /** transform a natural transformation in a [[PIso]] */
   def fromIsoFunctor[F[_], G[_], A, B](isoFunctor: F <~> G): PIso[F[A], F[B], G[A], G[B]] =
     PIso(isoFunctor.to.apply[A])(isoFunctor.from.apply[B])
 }
@@ -302,7 +302,7 @@ object Iso {
   def id[S]: Iso[S, S] =
     PIso.id[S, S]
 
-  /** transform an [[scalaz.Isomorphisms.Iso]] in a [[Iso]] */
+  /** transform an Iso in a [[Iso]] */
   def fromIsoSet[A, B](isoSet: A <=> B): Iso[A, B] =
     Iso(isoSet.to)(isoSet.from)
 }

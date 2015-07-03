@@ -10,15 +10,15 @@ class LensMonoExample extends MonocleSuite {
   @Lenses case class Person(name: String, age: Int, address: Address)
 
   object Manual { // Lens created manually (i.e. without macro)
-  val _name = Lens[Person, String](_.name)(n => p => p.copy(name = n))
-    val _age  = Lens[Person, Int](_.age)(a => p => p.copy(age = a))
+    val _name = Lens[Person, String](_.name)(n => p => p.copy(name = n))
+    val _age = Lens[Person, Int](_.age)(a => p => p.copy(age = a))
     val _address = Lens[Person, Address](_.address)(a => p => p.copy(address = a))
     val _streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
   }
 
   object Semi { // Lens generated semi automatically using GenLens macro
-  val name = GenLens[Person](_.name)
-    val age  = GenLens[Person](_.age)
+    val name = GenLens[Person](_.name)
+    val age = GenLens[Person](_.age)
     val address = GenLens[Person](_.address)
     val streetNumber = GenLens[Address](_.streetNumber)
   }

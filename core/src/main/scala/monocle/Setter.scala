@@ -3,7 +3,7 @@ package monocle
 import scalaz.{Choice, Contravariant, Functor, Profunctor, \/}
 
 /**
- * A [[PSetter]] is a generalisation of [[Functor]] map:
+ * A [[PSetter]] is a generalisation of Functor map:
  *  - `map:    (A => B) => F[A] => F[B]`
  *  - `modify: (A => B) => S    => T`
  *
@@ -114,15 +114,15 @@ object PSetter extends SetterInstances {
         _modify(_ => b)
     }
 
-  /** create a [[PSetter]] from a [[Functor]] */
+  /** create a [[PSetter]] from a scalaz.Functor */
   def fromFunctor[F[_], A, B](implicit F: Functor[F]): PSetter[F[A], F[B], A, B] =
     PSetter[F[A], F[B], A, B](f => F.map(_)(f))
 
-  /** create a [[PSetter]] from a [[Contravariant]] functor */
+  /** create a [[PSetter]] from a Contravariant functor */
   def fromContravariant[F[_], A, B](implicit F: Contravariant[F]): PSetter[F[B], F[A], A, B] =
     PSetter[F[B], F[A], A, B](f => F.contramap(_)(f))
 
-  /** create a [[PSetter]] from a [[Profunctor]] */
+  /** create a [[PSetter]] from a Profunctor */
   def fromProfunctor[P[_, _], A, B, C](implicit P: Profunctor[P]): PSetter[P[B, C], P[A, C], A, B] =
     PSetter[P[B, C], P[A, C], A, B](f => P.mapfst(_)(f))
 
