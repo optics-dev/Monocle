@@ -5,22 +5,51 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>{{ site.name }} - {{ page.title }}</title>
 
-    <link rel="stylesheet" href="{{ site.baseurl }}css/syntax.css">
     <link rel="stylesheet" href="{{ site.baseurl }}css/styles.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}css/custom.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}css/syntax.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 </head>
 <body>
-<a name="top"></a>
-<div class="wrapper">
-    <header>
-    </header>
-    <section>
-        {{ content }}
-    </section>
-    <footer>
+<div id="container">
+    <div id="header">
+        <div id="commute"><img src="https://raw.github.com/julien-truffaut/Monocle/master/image/logo.png"/></div>
+        <div id="toolbox">
+            <table id="tooltable">
+                <tr><td class="label">Source:</td><td class="link"><a href="https://github.com/julien-truffaut/Monocle">Github</a></td></tr>
+                <tr><td class="label">Chat:</td><td class="link"><a href="https://gitter.im/julien-truffaut/Monocle">Gitter</a></td></tr>
+                <tr><td class="label">Build:</td><td class="link"><a href="https://travis-ci.org/julien-truffaut/Monocle">Travis</a></td></tr>
+                <tr><td class="label">Api:</td><td class="link"><a href="{{site.apidocs}}">Scaladoc</a></td></tr>
+            </table>
+        </div>
+        <div id="banner">
+            <h1>Monocle</h1>
+        </div>
+    </div>
+    <div id="wrapper">
+        <div id="navbar">
+            <ul>
+                <li {%if page.section =="home" %} class="active" {% else %} class="inactive" {% endif %}>
+                    <a href="{{ site.baseurl }}/index.html">About</a>
+                </li>
+                <li {%if page.section =="contributing" %} class="active" {% else %} class="inactive"{% endif %}>
+                    <a href="{{ site.baseurl }}/optics.html">Optics</a>
+                </li>
+            </ul>
+        </div>
+        <div id="content">
+            {{ content }}
+        </div>
+    </div>
+
+    <div id="footer">
         <p>Last updated on <em>{{ site.time | date: '%B %d, %Y' }}</em></p>
-        <p>This site was generated from <a href="https://github.com/julien-truffaut/Monocle/">Monocle</a></p>
-    </footer>
+    </div>
 </div>
+
+<script src="{{ site.baseurl }}js/scale.fix.js" type="text/javascript"></script>
 </body>
 </html>

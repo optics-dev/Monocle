@@ -3,7 +3,6 @@ layout: default
 title:  "Home"
 section: "home"
 ---
-![Monocle Logo](https://raw.github.com/julien-truffaut/Monocle/master/image/logo.png)<br>
 
 Monocle is an `Optics` library where Optics gather the concepts of `Lens`, `Traversal`,
 `Optional`, `Prism` and `Iso`. Monocle is strongly inspired by Haskell [Lens](https://github.com/ekmett/lens).
@@ -27,8 +26,3 @@ libraryDependencies ++= Seq(
 
 // for @Lenses macro support
 addCompilerPlugin("org.scalamacros" %% "paradise" % "2.0.1" cross CrossVersion.full)
-```
-
-# Optics
-
--   [Lens](tut/lens.html)

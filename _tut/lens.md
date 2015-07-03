@@ -2,7 +2,7 @@
 layout: source
 title:  "Hello"
 section: "example"
-scaladoc: "http://julien-truffaut.github.io/Monocle/api/#core.Lens"
+scaladoc: "http://julien-truffaut.github.io/Monocle/api/#monocle.PLens"
 source: "https://github.com/julien-truffaut/Monocle/blob/master/example/src/main/scala/monocle/example/LensExample.scala"
 pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/docs/src/main/tut/lens.md"
 ---
@@ -33,7 +33,7 @@ scala> john
 res0: monocle.example.LensExample.Person = Person(John,20,Address(10,High Street))
 
 scala> _age: Lens[Person, Int]
-res1: monocle.Lens[monocle.example.LensExample.Person,Int] = monocle.PLens$$anon$7@553ffce2
+res1: monocle.Lens[monocle.example.LensExample.Person,Int] = monocle.PLens$$anon$7@4897ffd4
 
 scala> _age.get(john)
 res2: Int = 20
