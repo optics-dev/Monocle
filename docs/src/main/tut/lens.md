@@ -2,7 +2,7 @@
 layout: source
 title:  "Hello"
 section: "example"
-scaladoc: "http://julien-truffaut.github.io/Monocle/api/#core.Lens"
+scaladoc: "http://julien-truffaut.github.io/Monocle/api/#monocle.PLens"
 source: "https://github.com/julien-truffaut/Monocle/blob/master/example/src/main/scala/monocle/example/LensExample.scala"
 pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/docs/src/main/tut/lens.md"
 ---
