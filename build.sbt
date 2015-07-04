@@ -1,6 +1,7 @@
 import com.typesafe.sbt.pgp.PgpKeys.publishSigned
 import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
+import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 import pl.project13.scala.sbt.SbtJmh._
 import sbt.Keys._
 import sbtrelease.ReleaseStep
@@ -45,6 +46,10 @@ lazy val macroVersion = "2.0.1"
 lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
 lazy val kindProjector  = compilerPlugin("org.spire-math"  %% "kind-projector" % "0.6.0")
 
+def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
+  previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.1.0")
+)
+
 lazy val monocleSettings = buildSettings ++ publishSettings ++ releaseSettings
 
 lazy val monocle = project.in(file("."))
@@ -57,11 +62,13 @@ lazy val monocle = project.in(file("."))
 lazy val core = project
   .settings(moduleName := "monocle-core")
   .settings(monocleSettings)
+  .settings(mimaSettings("core"))
   .settings(libraryDependencies := Seq(scalaz, compilerPlugin(kindProjector)))
 
 lazy val generic = project.dependsOn(core)
   .settings(moduleName := "monocle-generic")
   .settings(monocleSettings)
+  .settings(mimaSettings("generic"))
   .settings(libraryDependencies := Seq(scalaz, shapeless))
 
 lazy val law = project.dependsOn(core)
