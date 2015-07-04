@@ -24,4 +24,10 @@ trait DisjunctionFunctions {
 
   final def disjunctionToValidation[E, A]: Iso[E \/ A, Validation[E, A]] =
     pDisjunctionToValidation[E, E, A, A]
+
+  final def pDisjunctionToEither[E1, E2, A1, A2]: PIso[E1 \/ A1, E2 \/ A2, Either[E1, A1], Either[E2, A2]] =
+    PIso[E1 \/ A1, E2 \/ A2, Either[E1, A1], Either[E2, A2]](_.toEither)(_.fold(\/.left, \/.right))
+
+  final def disjunctionToEither[E, A]: Iso[E \/ A, Either[E, A]] =
+    pDisjunctionToEither[E, E, A, A]
 }
