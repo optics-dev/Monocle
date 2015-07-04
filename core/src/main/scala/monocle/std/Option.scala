@@ -9,16 +9,19 @@ object option extends OptionInstances
 
 trait OptionFunctions {
 
-  def some[A, B]: PPrism[Option[A], Option[B], A, B] =
+  final def pSome[A, B]: PPrism[Option[A], Option[B], A, B] =
     PPrism[Option[A], Option[B], A, B](_.map(\/-(_)) getOrElse -\/(None))(Some.apply)
 
-  def none[A]: Prism[Option[A], Unit] =
+  final def some[A]: Prism[Option[A], A] =
+    pSome[A, A]
+
+  final def none[A]: Prism[Option[A], Unit] =
     Prism[Option[A], Unit]{ case None => Some(()); case Some(_) => None }(_ => None)
 
-  def pOptionToDisjunction[A, B]: PIso[Option[A], Option[B], Unit \/ A, Unit \/ B] =
+  final def pOptionToDisjunction[A, B]: PIso[Option[A], Option[B], Unit \/ A, Unit \/ B] =
     PIso[Option[A], Option[B], Unit \/ A, Unit \/ B](_.map(\/-(_)) getOrElse -\/(()))(_.toOption)
 
-  def optionToDisjunction[A]: Iso[Option[A], Unit \/ A] =
+  final def optionToDisjunction[A]: Iso[Option[A], Unit \/ A] =
     pOptionToDisjunction[A, A]
 }
 
@@ -30,10 +33,6 @@ trait OptionInstances extends OptionFunctions {
 
   implicit def optEach[A]: Each[Option[A], A] = new Each[Option[A], A] {
     def each = some.asTraversal
-  }
-
-  implicit val noneEmpty: Empty[None.type] = new Empty[None.type] {
-    def empty = Prism[None.type , Unit](_ => Some(()))(_ => None)
   }
 
 }

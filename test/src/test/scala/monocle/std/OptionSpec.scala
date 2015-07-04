@@ -6,7 +6,7 @@ import monocle.law.discipline.function.{EachTests, EmptyTests}
 
 class OptionSpec extends MonocleSuite {
 
-  checkAll("some", PrismTests(monocle.std.some[Int, Int]))
+  checkAll("some", PrismTests(monocle.std.some[Int]))
   checkAll("none", PrismTests(monocle.std.none[Long]))
 
   checkAll("each Option", EachTests[Option[Int], Int])

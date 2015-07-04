@@ -14,7 +14,7 @@ class OptionExample extends MonocleSuite {
     mSome.set('a')(Some(1))  shouldEqual Some('a')
     mSome.set(2)(None)       shouldEqual None
 
-    mSome.modify((_: Int) + 2.0)(Some(1)) shouldEqual Some(3.0)
+    pSome.modify((_: Int) + 2.0)(Some(1)) shouldEqual Some(3.0)
   }
 
   test("none creates a Prism from an Option to Unit") {
