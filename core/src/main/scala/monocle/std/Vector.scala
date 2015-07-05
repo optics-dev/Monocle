@@ -8,9 +8,9 @@ import scalaz.\/
 import scalaz.std.vector._
 import scalaz.syntax.traverse._
 
-object vector extends VectorInstances
+object vector extends VectorOptics
 
-trait VectorInstances {
+trait VectorOptics {
 
   implicit def vectorEmpty[A]: Empty[Vector[A]] = new Empty[Vector[A]] {
     def empty = Prism[Vector[A], Unit](v => if(v.isEmpty) Some(()) else None)(_ => Vector.empty)

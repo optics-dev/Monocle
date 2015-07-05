@@ -5,9 +5,9 @@ import monocle.{PPrism, Prism, PIso, Iso}
 
 import scalaz.{-\/, \/-, \/}
 
-object option extends OptionInstances
+object option extends OptionOptics
 
-trait OptionFunctions {
+trait OptionOptics {
 
   final def pSome[A, B]: PPrism[Option[A], Option[B], A, B] =
     PPrism[Option[A], Option[B], A, B](_.map(\/-(_)) getOrElse -\/(None))(Some.apply)
@@ -23,9 +23,6 @@ trait OptionFunctions {
 
   final def optionToDisjunction[A]: Iso[Option[A], Unit \/ A] =
     pOptionToDisjunction[A, A]
-}
-
-trait OptionInstances extends OptionFunctions {
 
   implicit def optionEmpty[A]: Empty[Option[A]] = new Empty[Option[A]] {
     def empty = none

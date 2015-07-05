@@ -8,9 +8,9 @@ import scalaz.std.list._
 import scalaz.std.option._
 import scalaz.syntax.traverse._
 
-object string extends StringInstances
+object string extends StringOptics
 
-trait StringInstances {
+trait StringOptics {
 
   val stringToList: Iso[String, List[Char]] =
     Iso((_: String).toList)(_.mkString)

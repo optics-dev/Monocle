@@ -6,9 +6,9 @@ import monocle.internal.{Bits, Bounded}
 
 import scalaz.std.anyVal._
 
-object byte extends ByteInstances
+object byte extends ByteOptics
 
-trait ByteInstances {
+trait ByteOptics {
 
   implicit val byteBitIndex: Index[Byte, Int, Boolean] =
     Bits.bitsIndex[Byte]

@@ -8,9 +8,9 @@ import scalaz.std.map._
 import scalaz.syntax.traverse._
 import scalaz.Applicative
 
-object map extends MapInstances
+object map extends MapOptics
 
-trait MapInstances {
+trait MapOptics {
 
   implicit def mapEmpty[K, V]: Empty[Map[K, V]] = new Empty[Map[K, V]] {
     def empty = Prism[Map[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Map.empty)

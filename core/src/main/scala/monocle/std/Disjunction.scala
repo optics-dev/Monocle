@@ -3,9 +3,9 @@ package monocle.std
 import scalaz.{Validation, \/-, -\/, \/}
 import monocle.{Iso, PIso, Prism, PPrism}
 
-object disjunction extends DisjunctionFunctions
+object disjunction extends DisjunctionOptics
 
-trait DisjunctionFunctions {
+trait DisjunctionOptics {
   
   final def pLeft[A, B, C]: PPrism[A \/ B, C \/ B, A, C] =
     PPrism[A \/ B, C \/ B, A, C](_.swap.bimap(\/-.apply, identity))(-\/.apply)

@@ -3,9 +3,9 @@ package monocle.std
 import monocle.function._
 import monocle.{Iso, Lens, PTraversal}
 
-object tuple2 extends Tuple2Instances
+object tuple2 extends Tuple2Optics
 
-trait Tuple2Instances {
+trait Tuple2Optics {
 
   implicit def tuple2Each[A]: Each[(A, A), A] = new Each[(A, A), A] {
     def each =

@@ -5,9 +5,9 @@ import monocle.{Lens, Iso, Optional, Traversal}
 
 import scalaz.{Applicative, Maybe, OneAnd}
 
-object oneand extends OneAndInstances
+object oneand extends OneAndOptics
 
-trait OneAndInstances {
+trait OneAndOptics {
 
   implicit def oneAndEach[T[_], A](implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
     new Each[OneAnd[T, A], A]{

@@ -7,13 +7,11 @@ import monocle.law.discipline.{IsoTests, PrismTests}
 import scalaz.Maybe
 
 class MaybeSpec extends MonocleSuite {
+  checkAll("maybeToOption", IsoTests(maybeToOption[Int]))
 
-  checkAll("maybeToOption", IsoTests(maybeToOption[Int, Int]))
-
-  checkAll("just"   , PrismTests(just[Int, Int]))
+  checkAll("just"   , PrismTests(just[Int]))
   checkAll("nothing", PrismTests(nothing[Long]))
 
   checkAll("each Maybe", EachTests[Maybe[Int], Int])
   checkAll("empty Maybe", EmptyTests[Maybe[Int]])
-
 }

@@ -3,9 +3,9 @@ package monocle.std
 import monocle.{Prism, PPrism, Iso, PIso}
 import scalaz.{\/, -\/, \/-}
 
-object either extends StdEitherFunctions
+object either extends EitherOptics
 
-trait StdEitherFunctions {
+trait EitherOptics {
   
   final def pStdLeft[A, B, C]: PPrism[Either[A, B], Either[C, B], A, C] =
     PPrism[Either[A, B], Either[C, B], A, C]{

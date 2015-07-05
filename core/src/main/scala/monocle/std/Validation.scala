@@ -6,9 +6,9 @@ import scalaz.syntax.either._
 import scalaz.syntax.validation._
 import scalaz.{Validation, \/}
 
-object validation extends ValidationFunctions
+object validation extends ValidationOptics
 
-trait ValidationFunctions {
+trait ValidationOptics {
   final def pSuccess[E, A, B]: PPrism[Validation[E, A], Validation[E, B], A, B] =
     PPrism[Validation[E, A], Validation[E, B], A, B](
       _.fold(e => Validation.failure[E, B](e).left[A], a => a.right[Validation[E, B]])

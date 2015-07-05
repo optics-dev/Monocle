@@ -3,9 +3,9 @@ package monocle.std
 import monocle.function.{At, Empty}
 import monocle.{Lens, Prism}
 
-object set extends SetInstances
+object set extends SetOptics
 
-trait SetInstances {
+trait SetOptics {
 
   implicit def emptySet[A]: Empty[Set[A]] = new Empty[Set[A]] {
     def empty = Prism[Set[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Set.empty[A])

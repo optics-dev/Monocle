@@ -7,9 +7,9 @@ import scalaz.std.list._
 import scalaz.syntax.traverse._
 import scalaz.{==>>, Applicative, Order}
 
-object imap extends IMapInstances
+object imap extends IMapOptics
 
-trait IMapInstances {
+trait IMapOptics {
 
   implicit def iMapEmpty[K, V]: Empty[K ==>> V] = new Empty[K ==>> V] {
     def empty = Prism[K ==>> V, Unit](m => if(m.isEmpty) Some(()) else None)(_ => ==>>.empty)

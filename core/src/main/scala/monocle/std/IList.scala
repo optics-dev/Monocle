@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Optional, PIso, Prism}
+import monocle.{Iso, Optional, PIso, Prism}
 
 import scalaz.Id.Id
 import scalaz.std.option._
@@ -12,8 +12,11 @@ object ilist extends IListInstances
 
 trait IListInstances {
 
-  def iListToList[A, B]: PIso[IList[A], IList[B], List[A], List[B]] =
+  final def pIListToList[A, B]: PIso[IList[A], IList[B], List[A], List[B]] =
     PIso[IList[A], IList[B], List[A], List[B]](_.toList)(IList.fromList)
+
+  final def iListToList[A]: Iso[IList[A], List[A]] =
+    pIListToList[A, A]
 
   implicit def iListEmpty[A]: Empty[IList[A]] = new Empty[IList[A]] {
     def empty = Prism[IList[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => IList.empty)

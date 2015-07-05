@@ -6,9 +6,9 @@ import monocle.internal.{Bits, Bounded}
 
 import scalaz.Order
 
-object char extends CharInstances
+object char extends CharOptics
 
-trait CharInstances {
+trait CharOptics {
 
   implicit val charBitIndex: Index[Char, Int, Boolean] =
     Bits.bitsIndex[Char]

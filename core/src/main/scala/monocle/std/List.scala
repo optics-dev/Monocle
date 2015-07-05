@@ -9,9 +9,9 @@ import scalaz.std.option._
 import scalaz.syntax.traverse._
 import scalaz.{Applicative, \/}
 
-object list extends ListInstances
+object list extends ListOptics
 
-trait ListInstances {
+trait ListOptics {
 
   implicit def listEmpty[A]: Empty[List[A]] = new Empty[List[A]] {
     def empty = Prism[List[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => List.empty)

@@ -1,34 +1,34 @@
 package monocle.std
 
 trait StdInstances
-  extends BooleanInstances
-  with    ByteInstances
-  with    CharInstances
-  with    DoubleInstances
-  with    StdEitherFunctions
-  with    FunctionFunctions with FunctionInstances
-  with    IntInstances
-  with    ListInstances
-  with    LongInstances
-  with    MapInstances
-  with    MaybeFunctions  with MaybeInstances
-  with    OptionFunctions with OptionInstances
-  with    SetInstances
-  with    StreamInstances
-  with    StringInstances
-  with    Tuple2Instances
-  with    Tuple3Instances
-  with    Tuple4Instances
-  with    Tuple5Instances
-  with    Tuple6Instances
-  with    VectorInstances
+  extends BooleanOptics
+  with    ByteOptics
+  with    CharOptics
+  with    DoubleOptics
+  with    EitherOptics
+  with    FunctionOptics
+  with    IntOptics
+  with    ListOptics
+  with    LongOptics
+  with    MapOptics
+  with    MaybeOptics
+  with    OptionOptics
+  with    SetOptics
+  with    StreamOptics
+  with    StringOptics
+  with    Tuple2Optics
+  with    Tuple3Optics
+  with    Tuple4Optics
+  with    Tuple5Optics
+  with    Tuple6Optics
+  with    VectorOptics
   // Scalaz Instances
-  with    DisjunctionFunctions
-  with    TheseFunctions
+  with    DisjunctionOptics
+  with    TheseOptics
   with    IListInstances
-  with    IMapInstances
-  with    ISetInstances
-  with    NonEmptyListInstances
-  with    OneAndInstances
-  with    TreeFunctions with TreeInstances
-  with    ValidationFunctions
+  with    IMapOptics
+  with    ISetOptics
+  with    NonEmptyListOptics
+  with    OneAndOptics
+  with    TreeOptics
+  with    ValidationOptics

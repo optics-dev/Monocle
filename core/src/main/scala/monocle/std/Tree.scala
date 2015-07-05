@@ -8,18 +8,17 @@ import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
 
 
-object tree extends TreeFunctions with TreeInstances
+object tree extends TreeOptics
 
-trait TreeFunctions {
+trait TreeOptics {
 
-  def rootLabel[A]: Lens[Tree[A], A] =
+  final def rootLabel[A]: Lens[Tree[A], A] =
     Lens[Tree[A], A](_.rootLabel)(l => tree => Tree.node(l, tree.subForest))
 
-  def subForest[A]: Lens[Tree[A], Stream[Tree[A]]] =
+  final def subForest[A]: Lens[Tree[A], Stream[Tree[A]]] =
     Lens[Tree[A], Stream[Tree[A]]](_.subForest)(children => tree => Tree.node(tree.rootLabel, children))
 
-  def leftMostLabel[A]: Lens[Tree[A], A] = {
-
+  final def leftMostLabel[A]: Lens[Tree[A], A] = {
     @tailrec
     def _get(tree: Tree[A]): A = tree.subForest match {
       case Empty    => tree.rootLabel
@@ -34,8 +33,7 @@ trait TreeFunctions {
     Lens(_get)(_set)
   }
 
-  def rightMostLabel[A]: Lens[Tree[A], A] = {
-
+  final def rightMostLabel[A]: Lens[Tree[A], A] = {
     @tailrec
     def _get(tree: Tree[A]): A = tree.subForest match {
       case Empty => tree.rootLabel
@@ -49,10 +47,6 @@ trait TreeFunctions {
 
     Lens(_get)(_set)
   }
-
-}
-
-trait TreeInstances {
 
   implicit def treeEach[A]: Each[Tree[A], A] = Each.traverseEach[Tree, A]
 

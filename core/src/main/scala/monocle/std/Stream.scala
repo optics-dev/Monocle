@@ -8,9 +8,9 @@ import scalaz.Id.Id
 import scalaz.std.stream._
 import scalaz.syntax.traverse._
 
-object stream extends StreamInstances
+object stream extends StreamOptics
 
-trait StreamInstances {
+trait StreamOptics {
 
   implicit def streamEmpty[A]: Empty[Stream[A]] = new Empty[Stream[A]] {
     def empty = Prism[Stream[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Stream.empty)
@@ -42,7 +42,7 @@ trait StreamInstances {
     def snoc = Prism[Stream[A], (Stream[A], A)]( s =>
       for {
         init <- if(s.isEmpty) None else Some(s.init)
-        last <- if(s.isEmpty) None else Some(s.last)
+        last <- s.lastOption
       } yield (init, last)){
       case (init, last) => init :+ last
     }
