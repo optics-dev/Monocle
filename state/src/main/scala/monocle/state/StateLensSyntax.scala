@@ -1,12 +1,10 @@
-package monocle.syntax
+package monocle.state
 
 import monocle.PLens
 
 import scalaz.{IndexedState, State}
 
-object state extends StateSyntax
-
-trait StateSyntax {
+trait StateLensSyntax {
   implicit def toStateLensOps[S, T, A, B](lens: PLens[S, T, A, B]): StateLensOps[S, T, A, B] =
     new StateLensOps[S, T, A, B](lens)
 }

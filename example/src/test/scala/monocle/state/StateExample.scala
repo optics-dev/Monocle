@@ -1,4 +1,4 @@
-package monocle.syntax
+package monocle.state
 
 import monocle.MonocleSuite
 import monocle.macros.GenLens

@@ -55,8 +55,8 @@ lazy val monocleSettings = buildSettings ++ publishSettings ++ releaseSettings
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
   .settings(monocleSettings)
-  .aggregate(core, generic, law, macros, test, example, docs, bench)
-  .dependsOn(core, generic, law, macros, test % "test-internal -> test", bench % "compile-internal;test-internal -> test")
+  .aggregate(core, generic, law, macros, state, test, example, docs, bench)
+  .dependsOn(core, generic, law, macros, state, test % "test-internal -> test", bench % "compile-internal;test-internal -> test")
 
 
 lazy val core = project
@@ -93,6 +93,11 @@ lazy val macros = project.dependsOn(core)
   unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
   ))
 
+lazy val state = project.dependsOn(core)
+  .settings(moduleName := "monocle-state")
+  .settings(monocleSettings)
+  .settings(libraryDependencies := Seq(scalaz))
+
 lazy val test = project.dependsOn(core, generic, macros, law)
   .settings(moduleName := "monocle-test")
   .settings(monocleSettings)
@@ -114,7 +119,7 @@ lazy val bench = project
     compilerPlugin(paradisePlugin)
   ))
 
-lazy val example = project.dependsOn(core, generic, macros, test % "test->test")
+lazy val example = project.dependsOn(core, generic, macros, state, test % "test->test")
   .settings(moduleName := "monocle-example")
   .settings(monocleSettings)
   .settings(noPublishSettings)
