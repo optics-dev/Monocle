@@ -33,7 +33,7 @@ scala> john
 res0: monocle.example.LensExample.Person = Person(John,20,Address(10,High Street))
 
 scala> _age: Lens[Person, Int]
-res1: monocle.Lens[monocle.example.LensExample.Person,Int] = monocle.PLens$$anon$7@4897ffd4
+res1: monocle.Lens[monocle.example.LensExample.Person,Int] = monocle.PLens$$anon$7@1dfa31ff
 
 scala> _age.get(john)
 res2: Int = 20
