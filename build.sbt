@@ -4,12 +4,9 @@ import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 import pl.project13.scala.sbt.SbtJmh._
 import sbt.Keys._
-import sbtrelease.ReleaseStep
-import sbtrelease.ReleasePlugin.ReleaseKeys.releaseProcess
 import sbtrelease.ReleaseStateTransformations._
-import sbtrelease.Utilities._
+import ReleaseTransformations._
 import sbtunidoc.Plugin.UnidocKeys._
-
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
@@ -50,7 +47,7 @@ def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.1.0")
 )
 
-lazy val monocleSettings = buildSettings ++ publishSettings ++ releaseSettings
+lazy val monocleSettings = buildSettings ++ publishSettings
 
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
@@ -184,6 +181,7 @@ lazy val publishSettings = Seq(
       </developer>
     </developers>
     ),
+  releaseCrossBuild := true,
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,
@@ -191,27 +189,12 @@ lazy val publishSettings = Seq(
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
-    publishSignedArtifacts,
+    ReleaseStep(action = Command.process("publishSigned", _)),
     setNextVersion,
     commitNextVersion,
+    ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
     pushChanges
   )
-)
-
-lazy val publishSignedArtifacts = ReleaseStep(
-  action = { st =>
-    val extracted = st.extract
-    val ref = extracted.get(thisProjectRef)
-    extracted.runAggregated(publishSigned in Global in ref, st)
-  },
-  check = { st =>
-    // getPublishTo fails if no publish repository is set up.
-    val ex = st.extract
-    val ref = ex.get(thisProjectRef)
-    Classpaths.getPublishTo(ex.get(publishTo in Global in ref))
-    st
-  },
-  enableCrossBuild = true
 )
 
 lazy val noPublishSettings = Seq(
