@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Applicative, Choice, Functor, Maybe, Monoid, Split, \/}
+import scalaz.{Applicative, Choice, Functor, Monoid, Split, \/}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
@@ -20,7 +20,7 @@ import scalaz.{Applicative, Choice, Functor, Maybe, Monoid, Split, \/}
  * A [[PLens]] is also a valid [[Getter]], [[Fold]], [[POptional]],
  * [[PTraversal]] and [[PSetter]]
  *
- * Typically a [[PLens]] or [[Lens]] can be defined between a [[scala.Product]]
+ * Typically a [[PLens]] or [[Lens]] can be defined between a Product
  * (e.g. case class, tuple, HList) and one of it is component.
  *
  * @see [[monocle.law.LensLaws]]
