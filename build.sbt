@@ -159,7 +159,6 @@ lazy val publishSettings = Seq(
   autoAPIMappings := true,
   apiURL := Some(url("https://julien-truffaut.github.io/Monocle/api/")),
   publishMavenStyle := true,
-  publishArtifact in packageDoc := false,
   publishArtifact in Test := false,
   pomIncludeRepository := { _ => false },
   publishTo <<= version { (v: String) =>
