@@ -134,7 +134,7 @@ lazy val docs = project.dependsOn(core, example)
   .settings(docSettings)
   .settings(tutSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz, shapeless, compilerPlugin(kindProjector))
+    libraryDependencies ++= Seq(scalaz, shapeless, compilerPlugin(kindProjector), compilerPlugin(paradisePlugin))
   )
 
 
