@@ -1,59 +1,158 @@
 ---
-layout: source
-title:  "Hello"
-section: "example"
+layout: default
+title:  "Lens"
+section: "optics"
 scaladoc: "http://julien-truffaut.github.io/Monocle/api/#monocle.PLens"
 source: "https://github.com/julien-truffaut/Monocle/blob/master/example/src/main/scala/monocle/example/LensExample.scala"
 pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/docs/src/main/tut/lens.md"
 ---
 # Lens
 
-A `Lens` is an Optic used to zoom inside a `Product`, e.g. case class, `Tuple`, `HList`.
+A `Lens` is an Optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`.
 
-Let's take a simple example of 2 nested case classes:
+`Lenses` have two type parameters generally called `S` and `A`: `Lens[S, A]` where `S` represents the `Product` and `A` an element inside of `S`.
+
+Let's take a simple case class with two fields:
 
 ```scala
-case class Person(name: String, age: Int, address: Address)
 case class Address(streetNumber: Int, streetName: String)
 ```
 
-A `Lens` has two type parameters generally called `S` and `A`: `Lens[S, A]`.
-`S` represents the `Product` and `A` an element inside of `S`, in our above example we can define a `Lens` between:
-*   `Person` and its field `name`, `age` or `address`
-*   `Address` and its field `streetNumber` or `streetName`
+We can create a `Lens[Address, Int]` which zoom from an `Address` to its field `streetNumber` by supplying a pair of functions:
+ 
+*   `get: Address => Int` 
+*   `set: Int => Address => Address`
 
 ```scala
-scala> import monocle.Lens
+import monocle.Lens
+val _streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n)) 
+```
+
+Once we have a `Lens`, we can use the supplied `get` and `set` functions (nothing fancy!):
+
+```scala
+scala> val address = Address(10, "High Street")
+address: Address = Address(10,High Street)
+
+scala> _streetNumber.get(address)
+res0: Int = 10
+
+scala> _streetNumber.set(5)(address)
+res1: Address = Address(5,High Street)
+```
+
+We can also `modify` the target of `Lens` with a function, this equivalent to call `get` and then `set`:
+
+```scala
+scala> _streetNumber.modify(_ + 1)(address)
+res2: Address = Address(11,High Street)
+
+scala> val n = _streetNumber.get(address)
+n: Int = 10
+
+scala> _streetNumber.set(n + 1)(address)
+res3: Address = Address(11,High Street)
+```
+
+We can push push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `scalaz.Functor`:
+
+```scala
+def neighbors(n: Int): List[Int] =
+  if(n > 0) List(n - 1, n + 1) else List(n + 1) 
+  
+import scalaz.std.list._ // to get Functor[List] instance
+```
+```scala
+scala> _streetNumber.modifyF(neighbors)(address)
+res5: List[Address] = List(Address(9,High Street), Address(11,High Street))
+
+scala> _streetNumber.modifyF(neighbors)(Address(135, "High Street"))
+res6: List[Address] = List(Address(134,High Street), Address(136,High Street))
+```
+
+Most importantly, `Lenses` compose to zoom deeper in a data structure
+
+```scala
+case class Person(name: String, age: Int, address: Address)
+val john = Person("John", 20, address)
+```
+
+```scala
+val _address = Lens[Person, Address](_.address)(p => a => p.copy(address = a)) 
+
+(_address composeLens _streetNumber).get(john)
+(_address composeLens _streetNumber).set(2)(john)
+```
+
+
+## Lens Generation
+ 
+`Lens` creation is rather boiler platy but we developed a few macros to generate them automatically. All macros 
+are defined in a separate module:
+
+```scala
+libraryDependencies += "com.github.julien-truffaut"  %%  "monocle-macro"  % ${version} 
+```
+
+```scala
+import monocle.macros.GenLens
+val _age = GenLens[Person](_.age)
+```
+
+`GenLens` can also be used to generate `Lens` several level deep:
+ 
+```scala
+scala> GenLens[Person](_.address.streetName).set("Iffley Road")(john)
+res7: Person = Person(John,20,Address(10,Iffley Road))
+```
+
+For those who want to push `Lenses` generation even further, we created `@Lenses` macro annotation which generate
+`Lenses` for *all* fields of a case class. The generated `Lenses` are in the companion object of the case class:
+
+```scala
+addCompilerPlugin("org.scalamacros" %% "paradise" % "2.0.1" cross CrossVersion.full)
+```
+
+```scala
+import monocle.macros.Lenses
+@Lenses case class Point(x: Int, y: Int)
+```
+
+```scala
+scala> val p = Point(5, 3)
+p: Point = Point(5,3)
+
+scala> Point.x.get(p)
+res8: Int = 5
+
+scala> Point.y.set(0)(p)
+res9: Point = Point(5,0)
+```
+
+Note that `@Lenses` might not supported by your favorite IDE, currently only Intellij recognises the generated `Lenses`.
+
+## Laws 
+
+`Lenses` are built using a pair of functions `get` and `set`. However, not all functions form a valid `Lens`, `get` and `set`
+also need to respect the following laws:
+
+```scala
 import monocle.Lens
 
-scala> import monocle.example.LensExample._
-import monocle.example.LensExample._
+class LensLaws[S, A](lens: Lens[S, A]) {
 
-scala> john
-res0: monocle.example.LensExample.Person = Person(John,20,Address(10,High Street))
-
-scala> _age: Lens[Person, Int]
-res1: monocle.Lens[monocle.example.LensExample.Person,Int] = monocle.PLens$$anon$7@1dfa31ff
-
-scala> _age.get(john)
-res2: Int = 20
-
-scala> _age.set(25)(john)
-res3: monocle.example.LensExample.Person = Person(John,25,Address(10,High Street))
-
-scala> _age.modify(_ + 1)(john)
-res4: monocle.example.LensExample.Person = Person(John,21,Address(10,High Street))
+  def getSetLaw(s: S): Boolean =
+    lens.set(lens.get(s)) == s
+    
+  def setGetLaw(s: S, a: A): Boolean =
+    lens.get(lens.set(a)(s)) == a
+    
+}
 ```
 
-Lenses can be composed to zoom deeper in a data structure
+`getSetLaw` states that if you `get` a value `A` from `S` and then `set` it back in, the result is an object identical to the original one. 
+A side effect of this law is that `set` is constraint to only update the `A` it points to, for example it cannot 
+increment a counter or modify another value of type `A`.
 
-```scala
-scala> (_address composeLens _streetNumber).get(john)
-res5: Int = 10
-
-scala> (_address composeLens _streetNumber).set(2)(john)
-res6: monocle.example.LensExample.Person = Person(John,20,Address(2,High Street))
-```
-
-
-
+`setGetLaw` states that if you `set` a value, you always `get` the same value back. This law guarantees that `set` is 
+actually updating a value of type `A`.
