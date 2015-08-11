@@ -110,10 +110,6 @@ For those who want to push `Lenses` generation even further, we created `@Lenses
 `Lenses` for *all* fields of a case class. The generated `Lenses` are in the companion object of the case class:
 
 ```scala
-addCompilerPlugin("org.scalamacros" %% "paradise" % "2.0.1" cross CrossVersion.full)
-```
-
-```scala
 import monocle.macros.Lenses
 @Lenses case class Point(x: Int, y: Int)
 ```
@@ -129,12 +125,7 @@ scala> Point.y.set(0)(p)
 res9: Point = Point(5,0)
 ```
 
-Note that `@Lenses` might not supported by your favorite IDE, currently only Intellij recognises the generated `Lenses`.
-
 ## Laws 
-
-`Lenses` are built using a pair of functions `get` and `set`. However, not all functions form a valid `Lens`, `get` and `set`
-also need to respect the following laws:
 
 ```scala
 import monocle.Lens
@@ -154,5 +145,5 @@ class LensLaws[S, A](lens: Lens[S, A]) {
 A side effect of this law is that `set` is constraint to only update the `A` it points to, for example it cannot 
 increment a counter or modify another value of type `A`.
 
-`setGetLaw` states that if you `set` a value, you always `get` the same value back. This law guarantees that `set` is 
-actually updating a value of type `A`.
+`setGetLaw` states that if you `set` a value, you always `get` the same value back. This law guarantees that `set` is
+ actually updating a value of type `A`.
