@@ -14,13 +14,14 @@ import sbt._
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-val scalaVersion   = "2.11.6"  // or "2.10.5"
-val libraryVersion = "1.1.1"   // or "1.2.0-SNAPSHOT"
+val scalaVersion   = "2.11.7"   // or "2.10.5"
+val libraryVersion = "1.2.0-M1" // or "1.3.0-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion,
   "com.github.julien-truffaut"  %%  "monocle-generic" % libraryVersion,
-  "com.github.julien-truffaut"  %%  "monocle-macro"   % libraryVersion,        
+  "com.github.julien-truffaut"  %%  "monocle-macro"   % libraryVersion,
+  "com.github.julien-truffaut"  %%  "monocle-state"   % libraryVersion,
   "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % "test" 
 )
 
