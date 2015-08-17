@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Applicative, Category, Maybe, Monoid, \/}
+import scalaz.{Applicative, Category, Equal, Maybe, Monoid, \/}
 import scalaz.syntax.std.option._
 
 /**
@@ -253,6 +253,10 @@ object Prism {
       def getOption(s: S): Option[A] =
         _getOption(s)
     }
+
+  /** a [[Prism]] that checks for equality with a given value */
+  def only[A](a: A)(implicit A: Equal[A]): Prism[A, Unit] =
+    Prism[A, Unit](a2 => if(A.equal(a, a2)) Some(()) else None)(_ => a)
 }
 
 sealed abstract class PrismInstances {
