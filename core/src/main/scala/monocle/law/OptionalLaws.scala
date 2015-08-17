@@ -9,7 +9,7 @@ class OptionalLaws[S, A](optional: Optional[S, A]) {
   import IsEq.syntax
 
   def getOptionSet(s: S): IsEq[S] =
-    optional.getOrModify(s).fold(identity, optional.set(_)(s)) <==> s
+    optional.matching(s).fold(identity, optional.set(_)(s)) <==> s
 
   def setGetOption(s: S, a: A): IsEq[Option[A]] =
     optional.getOption(optional.set(a)(s)) <==> optional.getOption(s).map(_ => a)
