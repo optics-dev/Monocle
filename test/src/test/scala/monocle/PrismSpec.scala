@@ -3,6 +3,7 @@ package monocle
 import monocle.law.discipline.{OptionalTests, PrismTests, SetterTests, TraversalTests}
 
 import scalaz._
+import scalaz.std.list._
 
 class PrismSpec extends MonocleSuite {
 
@@ -24,5 +25,14 @@ class PrismSpec extends MonocleSuite {
     Category[Prism].id[Int].getOption(3) shouldEqual Some(3)
   }
 
+  test("only") {
+    Prism.only(5).getOption(5) shouldEqual Some(())
+  }
+
+  test("below") {
+    val _5s = Prism.only(5).below[List]
+    _5s.getOption(List(1,2,3,4,5)) shouldEqual None
+    _5s.getOption(List(5,5,5))     shouldEqual Some(List((), (), ()))
+  }
 
 }
