@@ -9,7 +9,7 @@ class PrismLaws[S, A](prism: Prism[S, A]) {
   import IsEq.syntax
 
   def partialRoundTripOneWay(s: S): IsEq[S] =
-    prism.getOrModify(s).fold(identity, prism.reverseGet) <==> s
+    prism.matching(s).fold(identity, prism.reverseGet) <==> s
   
   def roundTripOtherWay(a: A): IsEq[Option[A]] =
     prism.getOption(prism.reverseGet(a)) <==> Some(a)

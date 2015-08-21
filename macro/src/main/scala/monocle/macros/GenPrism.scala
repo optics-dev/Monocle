@@ -3,9 +3,6 @@ package monocle.macros
 import monocle.Prism
 import monocle.macros.internal.MacrosCompatibility
 
-
-
-
 object GenPrism {
   /** generate a [[Prism]] between `S` and a subtype `A` of `S` */
   def apply[S, A <: S]: Prism[S, A] = macro GenPrismImpl.genPrism_impl[S, A]
@@ -23,7 +20,7 @@ private object GenPrismImpl extends MacrosCompatibility {
       import scalaz.{\/, \/-, -\/}
 
       new Prism[$sTpe, $aTpe]{
-        def getOrModify(s: $sTpe): $sTpe \/ $aTpe =
+        def matching(s: $sTpe): $sTpe \/ $aTpe =
           if(s.isInstanceOf[$aTpe]) \/-(s.asInstanceOf[$aTpe])
           else -\/(s)
 
