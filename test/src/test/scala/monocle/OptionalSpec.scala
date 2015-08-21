@@ -18,8 +18,9 @@ class OptionalSpec extends MonocleSuite {
   checkAll("optional.asTraversal", TraversalTests(headOption[Int].asTraversal))
   checkAll("optional.asSetter"   , SetterTests(headOption[Int].asSetter))
 
-  test("void"){
-    (Iso.id[Int] composeOptional Optional.void[Int, Int]).getOption(1) shouldEqual None
+  test("void") {
+    Optional.void.getOption("hello") shouldEqual None
+    Optional.void.set(5)("hello")    shouldEqual "hello"
   }
 
   // test implicit resolution of type classes
