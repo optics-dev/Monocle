@@ -31,6 +31,11 @@ class TraversalSpec extends MonocleSuite {
 
   checkAll("traversal.asSetter", SetterTests(coordinates.asSetter))
 
+  test("length") {
+    all[Location].length(IList(Location(1,2,""), Location(3,4,""))) shouldEqual 2
+    all[Location].length(INil[Location])                            shouldEqual 0
+  }
+
   // test implicit resolution of type classes
 
   test("Traversal has a Compose instance") {

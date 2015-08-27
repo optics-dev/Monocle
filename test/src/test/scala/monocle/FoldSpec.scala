@@ -27,6 +27,11 @@ class FoldSpec extends MonocleSuite {
     iListFold.all(_ <= 7)(IList(1,2,3))     shouldEqual true
   }
 
+  test("length") {
+    iListFold.length(IList(1,2,3,4,5)) shouldEqual 5
+    iListFold.length(INil())           shouldEqual 0
+  }
+
   def nestedIListFold[A] = new Fold[IList[IList[A]], IList[A]]{
     def foldMap[M: Monoid](f: (IList[A]) => M)(s: IList[IList[A]]): M =
       s.foldRight(Monoid[M].zero)((l, acc) => Monoid[M].append(f(l), acc))
