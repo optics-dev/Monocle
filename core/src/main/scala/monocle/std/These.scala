@@ -9,7 +9,7 @@ import scalaz.{-\/, \&/, \/, \/-}
 object these extends TheseOptics
 
 trait TheseOptics {
-  def theseDisjunction[A, B]: Prism[A \&/ B, A \/ B] = Prism[A \&/ B, A \/ B]{
+  def theseToDisjunction[A, B]: Prism[A \&/ B, A \/ B] = Prism[A \&/ B, A \/ B]{
     case This(a) => Some(a.left[B])
     case That(b) => Some(b.right[A])
     case Both(_, _) => None
@@ -17,4 +17,8 @@ trait TheseOptics {
     case -\/(a) => This(a)
     case \/-(b) => That(b)
   }
+
+  @deprecated("use theseToDisjunction", since = "1.2.0")
+  def theseDisjunction[A, B]: Prism[A \&/ B, A \/ B] =
+    theseToDisjunction[A, B]
 }
