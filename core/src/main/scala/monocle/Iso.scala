@@ -200,7 +200,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** view a [[PIso]] as a [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
     new POptional[S, T, A, B]{
-      def matching(s: S): T \/ A =
+      def getOrModify(s: S): T \/ A =
         \/.right(get(s))
 
       def set(b: B): S => T =
@@ -219,7 +219,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** view a [[PIso]] as a [[PPrism]] */
   @inline final def asPrism: PPrism[S, T, A, B] =
     new PPrism[S, T, A, B]{
-      def matching(s: S): T \/ A =
+      def getOrModify(s: S): T \/ A =
         \/.right(get(s))
 
       def reverseGet(b: B): T =

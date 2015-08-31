@@ -5,8 +5,8 @@ import scalaz.syntax.std.option._
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
- *  - `matching: S      => T \/ A`
- *  - `set     : (B, S) => T`
+ *  - `getOrModify: S      => T \/ A`
+ *  - `set        : (B, S) => T`
  *
  * A [[POptional]] could also be defined as a weaker [[PLens]] and
  * weaker [[PPrism]]
@@ -28,11 +28,7 @@ import scalaz.syntax.std.option._
 abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   /** get the target of a [[POptional]] or return the original value while allowing the type to change if it does not match */
-  def matching(s: S): T \/ A
-
-  @deprecated("renamed to matching", since = "1.2.0")
-  def getOrModify(s: S): T \/ A =
-    matching(s)
+  def getOrModify(s: S): T \/ A
 
   /** get the modified source of a [[POptional]] */
   def set(b: B): S => T
@@ -48,14 +44,14 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   /**
    * modify polymorphically the target of a [[POptional]] with a function.
-   * return empty if the [[POptional]] is not matching
+   * return empty if the [[POptional]] is not getOrModify
    */
   @inline final def modifyOption(f: A => B): S => Option[T] =
     s => getOption(s).map(a => set(f(a))(s))
 
   /**
    * set polymorphically the target of a [[POptional]] with a value.
-   * return empty if the [[POptional]] is not matching
+   * return empty if the [[POptional]] is not getOrModify
    */
   @inline final def setOption(b: B): S => Option[T] =
     modifyOption(_ => b)
@@ -66,13 +62,13 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   /** join two [[POptional]] with the same target */
   @inline final def sum[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
-    POptional[S \/ S1, T \/ T1, A, B](_.fold(self.matching(_).leftMap(\/.left), other.matching(_).leftMap(\/.right))){
+    POptional[S \/ S1, T \/ T1, A, B](_.fold(self.getOrModify(_).leftMap(\/.left), other.getOrModify(_).leftMap(\/.right))){
       b => _.bimap(self.set(b), other.set(b))
     }
 
   @inline final def first[C]: POptional[(S, C), (T, C), (A, C), (B, C)] =
     POptional[(S, C), (T, C), (A, C), (B, C)]{
-      case (s, c) => matching(s).bimap(_ -> c, _ -> c)
+      case (s, c) => getOrModify(s).bimap(_ -> c, _ -> c)
     }{ case (b, c) => {
         case (s, _) => (set(b)(s), c)
       }
@@ -80,7 +76,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   @inline final def second[C]: POptional[(C, S), (C, T), (C, A), (C, B)] =
     POptional[(C, S), (C, T), (C, A), (C, B)]{
-      case (c, s) => matching(s).bimap(c -> _, c -> _)
+      case (c, s) => getOrModify(s).bimap(c -> _, c -> _)
     }{ case (c, b) => {
         case (_, s) => (c, set(b)(s))
       }
@@ -121,8 +117,8 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   /** compose a [[POptional]] with a [[POptional]] */
   @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     new POptional[S, T, C, D]{
-      def matching(s: S): T \/ C =
-        self.matching(s).flatMap(a => other.matching(a).bimap(self.set(_)(s), identity))
+      def getOrModify(s: S): T \/ C =
+        self.getOrModify(s).flatMap(a => other.getOrModify(a).bimap(self.set(_)(s), identity))
 
       def set(d: D): S => T =
         self.modify(other.set(d))
@@ -210,26 +206,26 @@ object POptional extends OptionalInstances {
       _.fold(\/.right, \/.right)
     )(t => _.bimap(_ => t, _ => t))
 
-  /** create a [[POptional]] using the canonical functions: matching and set */
-  def apply[S, T, A, B](_matching: S => T \/ A)(_set: B => S => T): POptional[S, T, A, B] =
+  /** create a [[POptional]] using the canonical functions: getOrModify and set */
+  def apply[S, T, A, B](_getOrModify: S => T \/ A)(_set: B => S => T): POptional[S, T, A, B] =
     new POptional[S, T, A, B]{
-      def matching(s: S): T \/ A =
-        _matching(s)
+      def getOrModify(s: S): T \/ A =
+        _getOrModify(s)
 
       def set(b: B): S => T =
         _set(b)
 
       def getOption(s: S): Option[A] =
-        _matching(s).toOption
+        _getOrModify(s).toOption
 
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        _matching(s).fold(
+        _getOrModify(s).fold(
           t => Applicative[F].point(t),
           a => Applicative[F].map(f(a))(_set(_)(s))
         )
 
       def modify(f: A => B): S => T =
-        s => _matching(s).fold(identity, a => _set(f(a))(s))
+        s => _getOrModify(s).fold(identity, a => _set(f(a))(s))
     }
 }
 
@@ -247,7 +243,7 @@ object Optional {
   /** alias for [[POptional]] apply restricted to monomorphic update */
   def apply[S, A](_getOption: S => Option[A])(_set: A => S => S): Optional[S, A] =
     new Optional[S, A]{
-      def matching(s: S): S \/ A =
+      def getOrModify(s: S): S \/ A =
         _getOption(s).fold[S \/ A](\/.left(s))(\/.right)
 
       def set(a: A): S => S =

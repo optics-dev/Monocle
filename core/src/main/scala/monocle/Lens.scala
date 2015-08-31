@@ -185,7 +185,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /** view a [[PLens]] as an [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
     new POptional[S, T, A, B] {
-      def matching(s: S): T \/ A =
+      def getOrModify(s: S): T \/ A =
         \/.right(get(s))
 
       def set(b: B): S => T =

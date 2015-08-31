@@ -20,7 +20,7 @@ private object GenPrismImpl extends MacrosCompatibility {
       import scalaz.{\/, \/-, -\/}
 
       new Prism[$sTpe, $aTpe]{
-        def matching(s: $sTpe): $sTpe \/ $aTpe =
+        def getOrModify(s: $sTpe): $sTpe \/ $aTpe =
           if(s.isInstanceOf[$aTpe]) \/-(s.asInstanceOf[$aTpe])
           else -\/(s)
 
