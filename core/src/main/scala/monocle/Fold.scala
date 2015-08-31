@@ -64,6 +64,10 @@ abstract class Fold[S, A] extends Serializable { self =>
   @inline final def headMaybe(s: S): Maybe[A] =
     find(_ => true)(s).toMaybe
 
+  /** calculate the number of targets */
+  @inline final def length(s: S): Int =
+    foldMap(_ => 1)(s)
+
   /**********************************************************/
   /** Compose methods between a [[Fold]] and another Optics */
   /**********************************************************/

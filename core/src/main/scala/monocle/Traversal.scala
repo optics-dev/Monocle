@@ -86,6 +86,10 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   @inline final def headMaybe(s: S): Maybe[A] =
     find(_ => true)(s).toMaybe
 
+  /** calculate the number of targets */
+  @inline final def length(s: S): Int =
+    foldMap(_ => 1)(s)
+
   /****************************************************************/
   /** Compose methods between a [[PTraversal]] and another Optics */
   /****************************************************************/
