@@ -104,3 +104,23 @@ import monocle.std.tuple2._      // to get instance Fields instance for Tuple2
 ```
 
 Composing a `Prism` with a `Lens` gives an `Optional` (TODO `Optional` doc).
+
+## Prism Laws
+
+```tut:silent
+class PrismLaws[S, A](prism: Prism[S, A]) {
+
+  def partialRoundTripOneWayLaw(s: S): Boolean =
+    prism.getOption(s).fold(true)(prism.reverseGet(_) == s)
+    
+  def roundTripOtherWayLaw(a: A): Boolean =
+    prism.getOption(prism.reverseGet(a)) == Some(a)
+    
+}
+```
+
+The first law states that if a `Prism` matches (i.e. `getOption` returns a `Some`), you can always come back 
+to the original value using `reverseGet`.
+
+The second laws states that starting from an `A`, you can do a complete round trip. This law is equivalent to the 
+second law of `Iso`.

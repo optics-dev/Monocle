@@ -111,8 +111,6 @@ Point.y.set(0)(p)
 ## Laws 
 
 ```tut:silent
-import monocle.Lens
-
 class LensLaws[S, A](lens: Lens[S, A]) {
 
   def getSetLaw(s: S): Boolean =
