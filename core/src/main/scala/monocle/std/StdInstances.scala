@@ -32,3 +32,4 @@ trait StdInstances
   with    OneAndOptics
   with    TreeOptics
   with    ValidationOptics
+  with    Either3Optics
