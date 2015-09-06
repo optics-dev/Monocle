@@ -1,7 +1,6 @@
 package monocle.function
 
-import monocle.Monocle._
-import monocle._
+import monocle._, Monocle._
 
 import scalaz.Tree._
 

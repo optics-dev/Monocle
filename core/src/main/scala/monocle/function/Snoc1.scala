@@ -1,7 +1,8 @@
 package monocle.function
 
+import monocle.function.fields._
 import monocle.std.tuple2._
-import monocle.{Lens, Iso}
+import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
 
@@ -9,7 +10,6 @@ import scala.annotation.implicitNotFound
 @implicitNotFound("Could not find an instance of Snoc1[${S}, ${I}, ${L}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 trait Snoc1[S, I, L] extends Serializable {
-
   /**
    * snoc1 defines an [[Iso]] between a S and its init and last element.
    * snoc1 is like snoc but for types that have *always* an init and a last element, e.g. a non empty list
@@ -18,7 +18,6 @@ trait Snoc1[S, I, L] extends Serializable {
 
   def init: Lens[S, I] = snoc1 composeLens first
   def last: Lens[S, L] = snoc1 composeLens second
-
 }
 
 object Snoc1 extends Snoc1Functions

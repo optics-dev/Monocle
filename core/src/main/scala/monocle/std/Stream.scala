@@ -49,6 +49,6 @@ trait StreamOptics {
   }
 
   implicit def streamReverse[A]: Reverse[Stream[A], Stream[A]] =
-    reverseFromReverseFunction[Stream[A]](_.reverse)
+    Reverse.reverseFromReverseFunction[Stream[A]](_.reverse)
 
 }

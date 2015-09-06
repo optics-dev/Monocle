@@ -1,5 +1,6 @@
 package monocle.law.discipline.function
 
+import monocle.function.Empty._
 import monocle.function._
 import monocle.law.discipline.PrismTests
 import org.scalacheck.{Arbitrary, Prop}

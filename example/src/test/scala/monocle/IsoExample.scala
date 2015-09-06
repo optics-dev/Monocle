@@ -1,8 +1,8 @@
 package monocle
 
 import monocle.macros.GenIso
-import monocle.std._
-import monocle.syntax._
+import monocle.std.all._
+import monocle.syntax.all._
 
 class IsoExample extends MonocleSuite {
 

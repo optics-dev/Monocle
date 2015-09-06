@@ -1,8 +1,8 @@
 package monocle.function
 
 import monocle.MonocleSuite
-import monocle.std._
-
+import monocle.function.all._
+import monocle.std.all._
 
 class ConsSnocExample extends MonocleSuite {
 

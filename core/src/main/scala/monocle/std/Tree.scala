@@ -2,6 +2,8 @@ package monocle.std
 
 import monocle.function._
 import monocle.{Iso, Lens}
+import monocle.function.all._
+import monocle.std.stream._
 
 import scalaz.Tree
 import scala.annotation.tailrec

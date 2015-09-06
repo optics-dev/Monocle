@@ -1,5 +1,6 @@
 package monocle.function
 
+import monocle.function.fields._
 import monocle.std.tuple2._
 import monocle.{Iso, Lens}
 
@@ -8,7 +9,6 @@ import scala.annotation.implicitNotFound
 @implicitNotFound("Could not find an instance of Cons1[${S}, ${H}, ${T}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 trait Cons1[S, H, T] extends Serializable {
-
   /** 
    * cons1 defines an [[Iso]] between a S and its head and tail.
    * cons1 is like cons but for types that have *always* a head and tail, e.g. a non empty list

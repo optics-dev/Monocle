@@ -1,5 +1,7 @@
 package monocle.std
 
+object all extends StdInstances
+
 trait StdInstances
   extends BooleanOptics
   with    ByteOptics

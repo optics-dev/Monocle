@@ -1,6 +1,7 @@
 package monocle.generic
 
 import monocle.MonocleSuite
+import monocle.generic.all._
 import shapeless.test.illTyped
 import shapeless.{:+:, CNil, Coproduct}
 

@@ -1,8 +1,9 @@
 package monocle.law.discipline.function
 
+import monocle.function.Cons._
 import monocle.function._
 import monocle.law.discipline.{OptionalTests, PrismTests}
-import org.scalacheck.{Arbitrary, Prop}
+import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
 import scalaz.Equal

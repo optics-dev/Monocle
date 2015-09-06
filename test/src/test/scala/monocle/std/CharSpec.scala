@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.MonocleSuite
-import monocle.function._
+import monocle.function.all._
 import monocle.law.discipline.{OptionalTests, PrismTests}
 
 class CharSpec extends MonocleSuite {

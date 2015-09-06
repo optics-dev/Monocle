@@ -1,5 +1,6 @@
 package monocle.law.discipline.function
 
+import monocle.function.At._
 import monocle.function._
 import monocle.law.discipline.LensTests
 import org.scalacheck.Arbitrary

@@ -1,8 +1,9 @@
 package monocle.syntax
 
-import monocle.function._
+import monocle.function.all._
 import monocle.macros.GenLens
 import monocle.std._
+import monocle.syntax.all._
 import monocle.{Lens, MonocleSuite, Prism}
 
 class SymbolicSyntaxExample extends MonocleSuite {

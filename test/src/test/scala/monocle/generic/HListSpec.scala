@@ -1,7 +1,8 @@
 package monocle.generic
 
 import monocle.MonocleSuite
-import monocle.function._
+import monocle.function.all._
+import monocle.generic.all._
 import monocle.law.discipline.{IsoTests, LensTests}
 import org.scalacheck.Arbitrary
 import shapeless.HList._

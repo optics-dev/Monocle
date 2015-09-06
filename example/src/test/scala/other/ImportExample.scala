@@ -20,8 +20,8 @@ object Custom {
 
 class ImportExample extends MonocleSuite {
 
-  test("monocle.function._ imports all polymorphic optics in the scope") {
-    import monocle.function._
+  test("monocle.function.all._ imports all polymorphic optics in the scope") {
+    import monocle.function.all._
 
     // do not compile because Each instance for List is not in the scope
     illTyped { """each[List[Int], Int].modify(List(1,2,3), _ + 1)""" }
@@ -33,8 +33,8 @@ class ImportExample extends MonocleSuite {
     first[Custom, Int].modify(_ + 1)(Custom(1)) shouldEqual Custom(2)
   }
 
-  test("monocle.syntax._ permits to use optics as operator which improves type inference") {
-    import monocle.function._
+  test("monocle.syntax.all._ permits to use optics as operator which improves type inference") {
+    import monocle.function.all._
     import monocle.std.list._
 
     // do not compile because scala cannot infer which instance of Each is required
@@ -43,9 +43,9 @@ class ImportExample extends MonocleSuite {
     each[List[Int], Int].modify(_ + 1)(List(1,2,3)) shouldEqual List(2,3,4)
   }
 
-  test("monocle.std._ brings all polymorphic Optic instances in scope for standard Scala classes") {
-    import monocle.function._
-    import monocle.std._
+  test("monocle.std.all._ brings all polymorphic Optic instances in scope for standard Scala classes") {
+    import monocle.function.all._
+    import monocle.std.all._
 
     // do not compile because Head instance for HList is not in scope
     illTyped { """head[Int :: HNil, Int].modify(1 :: HNil, _ + 1) shouldEqual (2 :: HNil)""" }
@@ -54,9 +54,9 @@ class ImportExample extends MonocleSuite {
     each[IList[Int], Int].modify(_ + 1)(IList(1,2,3)) shouldEqual IList(2,3,4)
   }
 
-  test("monocle.generic._ brings all polymorphic Optic instances in scope for Shapeless classes") {
-    import monocle.function._
-    import monocle.generic._
+  test("monocle.generic.all._ brings all polymorphic Optic instances in scope for Shapeless classes") {
+    import monocle.function.all._
+    import monocle.generic.all._
 
     // do not compile because Each instance for List is not in scope
     illTyped { """each[List[Int], Int].modify(List(1,2,3), _ + 1)""" }
@@ -65,8 +65,7 @@ class ImportExample extends MonocleSuite {
   }
 
   test("monocle._, Monocle._ makes all Monocle core features available (no generic)") {
-    import monocle._
-    import Monocle._
+    import monocle._, Monocle._
 
     each[List[Int], Int].modify(_ + 1)(List(1,2,3))   shouldEqual List(2,3,4)
     each[IList[Int], Int].modify(_ + 1)(IList(1,2,3)) shouldEqual IList(2,3,4)

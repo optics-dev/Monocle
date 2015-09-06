@@ -1,13 +1,14 @@
 package monocle
 
 import monocle.std.ilist._
+import monocle.function.all._
 
 import scalaz._
 
 class SetterSpec extends MonocleSuite {
 
   def all[A]: Setter[IList[A], A] = PSetter.fromFunctor[IList, A, A]
-  def even[A]: Setter[IList[A], A] = function.filterIndex[IList[A], Int, A](_ % 2 == 0).asSetter
+  def even[A]: Setter[IList[A], A] = filterIndex[IList[A], Int, A](_ % 2 == 0).asSetter
 
   // test implicit resolution of type classes
 

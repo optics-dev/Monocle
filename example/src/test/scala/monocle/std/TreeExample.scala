@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.MonocleSuite
-import monocle.syntax._
+import monocle.syntax.all._
 
 import scalaz.Tree._
 

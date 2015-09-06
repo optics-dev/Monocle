@@ -34,7 +34,7 @@ trait StringOptics {
     }
 
   implicit val stringReverse: Reverse[String, String] =
-    reverseFromReverseFunction[String](_.reverse)
+    Reverse.reverseFromReverseFunction[String](_.reverse)
 
   implicit val stringEach: Each[String, Char] =
     new Each[String, Char] {

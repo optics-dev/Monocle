@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.MonocleSuite
-import monocle.function._
+import monocle.function.all._
 import monocle.law.discipline.LensTests
 import monocle.law.discipline.function.{Cons1Tests, EachTests, ReverseTests, Snoc1Tests}
 

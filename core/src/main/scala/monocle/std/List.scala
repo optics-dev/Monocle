@@ -22,7 +22,7 @@ trait ListOptics {
   }
 
   implicit def listReverse[A]: Reverse[List[A], List[A]] =
-    reverseFromReverseFunction[List[A]](_.reverse)
+    Reverse.reverseFromReverseFunction[List[A]](_.reverse)
 
   implicit def listEach[A]: Each[List[A], A] = Each.traverseEach[List, A]
 
