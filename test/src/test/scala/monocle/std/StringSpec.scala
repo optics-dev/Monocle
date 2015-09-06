@@ -21,4 +21,8 @@ class StringSpec extends MonocleSuite {
   checkAll("String to Int"     , PrismTests(stringToInt))
   checkAll("String to Long"    , PrismTests(stringToLong))
 
+  test("String to Long: '-' to long should not succeed.") {
+    stringToLong.getOption("-") shouldEqual None
+  }
+
 }
