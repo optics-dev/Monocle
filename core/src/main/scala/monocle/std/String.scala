@@ -80,7 +80,8 @@ trait StringOptics {
     }
 
   private def parseLongUnsigned(s: List[Char]): Option[Long] =
-    s.traverse(charToDigit).map(_.foldl(0L)(n => d => n * 10 + d))
+    if(s.isEmpty) None
+    else s.traverse(charToDigit).map(_.foldl(0L)(n => d => n * 10 + d))
 
   private def charToDigit(c: Char): Option[Int] =
     if (c >= '0' && c <= '9') Some(c - '0')
