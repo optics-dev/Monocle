@@ -137,4 +137,11 @@ trait TestInstances {
   implicit def nelArbitrary[A: Arbitrary]: Arbitrary[NonEmptyList[A]] =
     Arbitrary(oneAndArbitrary[List,A].arbitrary.map( o => NonEmptyList(o.head, o.tail:_*)))
 
+  implicit def either3Arbitrary[A: Arbitrary, B: Arbitrary, C: Arbitrary]: Arbitrary[Either3[A, B, C]] =
+    Arbitrary(Gen.oneOf(
+      Arbitrary.arbitrary[A].map(Either3.left3),
+      Arbitrary.arbitrary[B].map(Either3.middle3),
+      Arbitrary.arbitrary[C].map(Either3.right3)
+    ))
+
 }
