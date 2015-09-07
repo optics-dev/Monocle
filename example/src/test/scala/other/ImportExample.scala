@@ -1,6 +1,8 @@
 package other
 
-import monocle.MonocleSuite
+import monocle.TestInstances
+import org.scalatest.{Matchers, FunSuite}
+import org.typelevel.discipline.scalatest.Discipline
 import shapeless.test.illTyped
 import shapeless.{::, HNil}
 
@@ -18,7 +20,8 @@ object Custom {
   }
 }
 
-class ImportExample extends MonocleSuite {
+// Cannot use MonocleSuite as it brings all imports
+class ImportExample extends FunSuite with Discipline with Matchers with TestInstances {
 
   test("monocle.function.all._ imports all polymorphic optics in the scope") {
     import monocle.function.all._

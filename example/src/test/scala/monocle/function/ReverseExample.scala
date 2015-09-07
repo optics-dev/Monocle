@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle._, Monocle._
+import monocle._
 
 import scalaz.Tree._
 
@@ -16,7 +16,6 @@ class ReverseExample extends MonocleSuite {
     ((1,'b', true, 5.4, "plop", 7L) applyIso reverse get) shouldEqual ((7L, "plop", 5.4, true, 'b',1))
 
     // for tuple greater than 6 we need to use shapeless
-    import monocle.generic.tuplen._
     ((1,'b', true, 5.4, "plop", 7L, false) applyIso reverse get) shouldEqual ((false, 7L, "plop", 5.4, true, 'b',1))
   }
 

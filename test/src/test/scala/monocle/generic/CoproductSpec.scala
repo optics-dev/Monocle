@@ -25,6 +25,6 @@ class CoproductSpec extends MonocleSuite {
     }
   }
 
-  checkAll("Coproduct Prism", PrismTests(coproduct.coProductPrism[IB, Boolean]))
+  checkAll("Coproduct Prism", PrismTests(coProductPrism[IB, Boolean]))
 
 }

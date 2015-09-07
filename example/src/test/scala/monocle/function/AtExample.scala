@@ -1,9 +1,6 @@
 package monocle.function
 
 import monocle.MonocleSuite
-import monocle.function.all._
-import monocle.std.all._
-import monocle.syntax.all._
 
 import scalaz.IMap
 import scalaz.std.string._

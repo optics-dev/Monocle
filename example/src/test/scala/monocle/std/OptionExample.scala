@@ -4,7 +4,7 @@ import monocle.MonocleSuite
 
 class OptionExample extends MonocleSuite {
 
-  import monocle.std.{none => mNone, some => mSome}
+  import monocle.std.option.{none => mNone, some => mSome}
 
   test("some creates a Prism from an Option to its element") {
     mSome.getOption(Some(1)) shouldEqual Some(1)

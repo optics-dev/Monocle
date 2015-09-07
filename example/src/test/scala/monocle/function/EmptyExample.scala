@@ -1,9 +1,7 @@
 package monocle.function
 
 import monocle.MonocleSuite
-import monocle.function.all.{empty => mempty, _}
-import monocle.std.all._
-import monocle.syntax.all._
+import monocle.function.all.{empty => mempty}
 
 import scalaz.{==>>, IMap}
 

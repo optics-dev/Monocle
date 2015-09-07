@@ -26,7 +26,7 @@ trait EitherOptics {
     pStdRight[A, B, B]
 
   final def pEitherToDisjunction[E1, E2, A1, A2]: PIso[Either[E1, A1], Either[E2, A2], E1 \/ A1, E2 \/ A2] =
-    pDisjunctionToEither[E2, E1, A2, A1].reverse
+    disjunction.pDisjunctionToEither[E2, E1, A2, A1].reverse
 
   final def eitherToDisjunction[E, A]: Iso[Either[E, A], E \/ A] =
     pEitherToDisjunction[E, E, A, A]

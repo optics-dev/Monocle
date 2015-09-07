@@ -1,8 +1,6 @@
 package monocle
 
 import monocle.macros.GenIso
-import monocle.std.all._
-import monocle.syntax.all._
 
 class IsoExample extends MonocleSuite {
 
@@ -30,8 +28,6 @@ class IsoExample extends MonocleSuite {
   }
 
   test("Iso composition can limit the need of ad-hoc Lens") {
-    import monocle.function.Field1._
-
     // here we use tuple Lens on Pair via pointToPair Iso
     (Point(3, 5) applyIso pointToPair composeLens first get)   shouldEqual 3
     (Point(3, 5) applyIso pointToPair composeLens first set 4) shouldEqual Point(4, 5)

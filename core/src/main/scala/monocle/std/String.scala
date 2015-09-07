@@ -1,6 +1,7 @@
 package monocle.std
 
 import monocle.function._
+import monocle.std.list._
 import monocle.{Iso, Prism}
 
 import scalaz.\/

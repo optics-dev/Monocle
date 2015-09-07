@@ -1,8 +1,5 @@
 package monocle
 
-import monocle.function.all._
-import monocle.std.all._
-
 /**
  * Show how could we use Optics to manipulate some Json AST
  */

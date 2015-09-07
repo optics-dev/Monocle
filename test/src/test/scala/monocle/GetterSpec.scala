@@ -2,7 +2,6 @@ package monocle
 
 import scalaz._
 
-
 class GetterSpec extends MonocleSuite {
 
   case class Bar(i: Int)

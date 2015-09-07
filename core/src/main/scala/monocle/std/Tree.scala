@@ -9,7 +9,6 @@ import scalaz.Tree
 import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
 
-
 object tree extends TreeOptics
 
 trait TreeOptics {

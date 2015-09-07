@@ -1,8 +1,5 @@
 package monocle
 
-import monocle.std.ilist._
-import monocle.function.all._
-
 import scalaz._
 
 class SetterSpec extends MonocleSuite {
