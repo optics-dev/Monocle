@@ -18,4 +18,7 @@ class StringSpec extends MonocleSuite {
   checkAll("String to Byte"    , PrismTests(stringToByte))
   checkAll("String to Int"     , PrismTests(stringToInt))
   checkAll("String to Long"    , PrismTests(stringToLong))
+
+
+
 }
