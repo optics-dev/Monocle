@@ -1,5 +1,7 @@
 package monocle.std
 
+object all extends StdInstances
+
 trait StdInstances
   extends BooleanOptics
   with    ByteOptics
@@ -23,6 +25,7 @@ trait StdInstances
   with    Tuple6Optics
   with    VectorOptics
   // Scalaz Instances
+  with    Either3Optics
   with    DisjunctionOptics
   with    TheseOptics
   with    IListInstances
@@ -32,4 +35,3 @@ trait StdInstances
   with    OneAndOptics
   with    TreeOptics
   with    ValidationOptics
-  with    Either3Optics

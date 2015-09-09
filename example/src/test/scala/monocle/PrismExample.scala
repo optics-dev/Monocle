@@ -1,7 +1,6 @@
 package monocle
 
 import monocle.macros.{GenIso, GenPrism}
-import monocle.std._
 
 class PrismExample extends MonocleSuite {
 

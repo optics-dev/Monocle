@@ -1,7 +1,8 @@
 package monocle.law.discipline.function
 
+import monocle.function.Snoc1._
 import monocle.function._
-import monocle.law.discipline.{LensTests, IsoTests}
+import monocle.law.discipline.{IsoTests, LensTests}
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 

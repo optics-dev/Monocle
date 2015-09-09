@@ -1,9 +1,6 @@
 package monocle.function
 
 import monocle.MonocleSuite
-import monocle.std._
-import monocle.syntax._
-
 class InitExample extends MonocleSuite {
 
   test("init creates a Lens from a 2-6 tuple to its tail") {

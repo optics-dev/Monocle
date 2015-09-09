@@ -1,5 +1,6 @@
 package monocle.law.discipline.function
 
+import monocle.function.Cons1._
 import monocle.function._
 import monocle.law.discipline.{IsoTests, LensTests}
 import org.scalacheck.Arbitrary
@@ -18,5 +19,4 @@ object Cons1Tests extends Laws {
       IsoTests(cons1[S, H, T]).props ++
       LensTests(head[S, H, T]).props ++
       LensTests(tail[S, H, T]).props: _*)
-
 }

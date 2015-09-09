@@ -1,12 +1,9 @@
 package monocle.function
 
 import monocle.MonocleSuite
-import monocle.std._
-import monocle.syntax._
 
 import scalaz.std.string._
 import scalaz.{IMap, OneAnd}
-
 
 class IndexExample extends MonocleSuite {
 

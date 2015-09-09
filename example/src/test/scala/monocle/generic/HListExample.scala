@@ -1,8 +1,6 @@
 package monocle.generic
 
 import monocle.MonocleSuite
-import monocle.function._
-import monocle.syntax._
 import shapeless.HNil
 
 class HListExample extends MonocleSuite {

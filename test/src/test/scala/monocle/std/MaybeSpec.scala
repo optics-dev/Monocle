@@ -8,7 +8,6 @@ import scalaz.Maybe
 
 class MaybeSpec extends MonocleSuite {
   checkAll("maybeToOption", IsoTests(maybeToOption[Int]))
-
   checkAll("just"   , PrismTests(just[Int]))
   checkAll("nothing", PrismTests(nothing[Long]))
 

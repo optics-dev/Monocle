@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.{Prism, PPrism}
 import scalaz.{Either3, Left3, Middle3, Right3}
-import scalaz.{\/, -\/, \/-}
+import scalaz.{-\/, \/-}
 
 object either3 extends Either3Optics
 

@@ -6,7 +6,6 @@ import monocle.law.discipline.function.{EachTests, ReverseTests}
 
 import scalaz.Tree
 
-
 class TreeSpec extends MonocleSuite {
   checkAll("rootLabel", LensTests(rootLabel[Int]))
   checkAll("subForest", LensTests(subForest[Int]))

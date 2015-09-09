@@ -11,11 +11,8 @@ import scalaz.Equal
 class MacroOutSideMonocleSpec extends MonocleSuite {
 
   case class Example(i: Int)
-
   case object ExampleObject
-
   case class EmptyCase()
-
   case class EmptyCaseType[A]()
 
   sealed trait Foo
@@ -37,12 +34,10 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
   implicit val bar1Eq: Equal[Bar1] = Equal.equalA[Bar1]
   implicit val fooEq: Equal[Foo] = Equal.equalA[Foo]
 
-
   checkAll("GenIso"                                       , IsoTests(GenIso[Example, Int]))
   checkAll("GenIso.unit object"                           , IsoTests(GenIso.unit[ExampleObject.type]))
   checkAll("GenIso.unit empty case class"                 , IsoTests(GenIso.unit[EmptyCase]))
   checkAll("GenIso.unit empty case class with type param" , IsoTests(GenIso.unit[EmptyCaseType[Int]]))
   checkAll("GenLens"                                      , LensTests(GenLens[Example](_.i)))
   checkAll("GenPrism"                                     , PrismTests(GenPrism[Foo, Bar1]))
-
 }

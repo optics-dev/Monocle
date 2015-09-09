@@ -1,12 +1,12 @@
 package monocle.law.discipline.function
 
+import monocle.function.Index._
 import monocle.function._
 import monocle.law.discipline.OptionalTests
-import org.scalacheck.{Arbitrary, Prop}
+import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
 import scalaz.Equal
-
 
 object IndexTests extends Laws {
 

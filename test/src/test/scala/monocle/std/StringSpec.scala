@@ -5,9 +5,7 @@ import monocle.law.discipline.function._
 import monocle.law.discipline.{IsoTests, PrismTests}
 
 class StringSpec extends MonocleSuite {
-
   checkAll("stringToList", IsoTests(stringToList))
-
   checkAll("reverse String", ReverseTests[String])
   checkAll("empty String", EmptyTests[String])
   checkAll("cons String", ConsTests[String, Char])
@@ -21,8 +19,6 @@ class StringSpec extends MonocleSuite {
   checkAll("String to Int"     , PrismTests(stringToInt))
   checkAll("String to Long"    , PrismTests(stringToLong))
 
-  test("String to Long: '-' to long should not succeed.") {
-    stringToLong.getOption("-") shouldEqual None
-  }
+
 
 }

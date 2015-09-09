@@ -11,27 +11,19 @@ import scalaz.{Category, Compose, Equal, Split}
 class IsoSpec extends MonocleSuite {
 
   case class IntWrapper(i: Int)
-
   implicit val intWrapperGen: Arbitrary[IntWrapper] = Arbitrary(arbitrary[Int].map(IntWrapper.apply))
-
   implicit val intWrapperEq = Equal.equalA[IntWrapper]
 
   case object AnObject
-
   implicit val anObjectGen: Arbitrary[AnObject.type] = Arbitrary(Gen.const(AnObject))
-
   implicit val anObjectEq = Equal.equalA[AnObject.type]
 
   case class EmptyCase()
-
   implicit val emptyCaseGen: Arbitrary[EmptyCase] = Arbitrary(Gen.const(EmptyCase()))
-
   implicit val emptyCaseEq = Equal.equalA[EmptyCase]
 
   case class EmptyCaseType[A]()
-
   implicit def emptyCaseTypeGen[A]: Arbitrary[EmptyCaseType[A]] = Arbitrary(Gen.const(EmptyCaseType()))
-
   implicit def emptyCaseTypeEq[A] = Equal.equalA[EmptyCaseType[A]]
 
   val iso = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)

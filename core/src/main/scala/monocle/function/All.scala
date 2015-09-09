@@ -1,5 +1,6 @@
 package monocle.function
 
+object all extends GenericOptics
 
 trait GenericOptics
   extends AtFunctions

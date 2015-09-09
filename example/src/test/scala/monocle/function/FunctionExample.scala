@@ -1,9 +1,6 @@
 package monocle.function
 
 import monocle.MonocleSuite
-import monocle.std.function._
-import monocle.syntax._
-
 
 class FunctionExample extends MonocleSuite {
 

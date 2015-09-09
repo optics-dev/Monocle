@@ -34,7 +34,7 @@ trait NonEmptyListOptics {
     )
 
   implicit def nelReverse[A]: Reverse[NonEmptyList[A], NonEmptyList[A]] =
-    reverseFromReverseFunction[NonEmptyList[A]](_.reverse)
+    Reverse.reverseFromReverseFunction[NonEmptyList[A]](_.reverse)
 
 
   implicit def nelCons1[A]: Cons1[NonEmptyList[A], A, List[A]] =

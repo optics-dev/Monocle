@@ -46,6 +46,6 @@ trait VectorOptics {
   }
 
   implicit def vectorReverse[A]: Reverse[Vector[A], Vector[A]] =
-    reverseFromReverseFunction[Vector[A]](_.reverse)
+    Reverse.reverseFromReverseFunction[Vector[A]](_.reverse)
 
 }

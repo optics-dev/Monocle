@@ -1,12 +1,11 @@
 package monocle.generic
 
 import monocle.MonocleSuite
-import monocle.function._
 import monocle.law.discipline.{IsoTests, LensTests}
 import org.scalacheck.Arbitrary
 import shapeless.HList._
 import shapeless.ops.hlist.{Init => HListInit, IsHCons}
-import shapeless.{::, Generic, HNil}
+import shapeless.{::, HNil}
 
 import scalaz.Equal
 
