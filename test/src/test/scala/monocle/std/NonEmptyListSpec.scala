@@ -1,11 +1,15 @@
 package monocle.std
 
 import monocle.MonocleSuite
+import monocle.law.discipline.IsoTests
 import monocle.law.discipline.function._
 
 import scalaz.NonEmptyList
 
 class NonEmptyListSpec extends MonocleSuite {
+  checkAll("nelToAndOne", IsoTests(nelToOneAnd[Int]))
+  checkAll("optNelToList", IsoTests(optNelToList[Int]))
+
   checkAll("each NonEmptyList", EachTests[NonEmptyList[Int], Int])
   checkAll("index NonEmptyList", IndexTests.defaultIntIndex[NonEmptyList[Int], Int])
   checkAll("filterIndex NonEmptyList", FilterIndexTests.evenIndex[NonEmptyList[Int], Int])
