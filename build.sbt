@@ -33,7 +33,7 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.3"
+lazy val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.4"
 lazy val shapeless  = "com.chuusai"     %% "shapeless"   % "2.2.5"
 
 lazy val discpline  = "org.typelevel"   %% "discipline"  % "0.3"
