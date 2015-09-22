@@ -38,7 +38,6 @@ lazy val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
 
 lazy val macroVersion = "2.0.1"
 lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
-lazy val kindProjector  = compilerPlugin("org.spire-math"  %% "kind-projector" % "0.6.0")
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.1.0")
@@ -56,7 +55,7 @@ lazy val core = project
   .settings(moduleName := "monocle-core")
   .settings(monocleSettings)
   .settings(mimaSettings("core"))
-  .settings(libraryDependencies := Seq(scalaz, compilerPlugin(kindProjector)))
+  .settings(libraryDependencies := Seq(scalaz))
 
 lazy val generic = project.dependsOn(core)
   .settings(moduleName := "monocle-generic")
@@ -99,15 +98,12 @@ lazy val test = project.dependsOn(core, generic, macros, law, state)
     libraryDependencies ++= Seq(scalaz, shapeless, scalatest, compilerPlugin(paradisePlugin))
   )
 
-lazy val bench = project
+lazy val bench = project.dependsOn(core, macros)
   .settings(moduleName := "monocle-bench")
   .settings(monocleSettings)
   .settings(noPublishSettings)
   .settings(libraryDependencies ++= Seq(
-    "com.github.julien-truffaut" %%  "monocle-core"  % "1.2.0-SNAPSHOT",
-    "com.github.julien-truffaut" %%  "monocle-macro" % "1.2.0-SNAPSHOT",
     shapeless,
-    compilerPlugin(kindProjector),
     compilerPlugin(paradisePlugin)
   )).enablePlugins(JmhPlugin)
 
@@ -129,7 +125,7 @@ lazy val docs = project.dependsOn(core, example)
   .settings(docSettings)
   .settings(tutSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz, shapeless, compilerPlugin(kindProjector), compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(scalaz, shapeless, compilerPlugin(paradisePlugin))
   )
 
 

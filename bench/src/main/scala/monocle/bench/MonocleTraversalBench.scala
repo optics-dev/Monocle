@@ -10,7 +10,7 @@ import scalaz.IMap
 class MonocleTraversalBench {
 
   val point3Traversal = Traversal.apply3[Point3, Int](_.x, _.y, _.z)((x, y, z, _) => Point3(x, y, z))
-  val iMapTraversal = PTraversal.fromTraverse[IMap[Int, ?], Int, Int]
+  val iMapTraversal = PTraversal.fromTraverse[({type λ[α] = IMap[Int, α]})#λ, Int, Int]
 
 
   @Benchmark def caseClassGetAll() = point3Traversal.getAll(p)
