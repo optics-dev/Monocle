@@ -1,11 +1,8 @@
-import com.typesafe.sbt.pgp.PgpKeys.publishSigned
-import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
+import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
-import pl.project13.scala.sbt.SbtJmh._
 import sbt.Keys._
-import sbtrelease.ReleaseStateTransformations._
-import ReleaseTransformations._
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 import sbtunidoc.Plugin.UnidocKeys._
 
 lazy val buildSettings = Seq(
@@ -106,14 +103,13 @@ lazy val bench = project
   .settings(moduleName := "monocle-bench")
   .settings(monocleSettings)
   .settings(noPublishSettings)
-  .settings(jmhSettings)
   .settings(libraryDependencies ++= Seq(
     "com.github.julien-truffaut" %%  "monocle-core"  % "1.2.0-SNAPSHOT",
     "com.github.julien-truffaut" %%  "monocle-macro" % "1.2.0-SNAPSHOT",
     shapeless,
     compilerPlugin(kindProjector),
     compilerPlugin(paradisePlugin)
-  ))
+  )).enablePlugins(JmhPlugin)
 
 lazy val example = project.dependsOn(core, generic, macros, state, test % "test->test")
   .settings(moduleName := "monocle-example")
