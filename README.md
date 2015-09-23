@@ -173,31 +173,23 @@ An [example](example/src/test/scala/other/ImportExample.scala) shows how to use 
 
 ## Overview
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
-#### Sub Projects
-* Core contains the main library concepts: `Lens`, `Traversal`, `Prism`, `Optional`, `Iso`, `Getter` and `Setter`.
-Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes.
-* Law defines properties for Optics using [scalacheck](http://www.scalacheck.org/).
-* Macro defines a a set of macros to reduce Optics boiler plate.
-* Generic is an experiment to provide highly generalised Optics using `HList` and `CoProduct` from [shapeless](https://github.com/milessabin/shapeless). Generic focus is on neat abstraction but that may come at additional runtime or compile time cost.
-* Example shows how other sub projects can be used.
 
-#### Contributor Handbook
-We are happy to have as many people as possible contributing to Monocle.
-Therefore, we made this small workflow to simplify the process:
+### Modules
+* Core defines the main library concepts: optics, typeclass, syntax. Core only depends on [scalaz](https://github.com/scalaz/scalaz) for type classes.
+* Law defines properties for optics using [discipline](https://github.com/typelevel/discipline) and [scalacheck](http://www.scalacheck.org/).
+* Macro defines a set of macros to generate optics automatically.
+* Generic is an experiment to provide highly generalised Optics using [shapeless](https://github.com/milessabin/shapeless). 
 
-1.   Select or create an issue (issues tagged with label "padawan-friendly" are designed for Scala novice)
-2.   Comment on the issue letting everyone knows that you are working on it.
-3.   Fork Monocle
-4.   Work on your fork until you are satisfied (label your commits with issue number)
-5.   Submit a [pull request](https://help.github.com/articles/using-pull-requests)
-6.   We will review your pull request and merge it back to master
+### Maintainers and Contributors
+The current maintainers (people who can merge pull requests) are:
 
-If you have any questions, we have irc channel on [freenode](http://webchat.freenode.net/) #scala-monocle and a [mailing group](https://groups.google.com/forum/#!forum/scala-monocle)
+* Julien Truffaut - [@julien-truffaut](https://github.com/julien-truffaut)
+* Ilan Godik - [@NightRa](https://github.com/NightRa)
+* Naoki Aoyama - [@aoiroaoino](https://github.com/aoiroaoino) 
 
-Thank you for you contribution!
-### Contributors
-Julien Truffaut - [@JulienTruffaut](https://twitter.com/JulienTruffaut "@JulienTruffaut") </a><br>
-Ross Huggett - ross.huggett@gmail.com / [@rosshuggett](http://twitter.com/rosshuggett "@rosshuggett") </a><br>
-Ilan Godik - ilan3580@gmail.com / [NightRa](https://github.com/NightRa "NightRa") </a><br>
-Adam Warski - [@adamwarski](http://twitter.com/adamwarski "@adamwarski") </a><br>
-Dale Wijnand - [@dwijnand](http://twitter.com/dwijnand "@dwijnand") </a><br>
+and the [contributors](https://github.com/julien-truffaut/Monocle/graphs/contributors) (people who committed to Monocle).
+
+### Contact
+
+If you have any question, we have a [gitter](https://gitter.im/julien-truffaut/Monocle) channel and a [mailing group](https://groups.google.com/forum/#!forum/scala-monocle)
+
