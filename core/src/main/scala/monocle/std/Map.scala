@@ -20,7 +20,7 @@ trait MapOptics {
     def at(i: K) = Lens{m: Map[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   }
 
-  implicit def mapEach[K, V]: Each[Map[K, V], V] = Each.traverseEach[Map[K, ?], V]
+  implicit def mapEach[K, V]: Each[Map[K, V], V] = Each.traverseEach[({type λ[α] = Map[K, α]})#λ, V]
 
   implicit def mapIndex[K, V]: Index[Map[K, V], K  , V] = Index.atIndex
 
