@@ -67,6 +67,7 @@ to be updated:
 
  * `docs/src/site/index.md`: update version numbers
  * `README.md`: update version numbers
+ * `docs/src/site/release_note.md`: update release note
 
 (Other changes may be necessary, especially for large releases.)
 
