@@ -16,8 +16,7 @@ notifications:
 script: sbt ++$TRAVIS_SCALA_VERSION test
 env:
   global:
-  - secure: JjrFp+1hGEwifDp5vh9BZ4vlZKe/zg/KbGg57PuCtsEgOvpUhvu0Fl6b3JImmF8GKZNjhk2EcgWAA8wyROIORVYNVaroOTHf/XoLvrHhgskGpx042O3gDuiufAaItUGN6NWXB/IjafP69Y1OWDocOsDWRJuL7f/9uom9aKdpamM=
-  - secure: bNUYybjKmsptOCsOsgEX29WKPwSZQP9N9fKAyyc/zIIq4tyAr5mJ/v3YRdEB7n2F7cnpNJQqUZ5llQdNGeFUNb2YycbWzTbA2zQmuoI3pawaUwDii57yOMd+E0I21eiok6eXaMlm9RzOBJ8iRwO9uL7QnUPuNqXbUwNT2zkspS4=
-
+  - secure: lJxaR+9VM96s7rfaigL3K2FbcP3XiZ+AerbgOBOpYi2anRkMPQ91h1g60HYTwEDGJIKybyNWFuXZM8hNtQMCxzxgu7ev1SyRr5Otfzg5ehGqB5UWbSAgpXlqhR5dAonwmqyEEDF2OK+k1fa0N6mIwpQeuUCwrt68kTp4f0K9jMQ=
+  - secure: NZQn8lB04I+FO3Om680CXWP29scS/zRhITbLO/1sM3dnuG8ygn0fzlFMQhgCO3fCjnclThAi+6MN7UnyV8BwDbFhCDe627+06px5fHUw2TPdzhz/BwngAW9pRsx6m0b8eBqQmt8Q6mlgeYOPemsFOeqQTKZulpIhSYnO1R1Nwzc=
 after_success:
-  - "[[ $TRAVIS_BRANCH == \"master\" ]] && { sbt publish; };"
+- '[[ $TRAVIS_BRANCH == "master" ]] && { sbt publish; };'
