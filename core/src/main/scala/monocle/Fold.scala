@@ -54,11 +54,15 @@ abstract class Fold[S, A] extends Serializable { self =>
     foldMap(p(_).conjunction)(s).unwrap
 
   /** join two [[Fold]] with the same target */
-  @inline final def sum[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
+  @inline final def choice[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
     new Fold[S \/ S1, A]{
       def foldMap[M: Monoid](f: A => M)(s: S \/ S1): M =
         s.fold(self.foldMap(f), other.foldMap(f))
     }
+
+  @deprecated("use choice", since = "1.2.0")
+  @inline final def sum[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
+    choice(other)
 
   @deprecated("use headOption", since = "1.1.0")
   @inline final def headMaybe(s: S): Maybe[A] =
@@ -155,7 +159,7 @@ object Fold extends FoldInstances {
 sealed abstract class FoldInstances {
   implicit val foldChoice: Choice[Fold] = new Choice[Fold]{
     def choice[A, B, C](f: => Fold[A, C], g: => Fold[B, C]): Fold[A \/ B, C] =
-      f sum g
+      f choice g
 
     def id[A]: Fold[A, A] =
       Fold.id[A]

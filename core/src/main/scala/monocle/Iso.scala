@@ -63,7 +63,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
     _ => reverseGet(b)
 
   /** pair two disjoint [[PIso]] */
-  @inline final def product[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
+  @inline final def split[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
     PIso[(S, S1), (T, T1), (A, A1), (B, B1)]{
       case (s, s1) => (get(s), other.get(s1))
     }{
@@ -83,6 +83,10 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
     }{
       case (c, b) => (c, reverseGet(b))
     }
+
+  @deprecated("use split", "1.2.0")
+  @inline final def product[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
+    product(other)
 
   /**********************************************************/
   /** Compose methods between a [[PIso]] and another Optics */
@@ -310,7 +314,7 @@ object Iso {
 sealed abstract class IsoInstances extends IsoInstances0 {
   implicit val isoSplit: Split[Iso] = new Split[Iso] {
     def split[A, B, C, D](f: Iso[A, B], g: Iso[C, D]): Iso[(A, C), (B, D)] =
-      f product g
+      f split g
 
     def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
       g composeIso f

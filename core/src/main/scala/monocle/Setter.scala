@@ -32,10 +32,14 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   def set(b: B): S => T
 
   /** join two [[PSetter]] with the same target */
-  @inline final def sum[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[S \/ S1, T \/ T1, A, B] =
+  @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[S \/ S1, T \/ T1, A, B] =
     PSetter[S \/ S1, T \/ T1, A, B](
       b => _.bimap(self.modify(b), other.modify(b))
     )
+
+  @deprecated("use choice", since = "1.2.0")
+  @inline final def sum[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[S \/ S1, T \/ T1, A, B] =
+    choice(other)
 
   /*************************************************************/
   /** Compose methods between a [[PSetter]] and another Optics */
@@ -153,6 +157,6 @@ sealed abstract class SetterInstances {
       Setter.id
 
     def choice[A, B, C](f1: => Setter[A, C], f2: => Setter[B, C]): Setter[A \/ B, C] =
-      f1 sum f2
+      f1 choice f2
   }
 }

@@ -61,7 +61,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     getOption(s).isDefined
 
   /** join two [[POptional]] with the same target */
-  @inline final def sum[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
+  @inline final def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
     POptional[S \/ S1, T \/ T1, A, B](_.fold(self.getOrModify(_).leftMap(\/.left), other.getOrModify(_).leftMap(\/.right))){
       b => _.bimap(self.set(b), other.set(b))
     }
@@ -81,6 +81,10 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
         case (_, s) => (c, set(b)(s))
       }
     }
+
+  @deprecated("use choice", since = "1.2.0")
+  @inline final def sum[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
+    choice(other)
 
   @deprecated("use getOption", since = "1.1.0")
   @inline final def getMaybe(s: S): Maybe[A] =
@@ -266,7 +270,7 @@ object Optional {
 sealed abstract class OptionalInstances {
   implicit val optionalChoice: Choice[Optional] = new Choice[Optional] {
     def choice[A, B, C](f: => Optional[A, C], g: => Optional[B, C]): Optional[A \/ B, C] =
-      f sum g
+      f choice g
 
     def id[A]: Optional[A, A] =
       Optional.id[A]
