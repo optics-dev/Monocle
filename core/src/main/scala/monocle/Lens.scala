@@ -45,13 +45,13 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   def modify(f: A => B): S => T
 
   /** join two [[PLens]] with the same target */
-  @inline final def sum[S1, T1](other: PLens[S1, T1, A, B]): PLens[S \/ S1, T \/ T1, A, B] =
+  @inline final def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[S \/ S1, T \/ T1, A, B] =
     PLens[S \/ S1, T \/ T1, A, B](_.fold(self.get, other.get)){
       b => _.bimap(self.set(b), other.set(b))
     }
 
   /** pair two disjoint [[PLens]] */
-  @inline final def product[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
+  @inline final def split[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
     PLens[(S, S1), (T, T1), (A, A1), (B, B1)]{
       case (s, s1) => (self.get(s), other.get(s1))
     }{ case (b, b1) => {
@@ -74,6 +74,14 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
         case (_, s) => (c, set(b)(s))
       }
     }
+
+  @deprecated("use choice", since = "1.2.0")
+  @inline final def sum[S1, T1](other: PLens[S1, T1, A, B]): PLens[S \/ S1, T \/ T1, A, B] =
+    choice(other)
+
+  @deprecated("use split", since = "1.2.0")
+  @inline final def product[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
+    split(other)
 
   /***********************************************************/
   /** Compose methods between a [[PLens]] and another Optics */
@@ -248,7 +256,7 @@ object Lens {
 sealed abstract class LensInstances extends LensInstances0 {
   implicit val lensChoice: Choice[Lens] = new Choice[Lens] {
     def choice[A, B, C](f: => Lens[A, C], g: => Lens[B, C]): Lens[A \/ B, C] =
-      f sum g
+      f choice g
 
     def id[A]: Lens[A, A] =
       Lens.id
@@ -261,7 +269,7 @@ sealed abstract class LensInstances extends LensInstances0 {
 sealed abstract class LensInstances0 {
   implicit val lensSplit: Split[Lens]  = new Split[Lens] {
     def split[A, B, C, D](f: Lens[A, B], g: Lens[C, D]): Lens[(A, C), (B, D)] =
-      f product g
+      f split g
 
     def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
       g composeLens f

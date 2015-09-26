@@ -16,11 +16,11 @@ abstract class Getter[S, A] extends Serializable { self =>
   def get(s: S): A
 
   /** join two [[Getter]] with the same target */
-  @inline final def sum[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
+  @inline final def choice[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
     Getter[S \/ S1, A](_.fold(self.get, other.get))
 
   /** pair two disjoint [[Getter]] */
-  @inline final def product[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
+  @inline final def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
     Getter[(S, S1), (A, A1)]{case (s, s1) => (self.get(s), other.get(s1))}
 
   @inline final def first[B]: Getter[(S, B), (A, B)] =
@@ -28,6 +28,14 @@ abstract class Getter[S, A] extends Serializable { self =>
 
   @inline final def second[B]: Getter[(B, S), (B, A)] =
     Getter[(B, S), (B, A)]{case (b, s) => (b, self.get(s))}
+
+  @deprecated("use choice", "1.2.0")
+  @inline final def sum[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
+    choice(other)
+
+  @deprecated("use split", "1.2.0")
+  @inline final def product[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
+    split(other)
 
   /*************************************************************/
   /** Compose methods between a [[Getter]] and another Optics  */
@@ -136,7 +144,7 @@ sealed abstract class GetterInstances extends GetterInstances0 {
 sealed abstract class GetterInstances0 {
   implicit val getterChoice: Choice[Getter] = new Choice[Getter]{
     def choice[A, B, C](f: => Getter[A, C], g: => Getter[B, C]): Getter[A \/ B, C] =
-      f sum g
+      f choice g
 
     def id[A]: Getter[A, A] =
       Getter.id
