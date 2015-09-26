@@ -74,7 +74,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
     modify(_ => b)
 
   /** join two [[PTraversal]] with the same target */
-  @inline final def sum[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[S \/ S1, T \/ T1, A, B] =
+  @inline final def choice[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[S \/ S1, T \/ T1, A, B] =
     new PTraversal[S \/ S1, T \/ T1, A, B]{
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S \/ S1): F[T \/ T1] =
         s.fold(
@@ -82,6 +82,10 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
           s1 => Functor[F].map(other.modifyF(f)(s1))(\/.right)
         )
     }
+
+  @deprecated("use choice", since = "1.2.0")
+  @inline final def sum[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[S \/ S1, T \/ T1, A, B] =
+    choice(other)
 
   @deprecated("use headOption", since = "1.1.0")
   @inline final def headMaybe(s: S): Maybe[A] =
@@ -256,7 +260,7 @@ sealed abstract class TraversalInstances {
       Traversal.id
 
     def choice[A, B, C](f1: => Traversal[A, C], f2: => Traversal[B, C]): Traversal[A \/ B, C] =
-      f1 sum f2
+      f1 choice f2
   }
 }
 
