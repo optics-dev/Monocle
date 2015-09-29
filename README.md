@@ -1,4 +1,5 @@
 ![Monocle Logo](https://raw.github.com/julien-truffaut/Monocle/master/image/logo.png)<br>
+
 ## Build
 
 [![Join the chat at https://gitter.im/julien-truffaut/Monocle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/julien-truffaut/Monocle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -23,6 +24,18 @@ libraryDependencies ++= Seq(
 // for @Lenses macro support
 addCompilerPlugin("org.scalamacros" %% "paradise" % "2.0.1" cross CrossVersion.full)
 ```
+## Table of contents
+- [Motivation](#motivation)  
+    - [What does it mean?](#what-does-it-mean)  
+    - [Why do I need this?](#why-do-i-need-this)  
+    - [More abstractions](#more-abstractions)  
+- [Lens Creation](#lens-creation)
+- [Generic Optics and Instance Location Policy](#generic-optics-and-instance-location-policy)
+- [Optics Hierarchy](#optics-hierarchy)
+- [Modules](#modules)
+- [Maintainers and Contributors](#maintainers-and-contributors)
+- [Contact](#contact)
+
 ## Motivation
 
 Monocle is a `Lens` library, or more generally an Optics library where Optics gather the concepts
@@ -171,7 +184,7 @@ Monocle defines generic optic instances in the following packages:
 
 An [example](example/src/test/scala/other/ImportExample.scala) shows how to use Monocle imports.
 
-## Overview
+## Optics Hierarchy
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
 
 ### Modules
