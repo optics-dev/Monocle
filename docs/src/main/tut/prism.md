@@ -23,7 +23,7 @@ case object Sunday extends Day
 
 We can define a `Prism` which only selects `Tuesday`
 `Tuesday` is a singleton, so it is isomorphic to `Unit` (type with a single inhabitant):
- 
+
 ```tut:silent
 import monocle.Prism
 
@@ -32,21 +32,21 @@ val _tuesday = Prism[Day, Unit]{
   case _       => None
 }(_ => Tuesday)
 ```
- 
+
 `_tuesday` can then be used as constructor of `Day`:
- 
+
 ```tut
 _tuesday.reverseGet(())
 ```
- 
+
 or as a replacement of pattern matching:
- 
+
 ```tut
 _tuesday.getOption(Monday)
 _tuesday.getOption(Tuesday)
 ```
- 
-Let's have look at `Prism` toward larger types such as `LinkedList`. 
+
+Let's have look at `Prism` toward larger types such as `LinkedList`.
 A `LinkedList` is recursive data type that either empty or a cons, so we can easily define a `Prism` from a `LinkedList`
 to each of the two constructors:
 
@@ -62,7 +62,7 @@ def _nil[A] = Prism[LinkedList[A], Unit]{
 
 def _cons[A] = Prism[LinkedList[A], (A, LinkedList[A])]{
   case Nil()      => None
-  case Cons(h, t) => Some((h, t)) 
+  case Cons(h, t) => Some((h, t))
 }{ case (h, t) => Cons(h, t)}
 ```
 
@@ -96,7 +96,7 @@ It is quite annoying that we need to use `copy` to `modify` the first element of
 should be able to use a `Lens` to zoom further:
 
 ```tut
-import monocle.function.Fields._ // to have access to first, second, ...
+import monocle.function.fields._ // to have access to first, second, ...
 import monocle.std.tuple2._      // to get instance Fields instance for Tuple2
 
 (_cons[Int] composeLens first).set(5)(l1)
@@ -112,15 +112,15 @@ class PrismLaws[S, A](prism: Prism[S, A]) {
 
   def partialRoundTripOneWayLaw(s: S): Boolean =
     prism.getOption(s).fold(true)(prism.reverseGet(_) == s)
-    
+
   def roundTripOtherWayLaw(a: A): Boolean =
     prism.getOption(prism.reverseGet(a)) == Some(a)
-    
+
 }
 ```
 
-The first law states that if a `Prism` matches (i.e. `getOption` returns a `Some`), you can always come back 
+The first law states that if a `Prism` matches (i.e. `getOption` returns a `Some`), you can always come back
 to the original value using `reverseGet`.
 
-The second laws states that starting from an `A`, you can do a complete round trip. This law is equivalent to the 
+The second laws states that starting from an `A`, you can do a complete round trip. This law is equivalent to the
 second law of `Iso`.

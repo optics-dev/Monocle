@@ -6,5 +6,10 @@ section: "optics"
 
 # Optics
 
--   [Lens](tut/lens.html)
+## Convert between two types
+
+-   [Iso](tut/iso.html)
 -   [Prism](tut/prism.html)
+
+## Handle structured data
+-   [Lens](tut/lens.html)
