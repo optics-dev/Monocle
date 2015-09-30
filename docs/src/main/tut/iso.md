@@ -9,8 +9,8 @@ pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/do
 
 # Iso
 
-An `Iso` is an Optic which converts elements of type `S` into elements of type
-`A` without loss.
+An `Iso` is an Optic which converts elements of type `A` into elements of type
+`B` without loss.
 
 Consider these two case classes:
 
@@ -31,4 +31,4 @@ val personPrism = Iso[Person, Pers]((p: Person) => Pers(p.name, p.age))((p: Pers
 
 and thereby create a lossless conversion between these two types. Other usages include for example the transformation of different types of physical units.
 
-It is important to understand that the transformation between type `S` and `A` works for any type `S` and `A` and that the functions `get` and `reverseGet` are true inverses to each other.
+It is important to understand that the transformation between type `A` and `B` works for any type `A` and `B` and that the functions `get` and `reverseGet` are true inverses to each other.
