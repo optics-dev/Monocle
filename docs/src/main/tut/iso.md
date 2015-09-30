@@ -9,14 +9,14 @@ pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/do
 
 # Iso
 
-An `Iso` is an Optic which converts elements of type `A` into elements of type
-`B` without loss.
+An `Iso` is an Optic which converts elements of type `S` into elements of type
+`A` without loss.
 
 Consider these two case classes:
 
 ```tut:silent
-case class Person(name: String, firstName : String)
-case class Pers(n: String, f: String)
+case class Person(name: String, age: Int)
+case class Pers(n: String, a: Int)
 ```
 
 In order to create an `Iso` between `Person` and `Pers` we need to supply two total functions
@@ -25,10 +25,10 @@ In order to create an `Iso` between `Person` and `Pers` we need to supply two to
 * reverseGet : Pers => Person
 
 ```tut:silent
-import monocle._
-val personPrism = Iso[Person, Pers]((p: Person) => Pers(p.name, p.firstName))((p: Pers) => Person(p.n, p.f))
+import monocle.Iso
+val personPrism = Iso[Person, Pers]((p: Person) => Pers(p.name, p.age))((p: Pers) => Person(p.n, p.a))
 ```
 
 and thereby create a lossless conversion between these two types. Other usages include for example the transformation of different types of physical units.
 
-It is important to understand that the transformation between type `A` and `B` works for any type `A` and `B` and that the functions `get` and `reverseGet` are true inverses to each other.
+It is important to understand that the transformation between type `S` and `A` works for any type `S` and `A` and that the functions `get` and `reverseGet` are true inverses to each other.
