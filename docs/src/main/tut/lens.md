@@ -19,13 +19,13 @@ case class Address(streetNumber: Int, streetName: String)
 ```
 
 We can create a `Lens[Address, Int]` which zoom from an `Address` to its field `streetNumber` by supplying a pair of functions:
- 
-*   `get: Address => Int` 
+
+*   `get: Address => Int`
 *   `set: Int => Address => Address`
 
 ```tut:silent
 import monocle.Lens
-val _streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n)) 
+val _streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
 ```
 
 Once we have a `Lens`, we can use the supplied `get` and `set` functions (nothing fancy!):
@@ -50,14 +50,31 @@ We can push push the idea even further, with `modifyF` we can update the target 
 
 ```tut:silent
 def neighbors(n: Int): List[Int] =
-  if(n > 0) List(n - 1, n + 1) else List(n + 1) 
-  
+  if(n > 0) List(n - 1, n + 1) else List(n + 1)
+
 import scalaz.std.list._ // to get Functor[List] instance
 ```
+
 ```tut
 _streetNumber.modifyF(neighbors)(address)
 _streetNumber.modifyF(neighbors)(Address(135, "High Street"))
 ```
+
+This would work with any kind of `Functor` and is especially useful in conjunction with asynchronous APIs, where one has the task to update a deeply nested structure (see Lens Composition) with the result of an asynchronous computation:
+
+```tut:silent
+import scalaz.std.scalaFuture._
+import scala.concurrent._
+import scala.concurrent.ExecutionContext.Implicits._ // to get Future Functor instance
+```
+
+```tut
+def updateNumber(n: Int) : Future[Int] = Future.successful ( n + 1)
+_streetNumber.modifyF(updateNumber)(address)
+```
+
+
+
 
 Most importantly, `Lenses` compose to zoom deeper in a data structure
 
@@ -75,12 +92,12 @@ val _address = Lens[Person, Address](_.address)(a => p => p.copy(address = a))
 
 
 ## Lens Generation
- 
-`Lens` creation is rather boiler platy but we developed a few macros to generate them automatically. All macros 
+
+`Lens` creation is rather boiler platy but we developed a few macros to generate them automatically. All macros
 are defined in a separate module:
 
 ```scala
-libraryDependencies += "com.github.julien-truffaut"  %%  "monocle-macro"  % ${version} 
+libraryDependencies += "com.github.julien-truffaut"  %%  "monocle-macro"  % ${version}
 ```
 
 ```tut:silent
@@ -89,7 +106,7 @@ val _age = GenLens[Person](_.age)
 ```
 
 `GenLens` can also be used to generate `Lens` several level deep:
- 
+
 ```tut
 GenLens[Person](_.address.streetName).set("Iffley Road")(john)
 ```
@@ -108,22 +125,22 @@ Point.x.get(p)
 Point.y.set(0)(p)
 ```
 
-## Laws 
+## Laws
 
 ```tut:silent
 class LensLaws[S, A](lens: Lens[S, A]) {
 
   def getSetLaw(s: S): Boolean =
     lens.set(lens.get(s)) == s
-    
+
   def setGetLaw(s: S, a: A): Boolean =
     lens.get(lens.set(a)(s)) == a
-    
+
 }
 ```
 
-`getSetLaw` states that if you `get` a value `A` from `S` and then `set` it back in, the result is an object identical to the original one. 
-A side effect of this law is that `set` is constraint to only update the `A` it points to, for example it cannot 
+`getSetLaw` states that if you `get` a value `A` from `S` and then `set` it back in, the result is an object identical to the original one.
+A side effect of this law is that `set` is constraint to only update the `A` it points to, for example it cannot
 increment a counter or modify another value of type `A`.
 
 `setGetLaw` states that if you `set` a value, you always `get` the same value back. This law guarantees that `set` is
