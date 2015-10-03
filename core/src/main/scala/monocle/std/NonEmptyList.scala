@@ -47,9 +47,7 @@ trait NonEmptyListOptics {
     }
 
   implicit def nelFilterIndex[A]: FilterIndex[NonEmptyList[A], Int, A] =
-    FilterIndex.traverseFilterIndex[NonEmptyList, A](n =>
-      n.zip(NonEmptyList(0, Stream.from(1).take(n.size): _*))
-    )
+    FilterIndex.traverseFilterIndex[NonEmptyList, A](_.zipWithIndex)
 
   implicit def nelReverse[A]: Reverse[NonEmptyList[A], NonEmptyList[A]] =
     Reverse.reverseFromReverseFunction[NonEmptyList[A]](_.reverse)
