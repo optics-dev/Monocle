@@ -30,8 +30,11 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.4"
-lazy val shapeless  = "com.chuusai"     %% "shapeless"   % "2.2.5"
+lazy val scalaz      = "org.scalaz"      %% "scalaz-core"  % "7.1.4"
+lazy val shapeless   = "com.chuusai"     %% "shapeless"    % "2.2.5"
+lazy val refined     = "eu.timepit"      %% "refined"      % "0.2.3"
+lazy val joda        = "joda-time"        % "joda-time"    % "2.8.2"
+lazy val jodaConvert = "org.joda"         % "joda-convert" % "1.7"
 
 lazy val discpline  = "org.typelevel"   %% "discipline"  % "0.3"
 lazy val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
@@ -48,8 +51,8 @@ lazy val monocleSettings = buildSettings ++ publishSettings
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
   .settings(monocleSettings)
-  .aggregate(core, generic, law, macros, state, test, example, docs, bench)
-  .dependsOn(core, generic, law, macros, state, test % "test-internal -> test", bench % "compile-internal;test-internal -> test")
+  .aggregate(core, generic, law, macros, state, date, test, example, docs, bench)
+  .dependsOn(core, generic, law, macros, state, date, test % "test-internal -> test", bench % "compile-internal;test-internal -> test")
 
 lazy val core = project
   .settings(moduleName := "monocle-core")
@@ -90,7 +93,12 @@ lazy val state = project.dependsOn(core)
   .settings(monocleSettings)
   .settings(libraryDependencies := Seq(scalaz))
 
-lazy val test = project.dependsOn(core, generic, macros, law, state)
+lazy val date = project.dependsOn(core)
+  .settings(moduleName := "monocle-date")
+  .settings(monocleSettings)
+  .settings(libraryDependencies := Seq(scalaz, refined, joda, jodaConvert))
+
+lazy val test = project.dependsOn(core, generic, macros, law, state, date)
   .settings(moduleName := "monocle-test")
   .settings(monocleSettings)
   .settings(noPublishSettings)

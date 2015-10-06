@@ -1,5 +1,8 @@
 package monocle
 
+import eu.timepit.refined.Refined
+import monocle.date.{Hour, Minute}
+import org.joda.time.DateTime
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalactic.Equality
@@ -48,6 +51,11 @@ trait TestInstances {
   implicit def tuple4Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal] = scalaz.std.tuple.tuple4Equal[A1, A2, A3, A4]
   implicit def tuple5Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal] = scalaz.std.tuple.tuple5Equal[A1, A2, A3, A4, A5]
   implicit def tuple6Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal, A6: Equal] = scalaz.std.tuple.tuple6Equal[A1, A2, A3, A4, A5, A6]
+
+  implicit val dateTimeEq: Equal[DateTime] = Equal.equalA
+
+  implicit val minuteEq: Equal[Minute] = Equal.equalA
+  implicit val hourEq  : Equal[Hour]   = Equal.equalA
 
   // Order instances
 
@@ -143,5 +151,17 @@ trait TestInstances {
       Arbitrary.arbitrary[B].map(Either3.middle3),
       Arbitrary.arbitrary[C].map(Either3.right3)
     ))
+
+  implicit val dateTimeArbitrary: Arbitrary[DateTime] = Arbitrary(
+    Gen.choose(0L, Long.MaxValue).map(new DateTime(_))
+  )
+
+  implicit val minuteArbitrary: Arbitrary[Minute] = Arbitrary(
+    Gen.choose(0, 59).map(Refined.unsafeApply)
+  )
+
+  implicit val hourArbitrary: Arbitrary[Hour] = Arbitrary(
+    Gen.choose(0, 23).map(Refined.unsafeApply)
+  )
 
 }
