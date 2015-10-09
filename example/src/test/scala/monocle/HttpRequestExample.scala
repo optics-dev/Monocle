@@ -75,7 +75,6 @@ class HttpRequestExample extends MonocleSuite {
       composeTraversal filterIndex { h: String => h.contains("timeout") }
       composePrism stringToInt).modify(_ * 2)(r1)
 
-    println(r)
     r.headers.get("socket_timeout") shouldBe Some("40")
     r.headers.get("connection_timeout") shouldBe Some("20")
   }
