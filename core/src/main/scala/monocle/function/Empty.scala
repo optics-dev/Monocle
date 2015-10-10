@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle.Prism
+import monocle.{Iso, Prism}
 
 import scala.annotation.implicitNotFound
 
@@ -10,7 +10,12 @@ trait Empty[S] extends Serializable {
   def empty: Prism[S, Unit]
 }
 
-object Empty extends EmptyFunctions
+object Empty extends EmptyFunctions {
+  def fromIso[S, A](iso: Iso[S, A])(implicit ev: Empty[A]): Empty[S] = new Empty[S] {
+    override def empty: Prism[S, Unit] =
+      iso composePrism ev.empty
+  }
+}
 
 trait EmptyFunctions {
   

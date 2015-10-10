@@ -20,7 +20,12 @@ trait Snoc1[S, I, L] extends Serializable {
   def last: Lens[S, L] = snoc1 composeLens second
 }
 
-object Snoc1 extends Snoc1Functions
+object Snoc1 extends Snoc1Functions {
+  def fromIso[S, A, I, L](iso: Iso[S, A])(implicit ev: Snoc1[A, I, L]): Snoc1[S, I, L] = new Snoc1[S, I, L] {
+    override def snoc1: Iso[S, (I, L)] =
+      iso composeIso ev.snoc1
+  }
+}
 
 trait Snoc1Functions {
   final def snoc1[S, I, L](implicit ev: Snoc1[S, I, L]): Iso[S, (I, L)] = ev.snoc1

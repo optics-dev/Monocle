@@ -20,10 +20,15 @@ trait Cons1[S, H, T] extends Serializable {
 }
 
 
-object Cons1 extends HConsFunctions
+object Cons1 extends Cons1Functions {
+  def fromIso[S, A, H, T](iso: Iso[S, A])(implicit ev: Cons1[A, H, T]): Cons1[S, H, T] = new Cons1[S, H, T] {
+    override def cons1: Iso[S, (H, T)] =
+      iso composeIso ev.cons1
+  }
+}
 
 
-trait HConsFunctions {
+trait Cons1Functions {
   final def cons1[S, H, T](implicit ev: Cons1[S, H, T]): Iso[S, (H, T)] = ev.cons1
 
   final def head[S, H, T](implicit ev: Cons1[S, H, T]): Lens[S, H] = ev.head

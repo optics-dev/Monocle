@@ -27,7 +27,7 @@ trait TestInstances {
   implicit val byteEqual    = Equal.equalA[Byte]
   implicit val shortEqual   = Equal.equalA[Short]
   implicit val charEqual    = Equal.equalA[Char]
-  implicit val intEqual     = Equal.equalA[Int]
+//  implicit val intEqual     = Equal.equalA[Int]
   implicit val longEqual    = Equal.equalA[Long]
   implicit val floatEqual   = Equal.equalA[Float]
   implicit val doubleEqual  = Equal.equalA[Double]

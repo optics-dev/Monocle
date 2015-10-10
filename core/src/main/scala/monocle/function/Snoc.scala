@@ -2,7 +2,7 @@ package monocle.function
 
 import monocle.function.fields._
 import monocle.std.tuple2._
-import monocle.{Optional, Prism}
+import monocle._
 
 import scala.annotation.implicitNotFound
 
@@ -15,7 +15,12 @@ trait Snoc[S, A] extends Serializable {
   def lastOption: Optional[S, A] = snoc composeLens second
 }
 
-object Snoc extends SnocFunctions
+object Snoc extends SnocFunctions {
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Snoc[A, B]): Snoc[S, B] = new Snoc[S, B] {
+    override def snoc: Prism[S, (S, B)] =
+      iso composePrism ev.snoc composeIso iso.reverse.first
+  }
+}
 
 trait SnocFunctions {
   final def snoc[S, A](implicit ev: Snoc[S, A]): Prism[S, (S, A)] = ev.snoc

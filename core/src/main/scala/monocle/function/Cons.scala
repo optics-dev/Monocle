@@ -2,7 +2,7 @@ package monocle.function
 
 import monocle.function.fields._
 import monocle.std.tuple2._
-import monocle.{Optional, Prism}
+import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
 
@@ -15,7 +15,12 @@ trait Cons[S, A] extends Serializable {
   def tailOption: Optional[S, S] = cons composeLens second
 }
 
-object Cons extends ConsFunctions
+object Cons extends ConsFunctions {
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Cons[A, B]): Cons[S, B] = new Cons[S, B] {
+    override def cons: Prism[S, (B, S)] =
+      iso composePrism ev.cons composeIso iso.reverse.second
+  }
+}
 
 
 trait ConsFunctions {

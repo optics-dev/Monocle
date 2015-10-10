@@ -15,7 +15,7 @@ trait GenericOptics
   with    Field5Functions
   with    Field6Functions
   with    FilterIndexFunctions
-  with    HConsFunctions
+  with    Cons1Functions
   with    Snoc1Functions
   with    IndexFunctions
   with    ReverseFunctions

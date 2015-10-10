@@ -1,21 +1,19 @@
 package monocle.function
 
 import monocle.Iso
+
 import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Reverse[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 trait Reverse[S, A] extends Serializable {
-
   /** Creates an Iso from S to a reversed S */
   def reverse: Iso[S, A]
-
 }
 
 object Reverse extends ReverseFunctions
 
 trait ReverseFunctions {
-
   def reverseFromReverseFunction[S](_reverse: S => S): Reverse[S, S] = new Reverse[S, S] {
     def reverse = Iso(_reverse)(_reverse)
   }
