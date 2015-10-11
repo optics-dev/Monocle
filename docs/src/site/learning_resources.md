@@ -1,0 +1,25 @@
+---
+layout: default
+title:  "Learning Resources"
+section: "learning_resources"
+---
+
+Here are some various learning resources concerning optics. Feel free to send a PR to add other learning material.
+
+### Blog Posts
+-   [Lens implementation](http://functional-wizardry.blogspot.co.uk/2014/02/lens-implementation-part-1.html): Van Laarhoven 
+`Lens` implementation in scala (by [Julien Truffaut](https://github.com/julien-truffaut))
+ 
+### Presentations and Slides
+-   [Beyond Lenses](http://www.slideshare.net/JulienTruffaut/beyond-scala-lens): how `Iso`, `Prism`, `Lens` and `Optional`
+relate to each other (by [Julien Truffaut](https://github.com/julien-truffaut))
+-   [Lenses: compositional data access and manipulation](https://skillsmatter.com/skillscasts/4251-lenses-compositional-data-access-and-manipulation):
+haskell `Lens` implementation (by [Simon Peyton Jones](https://github.com/simonpj))
+-   [Lenses: A Functional Imperative](https://www.youtube.com/watch?v=efv0SQNde5Q): scalaz `Lens` usage with `State` to write 
+functional code that looks like imperative one (by [Edward Kmett](https://github.com/ekmett))
+
+### Other Optics Libraries
+-    [Haskell Lens](http://hackage.haskell.org/package/lens): library at the origin of Monocle
+-    [Scalaz](https://github.com/scalaz/scalaz): `Lens` and `PLens` (for partial lens or `Optional` in Monocle)
+-    [Shapeless](https://github.com/milessabin/shapeless): for boiler plate free `Lens` and `Prism` (what shapeless calls 
+`Prism` is called `Optional` in Monocle).
