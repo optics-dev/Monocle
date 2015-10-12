@@ -8,9 +8,13 @@
 ## NetBeans files to ignore
 .*_nb
 
+## Ensime files to ignore
+.ensime*
+
 ## scala specific files to ignore
 *.class
 target/
 project/project/
 benchData/
 _site/
+*.sc
