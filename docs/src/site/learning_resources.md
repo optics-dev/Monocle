@@ -26,4 +26,14 @@ relate to each other (by [Julien Truffaut](https://github.com/julien-truffaut))
 -    [Haskell Lens](http://hackage.haskell.org/package/lens): library at the origin of Monocle
 -    [Scalaz](https://github.com/scalaz/scalaz): `Lens` and `PLens` (for partial lens or `Optional` in Monocle)
 -    [Shapeless](https://github.com/milessabin/shapeless): for boiler plate free `Lens` and `Prism` (what shapeless calls 
-`Prism` is called `Optional` in Monocle).
+`Prism` is called `Optional` in Monocle)
+-    [Quicklens](https://github.com/adamw/quicklens)
+
+### Resources in Japanese
+-    [Monocleとかいうのがありまして](http://aoino.hatenablog.com/entry/2014/12/23/050932): Introduction to Monocle 
+(by [Naoki Aoyama](https://github.com/aoiroaoino))
+-    [MonocleのapplyLensメソッドの使い方](http://aoino.hatenablog.com/entry/2015/06/15/012432): `ApplyXXX` usage
+(by [Naoki Aoyama](https://github.com/aoiroaoino))
+
+### Resources in Korean
+-    [Scala Lens Library](http://1ambda.github.io/scala-monocle-tutorial/): Introduction to Monocle (by [Hoon](https://github.com/1ambda))
