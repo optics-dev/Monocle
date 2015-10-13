@@ -36,4 +36,4 @@ relate to each other (by [Julien Truffaut](https://github.com/julien-truffaut))
 (by [Naoki Aoyama](https://github.com/aoiroaoino))
 
 ### Resources in Korean
--    [Scala Lens Library](http://1ambda.github.io/scala-monocle-tutorial/): Introduction to Monocle (by [Hoon](https://github.com/1ambda))
+-    [Scala Lens Library](http://1ambda.github.io/scala-monocle-tutorial/): Introduction to Monocle (by [Hoon Park](https://github.com/1ambda))
