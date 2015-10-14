@@ -1,6 +1,7 @@
 package monocle.function
 
-import monocle._
+import monocle.{Iso, Lens}
+
 import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Field1[${S},${A}], please check Monocle instance location policy to " +

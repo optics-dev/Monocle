@@ -1,10 +1,9 @@
 package monocle.generic
 
-import monocle._
 import monocle.function._
+import monocle.{Iso, Lens}
+import shapeless.ops.hlist.{At, Init => HInit, IsHCons, Last => HLast, Prepend, ReplaceAt, Reverse => HReverse}
 import shapeless.{Lens => _, _}
-import shapeless.ops.hlist.{Reverse => HReverse, Prepend, IsHCons, ReplaceAt, At, Init => HInit, Last => HLast}
-
 
 object hlist extends HListInstances
 

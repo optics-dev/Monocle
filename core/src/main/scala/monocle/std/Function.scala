@@ -1,6 +1,6 @@
 package monocle.std
 
-import monocle._
+import monocle.Iso
 import monocle.function.Curry
 
 object function extends FunctionOptics

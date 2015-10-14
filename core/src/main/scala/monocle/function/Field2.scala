@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle._
+import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
 

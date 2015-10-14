@@ -1,6 +1,6 @@
 package monocle.law
 
-import monocle._
+import monocle.Optional
 import monocle.internal.IsEq
 
 import scalaz.Id._

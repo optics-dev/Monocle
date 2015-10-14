@@ -2,7 +2,7 @@ package monocle.function
 
 import monocle.function.fields._
 import monocle.std.tuple2._
-import monocle._
+import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
 
