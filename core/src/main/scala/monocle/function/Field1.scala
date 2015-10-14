@@ -14,7 +14,7 @@ trait Field1[S, A] extends Serializable {
 object Field1 extends Field1Functions {
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field1[A, B]): Field1[S, B] = new Field1[S, B] {
     override def first: Lens[S, B] =
-      iso composeLens  ev.first
+      iso composeLens ev.first
   }
 }
 
