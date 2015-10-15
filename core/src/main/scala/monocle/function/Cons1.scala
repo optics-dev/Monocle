@@ -8,7 +8,7 @@ import scala.annotation.implicitNotFound
 
 /**
  * Typeclass that defines an [[Iso]] between an `S` and its head `H` and tail `T`
- * [[Cons1]] is like [[Cons1]] but for types that have *always* an head and tail, e.g. a non empty list
+ * [[Cons1]] is like [[Cons]] but for types that have *always* an head and tail, e.g. a non empty list
  * @tparam S source of [[Iso]]
  * @tparam H head of [[Iso]] target, `A` is supposed to be unique for a given `S`
  * @tparam T tail of [[Iso]] target, `T` is supposed to be unique for a given `S`

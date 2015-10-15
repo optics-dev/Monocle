@@ -7,8 +7,7 @@ import scalaz.syntax.traverse._
 import scalaz.{Applicative, Traverse}
 
 /**
- * Typeclass that defines a [[Traversal]] from an `S` to all its element `A` where a predicate is satisfied
- * on its index `I`
+ * Typeclass that defines a [[Traversal]] from an `S` to all its elements `A` whose index `I` in `S` satisfies the predicate
  * @tparam S source of [[Traversal]]
  * @tparam I index
  * @tparam A target of [[Traversal]], `A` is supposed to be unique for a given pair `(S, I)`
