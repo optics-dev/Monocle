@@ -6,14 +6,21 @@ import scala.annotation.implicitNotFound
 import scalaz.syntax.traverse._
 import scalaz.{Applicative, Traverse}
 
+/**
+ * Typeclass that defines a [[Traversal]] from an `S` to all its element `A` where a predicate is satisfied
+ * on its index `I`
+ * @tparam S source of [[Traversal]]
+ * @tparam I index
+ * @tparam A target of [[Traversal]], `A` is supposed to be unique for a given pair `(S, I)`
+ */
 @implicitNotFound("Could not find an instance of FilterIndex[${S},${I},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 trait FilterIndex[S, I, A] extends Serializable {
-  /** Creates a Traversal from S to all A with an index matching the predicate */
   def filterIndex(predicate: I => Boolean): Traversal[S, A]
 }
 
 object FilterIndex extends FilterIndexFunctions {
+  /** lift an instance of [[FilterIndex]] using an [[Iso]] */
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: FilterIndex[A, I, B]): FilterIndex[S, I, B] = new FilterIndex[S, I, B] {
     override def filterIndex(predicate: I => Boolean): Traversal[S, B] =
       iso composeTraversal ev.filterIndex(predicate)

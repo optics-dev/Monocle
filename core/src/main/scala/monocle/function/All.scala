@@ -5,6 +5,7 @@ object all extends GenericOptics
 trait GenericOptics
   extends AtFunctions
   with    ConsFunctions
+  with    Cons1Functions
   with    CurryFunctions
   with    EachFunctions
   with    EmptyFunctions
@@ -15,8 +16,7 @@ trait GenericOptics
   with    Field5Functions
   with    Field6Functions
   with    FilterIndexFunctions
-  with    Cons1Functions
-  with    Snoc1Functions
   with    IndexFunctions
   with    ReverseFunctions
   with    SnocFunctions
+  with    Snoc1Functions

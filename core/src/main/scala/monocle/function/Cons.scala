@@ -6,6 +6,11 @@ import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
 
+/**
+ * Typeclass that defines a [[Prism]] between an `S` and its head `A` and tail `S`
+ * @tparam S source of [[Prism]] and tail of [[Prism]] target
+ * @tparam A head of [[Prism]] target, `A` is supposed to be unique for a given `S`
+ */
 @implicitNotFound("Could not find an instance of Cons[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 trait Cons[S, A] extends Serializable {
@@ -16,6 +21,7 @@ trait Cons[S, A] extends Serializable {
 }
 
 object Cons extends ConsFunctions {
+  /** lift an instance of [[Cons]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Cons[A, B]): Cons[S, B] = new Cons[S, B] {
     override def cons: Prism[S, (B, S)] =
       iso composePrism ev.cons composeIso iso.reverse.second
