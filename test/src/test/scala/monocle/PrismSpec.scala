@@ -15,6 +15,11 @@ class PrismSpec extends MonocleSuite {
   checkAll("prism.asTraversal", TraversalTests(_right[String, Int].asTraversal))
   checkAll("prism.asSetter"   , SetterTests(_right[String, Int].asSetter))
 
+  checkAll("first" , PrismTests(_right[String, Int].first[Boolean]))
+  checkAll("second", PrismTests(_right[String, Int].second[Boolean]))
+  checkAll("left"  , PrismTests(_right[String, Int].left[Boolean]))
+  checkAll("right" , PrismTests(_right[String, Int].right[Boolean]))
+
   // test implicit resolution of type classes
 
   test("Prism has a Compose instance") {
