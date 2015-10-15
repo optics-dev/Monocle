@@ -1,9 +1,12 @@
 package monocle.std
 
 import monocle.MonocleSuite
+import monocle.law.discipline.IsoTests
 import monocle.law.discipline.function._
 
 class ListSpec extends MonocleSuite {
+  checkAll("listToVector", IsoTests(listToVector[Int]))
+
   checkAll("reverse List", ReverseTests[List[Int]])
   checkAll("empty List", EmptyTests[List[Int]])
   checkAll("cons List", ConsTests[List[Int], Int])

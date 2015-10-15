@@ -6,21 +6,29 @@ import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
 
-
+/**
+ * Typeclass that defines an [[Iso]] between an `S` and its init `H` and last `T`
+ * [[Snoc1]] is like [[Snoc]] but for types that have *always* an init and a last element, e.g. a non empty list
+ * @tparam S source of [[Iso]]
+ * @tparam I init of [[Iso]] target, `I` is supposed to be unique for a given `S`
+ * @tparam L last of [[Iso]] target, `L` is supposed to be unique for a given `S`
+ */
 @implicitNotFound("Could not find an instance of Snoc1[${S}, ${I}, ${L}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 trait Snoc1[S, I, L] extends Serializable {
-  /**
-   * snoc1 defines an [[Iso]] between a S and its init and last element.
-   * snoc1 is like snoc but for types that have *always* an init and a last element, e.g. a non empty list
-   */
   def snoc1: Iso[S, (I, L)]
 
   def init: Lens[S, I] = snoc1 composeLens first
   def last: Lens[S, L] = snoc1 composeLens second
 }
 
-object Snoc1 extends Snoc1Functions
+object Snoc1 extends Snoc1Functions {
+  /** lift an instance of [[Snoc1]] using an [[Iso]] */
+  def fromIso[S, A, I, L](iso: Iso[S, A])(implicit ev: Snoc1[A, I, L]): Snoc1[S, I, L] = new Snoc1[S, I, L] {
+    override def snoc1: Iso[S, (I, L)] =
+      iso composeIso ev.snoc1
+  }
+}
 
 trait Snoc1Functions {
   final def snoc1[S, I, L](implicit ev: Snoc1[S, I, L]): Iso[S, (I, L)] = ev.snoc1

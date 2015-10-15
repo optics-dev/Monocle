@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Lens, Prism, Traversal}
+import monocle.{Iso, Lens, Prism, Traversal}
 
 import scalaz.std.list._
 import scalaz.std.map._
@@ -11,6 +11,9 @@ import scalaz.Applicative
 object map extends MapOptics
 
 trait MapOptics {
+
+  def mapToSet[K]: Iso[Map[K, Unit], Set[K]] =
+    Iso[Map[K, Unit], Set[K]](_.keySet)(_.map(k => (k, ())).toMap)
 
   implicit def mapEmpty[K, V]: Empty[Map[K, V]] = new Empty[Map[K, V]] {
     def empty = Prism[Map[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Map.empty)

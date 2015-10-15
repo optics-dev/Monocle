@@ -1,8 +1,7 @@
 package monocle.macros
 
-import monocle._
+import monocle.Lens
 import monocle.macros.internal.MacroImpl
-
 
 class GenLens[A] {
   /** generate a [[Lens]] between a case class `S` and one of its field */

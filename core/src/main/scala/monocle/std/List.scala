@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Optional, Prism}
+import monocle.{Iso, PIso, Optional, Prism}
 
 import scalaz.Id.Id
 import scalaz.std.list._
@@ -12,6 +12,12 @@ import scalaz.{Applicative, \/}
 object list extends ListOptics
 
 trait ListOptics {
+
+  def pListToVector[A, B]: PIso[List[A], List[B], Vector[A], Vector[B]] =
+    PIso[List[A], List[B], Vector[A], Vector[B]](_.toVector)(_.toList)
+
+  def listToVector[A]: Iso[List[A], Vector[A]] =
+    pListToVector[A, A]
 
   implicit def listEmpty[A]: Empty[List[A]] = new Empty[List[A]] {
     def empty = Prism[List[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => List.empty)
