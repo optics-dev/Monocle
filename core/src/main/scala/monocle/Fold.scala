@@ -60,6 +60,18 @@ abstract class Fold[S, A] extends Serializable { self =>
         s.fold(self.foldMap(f), other.foldMap(f))
     }
 
+  @inline final def left[C]: Fold[S \/ C, A \/ C] =
+    new Fold[S \/ C, A \/ C]{
+      override def foldMap[M: Monoid](f: A \/ C => M)(s: S \/ C): M =
+        s.fold(self.foldMap(a => f(\/.left(a))), c => f(\/.right(c)))
+    }
+
+  @inline final def right[C]: Fold[C \/ S, C \/ A] =
+    new Fold[C \/ S, C \/ A]{
+      override def foldMap[M: Monoid](f: C \/ A => M)(s: C \/ S): M =
+        s.fold(c => f(\/.left(c)), self.foldMap(a => f(\/.right(a))))
+    }
+
   @deprecated("use choice", since = "1.2.0")
   @inline final def sum[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
     choice(other)

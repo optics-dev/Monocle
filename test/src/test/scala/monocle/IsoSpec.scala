@@ -46,7 +46,7 @@ class IsoSpec extends MonocleSuite {
   checkAll("second", IsoTests(iso.second[Boolean]))
   checkAll("left"  , IsoTests(iso.left[Boolean]))
   checkAll("right" , IsoTests(iso.right[Boolean]))
-  
+
   // test implicit resolution of type classes
 
   test("Iso has a Compose)stance") {

@@ -29,6 +29,12 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def second[B]: Getter[(B, S), (B, A)] =
     Getter[(B, S), (B, A)]{case (b, s) => (b, self.get(s))}
 
+  @inline final def left[C] : Getter[S \/ C, A \/ C] =
+    Getter[S \/ C, A \/ C](_.leftMap(get))
+
+  @inline final def right[C]: Getter[C \/ S, C \/ A] =
+    Getter[C \/ S, C \/ A](_.map(get))
+
   @deprecated("use choice", "1.2.0")
   @inline final def sum[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
     choice(other)
