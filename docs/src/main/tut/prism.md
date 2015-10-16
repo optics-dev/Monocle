@@ -96,7 +96,7 @@ It is quite annoying that we need to use `copy` to `modify` the first element of
 should be able to use a `Lens` to zoom further:
 
 ```tut
-import monocle.function.Fields._ // to have access to first, second, ...
+import monocle.function.fields._ // to have access to first, second, ...
 import monocle.std.tuple2._      // to get instance Fields instance for Tuple2
 
 (_cons[Int] composeLens first).set(5)(l1)
