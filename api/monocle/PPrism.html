@@ -47,7 +47,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">PPrism</span><span class="tparams">[<span name="S">S</span>, <span name="T">T</span>, <span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">PPrism</span><span class="tparams">[<span name="S">S</span>, <span name="T">T</span>, <span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4>
       
@@ -57,7 +57,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
 <a href="package.html#Prism[S,A]=monocle.PPrism[S,S,A,A]" class="extmbr" name="monocle.Prism">Prism</a> is a type alias for <a href="" class="extype" name="monocle.PPrism">PPrism</a> where the type of target cannot be modified:</p><pre><span class="kw">type</span> Prism[S, A] = PPrism[S, S, A, A]</pre><p>A <a href="" class="extype" name="monocle.PPrism">PPrism</a> is also a valid  <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a>, <a href="POptional.html" class="extype" name="monocle.POptional">POptional</a>, <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a> and <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a>
 </p></div><dl class="paramcmts block"><dt class="tparam">S</dt><dd class="cmt"><p>the source of a <a href="" class="extype" name="monocle.PPrism">PPrism</a></p></dd><dt class="tparam">T</dt><dd class="cmt"><p>the modified source of a <a href="" class="extype" name="monocle.PPrism">PPrism</a></p></dd><dt class="tparam">A</dt><dd class="cmt"><p>the target of a <a href="" class="extype" name="monocle.PPrism">PPrism</a></p></dd><dt class="tparam">B</dt><dd class="cmt"><p>the modified target of a <a href="" class="extype" name="monocle.PPrism">PPrism</a></p></dd></dl><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="monocle.PPrism">PPrism</a>[<span class="extype" name="monocle.PPrism.S">S</span>, <span class="extype" name="monocle.PPrism.T">T</span>, <span class="extype" name="monocle.PPrism.A">A</span>, <span class="extype" name="monocle.PPrism.B">B</span>]</dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/src/main/scala/monocle/Prism.scala" target="_blank">Prism.scala</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="law/PrismLaws.html" class="extype" name="monocle.law.PrismLaws">monocle.law.PrismLaws</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -127,7 +127,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getOption</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PPrism.S">S</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="monocle.PPrism.A">A</span>]</span>
+        <span class="name">getOption</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PPrism.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.PPrism.A">A</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@getOption(s:S):Option[A]" title="Permalink" target="_top">
@@ -151,7 +151,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <img src="../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">get the target of a <a href="" class="extype" name="monocle.PPrism">PPrism</a> or modify the source in case there is no target</p>
+      <p class="shortcomment cmt">get the target of a <a href="" class="extype" name="monocle.PPrism">PPrism</a> or return the original value while allowing the type to change if it does not match</p>
     </li><li name="monocle.PPrism#reverseGet" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="reverseGet(b:B):T"></a>
       <a id="reverseGet(B):T"></a>
@@ -183,7 +183,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@!=(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -200,7 +200,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@##():Int" title="Permalink" target="_top">
@@ -217,7 +217,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@==(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -431,7 +431,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@clone():Object" title="Permalink" target="_top">
@@ -614,7 +614,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -631,7 +631,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@equals(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -648,7 +648,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@finalize():Unit" title="Permalink" target="_top">
@@ -708,7 +708,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@hashCode():Int" title="Permalink" target="_top">
@@ -725,7 +725,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
@@ -742,7 +742,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isMatching</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PPrism.S">S</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">isMatching</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PPrism.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@isMatching(s:S):Boolean" title="Permalink" target="_top">
@@ -802,7 +802,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">modifyOption</span><span class="params">(<span name="f">f: (<span class="extype" name="monocle.PPrism.A">A</span>) ⇒ <span class="extype" name="monocle.PPrism.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.PPrism.S">S</span>) ⇒ <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="monocle.PPrism.T">T</span>]</span>
+        <span class="name">modifyOption</span><span class="params">(<span name="f">f: (<span class="extype" name="monocle.PPrism.A">A</span>) ⇒ <span class="extype" name="monocle.PPrism.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.PPrism.S">S</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.PPrism.T">T</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@modifyOption(f:A=&gt;B):S=&gt;Option[T]" title="Permalink" target="_top">
@@ -810,7 +810,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       </a>
     </span>
       <p class="shortcomment cmt">modify polymorphically the target of a <a href="" class="extype" name="monocle.PPrism">PPrism</a> with a function.</p><div class="fullcomment"><div class="comment cmt"><p>modify polymorphically the target of a <a href="" class="extype" name="monocle.PPrism">PPrism</a> with a function.
-return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> is not matching
+return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> is not getOrModify
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
@@ -824,7 +824,7 @@ return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> i
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -841,7 +841,7 @@ return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> i
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@notify():Unit" title="Permalink" target="_top">
@@ -858,7 +858,7 @@ return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> i
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@notifyAll():Unit" title="Permalink" target="_top">
@@ -935,7 +935,7 @@ return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> i
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setOption</span><span class="params">(<span name="b">b: <span class="extype" name="monocle.PPrism.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.PPrism.S">S</span>) ⇒ <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="monocle.PPrism.T">T</span>]</span>
+        <span class="name">setOption</span><span class="params">(<span name="b">b: <span class="extype" name="monocle.PPrism.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.PPrism.S">S</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.PPrism.T">T</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@setOption(b:B):S=&gt;Option[T]" title="Permalink" target="_top">
@@ -943,7 +943,7 @@ return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> i
       </a>
     </span>
       <p class="shortcomment cmt">set polymorphically the target of a <a href="" class="extype" name="monocle.PPrism">PPrism</a> with a value.</p><div class="fullcomment"><div class="comment cmt"><p>set polymorphically the target of a <a href="" class="extype" name="monocle.PPrism">PPrism</a> with a value.
-return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> is not matching
+return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> is not getOrModify
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
@@ -991,7 +991,7 @@ return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> i
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@wait():Unit" title="Permalink" target="_top">
@@ -1014,7 +1014,7 @@ return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> i
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
@@ -1037,7 +1037,7 @@ return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> i
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../index.html#monocle.PPrism@wait(x$1:Long):Unit" title="Permalink" target="_top">
@@ -1130,13 +1130,13 @@ return empty if the <a href="" class="extype" name="monocle.PPrism">PPrism</a> i
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.Serializable">
-              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

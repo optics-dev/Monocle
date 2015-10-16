@@ -109,8 +109,8 @@ It is quite annoying that we need to use `copy` to `modify` the first element of
 should be able to use a `Lens` to zoom further:
 
 ```scala
-scala> import monocle.function.Fields._ // to have access to first, second, ...
-import monocle.function.Fields._
+scala> import monocle.function.fields._ // to have access to first, second, ...
+import monocle.function.fields._
 
 scala> import monocle.std.tuple2._      // to get instance Fields instance for Tuple2
 import monocle.std.tuple2._
@@ -123,3 +123,23 @@ res12: monocle.example.PrismExample.LinkedList[Int] = Nil()
 ```
 
 Composing a `Prism` with a `Lens` gives an `Optional` (TODO `Optional` doc).
+
+## Prism Laws
+
+```scala
+class PrismLaws[S, A](prism: Prism[S, A]) {
+
+  def partialRoundTripOneWayLaw(s: S): Boolean =
+    prism.getOption(s).fold(true)(prism.reverseGet(_) == s)
+    
+  def roundTripOtherWayLaw(a: A): Boolean =
+    prism.getOption(prism.reverseGet(a)) == Some(a)
+    
+}
+```
+
+The first law states that if a `Prism` matches (i.e. `getOption` returns a `Some`), you can always come back 
+to the original value using `reverseGet`.
+
+The second laws states that starting from an `A`, you can do a complete round trip. This law is equivalent to the 
+second law of `Iso`.

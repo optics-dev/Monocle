@@ -78,7 +78,7 @@ val john = Person("John", 20, address)
 ```
 
 ```scala
-val _address = Lens[Person, Address](_.address)(p => a => p.copy(address = a)) 
+val _address = Lens[Person, Address](_.address)(a => p => p.copy(address = a)) 
 
 (_address composeLens _streetNumber).get(john)
 (_address composeLens _streetNumber).set(2)(john)
@@ -128,8 +128,6 @@ res9: Point = Point(5,0)
 ## Laws 
 
 ```scala
-import monocle.Lens
-
 class LensLaws[S, A](lens: Lens[S, A]) {
 
   def getSetLaw(s: S): Boolean =
