@@ -47,6 +47,9 @@ class LensSpec extends MonocleSuite {
   checkAll("lens.asTraversal", TraversalTests(_s.asTraversal))
   checkAll("lens.asSetter"   , SetterTests(_s.asSetter))
 
+  checkAll("first" ,  LensTests(_s.first[Boolean]))
+  checkAll("second",  LensTests(_s.second[Boolean]))
+
   // test implicit resolution of type classes
 
   test("Lens has a Compose instance") {
