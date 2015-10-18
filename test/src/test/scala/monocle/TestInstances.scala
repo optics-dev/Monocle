@@ -33,6 +33,7 @@ trait TestInstances {
   implicit val doubleEqual  = Equal.equalA[Double]
   implicit val stringEqual  = Equal.equalA[String]
   implicit val unitEqual    = Equal.equalA[Unit]
+  implicit val bigIntEqual  = Equal.equalA[BigInt]
 
   implicit def optEq[A: Equal] = scalaz.std.option.optionEqual[A]
   implicit def someEq[A: Equal] = Equal.equalA[Some[A]]
