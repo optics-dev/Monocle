@@ -1,6 +1,5 @@
 package monocle
 
-import eu.timepit.refined.Refined
 import monocle.date.{Hour, Minute}
 import org.joda.time.DateTime
 import org.scalacheck.Arbitrary._
@@ -154,14 +153,6 @@ trait TestInstances {
 
   implicit val dateTimeArbitrary: Arbitrary[DateTime] = Arbitrary(
     Gen.choose(0L, Long.MaxValue).map(new DateTime(_))
-  )
-
-  implicit val minuteArbitrary: Arbitrary[Minute] = Arbitrary(
-    Gen.choose(0, 59).map(Refined.unsafeApply)
-  )
-
-  implicit val hourArbitrary: Arbitrary[Hour] = Arbitrary(
-    Gen.choose(0, 23).map(Refined.unsafeApply)
   )
 
 }

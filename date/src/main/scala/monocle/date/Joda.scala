@@ -1,6 +1,6 @@
 package monocle.date
 
-import eu.timepit.refined.Refined
+import eu.timepit.refined.api.Refined
 import monocle.Lens
 import org.joda.time.DateTime
 

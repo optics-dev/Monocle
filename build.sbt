@@ -32,12 +32,13 @@ lazy val buildSettings = Seq(
 
 lazy val scalaz      = "org.scalaz"      %% "scalaz-core"  % "7.1.4"
 lazy val shapeless   = "com.chuusai"     %% "shapeless"    % "2.2.5"
-lazy val refined     = "eu.timepit"      %% "refined"      % "0.2.3"
+lazy val refined     = "eu.timepit"      %% "refined"      % "0.3.1"
 lazy val joda        = "joda-time"        % "joda-time"    % "2.8.2"
 lazy val jodaConvert = "org.joda"         % "joda-convert" % "1.7"
 
-lazy val discpline  = "org.typelevel"   %% "discipline"  % "0.3"
-lazy val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
+lazy val discpline         = "org.typelevel" %% "discipline"         % "0.3"
+lazy val scalatest         = "org.scalatest" %% "scalatest"          % "2.2.4" % "test"
+lazy val refinedScalaCheck = "eu.timepit"    %% "refined-scalacheck" % "0.3.1" % "test"
 
 lazy val macroVersion = "2.0.1"
 lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
@@ -103,7 +104,7 @@ lazy val test = project.dependsOn(core, generic, macros, law, state, date)
   .settings(monocleSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz, shapeless, scalatest, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(scalaz, shapeless, scalatest, refinedScalaCheck, compilerPlugin(paradisePlugin))
   )
 
 lazy val bench = project.dependsOn(core, macros)

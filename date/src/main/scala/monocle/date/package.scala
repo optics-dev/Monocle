@@ -1,7 +1,8 @@
 package monocle
 
-import eu.timepit.refined.{Refined, W}
-import eu.timepit.refined.numeric._
+import eu.timepit.refined.W
+import eu.timepit.refined.api.Refined
+import eu.timepit.refined.numeric.Interval
 
 package object date {
 
