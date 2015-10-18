@@ -3,7 +3,8 @@ package monocle.std
 object all extends StdInstances
 
 trait StdInstances
-  extends BooleanOptics
+  extends BigIntOptics
+  with    BooleanOptics
   with    ByteOptics
   with    CharOptics
   with    DoubleOptics
