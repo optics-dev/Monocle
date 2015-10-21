@@ -36,7 +36,9 @@ lazy val shapeless  = "com.chuusai"     %% "shapeless"   % "2.2.5"
 lazy val discpline  = "org.typelevel"   %% "discipline"  % "0.3"
 lazy val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
 
-lazy val macroVersion = "2.0.1"
+lazy val macroCompat = "org.typelevel" %% "macro-compat" % "1.0.3"
+
+lazy val macroVersion = "2.1.0-M5"
 lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
@@ -76,7 +78,8 @@ lazy val macros = project.dependsOn(core)
   scalacOptions  += "-language:experimental.macros",
   libraryDependencies ++= Seq(
     "org.scala-lang"  %  "scala-reflect"  % scalaVersion.value,
-    "org.scala-lang"  %  "scala-compiler" % scalaVersion.value % "provided"
+    "org.scala-lang"  %  "scala-compiler" % scalaVersion.value % "provided",
+    macroCompat
   ),
   addCompilerPlugin(paradisePlugin),
   libraryDependencies ++= CrossVersion partialVersion scalaVersion.value collect {
