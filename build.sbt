@@ -36,7 +36,7 @@ lazy val shapeless  = "com.chuusai"     %% "shapeless"   % "2.2.5"
 lazy val discpline  = "org.typelevel"   %% "discipline"  % "0.3"
 lazy val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
 
-lazy val macroCompat = "org.typelevel" %% "macro-compat" % "1.0.2"
+lazy val macroCompat = "org.typelevel" %% "macro-compat" % "1.0.3"
 
 lazy val macroVersion = "2.1.0-M5"
 lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
