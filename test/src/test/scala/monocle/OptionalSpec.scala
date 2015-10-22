@@ -18,6 +18,9 @@ class OptionalSpec extends MonocleSuite {
   checkAll("optional.asTraversal", TraversalTests(headOption[Int].asTraversal))
   checkAll("optional.asSetter"   , SetterTests(headOption[Int].asSetter))
 
+  checkAll("first" , OptionalTests(headOption[Int].first[Boolean]))
+  checkAll("second", OptionalTests(headOption[Int].second[Boolean]))
+
   test("void") {
     Optional.void.getOption("hello") shouldEqual None
     Optional.void.set(5)("hello")    shouldEqual "hello"

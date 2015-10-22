@@ -84,9 +84,15 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       case (c, b) => (c, reverseGet(b))
     }
 
+  @inline final def left[C] : PIso[S \/ C, T \/ C, A \/ C, B \/ C] =
+    PIso[S \/ C, T \/ C, A \/ C, B \/ C](_.leftMap(get))(_.leftMap(reverseGet))
+
+  @inline final def right[C]: PIso[C \/ S, C \/ T, C \/ A, C \/ B] =
+    PIso[C \/ S, C \/ T, C \/ A, C \/ B](_.map(get))(_.map(reverseGet))
+
   @deprecated("use split", "1.2.0")
   @inline final def product[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
-    product(other)
+    split(other)
 
   /**********************************************************/
   /** Compose methods between a [[PIso]] and another Optics */
