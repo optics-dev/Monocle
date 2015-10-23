@@ -25,8 +25,7 @@ private object GenIsoImpl extends MacrosCompatibility {
     val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
 
     val fieldMethod = caseAccessorsOf[S](c) match {
-      case m :: Nil if m.returnType == aTpe => m
-      case m :: Nil => c.abort(c.enclosingPosition, s"Found a case class accessor of type ${m.returnType} instead of $aTpe")
+      case m :: Nil => m
       case Nil      => c.abort(c.enclosingPosition, s"Cannot find a case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor")
       case _        => c.abort(c.enclosingPosition, s"Found several case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor")
     }
