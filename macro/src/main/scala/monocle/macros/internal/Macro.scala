@@ -2,12 +2,15 @@ package monocle.macros.internal
 
 import monocle.Lens
 
+import scala.reflect.macros.blackbox
+
 object Macro {
   def mkLens[S, A](fieldName: String): Lens[S, A] = macro MacroImpl.mkLens_impl[S, A]
 }
 
-private[macros] object MacroImpl extends MacrosCompatibility {
-  def genLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context)(field: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
+@macrocompat.bundle
+private[macros] class MacroImpl(val c: blackbox.Context) {
+  def genLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](field: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
     import c.universe._
     
     /** Extractor for member select chains.
@@ -32,7 +35,7 @@ private[macros] object MacroImpl extends MacrosCompatibility {
         )
       ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
         val fieldName = fieldNameName.decodedName.toString
-        mkLens_impl[S, A](c)(c.Expr[String](q"$fieldName"))
+        mkLens_impl[S, A](c.Expr[String](q"$fieldName"))
 
       // _.field1.field2...
       case Expr(
@@ -50,22 +53,22 @@ private[macros] object MacroImpl extends MacrosCompatibility {
     }
   }
 
-  def mkLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[Lens[S, A]] = {
+  def mkLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](fieldName: c.Expr[String]): c.Expr[Lens[S, A]] = {
     import c.universe._
 
     val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
 
-    val strFieldName = c.eval(c.Expr[String](resetLocalAttrs(c)(fieldName.tree.duplicate)))
+    val strFieldName = c.eval(c.Expr[String](c.untypecheck(fieldName.tree.duplicate)))
 
-    val fieldMethod = getDeclarations(c)(sTpe).collectFirst {
+    val fieldMethod = sTpe.decls.collectFirst {
       case m: MethodSymbol if m.isCaseAccessor && m.name.decodedName.toString == strFieldName => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $strFieldName in $sTpe"))
 
-    val constructor = getDeclarations(c)(sTpe).collectFirst {
+    val constructor = sTpe.decls.collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in $sTpe"))
 
-    val field = getParameterLists(c)(constructor).head
+    val field = constructor.paramLists.head
       .find(_.name.decodedName.toString == strFieldName)
       .getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $sTpe"))
 
