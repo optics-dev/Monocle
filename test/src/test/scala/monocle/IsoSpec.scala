@@ -14,6 +14,10 @@ class IsoSpec extends MonocleSuite {
   implicit val intWrapperGen: Arbitrary[IntWrapper] = Arbitrary(arbitrary[Int].map(IntWrapper.apply))
   implicit val intWrapperEq = Equal.equalA[IntWrapper]
 
+  case class IdWrapper[A](value: A)
+  implicit def idWrapperGen[A: Arbitrary]: Arbitrary[IdWrapper[A]] = Arbitrary(arbitrary[A].map(IdWrapper.apply))
+  implicit def idWrapperEq[A: Equal]: Equal[IdWrapper[A]] = Equal.equalA
+
   case object AnObject
   implicit val anObjectGen: Arbitrary[AnObject.type] = Arbitrary(Gen.const(AnObject))
   implicit val anObjectEq = Equal.equalA[AnObject.type]
@@ -30,6 +34,7 @@ class IsoSpec extends MonocleSuite {
 
   checkAll("apply Iso", IsoTests(iso))
   checkAll("GenIso", IsoTests(GenIso[IntWrapper, Int]))
+  checkAll("GenIso with type param", IsoTests(GenIso[IdWrapper[Int], Int]))
   checkAll("GenIso.unit object", IsoTests(GenIso.unit[AnObject.type]))
   checkAll("GenIso.unit empty case class", IsoTests(GenIso.unit[EmptyCase]))
   checkAll("GenIso.unit empty case class with type param", IsoTests(GenIso.unit[EmptyCaseType[Int]]))
