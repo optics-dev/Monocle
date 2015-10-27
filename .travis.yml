@@ -13,7 +13,9 @@ notifications:
     on_start: false
   email:
   - truffaut.julien@gmail.com
-script: sbt ++$TRAVIS_SCALA_VERSION test
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION test
+  - sbt ++$TRAVIS_SCALA_VERSION tut
 env:
   global:
   - secure: lJxaR+9VM96s7rfaigL3K2FbcP3XiZ+AerbgOBOpYi2anRkMPQ91h1g60HYTwEDGJIKybyNWFuXZM8hNtQMCxzxgu7ev1SyRr5Otfzg5ehGqB5UWbSAgpXlqhR5dAonwmqyEEDF2OK+k1fa0N6mIwpQeuUCwrt68kTp4f0K9jMQ=
