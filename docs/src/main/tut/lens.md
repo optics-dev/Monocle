@@ -73,9 +73,6 @@ def updateNumber(n: Int) : Future[Int] = Future.successful ( n + 1)
 _streetNumber.modifyF(updateNumber)(address)
 ```
 
-
-
-
 Most importantly, `Lenses` compose to zoom deeper in a data structure
 
 ```tut:silent
