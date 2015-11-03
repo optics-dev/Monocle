@@ -1,18 +1,18 @@
 package monocle.macros.internal
 
-import monocle.Lens
+import monocle.{PLens, Lens}
 
 import scala.reflect.macros.blackbox
 
 object Macro {
-  def mkLens[S, A](fieldName: String): Lens[S, A] = macro MacroImpl.mkLens_impl[S, A]
+  def mkLens[S, T, A, B](fieldName: String): PLens[S, T, A, B] = macro MacroImpl.mkLens_impl[S, T, A, B]
 }
 
 @macrocompat.bundle
 private[macros] class MacroImpl(val c: blackbox.Context) {
   def genLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](field: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
     import c.universe._
-    
+
     /** Extractor for member select chains.
         e.g.: SelectChain.unapply(a.b.c) == Some("a",Seq(a.type -> "b", a.b.type -> "c")) */
     object SelectChain{
@@ -35,7 +35,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
         )
       ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
         val fieldName = fieldNameName.decodedName.toString
-        mkLens_impl[S, A](c.Expr[String](q"$fieldName"))
+        mkLens_impl[S, S, A, A](c.Expr[String](q"$fieldName"))
 
       // _.field1.field2...
       case Expr(
@@ -53,10 +53,10 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
     }
   }
 
-  def mkLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](fieldName: c.Expr[String]): c.Expr[Lens[S, A]] = {
+  def mkLens_impl[S: c.WeakTypeTag, T: c.WeakTypeTag, A: c.WeakTypeTag, B: c.WeakTypeTag](fieldName: c.Expr[String]): c.Expr[PLens[S, T, A, B]] = {
     import c.universe._
 
-    val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
+    val (sTpe, tTpe, aTpe, bTpe) = (weakTypeOf[S], weakTypeOf[T], weakTypeOf[A], weakTypeOf[B])
 
     val strFieldName = c.eval(c.Expr[String](c.untypecheck(fieldName.tree.duplicate)))
 
@@ -72,21 +72,21 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
       .find(_.name.decodedName.toString == strFieldName)
       .getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $sTpe"))
 
-    c.Expr[Lens[S, A]](q"""
+    c.Expr[PLens[S, T, A, B]](q"""
       import monocle.PLens
       import scalaz.Functor
 
-      new PLens[$sTpe, $sTpe, $aTpe, $aTpe]{
+      new PLens[$sTpe, $tTpe, $aTpe, $bTpe]{
         def get(s: $sTpe): $aTpe =
           s.$fieldMethod
 
-        def set(a: $aTpe): $sTpe => $sTpe =
+        def set(a: $bTpe): $sTpe => $tTpe =
           _.copy($field = a)
 
-        def modifyF[F[_]: Functor](f: $aTpe => F[$aTpe])(s: $sTpe): F[$sTpe] =
+        def modifyF[F[_]: Functor](f: $aTpe => F[$bTpe])(s: $sTpe): F[$tTpe] =
           Functor[F].map(f(s.$fieldMethod))(a => s.copy($field = a))
 
-        def modify(f: $aTpe => $aTpe): $sTpe => $sTpe =
+        def modify(f: $aTpe => $bTpe): $sTpe => $tTpe =
          s => s.copy($field = f(s.$fieldMethod))
       }
     """)

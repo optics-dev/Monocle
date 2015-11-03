@@ -22,13 +22,48 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
     }
 
     def lenses(tpname: TypeName, tparams: List[TypeDef], paramss: List[List[ValDef]]): List[Tree] = {
-      paramss.head map { param =>
+      val params1 = paramss.head
+
+      // number of fields in which each tparam is used
+      val tparamsUsages: Map[TypeName, Int] = params1.foldLeft(tparams.map { _.name -> 0 }.toMap){ (acc, param) =>
+        val typeNames = param.collect{ case Ident(tn@TypeName(_)) => tn }.toSet
+        typeNames.foldLeft(acc){ (map, key) => map.get(key).fold(map){ value => map.updated(key, value + 1) }}
+      }
+
+      val groupedTpnames: Map[Int, Set[TypeName]] =
+        tparamsUsages.toList.groupBy(_._2).map{ case (n, tps) => (n, tps.map(_._1).toSet) }
+      val phantomTpnames = groupedTpnames.getOrElse(0, Set.empty)
+      val singleFieldTpnames = groupedTpnames.getOrElse(1, Set.empty)
+
+      params1 map { param =>
         val lensName = TermName(prefix + param.name.decodedName)
         if (tparams.isEmpty)
-          q"""val $lensName = monocle.macros.internal.Macro.mkLens[$tpname, ${param.tpt}](${param.name.toString})"""
-        else
-          q"""def $lensName[..$tparams] =
-                 monocle.macros.internal.Macro.mkLens[$tpname[..${tparams.map(_.name)}], ${param.tpt}](${param.name.toString})"""
+          q"""val $lensName = monocle.macros.internal.Macro.mkLens[$tpname, $tpname, ${param.tpt}, ${param.tpt}](${param.name.toString})"""
+        else {
+          val tpnames = param.collect{ case Ident(tn@TypeName(_)) => tn }.toSet
+          val tpnamesToChange = tpnames.intersect(singleFieldTpnames) ++ phantomTpnames
+          val tpnamesMap = tpnamesToChange.foldLeft((tparams.map(_.name).toSet ++ tpnames).map(x => (x, x)).toMap){ (acc, tpname) =>
+            acc.updated(tpname, c.freshName(tpname))
+          }
+          val defParams = tparams ++ tparams.filter(x => tpnamesToChange.contains(x.name)).map{
+            case TypeDef(mods, name, tps, rhs) => TypeDef(mods, tpnamesMap(name), tps, rhs)
+          }.toSet
+
+          object tptTransformer extends Transformer {
+            override def transform(tree: Tree): Tree = tree match {
+              case Ident(tn@TypeName(_)) => Ident(tpnamesMap(tn))
+              case x => super.transform(x)
+            }
+          }
+
+          val q"x: $s" = q"x: $tpname[..${tparams.map(_.name)}]"
+          val q"x: $t" = q"x: $tpname[..${tparams.map(x => tpnamesMap(x.name))}]"
+          val q"x: $a" = q"x: ${param.tpt}"
+          val q"x: $b" = q"x: ${tptTransformer.transform(param.tpt)}"
+
+          q"""def $lensName[..$defParams] =
+               monocle.macros.internal.Macro.mkLens[$s, $t, $a, $b](${param.name.toString})"""
+        }
       }
     }
 
