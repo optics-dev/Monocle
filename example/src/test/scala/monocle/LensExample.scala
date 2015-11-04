@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.macros.{GenLens, Lenses}
+import monocle.macros.{GenLens, Lenses, PLenses}
 import shapeless.test.illTyped
 
 class LensMonoExample extends MonocleSuite {
@@ -69,7 +69,7 @@ class LensMonoExample extends MonocleSuite {
 
 class LensPolyExample extends MonocleSuite {
 
-  @Lenses case class Foo[A,B](q: Map[(A,B),Double], default: Double)
+  @PLenses case class Foo[A,B](q: Map[(A,B),Double], default: Double)
 
   object Manual { // Lens created manually (i.e. without macro)
   def q[A,B] = Lens((_: Foo[A,B]).q)(q => f => f.copy(q = q))
@@ -94,4 +94,16 @@ class LensPolyExample extends MonocleSuite {
     Foo.q.modify((_: Map[(Int,Symbol),Double]).updated((0,'Buy), -2.0))(candyTrade) shouldEqual changedTrade
   }
 
+  test("@PLenses generates polymorphic lenses") {
+    val changedTrade = candyTrade.copy(q = candyTrade.q.map{case (x, y) => (x.swap, y)})
+    Foo.q.modify((_: Map[(Int, Symbol), Double]).map {case (x, y) => (x.swap, y)})(candyTrade) shouldEqual changedTrade
+  }
+
+  @PLenses("_") case class Cat(age: Int)
+
+  val alpha = Cat(2)
+
+  test("@PLenses takes an optional prefix string") {
+    Cat._age.get(alpha) shouldEqual 2
+  }
 }
