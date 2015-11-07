@@ -3,10 +3,7 @@ package monocle.std
 import monocle.function._
 import monocle.{Optional, Prism}
 
-import scalaz.Id.Id
-import scalaz.\/
 import scalaz.std.vector._
-import scalaz.syntax.traverse._
 
 object vector extends VectorOptics
 
@@ -21,8 +18,8 @@ trait VectorOptics {
   implicit def vectorIndex[A]: Index[Vector[A], Int, A] = new Index[Vector[A], Int, A] {
     def index(i: Int) =
       Optional[Vector[A], A](v =>
-        \/.fromTryCatchNonFatal(v(i)).toOption)(a => v =>
-        \/.fromTryCatchNonFatal(v.updated(i, a)).getOrElse(v))
+        if(v.isDefinedAt(i)) Some(v(i))     else None)(a => v =>
+        if(v.isDefinedAt(i)) v.updated(i,a) else v)
   }
 
   implicit def vectorFilterIndex[A]: FilterIndex[Vector[A], Int, A] =
