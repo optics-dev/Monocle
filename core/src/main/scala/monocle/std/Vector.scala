@@ -19,13 +19,10 @@ trait VectorOptics {
   implicit def vectorEach[A]: Each[Vector[A], A] = Each.traverseEach[Vector, A]
 
   implicit def vectorIndex[A]: Index[Vector[A], Int, A] = new Index[Vector[A], Int, A] {
-    def index(i: Int) = Optional[Vector[A], A](
-      v      => if(i < 0) None else \/.fromTryCatchNonFatal(v.apply(i)).toOption)(
-      a => v => v.zipWithIndex.traverse[Id, A]{
-        case (_    , index) if index == i => a
-        case (value, index)               => value
-      }
-    )
+    def index(i: Int) =
+      Optional[Vector[A], A](v =>
+        \/.fromTryCatchNonFatal(v(i)).toOption)(a => v =>
+        \/.fromTryCatchNonFatal(v.updated(i, a)).getOrElse(v))
   }
 
   implicit def vectorFilterIndex[A]: FilterIndex[Vector[A], Int, A] =
