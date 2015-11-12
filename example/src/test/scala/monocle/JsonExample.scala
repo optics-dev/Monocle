@@ -17,7 +17,7 @@ class JsonExample extends MonocleSuite {
   val jsArray  = Prism[Json, List[Json]]{ case JsArray(a) => Some(a); case _ => None}(JsArray.apply)
   val jsObject = Prism[Json, Map[String, Json]]{ case JsObject(m) => Some(m); case _ => None}(JsObject.apply)
 
-  val json = JsObject(Map(
+  val json: Json = JsObject(Map(
     "first_name" -> JsString("John"),
     "last_name"  -> JsString("Doe"),
     "age"        -> JsNumber(28),
@@ -142,4 +142,42 @@ class JsonExample extends MonocleSuite {
     ))
   }
 
+  implicit val jsonPlated: Plated[Json] = new Plated[Json] {
+    import scalaz.{Applicative, Traverse}
+    import scalaz.std.list._
+    import scalaz.std.map._
+    import scalaz.syntax.traverse._
+
+    def plate: Traversal[Json, Json] = new Traversal[Json, Json] {
+      def modifyF[F[_]: Applicative](f: Json => F[Json])(a: Json): F[Json] =
+        a match {
+          case j@(JsString(_) | JsNumber(_)) => Applicative[F].point(j)
+          case JsArray(l) => l.traverse(f).map(JsArray)
+          case JsObject(m) => m.traverse(f).map(JsObject)
+        }
+    }
+  }
+
+  test("Plated instance to rewrite any matching elements") {
+    Plated.rewrite[Json] {
+      case JsString(s) =>
+        val u = s.toUpperCase
+        if (s != u) Some(JsString(u)) else None
+      case _ => None
+    }(json) shouldEqual JsObject(Map(
+      "first_name" -> JsString("JOHN"),
+      "last_name"  -> JsString("DOE"),
+      "age"        -> JsNumber(28),
+      "siblings"   -> JsArray(List(
+        JsObject(Map(
+          "first_name" -> JsString("ELIA"),
+          "age"        -> JsNumber(23)
+        )),
+        JsObject(Map(
+          "first_name" -> JsString("ROBERT"),
+          "age"        -> JsNumber(25)
+        ))
+      ))
+    ))
+  }
 }

@@ -14,8 +14,8 @@ abstract class Plated[A] extends Serializable { self =>
 }
 
 object Plated {
-  def plate[A: Plated]: Traversal[A, A] = implicitly[Plated[A]].plate
-  def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
+  def plate[A](implicit P: Plated[A]): Traversal[A, A] = P.plate
+  @inline def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
   def universe[A: Plated](a: A): Stream[A] = {
     val fold = plate[A].asFold
     def go(b: A): Stream[A] = fold.foldMap[Stream[A]](c => c #:: go(c))(b)
