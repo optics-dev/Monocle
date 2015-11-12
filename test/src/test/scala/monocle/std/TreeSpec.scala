@@ -1,7 +1,7 @@
 package monocle.std
 
-import monocle.MonocleSuite
-import monocle.law.discipline.LensTests
+import monocle.{MonocleSuite, Plated}
+import monocle.law.discipline.{LensTests, TraversalTests}
 import monocle.law.discipline.function.{EachTests, ReverseTests}
 
 import scalaz.Tree
@@ -14,4 +14,6 @@ class TreeSpec extends MonocleSuite {
 
   checkAll("each Tree", EachTests[Tree[Int], Int])
   checkAll("reverse Tree", ReverseTests[Tree[Int], Tree[Int]])
+
+  checkAll("plated Tree", TraversalTests(Plated.plate[Tree[Int]]))
 }
