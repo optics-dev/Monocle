@@ -22,14 +22,14 @@ object Plated {
     go(a)
   }
   def rewrite[A: Plated](f: A => Option[A])(a: A): A = {
-    val setter = plate[A].asSetter
     def gogo(b: A): A = {
-      def go(c: A): A = gogo(f(c).fold(c)(go))
-      setter.modify(go)(b)
+      val c = transform(gogo)(b)
+      f(c).fold(c)(gogo)
     }
     gogo(a)
   }
-  def transform[A: Plated](f: A => A)(a: A): A = plate[A].modify(f)(a)
+  def transform[A: Plated](f: A => A)(a: A): A =
+    plate[A].modify(b => transform(f)(f(b)))(a)
 
   implicit def freePlated[S[_]: Traverse, A]: Plated[Free[S, A]] = new Plated[Free[S, A]] {
     def plate: Traversal[Free[S, A], Free[S, A]] = new Traversal[Free[S, A], Free[S, A]] {
