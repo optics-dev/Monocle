@@ -18,7 +18,7 @@ object Plated {
   @inline def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
   def universe[A: Plated](a: A): Stream[A] = {
     val fold = plate[A].asFold
-    def go(b: A): Stream[A] = fold.foldMap[Stream[A]](c => c #:: go(c))(b)
+    def go(b: A): Stream[A] = b #:: fold.foldMap[Stream[A]](go)(b)
     go(a)
   }
   def rewrite[A: Plated](f: A => Option[A])(a: A): A = {
