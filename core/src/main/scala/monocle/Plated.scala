@@ -21,15 +21,19 @@ object Plated {
     def go(b: A): Stream[A] = b #:: fold.foldMap[Stream[A]](go)(b)
     go(a)
   }
-  def rewrite[A: Plated](f: A => Option[A])(a: A): A = {
-    def gogo(b: A): A = {
-      val c = transform(gogo)(b)
-      f(c).fold(c)(gogo)
+  def rewrite[A: Plated](f: A => Option[A])(a: A): A =
+    rewriteOf(plate[A].asSetter)(f)(a)
+  def rewriteOf[A](l: Setter[A, A])(f: A => Option[A])(a: A): A = {
+    def go(b: A): A = {
+      val c = transformOf(l)(go)(b)
+      f(c).fold(c)(go)
     }
-    gogo(a)
+    go(a)
   }
   def transform[A: Plated](f: A => A)(a: A): A =
-    plate[A].modify(b => transform(f)(f(b)))(a)
+    transformOf(plate[A].asSetter)(f)(a)
+  def transformOf[A](l: Setter[A, A])(f: A => A)(a: A): A =
+    l.modify(b => transformOf(l)(f)(f(b)))(a)
 
   implicit def freePlated[S[_]: Traverse, A]: Plated[Free[S, A]] = new Plated[Free[S, A]] {
     def plate: Traversal[Free[S, A], Free[S, A]] = new Traversal[Free[S, A], Free[S, A]] {
