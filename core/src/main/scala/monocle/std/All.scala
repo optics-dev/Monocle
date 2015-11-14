@@ -26,6 +26,7 @@ trait StdInstances
   with    Tuple6Optics
   with    VectorOptics
   // Scalaz Instances
+  with    CofreeOptics
   with    Either3Optics
   with    DisjunctionOptics
   with    TheseOptics
@@ -36,4 +37,3 @@ trait StdInstances
   with    OneAndOptics
   with    TreeOptics
   with    ValidationOptics
-  with    CofreeOptics

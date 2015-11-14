@@ -50,6 +50,16 @@ trait TestInstances {
   implicit def tuple5Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal] = scalaz.std.tuple.tuple5Equal[A1, A2, A3, A4, A5]
   implicit def tuple6Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal, A6: Equal] = scalaz.std.tuple.tuple6Equal[A1, A2, A3, A4, A5, A6]
 
+  implicit def optionCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[Option, A]] =
+    Cofree.cofreeEqual(A, new (NaturalTransformation[Equal, ({type λ[X] = Equal[Option[X]]})#λ]) {
+      override def apply[A](a: Equal[A]): Equal[Option[A]] = optEq(a)
+    })
+
+  implicit def streamCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[Stream, A]] =
+    Cofree.cofreeEqual(A, new (NaturalTransformation[Equal, ({type λ[X] = Equal[Stream[X]]})#λ]) {
+      override def apply[A](a: Equal[A]): Equal[Stream[A]] = streamEq(a)
+    })
+
   // Order instances
 
   implicit val intOrder = Order.fromScalaOrdering[Int]
@@ -144,5 +154,13 @@ trait TestInstances {
       Arbitrary.arbitrary[B].map(Either3.middle3),
       Arbitrary.arbitrary[C].map(Either3.right3)
     ))
+
+  implicit def optionCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[Option, A]] =
+    Arbitrary(Arbitrary.arbitrary[OneAnd[List, A]].map( xs =>
+      monocle.std.cofree.cofreeToStream.reverseGet(xs.copy(tail = xs.tail.toStream))
+    ))
+
+  implicit def streamCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[Stream, A]] =
+    Arbitrary(Arbitrary.arbitrary[Tree[A]].map( monocle.std.cofree.cofreeToTree.reverseGet))
 
 }
