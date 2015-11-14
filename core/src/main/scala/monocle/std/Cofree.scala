@@ -10,8 +10,8 @@ object cofree extends CofreeOptics
 
 trait CofreeOptics {
 
-  private def toStream[A](c: Cofree[Option, A]): Stream[A] =
-    c.head #:: c.tail.fold(Stream.empty[A])(toStream[A])
+  private def toStream[A](optC: Option[Cofree[Option, A]]): Stream[A] =
+    optC.fold(Stream.empty[A])(c => c.head #:: toStream(c.tail))
 
   private def fromStream[A, B](z: A, c: Stream[A]): Cofree[Option, A] = c match {
     case head #:: tail => Cofree.delay(z, Some(fromStream(head, tail)))
@@ -22,7 +22,7 @@ trait CofreeOptics {
   def pCofreeToStream[A, B]: PIso[Cofree[Option, A], Cofree[Option, B],
                                   OneAnd[Stream, A], OneAnd[Stream, B]] =
     PIso[Cofree[Option, A], Cofree[Option, B], OneAnd[Stream, A], OneAnd[Stream, B]](
-      (c: Cofree[Option, A]) => OneAnd[Stream, A](c.head, toStream(c))
+      (c: Cofree[Option, A]) => OneAnd[Stream, A](c.head, toStream(c.tail))
     ){ case OneAnd(head, tail) => fromStream(head, tail) }
 
   /** [[Iso]] variant of [[pCofreeToStream]]  */
@@ -61,6 +61,6 @@ trait CofreeOptics {
 
 
   /** Trivial [[Each]] instance due to `Cofree S` being traversable when `S` is */
-  implicit def cofreeEach[S[_] : Traverse, A]: Each[Cofree[S, A], A] =
+  implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] =
     Each.traverseEach[({type L[X] = Cofree[S, X]})#L, A]
 }
