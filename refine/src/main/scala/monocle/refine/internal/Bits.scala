@@ -1,10 +1,4 @@
-package monocle.internal
-
-import monocle.Optional
-import monocle.function.Index
-
-import scalaz.Maybe
-
+package monocle.refine.internal
 
 private[monocle] trait Bits[A] {
 
@@ -32,24 +26,7 @@ private[monocle] trait Bits[A] {
 
 }
 
-private[monocle] object Bits extends BitsInstances {
-
-  def apply[A](implicit ev: Bits[A]): Bits[A] = ev
-
-  def bitsIndex[S: Bits]: Index[S, Int, Boolean] = new Index[S, Int, Boolean] {
-    private def doIfInRange[A](i: Int)(a: => A): Option[A] =
-      if(i >= 0 && i < Bits[S].bitSize) Some(a)
-      else None
-
-    def index(i: Int): Optional[S, Boolean] =
-      Optional[S, Boolean](
-        s => doIfInRange(i)(Bits[S].testBit(s, i)))(
-        a => s => doIfInRange(i)(Bits[S].updateBit(a)(s, i)).getOrElse(s)
-      )
-
-  }
-
-}
+private[monocle] object Bits extends BitsInstances
 
 private[monocle] trait BitsInstances {
 

@@ -1,17 +1,13 @@
 package monocle.std
 
 import monocle.Prism
-import monocle.function.Index
-import monocle.internal.{Bits, Bounded}
+import monocle.internal.Bounded
 
 import scalaz.std.anyVal._
 
 object int extends IntOptics
 
 trait IntOptics {
-
-  implicit val intBitIndex: Index[Int, Int, Boolean] =
-    Bits.bitsIndex[Int]
 
   val intToChar: Prism[Int, Char] =
     Bounded.orderingBoundedSafeCast[Int, Char](_.toChar)(_.toInt)

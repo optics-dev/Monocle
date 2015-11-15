@@ -4,7 +4,6 @@ object all extends StdInstances
 
 trait StdInstances
   extends BigIntOptics
-  with    BooleanOptics
   with    ByteOptics
   with    CharOptics
   with    DoubleOptics

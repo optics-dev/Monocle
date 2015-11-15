@@ -1,17 +1,13 @@
 package monocle.std
 
 import monocle.Prism
-import monocle.function.Index
-import monocle.internal.{Bits, Bounded}
+import monocle.internal.Bounded
 
 import scalaz.std.anyVal._
 
 object long extends LongOptics
 
 trait LongOptics {
-
-  implicit val longBitIndex: Index[Long, Int, Boolean] =
-    Bits.bitsIndex[Long]
 
   val longToInt: Prism[Long, Int]  =
     Bounded.orderingBoundedSafeCast[Long, Int](_.toInt)(_.toLong)

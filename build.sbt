@@ -32,6 +32,7 @@ lazy val buildSettings = Seq(
 
 lazy val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.4"
 lazy val shapeless  = "com.chuusai"     %% "shapeless"   % "2.2.5"
+lazy val refined    = "eu.timepit"      %% "refined"     % "0.3.1"
 
 lazy val discpline  = "org.typelevel"   %% "discipline"  % "0.3"
 lazy val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
@@ -65,6 +66,11 @@ lazy val generic = project.dependsOn(core)
   .settings(mimaSettings("generic"))
   .settings(libraryDependencies := Seq(scalaz, shapeless))
 
+lazy val refine = project.dependsOn(core)
+  .settings(moduleName := "monocle-refine")
+  .settings(monocleSettings)
+  .settings(libraryDependencies := Seq(scalaz, refined))
+
 lazy val law = project.dependsOn(core)
   .settings(moduleName := "monocle-law")
   .settings(monocleSettings)
@@ -93,7 +99,7 @@ lazy val state = project.dependsOn(core)
   .settings(monocleSettings)
   .settings(libraryDependencies := Seq(scalaz))
 
-lazy val test = project.dependsOn(core, generic, macros, law, state)
+lazy val test = project.dependsOn(core, generic, macros, law, state, refine)
   .settings(moduleName := "monocle-test")
   .settings(monocleSettings)
   .settings(noPublishSettings)
@@ -110,7 +116,7 @@ lazy val bench = project.dependsOn(core, macros)
     compilerPlugin(paradisePlugin)
   )).enablePlugins(JmhPlugin)
 
-lazy val example = project.dependsOn(core, generic, macros, state, test % "test->test")
+lazy val example = project.dependsOn(core, generic, refine, macros, state, test % "test->test")
   .settings(moduleName := "monocle-example")
   .settings(monocleSettings)
   .settings(noPublishSettings)

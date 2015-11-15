@@ -1,6 +1,8 @@
 package monocle.function
 
 import monocle.MonocleSuite
+import shapeless.test.illTyped
+import eu.timepit.refined.auto._
 
 import scalaz.IMap
 import scalaz.std.string._
@@ -32,6 +34,23 @@ class AtExample extends MonocleSuite {
 
     (Set(1, 2, 3) applyLens at(4) set Some(())) shouldEqual Set(1, 2, 3, 4)
     (Set(1, 2, 3) applyLens at(2) set None)     shouldEqual Set(1, 3)
+  }
+
+  test("at creates an Optional from Int to one of its bit") {
+    (3 applyLens at(0) get) shouldEqual true   // true  means bit is 1
+    (4 applyLens at(0) get) shouldEqual false  // false means bit is 0
+
+
+    (32 applyLens at(0) set true)   shouldEqual 33
+    (3  applyLens at(1) modify(!_)) shouldEqual 1 // since we toggled 2nd bit
+
+    illTyped("""0 applyLens at(79) get""")
+    illTyped("""0 applyLens at(-1) get""")
+  }
+
+  test("at creates an Optional from Char to one of its bit") {
+    ('x' applyLens at(0) get) shouldEqual false
+    ('x' applyLens at(0) set true) shouldEqual 'y'
   }
 
 }

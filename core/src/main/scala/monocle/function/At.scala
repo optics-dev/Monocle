@@ -18,6 +18,11 @@ trait At[S, I, A] extends Serializable {
 
 
 object At extends AtFunctions {
+  def apply[S, I, A](get: I => S => A)(set: I => A => S => S): At[S, I, A] =
+    new At[S, I, A] {
+      def at(i: I): Lens[S, A] = Lens(get(i))(set(i))
+    }
+
   /** lift an instance of [[At]] using an [[Iso]] */
   def fromIso[S, U, I, A](iso: Iso[S, U])(implicit ev: At[U, I, A]): At[S, I, A] = new At[S, I, A]{
     override def at(i: I): Lens[S, A] =
