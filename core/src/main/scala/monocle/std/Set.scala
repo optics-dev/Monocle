@@ -11,7 +11,7 @@ trait SetOptics {
     def empty = Prism[Set[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Set.empty[A])
   }
 
-  implicit def atSet[A]: At[Set[A], A, Unit] = new At[Set[A], A, Unit] {
+  implicit def atSet[A]: At[Set[A], A, Option[Unit]] = new At[Set[A], A, Option[Unit]] {
     def at(a: A) = Lens[Set[A], Option[Unit]](s => if(s(a)) Some(()) else None)(
       optA => set => optA.fold(set - a)(_ => set + a)
     )

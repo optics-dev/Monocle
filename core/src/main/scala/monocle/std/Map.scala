@@ -19,7 +19,7 @@ trait MapOptics {
     def empty = Prism[Map[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Map.empty)
   }
 
-  implicit def atMap[K, V]: At[Map[K, V], K, V] = new At[Map[K, V], K, V]{
+  implicit def atMap[K, V]: At[Map[K, V], K, Option[V]] = new At[Map[K, V], K, Option[V]]{
     def at(i: K) = Lens{m: Map[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   }
 
