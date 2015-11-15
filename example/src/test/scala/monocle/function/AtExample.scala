@@ -38,7 +38,7 @@ class AtExample extends MonocleSuite {
     (Set(1, 2, 3) applyLens at(2) set None)     shouldEqual Set(1, 3)
   }
 
-  test("at creates an Optional from Int to one of its bit") {
+  test("at creates a Lens from Int to one of its bit") {
     (3 applyLens at(0: IntBits) get) shouldEqual true   // true  means bit is 1
     (4 applyLens at(0: IntBits) get) shouldEqual false  // false means bit is 0
 
@@ -50,7 +50,7 @@ class AtExample extends MonocleSuite {
     illTyped("""0 applyLens at(-1) get""")
   }
 
-  test("at creates an Optional from Char to one of its bit") {
+  test("at creates a Lens from Char to one of its bit") {
     ('x' applyLens at(0: CharBits) get) shouldEqual false
     ('x' applyLens at(0: CharBits) set true) shouldEqual 'y'
   }
