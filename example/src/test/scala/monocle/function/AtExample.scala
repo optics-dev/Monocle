@@ -1,6 +1,8 @@
 package monocle.function
 
+import eu.timepit.refined._
 import monocle.MonocleSuite
+import monocle.refine._
 import shapeless.test.illTyped
 import eu.timepit.refined.auto._
 
@@ -37,20 +39,20 @@ class AtExample extends MonocleSuite {
   }
 
   test("at creates an Optional from Int to one of its bit") {
-    (3 applyLens at(0) get) shouldEqual true   // true  means bit is 1
-    (4 applyLens at(0) get) shouldEqual false  // false means bit is 0
+    (3 applyLens at(0: IntBits) get) shouldEqual true   // true  means bit is 1
+    (4 applyLens at(0: IntBits) get) shouldEqual false  // false means bit is 0
 
 
-    (32 applyLens at(0) set true)   shouldEqual 33
-    (3  applyLens at(1) modify(!_)) shouldEqual 1 // since we toggled 2nd bit
+    (32 applyLens at(0: IntBits) set true)   shouldEqual 33
+    (3  applyLens at(1: IntBits) modify(!_)) shouldEqual 1 // toggle 2nd bit
 
     illTyped("""0 applyLens at(79) get""")
     illTyped("""0 applyLens at(-1) get""")
   }
 
   test("at creates an Optional from Char to one of its bit") {
-    ('x' applyLens at(0) get) shouldEqual false
-    ('x' applyLens at(0) set true) shouldEqual 'y'
+    ('x' applyLens at(0: CharBits) get) shouldEqual false
+    ('x' applyLens at(0: CharBits) set true) shouldEqual 'y'
   }
 
 }
