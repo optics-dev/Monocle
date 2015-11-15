@@ -1,5 +1,7 @@
 package monocle
 
+import monocle.function.Plated
+
 /**
  * Show how could we use Optics to manipulate some Json AST
  */

@@ -1,6 +1,7 @@
 package monocle.std
 
-import monocle.{MonocleSuite, Plated}
+import monocle.MonocleSuite
+import monocle.function.Plated._
 import monocle.law.discipline.TraversalTests
 import monocle.law.discipline.function.{ConsTests, EmptyTests, ReverseTests}
 
@@ -12,5 +13,5 @@ class IListSpec extends MonocleSuite {
   checkAll("IList Cons", ConsTests[IList[Char], Char])
   checkAll("IList Snoc", ConsTests[IList[Char], Char])
 
-  checkAll("plated IList", TraversalTests(Plated.plate[IList[Char]]))
+  checkAll("plated IList", TraversalTests(plate[IList[Char]]))
 }

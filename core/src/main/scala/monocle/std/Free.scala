@@ -1,6 +1,7 @@
 package monocle.std
 
-import monocle.{Plated, Traversal}
+import monocle.function._
+import monocle.Traversal
 
 import scalaz.{Applicative, Free, Traverse}
 

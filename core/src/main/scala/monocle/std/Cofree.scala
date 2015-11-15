@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Lens, PIso, Iso, Optional, PTraversal, Plated, Traversal}
+import monocle.{Lens, PIso, Iso, Optional, PTraversal, Traversal}
 
 import scalaz.Cofree._
 import scalaz.{Cofree, Free, Applicative, Traverse, OneAnd, Tree}

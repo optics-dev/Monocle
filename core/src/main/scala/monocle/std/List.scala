@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Iso, PIso, Optional, Plated, Prism, Traversal}
+import monocle.{Iso, PIso, Optional, Prism, Traversal}
 
 import scalaz.Id.Id
 import scalaz.std.list._

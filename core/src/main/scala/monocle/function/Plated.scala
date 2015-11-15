@@ -1,7 +1,8 @@
-package monocle
+package monocle.function
+
+import monocle.{Setter, Traversal}
 
 import scala.annotation.implicitNotFound
-import scalaz._
 import scalaz.std.stream._
 
 /**
@@ -16,7 +17,9 @@ abstract class Plated[A] extends Serializable { self =>
   def plate: Traversal[A, A]
 }
 
-object Plated {
+object Plated extends PlatedFunctions
+
+trait PlatedFunctions {
 
   /** [[Traversal]] of immediate self-similar children */
   def plate[A](implicit P: Plated[A]): Traversal[A, A] = P.plate

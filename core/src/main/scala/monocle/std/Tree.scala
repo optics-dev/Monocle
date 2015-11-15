@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Iso, Lens, Plated, Traversal}
+import monocle.{Iso, Lens, Traversal}
 import monocle.function.all._
 import monocle.std.stream._
 
