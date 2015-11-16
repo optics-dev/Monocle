@@ -1,11 +1,12 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Iso, Lens}
+import monocle.{Iso, Lens, Traversal}
 import monocle.function.all._
 import monocle.std.stream._
 
-import scalaz.Tree
+import scalaz.{Applicative, Traverse, Tree}
+import scalaz.std.stream._
 import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
 
@@ -54,6 +55,13 @@ trait TreeOptics {
   implicit def treeReverse[A]: Reverse[Tree[A], Tree[A]] = new Reverse[Tree[A], Tree[A]] {
     def reverse = Iso[Tree[A], Tree[A]](reverseTree)(reverseTree)
     private def reverseTree(tree: Tree[A]): Tree[A] = Tree.node(tree.rootLabel, tree.subForest.reverse.map(reverseTree))
+  }
+
+  implicit def treePlated[A]: Plated[Tree[A]] = new Plated[Tree[A]] {
+    def plate: Traversal[Tree[A], Tree[A]] = new Traversal[Tree[A], Tree[A]] {
+      def modifyF[F[_]: Applicative](f: Tree[A] => F[Tree[A]])(s: Tree[A]): F[Tree[A]] =
+        Applicative[F].map(Traverse[Stream].traverse(s.subForest)(f))(Tree.node(s.rootLabel, _))
+    }
   }
 
 }

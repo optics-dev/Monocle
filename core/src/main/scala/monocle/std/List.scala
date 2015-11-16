@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Iso, PIso, Optional, Prism}
+import monocle.{Iso, PIso, Optional, Prism, Traversal}
 
 import scalaz.Id.Id
 import scalaz.std.list._
@@ -56,6 +56,16 @@ trait ListOptics {
     def snoc = Prism[List[A], (List[A], A)](
       s => Applicative[Option].apply2(\/.fromTryCatchNonFatal(s.init).toOption, s.lastOption)((_,_))){
       case (init, last) => init :+ last
+    }
+  }
+
+  implicit def listPlated[A]: Plated[List[A]] = new Plated[List[A]] {
+    def plate: Traversal[List[A], List[A]] = new Traversal[List[A], List[A]] {
+      def modifyF[F[_]: Applicative](f: List[A] => F[List[A]])(s: List[A]): F[List[A]] =
+        s match {
+          case x :: xs => Applicative[F].map(f(xs))(x :: _)
+          case Nil => Applicative[F].point(Nil)
+        }
     }
   }
 

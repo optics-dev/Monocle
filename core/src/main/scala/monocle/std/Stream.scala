@@ -1,9 +1,10 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Optional, Prism}
+import monocle.{Optional, Prism, Traversal}
 
 import scala.collection.immutable.Stream.{#::, Empty}
+import scalaz.Applicative
 import scalaz.Id.Id
 import scalaz.std.stream._
 import scalaz.syntax.traverse._
@@ -50,5 +51,15 @@ trait StreamOptics {
 
   implicit def streamReverse[A]: Reverse[Stream[A], Stream[A]] =
     Reverse.reverseFromReverseFunction[Stream[A]](_.reverse)
+
+  implicit def streamPlated[A]: Plated[Stream[A]] = new Plated[Stream[A]] {
+    def plate: Traversal[Stream[A], Stream[A]] = new Traversal[Stream[A], Stream[A]] {
+      def modifyF[F[_]: Applicative](f: Stream[A] => F[Stream[A]])(s: Stream[A]): F[Stream[A]] =
+        s match {
+          case x #:: xs => Applicative[F].map(f(xs))(x #:: _)
+          case Stream() => Applicative[F].point(Stream.empty)
+        }
+    }
+  }
 
 }

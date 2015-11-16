@@ -1,7 +1,8 @@
 package monocle.std
 
 import monocle.MonocleSuite
-import monocle.law.discipline.IsoTests
+import monocle.function.Plated._
+import monocle.law.discipline.{IsoTests, TraversalTests}
 import monocle.law.discipline.function._
 
 class ListSpec extends MonocleSuite {
@@ -14,4 +15,6 @@ class ListSpec extends MonocleSuite {
   checkAll("each List", EachTests[List[Int], Int])
   checkAll("index List", IndexTests.defaultIntIndex[List[Int], Int])
   checkAll("filterIndex List", FilterIndexTests.evenIndex[List[Int], Int])
+
+  checkAll("plated List", TraversalTests(plate[List[Int]]))
 }

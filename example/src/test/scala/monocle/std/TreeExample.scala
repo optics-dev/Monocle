@@ -1,6 +1,7 @@
 package monocle.std
 
 import monocle.MonocleSuite
+import monocle.function.Plated._
 
 import scalaz.Tree._
 
@@ -36,6 +37,10 @@ class TreeExample extends MonocleSuite {
     (tree    applyLens rightMostLabel get) shouldEqual 3
 
     (tree    applyLens rightMostLabel set 0) shouldEqual node(1, Stream(leaf(2), leaf(0)))
+  }
+
+  test("Plated universe gives us a stream of all node") {
+    universe(tree) shouldEqual Stream(tree, leaf(2), leaf(3))
   }
 
 }
