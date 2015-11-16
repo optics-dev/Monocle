@@ -60,7 +60,7 @@ trait ListOptics {
   }
 
   implicit def listPlated[A]: Plated[List[A]] = new Plated[List[A]] {
-    def plate: Traversal[List[A], List[A]] = new Traversal[List[A], List[A]] {
+    val plate: Traversal[List[A], List[A]] = new Traversal[List[A], List[A]] {
       def modifyF[F[_]: Applicative](f: List[A] => F[List[A]])(s: List[A]): F[List[A]] =
         s match {
           case x :: xs => Applicative[F].map(f(xs))(x :: _)

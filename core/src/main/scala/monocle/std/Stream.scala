@@ -53,7 +53,7 @@ trait StreamOptics {
     Reverse.reverseFromReverseFunction[Stream[A]](_.reverse)
 
   implicit def streamPlated[A]: Plated[Stream[A]] = new Plated[Stream[A]] {
-    def plate: Traversal[Stream[A], Stream[A]] = new Traversal[Stream[A], Stream[A]] {
+    val plate: Traversal[Stream[A], Stream[A]] = new Traversal[Stream[A], Stream[A]] {
       def modifyF[F[_]: Applicative](f: Stream[A] => F[Stream[A]])(s: Stream[A]): F[Stream[A]] =
         s match {
           case x #:: xs => Applicative[F].map(f(xs))(x #:: _)

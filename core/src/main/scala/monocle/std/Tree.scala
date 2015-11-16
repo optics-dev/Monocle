@@ -58,7 +58,7 @@ trait TreeOptics {
   }
 
   implicit def treePlated[A]: Plated[Tree[A]] = new Plated[Tree[A]] {
-    def plate: Traversal[Tree[A], Tree[A]] = new Traversal[Tree[A], Tree[A]] {
+    val plate: Traversal[Tree[A], Tree[A]] = new Traversal[Tree[A], Tree[A]] {
       def modifyF[F[_]: Applicative](f: Tree[A] => F[Tree[A]])(s: Tree[A]): F[Tree[A]] =
         Applicative[F].map(Traverse[Stream].traverse(s.subForest)(f))(Tree.node(s.rootLabel, _))
     }

@@ -150,7 +150,7 @@ class JsonExample extends MonocleSuite {
     import scalaz.std.map._
     import scalaz.syntax.traverse._
 
-    def plate: Traversal[Json, Json] = new Traversal[Json, Json] {
+    val plate: Traversal[Json, Json] = new Traversal[Json, Json] {
       def modifyF[F[_]: Applicative](f: Json => F[Json])(a: Json): F[Json] =
         a match {
           case j@(JsString(_) | JsNumber(_)) => Applicative[F].point(j)

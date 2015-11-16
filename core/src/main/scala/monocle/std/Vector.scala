@@ -1,8 +1,9 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{Optional, Prism}
+import monocle.{Optional, Prism, Traversal}
 
+import scalaz.Applicative
 import scalaz.std.vector._
 
 object vector extends VectorOptics
@@ -41,5 +42,15 @@ trait VectorOptics {
 
   implicit def vectorReverse[A]: Reverse[Vector[A], Vector[A]] =
     Reverse.reverseFromReverseFunction[Vector[A]](_.reverse)
+
+  implicit def vectorPlated[A]: Plated[Vector[A]] = new Plated[Vector[A]] {
+    val plate: Traversal[Vector[A], Vector[A]] = new Traversal[Vector[A], Vector[A]] {
+      def modifyF[F[_]: Applicative](f: Vector[A] => F[Vector[A]])(s: Vector[A]): F[Vector[A]] =
+        s match {
+          case h +: t => Applicative[F].map(f(t))(h +: _)
+          case _ => Applicative[F].point(Vector.empty)
+        }
+    }
+  }
 
 }
