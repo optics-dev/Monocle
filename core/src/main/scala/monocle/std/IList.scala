@@ -59,7 +59,7 @@ trait IListInstances {
     Reverse.reverseFromReverseFunction[IList[A]](_.reverse)
 
   implicit def ilistPlated[A]: Plated[IList[A]] = new Plated[IList[A]] {
-    def plate: Traversal[IList[A], IList[A]] = new Traversal[IList[A], IList[A]] {
+    val plate: Traversal[IList[A], IList[A]] = new Traversal[IList[A], IList[A]] {
       def modifyF[F[_]: Applicative](f: IList[A] => F[IList[A]])(s: IList[A]): F[IList[A]] =
         s match {
           case ICons(x, xs) => Applicative[F].map(f(xs))(x :: _)

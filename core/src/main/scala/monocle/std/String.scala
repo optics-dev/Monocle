@@ -72,7 +72,7 @@ trait StringOptics {
   }
 
   implicit val stringPlated: Plated[String] = new Plated[String] {
-    def plate: Traversal[String, String] = new Traversal[String, String] {
+    val plate: Traversal[String, String] = new Traversal[String, String] {
       def modifyF[F[_]: Applicative](f: String => F[String])(s: String): F[String] =
         s.headOption match {
           case Some(h) => Applicative[F].map(f(s.tail))(h.toString ++ _)

@@ -65,7 +65,7 @@ trait CofreeOptics {
     Each.traverseEach[({type L[X] = Cofree[S, X]})#L, A]
 
   implicit def cofreePlated[S[_]: Traverse, A]: Plated[Cofree[S, A]] = new Plated[Cofree[S, A]] {
-    def plate: Traversal[Cofree[S, A], Cofree[S, A]] = new Traversal[Cofree[S, A], Cofree[S, A]] {
+    val plate: Traversal[Cofree[S, A], Cofree[S, A]] = new Traversal[Cofree[S, A], Cofree[S, A]] {
       def modifyF[F[_]: Applicative](f: Cofree[S, A] => F[Cofree[S, A]])(s: Cofree[S, A]): F[Cofree[S, A]] =
         Applicative[F].map(Traverse[S].traverse(s.t.run)(f))(Cofree(s.head, _))
     }
