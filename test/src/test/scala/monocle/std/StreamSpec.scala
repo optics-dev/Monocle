@@ -1,6 +1,7 @@
 package monocle.std
 
 import monocle.MonocleSuite
+import monocle.law.discipline.TraversalTests
 import monocle.law.discipline.function._
 
 class StreamSpec extends MonocleSuite {
@@ -11,4 +12,6 @@ class StreamSpec extends MonocleSuite {
   checkAll("each Stream", EachTests[Stream[Int], Int])
   checkAll("index Stream", IndexTests.defaultIntIndex[Stream[Int], Int])
   checkAll("filterIndex Stream", FilterIndexTests.evenIndex[Stream[Int], Int])
+
+  checkAll("plated Stream", TraversalTests(plate[Stream[Int]]))
 }
