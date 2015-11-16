@@ -1,8 +1,9 @@
 package monocle.std
 
 import monocle.MonocleSuite
+import monocle.function.Plated._
 import monocle.law.discipline.function._
-import monocle.law.discipline.{IsoTests, PrismTests}
+import monocle.law.discipline.{IsoTests, PrismTests, TraversalTests}
 
 class StringSpec extends MonocleSuite {
   checkAll("stringToList", IsoTests(stringToList))
@@ -19,6 +20,6 @@ class StringSpec extends MonocleSuite {
   checkAll("String to Int"     , PrismTests(stringToInt))
   checkAll("String to Long"    , PrismTests(stringToLong))
 
-
+  checkAll("plated String", TraversalTests(plate[String]))
 
 }

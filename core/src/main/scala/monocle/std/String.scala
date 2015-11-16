@@ -2,9 +2,9 @@ package monocle.std
 
 import monocle.function._
 import monocle.std.list._
-import monocle.{Iso, Prism}
+import monocle.{Iso, Prism, Traversal}
 
-import scalaz.\/
+import scalaz.{Applicative, \/}
 import scalaz.std.list._
 import scalaz.std.option._
 import scalaz.syntax.traverse._
@@ -71,6 +71,15 @@ trait StringOptics {
       }
   }
 
+  implicit val stringPlated: Plated[String] = new Plated[String] {
+    def plate: Traversal[String, String] = new Traversal[String, String] {
+      def modifyF[F[_]: Applicative](f: String => F[String])(s: String): F[String] =
+        s.headOption match {
+          case Some(h) => Applicative[F].map(f(s.tail))(h.toString ++ _)
+          case None => Applicative[F].point("")
+        }
+    }
+  }
 
   private def parseLong(s: String): Option[Long] =
     if (s.isEmpty) None
