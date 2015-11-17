@@ -124,7 +124,7 @@ private[monocle] trait BitsInstances {
     def bitwiseOr(a1: Long, a2: Long) : Long = a1 | a2
     def bitwiseAnd(a1: Long, a2: Long): Long = a1 & a2
 
-    val bitSize: Int = 32
+    val bitSize: Int = 64
   }
 
 }
