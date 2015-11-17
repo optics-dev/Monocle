@@ -1,4 +1,4 @@
-package monocle.refine
+package monocle.refined
 
 import eu.timepit.refined._
 import eu.timepit.refined.auto._

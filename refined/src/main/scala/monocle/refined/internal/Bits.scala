@@ -1,4 +1,4 @@
-package monocle.refine.internal
+package monocle.refined.internal
 
 private[monocle] trait Bits[A] {
 

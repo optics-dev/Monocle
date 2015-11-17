@@ -1,7 +1,7 @@
-package monocle.refine
+package monocle.refined
 
 import monocle.function.At
-import monocle.refine.internal.Bits
+import monocle.refined.internal.Bits
 
 object bits extends BitsInstances
 
