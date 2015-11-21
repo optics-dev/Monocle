@@ -1,5 +1,3 @@
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.5")
-
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.url("tpolecat-sbt-plugin-releases",
   url("http://dl.bintray.com/content/tpolecat/sbt-plugin-releases"))(
