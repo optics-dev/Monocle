@@ -24,15 +24,42 @@ object GenIso {
 }
 
 @macrocompat.bundle
-class GenIsoImpl(val c: blackbox.Context) {
+sealed abstract class GenIsoImplBase {
+  val c: blackbox.Context
   import c.universe._
 
   protected final def fail(msg: String): Nothing =
     c.abort(c.enclosingPosition, msg)
 
-  protected def caseAccessorsOf[S: c.WeakTypeTag]: List[MethodSymbol] = {
+  protected final def caseAccessorsOf[S: c.WeakTypeTag]: List[MethodSymbol] =
     weakTypeOf[S].decls.collect { case m: MethodSymbol if m.isCaseAccessor => m }.toList
+
+  protected final def genIso_unit_tree[S: c.WeakTypeTag]: c.Tree = {
+    val sTpe = weakTypeOf[S]
+
+    if (sTpe.typeSymbol.isModuleClass) {
+      val table = c.universe.asInstanceOf[SymbolTable]
+      val tree = table.gen
+      val obj = tree.mkAttributedQualifier(sTpe.asInstanceOf[tree.global.Type]).asInstanceOf[Tree]
+      q"""
+        monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${obj}))
+      """
+    } else {
+      caseAccessorsOf[S] match {
+        case Nil =>
+          val sTpeSym = sTpe.typeSymbol.companion
+          q"""
+            monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${sTpeSym}()))
+          """
+        case _   => fail(s"$sTpe needs to be a case class with no accessor or an object.")
+      }
+    }
   }
+}
+
+@macrocompat.bundle
+class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
+  import c.universe._
 
   def genIso_impl[S: c.WeakTypeTag, A: c.WeakTypeTag]: c.Expr[Iso[S, A]] = {
     val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
@@ -71,34 +98,12 @@ class GenIsoImpl(val c: blackbox.Context) {
     """)
   }
 
-  protected def genIso_unit_tree[S: c.WeakTypeTag]: c.Tree = {
-    val sTpe = weakTypeOf[S]
-
-    if (sTpe.typeSymbol.isModuleClass) {
-      val table = c.universe.asInstanceOf[SymbolTable]
-      val tree = table.gen
-      val obj = tree.mkAttributedQualifier(sTpe.asInstanceOf[tree.global.Type]).asInstanceOf[Tree]
-      q"""
-        monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${obj}))
-      """
-    } else {
-      caseAccessorsOf[S] match {
-        case Nil =>
-          val sTpeSym = sTpe.typeSymbol.companion
-          q"""
-            monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${sTpeSym}()))
-          """
-        case _   => fail(s"$sTpe needs to be a case class with no accessor or an object.")
-      }
-    }
-  }
-
   def genIso_unit_impl[S: c.WeakTypeTag]: c.Expr[Iso[S, Unit]] =
     c.Expr[Iso[S, Unit]](genIso_unit_tree[S])
 }
 
 @macrocompat.bundle
-class GenIsoImplW(override val c: whitebox.Context) extends GenIsoImpl(c) {
+class GenIsoImplW(override val c: whitebox.Context) extends GenIsoImplBase {
   import c.universe._
 
   protected final def nameAndType(T: Type, s: Symbol): (TermName, Type) = {
@@ -107,12 +112,16 @@ class GenIsoImplW(override val c: whitebox.Context) extends GenIsoImpl(c) {
         case NullaryMethodType(t) => t
         case t                    => t
       }
-    val a = s.asTerm.name
+    // The pattern-match here is for Scala 2.10
+    val a = s.asTerm.name match {
+      case n@ TermName(_) => n
+      case n@ TypeName(_) => fail("Expected a TermName, got " + n)
+    }
     val A = paramType(a)
     (a, A)
   }
 
-  def genIso_fields_impl[S: c.WeakTypeTag]: c.Tree = {
+  def genIso_fields_impl[S: c.WeakTypeTag]: Tree = {
     val sTpe = weakTypeOf[S]
 
     val sTpeSym = sTpe.typeSymbol.asClass
