@@ -54,9 +54,6 @@ class ProductIsoBench {
     val a: A
     val b: B
     val iso: Iso[A, B]
-    val rev: Iso[B, A]
-    val idA: A => A = identity
-    val idB: B => B = identity
   }
   def Test[X, Y](i: Iso[X, Y])(y: Y): Test =
     new Test {
@@ -65,7 +62,6 @@ class ProductIsoBench {
       override val a   = i reverseGet y
       override val b   = y
       override val iso = i
-      override val rev = i.reverse
     }
 
   @Param(Array("mono2", "mono4", "mono8", "poly2", "poly4", "poly8"))
@@ -101,8 +97,4 @@ class ProductIsoBench {
 
   @Benchmark def get        = test(t => t.iso get        t.a)
   @Benchmark def reverseGet = test(t => t.iso reverseGet t.b)
-
-  import scala.language.existentials
-  @Benchmark def modify        = test(t => t.iso modify t.idB)
-  @Benchmark def reverseModify = test(t => t.rev modify t.idA)
 }
