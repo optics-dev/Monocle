@@ -60,7 +60,7 @@ trait CofreeOptics {
     }
 
 
-  /** Trivial [[Each]] instance due to `Cofree S` being traversable when `S` is */
+  /** Trivial `Each` instance due to `Cofree S` being traversable when `S` is */
   implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] =
     Each.traverseEach[({type L[X] = Cofree[S, X]})#L, A]
 
