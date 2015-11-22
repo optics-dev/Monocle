@@ -13,10 +13,8 @@ trait ISetOptics {
     def empty = Prism[ISet[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => ISet.empty[A])
   }
 
-  implicit def atISet[A: Order]: At[ISet[A], A, Option[Unit]] = new At[ISet[A], A, Option[Unit]] {
-    def at(a: A) = Lens[ISet[A], Option[Unit]](s => if(s member a) Some(()) else None)(
-      optA => set => optA.fold(set delete a)(_ => set insert a)
-    )
+  implicit def atISet[A: Order]: At[ISet[A], A, Boolean] = new At[ISet[A], A, Boolean] {
+    def at(a: A) = Lens[ISet[A], Boolean](_.member(a))(b => set => if(b) set insert a else set delete a)
   }
 
 }

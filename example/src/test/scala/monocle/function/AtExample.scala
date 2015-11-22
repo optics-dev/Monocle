@@ -31,11 +31,11 @@ class AtExample extends MonocleSuite {
   }
 
   test("at creates a Lens from a Set to an optional element of the Set") {
-    (Set(1, 2, 3) applyLens at(2) get) shouldEqual Some(())
-    (Set(1, 2, 3) applyLens at(4) get) shouldEqual None
+    (Set(1, 2, 3) applyLens at(2) get) shouldEqual true
+    (Set(1, 2, 3) applyLens at(4) get) shouldEqual false
 
-    (Set(1, 2, 3) applyLens at(4) set Some(())) shouldEqual Set(1, 2, 3, 4)
-    (Set(1, 2, 3) applyLens at(2) set None)     shouldEqual Set(1, 3)
+    (Set(1, 2, 3) applyLens at(4) set true) shouldEqual Set(1, 2, 3, 4)
+    (Set(1, 2, 3) applyLens at(2) set false)     shouldEqual Set(1, 3)
   }
 
   test("at creates a Lens from Int to one of its bit") {
