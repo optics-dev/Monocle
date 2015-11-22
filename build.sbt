@@ -101,7 +101,7 @@ lazy val test = project.dependsOn(core, generic, macros, law, state)
     libraryDependencies ++= Seq(scalaz, shapeless, scalatest, compilerPlugin(paradisePlugin))
   )
 
-lazy val bench = project.dependsOn(core, macros)
+lazy val bench = project.dependsOn(core, generic, macros)
   .settings(moduleName := "monocle-bench")
   .settings(monocleSettings)
   .settings(noPublishSettings)
