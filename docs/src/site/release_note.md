@@ -4,6 +4,52 @@ title:  "Release Note"
 section: "release_note"
 ---
 
+# 1.2.0-M2
+
+> 22 November 2015
+
+Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-truffaut/Monocle/compare/v1.2.0-M1...v1.2.0-M2)
+
+### Addition
+
+-   add `only` `Prism` to match a single value [see](https://github.com/julien-truffaut/Monocle/commit/5f6d414019883045ab5e92ea1a6cc650e1f5e0f5)
+-   add `below` `Prism` to lift a `Prism` in a `Traverse` [see](https://github.com/julien-truffaut/Monocle/commit/ed7b067d62891352a2a05e1a570451e3740a2446)
+-   add `length` for `Fold` and `Traversal` [#236](https://github.com/julien-truffaut/Monocle/commit/1773e93bfe2a7e229c57fc7915ec3519b8831eee) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   add optics for `scalaz.Either3` [#242](https://github.com/julien-truffaut/Monocle/commit/720ff020b08be8d7ffb3f60e3d1377147c1dce50) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   add `optNelToList` `Iso` [see](https://github.com/julien-truffaut/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0)
+-   add `fromIso` combinator for all optics [#245](https://github.com/julien-truffaut/Monocle/commit/db0c92c7bffcf41e40f5368caafa26b337983a7c)
+-   add `left` and `right` methods for `Iso`, `Prism`, `Getter` and `Fold` [#273](https://github.com/julien-truffaut/Monocle/commit/8efd6c85f8a3697abc11feae0a5f1a2ba7fd0a58)
+-   add safe down cast from BigInt [#267](https://github.com/julien-truffaut/Monocle/commit/1f3c37be2d3e950b1a84b4f1d05c5468bc80e6da)
+-   add `productToTuple` `Iso` between case class and tuple using shapeless [#247](https://github.com/julien-truffaut/Monocle/commit/c82c03c95e33314f1cac442b8e47252d5419af77)
+-   add `GenIso.fields` white box that generates the same `Iso` than `productToTuple` with better performances but less IDE support [#297](https://github.com/julien-truffaut/Monocle/pull/297) (thaks to [japgolly](https://github.com/japgolly))
+-   add `@PLenses` macro annotation to generate `PLens` for case class with type parameters [#114](https://github.com/julien-truffaut/Monocle/commit/f80ee012971689ec31865b67665e2641429b24fd) (thanks to [exlevan](https://github.com/exlevan))
+-   add `Plated` typeclass [#289](https://github.com/julien-truffaut/Monocle/commit/2be8bcf8d51113e6b0230dafd065289767da2f28) (thanks to [puffnfresh](https://github.com/puffnfresh))
+-   add optics for `scalaz.Cofree` [#290](https://github.com/julien-truffaut/Monocle/commit/a1b71065b36ddac7a94118b04748628d1dcc260c) (thanks to [LiamGoodacre](https://github.com/LiamGoodacre))
+
+### Non backward compatible change
+-   change `At` definition from `def at(index: I): Lens[S, Option[A]]` to `def at(index: I): Lens[S, A]`
+-   change `At` instance for `Set` and `ISet` from `Lens[S, Option[Unit]]` to `Lens[S, Boolean]`
+-   remove `Index` instances for bit indexing primitive `Long`, `Int`, `Char`, `Bye` from `monocle-core`
+-   add `monocle-refined` module with `At` instances for bit indexing primitive `Long`, `Int`, `Char`, `Bye` [#291](https://github.com/julien-truffaut/Monocle/pull/291) (thanks to [fthomas](https://github.com/fthomas) and [julien-truffaut](https://github.com/julien-truffaut))
+
+### Deprecation
+-   deprecate `theseDisjunction` to `theseToDisjunction` [see](https://github.com/julien-truffaut/Monocle/commit/bde69571074ef6dc08c3d240154feaa40aaaece5)
+-   deprecate `nelAndOneIso` to `nelToOneAnd` [see](https://github.com/julien-truffaut/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0)
+-   deprecate `sum` to `choice` and `product` to `split` [#239](https://github.com/julien-truffaut/Monocle/commit/f6b163b1702bef046f26576d2e182f32352b88d7)
+
+### Documentation
+-   add tut examples for `Prism` [#228](https://github.com/julien-truffaut/Monocle/commit/c65a0c4617b41b0a9f31674516c674efc5d0feb0)
+-   add tut examples for `Iso` [#279](https://github.com/julien-truffaut/Monocle/commit/61a526717417728ab4ad92fa9ba10aa0267a58d6) (thanks to [justjoheinz](https://github.com/justjoheinz))
+-   add examples for Http Request optics usage [#262](https://github.com/julien-truffaut/Monocle/commit/234097ce1f8601eab8ab47e6610d56aea59acce4) (thanks to [1ambda](https://github.com/1ambda))
+-   add learning resources to the website [#251](https://github.com/julien-truffaut/Monocle/commit/0bc53359e799e1124ad5a8c0f90ae9d85bd690d9)
+
+### Bug Fixes
+-   fix long parser [#244](https://github.com/julien-truffaut/Monocle/commit/1cdfc0fae44df71700f4d53cfbf23d0f9575ee07) (thanks to [NightRa](https://github.com/NightRa))
+-   fix `GenIso` case class with type parameter [#263](https://github.com/julien-truffaut/Monocle/commit/fa6dc7d164142c4fae1ec8014f3eb8c4f9619191)
+
+### Optimisation
+-   improve performances of `index` for `Vector` [#258](https://github.com/julien-truffaut/Monocle/commit/d4a29c279ed78c3acd8b253cb525cb71e8656ee4) (thanks to [spebbe](https://github.com/spebbe))
+
 # 1.2.0-M1
 -   laws definition move to `core` module [see](https://github.com/julien-truffaut/Monocle/tree/master/core/src/main/scala/monocle/law).
     Properties are still defined in `law` module with [discipline](https://github.com/typelevel/discipline)
