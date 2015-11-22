@@ -46,8 +46,8 @@ class AtExample extends MonocleSuite {
     (32 applyLens at(0: IntBits) set true)   shouldEqual 33
     (3  applyLens at(1: IntBits) modify(!_)) shouldEqual 1 // toggle 2nd bit
 
-    illTyped("""0 applyLens at(79) get""")
-    illTyped("""0 applyLens at(-1) get""")
+    illTyped("""0 applyLens at(79: IntBits) get""", "Right predicate.*fail.*")
+    illTyped("""0 applyLens at(-1: IntBits) get""", "Left predicate.*fail.*")
   }
 
   test("at creates a Lens from Char to one of its bit") {
