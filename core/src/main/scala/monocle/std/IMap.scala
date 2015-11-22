@@ -15,7 +15,7 @@ trait IMapOptics {
     def empty = Prism[K ==>> V, Unit](m => if(m.isEmpty) Some(()) else None)(_ => ==>>.empty)
   }
 
-  implicit def atIMap[K: Order, V]: At[K ==>> V, K, V] = new At[K ==>> V, K, V]{
+  implicit def atIMap[K: Order, V]: At[K ==>> V, K, Option[V]] = new At[K ==>> V, K, Option[V]]{
     def at(i: K) = Lens{m: ==>>[K, V] => m.lookup(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   }
 

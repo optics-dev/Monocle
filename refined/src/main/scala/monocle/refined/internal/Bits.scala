@@ -1,15 +1,6 @@
-package monocle.internal
-
-import monocle.Optional
-import monocle.function.Index
-
-import scalaz.Maybe
-
+package monocle.refined.internal
 
 private[monocle] trait Bits[A] {
-
-  def bitSize: Int
-
   def bitwiseAnd(a1: A, a2: A): A
   def bitwiseOr(a1: A, a2: A): A
   def bitwiseXor(a1: A, a2: A): A
@@ -29,34 +20,13 @@ private[monocle] trait Bits[A] {
 
   def negate(a: A): A
   def signed(a: A): Boolean
-
 }
 
-private[monocle] object Bits extends BitsInstances {
-
-  def apply[A](implicit ev: Bits[A]): Bits[A] = ev
-
-  def bitsIndex[S: Bits]: Index[S, Int, Boolean] = new Index[S, Int, Boolean] {
-    private def doIfInRange[A](i: Int)(a: => A): Option[A] =
-      if(i >= 0 && i < Bits[S].bitSize) Some(a)
-      else None
-
-    def index(i: Int): Optional[S, Boolean] =
-      Optional[S, Boolean](
-        s => doIfInRange(i)(Bits[S].testBit(s, i)))(
-        a => s => doIfInRange(i)(Bits[S].updateBit(a)(s, i)).getOrElse(s)
-      )
-
-  }
-
-}
+private[monocle] object Bits extends BitsInstances
 
 private[monocle] trait BitsInstances {
 
   implicit val booleanBits = new Bits[Boolean] {
-
-    val bitSize: Int = 1
-
     def bitwiseOr(a1: Boolean, a2: Boolean) : Boolean = a1 | a2
     def bitwiseAnd(a1: Boolean, a2: Boolean): Boolean = a1 & a2
     def bitwiseXor(a1: Boolean, a2: Boolean): Boolean = a1 ^ a2
@@ -75,9 +45,6 @@ private[monocle] trait BitsInstances {
   }
 
   implicit val byteBits = new Bits[Byte] {
-
-    val bitSize: Int = 8
-
     def bitwiseOr(a1: Byte, a2: Byte) : Byte = (a1 | a2).toByte
     def bitwiseAnd(a1: Byte, a2: Byte): Byte = (a1 & a2).toByte
     def bitwiseXor(a1: Byte, a2: Byte): Byte = (a1 ^ a2).toByte
@@ -96,9 +63,6 @@ private[monocle] trait BitsInstances {
   }
 
   implicit val charBits = new Bits[Char] {
-
-    val bitSize: Int = 16
-
     def bitwiseOr(a1: Char, a2: Char): Char  = (a1 | a2).toChar
     def bitwiseAnd(a1: Char, a2: Char): Char = (a1 & a2).toChar
     def bitwiseXor(a1: Char, a2: Char): Char = (a1 ^ a2).toChar
@@ -115,9 +79,6 @@ private[monocle] trait BitsInstances {
   }
 
   implicit val intBits = new Bits[Int] {
-
-    val bitSize: Int = 32
-
     def bitwiseOr(a1: Int, a2: Int) : Int = a1 | a2
     def bitwiseAnd(a1: Int, a2: Int): Int = a1 & a2
     def bitwiseXor(a1: Int, a2: Int): Int = a1 ^ a2
@@ -146,8 +107,6 @@ private[monocle] trait BitsInstances {
     def bitwiseXor(a1: Long, a2: Long): Long = a1 ^ a2
     def bitwiseOr(a1: Long, a2: Long) : Long = a1 | a2
     def bitwiseAnd(a1: Long, a2: Long): Long = a1 & a2
-
-    val bitSize: Int = 32
   }
 
 }

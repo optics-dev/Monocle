@@ -33,21 +33,4 @@ class IndexExample extends MonocleSuite {
     ("Hello World" applyOptional index(2) getOption) shouldEqual Some('l')
   }
 
-  test("index creates an Optional from Int to one of its bit") {
-    (3 applyOptional index(0) getOption)  shouldEqual Some(true)   // true  means bit is 1
-    (4 applyOptional index(0) getOption)  shouldEqual Some(false)  // false means bit is 0
-    (0 applyOptional index(79) getOption) shouldEqual None
-
-    (32 applyOptional index(0) set true)   shouldEqual 33
-    (3  applyOptional index(1) modify(!_)) shouldEqual 1 // since we toggled 2nd bit
-
-    // update on an incorrect index is a noop
-    (0 applyOptional index(-1) set true)  shouldEqual 0
-  }
-
-  test("index creates an Optional from Char to one of its bit") {
-    ('x' applyOptional index(0) getOption) shouldEqual Some(false)
-    ('x' applyOptional index(0) set true) shouldEqual 'y'
-  }
-
 }

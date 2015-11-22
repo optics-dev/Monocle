@@ -1,17 +1,13 @@
 package monocle.std
 
 import monocle.Prism
-import monocle.function.Index
-import monocle.internal.{Bits, Bounded}
+import monocle.internal.Bounded
 
 import scalaz.Order
 
 object char extends CharOptics
 
 trait CharOptics {
-
-  implicit val charBitIndex: Index[Char, Int, Boolean] =
-    Bits.bitsIndex[Char]
 
   implicit val charOrder: Order[Char] =
     Order.fromScalaOrdering[Char]
