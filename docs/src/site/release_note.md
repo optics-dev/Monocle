@@ -50,6 +50,13 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 ### Optimisation
 -   improve performances of `index` for `Vector` [#258](https://github.com/julien-truffaut/Monocle/commit/d4a29c279ed78c3acd8b253cb525cb71e8656ee4) (thanks to [spebbe](https://github.com/spebbe))
 
+### Upgrades
+-   scala to 2.10.6
+-   scalaz to 7.1.4
+-   shapeless to 2.2.5
+-   macro-compat to 1.1.0
+-   macro paradise to 2.1.0-M5
+
 # 1.2.0-M1
 -   laws definition move to `core` module [see](https://github.com/julien-truffaut/Monocle/tree/master/core/src/main/scala/monocle/law).
     Properties are still defined in `law` module with [discipline](https://github.com/typelevel/discipline)
