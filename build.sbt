@@ -32,7 +32,7 @@ lazy val buildSettings = Seq(
 
 lazy val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.1.4"
 lazy val shapeless  = "com.chuusai"     %% "shapeless"   % "2.2.5"
-lazy val refinedDep = "eu.timepit"      %% "refined"     % "0.3.1"
+lazy val refinedDep = "eu.timepit"      %% "refined"     % "0.3.2"
 
 lazy val discpline  = "org.typelevel"   %% "discipline"  % "0.3"
 lazy val scalatest  = "org.scalatest"   %% "scalatest"   % "2.2.4"  % "test"
