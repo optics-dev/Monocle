@@ -5,7 +5,7 @@ import eu.timepit.refined.api.Refined
 import eu.timepit.refined.numeric.Interval
 
 package object refined {
-  type ZeroTo[T] = Int Refined Interval[W.`0`.T, T]
+  type ZeroTo[T] = Int Refined Interval.Closed[W.`0`.T, T]
 
   type ByteBits = ZeroTo[W.`7`.T]
   type CharBits = ZeroTo[W.`15`.T]
