@@ -72,7 +72,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
       .find(_.name.decodedName.toString == strFieldName)
       .getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $sTpe"))
 
-    val F = c.universe.TypeName(c.freshName("F"))
+    val F = c.universe.newTypeName(c.freshName("F"))
 
     c.Expr[PLens[S, T, A, B]](q"""
       import monocle.PLens
