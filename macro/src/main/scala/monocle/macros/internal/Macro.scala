@@ -72,6 +72,8 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
       .find(_.name.decodedName.toString == strFieldName)
       .getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $sTpe"))
 
+    val F = c.universe.TypeName(c.freshName("F"))
+
     c.Expr[PLens[S, T, A, B]](q"""
       import monocle.PLens
       import scalaz.Functor
@@ -83,8 +85,8 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
         def set(a: $bTpe): $sTpe => $tTpe =
           _.copy($field = a)
 
-        def modifyF[F[_]: Functor](f: $aTpe => F[$bTpe])(s: $sTpe): F[$tTpe] =
-          Functor[F].map(f(s.$fieldMethod))(a => s.copy($field = a))
+        def modifyF[$F[_]: Functor](f: $aTpe => $F[$bTpe])(s: $sTpe): $F[$tTpe] =
+          Functor[$F].map(f(s.$fieldMethod))(a => s.copy($field = a))
 
         def modify(f: $aTpe => $bTpe): $sTpe => $tTpe =
          s => s.copy($field = f(s.$fieldMethod))
