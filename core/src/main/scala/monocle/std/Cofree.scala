@@ -4,6 +4,7 @@ import monocle.function._
 import monocle.{Lens, PIso, Iso, Optional, PTraversal, Traversal}
 
 import scalaz.Cofree._
+import scalaz.Tree.Node
 import scalaz.{Cofree, Free, Applicative, Traverse, OneAnd, Tree}
 
 object cofree extends CofreeOptics
@@ -31,7 +32,7 @@ trait CofreeOptics {
 
 
   private def toTree[A](c: Cofree[Stream, A]): Tree[A] =
-    Tree.node(c.head, c.tail.map(toTree[A]))
+    Node(c.head, c.tail.map(toTree[A]))
 
   private def fromTree[A](c: Tree[A]): Cofree[Stream, A] =
     Cofree.delay(c.rootLabel, c.subForest.map(fromTree[A]))

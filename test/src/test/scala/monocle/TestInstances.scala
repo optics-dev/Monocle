@@ -4,10 +4,12 @@ import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalactic.Equality
 
+import scalaz.Tree.Node
 import scalaz.\&/.{Both, That, This}
 import scalaz._
 import scalaz.std.list._
 import scalaz.syntax.traverse._
+import scalaz.syntax.equal._
 
 trait TestInstances {
 
@@ -51,14 +53,10 @@ trait TestInstances {
   implicit def tuple6Eq[A1: Equal, A2: Equal, A3: Equal, A4: Equal, A5: Equal, A6: Equal] = scalaz.std.tuple.tuple6Equal[A1, A2, A3, A4, A5, A6]
 
   implicit def optionCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[Option, A]] =
-    Cofree.cofreeEqual(A, new (NaturalTransformation[Equal, ({type λ[X] = Equal[Option[X]]})#λ]) {
-      override def apply[A](a: Equal[A]): Equal[Option[A]] = optEq(a)
-    })
+    Equal.equal { (a, b) =>  A.equal(a.head, b.head) && a.tail === b.tail }
 
   implicit def streamCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[Stream, A]] =
-    Cofree.cofreeEqual(A, new (NaturalTransformation[Equal, ({type λ[X] = Equal[Stream[X]]})#λ]) {
-      override def apply[A](a: Equal[A]): Equal[Stream[A]] = streamEq(a)
-    })
+    Equal.equal { (a, b) =>  A.equal(a.head, b.head) && a.tail === b.tail }
 
   // Order instances
 
@@ -90,7 +88,7 @@ trait TestInstances {
           value      <- Arbitrary.arbitrary[A]
           partitions <- genPartition(size - 1)
           children   <- partitions.traverseU(sizedTree)
-        } yield Tree.node[A](value, children.toStream)
+        } yield Node[A](value, children.toStream)
 
       Gen.sized(sz => sizedTree(sz))
     }

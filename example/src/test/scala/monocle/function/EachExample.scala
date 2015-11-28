@@ -33,8 +33,8 @@ class EachExample extends MonocleSuite {
   }
 
   test("Each can be used on Tree") {
-    node(1, Stream(leaf(2), leaf(3)))  applyTraversal each modify( _ + 1) shouldEqual node(2, Stream(leaf(3), leaf(4)))
-    (node(1, Stream(leaf(2), leaf(3))) applyTraversal each getAll) shouldEqual List(1,2,3)
+    Node(1, Stream(Leaf(2), Leaf(3)))  applyTraversal each modify( _ + 1) shouldEqual Node(2, Stream(Leaf(3), Leaf(4)))
+    (Node(1, Stream(Leaf(2), Leaf(3))) applyTraversal each getAll) shouldEqual List(1,2,3)
   }
 
 }

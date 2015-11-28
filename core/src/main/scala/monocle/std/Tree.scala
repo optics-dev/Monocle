@@ -5,6 +5,7 @@ import monocle.{Iso, Lens, Traversal}
 import monocle.function.all._
 import monocle.std.stream._
 
+import scalaz.Tree.{Leaf, Node}
 import scalaz.{Applicative, Traverse, Tree}
 import scalaz.std.stream._
 import scala.annotation.tailrec
@@ -15,10 +16,10 @@ object tree extends TreeOptics
 trait TreeOptics {
 
   final def rootLabel[A]: Lens[Tree[A], A] =
-    Lens[Tree[A], A](_.rootLabel)(l => tree => Tree.node(l, tree.subForest))
+    Lens[Tree[A], A](_.rootLabel)(l => tree => Node(l, tree.subForest))
 
   final def subForest[A]: Lens[Tree[A], Stream[Tree[A]]] =
-    Lens[Tree[A], Stream[Tree[A]]](_.subForest)(children => tree => Tree.node(tree.rootLabel, children))
+    Lens[Tree[A], Stream[Tree[A]]](_.subForest)(children => tree => Node(tree.rootLabel, children))
 
   final def leftMostLabel[A]: Lens[Tree[A], A] = {
     @tailrec
@@ -28,8 +29,8 @@ trait TreeOptics {
     }
 
     def _set(newLeaf: A)(tree: Tree[A]): Tree[A] = tree.subForest match {
-      case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel, headOption[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf))(xs) )
+      case Empty => Leaf(newLeaf)
+      case xs    => Node(tree.rootLabel, headOption[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf))(xs) )
     }
 
     Lens(_get)(_set)
@@ -43,8 +44,8 @@ trait TreeOptics {
     }
 
     def _set(newLeaf: A)(tree: Tree[A]): Tree[A] = tree.subForest match {
-      case Empty => Tree.leaf(newLeaf)
-      case xs    => Tree.node(tree.rootLabel, lastOption[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf))(xs) )
+      case Empty => Leaf(newLeaf)
+      case xs    => Node(tree.rootLabel, lastOption[Stream[Tree[A]], Tree[A]].modify(_set(newLeaf))(xs) )
     }
 
     Lens(_get)(_set)
@@ -54,13 +55,13 @@ trait TreeOptics {
 
   implicit def treeReverse[A]: Reverse[Tree[A], Tree[A]] = new Reverse[Tree[A], Tree[A]] {
     def reverse = Iso[Tree[A], Tree[A]](reverseTree)(reverseTree)
-    private def reverseTree(tree: Tree[A]): Tree[A] = Tree.node(tree.rootLabel, tree.subForest.reverse.map(reverseTree))
+    private def reverseTree(tree: Tree[A]): Tree[A] = Node(tree.rootLabel, tree.subForest.reverse.map(reverseTree))
   }
 
   implicit def treePlated[A]: Plated[Tree[A]] = new Plated[Tree[A]] {
     val plate: Traversal[Tree[A], Tree[A]] = new Traversal[Tree[A], Tree[A]] {
       def modifyF[F[_]: Applicative](f: Tree[A] => F[Tree[A]])(s: Tree[A]): F[Tree[A]] =
-        Applicative[F].map(Traverse[Stream].traverse(s.subForest)(f))(Tree.node(s.rootLabel, _))
+        Applicative[F].map(Traverse[Stream].traverse(s.subForest)(f))(Node(s.rootLabel, _))
     }
   }
 
