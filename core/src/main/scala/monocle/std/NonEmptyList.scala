@@ -1,10 +1,10 @@
 package monocle.std
 
 import monocle.function._
-import monocle.{PIso, Iso, Optional}
+import monocle.{Iso, Optional, PIso}
 
 import scalaz.NonEmptyList._
-import scalaz.{IList, NonEmptyList, OneAnd}
+import scalaz.{ICons, IList, INil, NonEmptyList, OneAnd}
 
 object nel extends NonEmptyListOptics
 
@@ -18,10 +18,10 @@ trait NonEmptyListOptics {
     pNelToOneAnd[A, A]
 
   final def pOptNelToList[A, B]: PIso[Option[NonEmptyList[A]], Option[NonEmptyList[B]], List[A], List[B]] =
-    PIso[Option[NonEmptyList[A]], Option[NonEmptyList[B]], List[A], List[B]](_.fold(List.empty[A])(_.list.toList)){
-      case Nil     => None
-      case x :: xs => Some(NonEmptyList.nel(x, IList.fromList(xs)))
-    }
+    PIso[Option[NonEmptyList[A]], Option[NonEmptyList[B]], IList[A], IList[B]](_.fold(IList.empty[A])(_.list)){
+      case INil()       => None
+      case ICons(x, xs) => Some(NonEmptyList.nel(x, xs))
+    } composeIso ilist.pIListToList
 
   final def optNelToList[A]: Iso[Option[NonEmptyList[A]], List[A]] =
     pOptNelToList[A, A]
@@ -56,14 +56,16 @@ trait NonEmptyListOptics {
   implicit def nelCons1[A]: Cons1[NonEmptyList[A], A, List[A]] =
     new Cons1[NonEmptyList[A],A,List[A]]{
       def cons1: Iso[NonEmptyList[A], (A, List[A])] =
-        Iso((nel: NonEmptyList[A]) => (nel.head,nel.tail.toList)){case (h,t) => NonEmptyList.nel(h, IList.fromList(t))}
+        Iso((nel: NonEmptyList[A]) => (nel.head,nel.tail)){case (h,t) => NonEmptyList.nel(h, t)} composeIso
+          ilist.pIListToList.second
     }
 
   implicit def nelSnoc1[A]:Snoc1[NonEmptyList[A], List[A], A] =
     new Snoc1[NonEmptyList[A],List[A], A]{
       def snoc1: Iso[NonEmptyList[A], (List[A], A)] =
-        Iso((nel:NonEmptyList[A]) => nel.init.toList -> nel.last){ case (i,l) => NonEmptyList.nel(l, IList.fromList(i.reverse)).reverse}
-  }
+        Iso((nel:NonEmptyList[A]) => nel.init -> nel.last){case (i,l) => NonEmptyList.nel(l, i.reverse).reverse} composeIso
+          ilist.pIListToList.first
+    }
 
 
 }
