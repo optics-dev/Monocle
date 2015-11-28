@@ -21,7 +21,7 @@ case class CNel(head: Char, tail: List[Char])
 
 object CNel extends TestInstances {
   val toNel: Iso[CNel, NonEmptyList[Char]] =
-    Iso[CNel, NonEmptyList[Char]](c => NonEmptyList(c.head, c.tail: _*))(n => CNel(n.head, n.tail))
+    Iso[CNel, NonEmptyList[Char]](c => NonEmptyList(c.head, c.tail: _*))(n => CNel(n.head, n.tail.toList))
 
   implicit val cNelEq: Equal[CNel] = Equal.equalA
   implicit val cNelArb: Arbitrary[CNel] = Arbitrary(^(Arbitrary.arbitrary[Char], Arbitrary.arbitrary[List[Char]])(CNel.apply))

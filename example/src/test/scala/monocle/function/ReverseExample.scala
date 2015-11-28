@@ -28,7 +28,7 @@ class ReverseExample extends MonocleSuite {
   }
 
   test("reverse creates an Iso from a Tree to its reversed version") {
-    (node(1, Stream(leaf(2), leaf(3))) applyIso reverse get) shouldEqual node(1, Stream(leaf(3), leaf(2)))
+    (Node(1, Stream(Leaf(2), Leaf(3))) applyIso reverse get) shouldEqual Node(1, Stream(Leaf(3), Leaf(2)))
   }
 
   test("reverse creates an Iso from a Vector to its reversed version") {
