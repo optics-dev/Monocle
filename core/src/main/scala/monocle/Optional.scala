@@ -44,14 +44,14 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   /**
    * modify polymorphically the target of a [[POptional]] with a function.
-   * return empty if the [[POptional]] is not getOrModify
+   * return empty if the [[POptional]] is not matching
    */
   @inline final def modifyOption(f: A => B): S => Option[T] =
     s => getOption(s).map(a => set(f(a))(s))
 
   /**
    * set polymorphically the target of a [[POptional]] with a value.
-   * return empty if the [[POptional]] is not getOrModify
+   * return empty if the [[POptional]] is not matching
    */
   @inline final def setOption(b: B): S => Option[T] =
     modifyOption(_ => b)
