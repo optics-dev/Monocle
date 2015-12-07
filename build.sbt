@@ -51,8 +51,8 @@ lazy val monocleSettings = buildSettings ++ publishSettings
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
   .settings(monocleSettings)
-  .aggregate(core, generic, law, macros, state, test, example, docs, bench)
-  .dependsOn(core, generic, law, macros, state, test % "test-internal -> test", bench % "compile-internal;test-internal -> test")
+  .aggregate(core, generic, law, macros, state, refined, test, example, docs, bench)
+  .dependsOn(core, generic, law, macros, state, refined, test % "test-internal -> test", bench % "compile-internal;test-internal -> test")
 
 lazy val core = project
   .settings(moduleName := "monocle-core")
