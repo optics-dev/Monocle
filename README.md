@@ -168,6 +168,42 @@ There are 3 ways to create `Lens`, each with their pro and cons:
 
 Note: `GenLens` and `@Lenses` are both limited to case classes
 
+## Optics in the REPL and tut
+
+`Iso`, `Prism`, `Lens`, `Optional`, `Traversal` and `Setter` are all type aliases for more general polymorphic optics, 
+for example here is the definition of `Lens`:
+
+```scala
+type Lens[S, A] = PLens[S, S, A, A]
+
+object Lens {
+  def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] = 
+    PLens(get)(set)
+}
+```
+
+This is a completely fine Scala definition and it will work perfectly in your code. However, if you try to create optics
+in the REPL you will probably encounter a similar error:
+
+```
+scala> import monocle.Lens
+import monocle.Lens
+
+scala> case class Example(s: String, i: Int)
+defined class Example
+
+scala> val s = Lens[Example, String](_.s)(s => _.copy(s = s))
+s: monocle.Lens[Example,String] = monocle.PLens$$anon$7@46aa4219
+
+scala> val i = Lens[Example, Int](_.i)(i => _.copy(i = i))
+<console>:13: error: object Lens does not take type parameters.
+       val i = Lens[Example, Int](_.i)(i => _.copy(i = i))
+```
+
+We managed to create the first `Lens` but the second call to `apply` failed. This is a known bug in the REPL which is 
+tracked by [SI-7139](https://issues.scala-lang.org/browse/SI-7139). You will also face this error if you use [tut](https://github.com/tpolecat/tut)
+to create documentation.
+
 ## Generic Optics and Instance Location Policy
 
 A generic optic is an optic that is applicable to different types. For example, `headOption` is an `Optional` from
