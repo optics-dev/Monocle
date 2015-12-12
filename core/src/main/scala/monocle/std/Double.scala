@@ -10,6 +10,6 @@ trait DoubleOptics {
     Prism[Double, Int](d => if(d.isValidInt) Some(d.toInt) else None)(_.toDouble)
 
   val doubleToFloat: Prism[Double, Float] =
-    Prism[Double, Float](d => if(d.isValidInt) Some(d.toInt) else None)(_.toDouble)
+    Prism[Double, Float]{d => val f = d.toFloat; if (f.toDouble == d) Some(f) else None}(_.toDouble)
 
 }
