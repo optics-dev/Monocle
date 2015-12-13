@@ -19,6 +19,7 @@ trait StdInstances
   with    SetOptics
   with    StreamOptics
   with    StringOptics
+  with    Tuple1Optics
   with    Tuple2Optics
   with    Tuple3Optics
   with    Tuple4Optics
