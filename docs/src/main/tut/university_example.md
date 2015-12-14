@@ -6,21 +6,14 @@ pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/do
 ---
 # University Example
 
-```tut:invisible
-import monocle.example.UniversityExample._
-import monocle.Traversal
-```
-
 Let's take a basic model of a `University` containing a few `Department`s where each `Department` has a budget 
 and a few `Lecturer`s.
 
-```scala
-case class University(name: String, departments: Map[String, Department])
-case class Department(budget: Int, lecturers: List[Lecturer])
-case class Lecturer(firstName: String, lastName: String, salary: Int)
-```
-
 ```tut:silent
+case class Lecturer(firstName: String, lastName: String, salary: Int)
+case class Department(budget: Int, lecturers: List[Lecturer])
+case class University(name: String, departments: Map[String, Department])
+
 val uni = University("oxford", Map(
   "Computer Science" -> Department(45, List(
     Lecturer("john"  , "doe", 10),
@@ -38,7 +31,7 @@ Our university is having some financial issues and it has to close the History d
 
 First, we need to zoom into `University` to the departments field using a `Lens`
 
-```scala
+```tut:silent
 import monocle.macros.GenLens  // require monocle-macro module
 
 val departments = GenLens[University](_.departments)
@@ -75,10 +68,9 @@ Let's have a look at a more positive scenario where all university lecturers get
 
 First we need to generate a few `Lens`es in order to zoom in the interesting fields of our model.
 
-```scala
+```tut:silent
 val lecturers = GenLens[Department](_.lecturers)
 val salary = GenLens[Lecturer](_.salary)
-
 ```
 
 We want to focus to all university lecturers, for this we can use `Each` typeclass as it provides a `Traversal`
@@ -88,6 +80,7 @@ which zooms into all elements of a container (e.g. `List`, `Vector` `Map`)
 import monocle.function.all._ // to get each and other typeclass based optics such as at or headOption
 import monocle.std.list._     // to get List instance for Each
 import monocle.std.map._      // to get Map instance for Each
+import monocle.Traversal
 
 val allLecturers: Traversal[University, Lecturer] = departments composeTraversal each composeLens lecturers composeTraversal each
 ```
@@ -106,7 +99,7 @@ character of both `firstName` and `lastName`.
 
 You know the drill, first we need to create the `Lens`es we need.
 
-```scala
+```tut:silent
 val firstName = GenLens[Lecturer](_.firstName)
 val lastName  = GenLens[Lecturer](_.lastName)
 ```
