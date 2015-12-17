@@ -4,6 +4,27 @@ title:  "Release Note"
 section: "release_note"
 ---
 
+# 1.2.0
+
+> 17 December 2015
+
+### Documentation
+
+-   add example, typeclass and faq sections to the website [#314](https://github.com/julien-truffaut/Monocle/pull/314), [#316](https://github.com/julien-truffaut/Monocle/pull/316) 
+-   document [SI-7139](https://issues.scala-lang.org/browse/SI-7139) limitation for optics constructor in REPL and tut [#309](https://github.com/julien-truffaut/Monocle/pull/309)
+
+### Bug Fixes
+
+-   generate fresh type-parameter name for `modifyF` [#300](https://github.com/julien-truffaut/Monocle/pull/300)  (thanks to [puffnfresh](https://github.com/puffnfresh))
+-   publish `monocle-refined` with all the other modules [#311](https://github.com/julien-truffaut/Monocle/pull/311)
+-   publish snapshot automatically for scala 2.10 and 2.11 [#310](https://github.com/julien-truffaut/Monocle/pull/310)
+
+### Upgrades
+
+-   scalaz to 7.2.0
+-   refined to 0.3.2
+-   macro paradise to 2.1.0
+
 # 1.2.0-M2
 
 > 22 November 2015
