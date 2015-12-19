@@ -11,7 +11,7 @@ import scalaz.std.stream._
   *
   * @tparam A the parent and child type of a [[Plated]]
   */
-@implicitNotFound("Could not find an instance of Plated[{A}], please check Monocle instance location policy to " +
+@implicitNotFound("Could not find an instance of Plated[${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
 abstract class Plated[A] extends Serializable { self =>
   def plate: Traversal[A, A]
