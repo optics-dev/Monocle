@@ -54,7 +54,7 @@ scala> _streetNumber.set(n + 1)(address)
 res3: Address = Address(11,High Street)
 ```
 
-We can push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `scalaz.Functor`:
+We can push push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `scalaz.Functor`:
 
 ```scala
 def neighbors(n: Int): List[Int] =
@@ -84,7 +84,7 @@ scala> def updateNumber(n: Int) : Future[Int] = Future.successful ( n + 1)
 updateNumber: (n: Int)scala.concurrent.Future[Int]
 
 scala> _streetNumber.modifyF(updateNumber)(address)
-res7: scala.concurrent.Future[Address] = scala.concurrent.impl.Promise$DefaultPromise@6801130a
+res7: scala.concurrent.Future[Address] = scala.concurrent.impl.Promise$DefaultPromise@606dc651
 ```
 
 Most importantly, `Lenses` compose to zoom deeper in a data structure
