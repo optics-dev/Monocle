@@ -54,7 +54,7 @@ scala> _streetNumber.set(n + 1)(address)
 res3: Address = Address(11,High Street)
 ```
 
-We can push push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `scalaz.Functor`:
+We can push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `scalaz.Functor`:
 
 ```scala
 def neighbors(n: Int): List[Int] =
