@@ -65,7 +65,9 @@ lazy val core = project
   .settings(moduleName := "monocle-core")
   .settings(monocleSettings)
   .settings(mimaSettings("core"))
-  .settings(libraryDependencies := Seq(scalaz))
+  .settings(libraryDependencies := Seq(scalaz) ++ PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)){
+    case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
+  }.toList)
 
 lazy val generic = project.dependsOn(core)
   .settings(moduleName := "monocle-generic")
