@@ -14,7 +14,7 @@ import sbt._
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-val scalaVersion   = "2.11.7"   // or "2.10.6"
+val scalaVersion   = "2.11.8"   // or "2.10.6"
 val libraryVersion = "1.2.0"    // or "1.3.0-SNAPSHOT"
 
 libraryDependencies ++= Seq(
