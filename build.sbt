@@ -21,7 +21,14 @@ lazy val buildSettings = Seq(
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
     "-Xfuture"
-  ),
+  ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2,10)) => Seq("-Yno-generic-signatures") // no generic signatures for scala 2.10.x, see SI-7932, #571 and #828
+    case _ => Seq( // https://github.com/scala/make-release-notes/blob/9cfbdc8c92f94/experimental-backend.md#emitting-java-8-style-lambdas
+      "-Ybackend:GenBCode",
+      "-Ydelambdafy:method",
+      "-target:jvm-1.8"
+    )
+  }),
   resolvers ++= Seq(
     "bintray/non" at "http://dl.bintray.com/non/maven",
     Resolver.sonatypeRepo("releases"),
@@ -58,7 +65,9 @@ lazy val core = project
   .settings(moduleName := "monocle-core")
   .settings(monocleSettings)
   .settings(mimaSettings("core"))
-  .settings(libraryDependencies := Seq(scalaz))
+  .settings(libraryDependencies := Seq(scalaz) ++ PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)){
+    case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
+  }.toList)
 
 lazy val generic = project.dependsOn(core)
   .settings(moduleName := "monocle-generic")
