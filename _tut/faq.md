@@ -39,7 +39,7 @@ val is = GenLens[Foo](_.is)
 
 ```scala
 scala> (is composeOptional headOption).getOption(foo)
-<console>:20: error: Could not find an instance of Cons[S,A], please check Monocle instance location policy to find out which import is necessary
+<console>:21: error: Could not find an instance of Cons[S,A], please check Monocle instance location policy to find out which import is necessary
        (is composeOptional headOption).getOption(foo)
                            ^
 ```
@@ -53,7 +53,7 @@ import monocle.std.vector._
 
 ```scala
 scala> (is composeOptional headOption).getOption(foo)
-<console>:23: error: type mismatch;
+<console>:24: error: type mismatch;
  found   : monocle.function.Cons[Vector[Nothing],Nothing]
  required: monocle.function.Cons[Vector[Nothing],A]
 Note: Nothing <: A, but trait Cons is invariant in type A.
@@ -114,7 +114,7 @@ Note: `root` is a trick to help type inference. Without it, we would get the fol
 
 ```scala
 scala> index("two").set(0)(m) 
-<console>:27: error: type mismatch;
+<console>:28: error: type mismatch;
  found   : monocle.function.Index[Map[String,Nothing],String,Nothing]
  required: monocle.function.Index[Map[String,Nothing],String,A]
 Note: Nothing <: A, but trait Index is invariant in type A.
