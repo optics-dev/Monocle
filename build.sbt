@@ -4,6 +4,9 @@ import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 import sbt.Keys._
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 import sbtunidoc.Plugin.UnidocKeys._
+import org.scalajs.sbtplugin.ScalaJSPlugin
+import org.scalajs.sbtplugin.cross.CrossProject
+import ScalaJSPlugin.autoImport._
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
@@ -37,14 +40,14 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz     = "org.scalaz"      %% "scalaz-core" % "7.2.0"
-lazy val shapeless  = "com.chuusai"     %% "shapeless"   % "2.3.0"
-lazy val refinedDep = "eu.timepit"      %% "refined"     % "0.3.7"
+lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.2.1")
+lazy val shapeless  = Def.setting("com.chuusai"     %%% "shapeless"   % "2.3.0")
+lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % "0.3.7")
 
-lazy val discpline  = "org.typelevel"   %% "discipline"  % "0.4"
-lazy val scalatest  = "org.scalatest"   %% "scalatest"   % "3.0.0-M7"  % "test"
+lazy val discpline  = Def.setting("org.typelevel"   %%% "discipline"  % "0.4")
+lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.0-M7"  % "test")
 
-lazy val macroCompat = "org.typelevel" %% "macro-compat" % "1.1.0"
+lazy val macroCompat = Def.setting("org.typelevel" %%% "macro-compat" % "1.1.0")
 
 lazy val macroVersion = "2.1.0"
 lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
@@ -53,87 +56,133 @@ def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.1.0")
 )
 
-lazy val monocleSettings = buildSettings ++ publishSettings
+lazy val tagName = Def.setting(
+ s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}")
+
+lazy val gitRev =
+  sys.process.Process("git rev-parse HEAD").lines_!.head
+
+lazy val scalajsSettings = Seq(
+  scalacOptions += {
+    val s = if (isSnapshot.value) gitRev else tagName.value
+    val a = (baseDirectory in LocalRootProject).value.toURI.toString
+    val g = "https://raw.githubusercontent.com/julien-truffaut/Monocle"
+    s"-P:scalajs:mapSourceURI:$a->$g/$s/"
+  },
+  scalaJSUseRhino := false,
+  requiresDOM := false
+)
+
+lazy val monocleSettings    = buildSettings ++ publishSettings
+lazy val monocleJvmSettings = monocleSettings
+lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
+
+lazy val monocleCrossSettings = (_: CrossProject)
+  .jvmSettings(monocleJvmSettings: _*)
+  .jsSettings(monocleJsSettings: _*)
 
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
   .settings(monocleSettings)
-  .aggregate(core, generic, law, macros, state, refined, test, example, docs, bench)
-  .dependsOn(core, generic, law, macros, state, refined, test % "test-internal -> test", bench % "compile-internal;test-internal -> test")
+  .aggregate(
+    coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, testJVM,
+    coreJS , genericJS , lawJS , macrosJS , stateJS , refinedJS , testJS ,
+    example, docs, bench)
+  .dependsOn(
+    coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, testJVM % "test-internal -> test",
+    coreJS , genericJS , lawJS , macrosJS , stateJS , refinedJS , testJS  % "test-internal -> test",
+    bench % "compile-internal;test-internal -> test")
 
-lazy val core = project
+lazy val coreJVM = core.jvm
+lazy val coreJS  = core.js
+lazy val core    = crossProject
   .settings(moduleName := "monocle-core")
-  .settings(monocleSettings)
-  .settings(mimaSettings("core"))
-  .settings(libraryDependencies := Seq(scalaz) ++ PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)){
-    case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
-  }.toList)
-
-lazy val generic = project.dependsOn(core)
-  .settings(moduleName := "monocle-generic")
-  .settings(monocleSettings)
-  .settings(mimaSettings("generic"))
-  .settings(libraryDependencies := Seq(scalaz, shapeless))
-
-lazy val refined = project.dependsOn(core)
-  .settings(moduleName := "monocle-refined")
-  .settings(monocleSettings)
-  .settings(libraryDependencies := Seq(scalaz, refinedDep))
-
-lazy val law = project.dependsOn(core)
-  .settings(moduleName := "monocle-law")
-  .settings(monocleSettings)
-  .settings(libraryDependencies := Seq(discpline))
-
-lazy val macros = project.dependsOn(core)
-  .in(file("macro"))
-  .settings(moduleName := "monocle-macro")
-  .settings(monocleSettings)
-  .settings(Seq(
-  scalacOptions  += "-language:experimental.macros",
-  libraryDependencies ++= Seq(
-    "org.scala-lang"  %  "scala-reflect"  % scalaVersion.value,
-    "org.scala-lang"  %  "scala-compiler" % scalaVersion.value % "provided",
-    macroCompat
-  ),
-  addCompilerPlugin(paradisePlugin),
-  libraryDependencies ++= CrossVersion partialVersion scalaVersion.value collect {
-    case (2, scalaMajor) if scalaMajor < 11 => Seq("org.scalamacros" %% "quasiquotes" % macroVersion)
-  } getOrElse Nil,
-  unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
-  ))
-
-lazy val state = project.dependsOn(core)
-  .settings(moduleName := "monocle-state")
-  .settings(monocleSettings)
-  .settings(libraryDependencies := Seq(scalaz))
-
-lazy val test = project.dependsOn(core, generic, macros, law, state, refined)
-  .settings(moduleName := "monocle-test")
-  .settings(monocleSettings)
-  .settings(noPublishSettings)
-  .settings(
-    libraryDependencies ++= Seq(scalaz, shapeless, scalatest, compilerPlugin(paradisePlugin))
+  .configure(monocleCrossSettings)
+  .jvmSettings(mimaSettings("core"): _*)
+  .settings(libraryDependencies += scalaz.value)
+  .jvmSettings(
+    libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+      case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
+    }.toList
   )
 
-lazy val bench = project.dependsOn(core, generic, macros)
+lazy val genericJVM = generic.jvm
+lazy val genericJS  = generic.js
+lazy val generic    = crossProject.dependsOn(core)
+  .settings(moduleName := "monocle-generic")
+  .configure(monocleCrossSettings)
+  .jvmSettings(mimaSettings("generic"): _*)
+  .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
+
+lazy val refinedJVM = refined.jvm
+lazy val refinedJS  = refined.js
+lazy val refined    = crossProject.dependsOn(core)
+  .settings(moduleName := "monocle-refined")
+  .configure(monocleCrossSettings)
+  .settings(libraryDependencies ++= Seq(scalaz.value, refinedDep.value))
+
+lazy val lawJVM = law.jvm
+lazy val lawJS  = law.js
+lazy val law    = crossProject.dependsOn(core)
+  .settings(moduleName := "monocle-law")
+  .configure(monocleCrossSettings)
+  .settings(libraryDependencies ++= Seq(discpline.value))
+
+lazy val macrosJVM = macros.jvm
+lazy val macrosJS  = macros.js
+lazy val macros    = crossProject.dependsOn(core)
+  .in(file("macro"))
+  .settings(moduleName := "monocle-macro")
+  .configure(monocleCrossSettings)
+  .settings(
+    scalacOptions += "-language:experimental.macros",
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-reflect"  % scalaVersion.value,
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
+      macroCompat.value
+    ),
+    addCompilerPlugin(paradisePlugin),
+    libraryDependencies ++= CrossVersion partialVersion scalaVersion.value collect {
+        case (2, scalaMajor) if scalaMajor < 11 => Seq("org.scalamacros" %% "quasiquotes" % macroVersion)
+      } getOrElse Nil,
+    unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
+  )
+
+lazy val stateJVM = state.jvm
+lazy val stateJS  = state.js
+lazy val state    = crossProject.dependsOn(core)
+  .settings(moduleName := "monocle-state")
+  .configure(monocleCrossSettings)
+  .settings(libraryDependencies ++= Seq(scalaz.value))
+
+lazy val testJVM = test.jvm
+lazy val testJS  = test.js
+lazy val test    = crossProject.dependsOn(core, generic, macros, law, state, refined)
+  .settings(moduleName := "monocle-test")
+  .configure(monocleCrossSettings)
+  .settings(noPublishSettings: _*)
+  .settings(
+    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
+  )
+
+lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
   .settings(moduleName := "monocle-bench")
-  .settings(monocleSettings)
+  .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(libraryDependencies ++= Seq(
-    shapeless,
+    shapeless.value,
     compilerPlugin(paradisePlugin)
   )).enablePlugins(JmhPlugin)
 
-lazy val example = project.dependsOn(core, generic, refined, macros, state, test % "test->test")
+lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM, stateJVM, testJVM % "test->test")
   .settings(moduleName := "monocle-example")
-  .settings(monocleSettings)
+  .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz, shapeless, scalatest, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
   )
 
-lazy val docs = project.dependsOn(core, example)
+lazy val docs = project.dependsOn(coreJVM, example)
   .settings(moduleName := "monocle-docs")
   .settings(monocleSettings)
   .settings(noPublishSettings)
@@ -143,13 +192,13 @@ lazy val docs = project.dependsOn(core, example)
   .settings(docSettings)
   .settings(tutSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz, shapeless, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(scalaz.value, shapeless.value, compilerPlugin(paradisePlugin))
   )
 
 
 lazy val docSettings = Seq(
   autoAPIMappings := true,
-  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(core),
+  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM),
   site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "api"),
   site.addMappingsToSiteDir(tut, "_tut"),
   ghpagesNoJekyll := false,
