@@ -70,7 +70,10 @@ lazy val scalajsSettings = Seq(
     s"-P:scalajs:mapSourceURI:$a->$g/$s/"
   },
   scalaJSUseRhino := false,
-  requiresDOM := false
+  requiresDOM := false,
+  testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck,
+                           "-maxSize", "8",
+                           "-minSuccessfulTests", "50")
 )
 
 lazy val monocleSettings    = buildSettings ++ publishSettings
@@ -84,14 +87,27 @@ lazy val monocleCrossSettings = (_: CrossProject)
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
   .settings(monocleSettings)
+  .aggregate(monocleJVM, monocleJS)
+  .dependsOn(
+    monocleJVM, testJVM % "test-internal -> test",
+    monocleJS , testJS  % "test-internal -> test",
+    bench % "compile-internal;test-internal -> test")
+
+lazy val monocleJVM = project.in(file(".monocleJVM"))
+  .settings(moduleName := "monocle")
+  .settings(monocleJvmSettings)
   .aggregate(
     coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, testJVM,
-    coreJS , genericJS , lawJS , macrosJS , stateJS , refinedJS , testJS ,
     example, docs, bench)
   .dependsOn(
     coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, testJVM % "test-internal -> test",
-    coreJS , genericJS , lawJS , macrosJS , stateJS , refinedJS , testJS  % "test-internal -> test",
     bench % "compile-internal;test-internal -> test")
+
+lazy val monocleJS = project.in(file(".monocleJS"))
+  .settings(moduleName := "monocle")
+  .settings(monocleJsSettings)
+  .aggregate(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, testJS)
+  .dependsOn(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, testJS  % "test-internal -> test")
 
 lazy val coreJVM = core.jvm
 lazy val coreJS  = core.js
