@@ -88,13 +88,9 @@ lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
   .settings(monocleSettings)
   .aggregate(monocleJVM, monocleJS)
-  .dependsOn(
-    monocleJVM, testJVM % "test-internal -> test",
-    monocleJS , testJS  % "test-internal -> test",
-    bench % "compile-internal;test-internal -> test")
+  .dependsOn(monocleJVM, monocleJS)
 
 lazy val monocleJVM = project.in(file(".monocleJVM"))
-  .settings(moduleName := "monocle")
   .settings(monocleJvmSettings)
   .aggregate(
     coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, testJVM,
@@ -104,7 +100,6 @@ lazy val monocleJVM = project.in(file(".monocleJVM"))
     bench % "compile-internal;test-internal -> test")
 
 lazy val monocleJS = project.in(file(".monocleJS"))
-  .settings(moduleName := "monocle")
   .settings(monocleJsSettings)
   .aggregate(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, testJS)
   .dependsOn(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, testJS  % "test-internal -> test")
