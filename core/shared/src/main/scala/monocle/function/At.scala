@@ -32,4 +32,7 @@ object At extends AtFunctions {
 
 trait AtFunctions {
   def at[S, I, A](i: I)(implicit ev: At[S, I, A]): Lens[S, A] = ev.at(i)
+
+  def sans[S, I, A](i: I)(s: S)(implicit ev: At[S, I, Option[A]]): S =
+    ev.at(i).set(None)(s)
 }
