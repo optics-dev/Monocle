@@ -4,7 +4,7 @@ import monocle.function._
 import monocle.std.list._
 import monocle.{Iso, Prism, Traversal}
 
-import scalaz.{Applicative, \/}
+import scalaz.Applicative
 import scalaz.std.list._
 import scalaz.std.option._
 import scalaz.syntax.traverse._
@@ -17,7 +17,7 @@ trait StringOptics {
     Iso((_: String).toList)(_.mkString)
 
   val stringToBoolean: Prism[String, Boolean] =
-    Prism{s: String => \/.fromTryCatchNonFatal(s.toBoolean).toOption}(_.toString)
+    Prism{s: String => parseCaseSensitiveBoolean(s)}(_.toString)
 
   val stringToLong: Prism[String, Long] =
     Prism(parseLong)(_.toString)
@@ -103,4 +103,9 @@ trait StringOptics {
     if (c >= '0' && c <= '9') Some(c - '0')
     else None
 
+  private def parseCaseSensitiveBoolean(stringBoolean: String): Option[Boolean] = stringBoolean match {
+    case "true" => Some(true)
+    case "false" => Some(false)
+    case _ => None
+  }
 }
