@@ -55,4 +55,8 @@ class AtExample extends MonocleSuite {
     ('x' applyLens at(0: CharBits) set true) shouldEqual 'y'
   }
 
+  test("sans deletes an element of a Map") {
+    sans("Foo")(Map("Foo" -> 1, "Bar" -> 2)) shouldEqual Map("Bar" -> 2)
+  }
+
 }
