@@ -7,6 +7,6 @@ class IndexSpec extends MonocleSuite {
 
   implicit def mmapIndex[K, V]: Index[MMap[K, V], K, V] = Index.fromIso(MMap.toMap)
 
-  checkAll("fromIso", IndexTests.defaultIntIndex[MMap[Int, String], String])
+  checkAll("fromIso", IndexTests[MMap[Int, String], Int, String])
 
 }

@@ -11,7 +11,7 @@ class VectorSpec extends MonocleSuite {
   checkAll("cons Vector", ConsTests[Vector[Int], Int])
   checkAll("snoc Vector", SnocTests[Vector[Int], Int])
   checkAll("each Vector", EachTests[Vector[Int], Int])
-  checkAll("index Vector", IndexTests.defaultIntIndex[Vector[Int], Int])
+  checkAll("index Vector", IndexTests[Vector[Int], Int, Int])
   checkAll("filterIndex Vector", FilterIndexTests.evenIndex[Vector[Int], Int])
 
   checkAll("plated Vector", TraversalTests(plate[Vector[Int]]))
