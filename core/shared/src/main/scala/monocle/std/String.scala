@@ -81,13 +81,19 @@ trait StringOptics {
     }
   }
 
-  private def parseLong(s: String): Option[Long] =
-    if (s.isEmpty) None
+  private def parseLong(s: String): Option[Long] = {
+    // we reject cases where String will be an invalid Prism according 2nd Prism law
+    // * String starts with +
+    // * String starts with 0 and has multiple digits
+    def inputBreaksPrismLaws(input: String): Boolean =
+      s.isEmpty || s.startsWith("+") || (s.startsWith("0") && s.length > 1)
+
+    if (inputBreaksPrismLaws(s)) None
     else s.toList match {
       case '-' :: xs => parseLongUnsigned(xs).map(-_)
-      case xs        => parseLongUnsigned(xs)
-      // we reject case where String starts with +, otherwise it will be an invalid Prism according 2nd Prism law
+      case        xs => parseLongUnsigned(xs)
     }
+  }
 
   private def parseLongUnsigned(s: List[Char]): Option[Long] =
     if(s.isEmpty) None
