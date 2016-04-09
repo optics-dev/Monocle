@@ -43,6 +43,7 @@ lazy val buildSettings = Seq(
 lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.2.1")
 lazy val shapeless  = Def.setting("com.chuusai"     %%% "shapeless"   % "2.3.0")
 lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % "0.3.7")
+lazy val refinedScalaCheckDep = Def.setting("eu.timepit"      %%% "refined-scalacheck"  % "0.3.7")
 
 lazy val discpline  = Def.setting("org.typelevel"   %%% "discipline"  % "0.4")
 lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.0-M7"  % "test")
@@ -130,7 +131,7 @@ lazy val refinedJS  = refined.js
 lazy val refined    = crossProject.dependsOn(core)
   .settings(moduleName := "monocle-refined")
   .configure(monocleCrossSettings)
-  .settings(libraryDependencies ++= Seq(scalaz.value, refinedDep.value))
+  .settings(libraryDependencies ++= Seq(scalaz.value, refinedDep.value, refinedScalaCheckDep.value))
 
 lazy val lawJVM = law.jvm
 lazy val lawJS  = law.js
