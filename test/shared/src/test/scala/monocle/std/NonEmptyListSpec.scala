@@ -11,7 +11,7 @@ class NonEmptyListSpec extends MonocleSuite {
   checkAll("optNelToList", IsoTests(optNelToList[Int]))
 
   checkAll("each NonEmptyList", EachTests[NonEmptyList[Int], Int])
-  checkAll("index NonEmptyList", IndexTests.defaultIntIndex[NonEmptyList[Int], Int])
+  checkAll("index NonEmptyList", IndexTests[NonEmptyList[Int], Int, Int])
   checkAll("filterIndex NonEmptyList", FilterIndexTests.evenIndex[NonEmptyList[Int], Int])
   checkAll("reverse NonEmptyList", ReverseTests[NonEmptyList[Int]])
   checkAll("cons1 NonEmptyList", Cons1Tests[NonEmptyList[Int], Int, List[Int]])
