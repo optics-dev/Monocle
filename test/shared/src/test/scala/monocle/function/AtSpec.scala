@@ -11,7 +11,7 @@ class AtSpec extends MonocleSuite with GeneratorDrivenPropertyChecks {
 
   checkAll("fromIso", AtTests[MMap[Int, String], Int, Option[String]])
 
-  test("sans deletes a key") {
+  test("remove deletes a key") {
 
     val mapAndIndexGen: Gen[(Map[Int, String], Int)] = for {
       m <- Arbitrary.arbitrary[Map[Int, String]]
@@ -21,7 +21,7 @@ class AtSpec extends MonocleSuite with GeneratorDrivenPropertyChecks {
     } yield (m, i)
 
     forAll(mapAndIndexGen) { case (m, i) =>
-      sans(i)(m) should be (m - i)
+      remove(i)(m) should be (m - i)
     }
   }
 
