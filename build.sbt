@@ -1,12 +1,13 @@
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 import com.typesafe.sbt.SbtSite.SiteKeys._
-import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
+import com.typesafe.tools.mima.core.MissingMethodProblem
+import com.typesafe.tools.mima.core.ProblemFilters.exclude
+import com.typesafe.tools.mima.plugin.MimaKeys.{binaryIssueFilters, previousArtifact}
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import org.scalajs.sbtplugin.cross.CrossProject
 import sbt.Keys._
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 import sbtunidoc.Plugin.UnidocKeys._
-import org.scalajs.sbtplugin.ScalaJSPlugin
-import org.scalajs.sbtplugin.cross.CrossProject
-import ScalaJSPlugin.autoImport._
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
@@ -56,7 +57,12 @@ lazy val macroVersion = "2.1.0"
 lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.1.0")
+  previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.2.0"),
+  binaryIssueFilters ++= Seq(
+    exclude[MissingMethodProblem]("monocle.std.DoubleOptics.monocle$std$DoubleOptics$_setter_$doubleToFloat_="),
+    exclude[MissingMethodProblem]("monocle.std.DoubleOptics.doubleToFloat"),
+    exclude[MissingMethodProblem]("monocle.function.AtFunctions.remove")
+  )
 )
 
 lazy val tagName = Def.setting(
