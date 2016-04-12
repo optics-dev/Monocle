@@ -52,7 +52,10 @@ def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   binaryIssueFilters ++= Seq(
     exclude[MissingMethodProblem]("monocle.std.DoubleOptics.monocle$std$DoubleOptics$_setter_$doubleToFloat_="),
     exclude[MissingMethodProblem]("monocle.std.DoubleOptics.doubleToFloat"),
-    exclude[MissingMethodProblem]("monocle.function.AtFunctions.remove")
+    exclude[MissingMethodProblem]("monocle.function.AtFunctions.remove"),
+    exclude[MissingMethodProblem]("monocle.generic.ProductOptics.hNilEach"),
+    exclude[MissingMethodProblem]("monocle.generic.ProductOptics.hConsEach"),
+    exclude[MissingMethodProblem]("monocle.generic.ProductOptics.productEach")
   )
 )
 
