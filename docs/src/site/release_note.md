@@ -15,6 +15,7 @@ section: "release_note"
 -   `doubleToFloat`, `bigDecimalToLong` and `bigDecimalToInt` [#312](https://github.com/julien-truffaut/Monocle/pull/312) (thanks to [mikaelv](https://github.com/mikaelv))
 -   optics for `Tuple1` [#313](https://github.com/julien-truffaut/Monocle/pull/313) (thanks to [exlevan](https://github.com/exlevan))
 -   use random index for `AtTests` and `IndexTests` [#343](https://github.com/julien-truffaut/Monocle/pull/343) (thanks to [pvillega](https://github.com/pvillega))
+-   `Each` instance for tuples and case classes with fields of the same type [#347](https://github.com/julien-truffaut/Monocle/pull/347) (thanks to [Astrac](https://github.com/Astrac))
 
 ### Bug Fixes
 
@@ -27,7 +28,6 @@ section: "release_note"
 
 -   scala 2.11.8
 -   scalaz to 7.2.2
--   shapeless to 2.3.0
 
 # 1.2.0
 
