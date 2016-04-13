@@ -4,6 +4,31 @@ title:  "Release Note"
 section: "release_note"
 ---
 
+# 1.2.1
+
+> 13 April 2016
+
+### Addition
+
+-   support for scala.js [#335](https://github.com/julien-truffaut/Monocle/pull/335) (thanks to [japgolly](https://github.com/japgolly))
+-   `remove`: delete a value associated with a key in a Map-like container [#341](https://github.com/julien-truffaut/Monocle/pull/341) (thanks to [dabd](https://github.com/dabd))
+-   `doubleToFloat`, `bigDecimalToLong` and `bigDecimalToInt` [#312](https://github.com/julien-truffaut/Monocle/pull/312) (thanks to [mikaelv](https://github.com/mikaelv))
+-   optics for `Tuple1` [#313](https://github.com/julien-truffaut/Monocle/pull/313) (thanks to [exlevan](https://github.com/exlevan))
+-   use random index for `AtTests` and `IndexTests` [#343](https://github.com/julien-truffaut/Monocle/pull/343) (thanks to [pvillega](https://github.com/pvillega))
+-   `Each` instance for tuples and case classes with fields of the same type [#347](https://github.com/julien-truffaut/Monocle/pull/347) (thanks to [Astrac](https://github.com/Astrac))
+
+### Bug Fixes
+
+-   fix implicit not found message for `Plated` [#320](https://github.com/julien-truffaut/Monocle/pull/320) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   fix `stringToBoolean` such as it satisfies 2nd prism law [#340](https://github.com/julien-truffaut/Monocle/pull/340) (thanks to [hasumedic](https://github.com/hasumedic))
+-   fix `stringToLong` such as it satisfies 2nd prism law [#339](https://github.com/julien-truffaut/Monocle/pull/339) (thanks to [pvillega](https://github.com/pvillega))
+-   fix bit indexing for `Long` [#343](https://github.com/julien-truffaut/Monocle/pull/343) (thanks to [pvillega](https://github.com/pvillega))
+
+### Upgrades
+
+-   scala 2.11.8
+-   scalaz to 7.2.2
+
 # 1.2.0
 
 > 17 December 2015
@@ -42,7 +67,7 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 -   add `left` and `right` methods for `Iso`, `Prism`, `Getter` and `Fold` [#273](https://github.com/julien-truffaut/Monocle/commit/8efd6c85f8a3697abc11feae0a5f1a2ba7fd0a58)
 -   add safe down cast from BigInt [#267](https://github.com/julien-truffaut/Monocle/commit/1f3c37be2d3e950b1a84b4f1d05c5468bc80e6da)
 -   add `productToTuple` `Iso` between case class and tuple using shapeless [#247](https://github.com/julien-truffaut/Monocle/commit/c82c03c95e33314f1cac442b8e47252d5419af77)
--   add `GenIso.fields` white box that generates the same `Iso` than `productToTuple` with better performances but less IDE support [#297](https://github.com/julien-truffaut/Monocle/pull/297) (thaks to [japgolly](https://github.com/japgolly))
+-   add `GenIso.fields` white box that generates the same `Iso` than `productToTuple` with better performances but less IDE support [#297](https://github.com/julien-truffaut/Monocle/pull/297) (thanks to [japgolly](https://github.com/japgolly))
 -   add `@PLenses` macro annotation to generate `PLens` for case class with type parameters [#114](https://github.com/julien-truffaut/Monocle/commit/f80ee012971689ec31865b67665e2641429b24fd) (thanks to [exlevan](https://github.com/exlevan))
 -   add `Plated` typeclass [#289](https://github.com/julien-truffaut/Monocle/commit/2be8bcf8d51113e6b0230dafd065289767da2f28) (thanks to [puffnfresh](https://github.com/puffnfresh))
 -   add optics for `scalaz.Cofree` [#290](https://github.com/julien-truffaut/Monocle/commit/a1b71065b36ddac7a94118b04748628d1dcc260c) (thanks to [LiamGoodacre](https://github.com/LiamGoodacre))

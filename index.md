@@ -15,7 +15,7 @@ resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
 val scalaVersion   = "2.11.8"   // or "2.10.6"
-val libraryVersion = "1.2.0"    // or "1.3.0-SNAPSHOT"
+val libraryVersion = "1.2.1"    // or "1.3.0-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion,
