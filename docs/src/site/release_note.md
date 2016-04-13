@@ -6,7 +6,7 @@ section: "release_note"
 
 # 1.2.1
 
-> 10 April 2016
+> 13 April 2016
 
 ### Addition
 
