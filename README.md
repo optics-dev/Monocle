@@ -109,10 +109,10 @@ import monocle.function.headOption._ // to use headOption (a generic optic)
 import monocle.std.string._          // to get String instance for HeadOption
 
 
-((_company composeLens _address
-           composeLens _street
-           composeLens _name
-           composeOptional headOption).modify(toUpper)(employee)
+(_company composeLens _address
+          composeLens _street
+          composeLens _name
+          composeOptional headOption).modify(toUpper)(employee)
 ```
 
 Similarly to composeLens, composeOptional takes two `Optional`, one from A to B and another from B to C and
