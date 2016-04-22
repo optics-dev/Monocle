@@ -73,6 +73,7 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 -   add optics for `scalaz.Cofree` [#290](https://github.com/julien-truffaut/Monocle/commit/a1b71065b36ddac7a94118b04748628d1dcc260c) (thanks to [LiamGoodacre](https://github.com/LiamGoodacre))
 
 ### Non backward compatible change
+-   change mega imports from package object to `all` object, e.g. `import monocle.function._` becomes `import monocle.function.all._` [#243](https://github.com/julien-truffaut/Monocle/pull/243)
 -   change `At` definition from `def at(index: I): Lens[S, Option[A]]` to `def at(index: I): Lens[S, A]`
 -   change `At` instance for `Set` and `ISet` from `Lens[S, Option[Unit]]` to `Lens[S, Boolean]`
 -   remove `Index` instances for bit indexing primitive `Long`, `Int`, `Char`, `Bye` from `monocle-core`
