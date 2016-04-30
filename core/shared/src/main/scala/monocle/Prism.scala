@@ -293,6 +293,11 @@ object Prism {
         _getOption(s)
     }
 
+  /** Create a Prism using a partial function rather than Option.
+    */
+  def partial[S, A](get: PartialFunction[S, A])(reverseGet: A => S): Prism[S, A] =
+    Prism[S, A](get.lift)(reverseGet)
+
   /** a [[Prism]] that checks for equality with a given value */
   def only[A](a: A)(implicit A: Equal[A]): Prism[A, Unit] =
     Prism[A, Unit](a2 => if(A.equal(a, a2)) Some(()) else None)(_ => a)
