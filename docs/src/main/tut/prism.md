@@ -21,7 +21,7 @@ case object Tuesday extends Day
 case object Sunday extends Day
 ```
 
-We can define a `Prism` which only selects `Tuesday`
+We can define a `Prism` which only selects `Tuesday`.
 `Tuesday` is a singleton, so it is isomorphic to `Unit` (type with a single inhabitant):
 
 ```tut:silent
