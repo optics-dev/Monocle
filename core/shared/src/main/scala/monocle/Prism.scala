@@ -293,8 +293,7 @@ object Prism {
         _getOption(s)
     }
 
-  /** Create a Prism using a partial function rather than Option.
-    */
+  /** Create a Prism using a partial function rather than Option. */
   def partial[S, A](get: PartialFunction[S, A])(reverseGet: A => S): Prism[S, A] =
     Prism[S, A](get.lift)(reverseGet)
 

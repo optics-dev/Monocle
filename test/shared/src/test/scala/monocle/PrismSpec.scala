@@ -8,6 +8,8 @@ import scalaz.std.list._
 class PrismSpec extends MonocleSuite {
 
   def _right[E, A]: Prism[E \/ A, A] = Prism[E \/ A, A](_.toOption)(\/.right)
+  def _pright[E, A]: Prism[E \/ A, A] =
+    Prism.partial[E \/ A, A](Function.unlift(_.toOption))(\/.right)
 
   val _nullary: Prism[Arities, Unit] =
     Prism[Arities, Unit] {
@@ -34,6 +36,7 @@ class PrismSpec extends MonocleSuite {
 
 
   checkAll("apply Prism", PrismTests(_right[String, Int]))
+  checkAll("apply partial Prism", PrismTests(_pright[String, Int]))
 
   checkAll("prism.asTraversal", OptionalTests(_right[String, Int].asOptional))
   checkAll("prism.asTraversal", TraversalTests(_right[String, Int].asTraversal))
