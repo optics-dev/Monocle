@@ -9,6 +9,30 @@ class PrismSpec extends MonocleSuite {
 
   def _right[E, A]: Prism[E \/ A, A] = Prism[E \/ A, A](_.toOption)(\/.right)
 
+  val _nullary: Prism[Arities, Unit] =
+    Prism[Arities, Unit] {
+      case Nullary() => Some(())
+      case _         => None
+    } {
+      case () => Nullary()
+    }
+  val _unary: Prism[Arities, Int] =
+    Prism[Arities, Int] {
+      case Unary(i) => Some(i)
+      case _        => None
+    } (Unary)
+  val _binary: Prism[Arities, (String, Int)] =
+    Prism[Arities, (String, Int)] {
+      case Binary(s, i) => Some((s, i))
+      case _            => None
+    } (Binary.tupled)
+  val _quintary: Prism[Arities, (Unit, Boolean, String, Int, Double)] =
+    Prism[Arities, (Unit, Boolean, String, Int, Double)] {
+      case Quintary(u, b, s, i, f) => Some((u, b, s, i, f))
+      case _                       => None
+    } (Quintary.tupled)
+
+
   checkAll("apply Prism", PrismTests(_right[String, Int]))
 
   checkAll("prism.asTraversal", OptionalTests(_right[String, Int].asOptional))
@@ -40,4 +64,11 @@ class PrismSpec extends MonocleSuite {
     _5s.getOption(List(5,5,5))     shouldEqual Some(List((), (), ()))
   }
 
+  test("apply") {
+    _nullary() shouldEqual Nullary()
+    _unary(3) shouldEqual Unary(3)
+    _binary("foo", 7) shouldEqual Binary("foo", 7)
+    _quintary((), true, "bar", 13, 0.4) shouldEqual
+      Quintary((), true, "bar", 13, 0.4)
+  }
 }
