@@ -26,9 +26,9 @@ class PrismSpec extends MonocleSuite {
       case Binary(s, i) => Some((s, i))
       case _            => None
     } (Binary.tupled)
-  val _quintary: Prism[Arities, (Any, Boolean, String, Int, Double)] =
-    Prism[Arities, (Any, Boolean, String, Int, Double)] {
-      case Quintary(a, b, s, i, f) => Some((a, b, s, i, f))
+  val _quintary: Prism[Arities, (Char, Boolean, String, Int, Double)] =
+    Prism[Arities, (Char, Boolean, String, Int, Double)] {
+      case Quintary(c, b, s, i, f) => Some((c, b, s, i, f))
       case _                       => None
     } (Quintary.tupled)
 
@@ -68,7 +68,7 @@ class PrismSpec extends MonocleSuite {
     _nullary() shouldEqual Nullary()
     _unary(3) shouldEqual Unary(3)
     _binary("foo", 7) shouldEqual Binary("foo", 7)
-    _quintary((), true, "bar", 13, 0.4) shouldEqual
-      Quintary((), true, "bar", 13, 0.4)
+    _quintary('x', true, "bar", 13, 0.4) shouldEqual
+      Quintary('x', true, "bar", 13, 0.4)
   }
 }
