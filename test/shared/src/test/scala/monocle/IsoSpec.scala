@@ -16,9 +16,9 @@ class IsoSpec extends MonocleSuite {
   val _unary: Iso[Unary, Int] = Iso[Unary, Int](_.i)(Unary)
   val _binary: Iso[Binary, (String, Int)] =
     Iso[Binary, (String, Int)](b => (b.s, b.i))(Binary.tupled)
-  val _quintary: Iso[Quintary, (Any, Boolean, String, Int, Double)] =
-    Iso[Quintary, (Any, Boolean, String, Int, Double)](
-      b => (b.a, b.b, b.s, b.i, b.f))(
+  val _quintary: Iso[Quintary, (Char, Boolean, String, Int, Double)] =
+    Iso[Quintary, (Char, Boolean, String, Int, Double)](
+      b => (b.c, b.b, b.s, b.i, b.f))(
       Quintary.tupled)
 
   case class IntWrapper(i: Int)
@@ -81,8 +81,8 @@ class IsoSpec extends MonocleSuite {
     _nullary() shouldEqual Nullary()
     _unary(3) shouldEqual Unary(3)
     _binary("foo", 7) shouldEqual Binary("foo", 7)
-    _quintary((), true, "bar", 13, 0.4) shouldEqual
-      Quintary((), true, "bar", 13, 0.4)
+    _quintary('x', true, "bar", 13, 0.4) shouldEqual
+      Quintary('x', true, "bar", 13, 0.4)
   }
 }
 
