@@ -1,5 +1,7 @@
 package monocle
 
+import scalaz.Leibniz.===
+import scalaz.Liskov.<~<
 import scalaz.{Applicative, Category, Equal, Maybe, Monoid, Traverse, \/}
 import scalaz.std.option._
 import scalaz.syntax.std.option._
@@ -228,6 +230,29 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
+
+  /*************************************************************************/
+  /** Apply methods to treat a [[PPrism]] as smart constructors for type T */
+  /*************************************************************************/
+
+  def apply()(implicit ev: B === Unit): T =
+    ev.subst[({type λ[α] = PPrism[S, T, A, α]})#λ](self).reverseGet(())
+
+  def apply(b: B): T = reverseGet(b)
+
+  def apply[C, D](c: C, d: D)(implicit ev: (C, D) <~< B): T = apply(ev((c, d)))
+
+  def apply[C, D, E](c: C, d: D, e: E)(implicit ev: (C, D, E) <~< B): T =
+    apply(ev((c, d, e)))
+
+  def apply[C, D, E, F](c: C, d: D, e: E, f: F)(implicit ev: (C, D, E, F) <~< B): T =
+    apply(ev((c, d, e, f)))
+
+  def apply[C, D, E, F, G](c: C, d: D, e: E, f: F, g: G)(implicit ev: (C, D, E, F, G) <~< B): T =
+    apply(ev((c, d, e, f, g)))
+
+  def apply[C, D, E, F, G, H](c: C, d: D, e: E, f: F, g: G, h: H)(implicit ev: (C, D, E, F, G, H) <~< B): T =
+    apply(ev((c, d, e, f, g, h)))
 }
 
 object PPrism extends PrismInstances {

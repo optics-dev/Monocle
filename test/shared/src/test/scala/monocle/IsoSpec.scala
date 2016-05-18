@@ -10,6 +10,17 @@ import scalaz.{Category, Compose, Equal, Split}
 
 class IsoSpec extends MonocleSuite {
 
+  val _nullary: Iso[Nullary, Unit] = Iso[Nullary, Unit](n => ()) {
+    case () => Nullary()
+  }
+  val _unary: Iso[Unary, Int] = Iso[Unary, Int](_.i)(Unary)
+  val _binary: Iso[Binary, (String, Int)] =
+    Iso[Binary, (String, Int)](b => (b.s, b.i))(Binary.tupled)
+  val _quintary: Iso[Quintary, (Char, Boolean, String, Int, Double)] =
+    Iso[Quintary, (Char, Boolean, String, Int, Double)](
+      b => (b.c, b.b, b.s, b.i, b.f))(
+      Quintary.tupled)
+
   case class IntWrapper(i: Int)
   implicit val intWrapperGen: Arbitrary[IntWrapper] = Arbitrary(arbitrary[Int].map(IntWrapper.apply))
   implicit val intWrapperEq = Equal.equalA[IntWrapper]
@@ -66,6 +77,12 @@ class IsoSpec extends MonocleSuite {
     Split[Iso].split(iso, iso.reverse).get((IntWrapper(3), 3)) shouldEqual ((3, IntWrapper(3)))
   }
 
-
+  test("apply") {
+    _nullary() shouldEqual Nullary()
+    _unary(3) shouldEqual Unary(3)
+    _binary("foo", 7) shouldEqual Binary("foo", 7)
+    _quintary('x', true, "bar", 13, 0.4) shouldEqual
+      Quintary('x', true, "bar", 13, 0.4)
+  }
 }
 
