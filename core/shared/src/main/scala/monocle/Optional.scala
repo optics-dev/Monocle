@@ -70,7 +70,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     POptional[(S, C), (T, C), (A, C), (B, C)]{
       case (s, c) => getOrModify(s).bimap(_ -> c, _ -> c)
     }{ case (b, c) => {
-        case (s, _) => (set(b)(s), c)
+        case (s, c2) => setOption(b)(s).fold(set(b)(s) -> c2)(_ -> c)
       }
     }
 
@@ -78,7 +78,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     POptional[(C, S), (C, T), (C, A), (C, B)]{
       case (c, s) => getOrModify(s).bimap(c -> _, c -> _)
     }{ case (c, b) => {
-        case (_, s) => (c, set(b)(s))
+        case (c2, s) => setOption(b)(s).fold(c2 -> set(b)(s))(c -> _)
       }
     }
 

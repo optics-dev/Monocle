@@ -5,7 +5,7 @@ import monocle.internal.IsEq
 
 import scalaz.Id._
 
-class OptionalLaws[S, A](optional: Optional[S, A]) {
+case class OptionalLaws[S, A](optional: Optional[S, A]) {
   import IsEq.syntax
 
   def getOptionSet(s: S): IsEq[S] =
@@ -25,4 +25,10 @@ class OptionalLaws[S, A](optional: Optional[S, A]) {
 
   def modifyOptionIdentity(s: S): IsEq[Option[S]] =
     optional.modifyOption(identity)(s) <==> optional.getOption(s).map(_ => s)
+
+  def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
+    optional.modify(g)(optional.modify(f)(s)) <==> optional.modify(g compose f)(s)
+
+  def consistentModify(s: S, a: A): IsEq[S] =
+    optional.modify(_ => a)(s) <==> optional.set(a)(s)
 }

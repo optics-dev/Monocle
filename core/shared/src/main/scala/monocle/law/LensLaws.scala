@@ -5,7 +5,7 @@ import monocle.internal.IsEq
 
 import scalaz.Id._
 
-class LensLaws[S, A](lens: Lens[S, A]) {
+case class LensLaws[S, A](lens: Lens[S, A]) {
   import IsEq.syntax
 
   def getSet(s: S): IsEq[S] =
@@ -22,4 +22,10 @@ class LensLaws[S, A](lens: Lens[S, A]) {
 
   def modifyFId(s: S): IsEq[S] =
     lens.modifyF[Id](id.point[A](_))(s) <==> s
+
+  def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
+    lens.modify(g)(lens.modify(f)(s)) <==> lens.modify(g compose f)(s)
+
+  def consistentModify(s: S, a: A): IsEq[S] =
+    lens.modify(_ => a)(s) <==> lens.set(a)(s)
 }

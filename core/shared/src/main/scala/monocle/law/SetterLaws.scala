@@ -3,7 +3,7 @@ package monocle.law
 import monocle.Setter
 import monocle.internal.IsEq
 
-class SetterLaws[S, A](setter: Setter[S, A]) {
+case class SetterLaws[S, A](setter: Setter[S, A]) {
   import IsEq.syntax
 
   def setIdempotent(s: S, a: A): IsEq[S] =
@@ -11,4 +11,10 @@ class SetterLaws[S, A](setter: Setter[S, A]) {
 
   def modifyIdentity(s: S): IsEq[S] =
     setter.modify(identity)(s) <==> s
+
+  def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
+    setter.modify(g)(setter.modify(f)(s)) <==> setter.modify(g compose f)(s)
+
+  def consistentModify(s: S, a: A): IsEq[S] =
+    setter.modify(_ => a)(s) <==> setter.set(a)(s)
 }

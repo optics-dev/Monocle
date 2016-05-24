@@ -5,7 +5,7 @@ import monocle.internal.IsEq
 
 import scalaz.Id._
 
-class PrismLaws[S, A](prism: Prism[S, A]) {
+case class PrismLaws[S, A](prism: Prism[S, A]) {
   import IsEq.syntax
 
   def partialRoundTripOneWay(s: S): IsEq[S] =
@@ -22,4 +22,10 @@ class PrismLaws[S, A](prism: Prism[S, A]) {
   
   def modifyOptionIdentity(s: S): IsEq[Option[S]] =
     prism.modifyOption(identity)(s) <==> prism.getOption(s).map(_ => s)
+
+  def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
+    prism.modify(g)(prism.modify(f)(s)) <==> prism.modify(g compose f)(s)
+
+  def consistentModify(s: S, a: A): IsEq[S] =
+    prism.modify(_ => a)(s) <==> prism.set(a)(s)
 }

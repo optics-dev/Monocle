@@ -5,7 +5,7 @@ import monocle.internal.IsEq
 
 import scalaz.Id._
 
-class TraversalLaws[S, A](traversal: Traversal[S, A]) {
+case class TraversalLaws[S, A](traversal: Traversal[S, A]) {
   import IsEq.syntax
 
   def setGetAll(s: S, a: A): IsEq[List[A]] =
@@ -22,4 +22,10 @@ class TraversalLaws[S, A](traversal: Traversal[S, A]) {
 
   def headOption(s: S): IsEq[Option[A]] =
     traversal.headOption(s) <==> traversal.getAll(s).headOption
+
+  def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
+    traversal.modify(g)(traversal.modify(f)(s)) <==> traversal.modify(g compose f)(s)
+
+  def consistentModify(s: S, a: A): IsEq[S] =
+    traversal.modify(_ => a)(s) <==> traversal.set(a)(s)
 }
