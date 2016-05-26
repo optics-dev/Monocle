@@ -12,16 +12,13 @@ import scalaz.std.option._
 
 object TraversalTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](traversal: Traversal[S, A]): RuleSet = {
+  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](traversal: Traversal[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     val laws: TraversalLaws[S, A] = new TraversalLaws(traversal)
     new SimpleRuleSet("Traversal",
-      "get what you set"  -> forAll( (s: S, a: A) => laws.setGetAll(s, a)),
-      "set idempotent"    -> forAll( (s: S, a: A) => laws.setIdempotent(s, a)),
-      "modify id = id"    -> forAll( (s: S) => laws.modifyIdentity(s)),
-      "modifyF Id = Id"   -> forAll( (s: S) => laws.modifyFId(s)),
       "headOption"        -> forAll( (s: S) => laws.headOption(s)),
-      "compose modify"    -> forAll( (s: S, f: A => A, g: A => A) => laws.composeModify(s, f, g)),
-      "consistent modify" -> forAll( (s: S, a: A) => laws.consistentModify(s, a))
+      "get what you set"  -> forAll( (s: S, f: A => A) => laws.modifyGetAll(s, f)),
+      "modify id = id"    -> forAll( (s: S) => laws.modifyIdentity(s)),
+      "compose modify"    -> forAll( (s: S, f: A => A, g: A => A) => laws.composeModify(s, f, g))
     )
   }
 

@@ -15,6 +15,6 @@ case class SetterLaws[S, A](setter: Setter[S, A]) {
   def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
     setter.modify(g)(setter.modify(f)(s)) <==> setter.modify(g compose f)(s)
 
-  def consistentModify(s: S, a: A): IsEq[S] =
+  def consistentSetModify(s: S, a: A): IsEq[S] =
     setter.modify(_ => a)(s) <==> setter.set(a)(s)
 }

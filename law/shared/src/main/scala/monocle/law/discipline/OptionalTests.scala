@@ -14,16 +14,16 @@ object OptionalTests extends Laws {
   def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](optional: Optional[S, A]): RuleSet =
     apply[S, A, Unit](_ => optional)
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal, I: Arbitrary](f: I => Optional[S, A]): RuleSet =
+  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal, I: Arbitrary](f: I => Optional[S, A]): RuleSet = {
+    def laws(i: I) = OptionalLaws(f(i))
     new SimpleRuleSet("Optional",
-      "set what you get"  -> forAll( (s: S, i: I) => OptionalLaws(f(i)).getOptionSet(s)),
-      "get what you set"  -> forAll( (s: S, a: A, i: I) => OptionalLaws(f(i)).setGetOption(s, a)),
-      "set idempotent"    -> forAll( (s: S, a: A, i: I) => OptionalLaws(f(i)).setIdempotent(s, a)),
-      "modify id = id"    -> forAll( (s: S, i: I) => OptionalLaws(f(i)).modifyIdentity(s)),
-      "modifyF Id = Id"   -> forAll( (s: S, i: I) => OptionalLaws(f(i)).modifyFId(s)),
-      "modifyOption"      -> forAll( (s: S, i: I) => OptionalLaws(f(i)).modifyOptionIdentity(s)),
-      "compose modify"    -> forAll( (s: S, g: A => A, h: A => A, i: I) => OptionalLaws(f(i)).composeModify(s, g, h)),
-      "consistent modify" -> forAll( (s: S, a: A, i: I) => OptionalLaws(f(i)).consistentModify(s, a))
+      "set what you get"  -> forAll( (s: S, i: I) => laws(i).getOptionSet(s)),
+      "get what you set"  -> forAll( (s: S, a: A, i: I) => laws(i).setGetOption(s, a)),
+      "modify id = id"    -> forAll( (s: S, i: I) => laws(i).modifyIdentity(s)),
+      "compose modify"    -> forAll( (s: S, g: A => A, h: A => A, i: I) => laws(i).composeModify(s, g, h)),
+      "consistent set with modify"         -> forAll( (s: S, a: A, i: I) => laws(i).consistentSetModify(s, a)),
+      "consistent modify with modifyId"    -> forAll( (s: S, g: A => A, i: I) => laws(i).consistentModifyModifyId(s, g)),
+      "consistent getOption with modifyId" -> forAll( (s: S, i: I) => laws(i).consistentGetOptionModifyId(s))
     )
-
+  }
 }
