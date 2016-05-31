@@ -4,8 +4,13 @@ import monocle.Optional
 import monocle.internal.IsEq
 
 import scalaz.Id._
+import scalaz.Tags.First
+import scalaz.std.option._
+import scalaz.syntax.std.option._
+import scalaz.syntax.tag._
+import scalaz.{@@, Const}
 
-class OptionalLaws[S, A](optional: Optional[S, A]) {
+case class OptionalLaws[S, A](optional: Optional[S, A]) {
   import IsEq.syntax
 
   def getOptionSet(s: S): IsEq[S] =
@@ -20,9 +25,15 @@ class OptionalLaws[S, A](optional: Optional[S, A]) {
   def modifyIdentity(s: S): IsEq[S] =
     optional.modify(identity)(s) <==> s
 
-  def modifyFId(s: S): IsEq[S] =
-    optional.modifyF[Id](id.point[A](_))(s) <==> s
+  def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
+    optional.modify(g)(optional.modify(f)(s)) <==> optional.modify(g compose f)(s)
 
-  def modifyOptionIdentity(s: S): IsEq[Option[S]] =
-    optional.modifyOption(identity)(s) <==> optional.getOption(s).map(_ => s)
+  def consistentSetModify(s: S, a: A): IsEq[S] =
+    optional.set(a)(s) <==> optional.modify(_ => a)(s)
+
+  def consistentModifyModifyId(s: S, f: A => A): IsEq[S] =
+    optional.modify(f)(s) <==> optional.modifyF(a => id.point(f(a)))(s)
+
+  def consistentGetOptionModifyId(s: S): IsEq[Option[A]] =
+    optional.getOption(s) <==> optional.modifyF[Const[Option[A] @@ First, ?]](a => Const(Some(a).first))(s).getConst.unwrap
 }

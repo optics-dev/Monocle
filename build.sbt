@@ -56,6 +56,8 @@ lazy val macroCompat = Def.setting("org.typelevel" %%% "macro-compat" % "1.1.0")
 lazy val macroVersion = "2.1.0"
 lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
 
+lazy val kindProjector = "org.spire-math" % "kind-projector" % "0.7.1" cross CrossVersion.binary
+
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.2.0"),
   binaryIssueFilters ++= Seq(
@@ -123,6 +125,7 @@ lazy val core    = crossProject
   .configure(monocleCrossSettings)
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies += scalaz.value)
+  .settings(addCompilerPlugin(kindProjector))
   .jvmSettings(
     libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
       case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"

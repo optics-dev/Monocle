@@ -4,8 +4,13 @@ import monocle.Prism
 import monocle.internal.IsEq
 
 import scalaz.Id._
+import scalaz.Tags.First
+import scalaz.std.option._
+import scalaz.syntax.std.option._
+import scalaz.syntax.tag._
+import scalaz.{@@, Const}
 
-class PrismLaws[S, A](prism: Prism[S, A]) {
+case class PrismLaws[S, A](prism: Prism[S, A]) {
   import IsEq.syntax
 
   def partialRoundTripOneWay(s: S): IsEq[S] =
@@ -17,9 +22,15 @@ class PrismLaws[S, A](prism: Prism[S, A]) {
   def modifyIdentity(s: S): IsEq[S] =
     prism.modify(identity)(s) <==> s
 
-  def modifyFId(s: S): IsEq[S] =
-    prism.modifyF[Id](id.point[A](_))(s) <==> s
-  
-  def modifyOptionIdentity(s: S): IsEq[Option[S]] =
-    prism.modifyOption(identity)(s) <==> prism.getOption(s).map(_ => s)
+  def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
+    prism.modify(g)(prism.modify(f)(s)) <==> prism.modify(g compose f)(s)
+
+  def consistentSetModify(s: S, a: A): IsEq[S] =
+    prism.set(a)(s) <==> prism.modify(_ => a)(s)
+
+  def consistentModifyModifyId(s: S, f: A => A): IsEq[S] =
+    prism.modify(f)(s) <==> prism.modifyF(a => id.point(f(a)))(s)
+
+  def consistentGetOptionModifyId(s: S): IsEq[Option[A]] =
+    prism.getOption(s) <==> prism.modifyF[Const[Option[A] @@ First, ?]](a => Const(Some(a).first))(s).getConst.unwrap
 }

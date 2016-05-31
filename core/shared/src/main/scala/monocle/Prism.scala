@@ -236,7 +236,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /*************************************************************************/
 
   def apply()(implicit ev: B === Unit): T =
-    ev.subst[({type λ[α] = PPrism[S, T, A, α]})#λ](self).reverseGet(())
+    ev.subst[PPrism[S, T, A, ?]](self).reverseGet(())
 
   def apply(b: B): T = reverseGet(b)
 

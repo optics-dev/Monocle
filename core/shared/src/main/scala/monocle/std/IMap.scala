@@ -19,7 +19,7 @@ trait IMapOptics {
     def at(i: K) = Lens{m: ==>>[K, V] => m.lookup(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   }
 
-  implicit def iMapEach[K, V]: Each[K ==>> V, V] = Each.traverseEach[({type λ[α] = K ==>> α})#λ, V]
+  implicit def iMapEach[K, V]: Each[K ==>> V, V] = Each.traverseEach[K ==>> ?, V]
 
   implicit def iMapIndex[K: Order, V]: Index[K ==>> V, K, V] = Index.atIndex
 
