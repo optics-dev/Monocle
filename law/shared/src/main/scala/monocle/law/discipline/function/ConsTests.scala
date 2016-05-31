@@ -11,9 +11,8 @@ import scalaz.std.tuple._
 
 object ConsTests extends Laws {
 
-  def apply[S, A](implicit aEq: Equal[A], aArb: Arbitrary[A],
-                           sEq: Equal[S], sArb: Arbitrary[S],
-                           evCons: Cons[S, A]): RuleSet =
+  def apply[S: Equal : Arbitrary, A: Equal : Arbitrary](implicit evCons: Cons[S, A],
+     arbASAS: Arbitrary[((A,S)) => ((A,S))], arbAA: Arbitrary[A => A], arbSS: Arbitrary[S => S]): RuleSet =
     new SimpleRuleSet("Cons",
       PrismTests(cons[S, A]).props ++
       OptionalTests(headOption[S, A]).props ++

@@ -1,7 +1,8 @@
 package monocle
 
 import org.scalacheck.Arbitrary._
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.rng.Seed
+import org.scalacheck.{Cogen, Arbitrary, Gen}
 import org.scalactic.Equality
 
 import scalaz.Tree.Node
@@ -94,6 +95,11 @@ trait TestInstances {
       Gen.sized(sz => sizedTree(sz))
     }
 
+  implicit def treeCoGen[A: Cogen]: Cogen[Tree[A]] =
+    Cogen[Tree[A]]((seed: Seed, t: Tree[A]) => Cogen[(A, Stream[Tree[A]])].perturb(seed, (t.rootLabel, t.subForest)))
+
+  implicit def streamCoGen[A: Cogen]: Cogen[Stream[A]] = Cogen[List[A]].contramap[Stream[A]](_.toList)
+
   implicit def optionArbitrary[A: Arbitrary]: Arbitrary[Option[A]] = Arbitrary(Gen.frequency(
     1 -> None,
     3 -> Arbitrary.arbitrary[A].map(Option(_))
@@ -104,13 +110,21 @@ trait TestInstances {
     3 -> Arbitrary.arbitrary[A].map(Maybe.just(_))
   ))
 
+  implicit def iListCoGen[A: Cogen]: Cogen[IList[A]] = Cogen[List[A]].contramap[IList[A]](_.toList)
+
   implicit def someArbitrary[A: Arbitrary]: Arbitrary[Some[A]] = Arbitrary(Arbitrary.arbitrary[A].map(Some(_)))
 
   implicit def disjunctionArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \/ B] =
     Arbitrary(arbitrary[Either[A, B]] map \/.fromEither)
 
+  implicit def coGenDisjunction[E: Cogen, A: Cogen]: Cogen[E \/ A] =
+    Cogen.cogenEither[E, A].contramap[E \/ A](_.toEither)
+
   implicit def validationArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[Validation[A, B]] =
     Arbitrary(arbitrary[A \/ B].map(_.validation))
+
+  implicit def coGenValidation[E: Cogen, A: Cogen]: Cogen[Validation[E, A]] =
+    Cogen.cogenEither[E, A].contramap[Validation[E, A]](_.toEither)
 
   implicit def theseArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \&/ B] =
     Arbitrary(Gen.oneOf(
@@ -125,6 +139,9 @@ trait TestInstances {
     head <- Arbitrary.arbitrary[A]
     tail <- Arbitrary.arbitrary[T[A]]
   } yield OneAnd(head, tail))
+
+  implicit def oneAndCoGen[T[_], A](implicit a: Cogen[A], ta: Cogen[T[A]]): Cogen[OneAnd[T, A]] =
+    Cogen[(A, T[A])].contramap[OneAnd[T, A]](o => (o.head, o.tail))
 
   implicit def vectorArbitrary[A: Arbitrary]: Arbitrary[Vector[A]] =
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toVector))
@@ -147,6 +164,9 @@ trait TestInstances {
   implicit def nelArbitrary[A: Arbitrary]: Arbitrary[NonEmptyList[A]] =
     Arbitrary(oneAndArbitrary[List,A].arbitrary.map( o => NonEmptyList(o.head, o.tail:_*)))
 
+  implicit def nelCoGen[A: Cogen]: Cogen[NonEmptyList[A]] =
+    Cogen[(A, IList[A])].contramap[NonEmptyList[A]](nel => (nel.head, nel.tail))
+
   implicit def either3Arbitrary[A: Arbitrary, B: Arbitrary, C: Arbitrary]: Arbitrary[Either3[A, B, C]] =
     Arbitrary(Gen.oneOf(
       Arbitrary.arbitrary[A].map(Either3.left3),
@@ -161,5 +181,11 @@ trait TestInstances {
 
   implicit def streamCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[Stream, A]] =
     Arbitrary(Arbitrary.arbitrary[Tree[A]].map( monocle.std.cofree.cofreeToTree.reverseGet))
+
+  implicit def cogenOptionCofree[A](implicit A: Cogen[A]): Cogen[Cofree[Option, A]] =
+    Cogen[Cofree[Option, A]]((seed: Seed, t: Cofree[Option, A]) => Cogen[(A, Option[Cofree[Option, A]])].perturb(seed, (t.head, t.tail)))
+
+  implicit def cogenStreamCofree[A](implicit A: Cogen[A]): Cogen[Cofree[Stream, A]] =
+    Cogen[Cofree[Stream, A]]((seed: Seed, t: Cofree[Stream, A]) => Cogen[(A, Stream[Cofree[Stream, A]])].perturb(seed, (t.head, t.tail)))
 
 }

@@ -10,7 +10,7 @@ import scalaz.Equal
 
 object IsoTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](iso: Iso[S, A]): RuleSet = {
+  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](iso: Iso[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     val laws = new IsoLaws(iso)
     new SimpleRuleSet("Iso",
       "round trip one way"   -> forAll( (s: S) => laws.roundTripOneWay(s)),

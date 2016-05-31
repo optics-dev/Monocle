@@ -10,9 +10,8 @@ import scalaz.Equal
 
 object IndexTests extends Laws {
 
-  def apply[S, I, A](implicit aEq: Equal[A], aArb: Arbitrary[A],
-                              sEq: Equal[S], sArb: Arbitrary[S],
-                              iArb: Arbitrary[I], evIndex: Index[S, I, A]): RuleSet =
+  def apply[S: Equal : Arbitrary, I : Arbitrary, A: Equal : Arbitrary](implicit evIndex: Index[S, I, A],
+                                                                       arbAA: Arbitrary[A => A]): RuleSet =
     new SimpleRuleSet("Index", OptionalTests(index(_ : I)).props: _*)
 
 }

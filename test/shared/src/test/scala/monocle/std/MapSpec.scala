@@ -8,5 +8,5 @@ class MapSpec extends MonocleSuite {
   checkAll("each Map", EachTests[Map[Int, String], String])
   checkAll("empty Map", EmptyTests[Map[Int, String]])
   checkAll("index Map", IndexTests[Map[Int, String], Int, String])
-  checkAll("filterIndex Map", FilterIndexTests.evenIndex[Map[Int, Char], Char])
+  checkAll("filterIndex Map", FilterIndexTests[Map[Int, Char], Int, Char])
 }

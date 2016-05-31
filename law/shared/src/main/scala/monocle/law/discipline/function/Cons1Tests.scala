@@ -11,10 +11,8 @@ import scalaz.std.tuple._
 
 object Cons1Tests extends Laws {
 
-  def apply[S, H, T](implicit hEq: Equal[H], hArb: Arbitrary[H],
-                              tEq: Equal[T], tArb: Arbitrary[T],
-                              sEq: Equal[S], sArb: Arbitrary[S],
-                         evCons1: Cons1[S, H, T]): RuleSet =
+  def apply[S: Equal : Arbitrary, H: Equal : Arbitrary, T: Equal : Arbitrary](implicit evCons1: Cons1[S, H, T],
+      arbHTHT: Arbitrary[((H,T)) => ((H,T))], arbHH: Arbitrary[H => H], arbTT: Arbitrary[T => T]): RuleSet =
     new SimpleRuleSet("Cons1",
       IsoTests(cons1[S, H, T]).props ++
       LensTests(head[S, H, T]).props ++

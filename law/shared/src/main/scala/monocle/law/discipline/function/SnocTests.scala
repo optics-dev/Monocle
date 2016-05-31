@@ -11,9 +11,8 @@ import scalaz.std.tuple._
 
 object SnocTests extends Laws {
 
-  def apply[S, A](implicit aEq: Equal[A], aArb: Arbitrary[A],
-                           sEq: Equal[S], sArb: Arbitrary[S],
-                           evSnoc: Snoc[S, A]): RuleSet =
+  def apply[S: Equal : Arbitrary, A: Equal : Arbitrary](implicit evSnoc: Snoc[S, A],
+    arbASAS: Arbitrary[((S,A)) => ((S,A))], arbAA: Arbitrary[A => A], arbSS: Arbitrary[S => S]): RuleSet =
     new SimpleRuleSet("Snoc",
       PrismTests(snoc[S, A]).props ++
       OptionalTests(lastOption[S, A]).props ++

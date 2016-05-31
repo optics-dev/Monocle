@@ -11,7 +11,7 @@ import scalaz.std.option._
 
 object PrismTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](prism: Prism[S, A]): RuleSet = {
+  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](prism: Prism[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     val laws: PrismLaws[S, A] = new PrismLaws(prism)
     new SimpleRuleSet("Prism",
       "partial round trip one way" -> forAll( (s: S) => laws.partialRoundTripOneWay(s)),

@@ -11,9 +11,7 @@ import scalaz.Equal
 
 object EachTests extends Laws {
 
-  def apply[S, A](implicit aEq: Equal[A], aArb: Arbitrary[A],
-                              sEq: Equal[S], sArb: Arbitrary[S],
-                           evEach: Each[S, A]): RuleSet =
+  def apply[S: Equal : Arbitrary, A: Equal : Arbitrary](implicit evEach: Each[S, A], arbAA: Arbitrary[A => A]): RuleSet =
     new SimpleRuleSet("Each", TraversalTests(each[S, A]).props: _*)
 
 }

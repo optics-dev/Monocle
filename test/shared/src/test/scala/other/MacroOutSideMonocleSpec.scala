@@ -4,7 +4,7 @@ import monocle.{Iso, MonocleSuite}
 import monocle.law.discipline.{IsoTests, LensTests, PrismTests}
 import monocle.macros.{GenIso, GenLens, GenPrism}
 import org.scalacheck.Arbitrary.{arbOption => _, _}
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.{Cogen, Arbitrary, Gen}
 
 import scalaz.Equal
 import scalaz.std.option._
@@ -31,6 +31,7 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
   implicit val bar1Arb: Arbitrary[Bar1] = Arbitrary(arbitrary[String].map(Bar1.apply))
   implicit val bar2Arb: Arbitrary[Bar2] = Arbitrary(arbitrary[Int].map(Bar2.apply))
   implicit val fooArb: Arbitrary[Foo] = Arbitrary(Gen.oneOf(arbitrary[Bar1], arbitrary[Bar2]))
+  implicit val bar1CoGen: Cogen[Bar1] = Cogen[String].contramap[Bar1](_.s)
   implicit def exampleTypeArb[A: Arbitrary]: Arbitrary[ExampleType[A]] = Arbitrary(Arbitrary.arbOption[A].arbitrary map ExampleType.apply)
   implicit def example2TypeArb[A: Arbitrary]: Arbitrary[Example2Type[A]] =
     Arbitrary(for {x <- arbitrary[A]; y <- Arbitrary.arbOption[A].arbitrary} yield Example2Type(x, y))
@@ -53,10 +54,10 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
   checkAll("GenPrism"                                     , PrismTests(GenPrism[Foo, Bar1]))
 
 
-  def testGenIsoFields[S: Arbitrary : Equal, A: Arbitrary : Equal](name: String, iso: Iso[S, A]) =
+  def testGenIsoFields[S: Arbitrary : Equal, A: Arbitrary : Equal : Cogen](name: String, iso: Iso[S, A]) =
     new FieldsTester(name, iso)
 
-  class FieldsTester[S: Arbitrary : Equal, A: Arbitrary : Equal](name: String, iso: Iso[S, A]) {
+  class FieldsTester[S: Arbitrary : Equal, A: Arbitrary : Equal: Cogen](name: String, iso: Iso[S, A]) {
     def expect[Expect](implicit ev: A =:= Expect) =
       checkAll("GenIso.fields " + name, IsoTests(iso))
   }

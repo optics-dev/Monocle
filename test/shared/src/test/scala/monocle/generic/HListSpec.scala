@@ -2,7 +2,7 @@ package monocle.generic
 
 import monocle.MonocleSuite
 import monocle.law.discipline.{IsoTests, LensTests}
-import org.scalacheck.Arbitrary
+import org.scalacheck.{Cogen, Arbitrary}
 import shapeless.HList._
 import shapeless.ops.hlist.{Init => HListInit, IsHCons}
 import shapeless.{::, HNil}
@@ -36,11 +36,18 @@ class HListSpec extends MonocleSuite {
     l <- Arbitrary.arbitrary[Long]
     d <- Arbitrary.arbitrary[Double]
   } yield Example(i,b,c,f,l,d))
+  implicit val example: Cogen[Example] = Cogen.tuple6[Int, Boolean, Char, Float, Long, Double].contramap[Example](e =>
+    (e.i, e.b, e.c, e.f, e.l, e.d)
+  )
 
   implicit val hArb        = Arbitrary(for {example <- Arbitrary.arbitrary[Example]} yield toHList[Example, H].get(example))
   implicit val reverseHArb = Arbitrary(for {h <- Arbitrary.arbitrary[H]} yield h.reverse)
   implicit val hTailArb    = Arbitrary(for {h <- Arbitrary.arbitrary[H]} yield h.tail)
   implicit val hInitArb    = Arbitrary(for {h <- Arbitrary.arbitrary[H]} yield h.init)
+  implicit val hCoGen      = Cogen[Example].contramap(fromHList[H, Example].get)
+  implicit val reverseHCoGen = hCoGen.contramap[ReverseH](_.reverse)
+  implicit val hTailCoGen  = Cogen.tuple5[Boolean, Char, Float, Long, Double].contramap[HTail](_.tupled)
+  implicit val hInitCoGen  = Cogen.tuple5[Int, Boolean, Char, Float, Long].contramap[HInit](_.tupled)
 
   checkAll("toHList", IsoTests(toHList[Example, H]))
 

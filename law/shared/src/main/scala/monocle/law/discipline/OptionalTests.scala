@@ -11,10 +11,10 @@ import scalaz.std.option._
 
 object OptionalTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](optional: Optional[S, A]): RuleSet =
+  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](optional: Optional[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet =
     apply[S, A, Unit](_ => optional)
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal, I: Arbitrary](f: I => Optional[S, A]): RuleSet = {
+  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal, I: Arbitrary](f: I => Optional[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     def laws(i: I) = OptionalLaws(f(i))
     new SimpleRuleSet("Optional",
       "set what you get"  -> forAll( (s: S, i: I) => laws(i).getOptionSet(s)),

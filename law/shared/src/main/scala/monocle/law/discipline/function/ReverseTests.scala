@@ -10,16 +10,15 @@ import scalaz.Equal
 
 object ReverseTests extends Laws {
 
-  def apply[S, A](implicit aEq: Equal[A], aArb: Arbitrary[A],
-                           sEq: Equal[S], sArb: Arbitrary[S],
-                           evReverse: Reverse[S, A]): RuleSet = new RuleSet {
+  def apply[S: Equal : Arbitrary](implicit evReverse: Reverse[S, S], arbSS: Arbitrary[S => S]): RuleSet =
+    apply[S, S]
+
+  def apply[S: Equal : Arbitrary, A: Equal : Arbitrary](implicit evReverse: Reverse[S, A],
+                                                        arbAA: Arbitrary[A => A]): RuleSet = new RuleSet {
     override def name: String = "Reverse"
     override def bases: Seq[(String, RuleSet)] = Nil
     override def parents: Seq[RuleSet] = Nil
     override def props: Seq[(String, Prop)] =
       IsoTests(reverse[S, A]).props
   }
-
-  def apply[S](implicit sEq: Equal[S], sArb: Arbitrary[S], evReverse: Reverse[S, S]): RuleSet =
-    apply[S, S]
 }
