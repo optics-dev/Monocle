@@ -15,6 +15,9 @@ case class LensLaws[S, A](lens: Lens[S, A]) {
   def setGet(s: S, a: A): IsEq[A] =
     lens.get(lens.set(a)(s)) <==> a
 
+  def setIdempotent(s: S, a: A): IsEq[S] =
+    lens.set(a)(lens.set(a)(s)) <==> lens.set(a)(s)
+
   def modifyIdentity(s: S): IsEq[S] =
     lens.modify(identity)(s) <==> s
 

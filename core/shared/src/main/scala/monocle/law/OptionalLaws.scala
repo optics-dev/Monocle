@@ -19,6 +19,9 @@ case class OptionalLaws[S, A](optional: Optional[S, A]) {
   def setGetOption(s: S, a: A): IsEq[Option[A]] =
     optional.getOption(optional.set(a)(s)) <==> optional.getOption(s).map(_ => a)
 
+  def setIdempotent(s: S, a: A): IsEq[S] =
+    optional.set(a)(optional.set(a)(s)) <==> optional.set(a)(s)
+
   def modifyIdentity(s: S): IsEq[S] =
     optional.modify(identity)(s) <==> s
 

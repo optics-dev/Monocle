@@ -17,6 +17,7 @@ object TraversalTests extends Laws {
     new SimpleRuleSet("Traversal",
       "headOption"        -> forAll( (s: S) => laws.headOption(s)),
       "get what you set"  -> forAll( (s: S, f: A => A) => laws.modifyGetAll(s, f)),
+      "set idempotent"   -> forAll( (s: S, a: A) => laws.setIdempotent(s, a)),
       "modify id = id"    -> forAll( (s: S) => laws.modifyIdentity(s)),
       "compose modify"    -> forAll( (s: S, f: A => A, g: A => A) => laws.composeModify(s, f, g))
     )

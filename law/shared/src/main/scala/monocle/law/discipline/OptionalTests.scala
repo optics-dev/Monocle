@@ -19,6 +19,7 @@ object OptionalTests extends Laws {
     new SimpleRuleSet("Optional",
       "set what you get"  -> forAll( (s: S, i: I) => laws(i).getOptionSet(s)),
       "get what you set"  -> forAll( (s: S, a: A, i: I) => laws(i).setGetOption(s, a)),
+      "set idempotent"   -> forAll( (s: S, a: A, i: I) => laws(i).setIdempotent(s, a)),
       "modify id = id"    -> forAll( (s: S, i: I) => laws(i).modifyIdentity(s)),
       "compose modify"    -> forAll( (s: S, g: A => A, h: A => A, i: I) => laws(i).composeModify(s, g, h)),
       "consistent set with modify"         -> forAll( (s: S, a: A, i: I) => laws(i).consistentSetModify(s, a)),
