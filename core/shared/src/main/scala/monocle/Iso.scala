@@ -279,6 +279,8 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
 
   def apply[C, D, E, F, G, H](c: C, d: D, e: E, f: F, g: G, h: H)(implicit ev: (C, D, E, F, G, H) <~< B): T =
     apply(ev((c, d, e, f, g, h)))
+
+  def unapply(obj: S): Some[A] = Some(get(obj))
 }
 
 object PIso extends IsoInstances {
