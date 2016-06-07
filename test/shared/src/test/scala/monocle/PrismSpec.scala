@@ -76,10 +76,10 @@ class PrismSpec extends MonocleSuite {
   }
 
   test("unapply") {
-    (Nullary() match { case _nullary(unit) => unit }) shouldEqual (())
-    (Unary(3) match { case _unary(value) => value * 2 }) shouldEqual 6
-    (Binary("foo", 7) match { case _binary(s, i) => s + i }) shouldEqual "foo7"
-    (Quintary('x', true, "bar", 13, 0.4) match {
+    ((Nullary(): Arities) match { case _nullary(unit) => unit }) shouldEqual (())
+    ((Unary(3): Arities) match { case _unary(value) => value * 2 }) shouldEqual 6
+    ((Binary("foo", 7): Arities) match { case _binary(s, i) => s + i }) shouldEqual "foo7"
+    ((Quintary('x', true, "bar", 13, 0.4): Arities) match {
       case _quintary(c, b, s, i, f) => "" + c + b + s + i + f
     }) shouldEqual "xtruebar130.4"
   }
