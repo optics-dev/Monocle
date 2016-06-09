@@ -96,6 +96,9 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   @inline final def product[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
     split(other)
 
+  @inline final def au[F[_]: Functor](f: (B => T) => F[S]): F[A] =
+    Functor[F].map(f(reverseGet))(get)
+
   /**********************************************************/
   /** Compose methods between a [[PIso]] and another Optics */
   /**********************************************************/
