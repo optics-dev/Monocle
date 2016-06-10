@@ -7,9 +7,9 @@ pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/do
 ---
 # Prism
 
-A `Prism` is an Optic used to select part of a `Sum` type (also know as `Coproduct`), e.g. `sealed trait` or `Enum`.
+A `Prism` is an Optic used to select part of a `Sum` type (also known as `Coproduct`), e.g. `sealed trait` or `Enum`.
 
-`Prism` have two type parameters generally called `S` and `A`: `Prism[S, A]` where `S` represents the `Sum` and `A` a part of the `Sum`.
+`Prism`s have two type parameters generally called `S` and `A`: `Prism[S, A]` where `S` represents the `Sum` and `A` a part of the `Sum`.
 
 Let's take the example of a simple enum:
 
@@ -21,7 +21,7 @@ case object Tuesday extends Day
 case object Sunday extends Day
 ```
 
-We can define a `Prism` which only selects `Tuesday`
+We can define a `Prism` which only selects `Tuesday`.
 `Tuesday` is a singleton, so it is isomorphic to `Unit` (type with a single inhabitant):
 
 ```scala
