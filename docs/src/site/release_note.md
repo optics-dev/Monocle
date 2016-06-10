@@ -4,6 +4,20 @@ title:  "Release Note"
 section: "release_note"
 ---
 
+# 1.2.2
+
+> 9 June 2016
+
+### Addition
+
+-   add `apply` methods for `Prism` and `Iso` [#354](https://github.com/julien-truffaut/Monocle/pull/354) (thanks to [sellout](https://github.com/sellout))
+-   add `unapply` methods for `Prism` and `Iso` [#361](https://github.com/julien-truffaut/Monocle/pull/361) (thanks to [sellout](https://github.com/sellout))
+-   add `partial` constructor for `Prism` [#355](https://github.com/julien-truffaut/Monocle/pull/361) (thanks to [sellout](https://github.com/sellout))
+
+### Documentation
+
+-   various improvements from [Unisay](https://github.com/Unisay), [fthomas](https://github.com/fthomas) and [amrhassan](https://github.com/amrhassan)
+
 # 1.2.1
 
 > 13 April 2016
