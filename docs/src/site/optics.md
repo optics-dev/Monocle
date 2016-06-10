@@ -8,7 +8,7 @@ section: "optics"
 
 ## Convert between two types
 
-Isomorphims and Prisms essentially deal with the conversion between two types.
+Isomorphisms and Prisms essentially deal with the conversion between two types.
 
 -   [Iso](tut/iso.html)
 -   [Prism](tut/prism.html)
