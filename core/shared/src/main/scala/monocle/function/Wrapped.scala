@@ -21,6 +21,4 @@ trait WrappedFunctions {
   def wrapped[S, A](implicit ev: Wrapped[S, A]): Iso[S, A] = ev.wrapped
 
   def unwrapped[S, A](implicit ev: Wrapped[S, A]): Iso[A, S] = ev.wrapped.reverse
-
-  def ala[S, A, F[_]](f: (A => S) => F[S])(implicit ev: Wrapped[S, A], F: Functor[F]): F[A] = ev.wrapped.au(f)
 }
