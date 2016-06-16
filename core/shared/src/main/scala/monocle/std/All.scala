@@ -36,5 +36,6 @@ trait StdInstances
   with    ISetOptics
   with    NonEmptyListOptics
   with    OneAndOptics
+  with    TagOptics
   with    TreeOptics
   with    ValidationOptics
