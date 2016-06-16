@@ -7,7 +7,7 @@ import scalaz.Functor
 import scala.annotation.implicitNotFound
 
 /**
-  * Typeclass that defines an [[Iso]] from an `S` to an `A`
+  * Typeclass that defines an [[Iso]] from an `S` to an `A` where `S` is expected to wrap `A`.
   * @tparam S source of [[Iso]]
   * @tparam A target of [[Iso]], `A` is supposed to be unique for a given `S`
   */
