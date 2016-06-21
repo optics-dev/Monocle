@@ -119,6 +119,9 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 -   macro paradise to 2.1.0-M5
 
 # 1.2.0-M1
+
+> 06 July 2015
+
 -   laws definition move to `core` module [see](https://github.com/julien-truffaut/Monocle/tree/master/core/src/main/scala/monocle/law).
     Properties are still defined in `law` module with [discipline](https://github.com/typelevel/discipline)
 -   optics defined for `scalaz.Validation` [#211](https://github.com/julien-truffaut/Monocle/pull/211) (thanks to [anakos](https://github.com/anakos))
@@ -142,6 +145,81 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 -   scalaz to 7.1.3
 -   shapeless to 2.2.3
 -   kind projector to 0.6.0
+
+# 1.1.0
+
+> 31 Mars 2015
+
+### All Optics are now abstract classes
+-   easier to change implementation and maintain backward compatibility
+-   offer faster implementation using macros or `new` (not recommended)
+
+### Deprecate use of `Maybe` and `IList` in interface
+-   1.0.0 replaced `Option` by `scalaz.Maybe` but it turns out that `Maybe` advantages are not worth the cost of moving away from scala std.
+-   same between `List` and `scalaz.IList`
+
+### Add `Category` related instances and methods
+-   type classes e.g. `Compose`, `Category`, `Arrow`, `Choice`
+-   methods e.g. `id`, `codiagonal`, `first`, `second`, `sum`, `product`
+
+### Macro
+-   `monocle.macros.GenIso` generates `Iso` for case class with a single accessor
+-   `monocle.macros.GenPrism` generates `Prism` for sealed trait
+-   `@Lenses` now supports case classes with type parameters [see](https://github.com/julien-truffaut/Monocle/blob/697bbf0ca3cbb1e8e8b3a63626fc45dfca3cd3cf/example/src/test/scala/monocle/LensExample.scala#L62)
+-   `Lenser` is deprecated, use `GenLens` instead (same functionality but more consistant naming)
+
+### Spark friendly
+-   Optics and type classes extends `Serializable`
+
+### Syntax
+-   using optics as an infix operator operator requires a single import `monocle.syntax.apply` or `monocle.syntax._` 
+
+# 1.0.0
+
+> 14 December 2014
+
+### Rename Optics
+-   `Iso`, `Lens`, `Prism`, `Optional`, `Traversal` and `Setter` were prepended by a P for Polymorphic
+-   `SimpleIso`, `SimpleLens`, `SimplePrism`, `SimpleOptional`, `SimpleTraversal` and `SimpleSetter` lost `Simple`
+-   for example, `Lens` was renamed to `PLens` and `SimpleLens` to `Lens`
+-   benefits: in practice most optics are not polymorphic, so it is more convenient to have a shorter name for the most used optics.
+
+### No inheritance between Optics
+-   All Optics use `asX` methods to transform Optics, e.g. `Prism[S, T, A, B]` has methods `asOptional: Optional[S, T, A, B]`, `asTraversal: Traversal[S, T, A, B]`, ... methods
+
+### Compose direction
+-   in 0.5, `composeY` meant that the result of the composition is an Optic of type `Y`
+-   in 1.0, `composeY` means that you compose with an Optic of type `Y`
+
+### Main method changes
+-   removed `set`, `modify`, `setOption`, `modifyOption`
+-   `setF` became `set`
+-   `setFOption` became `setMaybe`
+-   `modifyF` became `modify`
+-   `modifyFOption` became `modifyMaybe`
+-   `modifyF` became `lift` or `multiLift` depending on the Optic
+-   `getOption` became `getMaybe`
+
+### Simplified Constructors
+-   Curry Optics constructor and merged Simple Optic constructors
+-   Shuffle methods and parameters order to be consistent between Optics
+
+### Use Maybe and IList from scalaz instead of Option and List from std
+-   `Maybe` can be transformed to `Option` by calling `toOption` 
+-   `IList` can be transformed to `List` by calling `toList` 
+-   benefits: no variance, better scalaz support, safer methods
+
+### Simplified type classes
+-   merged `HeadOption` and `TailOption` into `Cons`
+-   merged `Head` and `Tail` into `Cons1`
+-   merged `InitOption` and `LastOption` into `Snoc`
+-   merged `Init` and `Last` into `Snoc1`
+-   removed `SafeCast` as it was simply a way to summon `Prism` implicitly
+-   removed `AtBit` and defined `Index[S, Int, Boolean]` where `S` is a numeric type
+
+### Macros
+-   all macros have been moved to `monocle.macros` package
+-   `mkLens` has been moved to `monocle.macros.internal`, i.e. it is not public anymore. Use `Lenser` or `@Lenses`
 
 # 0.5.1
 
