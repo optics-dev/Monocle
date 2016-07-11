@@ -33,6 +33,7 @@ lazy val buildSettings = Seq(
       "-target:jvm-1.8"
     )
   }),
+  addCompilerPlugin(kindProjector),
   resolvers ++= Seq(
     "bintray/non" at "http://dl.bintray.com/non/maven",
     Resolver.sonatypeRepo("releases"),
@@ -125,7 +126,6 @@ lazy val core    = crossProject
   .configure(monocleCrossSettings)
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies += scalaz.value)
-  .settings(addCompilerPlugin(kindProjector))
   .jvmSettings(
     libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
       case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
