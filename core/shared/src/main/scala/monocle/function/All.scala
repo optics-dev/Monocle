@@ -21,3 +21,4 @@ trait GenericOptics
   with    ReverseFunctions
   with    SnocFunctions
   with    Snoc1Functions
+  with    WrappedFunctions

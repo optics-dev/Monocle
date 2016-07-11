@@ -33,6 +33,7 @@ lazy val buildSettings = Seq(
       "-target:jvm-1.8"
     )
   }),
+  addCompilerPlugin(kindProjector),
   resolvers ++= Seq(
     "bintray/non" at "http://dl.bintray.com/non/maven",
     Resolver.sonatypeRepo("releases"),
@@ -41,7 +42,7 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.2.2")
+lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.3.0-M3")
 lazy val shapeless  = Def.setting("com.chuusai"     %%% "shapeless"   % "2.3.0")
 
 lazy val refinedVersion = "0.4.0"
@@ -125,7 +126,6 @@ lazy val core    = crossProject
   .configure(monocleCrossSettings)
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies += scalaz.value)
-  .settings(addCompilerPlugin(kindProjector))
   .jvmSettings(
     libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
       case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
