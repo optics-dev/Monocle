@@ -108,16 +108,16 @@ lazy val monocle = project.in(file("."))
 lazy val monocleJVM = project.in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
   .aggregate(
-    coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, testJVM,
+    coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, unsafeJVM, testJVM,
     example, docs, bench)
   .dependsOn(
-    coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, testJVM % "test-internal -> test",
+    coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, unsafeJVM, testJVM % "test-internal -> test",
     bench % "compile-internal;test-internal -> test")
 
 lazy val monocleJS = project.in(file(".monocleJS"))
   .settings(monocleJsSettings)
-  .aggregate(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, testJS)
-  .dependsOn(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, testJS  % "test-internal -> test")
+  .aggregate(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS)
+  .dependsOn(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS  % "test-internal -> test")
 
 lazy val coreJVM = core.jvm
 lazy val coreJS  = core.js
@@ -181,9 +181,17 @@ lazy val state    = crossProject.dependsOn(core)
   .configure(monocleCrossSettings)
   .settings(libraryDependencies ++= Seq(scalaz.value))
 
+lazy val unsafeJVM = unsafe.jvm
+lazy val unsafeJS  = unsafe.js
+lazy val unsafe    = crossProject.dependsOn(core)
+  .settings(moduleName := "monocle-unsafe")
+  .configure(monocleCrossSettings)
+  .jvmSettings(mimaSettings("unsafe"): _*)
+  .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
+
 lazy val testJVM = test.jvm
 lazy val testJS  = test.js
-lazy val test    = crossProject.dependsOn(core, generic, macros, law, state, refined)
+lazy val test    = crossProject.dependsOn(core, generic, macros, law, state, refined, unsafe)
   .settings(moduleName := "monocle-test")
   .configure(monocleCrossSettings)
   .settings(noPublishSettings: _*)
