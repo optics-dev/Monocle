@@ -10,10 +10,10 @@ import scalaz.Equal
 
 object LensTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](lens: Lens[S, A]): RuleSet =
+  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](lens: Lens[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet =
     apply[S, A, Unit](_ => lens)
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal, I: Arbitrary](f: I => Lens[S, A]): RuleSet = {
+  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal, I: Arbitrary](f: I => Lens[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     def laws(i: I) = LensLaws(f(i))
     new SimpleRuleSet("Lens",
       "set what you get"  -> forAll( (s: S, i: I) => laws(i).getSet(s)),

@@ -13,7 +13,7 @@ class StringSpec extends MonocleSuite {
   checkAll("snoc String", SnocTests[String, Char])
   checkAll("each String", EachTests[String, Char])
   checkAll("index String", IndexTests[String, Int, Char])
-  checkAll("filterIndex String", FilterIndexTests.evenIndex[String, Char])
+  checkAll("filterIndex String", FilterIndexTests[String, Int, Char])
 
   checkAll("String to Boolean ", PrismTests(stringToBoolean))
   checkAll("String to Byte"    , PrismTests(stringToByte))

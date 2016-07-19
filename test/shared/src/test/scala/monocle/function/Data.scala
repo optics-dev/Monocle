@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle._
-import org.scalacheck.Arbitrary
+import org.scalacheck.{Cogen, Arbitrary}
 
 import scalaz.{NonEmptyList, Equal}
 import scalaz.syntax.applicative._
@@ -33,7 +33,8 @@ object CList {
   val toList: Iso[CList, List[Char]] = Iso[CList, List[Char]](_.list)(CList(_))
 
   implicit val clistEq: Equal[CList] = Equal.equalA
-  implicit val slistQrb: Arbitrary[CList] = Arbitrary(Arbitrary.arbitrary[List[Char]].map(CList(_)))
+  implicit val clistArb: Arbitrary[CList] = Arbitrary(Arbitrary.arbitrary[List[Char]].map(CList(_)))
+  implicit val clistCoGen: Cogen[CList] = Cogen.cogenList[Char].contramap[CList](_.list)
 }
 
 case class Raw(b: Boolean, c: Char, i: Int, l: Long, f: Float, d: Double)

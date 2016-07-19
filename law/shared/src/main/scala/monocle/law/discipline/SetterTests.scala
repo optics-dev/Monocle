@@ -10,7 +10,7 @@ import scalaz.Equal
 
 object SetterTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](setter: Setter[S, A]): RuleSet = {
+  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](setter: Setter[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     val laws: SetterLaws[S, A] = new SetterLaws(setter)
     new SimpleRuleSet("Setter",
       "set idempotent" -> forAll( (s: S, a: A) => laws.setIdempotent(s, a)),

@@ -11,7 +11,7 @@ class StreamSpec extends MonocleSuite {
   checkAll("snoc Stream", SnocTests[Stream[Int], Int])
   checkAll("each Stream", EachTests[Stream[Int], Int])
   checkAll("index Stream", IndexTests[Stream[Int], Int, Int])
-  checkAll("filterIndex Stream", FilterIndexTests.evenIndex[Stream[Int], Int])
+  checkAll("filterIndex Stream", FilterIndexTests[Stream[Int], Int, Int])
 
   checkAll("plated Stream", TraversalTests(plate[Stream[Int]]))
 }

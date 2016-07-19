@@ -9,6 +9,6 @@ class IMapSpec extends MonocleSuite {
   checkAll("at ==>>", AtTests[Int ==>> String, Int, Option[String]])
   checkAll("each ==>>", EachTests[Int ==>> String, String])
   checkAll("empty ==>>", EmptyTests[Int ==>> String])
-  checkAll("filterIndex ==>>", FilterIndexTests.evenIndex[Int ==>> Char, Char])
+  checkAll("filterIndex ==>>", FilterIndexTests[Int ==>> Char, Int, Char])
   checkAll("index ==>>", IndexTests[Int ==>> String, Int, String])
 }

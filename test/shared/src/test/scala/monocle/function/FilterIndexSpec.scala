@@ -8,6 +8,6 @@ class FilterIndexSpec extends MonocleSuite {
   implicit def mmapFilterIndex[K, V]: FilterIndex[MMap[K, V], K, V] =
     FilterIndex.fromIso(MMap.toMap)
 
-  checkAll("fromIso", FilterIndexTests.evenIndex[MMap[Int, String], String])
+  checkAll("fromIso", FilterIndexTests[MMap[Int, String], Int, String])
 
 }
