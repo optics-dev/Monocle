@@ -108,7 +108,7 @@ we need a sort of partial `Lens`, in Monocle it is called `Optional`.
 
 ```scala
 import monocle.function.Cons.headOption // to use headOption (a generic optic)
-  import monocle.std.string._             // to get String instance for HeadOption
+import monocle.std.string._             // to get String instance for HeadOption
 
 (company composeLens address
   composeLens street
