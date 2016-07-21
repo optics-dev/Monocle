@@ -65,7 +65,7 @@ Let's say we have an employee and we need to set the first character of his comp
 Here is how we could write it in vanilla Scala:
 
 ```scala
-val employee: Employee = ...
+val employee: Employee = ???
 
 employee.copy(
   company = employee.company.copy(
@@ -82,20 +82,21 @@ As you can see copy is not convenient to update nested objects as we need to rep
 to reach it. Let's see what could we do with Monocle:
 
 ```scala
-val _name   : Lens[Street  , String]  = ...  // we'll see later how to build Lens
-val _street : Lens[Address , Street]  = ...
-val _address: Lens[Company , Address] = ...
-val _company: Lens[Employee, Company] = ...
+import monocle.Lens
+val name   : Lens[Street  , String]  = ???  // we'll see later how to build Lens
+val street : Lens[Address , Street]  = ???
+val address: Lens[Company , Address] = ???
+val company: Lens[Employee, Company] = ???
 
-(_company composeLens _address composeLens _street composeLens _name).modify(_.capitalize)(employee)
+(company composeLens address composeLens street composeLens name).modify(_.capitalize)(employee)
 
 // you can achieve the same result with less characters using symbolic syntax
-
-(_company ^|-> _address ^|-> _street ^|-> _name).modify(_.capitalize)(employee)
+import monocle.syntax.apply._
+(company ^|-> address ^|-> street ^|-> name).modify(_.capitalize)(employee)
 ```
 
 ComposeLens takes two `Lens`, one from A to B and another from B to C and creates a third `Lens` from A to C.
-Therefore, after composing _company, _address, _street and _name, we obtain a `Lens` from `Employee` to `String` (the street name).
+Therefore, after composing `company`, `address`, `street` and `name`, we obtain a `Lens` from `Employee` to `String` (the street name).
 
 #### More abstractions
 
@@ -106,14 +107,13 @@ object `A` and in our case, the first character of a `String` is optional as a `
 we need a sort of partial `Lens`, in Monocle it is called `Optional`.
 
 ```scala
-import monocle.function.headOption._ // to use headOption (a generic optic)
-import monocle.std.string._          // to get String instance for HeadOption
+import monocle.function.Cons.headOption // to use headOption (a generic optic)
+  import monocle.std.string._             // to get String instance for HeadOption
 
-
-(_company composeLens _address
-          composeLens _street
-          composeLens _name
-          composeOptional headOption).modify(toUpper)(employee)
+(company composeLens address
+  composeLens street
+  composeLens name
+  composeOptional headOption).modify(_.toUpper)(employee)
 ```
 
 Similarly to composeLens, composeOptional takes two `Optional`, one from A to B and another from B to C and
@@ -130,30 +130,27 @@ There are 3 ways to create `Lens`, each with their pro and cons:
 1.   The manual method where we construct a `Lens` by passing `get` and `set` functions:
      
      ```scala
-     val _company = Lens[Employee, Company](_.company)( c => e => e.copy(company = c))
+     import monocle.Lens
+     val company = Lens[Employee, Company](_.company)( c => e => e.copy(company = c))
      // or with some type inference
-     val _company = Lens((_: Employee).company)( c => e => e.copy(company = c))
+     val company = Lens((_: Employee).company)( c => e => e.copy(company = c))
      ```
 
 2.   The semi-automatic method using the `GenLens` blackbox macro:
 
      ```scala
-     val _company = GenLens[Employee](_.company)
-     val _name    = GenLens[Employee](_.name)
-     
-     // or
-     val genLens = GenLens[Employee]
-     val (_company, _name) = (genLens(_.company) , genLens(_.name))
+     import monocle.macros.GenLens
+     val company = GenLens[Employee](_.company)
      ```
 
 3.   Finally, the fully automatic method using the `@Lenses` macro annotation.
      `@Lenses` generates `Lens` for every accessor of a case class in its companion object (even if there is no companion object defined).
      This solution is the most boiler plate free but it has several disadvantages:
      1.   users need to add the macro paradise plugin to their project.
-     2.   poor IDE supports, at the moment only IntelliJ recognises the generated `Lens`.
-     3.   requires access to the case classes since you need to annotate them.
+     2.   requires access to the case classes since you need to annotate them.
      
      ```scala
+     import monocle.macros.Lenses
      @Lenses case class Employee(company: Company, name: String, ...)
      
      // generates Employee.company: Lens[Employee, Company]
@@ -211,9 +208,9 @@ A generic optic is an optic that is applicable to different types. For example, 
 some type `S` to its optional first element of type `A`. In order to use `headOption` (or any generic optics), you
 need to:
 
-1.   import the generic optic in your scope via `import monocle.function.headOption._` or `import monocle.function._`
-2.   have the required instance of the type class `monocle.HeadOption` in your scope, e.g. if you want to use `headOption` from
-     a `List[Int]`, you need an instance of `HeadOption[List[Int], Int]`. This instance can be either provided
+1.   import the generic optic in your scope via `import monocle.function.Cons.headOption._` or `import monocle.function.all._`
+2.   have the required instance of the type class `monocle.function.Cons` in your scope, e.g. if you want to use `headOption` from
+     a `List[Int]`, you need an instance of `Cons[List[Int], Int, List[Int]`. This instance can be either provided
      by you or by Monocle.
 
 Monocle defines generic optic instances in the following packages:
