@@ -22,9 +22,26 @@ Unsafe Optics are defined in the `unsafe` module.  This module contains the foll
 
 ## UnsafeSelect
 
-Cesar this section needs your help :)
+`UnsafeSelect` allows to create a `Prism` based on a predicate. Let's have a look at a simple example:
 
+```tut:silent
+case class Person(name: String, age: Int)
+```
 
+Using an `UnsafeSelect` we can select all `Person` with `age >= 18` and then use a `Lens` to modify their name:
+
+```tut:silent
+UnsafeSelect.unsafeSelect[Person](_.age >= 18) composeLens GenLens[Person](_.name).modify("Adult " + _)
+
+```
+
+This operator is considered unsafe because it allows for inconsistency if a `Lens` is then used to change one of the value used in the predicates. For example:
+
+```tut:silent
+UnsafeSelect.unsafeSelect[Person](_.age >= 18) composeLens GenLens[Person](_.age).set(0)
+```
+
+In this example the age is reset to `0` which invalidates the original predicate of `age >= 18`. More formally `UnsafeSelect` can invalidate the `roundTripOtherWayLaw` law.
 
 ## UnsafeHCompose
 
