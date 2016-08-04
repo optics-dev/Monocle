@@ -12,7 +12,9 @@ understand how these things work.
 Pull requests currently require one sign-off from Monocle maintainer 
 (which must be different from the pull request author). Community member 
 sign-offs are appreciated as votes of confidence but don't usually 
-count.
+count. Exceptionally, a pull request can be signed off by the same author
+if he is a maintainer and no other maintainer manifest themselves within a
+week after the pull request submission.
 
 When fixing typos, improving documentation or other minor changes 
 no sign-off is required if no Monocle maintainer comment on the pull 
