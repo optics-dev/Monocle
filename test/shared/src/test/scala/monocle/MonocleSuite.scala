@@ -3,7 +3,7 @@ package monocle
 import monocle.function.GenericOptics
 import monocle.generic.GenericInstances
 import monocle.refined.RefinedInstances
-import monocle.state.StateLensSyntax
+import monocle.state.{StateLensSyntax, StateOptionalSyntax}
 import monocle.std.StdInstances
 import monocle.syntax.Syntaxes
 import org.scalatest.{FunSuite, Matchers}
@@ -19,3 +19,4 @@ trait MonocleSuite extends FunSuite
                       with RefinedInstances
                       with Syntaxes
                       with StateLensSyntax
+                      with StateOptionalSyntax
