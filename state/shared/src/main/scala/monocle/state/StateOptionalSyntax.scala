@@ -19,10 +19,10 @@ final class StateOptionalOps[S, T, A, B](optional: POptional[S, T, A, B]) {
     toState
 
   /** modify the value viewed through the Optional and return its *old* value, if there was one */
-  def mod(f: A => B): IndexedState[S, T, Option[A]] =
+  def modo(f: A => B): IndexedState[S, T, Option[A]] =
     IndexedState(s => (optional.modify(f)(s), optional.getOption(s)))
 
   /** set the value viewed through the Optional and return its *old* value, if there was one */
-  def assign(b: B): IndexedState[S, T, Option[A]] = mod(_ => b)
+  def assigno(b: B): IndexedState[S, T, Option[A]] = modo(_ => b)
 
 }
