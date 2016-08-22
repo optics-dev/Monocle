@@ -195,8 +195,13 @@ lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
   .settings(moduleName := "monocle-bench")
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
+  .settings(
+    javaOptions in Jmh         ++= Seq("-server", "-Xms2G", "-Xmx2G", "-XX:+UseG1GC"),
+    javaOptions in (Test, run) ++= Seq("-server", "-Xms2G", "-Xmx2G", "-XX:+UseG1GC")
+  )
   .settings(libraryDependencies ++= Seq(
     shapeless.value,
+    "org.jfree" % "jfreechart" % "1.0.19",
     compilerPlugin(paradisePlugin)
   )).enablePlugins(JmhPlugin)
 

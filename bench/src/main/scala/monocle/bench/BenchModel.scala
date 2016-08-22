@@ -7,7 +7,9 @@ import scalaz.std.anyVal._
 
 object BenchModel {
 
-  def safeDivide(a: Int, b: Int): Maybe[Int] = if(b == 0) Maybe.empty else Maybe.just(a / b)
+  def halfEven(n: Int): Option[Int] =
+    if(n % 2 == 0) Some(n / 2)
+    else None
 
   case class Nested0(s: String, i: Int, n: Nested1, l: Long)
   case class Nested1(s: String, i: Int, n: Nested2, l: Long)

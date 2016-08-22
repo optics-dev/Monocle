@@ -14,3 +14,7 @@ target/
 project/project/
 benchData/
 _site/
+
+# bench output
+bench/*.csv
+bench/*.png
