@@ -216,7 +216,7 @@ lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM,
     libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
   )
 
-lazy val docs = project.dependsOn(coreJVM, example)
+lazy val docs = project.dependsOn(coreJVM, unsafeJVM, example)
   .settings(moduleName := "monocle-docs")
   .settings(monocleSettings)
   .settings(noPublishSettings)

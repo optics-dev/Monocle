@@ -16,6 +16,6 @@ Isomorphisms and Prisms essentially deal with the conversion between two types.
 ## Handle structured data
 -   [Lens](tut/lens.html)
 
-## Unsafe Optics
+## Unsafe module
 
-- [unsafe optics](tut/unsafe_optics.html)
+- [Unsafe module](tut/unsafe_module.html)
