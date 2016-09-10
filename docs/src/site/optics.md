@@ -18,4 +18,4 @@ Isomorphisms and Prisms essentially deal with the conversion between two types.
 
 ## Unsafe Optics
 
-- [unsafe optics](tut/unsafe_optics.html)
+- [unsafe module](tut/unsafe_module.html)
