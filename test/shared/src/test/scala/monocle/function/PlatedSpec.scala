@@ -57,4 +57,11 @@ class PlatedSpec extends MonocleSuite {
     }
   }
 
+  test("transform counting Stream using Option.bind returns count of changes the same as stream size") {
+    check { (xs: Stream[Int]) =>
+      transformCounting[Stream[Int]](Option(_))(xs) === ((xs.size, xs))
+    }
+  }
+
+
 }

@@ -43,9 +43,10 @@ class TreeExample extends MonocleSuite {
     universe(tree) shouldEqual Stream(tree, Leaf(2), Leaf(3))
   }
 
-  test("transformC transform Tree nodes counting number of changed nodes") {
-    transformC[Tree[Int]] {
-      case l@Leaf(3) => l.map(_ + 1)
+  test("transformCounting on Tree counts number of changed nodes") {
+    transformCounting[Tree[Int]] {
+      case l@Leaf(3) => Some(l.map(_ + 1))
+      case _ => None
     }(tree) shouldEqual ((1, Node(1, Stream(Leaf(2), Leaf(4)))))
   }
 

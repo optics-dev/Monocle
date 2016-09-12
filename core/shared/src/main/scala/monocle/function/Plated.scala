@@ -66,10 +66,12 @@ trait PlatedFunctions {
     l.modify(b => transformOf(l)(f)(f(b)))(a)
 
   /** transforming counting changes */
-  def transformC[A: Plated](pf: PartialFunction[A, A])(a: A): (Int, A) = {
-    transformM[A, State[Int, ?]](
-      pf.andThen(b => State((i: Int) => (i + 1, b)))
-        .applyOrElse(_, State.state))(a).runZero
+  def transformCounting[A: Plated](f: A => Option[A])(a: A): (Int, A) = {
+    transformM[A, State[Int, ?]] { b =>
+      f(b).map(c => State((i: Int) => (i + 1, c)))
+        .getOrElse(State.state(b))
+    }(a).runZero
+
   }
 
   /** transforming every element using monadic transformation */
