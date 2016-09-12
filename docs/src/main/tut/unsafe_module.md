@@ -7,11 +7,11 @@ pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/do
 
 # Intro
 
-The `unsafe` module contains `Optics` that cannot fully satisfy the set of `Optics` `Laws` of the `core` module.
+The `unsafe` module contains `Optics` that do not fully satisfy the set of `Optics` `Laws` of the `core` module.  
 
-While these "unsafe" `Optics` are still handy for many common use case, care must be taken by the user to avoid the "unlawful" usage as it is not enforced by the library.
+These `Optics` hence require additional care from the end user to avoid unlawful usages as those are not enforced by the library.
 
-The module currently defines only one `Optic`, `UnsafeSelect`, but more will added as required.
+The module currently defines one `Optic`, `UnsafeSelect`, but more will added as required.
 
 
 ## UnsafeSelect

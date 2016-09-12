@@ -251,16 +251,14 @@ object Traversal {
 
   /**
     * Composes N lenses horizontally.  Note that although it is possible to pass two or more lenses
-    * that point to the same `A`, in practice it is considered an unsafe usage of the method (see https://github.com/julien-truffaut/Monocle/issues/379#issuecomment-236374838).
+    * that point to the same `A`, in practice it considered an unsafe usage (see https://github.com/julien-truffaut/Monocle/issues/379#issuecomment-236374838).
     */
   def applyN[S, A](xs: Lens[S, A]*): Traversal[S, A] = {
-    val lenses = xs.toList
     new PTraversal[S, S, A, A] {
       def modifyF[F[_] : Applicative](f: A => F[A])(s: S): F[S] = {
-        val as: List[(F[A], Lens[S, A])] = lenses.map(lens => (f(lens.get(s)), lens))
-        as.foldLeft(Applicative[F].pure(s)) { case (fs, (fa, lens)) =>
-          Applicative[F].apply2(fa, fs)((a, s) => lens.set(a)(s))
-        }
+        xs.foldLeft(Applicative[F].pure(s))((fs, lens) =>
+          Applicative[F].apply2(f(lens.get(s)), fs)((a, s) => lens.set(a)(s))
+        )
       }
     }
   }

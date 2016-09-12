@@ -8,9 +8,7 @@ import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 import scalaz.Equal
 
-/**
-  * Created by Cesar on 16/07/2016.
-  */
+
 class UnsafeSelectSpec extends MonocleSuite with GeneratorDrivenPropertyChecks {
   /*
     This fails the "unsafe.Prism.round trip other way" test with value -1
