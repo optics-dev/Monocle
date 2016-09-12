@@ -3,7 +3,10 @@ package monocle.function
 import monocle.{Setter, Traversal}
 
 import scala.annotation.implicitNotFound
+import scalaz.{Monad, State}
 import scalaz.std.stream._
+import scalaz.syntax.monad._
+import scalaz.std.anyVal._
 
 /**
   * [[Plated]] is a type-class for types which can extract their immediate
@@ -61,5 +64,22 @@ trait PlatedFunctions {
   /** transform every element by applying a [[Setter]] */
   def transformOf[A](l: Setter[A, A])(f: A => A)(a: A): A =
     l.modify(b => transformOf(l)(f)(f(b)))(a)
+
+  /** transforming counting changes */
+  def transformCounting[A: Plated](f: A => Option[A])(a: A): (Int, A) = {
+    transformM[A, State[Int, ?]] { b =>
+      f(b).map(c => State((i: Int) => (i + 1, c)))
+        .getOrElse(State.state(b))
+    }(a).runZero
+
+  }
+
+  /** transforming every element using monadic transformation */
+  def transformM[A: Plated, M[_]: Monad](f: A => M[A])(a: A): M[A] = {
+    val l = plate[A]
+    def go(c: A): M[A] =
+      l.modifyF[M](b => f(b).flatMap(go))(c)
+    go(a)
+  }
 
 }

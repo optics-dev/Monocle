@@ -3,6 +3,7 @@ package monocle.std
 import monocle.MonocleSuite
 
 import scalaz.Tree._
+import scalaz.Tree
 
 class TreeExample extends MonocleSuite {
 
@@ -40,6 +41,13 @@ class TreeExample extends MonocleSuite {
 
   test("Plated universe gives us a stream of all Node") {
     universe(tree) shouldEqual Stream(tree, Leaf(2), Leaf(3))
+  }
+
+  test("transformCounting on Tree counts number of changed nodes") {
+    transformCounting[Tree[Int]] {
+      case l@Leaf(3) => Some(l.map(_ + 1))
+      case _ => None
+    }(tree) shouldEqual ((1, Node(1, Stream(Leaf(2), Leaf(4)))))
   }
 
 }
