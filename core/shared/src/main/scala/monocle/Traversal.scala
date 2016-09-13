@@ -248,6 +248,20 @@ object Traversal {
 
   def apply6[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(set: (A, A, A, A, A, A, S) => S): Traversal[S, A] =
     PTraversal.apply6(get1, get2, get3, get4, get5, get6)(set)
+
+  /**
+    * Composes N lenses horizontally.  Note that although it is possible to pass two or more lenses
+    * that point to the same `A`, in practice it considered an unsafe usage (see https://github.com/julien-truffaut/Monocle/issues/379#issuecomment-236374838).
+    */
+  def applyN[S, A](xs: Lens[S, A]*): Traversal[S, A] = {
+    new PTraversal[S, S, A, A] {
+      def modifyF[F[_] : Applicative](f: A => F[A])(s: S): F[S] = {
+        xs.foldLeft(Applicative[F].pure(s))((fs, lens) =>
+          Applicative[F].apply2(f(lens.get(s)), fs)((a, s) => lens.set(a)(s))
+        )
+      }
+    }
+  }
 }
 
 sealed abstract class TraversalInstances {
