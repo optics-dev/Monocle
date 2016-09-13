@@ -52,6 +52,14 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** reverse a [[PIso]]: the source becomes the target and the target becomes the source */
   def reverse: PIso[B, A, T, S]
 
+  /** lift a [[PIso]] to a Functor level */
+  def mapping[F[_] : Functor]: PIso[F[S], F[T], F[A], F[B]] =
+    PIso[F[S], F[T], F[A], F[B]] { fs =>
+      Functor[F].map(fs)(self.get)
+    } { fb =>
+      Functor[F].map(fb)(self.reverseGet)
+    }
+
   /** modify polymorphically the target of a [[PIso]] with a Functor function */
   @inline final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
     Functor[F].map(f(get(s)))(reverseGet)
