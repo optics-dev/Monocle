@@ -31,12 +31,4 @@ case class IsoLaws[S, A](iso: Iso[S, A]) {
   def consistentGetModifyId(s: S): IsEq[A] =
     iso.get(s) <==> iso.modifyF[Const[A, ?]](Const(_))(s).getConst
 
-  def consistentSetMapping(s: S, a: A): IsEq[S] =
-    id.point(iso.set(a)(s)) <==> iso.mapping[Id].modify(_ => a)(s)
-
-  def consistentModifyMappingId(s: S, f: A => A): IsEq[S] =
-    id.point(iso.modify(f)(s)) <==> iso.mapping[Id].modifyF(a => id.point(f(a)))(s)
-
-  def consistentGetMappingId(s: S): IsEq[A] =
-    id.point(iso.get(s)) <==> iso.mapping[Id].get(s)
 }

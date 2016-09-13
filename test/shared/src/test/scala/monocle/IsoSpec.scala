@@ -77,6 +77,13 @@ class IsoSpec extends MonocleSuite {
     Split[Iso].split(iso, iso.reverse).get((IntWrapper(3), 3)) shouldEqual ((3, IntWrapper(3)))
   }
 
+  test("mapping") {
+    import scalaz.Id._
+
+    iso.mapping[Id].get(id.point(IntWrapper(3))) shouldEqual id.point(3)
+    iso.mapping[Id].reverseGet(id.point(3)) shouldEqual id.point(IntWrapper(3))
+  }
+
   test("apply") {
     _nullary() shouldEqual Nullary()
     _unary(3) shouldEqual Unary(3)
