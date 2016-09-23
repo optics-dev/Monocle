@@ -74,7 +74,6 @@ class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
 
     c.Expr[Iso[S, A]](q"""
       import monocle.Iso
-      import scalaz.Functor
 
       new Iso[$sTpe, $aTpe]{ self =>
         def get(s: $sTpe): $aTpe =
