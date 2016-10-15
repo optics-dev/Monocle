@@ -54,20 +54,11 @@ lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.0" 
 lazy val macroCompat = Def.setting("org.typelevel" %%% "macro-compat" % "1.1.0")
 
 lazy val macroVersion = "2.1.0"
-lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
-
-lazy val kindProjector = "org.spire-math" % "kind-projector" % "0.9.0" cross CrossVersion.binary
+lazy val paradisePlugin = "org.scalamacros" %  "paradise"      % macroVersion cross CrossVersion.full
+lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.0" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.2.0"),
-  binaryIssueFilters ++= Seq(
-    exclude[MissingMethodProblem]("monocle.std.DoubleOptics.monocle$std$DoubleOptics$_setter_$doubleToFloat_="),
-    exclude[MissingMethodProblem]("monocle.std.DoubleOptics.doubleToFloat"),
-    exclude[MissingMethodProblem]("monocle.function.AtFunctions.remove"),
-    exclude[MissingMethodProblem]("monocle.generic.ProductOptics.hNilEach"),
-    exclude[MissingMethodProblem]("monocle.generic.ProductOptics.hConsEach"),
-    exclude[MissingMethodProblem]("monocle.generic.ProductOptics.productEach")
-  )
+  previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.3.0")
 )
 
 lazy val tagName = Def.setting(

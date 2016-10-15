@@ -35,11 +35,6 @@ trait ConsFunctions {
   final def headOption[S, A](implicit ev: Cons[S, A]): Optional[S, A] = ev.headOption
   final def tailOption[S, A](implicit ev: Cons[S, A]): Optional[S, S] = ev.tailOption
 
-  @deprecated("use headOption", since = "1.1.0")
-  final def headMaybe[S, A](implicit ev: Cons[S, A]): Optional[S, A] = ev.headOption
-  @deprecated("use tailOption", since = "1.1.0")
-  final def tailMaybe[S, A](implicit ev: Cons[S, A]): Optional[S, S] = ev.tailOption
-
   /** append an element to the head */
   final def _cons[S, A](head: A, tail: S)(implicit ev: Cons[S, A]): S =
     ev.cons.reverseGet((head, tail))
