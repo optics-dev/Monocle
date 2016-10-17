@@ -10,7 +10,7 @@ section: "release_note"
 
 ### Addition
 
--   new `unsafe` module with `select` [#394](https://github.com/julien-truffaut/Monocle/pull/394) (thanks to [cesartl](https://github.com/cesartl))
+-   add `unsafe` module with `select` [#394](https://github.com/julien-truffaut/Monocle/pull/394) (thanks to [cesartl](https://github.com/cesartl))
 -   refactor optics laws to use random functions [#357](https://github.com/julien-truffaut/Monocle/pull/357)
 -   add `Wrapped` typeclass [#365](https://github.com/julien-truffaut/Monocle/pull/394) (thanks to [puffnfresh](https://github.com/puffnfresh))
 -   add `State` syntax for `Optional` [#387](https://github.com/julien-truffaut/Monocle/pull/387) (thanks to [cb372](https://github.com/cb372))
@@ -26,9 +26,9 @@ section: "release_note"
 
 | dependencies  | monocle 1.2.2 | monocle 1.3.0 |
 | ------------- | -------------:| -------------:|
-|        scalaz |         7.2.1 |         7.2.6 |
-|     shapeless |         2.3.0 |         2.3.2 |
-|       refined |         0.3.7 |         0.5.0 |
+|        scalaz |         7.2.2 |         7.2.6 |
+|     shapeless |         2.2.5 |         2.3.2 |
+|       refined |         0.3.2 |         0.5.0 |
 |    discipline |           0.4 |           0.7 |
 
 # 1.2.2
