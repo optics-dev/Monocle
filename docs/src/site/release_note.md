@@ -4,6 +4,33 @@ title:  "Release Note"
 section: "release_note"
 ---
 
+# 1.3.0
+
+> 17 October 2016
+
+### Addition
+
+-   new `unsafe` module with `select` [#394](https://github.com/julien-truffaut/Monocle/pull/394) (thanks to [cesartl](https://github.com/cesartl))
+-   refactor optics laws to use random functions [#357](https://github.com/julien-truffaut/Monocle/pull/357)
+-   add `Wrapped` typeclass [#365](https://github.com/julien-truffaut/Monocle/pull/394) (thanks to [puffnfresh](https://github.com/puffnfresh))
+-   add `State` syntax for `Optional` [#387](https://github.com/julien-truffaut/Monocle/pull/387) (thanks to [cb372](https://github.com/cb372))
+-   add `transformM` and `transformCounting` to `Plated` [#391](https://github.com/julien-truffaut/Monocle/pull/391) (thanks to [arkadius](https://github.com/arkadius))
+-   add `applyN` for `Traversal` [#379](https://github.com/julien-truffaut/Monocle/pull/379) (thanks to [jule64](https://github.com/jule64)) 
+-   add `mapping` [#396](https://github.com/julien-truffaut/Monocle/pull/396) (thanks to [mdulac](https://github.com/mdulac)) 
+
+### Deprecation
+
+-   remove all deprecated elements from 1.1 e.g. (`Lenser`, `headMaybe`, `getMaybe`, `setMaybe`, `modifyMaybe`) ([see](https://github.com/julien-truffaut/Monocle/commit/ff65c967096e7c1243119075ba35e46f12728f71))
+
+### Upgrades
+
+| dependencies  | monocle 1.2.2 | monocle 1.3.0 |
+| ------------- | -------------:| -------------:|
+|        scalaz |         7.2.1 |         7.2.6 |
+|     shapeless |         2.3.0 |         2.3.2 |
+|       refined |         0.3.7 |         0.5.0 |
+|    discipline |           0.4 |           0.7 |
+
 # 1.2.2
 
 > 9 June 2016
