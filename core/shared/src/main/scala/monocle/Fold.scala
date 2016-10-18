@@ -76,10 +76,6 @@ abstract class Fold[S, A] extends Serializable { self =>
   @inline final def sum[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
     choice(other)
 
-  @deprecated("use headOption", since = "1.1.0")
-  @inline final def headMaybe(s: S): Maybe[A] =
-    find(_ => true)(s).toMaybe
-
   /** calculate the number of targets */
   @inline final def length(s: S): Int =
     foldMap(_ => 1)(s)

@@ -42,33 +42,23 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.3.0-M3")
-lazy val shapeless  = Def.setting("com.chuusai"     %%% "shapeless"   % "2.3.0")
+lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.2.6")
+lazy val shapeless  = Def.setting("com.chuusai"     %%% "shapeless"   % "2.3.2")
 
-lazy val refinedVersion = "0.4.0"
-lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % refinedVersion)
+lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % "0.5.0")
 
-lazy val discipline = Def.setting("org.typelevel"   %%% "discipline"  % "0.5")
-lazy val scalacheck = Def.setting("org.scalacheck"  %%% "scalacheck" % "1.13.2")
-lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.0-M16-SNAP4"  % "test")
+lazy val discipline = Def.setting("org.typelevel"   %%% "discipline"  % "0.7")
+lazy val scalacheck = Def.setting("org.scalacheck"  %%% "scalacheck"  % "1.13.2")
+lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.0"  % "test")
 
 lazy val macroCompat = Def.setting("org.typelevel" %%% "macro-compat" % "1.1.0")
 
 lazy val macroVersion = "2.1.0"
-lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise"       % macroVersion cross CrossVersion.full)
-
-lazy val kindProjector = "org.spire-math" % "kind-projector" % "0.7.1" cross CrossVersion.binary
+lazy val paradisePlugin = "org.scalamacros" %  "paradise"      % macroVersion cross CrossVersion.full
+lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.0" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.2.0"),
-  binaryIssueFilters ++= Seq(
-    exclude[MissingMethodProblem]("monocle.std.DoubleOptics.monocle$std$DoubleOptics$_setter_$doubleToFloat_="),
-    exclude[MissingMethodProblem]("monocle.std.DoubleOptics.doubleToFloat"),
-    exclude[MissingMethodProblem]("monocle.function.AtFunctions.remove"),
-    exclude[MissingMethodProblem]("monocle.generic.ProductOptics.hNilEach"),
-    exclude[MissingMethodProblem]("monocle.generic.ProductOptics.hConsEach"),
-    exclude[MissingMethodProblem]("monocle.generic.ProductOptics.productEach")
-  )
+  previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.3.0")
 )
 
 lazy val tagName = Def.setting(

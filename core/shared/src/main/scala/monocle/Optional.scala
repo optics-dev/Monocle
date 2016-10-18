@@ -86,18 +86,6 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   @inline final def sum[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
     choice(other)
 
-  @deprecated("use getOption", since = "1.1.0")
-  @inline final def getMaybe(s: S): Maybe[A] =
-    getOption(s).toMaybe
-
-  @deprecated("use modifyOption", since = "1.1.0")
-  @inline final def modifyMaybe(f: A => B): S => Maybe[T] =
-    s => modifyOption(f)(s).toMaybe
-
-  @deprecated("use setOption", since = "1.1.0")
-  @inline final def setMaybe(b: B): S => Maybe[T] =
-    s => setOption(b)(s).toMaybe
-
   /***************************************************************/
   /** Compose methods between a [[POptional]] and another Optics */
   /***************************************************************/
