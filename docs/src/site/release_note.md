@@ -6,7 +6,7 @@ section: "release_note"
 
 # 1.3.0
 
-> 17 October 2016
+> 18 October 2016
 
 ### Addition
 
