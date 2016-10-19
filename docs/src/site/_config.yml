@@ -1,5 +1,8 @@
 name: Monocle documentation
 markdown: redcarpet
+redcarpet:
+  extensions:
+    - tables
 highlighter: pygments
 baseurl: /Monocle/
 apidocs: /Monocle/api/
