@@ -27,7 +27,7 @@ or you can import all typeclass based optics with
 import monocle.function.all._
 ```
 
-Now, if you try to use to use `headOption` you will see the following error:
+Now, if you try to use `headOption` you will see the following error:
 
 ```scala
 case class Foo(s: String, is: List[Int])
