@@ -75,7 +75,6 @@ lazy val scalajsSettings = Seq(
     val g = "https://raw.githubusercontent.com/julien-truffaut/Monocle"
     s"-P:scalajs:mapSourceURI:$a->$g/$s/"
   },
-  scalaJSUseRhino := false,
   requiresDOM := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck,
                            "-maxSize", "8",
