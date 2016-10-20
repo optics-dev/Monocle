@@ -114,7 +114,7 @@ lazy val coreJVM = core.jvm
 lazy val coreJS  = core.js
 lazy val core    = crossProject
   .settings(moduleName := "monocle-core")
-  .configure(monocleCrossSettings)
+  .configureCross(monocleCrossSettings)
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies += scalaz.value)
   .jvmSettings(
@@ -127,7 +127,7 @@ lazy val genericJVM = generic.jvm
 lazy val genericJS  = generic.js
 lazy val generic    = crossProject.dependsOn(core)
   .settings(moduleName := "monocle-generic")
-  .configure(monocleCrossSettings)
+  .configureCross(monocleCrossSettings)
   .jvmSettings(mimaSettings("generic"): _*)
   .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
 
@@ -135,14 +135,14 @@ lazy val refinedJVM = refined.jvm
 lazy val refinedJS  = refined.js
 lazy val refined    = crossProject.dependsOn(core)
   .settings(moduleName := "monocle-refined")
-  .configure(monocleCrossSettings)
+  .configureCross(monocleCrossSettings)
   .settings(libraryDependencies ++= Seq(scalaz.value, refinedDep.value))
 
 lazy val lawJVM = law.jvm
 lazy val lawJS  = law.js
 lazy val law    = crossProject.dependsOn(core)
   .settings(moduleName := "monocle-law")
-  .configure(monocleCrossSettings)
+  .configureCross(monocleCrossSettings)
   .settings(libraryDependencies ++= Seq(discipline.value, scalacheck.value))
 
 lazy val macrosJVM = macros.jvm
@@ -150,7 +150,7 @@ lazy val macrosJS  = macros.js
 lazy val macros    = crossProject.dependsOn(core)
   .in(file("macro"))
   .settings(moduleName := "monocle-macro")
-  .configure(monocleCrossSettings)
+  .configureCross(monocleCrossSettings)
   .settings(
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= Seq(
@@ -169,14 +169,14 @@ lazy val stateJVM = state.jvm
 lazy val stateJS  = state.js
 lazy val state    = crossProject.dependsOn(core)
   .settings(moduleName := "monocle-state")
-  .configure(monocleCrossSettings)
+  .configureCross(monocleCrossSettings)
   .settings(libraryDependencies ++= Seq(scalaz.value))
 
 lazy val unsafeJVM = unsafe.jvm
 lazy val unsafeJS  = unsafe.js
 lazy val unsafe    = crossProject.dependsOn(core)
   .settings(moduleName := "monocle-unsafe")
-  .configure(monocleCrossSettings)
+  .configureCross(monocleCrossSettings)
   .jvmSettings(mimaSettings("unsafe"): _*)
   .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
 
@@ -184,7 +184,7 @@ lazy val testJVM = test.jvm
 lazy val testJS  = test.js
 lazy val test    = crossProject.dependsOn(core, generic, macros, law, state, refined, unsafe)
   .settings(moduleName := "monocle-test")
-  .configure(monocleCrossSettings)
+  .configureCross(monocleCrossSettings)
   .settings(noPublishSettings: _*)
   .settings(
     libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
