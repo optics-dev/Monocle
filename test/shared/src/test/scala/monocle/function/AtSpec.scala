@@ -15,7 +15,8 @@ class AtSpec extends MonocleSuite with GeneratorDrivenPropertyChecks {
 
     val mapAndIndexGen: Gen[(Map[Int, String], Int)] = for {
       m <- Arbitrary.arbitrary[Map[Int, String]]
-      i <- Gen.frequency(
+      i <- if(m.isEmpty) Arbitrary.arbInt.arbitrary
+      else Gen.frequency(
         (8, Gen.oneOf(m.keys.toList)),
         (2, Arbitrary.arbInt.arbitrary))
     } yield (m, i)
