@@ -111,10 +111,10 @@ class GenIsoImplW(override val c: whitebox.Context) extends GenIsoImplBase {
         case NullaryMethodType(t) => t
         case t                    => t
       }
-    // The pattern-match here is for Scala 2.10
+
     val a = s.asTerm.name match {
-      case n@ TermName(_) => n
-      case n@ TypeName(_) => fail("Expected a TermName, got " + n)
+      case n: TermName => n
+      case n: TypeName => fail("Expected a TermName, got " + n)
     }
     val A = paramType(a)
     (a, A)

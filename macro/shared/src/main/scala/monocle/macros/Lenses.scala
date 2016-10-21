@@ -55,7 +55,7 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
       } else {
         // number of fields in which each tparam is used
         val tparamsUsages: Map[TypeName, Int] = params.foldLeft(tparams.map { _.name -> 0 }.toMap){ (acc, param) =>
-          val typeNames = param.collect{ case Ident(tn@TypeName(_)) => tn }.toSet
+          val typeNames = param.collect{ case Ident(tn: TypeName) => tn }.toSet
           typeNames.foldLeft(acc){ (map, key) => map.get(key).fold(map){ value => map.updated(key, value + 1) }}
         }
 
@@ -66,7 +66,7 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
 
         params.map { param =>
           val lensName = TermName(prefix + param.name.decodedName)
-          val tpnames = param.collect{ case Ident(tn@TypeName(_)) => tn }.toSet
+          val tpnames = param.collect{ case Ident(tn: TypeName) => tn }.toSet
           val tpnamesToChange = tpnames.intersect(singleFieldTpnames) ++ phantomTpnames
           val tpnamesMap = tpnamesToChange.foldLeft((tparams.map(_.name).toSet ++ tpnames).map(x => (x, x)).toMap){ (acc, tpname) =>
             acc.updated(tpname, c.freshName(tpname))
@@ -77,7 +77,7 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
 
           object tptTransformer extends Transformer {
             override def transform(tree: Tree): Tree = tree match {
-              case Ident(tn@TypeName(_)) => Ident(tpnamesMap(tn))
+              case Ident(tn: TypeName) => Ident(tpnamesMap(tn))
               case x => super.transform(x)
             }
           }

@@ -11,8 +11,8 @@ import sbtunidoc.Plugin.UnidocKeys._
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
-  scalaVersion       := "2.11.8",
-  crossScalaVersions := Seq("2.10.6", "2.11.8"),
+  scalaVersion       := "2.12.0-RC2",
+  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-RC2"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -20,18 +20,19 @@ lazy val buildSettings = Seq(
     "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
     "-unchecked",
     "-Xfatal-warnings",
-    "-Yinline-warnings",
     "-Yno-adapted-args",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
     "-Xfuture"
   ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2,10)) => Seq("-Yno-generic-signatures") // no generic signatures for scala 2.10.x, see SI-7932, #571 and #828
-    case _ => Seq( // https://github.com/scala/make-release-notes/blob/9cfbdc8c92f94/experimental-backend.md#emitting-java-8-style-lambdas
+    case Some((2, 10)) => Seq("-Yno-generic-signatures") // no generic signatures for scala 2.10.x, see SI-7932, #571 and #828
+    case Some((2, 11)) => Seq( // https://github.com/scala/make-release-notes/blob/9cfbdc8c92f94/experimental-backend.md#emitting-java-8-style-lambdas
       "-Ybackend:GenBCode",
       "-Ydelambdafy:method",
       "-target:jvm-1.8"
     )
+    case Some((2, 12)) => Seq("-Ydelambdafy:method", "-target:jvm-1.8")
+    case _ => Seq()
   }),
   addCompilerPlugin(kindProjector),
   resolvers ++= Seq(
@@ -47,15 +48,15 @@ lazy val shapeless  = Def.setting("com.chuusai"     %%% "shapeless"   % "2.3.2")
 
 lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % "0.5.0")
 
-lazy val discipline = Def.setting("org.typelevel"   %%% "discipline"  % "0.7")
-lazy val scalacheck = Def.setting("org.scalacheck"  %%% "scalacheck"  % "1.13.2")
+lazy val discipline = Def.setting("org.typelevel"   %%% "discipline"  % "0.7.1")
+lazy val scalacheck = Def.setting("org.scalacheck"  %%% "scalacheck"  % "1.13.3")
 lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.0"  % "test")
 
-lazy val macroCompat = Def.setting("org.typelevel" %%% "macro-compat" % "1.1.0")
+lazy val macroCompat = Def.setting("org.typelevel" %%% "macro-compat" % "1.1.1")
 
 lazy val macroVersion = "2.1.0"
 lazy val paradisePlugin = "org.scalamacros" %  "paradise"      % macroVersion cross CrossVersion.full
-lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.0" cross CrossVersion.binary
+lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.2" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.3.0")
