@@ -1,44 +1,383 @@
 <!DOCTYPE html >
 <html>
         <head>
-          <title>POptional - monocle.POptional</title>
-          <meta name="description" content="POptional - monocle.POptional" />
-          <meta name="keywords" content="POptional monocle.POptional" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <title></title>
+          <meta name="description" content="" />
+          <meta name="keywords" content="" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
+      <link href="../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
-      <script type="text/javascript" src="../lib/jquery.js" id="jquery-js"></script>
-      <script type="text/javascript" src="../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../lib/jquery.js"></script>
+      <script type="text/javascript" src="../lib/jquery.panzoom.min.js"></script>
+      <script type="text/javascript" src="../lib/jquery.mousewheel.min.js"></script>
+      <script type="text/javascript" src="../lib/index.js"></script>
+      <script type="text/javascript" src="../index.js"></script>
+      <script type="text/javascript" src="../lib/scheduler.js"></script>
       <script type="text/javascript" src="../lib/template.js"></script>
       <script type="text/javascript" src="../lib/tools.tooltip.js"></script>
       
       <script type="text/javascript">
-         if(top === self) {
-            var url = '../index.html';
-            var hash = 'monocle.POptional';
-            var anchor = window.location.hash;
-            var anchor_opt = '';
-            if (anchor.length >= 1)
-              anchor_opt = '@' + anchor.substring(1);
-            window.location.href = url + '#' + hash + anchor_opt;
-         }
-   	  </script>
+        /* this variable can be used by the JS to determine the path to the root document */
+        var toRoot = '../';
+      </script>
     
         </head>
-        <body class="type">
-      <div id="definition">
-        <a href="POptional$.html" title="See companion object"><img alt="Class/Object" src="../lib/class_to_object_big.png" /></a>
-        <p id="owner"><a href="package.html" class="extype" name="monocle">monocle</a></p>
-        <h1><a href="POptional$.html" title="See companion object">POptional</a></h1><h3><span class="morelinks"><div>
-            Related Docs:
-            <a href="POptional$.html" title="See companion object">object POptional</a>
-            | <a href="package.html" class="extype" name="monocle">package monocle</a>
-          </div></span></h3><span class="permalink">
-      <a href="../index.html#monocle.POptional" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+        <body>
+      <div id="search">
+        <span id="doc-title"><span id="doc-version"></span></span>
+        <span class="close-results"><span class="left">&lt;</span> Back</span>
+        <div id="textfilter">
+          <span class="input">
+            <input autocapitalize="none" placeholder="Search" id="index-input" type="text" accesskey="/" />
+            <i class="clear material-icons"></i>
+            <i id="search-icon" class="material-icons"></i>
+          </span>
+        </div>
+    </div>
+      <div id="search-results">
+        <div id="search-progress">
+          <div id="progress-fill"></div>
+        </div>
+        <div id="results-content">
+          <div id="entity-results"></div>
+          <div id="member-results"></div>
+        </div>
+      </div>
+      <div id="content-scroll-container" style="-webkit-overflow-scrolling: touch;">
+        <div id="content-container" style="-webkit-overflow-scrolling: touch;">
+          <div id="subpackage-spacer">
+            <div id="packages">
+              <h1>Packages</h1>
+              <ul>
+                <li name="_root_.root" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="_root_"></a><a id="root:_root_"></a>
+      <span class="permalink">
+      <a href="index.html#_root_" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../index.html">
+              <span class="name">root</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="_root_.monocle" visbl="pub" class="indented1 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="monocle"></a><a id="monocle:monocle"></a>
+      <span class="permalink">
+      <a href="index.html#monocle" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="index.html">
+              <span class="name">monocle</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="monocle.function" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="function"></a><a id="function:function"></a>
+      <span class="permalink">
+      <a href="../monocle/index.html#function" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="function/index.html">
+              <span class="name">function</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="monocle">monocle</a></dd></dl></div>
+    </li><li name="monocle.internal" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="internal"></a><a id="internal:internal"></a>
+      <span class="permalink">
+      <a href="../monocle/index.html#internal" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="internal/index.html">
+              <span class="name">internal</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="monocle">monocle</a></dd></dl></div>
+    </li><li name="monocle.law" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="law"></a><a id="law:law"></a>
+      <span class="permalink">
+      <a href="../monocle/index.html#law" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="law/index.html">
+              <span class="name">law</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="monocle">monocle</a></dd></dl></div>
+    </li><li name="monocle.std" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="std"></a><a id="std:std"></a>
+      <span class="permalink">
+      <a href="../monocle/index.html#std" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="std/index.html">
+              <span class="name">std</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="monocle">monocle</a></dd></dl></div>
+    </li><li name="monocle.syntax" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="syntax"></a><a id="syntax:syntax"></a>
+      <span class="permalink">
+      <a href="../monocle/index.html#syntax" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="syntax/index.html">
+              <span class="name">syntax</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="monocle">monocle</a></dd></dl></div>
+    </li><li class="current-entities indented1">
+                        <a class="object" href="Fold$.html" title=""></a>
+                        <a class="class" href="Fold.html" title="A Fold can be seen as a Getter with many targets or
+a weaker PTraversal which cannot modify its target."></a>
+                        <a href="Fold.html" title="A Fold can be seen as a Getter with many targets or
+a weaker PTraversal which cannot modify its target.">
+                          Fold
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="FoldInstances.html" title=""></a>
+                        <a href="FoldInstances.html" title="">
+                          FoldInstances
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="Getter$.html" title=""></a>
+                        <a class="class" href="Getter.html" title="A Getter can be seen as a glorified get method between
+a type S and a type A."></a>
+                        <a href="Getter.html" title="A Getter can be seen as a glorified get method between
+a type S and a type A.">
+                          Getter
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="GetterInstances.html" title=""></a>
+                        <a href="GetterInstances.html" title="">
+                          GetterInstances
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="GetterInstances0.html" title=""></a>
+                        <a href="GetterInstances0.html" title="">
+                          GetterInstances0
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="object" href="Iso$.html" title=""></a>
+                        <a href="Iso$.html" title="">
+                          Iso
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="IsoInstances.html" title=""></a>
+                        <a href="IsoInstances.html" title="">
+                          IsoInstances
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="IsoInstances0.html" title=""></a>
+                        <a href="IsoInstances0.html" title="">
+                          IsoInstances0
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="object" href="Lens$.html" title=""></a>
+                        <a href="Lens$.html" title="">
+                          Lens
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="LensInstances.html" title=""></a>
+                        <a href="LensInstances.html" title="">
+                          LensInstances
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="LensInstances0.html" title=""></a>
+                        <a href="LensInstances0.html" title="">
+                          LensInstances0
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="object" href="Monocle$.html" title=""></a>
+                        <a href="Monocle$.html" title="">
+                          Monocle
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="object" href="Optional$.html" title=""></a>
+                        <a href="Optional$.html" title="">
+                          Optional
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="OptionalInstances.html" title=""></a>
+                        <a href="OptionalInstances.html" title="">
+                          OptionalInstances
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="PIso$.html" title=""></a>
+                        <a class="class" href="PIso.html" title="A PIso defines an isomorphism between types S, A and B, T:
+HtmlTag(&lt;pre&gt;
+             get                           reverse.get
+    --------------------&gt;             --------------------&gt;
+  S                       A         T                       B
+    &lt;--------------------             &lt;--------------------
+      reverse.reverseGet                   reverseGet
+&lt;/pre&gt;)HtmlTag(&lt;/pre&gt;)"></a>
+                        <a href="PIso.html" title="A PIso defines an isomorphism between types S, A and B, T:
+HtmlTag(&lt;pre&gt;
+             get                           reverse.get
+    --------------------&gt;             --------------------&gt;
+  S                       A         T                       B
+    &lt;--------------------             &lt;--------------------
+      reverse.reverseGet                   reverseGet
+&lt;/pre&gt;)HtmlTag(&lt;/pre&gt;)">
+                          PIso
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="PLens$.html" title=""></a>
+                        <a class="class" href="PLens.html" title="A PLens can be seen as a pair of functions:"></a>
+                        <a href="PLens.html" title="A PLens can be seen as a pair of functions:">
+                          PLens
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="POptional$.html" title=""></a>
+                        <a class="class" href="" title="A POptional can be seen as a pair of functions:"></a>
+                        <a href="" title="A POptional can be seen as a pair of functions:">
+                          POptional
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="PPrism$.html" title=""></a>
+                        <a class="class" href="PPrism.html" title="A PPrism can be seen as a pair of functions:"></a>
+                        <a href="PPrism.html" title="A PPrism can be seen as a pair of functions:">
+                          PPrism
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="PSetter$.html" title=""></a>
+                        <a class="class" href="PSetter.html" title="A PSetter is a generalisation of Functor map:"></a>
+                        <a href="PSetter.html" title="A PSetter is a generalisation of Functor map:">
+                          PSetter
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="PTraversal$.html" title=""></a>
+                        <a class="class" href="PTraversal.html" title="A PTraversal can be seen as a POptional generalised to 0 to n targets
+where n can be infinite."></a>
+                        <a href="PTraversal.html" title="A PTraversal can be seen as a POptional generalised to 0 to n targets
+where n can be infinite.">
+                          PTraversal
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="object" href="Prism$.html" title=""></a>
+                        <a href="Prism$.html" title="">
+                          Prism
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="PrismInstances.html" title=""></a>
+                        <a href="PrismInstances.html" title="">
+                          PrismInstances
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="PrismSyntax.html" title=""></a>
+                        <a href="PrismSyntax.html" title="">
+                          PrismSyntax
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="object" href="Setter$.html" title=""></a>
+                        <a href="Setter$.html" title="">
+                          Setter
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="SetterInstances.html" title=""></a>
+                        <a href="SetterInstances.html" title="">
+                          SetterInstances
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="object" href="Traversal$.html" title=""></a>
+                        <a href="Traversal$.html" title="">
+                          Traversal
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="TraversalInstances.html" title=""></a>
+                        <a href="TraversalInstances.html" title="">
+                          TraversalInstances
+                        </a>
+                      </li>
+              </ul>
+            </div>
+          </div>
+          <div id="content">
+            <body class="class type">
+      <div id="definition">
+        <a href="POptional$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
+        <p id="owner"><a href="index.html" class="extype" name="monocle">monocle</a></p>
+        <h1><a href="POptional$.html" title="See companion object">POptional</a><span class="permalink">
+      <a href="../monocle/POptional.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span></h1>
+        <h3><span class="morelinks"><div>
+            Companion <a href="POptional$.html" title="See companion object">object POptional</a>
+          </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
@@ -47,56 +386,71 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">POptional</span><span class="tparams">[<span name="S">S</span>, <span name="T">T</span>, <span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <span class="name">POptional</span><span class="tparams">[<span name="S">S</span>, <span name="T">T</span>, <span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4>
+
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <a href="" class="extype" name="monocle.POptional">POptional</a> can be seen as a pair of functions:</p><ul><li><code>getOrModify: S      =&gt; T \/ A</code></li><li><code>set        : (B, S) =&gt; T</code></li></ul><p>A <a href="" class="extype" name="monocle.POptional">POptional</a> could also be defined as a weaker <a href="PLens.html" class="extype" name="monocle.PLens">PLens</a> and
 weaker <a href="PPrism.html" class="extype" name="monocle.PPrism">PPrism</a></p><p><a href="" class="extype" name="monocle.POptional">POptional</a> stands for Polymorphic Optional as it set and modify methods change
 a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
-<a href="package.html#Optional[S,A]=monocle.POptional[S,S,A,A]" class="extmbr" name="monocle.Optional">Optional</a> is a type alias for <a href="" class="extype" name="monocle.POptional">POptional</a> restricted to monomorphic updates:</p><pre><span class="kw">type</span> Optional[S, A] = POptional[S, S, A, A]</pre></div><dl class="paramcmts block"><dt class="tparam">S</dt><dd class="cmt"><p>the source of a <a href="" class="extype" name="monocle.POptional">POptional</a></p></dd><dt class="tparam">T</dt><dd class="cmt"><p>the modified source of a <a href="" class="extype" name="monocle.POptional">POptional</a></p></dd><dt class="tparam">A</dt><dd class="cmt"><p>the target of a <a href="" class="extype" name="monocle.POptional">POptional</a></p></dd><dt class="tparam">B</dt><dd class="cmt"><p>the modified target of a <a href="" class="extype" name="monocle.POptional">POptional</a></p></dd></dl><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>]</dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/Optional.scala" target="_blank">Optional.scala</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="law/OptionalLaws.html" class="extype" name="monocle.law.OptionalLaws">monocle.law.OptionalLaws</a></p></span></dd></dl><div class="toggleContainer block">
-          <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+<a href="index.html#Optional[S,A]=monocle.POptional[S,S,A,A]" class="extmbr" name="monocle.Optional">Optional</a> is a type alias for <a href="" class="extype" name="monocle.POptional">POptional</a> restricted to monomorphic updates:</p><pre><span class="kw">type</span> Optional[S, A] = POptional[S, S, A, A]</pre></div><dl class="paramcmts block"><dt class="tparam">S</dt><dd class="cmt"><p>the source of a <a href="" class="extype" name="monocle.POptional">POptional</a></p></dd><dt class="tparam">T</dt><dd class="cmt"><p>the modified source of a <a href="" class="extype" name="monocle.POptional">POptional</a></p></dd><dt class="tparam">A</dt><dd class="cmt"><p>the target of a <a href="" class="extype" name="monocle.POptional">POptional</a></p></dd><dt class="tparam">B</dt><dd class="cmt"><p>the modified target of a <a href="" class="extype" name="monocle.POptional">POptional</a></p></dd></dl><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>]</dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/Optional.scala" target="_blank">Optional.scala</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="law/OptionalLaws.html" class="extype" name="monocle.law.OptionalLaws">monocle.law.OptionalLaws</a></p></span></dd></dl><div class="toggleContainer block">
+          <span class="toggle">
+            Linear Supertypes
+          </span>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
-        <div id="order">
-              <span class="filtertype">Ordering</span>
-              <ol>
-                
-                <li class="alpha in"><span>Alphabetic</span></li>
-                <li class="inherit out"><span>By Inheritance</span></li>
-              </ol>
-            </div>
-        <div id="ancestors">
-                <span class="filtertype">Inherited<br />
-                </span>
-                <ol id="linearization">
-                  <li class="in" name="monocle.POptional"><span>POptional</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
-                </ol>
-              </div><div id="ancestors">
-            <span class="filtertype"></span>
+        <div class="toggle"></div>
+        <div id="memberfilter">
+          <i class="material-icons arrow"></i>
+          <span class="input">
+            <input id="mbrsel-input" placeholder="Filter all members" type="text" accesskey="/" />
+          </span>
+          <i class="clear material-icons"></i>
+        </div>
+        <div id="filterby">
+          <div id="order">
+            <span class="filtertype">Ordering</span>
             <ol>
-              <li class="hideall out"><span>Hide All</span></li>
-              <li class="showall in"><span>Show All</span></li>
+              
+              <li class="alpha in"><span>Alphabetic</span></li>
+              <li class="inherit out"><span>By Inheritance</span></li>
             </ol>
           </div>
-        <div id="visbl">
-            <span class="filtertype">Visibility</span>
-            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
-          </div>
+          <div class="ancestors">
+                  <span class="filtertype">Inherited<br />
+                  </span>
+                  <ol id="linearization">
+                    <li class="in" name="monocle.POptional"><span>POptional</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  </ol>
+                </div><div class="ancestors">
+              <span class="filtertype"></span>
+              <ol>
+                <li class="hideall out"><span>Hide All</span></li>
+                <li class="showall in"><span>Show All</span></li>
+              </ol>
+            </div>
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
       </div>
 
       <div id="template">
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="monocle.POptional#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():monocle.POptional[S,T,A,B]"></a>
-      <a id="&lt;init&gt;:POptional[S,T,A,B]"></a>
-      <h4 class="signature">
+              <ol><li name="monocle.POptional#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;():monocle.POptional[S,T,A,B]"></a><a id="&lt;init&gt;:POptional[S,T,A,B]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#&lt;init&gt;():monocle.POptional[S,T,A,B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
@@ -104,40 +458,38 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">POptional</span><span class="params">()</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@&lt;init&gt;():monocle.POptional[S,T,A,B]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt"></p>
     </li></ol>
             </div>
 
         
 
-        <div id="values" class="values members">
+        <div class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="monocle.POptional#getOption" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="getOption(s:S):Option[A]"></a>
-      <a id="getOption(S):Option[A]"></a>
-      <h4 class="signature">
+              <ol><li name="monocle.POptional#getOption" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="getOption(s:S):Option[A]"></a><a id="getOption(S):Option[A]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#getOption(s:S):Option[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getOption</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.POptional.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.POptional.A">A</span>]</span>
+        <span class="name">getOption</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.POptional.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.POptional.A">A</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@getOption(s:S):Option[A]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <p class="shortcomment cmt">get the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> or nothing if there is no target</p>
+    </li><li name="monocle.POptional#getOrModify" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="getOrModify(s:S):scalaz.\/[T,A]"></a><a id="getOrModify(S):\/[T,A]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#getOrModify(s:S):scalaz.\/[T,A]" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <p class="shortcomment cmt">get the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> or nothing if there is no target</p>
-    </li><li name="monocle.POptional#getOrModify" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="getOrModify(s:S):scalaz.\/[T,A]"></a>
-      <a id="getOrModify(S):\/[T,A]"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
@@ -145,16 +497,15 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">getOrModify</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.POptional.S">S</span></span>)</span><span class="result">: <span class="extype" name="scalaz.\/">\/</span>[<span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.A">A</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@getOrModify(s:S):scalaz.\/[T,A]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <p class="shortcomment cmt">get the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> or return the original value while allowing the type to change if it does not match</p>
+    </li><li name="monocle.POptional#modify" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="modify(f:A=&gt;B):S=&gt;T"></a><a id="modify((A)⇒B):(S)⇒T"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#modify(f:A=&gt;B):S=&gt;T" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <p class="shortcomment cmt">get the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> or return the original value while allowing the type to change if it does not match</p>
-    </li><li name="monocle.POptional#modify" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="modify(f:A=&gt;B):S=&gt;T"></a>
-      <a id="modify((A)⇒B):(S)⇒T"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
@@ -162,16 +513,15 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">modify</span><span class="params">(<span name="f">f: (<span class="extype" name="monocle.POptional.A">A</span>) ⇒ <span class="extype" name="monocle.POptional.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.POptional.S">S</span>) ⇒ <span class="extype" name="monocle.POptional.T">T</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@modify(f:A=&gt;B):S=&gt;T" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <p class="shortcomment cmt">modify polymorphically the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> with a function</p>
+    </li><li name="monocle.POptional#modifyF" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="modifyF[F[_]](f:A=&gt;F[B])(s:S)(implicitevidence$1:scalaz.Applicative[F]):F[T]"></a><a id="modifyF[F[_]]((A)⇒F[B])(S)(Applicative[F]):F[T]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#modifyF[F[_]](f:A=&gt;F[B])(s:S)(implicitevidence$1:scalaz.Applicative[F]):F[T]" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <p class="shortcomment cmt">modify polymorphically the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> with a function</p>
-    </li><li name="monocle.POptional#modifyF" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="modifyF[F[_]](f:A=&gt;F[B])(s:S)(implicitevidence$1:scalaz.Applicative[F]):F[T]"></a>
-      <a id="modifyF[F[_]]((A)⇒F[B])(S)(Applicative[F]):F[T]"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
@@ -179,16 +529,15 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">modifyF</span><span class="tparams">[<span name="F">F<span class="tparams">[<span name="_">_</span>]</span></span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="monocle.POptional.A">A</span>) ⇒ <span class="extype" name="monocle.POptional.modifyF.F">F</span>[<span class="extype" name="monocle.POptional.B">B</span>]</span>)</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.POptional.S">S</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scalaz.Applicative">Applicative</span>[<span class="extype" name="monocle.POptional.modifyF.F">F</span>]</span>)</span><span class="result">: <span class="extype" name="monocle.POptional.modifyF.F">F</span>[<span class="extype" name="monocle.POptional.T">T</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@modifyF[F[_]](f:A=&gt;F[B])(s:S)(implicitevidence$1:scalaz.Applicative[F]):F[T]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <p class="shortcomment cmt">modify polymorphically the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> with an Applicative function</p>
+    </li><li name="monocle.POptional#set" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="set(b:B):S=&gt;T"></a><a id="set(B):(S)⇒T"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#set(b:B):S=&gt;T" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <p class="shortcomment cmt">modify polymorphically the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> with an Applicative function</p>
-    </li><li name="monocle.POptional#set" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="set(b:B):S=&gt;T"></a>
-      <a id="set(B):(S)⇒T"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
@@ -196,72 +545,69 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">set</span><span class="params">(<span name="b">b: <span class="extype" name="monocle.POptional.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.POptional.S">S</span>) ⇒ <span class="extype" name="monocle.POptional.T">T</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@set(b:B):S=&gt;T" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">get the modified source of a <a href="" class="extype" name="monocle.POptional">POptional</a></p>
     </li></ol>
             </div>
 
-        <div id="values" class="values members">
+        <div class="values members">
               <h3>Concrete Value Members</h3>
-              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:Any):Boolean"></a>
-      <a id="!=(Any):Boolean"></a>
-      <h4 class="signature">
+              <ol>
+                <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#!=(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@!=(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
-      <a id="##():Int"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../monocle/POptional.html###():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@##():Int" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#==(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:Any):Boolean"></a>
-      <a id="==(Any):Boolean"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@==(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="monocle.POptional#^&lt;-&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="^&lt;-&gt;[C,D](other:monocle.PIso[A,B,C,D]):monocle.POptional[S,T,C,D]"></a><a id="^&lt;-&gt;[C,D](PIso[A,B,C,D]):POptional[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#^&lt;-&gt;[C,D](other:monocle.PIso[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="monocle.POptional#^&lt;-&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="^&lt;-&gt;[C,D](other:monocle.PIso[A,B,C,D]):monocle.POptional[S,T,C,D]"></a>
-      <a id="^&lt;-&gt;[C,D](PIso[A,B,C,D]):POptional[S,T,C,D]"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -269,19 +615,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span title="gt4s: $up$less$minus$greater" class="name">^&lt;-&gt;</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="PIso.html" class="extype" name="monocle.PIso">PIso</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.^&lt;-&gt;.C">C</span>, <span class="extype" name="monocle.POptional.^&lt;-&gt;.D">D</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.^&lt;-&gt;.C">C</span>, <span class="extype" name="monocle.POptional.^&lt;-&gt;.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@^&lt;-&gt;[C,D](other:monocle.PIso[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">alias to composeIso</p><div class="fullcomment"><div class="comment cmt"><p>alias to composeIso</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#^&lt;-?" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="^&lt;-?[C,D](other:monocle.PPrism[A,B,C,D]):monocle.POptional[S,T,C,D]"></a>
-      <a id="^&lt;-?[C,D](PPrism[A,B,C,D]):POptional[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#^&lt;-?" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="^&lt;-?[C,D](other:monocle.PPrism[A,B,C,D]):monocle.POptional[S,T,C,D]"></a><a id="^&lt;-?[C,D](PPrism[A,B,C,D]):POptional[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#^&lt;-?[C,D](other:monocle.PPrism[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -289,19 +634,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span title="gt4s: $up$less$minus$qmark" class="name">^&lt;-?</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="PPrism.html" class="extype" name="monocle.PPrism">PPrism</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.^&lt;-?.C">C</span>, <span class="extype" name="monocle.POptional.^&lt;-?.D">D</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.^&lt;-?.C">C</span>, <span class="extype" name="monocle.POptional.^&lt;-?.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@^&lt;-?[C,D](other:monocle.PPrism[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">alias to composePrism</p><div class="fullcomment"><div class="comment cmt"><p>alias to composePrism</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#^|-&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="^|-&gt;[C,D](other:monocle.PLens[A,B,C,D]):monocle.POptional[S,T,C,D]"></a>
-      <a id="^|-&gt;[C,D](PLens[A,B,C,D]):POptional[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#^|-&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="^|-&gt;[C,D](other:monocle.PLens[A,B,C,D]):monocle.POptional[S,T,C,D]"></a><a id="^|-&gt;[C,D](PLens[A,B,C,D]):POptional[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#^|-&gt;[C,D](other:monocle.PLens[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -309,19 +653,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span title="gt4s: $up$bar$minus$greater" class="name">^|-&gt;</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="PLens.html" class="extype" name="monocle.PLens">PLens</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.^|-&gt;.C">C</span>, <span class="extype" name="monocle.POptional.^|-&gt;.D">D</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.^|-&gt;.C">C</span>, <span class="extype" name="monocle.POptional.^|-&gt;.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@^|-&gt;[C,D](other:monocle.PLens[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">alias to composeLens</p><div class="fullcomment"><div class="comment cmt"><p>alias to composeLens</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#^|-&gt;&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="^|-&gt;&gt;[C,D](other:monocle.PTraversal[A,B,C,D]):monocle.PTraversal[S,T,C,D]"></a>
-      <a id="^|-&gt;&gt;[C,D](PTraversal[A,B,C,D]):PTraversal[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#^|-&gt;&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="^|-&gt;&gt;[C,D](other:monocle.PTraversal[A,B,C,D]):monocle.PTraversal[S,T,C,D]"></a><a id="^|-&gt;&gt;[C,D](PTraversal[A,B,C,D]):PTraversal[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#^|-&gt;&gt;[C,D](other:monocle.PTraversal[A,B,C,D]):monocle.PTraversal[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -329,19 +672,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span title="gt4s: $up$bar$minus$greater$greater" class="name">^|-&gt;&gt;</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.^|-&gt;&gt;.C">C</span>, <span class="extype" name="monocle.POptional.^|-&gt;&gt;.D">D</span>]</span>)</span><span class="result">: <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.^|-&gt;&gt;.C">C</span>, <span class="extype" name="monocle.POptional.^|-&gt;&gt;.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@^|-&gt;&gt;[C,D](other:monocle.PTraversal[A,B,C,D]):monocle.PTraversal[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">alias to composeTraversal</p><div class="fullcomment"><div class="comment cmt"><p>alias to composeTraversal</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#^|-?" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="^|-?[C,D](other:monocle.POptional[A,B,C,D]):monocle.POptional[S,T,C,D]"></a>
-      <a id="^|-?[C,D](POptional[A,B,C,D]):POptional[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#^|-?" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="^|-?[C,D](other:monocle.POptional[A,B,C,D]):monocle.POptional[S,T,C,D]"></a><a id="^|-?[C,D](POptional[A,B,C,D]):POptional[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#^|-?[C,D](other:monocle.POptional[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -349,19 +691,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span title="gt4s: $up$bar$minus$qmark" class="name">^|-?</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.^|-?.C">C</span>, <span class="extype" name="monocle.POptional.^|-?.D">D</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.^|-?.C">C</span>, <span class="extype" name="monocle.POptional.^|-?.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@^|-?[C,D](other:monocle.POptional[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">alias to composeOptional</p><div class="fullcomment"><div class="comment cmt"><p>alias to composeOptional</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#asFold" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="asFold:monocle.Fold[S,A]"></a>
-      <a id="asFold:Fold[S,A]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#asFold" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asFold:monocle.Fold[S,A]"></a><a id="asFold:Fold[S,A]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#asFold:monocle.Fold[S,A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -369,19 +710,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">asFold</span><span class="result">: <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.A">A</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@asFold:monocle.Fold[S,A]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">view a <a href="" class="extype" name="monocle.POptional">POptional</a> as a <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a></p><div class="fullcomment"><div class="comment cmt"><p>view a <a href="" class="extype" name="monocle.POptional">POptional</a> as a <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
-      <a id="asInstanceOf[T0]:T0"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../monocle/POptional.html#asInstanceOf[T0]:T0" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -389,16 +729,15 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@asInstanceOf[T0]:T0" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="monocle.POptional#asSetter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asSetter:monocle.PSetter[S,T,A,B]"></a><a id="asSetter:PSetter[S,T,A,B]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#asSetter:monocle.PSetter[S,T,A,B]" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="monocle.POptional#asSetter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="asSetter:monocle.PSetter[S,T,A,B]"></a>
-      <a id="asSetter:PSetter[S,T,A,B]"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -406,19 +745,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">asSetter</span><span class="result">: <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@asSetter:monocle.PSetter[S,T,A,B]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">view a <a href="" class="extype" name="monocle.POptional">POptional</a> as a <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a></p><div class="fullcomment"><div class="comment cmt"><p>view a <a href="" class="extype" name="monocle.POptional">POptional</a> as a <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#asTraversal" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="asTraversal:monocle.PTraversal[S,T,A,B]"></a>
-      <a id="asTraversal:PTraversal[S,T,A,B]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#asTraversal" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asTraversal:monocle.PTraversal[S,T,A,B]"></a><a id="asTraversal:PTraversal[S,T,A,B]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#asTraversal:monocle.PTraversal[S,T,A,B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -426,19 +764,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">asTraversal</span><span class="result">: <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@asTraversal:monocle.PTraversal[S,T,A,B]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">view a <a href="" class="extype" name="monocle.POptional">POptional</a> as a <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a></p><div class="fullcomment"><div class="comment cmt"><p>view a <a href="" class="extype" name="monocle.POptional">POptional</a> as a <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#choice" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="choice[S1,T1](other:monocle.POptional[S1,T1,A,B]):monocle.POptional[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]"></a>
-      <a id="choice[S1,T1](POptional[S1,T1,A,B]):POptional[\/[S,S1],\/[T,T1],A,B]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#choice" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="choice[S1,T1](other:monocle.POptional[S1,T1,A,B]):monocle.POptional[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]"></a><a id="choice[S1,T1](POptional[S1,T1,A,B]):POptional[\/[S,S1],\/[T,T1],A,B]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#choice[S1,T1](other:monocle.POptional[S1,T1,A,B]):monocle.POptional[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -446,31 +783,26 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">choice</span><span class="tparams">[<span name="S1">S1</span>, <span name="T1">T1</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.choice.S1">S1</span>, <span class="extype" name="monocle.POptional.choice.T1">T1</span>, <span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="scalaz.\/">\/</span>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.choice.S1">S1</span>], <span class="extype" name="scalaz.\/">\/</span>[<span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.choice.T1">T1</span>], <span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@choice[S1,T1](other:monocle.POptional[S1,T1,A,B]):monocle.POptional[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">join two <a href="" class="extype" name="monocle.POptional">POptional</a> with the same target</p><div class="fullcomment"><div class="comment cmt"><p>join two <a href="" class="extype" name="monocle.POptional">POptional</a> with the same target</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="clone():Object"></a>
-      <a id="clone():AnyRef"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a><a id="clone():AnyRef"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#clone():Object" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@clone():Object" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -478,10 +810,13 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#composeFold" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="composeFold[C](other:monocle.Fold[A,C]):monocle.Fold[S,C]"></a>
-      <a id="composeFold[C](Fold[A,C]):Fold[S,C]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#composeFold" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="composeFold[C](other:monocle.Fold[A,C]):monocle.Fold[S,C]"></a><a id="composeFold[C](Fold[A,C]):Fold[S,C]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#composeFold[C](other:monocle.Fold[A,C]):monocle.Fold[S,C]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -489,19 +824,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">composeFold</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="other">other: <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.composeFold.C">C</span>]</span>)</span><span class="result">: <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.composeFold.C">C</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@composeFold[C](other:monocle.Fold[A,C]):monocle.Fold[S,C]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a></p><div class="fullcomment"><div class="comment cmt"><p>compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#composeGetter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="composeGetter[C](other:monocle.Getter[A,C]):monocle.Fold[S,C]"></a>
-      <a id="composeGetter[C](Getter[A,C]):Fold[S,C]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#composeGetter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="composeGetter[C](other:monocle.Getter[A,C]):monocle.Fold[S,C]"></a><a id="composeGetter[C](Getter[A,C]):Fold[S,C]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#composeGetter[C](other:monocle.Getter[A,C]):monocle.Fold[S,C]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -509,19 +843,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">composeGetter</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="other">other: <a href="Getter.html" class="extype" name="monocle.Getter">Getter</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.composeGetter.C">C</span>]</span>)</span><span class="result">: <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.composeGetter.C">C</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@composeGetter[C](other:monocle.Getter[A,C]):monocle.Fold[S,C]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="Getter.html" class="extype" name="monocle.Getter">Getter</a></p><div class="fullcomment"><div class="comment cmt"><p>compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="Getter.html" class="extype" name="monocle.Getter">Getter</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#composeIso" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="composeIso[C,D](other:monocle.PIso[A,B,C,D]):monocle.POptional[S,T,C,D]"></a>
-      <a id="composeIso[C,D](PIso[A,B,C,D]):POptional[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#composeIso" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="composeIso[C,D](other:monocle.PIso[A,B,C,D]):monocle.POptional[S,T,C,D]"></a><a id="composeIso[C,D](PIso[A,B,C,D]):POptional[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#composeIso[C,D](other:monocle.PIso[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -529,19 +862,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">composeIso</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="PIso.html" class="extype" name="monocle.PIso">PIso</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.composeIso.C">C</span>, <span class="extype" name="monocle.POptional.composeIso.D">D</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.composeIso.C">C</span>, <span class="extype" name="monocle.POptional.composeIso.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@composeIso[C,D](other:monocle.PIso[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PIso.html" class="extype" name="monocle.PIso">PIso</a></p><div class="fullcomment"><div class="comment cmt"><p>compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PIso.html" class="extype" name="monocle.PIso">PIso</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#composeLens" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="composeLens[C,D](other:monocle.PLens[A,B,C,D]):monocle.POptional[S,T,C,D]"></a>
-      <a id="composeLens[C,D](PLens[A,B,C,D]):POptional[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#composeLens" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="composeLens[C,D](other:monocle.PLens[A,B,C,D]):monocle.POptional[S,T,C,D]"></a><a id="composeLens[C,D](PLens[A,B,C,D]):POptional[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#composeLens[C,D](other:monocle.PLens[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -549,19 +881,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">composeLens</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="PLens.html" class="extype" name="monocle.PLens">PLens</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.composeLens.C">C</span>, <span class="extype" name="monocle.POptional.composeLens.D">D</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.composeLens.C">C</span>, <span class="extype" name="monocle.POptional.composeLens.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@composeLens[C,D](other:monocle.PLens[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PLens.html" class="extype" name="monocle.PLens">PLens</a></p><div class="fullcomment"><div class="comment cmt"><p>compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PLens.html" class="extype" name="monocle.PLens">PLens</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#composeOptional" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="composeOptional[C,D](other:monocle.POptional[A,B,C,D]):monocle.POptional[S,T,C,D]"></a>
-      <a id="composeOptional[C,D](POptional[A,B,C,D]):POptional[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#composeOptional" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="composeOptional[C,D](other:monocle.POptional[A,B,C,D]):monocle.POptional[S,T,C,D]"></a><a id="composeOptional[C,D](POptional[A,B,C,D]):POptional[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#composeOptional[C,D](other:monocle.POptional[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -569,19 +900,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">composeOptional</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.composeOptional.C">C</span>, <span class="extype" name="monocle.POptional.composeOptional.D">D</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.composeOptional.C">C</span>, <span class="extype" name="monocle.POptional.composeOptional.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@composeOptional[C,D](other:monocle.POptional[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="" class="extype" name="monocle.POptional">POptional</a></p><div class="fullcomment"><div class="comment cmt"><p>compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="" class="extype" name="monocle.POptional">POptional</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#composePrism" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="composePrism[C,D](other:monocle.PPrism[A,B,C,D]):monocle.POptional[S,T,C,D]"></a>
-      <a id="composePrism[C,D](PPrism[A,B,C,D]):POptional[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#composePrism" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="composePrism[C,D](other:monocle.PPrism[A,B,C,D]):monocle.POptional[S,T,C,D]"></a><a id="composePrism[C,D](PPrism[A,B,C,D]):POptional[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#composePrism[C,D](other:monocle.PPrism[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -589,19 +919,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">composePrism</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="PPrism.html" class="extype" name="monocle.PPrism">PPrism</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.composePrism.C">C</span>, <span class="extype" name="monocle.POptional.composePrism.D">D</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.composePrism.C">C</span>, <span class="extype" name="monocle.POptional.composePrism.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@composePrism[C,D](other:monocle.PPrism[A,B,C,D]):monocle.POptional[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PPrism.html" class="extype" name="monocle.PPrism">PPrism</a></p><div class="fullcomment"><div class="comment cmt"><p>compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PPrism.html" class="extype" name="monocle.PPrism">PPrism</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#composeSetter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="composeSetter[C,D](other:monocle.PSetter[A,B,C,D]):monocle.PSetter[S,T,C,D]"></a>
-      <a id="composeSetter[C,D](PSetter[A,B,C,D]):PSetter[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#composeSetter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="composeSetter[C,D](other:monocle.PSetter[A,B,C,D]):monocle.PSetter[S,T,C,D]"></a><a id="composeSetter[C,D](PSetter[A,B,C,D]):PSetter[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#composeSetter[C,D](other:monocle.PSetter[A,B,C,D]):monocle.PSetter[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -609,19 +938,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">composeSetter</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.composeSetter.C">C</span>, <span class="extype" name="monocle.POptional.composeSetter.D">D</span>]</span>)</span><span class="result">: <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.composeSetter.C">C</span>, <span class="extype" name="monocle.POptional.composeSetter.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@composeSetter[C,D](other:monocle.PSetter[A,B,C,D]):monocle.PSetter[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a></p><div class="fullcomment"><div class="comment cmt"><p>compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#composeTraversal" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="composeTraversal[C,D](other:monocle.PTraversal[A,B,C,D]):monocle.PTraversal[S,T,C,D]"></a>
-      <a id="composeTraversal[C,D](PTraversal[A,B,C,D]):PTraversal[S,T,C,D]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#composeTraversal" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="composeTraversal[C,D](other:monocle.PTraversal[A,B,C,D]):monocle.PTraversal[S,T,C,D]"></a><a id="composeTraversal[C,D](PTraversal[A,B,C,D]):PTraversal[S,T,C,D]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#composeTraversal[C,D](other:monocle.PTraversal[A,B,C,D]):monocle.PTraversal[S,T,C,D]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -629,65 +957,58 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">composeTraversal</span><span class="tparams">[<span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="other">other: <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a>[<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.composeTraversal.C">C</span>, <span class="extype" name="monocle.POptional.composeTraversal.D">D</span>]</span>)</span><span class="result">: <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.composeTraversal.C">C</span>, <span class="extype" name="monocle.POptional.composeTraversal.D">D</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@composeTraversal[C,D](other:monocle.PTraversal[A,B,C,D]):monocle.PTraversal[S,T,C,D]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a></p><div class="fullcomment"><div class="comment cmt"><p>compose a <a href="" class="extype" name="monocle.POptional">POptional</a> with a <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="eq(x$1:AnyRef):Boolean"></a>
-      <a id="eq(AnyRef):Boolean"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="equals(x$1:Any):Boolean"></a>
-      <a id="equals(Any):Boolean"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#equals(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@equals(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
-      <a id="finalize():Unit"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../monocle/POptional.html#finalize():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@finalize():Unit" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -695,10 +1016,13 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#first" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="first[C]:monocle.POptional[(S,C),(T,C),(A,C),(B,C)]"></a>
-      <a id="first[C]:POptional[(S,C),(T,C),(A,C),(B,C)]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#first" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="first[C]:monocle.POptional[(S,C),(T,C),(A,C),(B,C)]"></a><a id="first[C]:POptional[(S,C),(T,C),(A,C),(B,C)]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#first[C]:monocle.POptional[(S,C),(T,C),(A,C),(B,C)]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -706,19 +1030,18 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">first</span><span class="tparams">[<span name="C">C</span>]</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[(<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.first.C">C</span>), (<span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.first.C">C</span>), (<span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.first.C">C</span>), (<span class="extype" name="monocle.POptional.B">B</span>, <span class="extype" name="monocle.POptional.first.C">C</span>)]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@first[C]:monocle.POptional[(S,C),(T,C),(A,C),(B,C)]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
-      <a id="getClass():Class[_]"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../monocle/POptional.html#getClass():Class[_]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -726,143 +1049,135 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@getClass():Class[_]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#hashCode():Int" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hashCode():Int"></a>
-      <a id="hashCode():Int"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@hashCode():Int" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
-      <a id="isInstanceOf[T0]:Boolean"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../monocle/POptional.html#isInstanceOf[T0]:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="monocle.POptional#isMatching" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="isMatching(s:S):Boolean"></a>
-      <a id="isMatching(S):Boolean"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#isMatching" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isMatching(s:S):Boolean"></a><a id="isMatching(S):Boolean"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#isMatching(s:S):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isMatching</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.POptional.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isMatching</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.POptional.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@isMatching(s:S):Boolean" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">check if a <a href="" class="extype" name="monocle.POptional">POptional</a> has a target</p><div class="fullcomment"><div class="comment cmt"><p>check if a <a href="" class="extype" name="monocle.POptional">POptional</a> has a target</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#modifyOption" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="modifyOption(f:A=&gt;B):S=&gt;Option[T]"></a>
-      <a id="modifyOption((A)⇒B):(S)⇒Option[T]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#modifyOption" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="modifyOption(f:A=&gt;B):S=&gt;Option[T]"></a><a id="modifyOption((A)⇒B):(S)⇒Option[T]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#modifyOption(f:A=&gt;B):S=&gt;Option[T]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">modifyOption</span><span class="params">(<span name="f">f: (<span class="extype" name="monocle.POptional.A">A</span>) ⇒ <span class="extype" name="monocle.POptional.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.POptional.S">S</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.POptional.T">T</span>]</span>
+        <span class="name">modifyOption</span><span class="params">(<span name="f">f: (<span class="extype" name="monocle.POptional.A">A</span>) ⇒ <span class="extype" name="monocle.POptional.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.POptional.S">S</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.POptional.T">T</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@modifyOption(f:A=&gt;B):S=&gt;Option[T]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">modify polymorphically the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> with a function.</p><div class="fullcomment"><div class="comment cmt"><p>modify polymorphically the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> with a function.
 return empty if the <a href="" class="extype" name="monocle.POptional">POptional</a> is not matching
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ne(x$1:AnyRef):Boolean"></a>
-      <a id="ne(AnyRef):Boolean"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
-      <a id="notify():Unit"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../monocle/POptional.html#notify():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@notify():Unit" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#notifyAll():Unit" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="notifyAll():Unit"></a>
-      <a id="notifyAll():Unit"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@notifyAll():Unit" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="monocle.POptional#second" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="second[C]:monocle.POptional[(C,S),(C,T),(C,A),(C,B)]"></a><a id="second[C]:POptional[(C,S),(C,T),(C,A),(C,B)]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#second[C]:monocle.POptional[(C,S),(C,T),(C,A),(C,B)]" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="monocle.POptional#second" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="second[C]:monocle.POptional[(C,S),(C,T),(C,A),(C,B)]"></a>
-      <a id="second[C]:POptional[(C,S),(C,T),(C,A),(C,B)]"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -870,41 +1185,39 @@ return empty if the <a href="" class="extype" name="monocle.POptional">POptional
       <span class="symbol">
         <span class="name">second</span><span class="tparams">[<span name="C">C</span>]</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[(<span class="extype" name="monocle.POptional.second.C">C</span>, <span class="extype" name="monocle.POptional.S">S</span>), (<span class="extype" name="monocle.POptional.second.C">C</span>, <span class="extype" name="monocle.POptional.T">T</span>), (<span class="extype" name="monocle.POptional.second.C">C</span>, <span class="extype" name="monocle.POptional.A">A</span>), (<span class="extype" name="monocle.POptional.second.C">C</span>, <span class="extype" name="monocle.POptional.B">B</span>)]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@second[C]:monocle.POptional[(C,S),(C,T),(C,A),(C,B)]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="monocle.POptional#setOption" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="setOption(b:B):S=&gt;Option[T]"></a>
-      <a id="setOption(B):(S)⇒Option[T]"></a>
-      <h4 class="signature">
+    </li><li name="monocle.POptional#setOption" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setOption(b:B):S=&gt;Option[T]"></a><a id="setOption(B):(S)⇒Option[T]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#setOption(b:B):S=&gt;Option[T]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setOption</span><span class="params">(<span name="b">b: <span class="extype" name="monocle.POptional.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.POptional.S">S</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.POptional.T">T</span>]</span>
+        <span class="name">setOption</span><span class="params">(<span name="b">b: <span class="extype" name="monocle.POptional.B">B</span></span>)</span><span class="result">: (<span class="extype" name="monocle.POptional.S">S</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.POptional.T">T</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@setOption(b:B):S=&gt;Option[T]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">set polymorphically the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> with a value.</p><div class="fullcomment"><div class="comment cmt"><p>set polymorphically the target of a <a href="" class="extype" name="monocle.POptional">POptional</a> with a value.
 return empty if the <a href="" class="extype" name="monocle.POptional">POptional</a> is not matching
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
-      <a id="synchronized[T0](⇒T0):T0"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -912,16 +1225,15 @@ return empty if the <a href="" class="extype" name="monocle.POptional">POptional
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#toString():String" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toString():String"></a>
-      <a id="toString():String"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -929,28 +1241,23 @@ return empty if the <a href="" class="extype" name="monocle.POptional">POptional
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@toString():String" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
-      <a id="wait():Unit"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../monocle/POptional.html#wait():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@wait():Unit" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -958,22 +1265,21 @@ return empty if the <a href="" class="extype" name="monocle.POptional">POptional
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
-      <a id="wait(Long,Int):Unit"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -981,22 +1287,21 @@ return empty if the <a href="" class="extype" name="monocle.POptional">POptional
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="wait(x$1:Long):Unit"></a>
-      <a id="wait(Long):Unit"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#wait(x$1:Long):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@wait(x$1:Long):Unit" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -1004,17 +1309,21 @@ return empty if the <a href="" class="extype" name="monocle.POptional">POptional
     </span>)</span>
               
         </dd></dl></div>
-    </li></ol>
+    </li>
+              </ol>
             </div>
 
         
 
-        <div id="values" class="values members">
+        <div class="values members">
               <h3>Deprecated Value Members</h3>
-              <ol><li name="monocle.POptional#sum" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="sum[S1,T1](other:monocle.POptional[S1,T1,A,B]):monocle.POptional[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]"></a>
-      <a id="sum[S1,T1](POptional[S1,T1,A,B]):POptional[\/[S,S1],\/[T,T1],A,B]"></a>
-      <h4 class="signature">
+              <ol><li name="monocle.POptional#sum" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sum[S1,T1](other:monocle.POptional[S1,T1,A,B]):monocle.POptional[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]"></a><a id="sum[S1,T1](POptional[S1,T1,A,B]):POptional[\/[S,S1],\/[T,T1],A,B]"></a>
+      <span class="permalink">
+      <a href="../monocle/POptional.html#sum[S1,T1](other:monocle.POptional[S1,T1,A,B]):monocle.POptional[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -1022,11 +1331,7 @@ return empty if the <a href="" class="extype" name="monocle.POptional">POptional
       <span class="symbol">
         <span class="name deprecated" title="Deprecated: (Since version 1.2.0) use choice">sum</span><span class="tparams">[<span name="S1">S1</span>, <span name="T1">T1</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="monocle.POptional.sum.S1">S1</span>, <span class="extype" name="monocle.POptional.sum.T1">T1</span>, <span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.POptional">POptional</a>[<span class="extype" name="scalaz.\/">\/</span>[<span class="extype" name="monocle.POptional.S">S</span>, <span class="extype" name="monocle.POptional.sum.S1">S1</span>], <span class="extype" name="scalaz.\/">\/</span>[<span class="extype" name="monocle.POptional.T">T</span>, <span class="extype" name="monocle.POptional.sum.T1">T1</span>], <span class="extype" name="monocle.POptional.A">A</span>, <span class="extype" name="monocle.POptional.B">B</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../index.html#monocle.POptional@sum[S1,T1](other:monocle.POptional[S1,T1,A,B]):monocle.POptional[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]" title="Permalink" target="_top">
-        <img src="../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
@@ -1039,13 +1344,13 @@ return empty if the <a href="" class="extype" name="monocle.POptional">POptional
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.Serializable">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0-RC2/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>
@@ -1062,7 +1367,9 @@ return empty if the <a href="" class="extype" name="monocle.POptional">POptional
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+    </body>
+          </div>
+        </div>
+      </div>
     </body>
       </html>

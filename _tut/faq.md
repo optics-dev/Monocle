@@ -39,7 +39,7 @@ val is = GenLens[Foo](_.is)
 
 ```scala
 scala> (is composeOptional headOption).getOption(foo)
-<console>:21: error: Could not find an instance of Cons[S,A], please check Monocle instance location policy to find out which import is necessary
+<console>:19: error: Could not find an instance of Cons[S,A], please check Monocle instance location policy to find out which import is necessary
        (is composeOptional headOption).getOption(foo)
                            ^
 ```
@@ -53,7 +53,7 @@ import monocle.std.vector._
 
 ```scala
 scala> (is composeOptional headOption).getOption(foo)
-<console>:24: error: type mismatch;
+<console>:22: error: type mismatch;
  found   : monocle.function.Cons[Vector[Nothing],Nothing]
  required: monocle.function.Cons[Vector[Nothing],A]
 Note: Nothing <: A, but trait Cons is invariant in type A.

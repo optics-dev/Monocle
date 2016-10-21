@@ -84,7 +84,7 @@ scala> def updateNumber(n: Int) : Future[Int] = Future.successful ( n + 1)
 updateNumber: (n: Int)scala.concurrent.Future[Int]
 
 scala> _streetNumber.modifyF(updateNumber)(address)
-res7: scala.concurrent.Future[Address] = List()
+res7: scala.concurrent.Future[Address] = Future(<not completed>)
 ```
 
 Most importantly, `Lenses` compose to zoom deeper in a data structure

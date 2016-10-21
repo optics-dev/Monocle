@@ -4,6 +4,13 @@ title:  "Release Note"
 section: "release_note"
 ---
 
+# 1.3.1
+
+> 21 October 2016
+
+-   add support for scala 2.12.0-RC2
+
+
 # 1.3.0
 
 > 18 October 2016
