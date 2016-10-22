@@ -27,39 +27,26 @@ or you can import all typeclass based optics with
 import monocle.function.all._
 ```
 
-Now, if you try to use `headOption` you will see the following error:
+Here is a complete example
 
 ```tut:silent
+import monocle.function.all._
+import monocle.macros.GenLens
+
 case class Foo(s: String, is: List[Int])
 val foo = Foo("Hello", List(1,2,3))
 
-import monocle.macros.GenLens
 val is = GenLens[Foo](_.is)
 ```
 
-```tut:fail
+```tut:book
 (is composeOptional headOption).getOption(foo)
 ```
 
-It means there is no instance of `Cons` (the typeclass where `headOption` is defined) for `List` in scope. You 
-could also get a more esoteric error message in case you have some `Cons` instance in scope that are not for `List`
-
-```tut:silent
-import monocle.std.vector._
-```
-
-```tut:fail
-(is composeOptional headOption).getOption(foo)
-```
-
-In our case, we need the `List` instance for `Cons` which can be obtained with the following import
+Note: if you use a version of monocle before 1.4.x, you need another import to get the typeclass instance
 
 ```tut:silent
 import monocle.std.list._
-```
-
-```tut
-(is composeOptional headOption).getOption(foo)
 ```
 
 ## What is the difference between at and index? When should I use one or the other?
@@ -76,7 +63,7 @@ val m = Map("one" -> 1, "two" -> 2)
 val root = Iso.id[Map[String, Int]]
 ```
 
-```tut
+```tut:book
 (root composeOptional index("two")).set(0)(m)   // update value at index "two"
 (root composeOptional index("three")).set(3)(m) // noop because m doesn't have a value at "three"
 (root composeLens at("three")).set(Some(3))(m)  // insert element at "three"
@@ -103,6 +90,6 @@ Similarly, if the `Map` was in a case class, a `Lens` would provide the same kin
 ```tut:silent
 case class Bar(kv: Map[String, Int])
 ```
-```tut
+```tut:book
 (GenLens[Bar](_.kv) composeOptional index("two")).set(0)(Bar(m))
 ```
