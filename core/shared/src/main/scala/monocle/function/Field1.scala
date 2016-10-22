@@ -11,7 +11,7 @@ import scala.annotation.implicitNotFound
  */
 @implicitNotFound("Could not find an instance of Field1[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Field1[S, A] extends Serializable {
+abstract class Field1[S, A] extends Serializable {
   def first: Lens[S, A]
 }
 

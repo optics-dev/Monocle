@@ -14,7 +14,7 @@ import scalaz.{Applicative, Traverse}
  */
 @implicitNotFound("Could not find an instance of FilterIndex[${S},${I},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait FilterIndex[S, I, A] extends Serializable {
+abstract class FilterIndex[S, I, A] extends Serializable {
   def filterIndex(predicate: I => Boolean): Traversal[S, A]
 }
 

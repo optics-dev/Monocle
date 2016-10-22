@@ -13,7 +13,7 @@ import scala.annotation.implicitNotFound
  */
 @implicitNotFound("Could not find an instance of Snoc[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Snoc[S, A] extends Serializable {
+abstract class Snoc[S, A] extends Serializable {
   def snoc: Prism[S, (S, A)]
 
   def initOption: Optional[S, S] = snoc composeLens first

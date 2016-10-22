@@ -15,7 +15,7 @@ import scala.annotation.implicitNotFound
  */
 @implicitNotFound("Could not find an instance of Cons1[${S}, ${H}, ${T}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Cons1[S, H, T] extends Serializable {
+abstract class Cons1[S, H, T] extends Serializable {
   def cons1: Iso[S, (H, T)]
 
   def head: Lens[S, H] = cons1 composeLens first

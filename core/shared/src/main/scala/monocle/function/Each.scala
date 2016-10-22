@@ -12,7 +12,7 @@ import scalaz.Traverse
  */
 @implicitNotFound("Could not find an instance of Each[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Each[S, A] extends Serializable {
+abstract class Each[S, A] extends Serializable {
   def each: Traversal[S, A]
 }
 

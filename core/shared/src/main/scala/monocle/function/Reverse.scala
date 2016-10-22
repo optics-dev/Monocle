@@ -6,7 +6,7 @@ import scala.annotation.implicitNotFound
 
 @implicitNotFound("Could not find an instance of Reverse[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Reverse[S, A] extends Serializable {
+abstract class Reverse[S, A] extends Serializable {
   /** Creates an Iso from S to a reversed S */
   def reverse: Iso[S, A]
 }

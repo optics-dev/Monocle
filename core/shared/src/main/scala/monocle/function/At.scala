@@ -12,7 +12,7 @@ import scala.annotation.implicitNotFound
  */
 @implicitNotFound("Could not find an instance of At[${S},${I},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait At[S, I, A] extends Serializable {
+abstract class At[S, I, A] extends Serializable {
   def at(i: I): Lens[S, A]
 }
 
