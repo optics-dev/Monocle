@@ -3,14 +3,11 @@ package monocle.std
 import monocle.Prism
 import monocle.internal.Bounded
 
-import scalaz.Order
+import scalaz.std.anyVal.{char => charInstances}
 
 object char extends CharOptics
 
 trait CharOptics {
-
-  implicit val charOrder: Order[Char] =
-    Order.fromScalaOrdering[Char]
 
   val charToBoolean: Prism[Char, Boolean] =
     Bounded.orderingBoundedSafeCast[Char, Boolean]{
