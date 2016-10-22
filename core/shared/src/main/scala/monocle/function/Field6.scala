@@ -15,14 +15,22 @@ abstract class Field6[S, A] extends Serializable {
   def sixth: Lens[S, A]
 }
 
-object Field6 extends Field6Functions {
-  /** lift an instance of [[Field6]] using an [[Iso]] */
-  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field6[A, B]): Field6[S, B] = new Field6[S, B] {
-    override def sixth: Lens[S, B] =
-      iso composeLens ev.sixth
-  }
-}
-
 trait Field6Functions {
   def sixth[S, A](implicit ev: Field6[S, A]): Lens[S, A] = ev.sixth
+}
+
+object Field6 extends Field6Functions{
+  /** lift an instance of [[Field6]] using an [[Iso]] */
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field6[A, B]): Field6[S, B] = new Field6[S, B] {
+    def sixth: Lens[S, B] =
+      iso composeLens ev.sixth
+  }
+
+  /************************************************************************************************/
+  /** Std instances                                                                               */
+  /************************************************************************************************/
+
+  implicit def tuple6Field6[A1, A2, A3, A4, A5, A6]: Field6[(A1, A2, A3, A4, A5, A6), A6] = new Field6[(A1, A2, A3, A4, A5, A6), A6] {
+    def sixth = Lens((_: (A1, A2, A3, A4, A5, A6))._6)(a => t => t.copy(_6 = a))
+  }
 }

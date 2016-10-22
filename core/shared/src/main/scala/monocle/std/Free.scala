@@ -1,22 +1,7 @@
 package monocle.std
 
-import monocle.function._
-import monocle.Traversal
+@deprecated("instances have been move to typeclass companion object", since = "1.4.0")
+object free
 
-import scalaz.{Applicative, Free, Traverse}
-
-object free extends FreeOptics
-
-trait FreeOptics {
-
-  implicit def freePlated[S[_]: Traverse, A]: Plated[Free[S, A]] = new Plated[Free[S, A]] {
-    val plate: Traversal[Free[S, A], Free[S, A]] = new Traversal[Free[S, A], Free[S, A]] {
-      def modifyF[F[_]: Applicative](f: Free[S, A] => F[Free[S, A]])(s: Free[S, A]): F[Free[S, A]] =
-        s.resume.fold(
-          as => Applicative[F].map(Traverse[S].traverse(as)(f))(Free.roll),
-          x => Applicative[F].point(Free.point(x))
-        )
-    }
-  }
-
-}
+@deprecated("instances have been move to typeclass companion object", since = "1.4.0")
+trait FreeOptics

@@ -1,16 +1,7 @@
 package monocle.std
 
-import monocle.Iso
-import monocle.function.Wrapped
+@deprecated("instances have been move to typeclass companion object", since = "1.4.0")
+object tag
 
-import scalaz.{@@, Tag}
-
-object tag extends TagOptics
-
-trait TagOptics {
-  implicit def tagWrapped[A, B]: Wrapped[A @@ B, A] =
-    new Wrapped[A @@ B, A] {
-      val wrapped: Iso[A @@ B, A] =
-        Iso(Tag.unwrap[A, B])(Tag.apply)
-    }
-}
+@deprecated("instances have been move to typeclass companion object", since = "1.4.0")
+trait TagOptics

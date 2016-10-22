@@ -15,14 +15,30 @@ abstract class Field4[S, A] extends Serializable {
   def fourth: Lens[S, A]
 }
 
+trait Field4Functions {
+  def fourth[S, A](implicit ev: Field4[S, A]): Lens[S, A] = ev.fourth
+}
+
 object Field4 extends Field4Functions {
   /** lift an instance of [[Field4]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field4[A, B]): Field4[S, B] = new Field4[S, B] {
-    override def fourth: Lens[S, B] =
+    def fourth: Lens[S, B] =
       iso composeLens ev.fourth
   }
-}
 
-trait Field4Functions {
-  def fourth[S, A](implicit ev: Field4[S, A]): Lens[S, A] = ev.fourth
+  /************************************************************************************************/
+  /** Std instances                                                                               */
+  /************************************************************************************************/
+
+  implicit def tuple4Field4[A1, A2, A3, A4]: Field4[(A1, A2, A3, A4), A4] = new Field4[(A1, A2, A3, A4), A4] {
+    def fourth = Lens((_: (A1, A2, A3, A4))._4)(a => t => t.copy(_4 = a))
+  }
+
+  implicit def tuple5Field4[A1, A2, A3, A4, A5]: Field4[(A1, A2, A3, A4, A5), A4] = new Field4[(A1, A2, A3, A4, A5), A4] {
+    def fourth = Lens((_: (A1, A2, A3, A4, A5))._4)(a => t => t.copy(_4 = a))
+  }
+
+  implicit def tuple6Field4[A1, A2, A3, A4, A5, A6]: Field4[(A1, A2, A3, A4, A5, A6), A4] = new Field4[(A1, A2, A3, A4, A5, A6), A4] {
+    def fourth = Lens((_: (A1, A2, A3, A4, A5, A6))._4)(a => t => t.copy(_4 = a))
+  }
 }

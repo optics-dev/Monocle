@@ -1,6 +1,5 @@
 package monocle.std
 
-import monocle.function.{Each, Empty}
 import monocle.{Iso, PIso, PPrism, Prism}
 
 import scalaz.syntax.std.option._
@@ -23,12 +22,4 @@ trait MaybeOptics {
 
   final def nothing[A]: Prism[Maybe[A], Unit] =
     Prism[Maybe[A], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Maybe.empty)
-
-  implicit def maybeEach[A]: Each[Maybe[A], A] = new Each[Maybe[A], A]{
-    def each = just.asTraversal
-  }
-
-  implicit def maybeEmpty[A]: Empty[Maybe[A]] = new Empty[Maybe[A]]{
-    def empty = nothing
-  }
 }

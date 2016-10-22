@@ -12,7 +12,7 @@ object FilterIndexTests extends Laws {
 
   def apply[S: Equal : Arbitrary, I, A: Equal : Arbitrary](implicit evFilterIndex: FilterIndex[S, I, A],
                                                                     arbAA: Arbitrary[A => A], arbIB: Arbitrary[I => Boolean]): RuleSet =
-    new SimpleRuleSet("FilterIndex", TraversalTests(filterIndex(_: I => Boolean)).props: _*)
+    new SimpleRuleSet("FilterIndex", TraversalTests(filterIndex(_: I => Boolean)(evFilterIndex)).props: _*)
 
 
 }

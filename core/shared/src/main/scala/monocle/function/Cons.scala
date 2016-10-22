@@ -5,6 +5,7 @@ import monocle.std.tuple2._
 import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
+import scalaz.{ICons, INil}
 
 /**
  * Typeclass that defines a [[Prism]] between an `S` and its head `A` and tail `S`
@@ -20,15 +21,6 @@ abstract class Cons[S, A] extends Serializable {
   def tailOption: Optional[S, S] = cons composeLens second
 }
 
-object Cons extends ConsFunctions {
-  /** lift an instance of [[Cons]] using an [[Iso]] */
-  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Cons[A, B]): Cons[S, B] = new Cons[S, B] {
-    override def cons: Prism[S, (B, S)] =
-      iso composePrism ev.cons composeIso iso.reverse.second
-  }
-}
-
-
 trait ConsFunctions {
   final def cons[S, A](implicit ev: Cons[S, A]): Prism[S, (A, S)] = ev.cons
 
@@ -37,9 +29,63 @@ trait ConsFunctions {
 
   /** append an element to the head */
   final def _cons[S, A](head: A, tail: S)(implicit ev: Cons[S, A]): S =
-    ev.cons.reverseGet((head, tail))
+  ev.cons.reverseGet((head, tail))
 
   /** deconstruct an S between its head and tail */
   final def _uncons[S, A](s: S)(implicit ev: Cons[S, A]): Option[(A, S)] =
-    ev.cons.getOption(s)
+  ev.cons.getOption(s)
+}
+
+object Cons extends ConsFunctions {
+  /** lift an instance of [[Cons]] using an [[Iso]] */
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Cons[A, B]): Cons[S, B] = new Cons[S, B] {
+    def cons: Prism[S, (B, S)] =
+      iso composePrism ev.cons composeIso iso.reverse.second
+  }
+
+  /************************************************************************************************/
+  /** Std instances                                                                               */
+  /************************************************************************************************/
+  import scala.collection.immutable.Stream.#::
+
+  implicit def listCons[A]: Cons[List[A], A] = new Cons[List[A], A]{
+    def cons = Prism[List[A], (A, List[A])]{
+      case Nil     => None
+      case x :: xs => Some((x, xs))
+    }{ case (a, s) => a :: s }
+  }
+
+  implicit def streamCons[A]: Cons[Stream[A], A] = new Cons[Stream[A], A]{
+    def cons = Prism[Stream[A], (A, Stream[A])]{
+      case scala.collection.immutable.Stream.Empty => None
+      case x #:: xs => Some((x, xs))
+    }{ case (a, s) => a #:: s }
+  }
+
+  implicit val stringCons: Cons[String, Char] = new Cons[String, Char] {
+    def cons =
+      Prism[String, (Char, String)](s =>
+        if(s.isEmpty) None else Some((s.head, s.tail))
+      ){ case (h, t) => h + t }
+  }
+
+  implicit def vectorCons[A]: Cons[Vector[A], A] = new Cons[Vector[A], A]{
+    def cons = Prism[Vector[A], (A, Vector[A])]{
+      case Vector() => None
+      case x +: xs  => Some((x, xs))
+    }{ case (a, s) => a +: s }
+  }
+
+  /************************************************************************************************/
+  /** Scalaz instances                                                                            */
+  /************************************************************************************************/
+
+  import scalaz.IList
+
+  implicit def iListCons[A]: Cons[IList[A], A] = new Cons[IList[A], A]{
+    def cons = Prism[IList[A], (A, IList[A])]{
+      case INil()       => None
+      case ICons(x, xs) => Some((x, xs))
+    }{ case (a, s) => ICons(a, s) }
+  }
 }

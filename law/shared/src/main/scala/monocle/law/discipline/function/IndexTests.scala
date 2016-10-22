@@ -12,6 +12,6 @@ object IndexTests extends Laws {
 
   def apply[S: Equal : Arbitrary, I : Arbitrary, A: Equal : Arbitrary](implicit evIndex: Index[S, I, A],
                                                                        arbAA: Arbitrary[A => A]): RuleSet =
-    new SimpleRuleSet("Index", OptionalTests(index(_ : I)).props: _*)
+    new SimpleRuleSet("Index", OptionalTests(index(_ : I)(evIndex)).props: _*)
 
 }

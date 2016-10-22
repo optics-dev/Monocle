@@ -15,10 +15,18 @@ abstract class Wrapped[S, A] extends Serializable {
   def wrapped: Iso[S, A]
 }
 
-object Wrapped extends WrappedFunctions
-
 trait WrappedFunctions {
   def wrapped[S, A](implicit ev: Wrapped[S, A]): Iso[S, A] = ev.wrapped
 
   def unwrapped[S, A](implicit ev: Wrapped[S, A]): Iso[A, S] = ev.wrapped.reverse
+}
+
+object Wrapped extends WrappedFunctions {
+  import scalaz.{@@, Tag}
+
+  implicit def tagWrapped[A, B]: Wrapped[A @@ B, A] =
+    new Wrapped[A @@ B, A] {
+      val wrapped: Iso[A @@ B, A] =
+        Iso(Tag.unwrap[A, B])(Tag.apply)
+    }
 }

@@ -11,7 +11,7 @@ import scalaz.Equal
 object AtTests extends Laws {
 
   def apply[S: Equal : Arbitrary, I: Arbitrary, A: Equal : Arbitrary](implicit evAt: At[S, I, A], arbAA: Arbitrary[A => A]): RuleSet = {
-    new SimpleRuleSet("At", LensTests(at(_: I)).props: _*)
+    new SimpleRuleSet("At", LensTests(at(_: I)(evAt)).props: _*)
   }
 
 }
