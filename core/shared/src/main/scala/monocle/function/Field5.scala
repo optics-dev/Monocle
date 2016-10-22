@@ -22,8 +22,7 @@ trait Field5Functions {
 object Field5 extends Field5Functions{
   /** lift an instance of [[Field5]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field5[A, B]): Field5[S, B] = new Field5[S, B] {
-    def fifth: Lens[S, B] =
-      iso composeLens ev.fifth
+    val fifth: Lens[S, B] = iso composeLens ev.fifth
   }
 
   /************************************************************************************************/
@@ -31,10 +30,10 @@ object Field5 extends Field5Functions{
   /************************************************************************************************/
 
   implicit def tuple5Field5[A1, A2, A3, A4, A5]: Field5[(A1, A2, A3, A4, A5), A5] = new Field5[(A1, A2, A3, A4, A5), A5] {
-    def fifth = Lens((_: (A1, A2, A3, A4, A5))._5)(a => t => t.copy(_5 = a))
+    val fifth = Lens((_: (A1, A2, A3, A4, A5))._5)(a => t => t.copy(_5 = a))
   }
 
   implicit def tuple6Field5[A1, A2, A3, A4, A5, A6]: Field5[(A1, A2, A3, A4, A5, A6), A5] = new Field5[(A1, A2, A3, A4, A5, A6), A5] {
-    def fifth = Lens((_: (A1, A2, A3, A4, A5, A6))._5)(a => t => t.copy(_5 = a))
+    val fifth = Lens((_: (A1, A2, A3, A4, A5, A6))._5)(a => t => t.copy(_5 = a))
   }
 }

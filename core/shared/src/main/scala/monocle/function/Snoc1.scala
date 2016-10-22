@@ -30,17 +30,17 @@ trait Snoc1Functions {
 
   /** append an element to the end */
   final def _snoc1[S, I, L](init: I, last: L)(implicit ev: Snoc1[S, I, L]): S =
-  ev.snoc1.reverseGet((init, last))
+    ev.snoc1.reverseGet((init, last))
 
   /** deconstruct an S between its init and last */
   final def _unsnoc1[S, I, L](s: S)(implicit ev: Snoc1[S, I, L]): (I, L) =
-  ev.snoc1.get(s)
+    ev.snoc1.get(s)
 }
 
 object Snoc1 extends Snoc1Functions {
   /** lift an instance of [[Snoc1]] using an [[Iso]] */
   def fromIso[S, A, I, L](iso: Iso[S, A])(implicit ev: Snoc1[A, I, L]): Snoc1[S, I, L] = new Snoc1[S, I, L] {
-    def snoc1: Iso[S, (I, L)] =
+    val snoc1: Iso[S, (I, L)] =
       iso composeIso ev.snoc1
   }
 
@@ -49,19 +49,19 @@ object Snoc1 extends Snoc1Functions {
   /************************************************************************************************/
 
   implicit def tuple2Snoc1[A1, A2]: Snoc1[(A1, A2), A1, A2] = new Snoc1[(A1, A2), A1, A2] {
-    def snoc1 = Iso[(A1, A2), (A1, A2)](identity)(identity)
+    val snoc1 = Iso[(A1, A2), (A1, A2)](identity)(identity)
   }
 
   implicit def tuple3Snoc1[A1, A2, A3]: Snoc1[(A1, A2, A3), (A1, A2), A3] = new Snoc1[(A1, A2, A3), (A1, A2), A3]{
-    def snoc1 = Iso[(A1, A2, A3), ((A1, A2), A3)](t => ((t._1, t._2), t._3)){ case (i, l) => (i._1, i._2, l) }
+    val snoc1 = Iso[(A1, A2, A3), ((A1, A2), A3)](t => ((t._1, t._2), t._3)){ case (i, l) => (i._1, i._2, l) }
   }
 
   implicit def tuple4Snoc1[A1, A2, A3, A4]: Snoc1[(A1, A2, A3, A4), (A1, A2, A3), A4] = new Snoc1[(A1, A2, A3, A4), (A1, A2, A3), A4]{
-    def snoc1 = Iso[(A1, A2, A3, A4), ((A1, A2, A3), A4)](t => ((t._1, t._2, t._3), t._4)){ case (i, l) => (i._1, i._2, i._3, l) }
+    val snoc1 = Iso[(A1, A2, A3, A4), ((A1, A2, A3), A4)](t => ((t._1, t._2, t._3), t._4)){ case (i, l) => (i._1, i._2, i._3, l) }
   }
 
   implicit def tuple6Snoc1[A1, A2, A3, A4, A5, A6]: Snoc1[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5), A6] = new Snoc1[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5), A6]{
-    def snoc1 = Iso[(A1, A2, A3, A4, A5, A6), ((A1, A2, A3, A4, A5), A6)](t => ((t._1, t._2, t._3, t._4, t._5), t._6)){ case (i, l) => (i._1, i._2, i._3, i._4, i._5, l) }
+    val snoc1 = Iso[(A1, A2, A3, A4, A5, A6), ((A1, A2, A3, A4, A5), A6)](t => ((t._1, t._2, t._3, t._4, t._5), t._6)){ case (i, l) => (i._1, i._2, i._3, i._4, i._5, l) }
   }
 
   /************************************************************************************************/
@@ -69,9 +69,8 @@ object Snoc1 extends Snoc1Functions {
   /************************************************************************************************/
   import scalaz.{IList, NonEmptyList}
 
-  implicit def nelSnoc1[A]:Snoc1[NonEmptyList[A], IList[A], A] =
-    new Snoc1[NonEmptyList[A], IList[A], A]{
-      def snoc1: Iso[NonEmptyList[A], (IList[A], A)] =
-        Iso((nel:NonEmptyList[A]) => nel.init -> nel.last){case (i,l) => NonEmptyList.nel(l, i.reverse).reverse}
-    }
+  implicit def nelSnoc1[A]:Snoc1[NonEmptyList[A], IList[A], A] = new Snoc1[NonEmptyList[A], IList[A], A]{
+    val snoc1: Iso[NonEmptyList[A], (IList[A], A)] =
+      Iso((nel:NonEmptyList[A]) => nel.init -> nel.last){case (i,l) => NonEmptyList.nel(l, i.reverse).reverse}
+  }
 }

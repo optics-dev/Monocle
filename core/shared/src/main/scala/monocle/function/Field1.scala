@@ -22,8 +22,7 @@ trait Field1Functions {
 object Field1 extends Field1Functions {
   /** lift an instance of [[Field1]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field1[A, B]): Field1[S, B] = new Field1[S, B] {
-    def first: Lens[S, B] =
-      iso composeLens ev.first
+    val first: Lens[S, B] = iso composeLens ev.first
   }
 
   /************************************************************************************************/
@@ -31,27 +30,27 @@ object Field1 extends Field1Functions {
   /************************************************************************************************/
 
   implicit def tuple1Field1[A]: Field1[Tuple1[A], A] = new Field1[Tuple1[A], A] {
-    def first = Lens((_: Tuple1[A])._1)(a => _ => Tuple1(a))
+    val first = Lens((_: Tuple1[A])._1)(a => _ => Tuple1(a))
   }
 
   implicit def tuple2Field1[A1, A2]: Field1[(A1, A2), A1] = new Field1[(A1, A2), A1] {
-    def first = Lens((_: (A1, A2))._1)(a => t => t.copy(_1 = a))
+    val first = Lens((_: (A1, A2))._1)(a => t => t.copy(_1 = a))
   }
 
   implicit def tuple3Field1[A1, A2, A3]: Field1[(A1, A2, A3), A1] = new Field1[(A1, A2, A3), A1] {
-    def first = Lens((_: (A1, A2, A3))._1)(a => t => t.copy(_1 = a))
+    val first = Lens((_: (A1, A2, A3))._1)(a => t => t.copy(_1 = a))
   }
 
   implicit def tuple4Field1[A1, A2, A3, A4]: Field1[(A1, A2, A3, A4), A1] = new Field1[(A1, A2, A3, A4), A1] {
-    def first = Lens((_: (A1, A2, A3, A4))._1)(a => t => t.copy(_1 = a))
+    val first = Lens((_: (A1, A2, A3, A4))._1)(a => t => t.copy(_1 = a))
   }
 
   implicit def tuple5Field1[A1, A2, A3, A4, A5]: Field1[(A1, A2, A3, A4, A5), A1] = new Field1[(A1, A2, A3, A4, A5), A1] {
-    def first = Lens((_: (A1, A2, A3, A4, A5))._1)(a => t => t.copy(_1 = a))
+    val first = Lens((_: (A1, A2, A3, A4, A5))._1)(a => t => t.copy(_1 = a))
   }
 
   implicit def tuple6Field1[A1, A2, A3, A4, A5, A6]: Field1[(A1, A2, A3, A4, A5, A6), A1] = new Field1[(A1, A2, A3, A4, A5, A6), A1] {
-    def first = Lens((_: (A1, A2, A3, A4, A5, A6))._1)(a => t => t.copy(_1 = a))
+    val first = Lens((_: (A1, A2, A3, A4, A5, A6))._1)(a => t => t.copy(_1 = a))
   }
 
   /************************************************************************************************/
@@ -60,6 +59,6 @@ object Field1 extends Field1Functions {
   import scalaz.OneAnd
 
   implicit def oneAndField1[T[_], A]: Field1[OneAnd[T, A], A] = new Field1[OneAnd[T, A], A]{
-    def first = Lens[OneAnd[T, A], A](_.head)(a => oneAnd => oneAnd.copy(head = a))
+    val first = Lens[OneAnd[T, A], A](_.head)(a => oneAnd => oneAnd.copy(head = a))
   }
 }

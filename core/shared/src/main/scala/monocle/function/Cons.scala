@@ -39,7 +39,7 @@ trait ConsFunctions {
 object Cons extends ConsFunctions {
   /** lift an instance of [[Cons]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Cons[A, B]): Cons[S, B] = new Cons[S, B] {
-    def cons: Prism[S, (B, S)] =
+    val cons: Prism[S, (B, S)] =
       iso composePrism ev.cons composeIso iso.reverse.second
   }
 
@@ -49,28 +49,28 @@ object Cons extends ConsFunctions {
   import scala.collection.immutable.Stream.#::
 
   implicit def listCons[A]: Cons[List[A], A] = new Cons[List[A], A]{
-    def cons = Prism[List[A], (A, List[A])]{
+    val cons = Prism[List[A], (A, List[A])]{
       case Nil     => None
       case x :: xs => Some((x, xs))
     }{ case (a, s) => a :: s }
   }
 
   implicit def streamCons[A]: Cons[Stream[A], A] = new Cons[Stream[A], A]{
-    def cons = Prism[Stream[A], (A, Stream[A])]{
+    val cons = Prism[Stream[A], (A, Stream[A])]{
       case scala.collection.immutable.Stream.Empty => None
       case x #:: xs => Some((x, xs))
     }{ case (a, s) => a #:: s }
   }
 
   implicit val stringCons: Cons[String, Char] = new Cons[String, Char] {
-    def cons =
+    val cons =
       Prism[String, (Char, String)](s =>
         if(s.isEmpty) None else Some((s.head, s.tail))
       ){ case (h, t) => h + t }
   }
 
   implicit def vectorCons[A]: Cons[Vector[A], A] = new Cons[Vector[A], A]{
-    def cons = Prism[Vector[A], (A, Vector[A])]{
+    val cons = Prism[Vector[A], (A, Vector[A])]{
       case Vector() => None
       case x +: xs  => Some((x, xs))
     }{ case (a, s) => a +: s }
@@ -83,7 +83,7 @@ object Cons extends ConsFunctions {
   import scalaz.IList
 
   implicit def iListCons[A]: Cons[IList[A], A] = new Cons[IList[A], A]{
-    def cons = Prism[IList[A], (A, IList[A])]{
+    val cons = Prism[IList[A], (A, IList[A])]{
       case INil()       => None
       case ICons(x, xs) => Some((x, xs))
     }{ case (a, s) => ICons(a, s) }

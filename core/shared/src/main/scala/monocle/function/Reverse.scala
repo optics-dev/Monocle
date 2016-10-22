@@ -13,7 +13,7 @@ abstract class Reverse[S, A] extends Serializable {
 
 trait ReverseFunctions {
   def reverseFromReverseFunction[S](_reverse: S => S): Reverse[S, S] = new Reverse[S, S] {
-    def reverse = Iso(_reverse)(_reverse)
+    val reverse = Iso(_reverse)(_reverse)
   }
 
   def reverse[S, A](implicit ev: Reverse[S, A]): Iso[S, A] = ev.reverse
@@ -36,27 +36,27 @@ object Reverse extends ReverseFunctions {
     reverseFromReverseFunction(_.reverse)
 
   implicit def tuple1Reverse[A]: Reverse[Tuple1[A], Tuple1[A]] = new Reverse[Tuple1[A], Tuple1[A]] {
-    def reverse = Iso.id
+    val reverse = Iso.id
   }
 
   implicit def tuple2Reverse[A, B]: Reverse[(A, B), (B, A)] = new Reverse[(A, B), (B, A)] {
-    def reverse = Iso[(A, B), (B, A)](_.swap)(_.swap)
+    val reverse = Iso[(A, B), (B, A)](_.swap)(_.swap)
   }
 
   implicit def tuple3Reverse[A, B, C]: Reverse[(A, B, C), (C, B, A)] = new Reverse[(A, B, C), (C, B, A)] {
-    def reverse = Iso{t: (A, B, C) => (t._3, t._2, t._1)}(t => (t._3, t._2, t._1))
+    val reverse = Iso{t: (A, B, C) => (t._3, t._2, t._1)}(t => (t._3, t._2, t._1))
   }
 
   implicit def tuple4Reverse[A, B, C, D]: Reverse[(A, B, C, D), (D, C, B, A)] = new Reverse[(A, B, C, D), (D, C, B, A)] {
-    def reverse = Iso{t: (A, B, C, D) => (t._4, t._3, t._2, t._1)}(t => (t._4, t._3, t._2, t._1))
+    val reverse = Iso{t: (A, B, C, D) => (t._4, t._3, t._2, t._1)}(t => (t._4, t._3, t._2, t._1))
   }
 
   implicit def tuple5Reverse[A, B, C, D, E]: Reverse[(A, B, C, D, E), (E, D, C, B, A)] = new Reverse[(A, B, C, D, E), (E, D, C, B, A)] {
-    def reverse = Iso{t: (A, B, C, D, E) => (t._5, t._4, t._3, t._2, t._1)}(t => (t._5, t._4, t._3, t._2, t._1))
+    val reverse = Iso{t: (A, B, C, D, E) => (t._5, t._4, t._3, t._2, t._1)}(t => (t._5, t._4, t._3, t._2, t._1))
   }
 
   implicit def tuple6Reverse[A, B, C, D, E, F]: Reverse[(A, B, C, D, E, F), (F, E, D, C, B, A)] = new Reverse[(A, B, C, D, E, F), (F, E, D, C, B, A)] {
-    def reverse = Iso{t: (A, B, C, D, E, F) => (t._6, t._5, t._4, t._3, t._2, t._1)}(t => (t._6, t._5, t._4, t._3, t._2, t._1))
+    val reverse = Iso{t: (A, B, C, D, E, F) => (t._6, t._5, t._4, t._3, t._2, t._1)}(t => (t._6, t._5, t._4, t._3, t._2, t._1))
   }
 
   implicit def vectorReverse[A]: Reverse[Vector[A], Vector[A]] =
@@ -74,7 +74,7 @@ object Reverse extends ReverseFunctions {
     reverseFromReverseFunction(_.reverse)
 
   implicit def treeReverse[A]: Reverse[Tree[A], Tree[A]] = new Reverse[Tree[A], Tree[A]] {
-    def reverse = Iso[Tree[A], Tree[A]](reverseTree)(reverseTree)
+    val reverse = Iso[Tree[A], Tree[A]](reverseTree)(reverseTree)
     private def reverseTree(tree: Tree[A]): Tree[A] = Tree.Node(tree.rootLabel, tree.subForest.reverse.map(reverseTree))
   }
 }

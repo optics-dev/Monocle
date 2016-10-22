@@ -22,8 +22,7 @@ trait Field3Functions {
 object Field3 extends Field3Functions {
   /** lift an instance of [[Field3]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field3[A, B]): Field3[S, B] = new Field3[S, B] {
-    def third: Lens[S, B] =
-      iso composeLens ev.third
+    val third: Lens[S, B] = iso composeLens ev.third
   }
 
   /************************************************************************************************/
@@ -31,18 +30,18 @@ object Field3 extends Field3Functions {
   /************************************************************************************************/
 
   implicit def tuple3Field3[A1, A2, A3]: Field3[(A1, A2, A3), A3] = new Field3[(A1, A2, A3), A3] {
-    def third = Lens((_: (A1, A2, A3))._3)(a => t => t.copy(_3 = a))
+    val third = Lens((_: (A1, A2, A3))._3)(a => t => t.copy(_3 = a))
   }
 
   implicit def tuple4Field3[A1, A2, A3, A4]: Field3[(A1, A2, A3, A4), A3]  = new Field3[(A1, A2, A3, A4), A3] {
-    def third = Lens((_: (A1, A2, A3, A4))._3)(a => t => t.copy(_3 = a))
+    val third = Lens((_: (A1, A2, A3, A4))._3)(a => t => t.copy(_3 = a))
   }
 
   implicit def tuple5Field3[A1, A2, A3, A4, A5]: Field3[(A1, A2, A3, A4, A5), A3] = new Field3[(A1, A2, A3, A4, A5), A3] {
-    def third = Lens((_: (A1, A2, A3, A4, A5))._3)(a => t => t.copy(_3 = a))
+    val third = Lens((_: (A1, A2, A3, A4, A5))._3)(a => t => t.copy(_3 = a))
   }
 
   implicit def tuple6Field3[A1, A2, A3, A4, A5, A6]: Field3[(A1, A2, A3, A4, A5, A6), A3] = new Field3[(A1, A2, A3, A4, A5, A6), A3] {
-    def third = Lens((_: (A1, A2, A3, A4, A5, A6))._3)(a => t => t.copy(_3 = a))
+    val third = Lens((_: (A1, A2, A3, A4, A5, A6))._3)(a => t => t.copy(_3 = a))
   }
 }
