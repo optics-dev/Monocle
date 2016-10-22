@@ -45,7 +45,7 @@ object Each extends EachFunctions {
   implicit def mapEach[K, V]: Each[Map[K, V], V] = traverseEach[Map[K, ?], V]
 
   implicit def optEach[A]: Each[Option[A], A] = new Each[Option[A], A] {
-    val each = monocle.std.option.some.asTraversal
+    def each = monocle.std.option.some[A].asTraversal
   }
 
   implicit def streamEach[A]: Each[Stream[A], A] = traverseEach

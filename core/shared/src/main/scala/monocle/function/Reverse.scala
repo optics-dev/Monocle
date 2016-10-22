@@ -36,7 +36,7 @@ object Reverse extends ReverseFunctions {
     reverseFromReverseFunction(_.reverse)
 
   implicit def tuple1Reverse[A]: Reverse[Tuple1[A], Tuple1[A]] = new Reverse[Tuple1[A], Tuple1[A]] {
-    val reverse = Iso.id
+    val reverse = Iso.id[Tuple1[A]]
   }
 
   implicit def tuple2Reverse[A, B]: Reverse[(A, B), (B, A)] = new Reverse[(A, B), (B, A)] {

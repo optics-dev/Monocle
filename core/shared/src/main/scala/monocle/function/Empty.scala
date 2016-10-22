@@ -45,7 +45,7 @@ object Empty extends EmptyFunctions {
   }
 
   implicit def optionEmpty[A]: Empty[Option[A]] = new Empty[Option[A]] {
-    val empty = monocle.std.option.none
+    val empty = monocle.std.option.none[A]
   }
 
   implicit def emptySet[A]: Empty[Set[A]] = new Empty[Set[A]] {
