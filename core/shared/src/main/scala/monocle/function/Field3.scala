@@ -11,18 +11,37 @@ import scala.annotation.implicitNotFound
  */
 @implicitNotFound("Could not find an instance of Field3[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Field3[S, A] extends Serializable {
+abstract class Field3[S, A] extends Serializable {
   def third: Lens[S, A]
+}
+
+trait Field3Functions {
+  def third[S, A](implicit ev: Field3[S, A]): Lens[S, A] = ev.third
 }
 
 object Field3 extends Field3Functions {
   /** lift an instance of [[Field3]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field3[A, B]): Field3[S, B] = new Field3[S, B] {
-    override def third: Lens[S, B] =
-      iso composeLens ev.third
+    val third: Lens[S, B] = iso composeLens ev.third
   }
-}
 
-trait Field3Functions {
-  def third[S, A](implicit ev: Field3[S, A]): Lens[S, A] = ev.third
+  /************************************************************************************************/
+  /** Std instances                                                                               */
+  /************************************************************************************************/
+
+  implicit def tuple3Field3[A1, A2, A3]: Field3[(A1, A2, A3), A3] = new Field3[(A1, A2, A3), A3] {
+    val third = Lens((_: (A1, A2, A3))._3)(a => t => t.copy(_3 = a))
+  }
+
+  implicit def tuple4Field3[A1, A2, A3, A4]: Field3[(A1, A2, A3, A4), A3]  = new Field3[(A1, A2, A3, A4), A3] {
+    val third = Lens((_: (A1, A2, A3, A4))._3)(a => t => t.copy(_3 = a))
+  }
+
+  implicit def tuple5Field3[A1, A2, A3, A4, A5]: Field3[(A1, A2, A3, A4, A5), A3] = new Field3[(A1, A2, A3, A4, A5), A3] {
+    val third = Lens((_: (A1, A2, A3, A4, A5))._3)(a => t => t.copy(_3 = a))
+  }
+
+  implicit def tuple6Field3[A1, A2, A3, A4, A5, A6]: Field3[(A1, A2, A3, A4, A5, A6), A3] = new Field3[(A1, A2, A3, A4, A5, A6), A3] {
+    val third = Lens((_: (A1, A2, A3, A4, A5, A6))._3)(a => t => t.copy(_3 = a))
+  }
 }

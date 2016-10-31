@@ -1,14 +1,12 @@
 package monocle.std
 
-import monocle.function._
-import monocle.{PPrism, Prism, PIso, Iso}
+import monocle.{Iso, PIso, PPrism, Prism}
 
-import scalaz.{-\/, \/-, \/}
+import scalaz.{-\/, \/, \/-}
 
 object option extends OptionOptics
 
 trait OptionOptics {
-
   final def pSome[A, B]: PPrism[Option[A], Option[B], A, B] =
     PPrism[Option[A], Option[B], A, B](_.map(\/-(_)) getOrElse -\/(None))(Some.apply)
 
@@ -23,14 +21,5 @@ trait OptionOptics {
 
   final def optionToDisjunction[A]: Iso[Option[A], Unit \/ A] =
     pOptionToDisjunction[A, A]
-
-  implicit def optionEmpty[A]: Empty[Option[A]] = new Empty[Option[A]] {
-    def empty = none
-  }
-
-  implicit def optEach[A]: Each[Option[A], A] = new Each[Option[A], A] {
-    def each = some.asTraversal
-  }
-
 }
 

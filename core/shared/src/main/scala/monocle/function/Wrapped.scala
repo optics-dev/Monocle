@@ -2,8 +2,6 @@ package monocle.function
 
 import monocle.Iso
 
-import scalaz.Functor
-
 import scala.annotation.implicitNotFound
 
 /**
@@ -13,12 +11,20 @@ import scala.annotation.implicitNotFound
   */
 @implicitNotFound("Could not find an instance of Wrapped[${S},${A}], please check Monocle instance location policy to " +
   "find out which import is necessary")
-trait Wrapped[S, A] extends Serializable {
+abstract class Wrapped[S, A] extends Serializable {
   def wrapped: Iso[S, A]
 }
 
 trait WrappedFunctions {
   def wrapped[S, A](implicit ev: Wrapped[S, A]): Iso[S, A] = ev.wrapped
-
   def unwrapped[S, A](implicit ev: Wrapped[S, A]): Iso[A, S] = ev.wrapped.reverse
+}
+
+object Wrapped extends WrappedFunctions {
+  import scalaz.{@@, Tag}
+
+  implicit def tagWrapped[A, B]: Wrapped[A @@ B, A] = new Wrapped[A @@ B, A] {
+    val wrapped: Iso[A @@ B, A] =
+      Iso(Tag.unwrap[A, B])(Tag.apply)
+  }
 }

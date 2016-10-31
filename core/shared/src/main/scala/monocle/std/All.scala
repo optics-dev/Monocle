@@ -16,16 +16,8 @@ trait StdInstances
   with    MapOptics
   with    MaybeOptics
   with    OptionOptics
-  with    SetOptics
-  with    StreamOptics
   with    StringOptics
   with    Tuple1Optics
-  with    Tuple2Optics
-  with    Tuple3Optics
-  with    Tuple4Optics
-  with    Tuple5Optics
-  with    Tuple6Optics
-  with    VectorOptics
   // Scalaz Instances
   with    CofreeOptics
   with    Either3Optics
@@ -33,9 +25,6 @@ trait StdInstances
   with    TheseOptics
   with    IListInstances
   with    IMapOptics
-  with    ISetOptics
   with    NonEmptyListOptics
-  with    OneAndOptics
-  with    TagOptics
   with    TreeOptics
   with    ValidationOptics

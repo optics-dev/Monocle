@@ -26,8 +26,8 @@ class EmptyExample extends MonocleSuite {
     _isEmpty(List(1,2,3)) shouldEqual false
     _isEmpty("hello")     shouldEqual false
 
-    _isEmpty(Nil)  shouldEqual true
-    _isEmpty("")   shouldEqual true
+    _isEmpty(List.empty)  shouldEqual true
+    _isEmpty("")          shouldEqual true
   }
   
 }
