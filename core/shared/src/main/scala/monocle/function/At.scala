@@ -21,7 +21,7 @@ trait AtFunctions {
 
   /** delete a value associated with a key in a Map-like container */
   def remove[S, I, A](i: I)(s: S)(implicit ev: At[S, I, Option[A]]): S =
-  ev.at(i).set(None)(s)
+    ev.at(i).set(None)(s)
 }
 
 object At extends AtFunctions {
