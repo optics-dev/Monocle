@@ -46,7 +46,7 @@ lazy val shapeless  = Def.setting("com.chuusai"     %%% "shapeless"   % "2.3.2")
 
 lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % "0.6.0")
 
-lazy val discipline = Def.setting("org.typelevel"   %%% "discipline"  % "0.7.1")
+lazy val discipline = Def.setting("org.typelevel"   %%% "discipline"  % "0.7.2")
 lazy val scalacheck = Def.setting("org.scalacheck"  %%% "scalacheck"  % "1.13.4")
 lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.0"  % "test")
 
@@ -241,13 +241,13 @@ lazy val publishSettings = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
   pomIncludeRepository := { _ => false },
-  publishTo <<= version { (v: String) =>
+  publishTo := version { (v: String) =>
     val nexus = "https://oss.sonatype.org/"
     if (v.trim.endsWith("SNAPSHOT"))
       Some("snapshots" at nexus + "content/repositories/snapshots")
     else
       Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-  },
+  }.value,
   pomExtra := (
     <developers>
       <developer>
