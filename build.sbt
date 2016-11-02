@@ -9,8 +9,8 @@ import sbtunidoc.Plugin.UnidocKeys._
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
-  scalaVersion       := "2.12.0-RC2",
-  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-RC2"),
+  scalaVersion       := "2.12.0",
+  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -41,20 +41,20 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.2.6")
+lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.2.7")
 lazy val shapeless  = Def.setting("com.chuusai"     %%% "shapeless"   % "2.3.2")
 
-lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % "0.5.0")
+lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % "0.6.0")
 
 lazy val discipline = Def.setting("org.typelevel"   %%% "discipline"  % "0.7.1")
-lazy val scalacheck = Def.setting("org.scalacheck"  %%% "scalacheck"  % "1.13.3")
+lazy val scalacheck = Def.setting("org.scalacheck"  %%% "scalacheck"  % "1.13.4")
 lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.0"  % "test")
 
 lazy val macroCompat = Def.setting("org.typelevel" %%% "macro-compat" % "1.1.1")
 
 lazy val macroVersion = "2.1.0"
 lazy val paradisePlugin = "org.scalamacros" %  "paradise"      % macroVersion cross CrossVersion.full
-lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.2" cross CrossVersion.binary
+lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.3" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   previousArtifact := Some("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.3.0")

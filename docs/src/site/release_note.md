@@ -10,7 +10,6 @@ section: "release_note"
 
 -   add support for scala 2.12.0-RC2
 
-
 # 1.3.0
 
 > 18 October 2016
