@@ -4,6 +4,14 @@ title:  "Release Note"
 section: "release_note"
 ---
 
+# 1.3.2
+
+> 02 November 2016
+
+-   add support for scala 2.12.0 [#408](https://github.com/julien-truffaut/Monocle/pull/408)
+-   use `Free.roll` in `Plated[Free[S, A]]` instance [#404](https://github.com/julien-truffaut/Monocle/pull/404) (thanks to [aoiroaoino ](https://github.com/aoiroaoino))
+-   update build settings for scala.js [#406](https://github.com/julien-truffaut/Monocle/pull/406) (thanks to [aoiroaoino ](https://github.com/aoiroaoino))
+
 # 1.3.1
 
 > 21 October 2016
