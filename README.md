@@ -11,9 +11,9 @@ import sbt._
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-scalaVersion := "2.12.0-RC2"     // or "2.11.8", "2.10.6"
+scalaVersion := "2.12.0"         // or "2.11.8", "2.10.6"
 
-val libraryVersion = "1.3.1"     // or "1.4.0-SNAPSHOT"
+val libraryVersion = "1.3.2"     // or "1.4.0-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-core"    % libraryVersion,
