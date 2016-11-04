@@ -8,7 +8,7 @@ pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/do
 # Optional
 
 An `Optional` is an Optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`.
-Unlike the `Lens`, the element that the `Optional` focus on may do not exist.
+Unlike the `Lens`, the element that the `Optional` focus on may not exist.
 
 `Optionals` have two type parameters generally called `S` and `A`: `Optional[S, A]` where `S` represents the `Product` and `A` an optional element inside of `S`.
 
@@ -21,7 +21,7 @@ We can create an `Optional[List[Int], Int]` which zoom from a `List[Int]` to its
 
 ```scala
 import monocle.Optional
-val _head = Optional[List[Int], Int] {
+val head = Optional[List[Int], Int] {
   case Nil => None
   case x :: xs => Some(x)
 }{ a => {
@@ -37,10 +37,10 @@ Once we have an `Optional`, we can use the supplied `getOption` and `set` functi
 scala> val xs = List(1, 2, 3)
 xs: List[Int] = List(1, 2, 3)
 
-scala> _head.getOption(xs)
+scala> head.getOption(xs)
 res0: Option[Int] = Some(1)
 
-scala> _head.set(5)(xs)
+scala> head.set(5)(xs)
 res1: List[Int] = List(5, 2, 3)
 ```
 
@@ -50,9 +50,9 @@ If we use the `Optional` on an empty list:
 scala> val xs = List.empty[Int]
 xs: List[Int] = Nil
 
-scala> _head.getOption(xs)
+scala> head.getOption(xs)
 res0: Option[Int] = None
 
-scala> _head.set(5)(xs)
+scala> head.set(5)(xs)
 res1: List[Int] = Nil
 ```
