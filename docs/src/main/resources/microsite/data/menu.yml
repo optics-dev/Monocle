@@ -1,0 +1,38 @@
+options:
+
+  - title: Getting Started
+    url: docs/index.html
+
+  - title: Optics
+    url: docs/optics.html
+    menu_section: optics
+
+    nested_options:
+     - title: Iso
+       url: docs/optics/iso.html
+     - title: Lens
+       url: docs/optics/lens.html
+     - title: Prism
+       url: docs/optics/prism.html
+
+  - title: Typeclasses
+    url: docs/typeclasses.html
+
+  - title: Examples
+    url: docs/examples.html
+
+    nested_options:
+     - title: University
+       url: docs/examples/university_example.html
+
+  - title: FAQ
+    url: docs/faq.html
+
+  - title: Release Notes
+    url: docs/release_notes.html
+
+  - title: Learning Resources
+    url: docs/learning_resources.html
+
+  - title: Adopters
+    url: docs/adopters.html

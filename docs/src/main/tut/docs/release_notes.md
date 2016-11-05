@@ -1,8 +1,9 @@
 ---
-layout: default
-title:  "Release Note"
-section: "release_note"
+layout: docs
+title:  "Release Notes"
 ---
+
+## Release Notes
 
 # 1.3.2
 

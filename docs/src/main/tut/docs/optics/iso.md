@@ -1,10 +1,9 @@
 ---
-layout: default
+layout: docs
 title:  "Iso"
 section: "optics"
-scaladoc: "http://julien-truffaut.github.io/Monocle/api/#monocle.PLens"
-source: "https://github.com/julien-truffaut/Monocle/blob/master/example/src/main/scala/monocle/example/LensExample.scala"
-pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/docs/src/main/tut/iso.md"
+source: "core/src/main/scala/monocle/PIso.scala"
+scaladoc: "#monocle.Iso"
 ---
 
 # Iso

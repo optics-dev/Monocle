@@ -206,28 +206,50 @@ lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM,
   )
 
 lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
+  .enablePlugins(MicrositesPlugin)
   .settings(moduleName := "monocle-docs")
   .settings(monocleSettings)
   .settings(noPublishSettings)
   .settings(unidocSettings)
-  .settings(site.settings)
   .settings(ghpages.settings)
   .settings(docSettings)
-  .settings(tutSettings)
+  .settings(tutScalacOptions ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))))
   .settings(
     libraryDependencies ++= Seq(scalaz.value, shapeless.value, compilerPlugin(paradisePlugin))
   )
 
+lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
 
 lazy val docSettings = Seq(
+  micrositeName := "Monocle",
+  micrositeDescription := "Optics library for Scala",
+  micrositeHighlightTheme := "atom-one-light",
+  micrositeHomepage := "http://julien-truffaut.github.io/Monocle",
+  micrositeBaseUrl := "/Monocle",
+  micrositeDocumentationUrl := "/Monocle/docs",
+  micrositeGithubOwner := "julien-truffaut",
+  micrositeGithubRepo := "Monocle",
+  micrositePalette := Map(
+    "brand-primary"   -> "#5B5988",
+    "brand-secondary" -> "#292E53",
+    "brand-tertiary"  -> "#222749",
+    "gray-dark"       -> "#49494B",
+    "gray"            -> "#7B7B7E",
+    "gray-light"      -> "#E5E5E6",
+    "gray-lighter"    -> "#F4F3F4",
+    "white-color"     -> "#FFFFFF"),
   autoAPIMappings := true,
   unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM),
-  site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "api"),
-  site.addMappingsToSiteDir(tut, "_tut"),
+  docsMappingsAPIDir := "api",
+  addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
+  fork in tut := true,
+  fork in (ScalaUnidoc, unidoc) := true,
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
+    "-Xfatal-warnings",
     "-doc-source-url", scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
-    "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath
+    "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath,
+    "-diagrams"
   ),
   git.remoteRepo := "git@github.com:julien-truffaut/Monocle.git",
   includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md"
