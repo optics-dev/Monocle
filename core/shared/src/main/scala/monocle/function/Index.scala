@@ -44,7 +44,7 @@ object Index extends IndexFunctions{
   implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
     def index(i: Int) = Optional[List[A], A](
       l      => if(i < 0) None else l.drop(i).headOption)(
-      a => l => Try(l.updated(i, a)).getOrElse(l)
+      a => l => if(i < 0) l    else Try(l.updated(i, a)).getOrElse(l) // if(i < 0) required for scala 2.10
     )
   }
 
@@ -53,10 +53,7 @@ object Index extends IndexFunctions{
   implicit def streamIndex[A]: Index[Stream[A], Int, A] = new Index[Stream[A], Int, A] {
     def index(i: Int) = Optional[Stream[A], A](
       s      => if(i < 0) None else s.drop(i).headOption)(
-      a => s => s.zipWithIndex.traverse[Id, A]{
-        case (_    , index) if index == i => a
-        case (value, index)               => value
-      }
+      a => s => if(i < 0) s    else Try(s.updated(i, a)).getOrElse(s) // if(i < 0) required for scala 2.10
     )
   }
 
