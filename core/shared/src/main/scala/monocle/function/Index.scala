@@ -3,6 +3,7 @@ package monocle.function
 import monocle.{Iso, Optional}
 
 import scala.annotation.implicitNotFound
+import scala.util.Try
 import scalaz.Id._
 
 /**
@@ -43,10 +44,7 @@ object Index extends IndexFunctions{
   implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
     def index(i: Int) = Optional[List[A], A](
       l      => if(i < 0) None else l.drop(i).headOption)(
-      a => l => l.zipWithIndex.traverse[Id, A]{
-        case (_    , index) if index == i => a
-        case (value, index)               => value
-      }
+      a => l => Try(l.updated(i, a)).getOrElse(l)
     )
   }
 
