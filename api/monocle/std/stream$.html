@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../../';
@@ -172,24 +172,6 @@
                         <a class="trait" href="FunctionOptics.html" title=""></a>
                         <a href="FunctionOptics.html" title="">
                           FunctionOptics
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics1.html" title=""></a>
-                        <a href="FunctionOptics1.html" title="">
-                          FunctionOptics1
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics2.html" title=""></a>
-                        <a href="FunctionOptics2.html" title="">
-                          FunctionOptics2
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics3.html" title=""></a>
-                        <a href="FunctionOptics3.html" title="">
-                          FunctionOptics3
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -592,16 +574,19 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">stream</span><span class="result"> extends <a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 1.4.0) instances have been move to typeclass companion object">stream</span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Stream.scala" target="_blank">Stream.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.4.0)</i> instances have been move to typeclass companion object</p></dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Stream.scala" target="_blank">Stream.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -627,7 +612,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="monocle.std.stream"><span>stream</span></li><li class="in" name="monocle.std.StreamOptics"><span>StreamOptics</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="monocle.std.stream"><span>stream</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -890,134 +875,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="monocle.std.StreamOptics#streamCons" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="streamCons[A]:monocle.function.Cons[Stream[A],A]"></a><a id="streamCons[A]:Cons[Stream[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/stream$.html#streamCons[A]:monocle.function.Cons[Stream[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">streamCons</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Cons.html" class="extype" name="monocle.function.Cons">Cons</a>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="monocle.std.StreamOptics.streamCons.A">A</span>], <span class="extype" name="monocle.std.StreamOptics.streamCons.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></dd></dl></div>
-    </li><li name="monocle.std.StreamOptics#streamEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="streamEach[A]:monocle.function.Each[Stream[A],A]"></a><a id="streamEach[A]:Each[Stream[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/stream$.html#streamEach[A]:monocle.function.Each[Stream[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">streamEach</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="monocle.std.StreamOptics.streamEach.A">A</span>], <span class="extype" name="monocle.std.StreamOptics.streamEach.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></dd></dl></div>
-    </li><li name="monocle.std.StreamOptics#streamEmpty" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="streamEmpty[A]:monocle.function.Empty[Stream[A]]"></a><a id="streamEmpty[A]:Empty[Stream[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/stream$.html#streamEmpty[A]:monocle.function.Empty[Stream[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">streamEmpty</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Empty.html" class="extype" name="monocle.function.Empty">Empty</a>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="monocle.std.StreamOptics.streamEmpty.A">A</span>]]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></dd></dl></div>
-    </li><li name="monocle.std.StreamOptics#streamFilterIndex" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="streamFilterIndex[A]:monocle.function.FilterIndex[Stream[A],Int,A]"></a><a id="streamFilterIndex[A]:FilterIndex[Stream[A],Int,A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/stream$.html#streamFilterIndex[A]:monocle.function.FilterIndex[Stream[A],Int,A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">streamFilterIndex</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/FilterIndex.html" class="extype" name="monocle.function.FilterIndex">FilterIndex</a>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="monocle.std.StreamOptics.streamFilterIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.StreamOptics.streamFilterIndex.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></dd></dl></div>
-    </li><li name="monocle.std.StreamOptics#streamIndex" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="streamIndex[A]:monocle.function.Index[Stream[A],Int,A]"></a><a id="streamIndex[A]:Index[Stream[A],Int,A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/stream$.html#streamIndex[A]:monocle.function.Index[Stream[A],Int,A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">streamIndex</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Index.html" class="extype" name="monocle.function.Index">Index</a>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="monocle.std.StreamOptics.streamIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.StreamOptics.streamIndex.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></dd></dl></div>
-    </li><li name="monocle.std.StreamOptics#streamPlated" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="streamPlated[A]:monocle.function.Plated[Stream[A]]"></a><a id="streamPlated[A]:Plated[Stream[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/stream$.html#streamPlated[A]:monocle.function.Plated[Stream[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">streamPlated</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Plated.html" class="extype" name="monocle.function.Plated">Plated</a>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="monocle.std.StreamOptics.streamPlated.A">A</span>]]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></dd></dl></div>
-    </li><li name="monocle.std.StreamOptics#streamReverse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="streamReverse[A]:monocle.function.Reverse[Stream[A],Stream[A]]"></a><a id="streamReverse[A]:Reverse[Stream[A],Stream[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/stream$.html#streamReverse[A]:monocle.function.Reverse[Stream[A],Stream[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">streamReverse</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Reverse.html" class="extype" name="monocle.function.Reverse">Reverse</a>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="monocle.std.StreamOptics.streamReverse.A">A</span>], <span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="monocle.std.StreamOptics.streamReverse.A">A</span>]]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></dd></dl></div>
-    </li><li name="monocle.std.StreamOptics#streamSnoc" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="streamSnoc[A]:monocle.function.Snoc[Stream[A],A]"></a><a id="streamSnoc[A]:Snoc[Stream[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/stream$.html#streamSnoc[A]:monocle.function.Snoc[Stream[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">streamSnoc</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Snoc.html" class="extype" name="monocle.function.Snoc">Snoc</a>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="monocle.std.StreamOptics.streamSnoc.A">A</span>], <span class="extype" name="monocle.std.StreamOptics.streamSnoc.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -1126,9 +983,7 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="monocle.std.StreamOptics">
-              <h3>Inherited from <a href="StreamOptics.html" class="extype" name="monocle.std.StreamOptics">StreamOptics</a></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></h3>

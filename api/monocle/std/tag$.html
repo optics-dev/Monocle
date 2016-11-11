@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../../';
@@ -172,24 +172,6 @@
                         <a class="trait" href="FunctionOptics.html" title=""></a>
                         <a href="FunctionOptics.html" title="">
                           FunctionOptics
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics1.html" title=""></a>
-                        <a href="FunctionOptics1.html" title="">
-                          FunctionOptics1
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics2.html" title=""></a>
-                        <a href="FunctionOptics2.html" title="">
-                          FunctionOptics2
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics3.html" title=""></a>
-                        <a href="FunctionOptics3.html" title="">
-                          FunctionOptics3
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -592,16 +574,19 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">tag</span><span class="result"> extends <a href="TagOptics.html" class="extype" name="monocle.std.TagOptics">TagOptics</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 1.4.0) instances have been move to typeclass companion object">tag</span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Tag.scala" target="_blank">Tag.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.4.0)</i> instances have been move to typeclass companion object</p></dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Tag.scala" target="_blank">Tag.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="TagOptics.html" class="extype" name="monocle.std.TagOptics">TagOptics</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -627,7 +612,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="monocle.std.tag"><span>tag</span></li><li class="in" name="monocle.std.TagOptics"><span>TagOptics</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="monocle.std.tag"><span>tag</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -906,22 +891,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="monocle.std.TagOptics#tagWrapped" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="tagWrapped[A,B]:monocle.function.Wrapped[scalaz.@@[A,B],A]"></a><a id="tagWrapped[A,B]:Wrapped[@@[A,B],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/tag$.html#tagWrapped[A,B]:monocle.function.Wrapped[scalaz.@@[A,B],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tagWrapped</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result">: <a href="../function/Wrapped.html" class="extype" name="monocle.function.Wrapped">Wrapped</a>[<a href="../../scalaz/index.html#@@[T,Tag]=scalaz.package.Tagged[T,Tag]" class="extmbr" name="scalaz.@@">@@</a>[<span class="extype" name="monocle.std.TagOptics.tagWrapped.A">A</span>, <span class="extype" name="monocle.std.TagOptics.tagWrapped.B">B</span>], <span class="extype" name="monocle.std.TagOptics.tagWrapped.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TagOptics.html" class="extype" name="monocle.std.TagOptics">TagOptics</a></dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
@@ -1014,9 +983,7 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="monocle.std.TagOptics">
-              <h3>Inherited from <a href="TagOptics.html" class="extype" name="monocle.std.TagOptics">TagOptics</a></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></h3>

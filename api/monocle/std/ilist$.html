@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../../';
@@ -172,24 +172,6 @@
                         <a class="trait" href="FunctionOptics.html" title=""></a>
                         <a href="FunctionOptics.html" title="">
                           FunctionOptics
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics1.html" title=""></a>
-                        <a href="FunctionOptics1.html" title="">
-                          FunctionOptics1
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics2.html" title=""></a>
-                        <a href="FunctionOptics2.html" title="">
-                          FunctionOptics2
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics3.html" title=""></a>
-                        <a href="FunctionOptics3.html" title="">
-                          FunctionOptics3
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -826,118 +808,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="monocle.std.IListInstances#iListCons" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="iListCons[A]:monocle.function.Cons[scalaz.IList[A],A]"></a><a id="iListCons[A]:Cons[IList[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/ilist$.html#iListCons[A]:monocle.function.Cons[scalaz.IList[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">iListCons</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Cons.html" class="extype" name="monocle.function.Cons">Cons</a>[<span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.iListCons.A">A</span>], <span class="extype" name="monocle.std.IListInstances.iListCons.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>
-    </li><li name="monocle.std.IListInstances#iListEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="iListEach[A]:monocle.function.Each[scalaz.IList[A],A]"></a><a id="iListEach[A]:Each[IList[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/ilist$.html#iListEach[A]:monocle.function.Each[scalaz.IList[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">iListEach</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.iListEach.A">A</span>], <span class="extype" name="monocle.std.IListInstances.iListEach.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>
-    </li><li name="monocle.std.IListInstances#iListEmpty" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="iListEmpty[A]:monocle.function.Empty[scalaz.IList[A]]"></a><a id="iListEmpty[A]:Empty[IList[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/ilist$.html#iListEmpty[A]:monocle.function.Empty[scalaz.IList[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">iListEmpty</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Empty.html" class="extype" name="monocle.function.Empty">Empty</a>[<span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.iListEmpty.A">A</span>]]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>
-    </li><li name="monocle.std.IListInstances#iListFilterIndex" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="iListFilterIndex[A]:monocle.function.FilterIndex[scalaz.IList[A],Int,A]"></a><a id="iListFilterIndex[A]:FilterIndex[IList[A],Int,A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/ilist$.html#iListFilterIndex[A]:monocle.function.FilterIndex[scalaz.IList[A],Int,A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">iListFilterIndex</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/FilterIndex.html" class="extype" name="monocle.function.FilterIndex">FilterIndex</a>[<span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.iListFilterIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.IListInstances.iListFilterIndex.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>
-    </li><li name="monocle.std.IListInstances#iListIndex" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="iListIndex[A]:monocle.function.Index[scalaz.IList[A],Int,A]"></a><a id="iListIndex[A]:Index[IList[A],Int,A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/ilist$.html#iListIndex[A]:monocle.function.Index[scalaz.IList[A],Int,A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">iListIndex</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Index.html" class="extype" name="monocle.function.Index">Index</a>[<span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.iListIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.IListInstances.iListIndex.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>
-    </li><li name="monocle.std.IListInstances#iListReverse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="iListReverse[A]:monocle.function.Reverse[scalaz.IList[A],scalaz.IList[A]]"></a><a id="iListReverse[A]:Reverse[IList[A],IList[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/ilist$.html#iListReverse[A]:monocle.function.Reverse[scalaz.IList[A],scalaz.IList[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">iListReverse</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Reverse.html" class="extype" name="monocle.function.Reverse">Reverse</a>[<span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.iListReverse.A">A</span>], <span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.iListReverse.A">A</span>]]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>
-    </li><li name="monocle.std.IListInstances#iListSnoc" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="iListSnoc[A]:monocle.function.Snoc[scalaz.IList[A],A]"></a><a id="iListSnoc[A]:Snoc[IList[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/ilist$.html#iListSnoc[A]:monocle.function.Snoc[scalaz.IList[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">iListSnoc</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Snoc.html" class="extype" name="monocle.function.Snoc">Snoc</a>[<span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.iListSnoc.A">A</span>], <span class="extype" name="monocle.std.IListInstances.iListSnoc.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>
     </li><li name="monocle.std.IListInstances#iListToList" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="iListToList[A]:monocle.Iso[scalaz.IList[A],List[A]]"></a><a id="iListToList[A]:Iso[IList[A],List[A]]"></a>
       <span class="permalink">
@@ -951,38 +821,6 @@
       </span>
       <span class="symbol">
         <span class="name">iListToList</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../index.html#Iso[S,A]=monocle.PIso[S,S,A,A]" class="extmbr" name="monocle.Iso">Iso</a>[<span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.iListToList.A">A</span>], <span class="extype" name="scala.List">List</span>[<span class="extype" name="monocle.std.IListInstances.iListToList.A">A</span>]]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>
-    </li><li name="monocle.std.IListInstances#iNilEmpty" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="iNilEmpty[A]:monocle.function.Empty[scalaz.INil[A]]"></a><a id="iNilEmpty[A]:Empty[INil[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/ilist$.html#iNilEmpty[A]:monocle.function.Empty[scalaz.INil[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">iNilEmpty</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Empty.html" class="extype" name="monocle.function.Empty">Empty</a>[<span class="extype" name="scalaz.INil">INil</span>[<span class="extype" name="monocle.std.IListInstances.iNilEmpty.A">A</span>]]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>
-    </li><li name="monocle.std.IListInstances#ilistPlated" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ilistPlated[A]:monocle.function.Plated[scalaz.IList[A]]"></a><a id="ilistPlated[A]:Plated[IList[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/ilist$.html#ilistPlated[A]:monocle.function.Plated[scalaz.IList[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ilistPlated</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Plated.html" class="extype" name="monocle.function.Plated">Plated</a>[<span class="extype" name="scalaz.IList">IList</span>[<span class="extype" name="monocle.std.IListInstances.ilistPlated.A">A</span>]]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="IListInstances.html" class="extype" name="monocle.std.IListInstances">IListInstances</a></dd></dl></div>

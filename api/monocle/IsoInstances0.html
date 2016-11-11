@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../lib/scheduler.js"></script>
       <script type="text/javascript" src="../lib/template.js"></script>
       <script type="text/javascript" src="../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../lib/modernizr.custom.js"></script><script type="text/javascript" src="../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../';
@@ -399,7 +399,17 @@ where n can be infinite.">
               Known Subclasses
             </span>
             <div class="subClasses hiddenContent"><a href="IsoInstances.html" class="extype" name="monocle.IsoInstances">IsoInstances</a>, <a href="PIso$.html" class="extype" name="monocle.PIso">PIso</a></div>
-          </div></div>
+          </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+                <span class="toggle diagram-link">
+                  Type Hierarchy
+                </span>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 150.00 158.00" height="158pt" width="150pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 154)" class="graph" id="graph0"><polygon points="-4,4 -4,-154 146,-154 146,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this class" id="graph1_0"><g id="a_this class|graph1_0"><a xlink:title="monocle.IsoInstances0 (this class)" xlink:href="#inheritance-diagram"><path d="M108.583,-88C108.583,-88 33.4167,-88 33.4167,-88 29.0833,-88 24.75,-83.6667 24.75,-79.3333 24.75,-79.3333 24.75,-70.6667 24.75,-70.6667 24.75,-66.3333 29.0833,-62 33.4167,-62 33.4167,-62 108.583,-62 108.583,-62 112.917,-62 117.25,-66.3333 117.25,-70.6667 117.25,-70.6667 117.25,-79.3333 117.25,-79.3333 117.25,-83.6667 112.917,-88 108.583,-88" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-81" x="37" preserveAspectRatio="xMinYMin meet" height="12px" width="12px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-72.6" x="56.707" text-anchor="start">IsoInstances0</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="monocle.IsoInstances" xlink:href="IsoInstances.html#inheritance-diagram"><path d="M106.583,-26C106.583,-26 35.4167,-26 35.4167,-26 31.0833,-26 26.75,-21.6667 26.75,-17.3333 26.75,-17.3333 26.75,-8.66667 26.75,-8.66667 26.75,-4.33333 31.0833,-0 35.4167,-0 35.4167,-0 106.583,-0 106.583,-0 110.917,-0 115.25,-4.33333 115.25,-8.66667 115.25,-8.66667 115.25,-17.3333 115.25,-17.3333 115.25,-21.6667 110.917,-26 106.583,-26" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-19" x="39" preserveAspectRatio="xMinYMin meet" height="12px" width="12px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.6" x="58.9316" text-anchor="start">IsoInstances</text></a></g></g><!-- node0&#45;&gt;node1 --><g class="edge inheritance" id="graph1_0_1"><g id="a_inheritance|graph1_0_1"><a xlink:title="IsoInstances is a subtype of IsoInstances0"><path d="M71,-54.7534C71,-45.3549 71,-34.3336 71,-26.1238" stroke="#d4d4d4" fill="none"></path><polygon points="68.5501,-54.8581 71,-61.8581 73.4501,-54.8581 68.5501,-54.8581" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node2 --><g class="node class" id="graph1_2"><g id="a_class|graph1_2"><a xlink:title="scala.AnyRef"><path d="M97.3333,-150C97.3333,-150 44.6667,-150 44.6667,-150 40.3333,-150 36,-145.667 36,-141.333 36,-141.333 36,-132.667 36,-132.667 36,-128.333 40.3333,-124 44.6667,-124 44.6667,-124 97.3333,-124 97.3333,-124 101.667,-124 106,-128.333 106,-132.667 106,-132.667 106,-141.333 106,-141.333 106,-145.667 101.667,-150 97.3333,-150" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-143" x="48" preserveAspectRatio="xMinYMin meet" height="12px" width="12px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-134.6" x="67.7715" text-anchor="start">AnyRef</text></a></g></g><!-- node2&#45;&gt;node0 --><g class="edge inheritance" id="graph1_2_0"><g id="a_inheritance|graph1_2_0"><a xlink:title="IsoInstances0 is a subtype of AnyRef"><path d="M71,-116.753C71,-107.355 71,-96.3336 71,-88.1238" stroke="#d4d4d4" fill="none"></path><polygon points="68.5501,-116.858 71,-123.858 73.4501,-116.858 68.5501,-116.858" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+                <div id="diagram-controls" class="hiddenContent">
+                  <button id="diagram-zoom-out" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button id="diagram-zoom-in" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button title="Toggle full-screen" id="diagram-fs" class="diagram-btn to-full"><i class="material-icons"></i></button>
+                </div>
+              </div></div>
         
 
       <div id="mbrsel">

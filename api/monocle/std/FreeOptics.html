@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../../';
@@ -172,24 +172,6 @@
                         <a class="trait" href="FunctionOptics.html" title=""></a>
                         <a href="FunctionOptics.html" title="">
                           FunctionOptics
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics1.html" title=""></a>
-                        <a href="FunctionOptics1.html" title="">
-                          FunctionOptics1
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics2.html" title=""></a>
-                        <a href="FunctionOptics2.html" title="">
-                          FunctionOptics2
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics3.html" title=""></a>
-                        <a href="FunctionOptics3.html" title="">
-                          FunctionOptics3
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -592,22 +574,30 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">FreeOptics</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 1.4.0) instances have been move to typeclass companion object">FreeOptics</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Free.scala" target="_blank">Free.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.4.0)</i> instances have been move to typeclass companion object</p></dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Free.scala" target="_blank">Free.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
           <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
-        </div><div class="toggleContainer block">
-            <span class="toggle">
-              Known Subclasses
-            </span>
-            <div class="subClasses hiddenContent"><a href="free$.html" class="extype" name="monocle.std.free">free</a></div>
-          </div></div>
+        </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+                <span class="toggle diagram-link">
+                  Type Hierarchy
+                </span>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 140.00 120.00" height="120pt" width="140pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 116)" class="graph" id="graph0"><polygon points="-4,4 -4,-116 136,-116 136,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this trait" id="graph1_0"><g id="a_this trait|graph1_0"><a xlink:title="monocle.std.FreeOptics (this trait)" xlink:href="#inheritance-diagram"><path d="M98.5833,-50C98.5833,-50 33.4167,-50 33.4167,-50 29.0833,-50 24.75,-45.6667 24.75,-41.3333 24.75,-41.3333 24.75,-32.6667 24.75,-32.6667 24.75,-28.3333 29.0833,-24 33.4167,-24 33.4167,-24 98.5833,-24 98.5833,-24 102.917,-24 107.25,-28.3333 107.25,-32.6667 107.25,-32.6667 107.25,-41.3333 107.25,-41.3333 107.25,-45.6667 102.917,-50 98.5833,-50" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../../lib/trait_diagram.png" y="-43" x="37" preserveAspectRatio="xMinYMin meet" height="12px" width="12px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-34.6" x="56.8281" text-anchor="start">FreeOptics</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="scala.AnyRef"><path d="M92.3333,-112C92.3333,-112 39.6667,-112 39.6667,-112 35.3333,-112 31,-107.667 31,-103.333 31,-103.333 31,-94.6667 31,-94.6667 31,-90.3333 35.3333,-86 39.6667,-86 39.6667,-86 92.3333,-86 92.3333,-86 96.6667,-86 101,-90.3333 101,-94.6667 101,-94.6667 101,-103.333 101,-103.333 101,-107.667 96.6667,-112 92.3333,-112" stroke="#418565" fill="#418565"></path><image xlink:href="../../lib/class_diagram.png" y="-105" x="43" preserveAspectRatio="xMinYMin meet" height="12px" width="12px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-96.6" x="62.7715" text-anchor="start">AnyRef</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="FreeOptics is a subtype of AnyRef"><path d="M66,-78.7534C66,-69.3549 66,-58.3336 66,-50.1238" stroke="#d4d4d4" fill="none"></path><polygon points="63.5501,-78.8581 66,-85.8581 68.4501,-78.8581 63.5501,-78.8581" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+                <div id="diagram-controls" class="hiddenContent">
+                  <button id="diagram-zoom-out" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button id="diagram-zoom-in" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button title="Toggle full-screen" id="diagram-fs" class="diagram-btn to-full"><i class="material-icons"></i></button>
+                </div>
+              </div></div>
         
 
       <div id="mbrsel">
@@ -799,22 +789,6 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="monocle.std.FreeOptics#freePlated" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="freePlated[S[_],A](implicitevidence$1:scalaz.Traverse[S]):monocle.function.Plated[scalaz.Free[S,A]]"></a><a id="freePlated[S[_],A](Traverse[S]):Plated[Free[S,A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/FreeOptics.html#freePlated[S[_],A](implicitevidence$1:scalaz.Traverse[S]):monocle.function.Plated[scalaz.Free[S,A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">freePlated</span><span class="tparams">[<span name="S">S<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scalaz.Traverse">Traverse</span>[<span class="extype" name="monocle.std.FreeOptics.freePlated.S">S</span>]</span>)</span><span class="result">: <a href="../function/Plated.html" class="extype" name="monocle.function.Plated">Plated</a>[<span class="extype" name="scalaz.Free">Free</span>[<span class="extype" name="monocle.std.FreeOptics.freePlated.S">S</span>, <span class="extype" name="monocle.std.FreeOptics.freePlated.A">A</span>]]</span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">

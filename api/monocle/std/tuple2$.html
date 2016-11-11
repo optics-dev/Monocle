@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../../';
@@ -172,24 +172,6 @@
                         <a class="trait" href="FunctionOptics.html" title=""></a>
                         <a href="FunctionOptics.html" title="">
                           FunctionOptics
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics1.html" title=""></a>
-                        <a href="FunctionOptics1.html" title="">
-                          FunctionOptics1
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics2.html" title=""></a>
-                        <a href="FunctionOptics2.html" title="">
-                          FunctionOptics2
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics3.html" title=""></a>
-                        <a href="FunctionOptics3.html" title="">
-                          FunctionOptics3
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -592,16 +574,19 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">tuple2</span><span class="result"> extends <a href="Tuple2Optics.html" class="extype" name="monocle.std.Tuple2Optics">Tuple2Optics</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 1.4.0) instances have been move to typeclass companion object">tuple2</span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Tuple2.scala" target="_blank">Tuple2.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.4.0)</i> instances have been move to typeclass companion object</p></dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Tuple2.scala" target="_blank">Tuple2.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="Tuple2Optics.html" class="extype" name="monocle.std.Tuple2Optics">Tuple2Optics</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -627,7 +612,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="monocle.std.tuple2"><span>tuple2</span></li><li class="in" name="monocle.std.Tuple2Optics"><span>Tuple2Optics</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="monocle.std.tuple2"><span>tuple2</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -922,102 +907,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="monocle.std.Tuple2Optics#tuple2Cons1" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="tuple2Cons1[A1,A2]:monocle.function.Cons1[(A1,A2),A1,A2]"></a><a id="tuple2Cons1[A1,A2]:Cons1[(A1,A2),A1,A2]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/tuple2$.html#tuple2Cons1[A1,A2]:monocle.function.Cons1[(A1,A2),A1,A2]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tuple2Cons1</span><span class="tparams">[<span name="A1">A1</span>, <span name="A2">A2</span>]</span><span class="result">: <a href="../function/Cons1.html" class="extype" name="monocle.function.Cons1">Cons1</a>[(<span class="extype" name="monocle.std.Tuple2Optics.tuple2Cons1.A1">A1</span>, <span class="extype" name="monocle.std.Tuple2Optics.tuple2Cons1.A2">A2</span>), <span class="extype" name="monocle.std.Tuple2Optics.tuple2Cons1.A1">A1</span>, <span class="extype" name="monocle.std.Tuple2Optics.tuple2Cons1.A2">A2</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Tuple2Optics.html" class="extype" name="monocle.std.Tuple2Optics">Tuple2Optics</a></dd></dl></div>
-    </li><li name="monocle.std.Tuple2Optics#tuple2Each" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="tuple2Each[A]:monocle.function.Each[(A,A),A]"></a><a id="tuple2Each[A]:Each[(A,A),A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/tuple2$.html#tuple2Each[A]:monocle.function.Each[(A,A),A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tuple2Each</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Each.html" class="extype" name="monocle.function.Each">Each</a>[(<span class="extype" name="monocle.std.Tuple2Optics.tuple2Each.A">A</span>, <span class="extype" name="monocle.std.Tuple2Optics.tuple2Each.A">A</span>), <span class="extype" name="monocle.std.Tuple2Optics.tuple2Each.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Tuple2Optics.html" class="extype" name="monocle.std.Tuple2Optics">Tuple2Optics</a></dd></dl></div>
-    </li><li name="monocle.std.Tuple2Optics#tuple2Field1" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="tuple2Field1[A1,A2]:monocle.function.Field1[(A1,A2),A1]"></a><a id="tuple2Field1[A1,A2]:Field1[(A1,A2),A1]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/tuple2$.html#tuple2Field1[A1,A2]:monocle.function.Field1[(A1,A2),A1]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tuple2Field1</span><span class="tparams">[<span name="A1">A1</span>, <span name="A2">A2</span>]</span><span class="result">: <a href="../function/Field1.html" class="extype" name="monocle.function.Field1">Field1</a>[(<span class="extype" name="monocle.std.Tuple2Optics.tuple2Field1.A1">A1</span>, <span class="extype" name="monocle.std.Tuple2Optics.tuple2Field1.A2">A2</span>), <span class="extype" name="monocle.std.Tuple2Optics.tuple2Field1.A1">A1</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Tuple2Optics.html" class="extype" name="monocle.std.Tuple2Optics">Tuple2Optics</a></dd></dl></div>
-    </li><li name="monocle.std.Tuple2Optics#tuple2Field2" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="tuple2Field2[A1,A2]:monocle.function.Field2[(A1,A2),A2]"></a><a id="tuple2Field2[A1,A2]:Field2[(A1,A2),A2]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/tuple2$.html#tuple2Field2[A1,A2]:monocle.function.Field2[(A1,A2),A2]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tuple2Field2</span><span class="tparams">[<span name="A1">A1</span>, <span name="A2">A2</span>]</span><span class="result">: <a href="../function/Field2.html" class="extype" name="monocle.function.Field2">Field2</a>[(<span class="extype" name="monocle.std.Tuple2Optics.tuple2Field2.A1">A1</span>, <span class="extype" name="monocle.std.Tuple2Optics.tuple2Field2.A2">A2</span>), <span class="extype" name="monocle.std.Tuple2Optics.tuple2Field2.A2">A2</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Tuple2Optics.html" class="extype" name="monocle.std.Tuple2Optics">Tuple2Optics</a></dd></dl></div>
-    </li><li name="monocle.std.Tuple2Optics#tuple2Reverse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="tuple2Reverse[A,B]:monocle.function.Reverse[(A,B),(B,A)]"></a><a id="tuple2Reverse[A,B]:Reverse[(A,B),(B,A)]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/tuple2$.html#tuple2Reverse[A,B]:monocle.function.Reverse[(A,B),(B,A)]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tuple2Reverse</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result">: <a href="../function/Reverse.html" class="extype" name="monocle.function.Reverse">Reverse</a>[(<span class="extype" name="monocle.std.Tuple2Optics.tuple2Reverse.A">A</span>, <span class="extype" name="monocle.std.Tuple2Optics.tuple2Reverse.B">B</span>), (<span class="extype" name="monocle.std.Tuple2Optics.tuple2Reverse.B">B</span>, <span class="extype" name="monocle.std.Tuple2Optics.tuple2Reverse.A">A</span>)]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Tuple2Optics.html" class="extype" name="monocle.std.Tuple2Optics">Tuple2Optics</a></dd></dl></div>
-    </li><li name="monocle.std.Tuple2Optics#tuple2Snoc1" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="tuple2Snoc1[A1,A2]:monocle.function.Snoc1[(A1,A2),A1,A2]"></a><a id="tuple2Snoc1[A1,A2]:Snoc1[(A1,A2),A1,A2]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/tuple2$.html#tuple2Snoc1[A1,A2]:monocle.function.Snoc1[(A1,A2),A1,A2]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tuple2Snoc1</span><span class="tparams">[<span name="A1">A1</span>, <span name="A2">A2</span>]</span><span class="result">: <a href="../function/Snoc1.html" class="extype" name="monocle.function.Snoc1">Snoc1</a>[(<span class="extype" name="monocle.std.Tuple2Optics.tuple2Snoc1.A1">A1</span>, <span class="extype" name="monocle.std.Tuple2Optics.tuple2Snoc1.A2">A2</span>), <span class="extype" name="monocle.std.Tuple2Optics.tuple2Snoc1.A1">A1</span>, <span class="extype" name="monocle.std.Tuple2Optics.tuple2Snoc1.A2">A2</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Tuple2Optics.html" class="extype" name="monocle.std.Tuple2Optics">Tuple2Optics</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
@@ -1094,9 +983,7 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="monocle.std.Tuple2Optics">
-              <h3>Inherited from <a href="Tuple2Optics.html" class="extype" name="monocle.std.Tuple2Optics">Tuple2Optics</a></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></h3>

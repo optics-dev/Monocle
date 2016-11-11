@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../../';
@@ -172,24 +172,6 @@
                         <a class="trait" href="FunctionOptics.html" title=""></a>
                         <a href="FunctionOptics.html" title="">
                           FunctionOptics
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics1.html" title=""></a>
-                        <a href="FunctionOptics1.html" title="">
-                          FunctionOptics1
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics2.html" title=""></a>
-                        <a href="FunctionOptics2.html" title="">
-                          FunctionOptics2
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics3.html" title=""></a>
-                        <a href="FunctionOptics3.html" title="">
-                          FunctionOptics3
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -592,16 +574,19 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">oneand</span><span class="result"> extends <a href="OneAndOptics.html" class="extype" name="monocle.std.OneAndOptics">OneAndOptics</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 1.4.0) instances have been move to typeclass companion object">oneand</span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/OneAnd.scala" target="_blank">OneAnd.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.4.0)</i> instances have been move to typeclass companion object</p></dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/OneAnd.scala" target="_blank">OneAnd.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="OneAndOptics.html" class="extype" name="monocle.std.OneAndOptics">OneAndOptics</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -627,7 +612,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="monocle.std.oneand"><span>oneand</span></li><li class="in" name="monocle.std.OneAndOptics"><span>OneAndOptics</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="monocle.std.oneand"><span>oneand</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -890,70 +875,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="monocle.std.OneAndOptics#oneAndCons1" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="oneAndCons1[T[_],A]:monocle.function.Cons1[scalaz.OneAnd[T,A],A,T[A]]"></a><a id="oneAndCons1[T[_],A]:Cons1[OneAnd[T,A],A,T[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/oneand$.html#oneAndCons1[T[_],A]:monocle.function.Cons1[scalaz.OneAnd[T,A],A,T[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">oneAndCons1</span><span class="tparams">[<span name="T">T<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="result">: <a href="../function/Cons1.html" class="extype" name="monocle.function.Cons1">Cons1</a>[<span class="extype" name="scalaz.OneAnd">OneAnd</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.T">T</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.A">A</span>], <span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.A">A</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.T">T</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.A">A</span>]]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="OneAndOptics.html" class="extype" name="monocle.std.OneAndOptics">OneAndOptics</a></dd></dl></div>
-    </li><li name="monocle.std.OneAndOptics#oneAndEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="oneAndEach[T[_],A](implicitev:monocle.function.Each[T[A],A]):monocle.function.Each[scalaz.OneAnd[T,A],A]"></a><a id="oneAndEach[T[_],A](Each[T[A],A]):Each[OneAnd[T,A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/oneand$.html#oneAndEach[T[_],A](implicitev:monocle.function.Each[T[A],A]):monocle.function.Each[scalaz.OneAnd[T,A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">oneAndEach</span><span class="tparams">[<span name="T">T<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <a href="../function/Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="monocle.std.OneAndOptics.oneAndEach.T">T</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndEach.A">A</span>], <span class="extype" name="monocle.std.OneAndOptics.oneAndEach.A">A</span>]</span>)</span><span class="result">: <a href="../function/Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scalaz.OneAnd">OneAnd</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndEach.T">T</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndEach.A">A</span>], <span class="extype" name="monocle.std.OneAndOptics.oneAndEach.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="OneAndOptics.html" class="extype" name="monocle.std.OneAndOptics">OneAndOptics</a></dd></dl></div>
-    </li><li name="monocle.std.OneAndOptics#oneAndField1" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="oneAndField1[T[_],A]:monocle.function.Field1[scalaz.OneAnd[T,A],A]"></a><a id="oneAndField1[T[_],A]:Field1[OneAnd[T,A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/oneand$.html#oneAndField1[T[_],A]:monocle.function.Field1[scalaz.OneAnd[T,A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">oneAndField1</span><span class="tparams">[<span name="T">T<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="result">: <a href="../function/Field1.html" class="extype" name="monocle.function.Field1">Field1</a>[<span class="extype" name="scalaz.OneAnd">OneAnd</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndField1.T">T</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndField1.A">A</span>], <span class="extype" name="monocle.std.OneAndOptics.oneAndField1.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="OneAndOptics.html" class="extype" name="monocle.std.OneAndOptics">OneAndOptics</a></dd></dl></div>
-    </li><li name="monocle.std.OneAndOptics#oneAndIndex" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="oneAndIndex[T[_],A](implicitev:monocle.function.Index[T[A],Int,A]):monocle.function.Index[scalaz.OneAnd[T,A],Int,A]"></a><a id="oneAndIndex[T[_],A](Index[T[A],Int,A]):Index[OneAnd[T,A],Int,A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/oneand$.html#oneAndIndex[T[_],A](implicitev:monocle.function.Index[T[A],Int,A]):monocle.function.Index[scalaz.OneAnd[T,A],Int,A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">oneAndIndex</span><span class="tparams">[<span name="T">T<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <a href="../function/Index.html" class="extype" name="monocle.function.Index">Index</a>[<span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.T">T</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.A">A</span>]</span>)</span><span class="result">: <a href="../function/Index.html" class="extype" name="monocle.function.Index">Index</a>[<span class="extype" name="scalaz.OneAnd">OneAnd</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.T">T</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="OneAndOptics.html" class="extype" name="monocle.std.OneAndOptics">OneAndOptics</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -1062,9 +983,7 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="monocle.std.OneAndOptics">
-              <h3>Inherited from <a href="OneAndOptics.html" class="extype" name="monocle.std.OneAndOptics">OneAndOptics</a></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></h3>

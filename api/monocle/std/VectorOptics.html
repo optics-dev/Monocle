@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../../';
@@ -172,24 +172,6 @@
                         <a class="trait" href="FunctionOptics.html" title=""></a>
                         <a href="FunctionOptics.html" title="">
                           FunctionOptics
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics1.html" title=""></a>
-                        <a href="FunctionOptics1.html" title="">
-                          FunctionOptics1
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics2.html" title=""></a>
-                        <a href="FunctionOptics2.html" title="">
-                          FunctionOptics2
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics3.html" title=""></a>
-                        <a href="FunctionOptics3.html" title="">
-                          FunctionOptics3
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -592,22 +574,30 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">VectorOptics</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 1.4.0) instances have been move to typeclass companion object">VectorOptics</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Vector.scala" target="_blank">Vector.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.4.0)</i> instances have been move to typeclass companion object</p></dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/Vector.scala" target="_blank">Vector.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
           <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
-        </div><div class="toggleContainer block">
-            <span class="toggle">
-              Known Subclasses
-            </span>
-            <div class="subClasses hiddenContent"><a href="../Monocle$.html" class="extype" name="monocle.Monocle">Monocle</a>, <a href="StdInstances.html" class="extype" name="monocle.std.StdInstances">StdInstances</a>, <a href="all$.html" class="extype" name="monocle.std.all">all</a>, <a href="vector$.html" class="extype" name="monocle.std.vector">vector</a></div>
-          </div></div>
+        </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+                <span class="toggle diagram-link">
+                  Type Hierarchy
+                </span>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 146.00 120.00" height="120pt" width="146pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 116)" class="graph" id="graph0"><polygon points="-4,4 -4,-116 142,-116 142,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this trait" id="graph1_0"><g id="a_this trait|graph1_0"><a xlink:title="monocle.std.VectorOptics (this trait)" xlink:href="#inheritance-diagram"><path d="M104.583,-50C104.583,-50 33.4167,-50 33.4167,-50 29.0833,-50 24.75,-45.6667 24.75,-41.3333 24.75,-41.3333 24.75,-32.6667 24.75,-32.6667 24.75,-28.3333 29.0833,-24 33.4167,-24 33.4167,-24 104.583,-24 104.583,-24 108.917,-24 113.25,-28.3333 113.25,-32.6667 113.25,-32.6667 113.25,-41.3333 113.25,-41.3333 113.25,-45.6667 108.917,-50 104.583,-50" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../../lib/trait_diagram.png" y="-43" x="37" preserveAspectRatio="xMinYMin meet" height="12px" width="12px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-34.6" x="56.7109" text-anchor="start">VectorOptics</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="scala.AnyRef"><path d="M95.3333,-112C95.3333,-112 42.6667,-112 42.6667,-112 38.3333,-112 34,-107.667 34,-103.333 34,-103.333 34,-94.6667 34,-94.6667 34,-90.3333 38.3333,-86 42.6667,-86 42.6667,-86 95.3333,-86 95.3333,-86 99.6667,-86 104,-90.3333 104,-94.6667 104,-94.6667 104,-103.333 104,-103.333 104,-107.667 99.6667,-112 95.3333,-112" stroke="#418565" fill="#418565"></path><image xlink:href="../../lib/class_diagram.png" y="-105" x="46" preserveAspectRatio="xMinYMin meet" height="12px" width="12px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-96.6" x="65.7715" text-anchor="start">AnyRef</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="VectorOptics is a subtype of AnyRef"><path d="M69,-78.7534C69,-69.3549 69,-58.3336 69,-50.1238" stroke="#d4d4d4" fill="none"></path><polygon points="66.5501,-78.8581 69,-85.8581 71.4501,-78.8581 66.5501,-78.8581" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+                <div id="diagram-controls" class="hiddenContent">
+                  <button id="diagram-zoom-out" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button id="diagram-zoom-in" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button title="Toggle full-screen" id="diagram-fs" class="diagram-btn to-full"><i class="material-icons"></i></button>
+                </div>
+              </div></div>
         
 
       <div id="mbrsel">
@@ -927,134 +917,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="monocle.std.VectorOptics#vectorCons" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="vectorCons[A]:monocle.function.Cons[Vector[A],A]"></a><a id="vectorCons[A]:Cons[Vector[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/VectorOptics.html#vectorCons[A]:monocle.function.Cons[Vector[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">vectorCons</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Cons.html" class="extype" name="monocle.function.Cons">Cons</a>[<span class="extype" name="scala.Vector">Vector</span>[<span class="extype" name="monocle.std.VectorOptics.vectorCons.A">A</span>], <span class="extype" name="monocle.std.VectorOptics.vectorCons.A">A</span>]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.VectorOptics#vectorEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="vectorEach[A]:monocle.function.Each[Vector[A],A]"></a><a id="vectorEach[A]:Each[Vector[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/VectorOptics.html#vectorEach[A]:monocle.function.Each[Vector[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">vectorEach</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scala.Vector">Vector</span>[<span class="extype" name="monocle.std.VectorOptics.vectorEach.A">A</span>], <span class="extype" name="monocle.std.VectorOptics.vectorEach.A">A</span>]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.VectorOptics#vectorEmpty" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="vectorEmpty[A]:monocle.function.Empty[Vector[A]]"></a><a id="vectorEmpty[A]:Empty[Vector[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/VectorOptics.html#vectorEmpty[A]:monocle.function.Empty[Vector[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">vectorEmpty</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Empty.html" class="extype" name="monocle.function.Empty">Empty</a>[<span class="extype" name="scala.Vector">Vector</span>[<span class="extype" name="monocle.std.VectorOptics.vectorEmpty.A">A</span>]]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.VectorOptics#vectorFilterIndex" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="vectorFilterIndex[A]:monocle.function.FilterIndex[Vector[A],Int,A]"></a><a id="vectorFilterIndex[A]:FilterIndex[Vector[A],Int,A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/VectorOptics.html#vectorFilterIndex[A]:monocle.function.FilterIndex[Vector[A],Int,A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">vectorFilterIndex</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/FilterIndex.html" class="extype" name="monocle.function.FilterIndex">FilterIndex</a>[<span class="extype" name="scala.Vector">Vector</span>[<span class="extype" name="monocle.std.VectorOptics.vectorFilterIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.VectorOptics.vectorFilterIndex.A">A</span>]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.VectorOptics#vectorIndex" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="vectorIndex[A]:monocle.function.Index[Vector[A],Int,A]"></a><a id="vectorIndex[A]:Index[Vector[A],Int,A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/VectorOptics.html#vectorIndex[A]:monocle.function.Index[Vector[A],Int,A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">vectorIndex</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Index.html" class="extype" name="monocle.function.Index">Index</a>[<span class="extype" name="scala.Vector">Vector</span>[<span class="extype" name="monocle.std.VectorOptics.vectorIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.VectorOptics.vectorIndex.A">A</span>]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.VectorOptics#vectorPlated" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="vectorPlated[A]:monocle.function.Plated[Vector[A]]"></a><a id="vectorPlated[A]:Plated[Vector[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/VectorOptics.html#vectorPlated[A]:monocle.function.Plated[Vector[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">vectorPlated</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Plated.html" class="extype" name="monocle.function.Plated">Plated</a>[<span class="extype" name="scala.Vector">Vector</span>[<span class="extype" name="monocle.std.VectorOptics.vectorPlated.A">A</span>]]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.VectorOptics#vectorReverse" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="vectorReverse[A]:monocle.function.Reverse[Vector[A],Vector[A]]"></a><a id="vectorReverse[A]:Reverse[Vector[A],Vector[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/VectorOptics.html#vectorReverse[A]:monocle.function.Reverse[Vector[A],Vector[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">vectorReverse</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Reverse.html" class="extype" name="monocle.function.Reverse">Reverse</a>[<span class="extype" name="scala.Vector">Vector</span>[<span class="extype" name="monocle.std.VectorOptics.vectorReverse.A">A</span>], <span class="extype" name="scala.Vector">Vector</span>[<span class="extype" name="monocle.std.VectorOptics.vectorReverse.A">A</span>]]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.VectorOptics#vectorSnoc" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="vectorSnoc[A]:monocle.function.Snoc[Vector[A],A]"></a><a id="vectorSnoc[A]:Snoc[Vector[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/VectorOptics.html#vectorSnoc[A]:monocle.function.Snoc[Vector[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">vectorSnoc</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="../function/Snoc.html" class="extype" name="monocle.function.Snoc">Snoc</a>[<span class="extype" name="scala.Vector">Vector</span>[<span class="extype" name="monocle.std.VectorOptics.vectorSnoc.A">A</span>], <span class="extype" name="monocle.std.VectorOptics.vectorSnoc.A">A</span>]</span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
