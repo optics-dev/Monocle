@@ -1,6 +1,6 @@
 package monocle.state
 
-import monocle.{MonocleSuite, Optional}
+import monocle.{MonocleSuite, Optional, Setter, Getter}
 import monocle.macros.GenLens
 
 class StateExample extends MonocleSuite {
@@ -8,6 +8,22 @@ class StateExample extends MonocleSuite {
   case class Person(name: String, age: Int)
   val _age = GenLens[Person](_.age)
   val p = Person("John", 30)
+
+  test("extract"){
+    val getAge = for {
+      i <- _age extract
+    } yield i
+
+    getAge.run(p) shouldEqual ((Person("John", 30), 30))
+  }
+
+  test("extracts"){
+    val getDoubleAge = for {
+      i <- _age extracts (_ * 2)
+    } yield i
+
+    getDoubleAge.run(p) shouldEqual ((Person("John", 30), 60))
+  }
 
   test("mod"){
     val increment = for {
@@ -23,6 +39,12 @@ class StateExample extends MonocleSuite {
     } yield i
 
     increment.run(p) shouldEqual ((Person("John", 31), 30))
+  }
+
+  test("mod_"){
+    val increment = _age mod_ (_ + 1)
+
+    increment.run(p) shouldEqual ((Person("John", 31), ()))
   }
 
   test("assign"){
@@ -41,8 +63,60 @@ class StateExample extends MonocleSuite {
     set20.run(p) shouldEqual ((Person("John", 20), 30))
   }
 
+  test("assign_"){
+    val set20 = _age assign_ 20
+
+    set20.run(p) shouldEqual ((Person("John", 20), ()))
+  }
+
   val _oldAge = Optional[Person, Int](p => if (p.age > 50) Some(p.age) else None){ a => _.copy(age = a) }
   val _coolGuy = Optional[Person, String](p => if (p.name.startsWith("C")) Some(p.name) else None){ n => _.copy(name = n) }
+
+  test("extract for Optional (predicate is false)"){
+    val youngPerson = Person("John", 30)
+    val update = _oldAge extract
+
+    update.run(youngPerson) shouldEqual ((Person("John", 30), None))
+  }
+
+  test("extract for Optional (predicate is true)"){
+    val oldPerson = Person("John", 100)
+    val update = _oldAge extract
+
+    update.run(oldPerson) shouldEqual ((Person("John", 100), Some(100)))
+  }
+
+  test("extracts for Optional (predicate is false)"){
+    val youngPerson = Person("John", 30)
+    val update = _oldAge extracts (_ * 2)
+
+    update.run(youngPerson) shouldEqual ((Person("John", 30), None))
+  }
+
+  test("extracts for Optional (predicate is true)"){
+    val oldPerson = Person("John", 100)
+    val update = _oldAge extracts (_ * 2)
+
+    update.run(oldPerson) shouldEqual ((Person("John", 100), Some(200)))
+  }
+
+  test("mod for Optional (predicate is false)"){
+    val youngPerson = Person("John", 30)
+    val update = for {
+      i <- _oldAge mod (_ + 1)
+    } yield i
+
+    update.run(youngPerson) shouldEqual ((Person("John", 30), None))
+  }
+
+  test("mod for Optional (predicate is true)"){
+    val oldPerson = Person("John", 100)
+    val update = for {
+      i <- _oldAge mod (_ + 1)
+    } yield i
+
+    update.run(oldPerson) shouldEqual ((Person("John", 101), Some(101)))
+  }
 
   test("modo for Optional (predicate is false)"){
     val youngPerson = Person("John", 30)
@@ -82,4 +156,95 @@ class StateExample extends MonocleSuite {
     update.run(oldCoolPerson) shouldEqual ((Person("chris", 30), Some("Chris")))
   }
 
+  test("mod_ for Optional (predicate is false)"){
+    val youngPerson = Person("John", 30)
+    val update = _oldAge mod_ (_ + 1)
+
+    update.run(youngPerson) shouldEqual ((Person("John", 30), ()))
+  }
+
+  test("mod_ for Optional (predicate is true)"){
+    val oldPerson = Person("John", 100)
+    val update = _oldAge mod_ (_ + 1)
+
+    update.run(oldPerson) shouldEqual ((Person("John", 101), ()))
+  }
+
+  test("assign for Optional (predicate is true)"){
+    val oldPerson = Person("John", 100)
+    val update = for {
+      i <- _oldAge assign 30
+    } yield i
+
+    update.run(oldPerson) shouldEqual ((Person("John", 30), Some(30)))
+  }
+
+  test("assign for Optional (predicate is false)"){
+    val youngPerson = Person("John", 30)
+    val update = for {
+      i <- _oldAge assign 100
+    } yield i
+
+    update.run(youngPerson) shouldEqual ((Person("John", 30), None))
+  }
+
+  test("assigno for Optional (predicate is true)"){
+    val oldPerson = Person("John", 100)
+    val update = for {
+      i <- _oldAge assigno 30
+    } yield i
+
+    update.run(oldPerson) shouldEqual ((Person("John", 30), Some(100)))
+  }
+
+  test("assigno for Optional (predicate is false)"){
+    val youngPerson = Person("John", 30)
+    val update = for {
+      i <- _oldAge assigno 100
+    } yield i
+
+    update.run(youngPerson) shouldEqual ((Person("John", 30), None))
+  }
+
+  test("assign_ for Optional (predicate is true)"){
+    val oldPerson = Person("John", 100)
+    val update = _oldAge assign_ 30
+
+    update.run(oldPerson) shouldEqual ((Person("John", 30),()))
+  }
+
+  test("assign_ for Optional (predicate is false)"){
+    val youngPerson = Person("John", 30)
+    val update = _oldAge assign_ 100
+
+    update.run(youngPerson) shouldEqual ((Person("John", 30), ()))
+  }
+
+  val _nameSet = Setter[Person, String](f => p => p.copy(name = f(p.name)))
+
+  test("mod_ for Setter"){
+    val toUpper = _nameSet mod_ (_.toUpperCase)
+
+    toUpper.run(p) shouldEqual ((Person("JOHN", 30), ()))
+  }
+
+  test("assign_ for Setter"){
+    val toUpper = _nameSet assign_ ("Juan")
+
+    toUpper.run(p) shouldEqual ((Person("Juan", 30), ()))
+  }
+
+  val _nameGet = Getter[Person, String](_.name)
+
+  test("extract for Getter"){
+    val name = _nameGet extract
+
+    name.run(p) shouldEqual ((Person("John", 30), "John"))
+  }
+
+  test("extracts for Getter"){
+    val upper = _nameGet extracts (_.toUpperCase)
+
+    upper.run(p) shouldEqual ((Person("John", 30), "JOHN"))
+  }
 }
