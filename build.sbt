@@ -285,6 +285,10 @@ lazy val publishSettings = Seq(
         <id>aoiroaoino</id>
         <name>Naoki Aoyama</name>
       </developer>
+      <developer>
+        <id>xuwei-k</id>
+        <name>Kenji Yoshida</name>
+      </developer>
     </developers>
     ),
   releaseCrossBuild := true,
