@@ -1,10 +1,9 @@
 ---
-layout: default
+layout: docs
 title:  "Typeclasses"
-section: "typeclasses"
 ---
 
-# Typeclasses
+## Typeclasses
 
 Monocle defines typeclasses to fetch generic optics implicitly. You can find more information about typeclass pattern in 
 [cats](http://typelevel.org/cats/typeclasses.html).

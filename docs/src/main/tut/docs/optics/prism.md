@@ -1,9 +1,9 @@
 ---
-layout: default
+layout: docs
 title:  "Prism"
 section: "optics"
-scaladoc: "http://julien-truffaut.github.io/Monocle/api/#monocle.PPrism"
-pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/docs/src/main/tut/prism.md"
+source: "core/src/main/scala/monocle/PPrism.scala"
+scaladoc: "#monocle.Prism"
 ---
 # Prism
 

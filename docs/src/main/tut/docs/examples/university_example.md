@@ -1,8 +1,7 @@
 ---
-layout: default
+layout: docs
 title:  "University Example"
-section: "university_example"
-pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/docs/src/main/tut/university_example.md"
+section: "examples"
 ---
 # University Example
 

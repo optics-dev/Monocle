@@ -1,11 +1,9 @@
 ---
-layout: default
+layout: docs
 title:  "Unsafe Module"
-section: "optics"
-pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/docs/src/main/tut/unsafe_module.md"
 ---
 
-# Intro
+## Unsafe module
 
 The `unsafe` module contains `Optics` that do not fully satisfy the set of `Optics` `Laws` of the `core` module.  
 

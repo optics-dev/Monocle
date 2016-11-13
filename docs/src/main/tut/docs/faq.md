@@ -1,10 +1,9 @@
 ---
-layout: default
+layout: docs
 title:  "FAQ"
-section: "faq"
-pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/docs/src/main/tut/faq.md"
 ---
-# FAQ
+
+## FAQ
 
 ## Which imports are required to use typeclass based optics such as at, each, headOption?
 

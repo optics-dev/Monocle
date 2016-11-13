@@ -1,8 +1,9 @@
 ---
-layout: default
+layout: docs
 title:  "Learning Resources"
-section: "learning_resources"
 ---
+
+## Learning Resources
 
 Here are some various learning resources concerning optics. Feel free to send a PR to add other learning material.
 
