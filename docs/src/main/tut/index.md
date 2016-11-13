@@ -230,7 +230,8 @@ The current maintainers (people who can merge pull requests) are:
 
 * Julien Truffaut - [@julien-truffaut](https://github.com/julien-truffaut)
 * Ilan Godik - [@NightRa](https://github.com/NightRa)
-* Naoki Aoyama - [@aoiroaoino](https://github.com/aoiroaoino) 
+* Naoki Aoyama - [@aoiroaoino](https://github.com/aoiroaoino)
+* Kenji Yoshida - [@xuwei-k](https://github.com/xuwei-k)
 
 and the [contributors](https://github.com/julien-truffaut/Monocle/graphs/contributors) (people who committed to Monocle).
 
