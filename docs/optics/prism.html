@@ -6,7 +6,7 @@
 
 <p>Let’s take the example of a simple enum:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">Day</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">Day</span>
 <span class="k">case</span> <span class="k">object</span> <span class="nc">Monday</span> <span class="k">extends</span> <span class="nc">Day</span>
 <span class="k">case</span> <span class="k">object</span> <span class="nc">Tuesday</span> <span class="k">extends</span> <span class="nc">Day</span>
 <span class="c1">// ...
@@ -17,7 +17,7 @@
 <p>We can define a <code class="highlighter-rouge">Prism</code> which only selects <code class="highlighter-rouge">Tuesday</code>.
 <code class="highlighter-rouge">Tuesday</code> is a singleton, so it is isomorphic to <code class="highlighter-rouge">Unit</code> (type with a single inhabitant):</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Prism</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Prism</span>
 
 <span class="k">val</span> <span class="nc">_tuesday</span> <span class="k">=</span> <span class="nc">Prism</span><span class="o">[</span><span class="kt">Day</span>, <span class="kt">Unit</span><span class="o">]{</span>
   <span class="k">case</span> <span class="nc">Tuesday</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(())</span>
@@ -28,14 +28,14 @@
 
 <p><code class="highlighter-rouge">_tuesday</code> can then be used as constructor of <code class="highlighter-rouge">Day</code>:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_tuesday</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">(())</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_tuesday</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">(())</span>
 <span class="n">res2</span><span class="k">:</span> <span class="kt">Day</span> <span class="o">=</span> <span class="nc">Tuesday</span>
 </code></pre>
 </div>
 
 <p>or as a replacement of pattern matching:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_tuesday</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">Monday</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_tuesday</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">Monday</span><span class="o">)</span>
 <span class="n">res3</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_tuesday</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">Tuesday</span><span class="o">)</span>
@@ -47,7 +47,7 @@
 A <code class="highlighter-rouge">LinkedList</code> is recursive data type that either empty or a cons, so we can easily define a <code class="highlighter-rouge">Prism</code> from a <code class="highlighter-rouge">LinkedList</code>
 to each of the two constructors:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
 <span class="nc">case</span> <span class="k">class</span> <span class="nc">Nil</span><span class="o">[</span><span class="kt">A</span><span class="o">]()</span> <span class="k">extends</span> <span class="nc">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
 
@@ -63,14 +63,14 @@ to each of the two constructors:</p>
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">l1</span> <span class="k">=</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">())))</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">l1</span> <span class="k">=</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">())))</span>
 <span class="k">val</span> <span class="n">l2</span> <span class="k">=</span> <span class="nc">_nil</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">reverseGet</span><span class="o">(())</span>
 </code></pre>
 </div>
 
 <p>A few usage of <code class="highlighter-rouge">Prism</code>:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">l1</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">l1</span><span class="o">)</span>
 <span class="n">res5</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[(</span><span class="kt">Int</span>, <span class="kt">monocle.example.PrismExample.LinkedList</span><span class="o">[</span><span class="kt">Int</span><span class="o">])]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">((</span><span class="mi">1</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="nc">Nil</span><span class="o">()))))</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">.</span><span class="n">isMatching</span><span class="o">(</span><span class="n">l1</span><span class="o">)</span>
@@ -87,7 +87,7 @@ to each of the two constructors:</p>
 <p>Contrarily to a <code class="highlighter-rouge">Lens</code>, a <code class="highlighter-rouge">Prism</code> can fail so <code class="highlighter-rouge">modify</code> is noop if a <code class="highlighter-rouge">Prism</code> fails to match. If you want to know if <code class="highlighter-rouge">modify</code>
 has an effect, you can use <code class="highlighter-rouge">modifyOption</code> instead:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">_1</span> <span class="k">=</span> <span class="mi">5</span><span class="o">))(</span><span class="n">l1</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">_1</span> <span class="k">=</span> <span class="mi">5</span><span class="o">))(</span><span class="n">l1</span><span class="o">)</span>
 <span class="n">res9</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">monocle.example.PrismExample.LinkedList</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="nc">Nil</span><span class="o">()))))</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">_1</span> <span class="k">=</span> <span class="mi">5</span><span class="o">))(</span><span class="n">l2</span><span class="o">)</span>
@@ -98,7 +98,7 @@ has an effect, you can use <code class="highlighter-rouge">modifyOption</code> i
 <p>It is quite annoying that we need to use <code class="highlighter-rouge">copy</code> to <code class="highlighter-rouge">modify</code> the first element of a tuple. A tuple is a <code class="highlighter-rouge">Product</code> so we
 should be able to use a <code class="highlighter-rouge">Lens</code> to zoom further:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">monocle.function.fields._</span> <span class="c1">// to have access to first, second, ...
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">monocle.function.fields._</span> <span class="c1">// to have access to first, second, ...
 </span><span class="k">import</span> <span class="nn">monocle.function.fields._</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">monocle.std.tuple2._</span>      <span class="c1">// to get instance Fields instance for Tuple2
@@ -116,7 +116,7 @@ should be able to use a <code class="highlighter-rouge">Lens</code> to zoom furt
 
 <h2 id="prism-laws">Prism Laws</h2>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PrismLaws</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">prism</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">])</span> <span class="o">{</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PrismLaws</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">prism</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">])</span> <span class="o">{</span>
 
   <span class="k">def</span> <span class="n">partialRoundTripOneWayLaw</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
     <span class="n">prism</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">s</span><span class="o">).</span><span class="n">fold</span><span class="o">(</span><span class="kc">true</span><span class="o">)(</span><span class="n">prism</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">(</span><span class="k">_</span><span class="o">)</span> <span class="o">==</span> <span class="n">s</span><span class="o">)</span>

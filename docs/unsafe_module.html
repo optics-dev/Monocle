@@ -10,13 +10,13 @@
 
 <p><code class="highlighter-rouge">UnsafeSelect</code> allows to create a <code class="highlighter-rouge">Prism</code> based on a predicate. Let’s have a look at a simple example:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">age</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">age</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
 </code></pre>
 </div>
 
 <p>Using an <code class="highlighter-rouge">UnsafeSelect</code> we can select all <code class="highlighter-rouge">Person</code> with <code class="highlighter-rouge">age &gt;= 18</code> and then use a <code class="highlighter-rouge">Lens</code> to modify their name:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.unsafe.UnsafeSelect</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.unsafe.UnsafeSelect</span>
 <span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
 
 <span class="o">(</span><span class="nc">UnsafeSelect</span><span class="o">.</span><span class="n">unsafeSelect</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;=</span> <span class="mi">18</span><span class="o">)</span> <span class="n">composeLens</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">name</span><span class="o">)).</span><span class="n">modify</span><span class="o">(</span><span class="s">"Adult "</span> <span class="o">+</span> <span class="k">_</span><span class="o">)</span>
@@ -25,7 +25,7 @@
 
 <p>This operator is considered unsafe because it allows for inconsistency if a <code class="highlighter-rouge">Lens</code> is then used to change one of the value used in the predicates. For example:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.unsafe.UnsafeSelect</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.unsafe.UnsafeSelect</span>
 <span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
 
 <span class="o">(</span><span class="nc">UnsafeSelect</span><span class="o">.</span><span class="n">unsafeSelect</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;=</span> <span class="mi">18</span><span class="o">)</span> <span class="n">composeLens</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">age</span><span class="o">)).</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
