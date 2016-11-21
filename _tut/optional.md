@@ -31,7 +31,23 @@ val head = Optional[List[Int], Int] {
 }
 ```
 
-Once we have an `Optional`, we can use the supplied `getOption` and `set` functions:
+Once we have an `Optional`, we can use the supplied `isMatching` function to know if it matches:
+
+```scala
+scala> val xs = List(1, 2, 3)
+xs: List[Int] = List(1, 2, 3)
+
+scala> val ys = List.empty[Int]
+ys: List[Int] = Nil
+
+scala> head.isMatching(xs)
+res0: Boolean = true
+
+scala> head.isMatching(ys)
+res1: Boolean = false
+```
+
+We can use the supplied `getOption` and `set` functions:
 
 ```scala
 scala> val xs = List(1, 2, 3)
@@ -56,3 +72,11 @@ res0: Option[Int] = None
 scala> head.set(5)(xs)
 res1: List[Int] = Nil
 ```
+
+We can also `modify` the target of `Optional` with a function:
+
+```scala
+scala> head.modify(_ + 1)(xs)
+res2: List[Int] = List(2, 2, 3)
+```
+
