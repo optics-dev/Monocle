@@ -47,6 +47,22 @@ scala> head.isMatching(ys)
 res1: Boolean = false
 ```
 
+We can use the supplied `getOrModify` function to retrieve the target if it matches, or the original value:
+
+```scala
+scala> val xs = List(1, 2, 3)
+xs: List[Int] = List(1, 2, 3)
+
+scala> val ys = List.empty[Int]
+ys: List[Int] = Nil
+
+scala> head.getOrModify(xs)
+res0: scalaz.\/[List[Int],Int] = -\/(List())
+
+scala> head.isMatching(ys)
+res1: scalaz.\/[List[Int],Int] = \/-(1)
+```
+
 We can use the supplied `getOption` and `set` functions:
 
 ```scala
@@ -80,3 +96,23 @@ scala> head.modify(_ + 1)(xs)
 res2: List[Int] = List(2, 2, 3)
 ```
 
+## Laws
+
+```scala
+class OptionalLaws[S, A](optional: Optional[S, A]) {
+
+  def getOptionSet(s: S): IsEq[S] =
+    optional.getOrModify(s).fold(identity, optional.set(_)(s)) <==> s
+
+  def setGetOption(s: S, a: A): IsEq[Option[A]] =
+    optional.getOption(optional.set(a)(s)) <==> optional.getOption(s).map(_ => a)
+
+}
+```
+
+An `Optional` must satisfies all properties defined in `OptionalLaws` in `core` module.
+You can check the validity of your own `Optional` using `OptionalTests` in `law` module.
+
+`getOptionSet` states that if you `getOrModify` a value `A` from `S` and then `set` it back in, the result is an object identical to the original one.
+
+`setGetOption` states that if you `set` a value, you always `getOption` the same value back.
