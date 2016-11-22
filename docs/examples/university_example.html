@@ -1,0 +1,133 @@
+<html><head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Monocle</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Optics library for Scala" /><meta name="author" content="com.github.julien-truffaut" /><meta name="og:image" content="/Monocle/img/poster.png" /><meta name="og:title" content="Monocle" /><meta name="og:site_name" content="Monocle" /><meta name="og:url" content="http://julien-truffaut.github.io/Monocle" /><meta name="og:type" content="website" /><meta name="og:description" content="Optics library for Scala" /><meta name="twitter:image" content="/Monocle/img/poster.png" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:site" content="" /><link rel="icon" type="image/png" href="/Monocle/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/Monocle/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/Monocle/css/style.css" /><link rel="stylesheet" href="/Monocle/css/palette.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/Monocle/" class="brand"><div class="brand-wrapper" style="background:url('/Monocle/img/sidebar_brand.png') no-repeat"><span>Monocle</span></div></a></li>        </ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Monocle Optics library for Scala');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Monocle Optics library for Scala');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="julien-truffaut" data-github-repo="Monocle"><div class="content-wrapper"><section><h1 id="university-example">University Example</h1>
+
+<p>Let’s take a basic model of a <code class="highlighter-rouge">University</code> containing a few <code class="highlighter-rouge">Department</code>s where each <code class="highlighter-rouge">Department</code> has a budget 
+and a few <code class="highlighter-rouge">Lecturer</code>s.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Lecturer</span><span class="o">(</span><span class="n">firstName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">lastName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">salary</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Department</span><span class="o">(</span><span class="n">budget</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">lecturers</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Lecturer</span><span class="o">])</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">University</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">departments</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Department</span><span class="o">])</span>
+
+<span class="k">val</span> <span class="n">uni</span> <span class="k">=</span> <span class="nc">University</span><span class="o">(</span><span class="s">"oxford"</span><span class="o">,</span> <span class="nc">Map</span><span class="o">(</span>
+  <span class="s">"Computer Science"</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">45</span><span class="o">,</span> <span class="nc">List</span><span class="o">(</span>
+    <span class="nc">Lecturer</span><span class="o">(</span><span class="s">"john"</span>  <span class="o">,</span> <span class="s">"doe"</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span>
+    <span class="nc">Lecturer</span><span class="o">(</span><span class="s">"robert"</span><span class="o">,</span> <span class="s">"johnson"</span><span class="o">,</span> <span class="mi">16</span><span class="o">)</span>
+  <span class="o">)),</span>
+  <span class="s">"History"</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="nc">List</span><span class="o">(</span>
+    <span class="nc">Lecturer</span><span class="o">(</span><span class="s">"arnold"</span><span class="o">,</span> <span class="s">"stones"</span><span class="o">,</span> <span class="mi">20</span><span class="o">)</span>
+  <span class="o">))</span> 
+<span class="o">))</span>
+</code></pre>
+</div>
+
+<h2 id="how-to-remove-or-add-elements-in-a-map">How to remove or add elements in a Map</h2>
+
+<p>Our university is having some financial issues and it has to close the History department.</p>
+
+<p>First, we need to zoom into <code class="highlighter-rouge">University</code> to the departments field using a <code class="highlighter-rouge">Lens</code></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>  <span class="c1">// require monocle-macro module
+</span>
+<span class="k">val</span> <span class="n">departments</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">University</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">departments</span><span class="o">)</span>
+</code></pre>
+</div>
+
+<p>then we zoom into the <code class="highlighter-rouge">Map</code> at the <code class="highlighter-rouge">History</code> key using <code class="highlighter-rouge">At</code> typeclass</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.At.at</span> <span class="c1">// to get at Lens
+</span><span class="k">import</span> <span class="nn">monocle.std.map._</span>      <span class="c1">// to get Map instance for At
+</span></code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="o">(</span><span class="n">departments</span> <span class="n">composeLens</span> <span class="n">at</span><span class="o">(</span><span class="s">"History"</span><span class="o">)).</span><span class="n">set</span><span class="o">(</span><span class="nc">None</span><span class="o">)(</span><span class="n">uni</span><span class="o">)</span>
+<span class="n">res2</span><span class="k">:</span> <span class="kt">University</span> <span class="o">=</span> <span class="nc">University</span><span class="o">(</span><span class="n">oxford</span><span class="o">,</span><span class="nc">Map</span><span class="o">(</span><span class="nc">Computer</span> <span class="nc">Science</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">45</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="n">john</span><span class="o">,</span><span class="n">doe</span><span class="o">,</span><span class="mi">10</span><span class="o">),</span> <span class="nc">Lecturer</span><span class="o">(</span><span class="n">robert</span><span class="o">,</span><span class="n">johnson</span><span class="o">,</span><span class="mi">16</span><span class="o">)))))</span>
+</code></pre>
+</div>
+
+<p>if instead we wanted to create a department, we would have used <code class="highlighter-rouge">set</code> with <code class="highlighter-rouge">Some</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">physics</span> <span class="k">=</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">36</span><span class="o">,</span> <span class="nc">List</span><span class="o">(</span>
+  <span class="nc">Lecturer</span><span class="o">(</span><span class="s">"daniel"</span><span class="o">,</span> <span class="s">"jones"</span><span class="o">,</span> <span class="mi">12</span><span class="o">),</span>
+  <span class="nc">Lecturer</span><span class="o">(</span><span class="s">"roger"</span> <span class="o">,</span> <span class="s">"smith"</span><span class="o">,</span> <span class="mi">14</span><span class="o">)</span>
+<span class="o">))</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="o">(</span><span class="n">departments</span> <span class="n">composeLens</span> <span class="n">at</span><span class="o">(</span><span class="s">"Physics"</span><span class="o">)).</span><span class="n">set</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">physics</span><span class="o">))(</span><span class="n">uni</span><span class="o">)</span>
+<span class="n">res3</span><span class="k">:</span> <span class="kt">University</span> <span class="o">=</span> <span class="nc">University</span><span class="o">(</span><span class="n">oxford</span><span class="o">,</span><span class="nc">Map</span><span class="o">(</span><span class="nc">Computer</span> <span class="nc">Science</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">45</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="n">john</span><span class="o">,</span><span class="n">doe</span><span class="o">,</span><span class="mi">10</span><span class="o">),</span> <span class="nc">Lecturer</span><span class="o">(</span><span class="n">robert</span><span class="o">,</span><span class="n">johnson</span><span class="o">,</span><span class="mi">16</span><span class="o">))),</span> <span class="nc">History</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="n">arnold</span><span class="o">,</span><span class="n">stones</span><span class="o">,</span><span class="mi">20</span><span class="o">))),</span> <span class="nc">Physics</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">36</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="n">daniel</span><span class="o">,</span><span class="n">jones</span><span class="o">,</span><span class="mi">12</span><span class="o">),</span> <span class="nc">Lecturer</span><span class="o">(</span><span class="n">roger</span><span class="o">,</span><span class="n">smith</span><span class="o">,</span><span class="mi">14</span><span class="o">)))))</span>
+</code></pre>
+</div>
+
+<h2 id="how-to-update-a-field-in-a-nested-case-class">How to update a field in a nested case class</h2>
+
+<p>Let’s have a look at a more positive scenario where all university lecturers get a salary increase.</p>
+
+<p>First we need to generate a few <code class="highlighter-rouge">Lens</code>es in order to zoom in the interesting fields of our model.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">lecturers</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Department</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">lecturers</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">salary</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Lecturer</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">salary</span><span class="o">)</span>
+</code></pre>
+</div>
+
+<p>We want to focus to all university lecturers, for this we can use <code class="highlighter-rouge">Each</code> typeclass as it provides a <code class="highlighter-rouge">Traversal</code>
+which zooms into all elements of a container (e.g. <code class="highlighter-rouge">List</code>, <code class="highlighter-rouge">Vector</code> <code class="highlighter-rouge">Map</code>)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.all._</span> <span class="c1">// to get each and other typeclass based optics such as at or headOption
+</span><span class="k">import</span> <span class="nn">monocle.std.list._</span>     <span class="c1">// to get List instance for Each
+</span><span class="k">import</span> <span class="nn">monocle.std.map._</span>      <span class="c1">// to get Map instance for Each
+</span><span class="k">import</span> <span class="nn">monocle.Traversal</span>
+
+<span class="k">val</span> <span class="n">allLecturers</span><span class="k">:</span> <span class="kt">Traversal</span><span class="o">[</span><span class="kt">University</span>, <span class="kt">Lecturer</span><span class="o">]</span> <span class="k">=</span> <span class="n">departments</span> <span class="n">composeTraversal</span> <span class="n">each</span> <span class="n">composeLens</span> <span class="n">lecturers</span> <span class="n">composeTraversal</span> <span class="n">each</span>
+</code></pre>
+</div>
+
+<p>Note that we used <code class="highlighter-rouge">each</code> twice, the first time on <code class="highlighter-rouge">Map</code> and the second time on <code class="highlighter-rouge">List</code>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="o">(</span><span class="n">allLecturers</span> <span class="n">composeLens</span> <span class="n">salary</span><span class="o">).</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">2</span><span class="o">)(</span><span class="n">uni</span><span class="o">)</span>
+<span class="n">res5</span><span class="k">:</span> <span class="kt">University</span> <span class="o">=</span> <span class="nc">University</span><span class="o">(</span><span class="n">oxford</span><span class="o">,</span><span class="nc">Map</span><span class="o">(</span><span class="nc">Computer</span> <span class="nc">Science</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">45</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="n">john</span><span class="o">,</span><span class="n">doe</span><span class="o">,</span><span class="mi">12</span><span class="o">),</span> <span class="nc">Lecturer</span><span class="o">(</span><span class="n">robert</span><span class="o">,</span><span class="n">johnson</span><span class="o">,</span><span class="mi">18</span><span class="o">))),</span> <span class="nc">History</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="n">arnold</span><span class="o">,</span><span class="n">stones</span><span class="o">,</span><span class="mi">22</span><span class="o">)))))</span>
+</code></pre>
+</div>
+
+<h2 id="how-to-create-your-own-traversal">How to create your own Traversal</h2>
+
+<p>We realised that our data is not formatted correctly, in particular first and last name are not upper cased.
+We can reused the <code class="highlighter-rouge">Traversal</code> to all <code class="highlighter-rouge">Lecturer</code>s we previously created but this time we need to zoom into the first 
+character of both <code class="highlighter-rouge">firstName</code> and <code class="highlighter-rouge">lastName</code>.</p>
+
+<p>You know the drill, first we need to create the <code class="highlighter-rouge">Lens</code>es we need.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">firstName</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Lecturer</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">firstName</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">lastName</span>  <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Lecturer</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">lastName</span><span class="o">)</span>
+</code></pre>
+</div>
+
+<p>Then, we can use <code class="highlighter-rouge">Cons</code> typeclass which provides both <code class="highlighter-rouge">headOption</code> and <code class="highlighter-rouge">tailOption</code> optics. In our case, we want
+to use <code class="highlighter-rouge">headOption</code> to zoom into the first character of a <code class="highlighter-rouge">String</code></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.std.string._</span> <span class="c1">// to get String instance for Cons
+</span></code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">upperCasedFirstName</span> <span class="k">=</span> <span class="o">(</span><span class="n">allLecturers</span> <span class="n">composeLens</span> <span class="n">firstName</span> <span class="n">composeOptional</span> <span class="n">headOption</span><span class="o">).</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toUpper</span><span class="o">)(</span><span class="n">uni</span><span class="o">)</span>
+<span class="n">upperCasedFirstName</span><span class="k">:</span> <span class="kt">University</span> <span class="o">=</span> <span class="nc">University</span><span class="o">(</span><span class="n">oxford</span><span class="o">,</span><span class="nc">Map</span><span class="o">(</span><span class="nc">Computer</span> <span class="nc">Science</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">45</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="nc">John</span><span class="o">,</span><span class="n">doe</span><span class="o">,</span><span class="mi">10</span><span class="o">),</span> <span class="nc">Lecturer</span><span class="o">(</span><span class="nc">Robert</span><span class="o">,</span><span class="n">johnson</span><span class="o">,</span><span class="mi">16</span><span class="o">))),</span> <span class="nc">History</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="nc">Arnold</span><span class="o">,</span><span class="n">stones</span><span class="o">,</span><span class="mi">20</span><span class="o">)))))</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="o">(</span><span class="n">allLecturers</span> <span class="n">composeLens</span> <span class="n">lastName</span> <span class="n">composeOptional</span> <span class="n">headOption</span><span class="o">).</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toUpper</span><span class="o">)(</span><span class="n">upperCasedFirstName</span><span class="o">)</span>
+<span class="n">res6</span><span class="k">:</span> <span class="kt">University</span> <span class="o">=</span> <span class="nc">University</span><span class="o">(</span><span class="n">oxford</span><span class="o">,</span><span class="nc">Map</span><span class="o">(</span><span class="nc">Computer</span> <span class="nc">Science</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">45</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="nc">John</span><span class="o">,</span><span class="nc">Doe</span><span class="o">,</span><span class="mi">10</span><span class="o">),</span> <span class="nc">Lecturer</span><span class="o">(</span><span class="nc">Robert</span><span class="o">,</span><span class="nc">Johnson</span><span class="o">,</span><span class="mi">16</span><span class="o">))),</span> <span class="nc">History</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="nc">Arnold</span><span class="o">,</span><span class="nc">Stones</span><span class="o">,</span><span class="mi">20</span><span class="o">)))))</span>
+</code></pre>
+</div>
+
+<p>It is annoying that we have to call <code class="highlighter-rouge">modify</code> on first name and then repeat the same action on last name. Ideally, we 
+would like to focus to both first and last name. To do that we need to create our own <code class="highlighter-rouge">Traversal</code></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">firstAndLastNames</span> <span class="k">=</span> <span class="nc">Traversal</span><span class="o">.</span><span class="n">apply2</span><span class="o">[</span><span class="kt">Lecturer</span>, <span class="kt">String</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">firstName</span><span class="o">,</span> <span class="k">_</span><span class="o">.</span><span class="n">lastName</span><span class="o">){</span> <span class="k">case</span> <span class="o">(</span><span class="n">fn</span><span class="o">,</span> <span class="n">ln</span><span class="o">,</span> <span class="n">l</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">firstName</span> <span class="k">=</span> <span class="n">fn</span><span class="o">,</span> <span class="n">lastName</span> <span class="k">=</span> <span class="n">ln</span><span class="o">)}</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="o">(</span><span class="n">allLecturers</span> <span class="n">composeTraversal</span> <span class="n">firstAndLastNames</span> <span class="n">composeOptional</span> <span class="n">headOption</span><span class="o">).</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toUpper</span><span class="o">)(</span><span class="n">uni</span><span class="o">)</span>
+<span class="n">res7</span><span class="k">:</span> <span class="kt">University</span> <span class="o">=</span> <span class="nc">University</span><span class="o">(</span><span class="n">oxford</span><span class="o">,</span><span class="nc">Map</span><span class="o">(</span><span class="nc">Computer</span> <span class="nc">Science</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">45</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="nc">John</span><span class="o">,</span><span class="nc">Doe</span><span class="o">,</span><span class="mi">10</span><span class="o">),</span> <span class="nc">Lecturer</span><span class="o">(</span><span class="nc">Robert</span><span class="o">,</span><span class="nc">Johnson</span><span class="o">,</span><span class="mi">16</span><span class="o">))),</span> <span class="nc">History</span> <span class="o">-&gt;</span> <span class="nc">Department</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span><span class="nc">List</span><span class="o">(</span><span class="nc">Lecturer</span><span class="o">(</span><span class="nc">Arnold</span><span class="o">,</span><span class="nc">Stones</span><span class="o">,</span><span class="mi">20</span><span class="o">)))))</span>
+</code></pre>
+</div>
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/Monocle/highlight/highlight.pack.js"></script><script>hljs.configure({
+languages:['scala','java','bash']
+});
+hljs.initHighlighting();
+             </script><script src="/Monocle/js/main.js"></script></body></html>

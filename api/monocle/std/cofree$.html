@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../../';
@@ -172,24 +172,6 @@
                         <a class="trait" href="FunctionOptics.html" title=""></a>
                         <a href="FunctionOptics.html" title="">
                           FunctionOptics
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics1.html" title=""></a>
-                        <a href="FunctionOptics1.html" title="">
-                          FunctionOptics1
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics2.html" title=""></a>
-                        <a href="FunctionOptics2.html" title="">
-                          FunctionOptics2
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics3.html" title=""></a>
-                        <a href="FunctionOptics3.html" title="">
-                          FunctionOptics3
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -740,54 +722,6 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="monocle.std.CofreeOptics#cofreeCons1" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="cofreeCons1[S[_],A]:monocle.function.Cons1[scalaz.Cofree[S,A],A,S[scalaz.Cofree[S,A]]]"></a><a id="cofreeCons1[S[_],A]:Cons1[Cofree[S,A],A,S[Cofree[S,A]]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/cofree$.html#cofreeCons1[S[_],A]:monocle.function.Cons1[scalaz.Cofree[S,A],A,S[scalaz.Cofree[S,A]]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">cofreeCons1</span><span class="tparams">[<span name="S">S<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="result">: <a href="../function/Cons1.html" class="extype" name="monocle.function.Cons1">Cons1</a>[<span class="extype" name="scalaz.Cofree">Cofree</span>[<span class="extype" name="monocle.std.CofreeOptics.cofreeCons1.S">S</span>, <span class="extype" name="monocle.std.CofreeOptics.cofreeCons1.A">A</span>], <span class="extype" name="monocle.std.CofreeOptics.cofreeCons1.A">A</span>, <span class="extype" name="monocle.std.CofreeOptics.cofreeCons1.S">S</span>[<span class="extype" name="scalaz.Cofree">Cofree</span>[<span class="extype" name="monocle.std.CofreeOptics.cofreeCons1.S">S</span>, <span class="extype" name="monocle.std.CofreeOptics.cofreeCons1.A">A</span>]]]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Evidence that cofree structures can be split up into a <code>head</code> and a <code>tail</code></p><div class="fullcomment"><div class="comment cmt"><p>Evidence that cofree structures can be split up into a <code>head</code> and a <code>tail</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CofreeOptics.html" class="extype" name="monocle.std.CofreeOptics">CofreeOptics</a></dd></dl></div>
-    </li><li name="monocle.std.CofreeOptics#cofreeEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="cofreeEach[S[_],A](implicitevidence$1:scalaz.Traverse[S]):monocle.function.Each[scalaz.Cofree[S,A],A]"></a><a id="cofreeEach[S[_],A](Traverse[S]):Each[Cofree[S,A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/cofree$.html#cofreeEach[S[_],A](implicitevidence$1:scalaz.Traverse[S]):monocle.function.Each[scalaz.Cofree[S,A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">cofreeEach</span><span class="tparams">[<span name="S">S<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scalaz.Traverse">Traverse</span>[<span class="extype" name="monocle.std.CofreeOptics.cofreeEach.S">S</span>]</span>)</span><span class="result">: <a href="../function/Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scalaz.Cofree">Cofree</span>[<span class="extype" name="monocle.std.CofreeOptics.cofreeEach.S">S</span>, <span class="extype" name="monocle.std.CofreeOptics.cofreeEach.A">A</span>], <span class="extype" name="monocle.std.CofreeOptics.cofreeEach.A">A</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Trivial <code>Each</code> instance due to <code>Cofree S</code> being traversable when <code>S</code> is</p><div class="fullcomment"><div class="comment cmt"><p>Trivial <code>Each</code> instance due to <code>Cofree S</code> being traversable when <code>S</code> is</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CofreeOptics.html" class="extype" name="monocle.std.CofreeOptics">CofreeOptics</a></dd></dl></div>
-    </li><li name="monocle.std.CofreeOptics#cofreePlated" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="cofreePlated[S[_],A](implicitevidence$2:scalaz.Traverse[S]):monocle.function.Plated[scalaz.Cofree[S,A]]"></a><a id="cofreePlated[S[_],A](Traverse[S]):Plated[Cofree[S,A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/cofree$.html#cofreePlated[S[_],A](implicitevidence$2:scalaz.Traverse[S]):monocle.function.Plated[scalaz.Cofree[S,A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">cofreePlated</span><span class="tparams">[<span name="S">S<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scalaz.Traverse">Traverse</span>[<span class="extype" name="monocle.std.CofreeOptics.cofreePlated.S">S</span>]</span>)</span><span class="result">: <a href="../function/Plated.html" class="extype" name="monocle.function.Plated">Plated</a>[<span class="extype" name="scalaz.Cofree">Cofree</span>[<span class="extype" name="monocle.std.CofreeOptics.cofreePlated.S">S</span>, <span class="extype" name="monocle.std.CofreeOptics.cofreePlated.A">A</span>]]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CofreeOptics.html" class="extype" name="monocle.std.CofreeOptics">CofreeOptics</a></dd></dl></div>
     </li><li name="monocle.std.CofreeOptics#cofreeToStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="cofreeToStream[A]:monocle.Iso[scalaz.Cofree[Option,A],scalaz.OneAnd[Stream,A]]"></a><a id="cofreeToStream[A]:Iso[Cofree[Option,A],OneAnd[Stream,A]]"></a>
       <span class="permalink">

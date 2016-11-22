@@ -19,7 +19,7 @@
       <script type="text/javascript" src="../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
-      
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
       <script type="text/javascript">
         /* this variable can be used by the JS to determine the path to the root document */
         var toRoot = '../../';
@@ -172,24 +172,6 @@
                         <a class="trait" href="FunctionOptics.html" title=""></a>
                         <a href="FunctionOptics.html" title="">
                           FunctionOptics
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics1.html" title=""></a>
-                        <a href="FunctionOptics1.html" title="">
-                          FunctionOptics1
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics2.html" title=""></a>
-                        <a href="FunctionOptics2.html" title="">
-                          FunctionOptics2
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="FunctionOptics3.html" title=""></a>
-                        <a href="FunctionOptics3.html" title="">
-                          FunctionOptics3
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -592,22 +574,30 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">OneAndOptics</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 1.4.0) instances have been move to typeclass companion object">OneAndOptics</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/OneAnd.scala" target="_blank">OneAnd.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.4.0)</i> instances have been move to typeclass companion object</p></dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/std/OneAnd.scala" target="_blank">OneAnd.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
           <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
-        </div><div class="toggleContainer block">
-            <span class="toggle">
-              Known Subclasses
-            </span>
-            <div class="subClasses hiddenContent"><a href="../Monocle$.html" class="extype" name="monocle.Monocle">Monocle</a>, <a href="StdInstances.html" class="extype" name="monocle.std.StdInstances">StdInstances</a>, <a href="all$.html" class="extype" name="monocle.std.all">all</a>, <a href="oneand$.html" class="extype" name="monocle.std.oneand">oneand</a></div>
-          </div></div>
+        </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+                <span class="toggle diagram-link">
+                  Type Hierarchy
+                </span>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 152.00 120.00" height="120pt" width="152pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 116)" class="graph" id="graph0"><polygon points="-4,4 -4,-116 148,-116 148,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this trait" id="graph1_0"><g id="a_this trait|graph1_0"><a xlink:title="monocle.std.OneAndOptics (this trait)" xlink:href="#inheritance-diagram"><path d="M111.333,-50C111.333,-50 32.6667,-50 32.6667,-50 28.3333,-50 24,-45.6667 24,-41.3333 24,-41.3333 24,-32.6667 24,-32.6667 24,-28.3333 28.3333,-24 32.6667,-24 32.6667,-24 111.333,-24 111.333,-24 115.667,-24 120,-28.3333 120,-32.6667 120,-32.6667 120,-41.3333 120,-41.3333 120,-45.6667 115.667,-50 111.333,-50" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../../lib/trait_diagram.png" y="-43" x="36" preserveAspectRatio="xMinYMin meet" height="12px" width="12px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-34.6" x="55.875" text-anchor="start">OneAndOptics</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="scala.AnyRef"><path d="M98.3333,-112C98.3333,-112 45.6667,-112 45.6667,-112 41.3333,-112 37,-107.667 37,-103.333 37,-103.333 37,-94.6667 37,-94.6667 37,-90.3333 41.3333,-86 45.6667,-86 45.6667,-86 98.3333,-86 98.3333,-86 102.667,-86 107,-90.3333 107,-94.6667 107,-94.6667 107,-103.333 107,-103.333 107,-107.667 102.667,-112 98.3333,-112" stroke="#418565" fill="#418565"></path><image xlink:href="../../lib/class_diagram.png" y="-105" x="49" preserveAspectRatio="xMinYMin meet" height="12px" width="12px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-96.6" x="68.7715" text-anchor="start">AnyRef</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="OneAndOptics is a subtype of AnyRef"><path d="M72,-78.7534C72,-69.3549 72,-58.3336 72,-50.1238" stroke="#d4d4d4" fill="none"></path><polygon points="69.5501,-78.8581 72,-85.8581 74.4501,-78.8581 69.5501,-78.8581" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+                <div id="diagram-controls" class="hiddenContent">
+                  <button id="diagram-zoom-out" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button id="diagram-zoom-in" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button title="Toggle full-screen" id="diagram-fs" class="diagram-btn to-full"><i class="material-icons"></i></button>
+                </div>
+              </div></div>
         
 
       <div id="mbrsel">
@@ -895,70 +885,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="monocle.std.OneAndOptics#oneAndCons1" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="oneAndCons1[T[_],A]:monocle.function.Cons1[scalaz.OneAnd[T,A],A,T[A]]"></a><a id="oneAndCons1[T[_],A]:Cons1[OneAnd[T,A],A,T[A]]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/OneAndOptics.html#oneAndCons1[T[_],A]:monocle.function.Cons1[scalaz.OneAnd[T,A],A,T[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">oneAndCons1</span><span class="tparams">[<span name="T">T<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="result">: <a href="../function/Cons1.html" class="extype" name="monocle.function.Cons1">Cons1</a>[<span class="extype" name="scalaz.OneAnd">OneAnd</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.T">T</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.A">A</span>], <span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.A">A</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.T">T</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndCons1.A">A</span>]]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.OneAndOptics#oneAndEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="oneAndEach[T[_],A](implicitev:monocle.function.Each[T[A],A]):monocle.function.Each[scalaz.OneAnd[T,A],A]"></a><a id="oneAndEach[T[_],A](Each[T[A],A]):Each[OneAnd[T,A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/OneAndOptics.html#oneAndEach[T[_],A](implicitev:monocle.function.Each[T[A],A]):monocle.function.Each[scalaz.OneAnd[T,A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">oneAndEach</span><span class="tparams">[<span name="T">T<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <a href="../function/Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="monocle.std.OneAndOptics.oneAndEach.T">T</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndEach.A">A</span>], <span class="extype" name="monocle.std.OneAndOptics.oneAndEach.A">A</span>]</span>)</span><span class="result">: <a href="../function/Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scalaz.OneAnd">OneAnd</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndEach.T">T</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndEach.A">A</span>], <span class="extype" name="monocle.std.OneAndOptics.oneAndEach.A">A</span>]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.OneAndOptics#oneAndField1" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="oneAndField1[T[_],A]:monocle.function.Field1[scalaz.OneAnd[T,A],A]"></a><a id="oneAndField1[T[_],A]:Field1[OneAnd[T,A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/OneAndOptics.html#oneAndField1[T[_],A]:monocle.function.Field1[scalaz.OneAnd[T,A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">oneAndField1</span><span class="tparams">[<span name="T">T<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="result">: <a href="../function/Field1.html" class="extype" name="monocle.function.Field1">Field1</a>[<span class="extype" name="scalaz.OneAnd">OneAnd</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndField1.T">T</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndField1.A">A</span>], <span class="extype" name="monocle.std.OneAndOptics.oneAndField1.A">A</span>]</span>
-      </span>
-      
-      
-    </li><li name="monocle.std.OneAndOptics#oneAndIndex" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="oneAndIndex[T[_],A](implicitev:monocle.function.Index[T[A],Int,A]):monocle.function.Index[scalaz.OneAnd[T,A],Int,A]"></a><a id="oneAndIndex[T[_],A](Index[T[A],Int,A]):Index[OneAnd[T,A],Int,A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/std/OneAndOptics.html#oneAndIndex[T[_],A](implicitev:monocle.function.Index[T[A],Int,A]):monocle.function.Index[scalaz.OneAnd[T,A],Int,A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">oneAndIndex</span><span class="tparams">[<span name="T">T<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <a href="../function/Index.html" class="extype" name="monocle.function.Index">Index</a>[<span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.T">T</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.A">A</span>]</span>)</span><span class="result">: <a href="../function/Index.html" class="extype" name="monocle.function.Index">Index</a>[<span class="extype" name="scalaz.OneAnd">OneAnd</span>[<span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.T">T</span>, <span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a>, <span class="extype" name="monocle.std.OneAndOptics.oneAndIndex.A">A</span>]</span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
