@@ -10,7 +10,7 @@ Monocle define the following optics:
 -   [Iso](optics/iso.html)
 -   [Prism](optics/prism.html)
 -   [Lens](optics/lens.html)
--   Optional
+-   [Optional](optics/optional.html)
 -   Traversal
 -   Setter
 -   Getter
