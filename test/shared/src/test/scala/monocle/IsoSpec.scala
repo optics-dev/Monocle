@@ -65,15 +65,15 @@ class IsoSpec extends MonocleSuite {
 
   // test implicit resolution of type classes
 
-  test("Iso has a Compose)stance") {
+  test("Iso has a Compose instance") {
     Compose[Iso].compose(iso, iso.reverse).get(3) shouldEqual  3
   }
 
-  test("Iso has a Category)stance") {
+  test("Iso has a Category instance") {
     Category[Iso].id[Int].get(3) shouldEqual 3
   }
 
-  test("Iso has a Split)stance") {
+  test("Iso has a Split instance") {
     Split[Iso].split(iso, iso.reverse).get((IntWrapper(3), 3)) shouldEqual ((3, IntWrapper(3)))
   }
 
@@ -100,5 +100,32 @@ class IsoSpec extends MonocleSuite {
       case _quintary(c, b, s, i, f) => "" + c + b + s + i + f
     }) shouldEqual "xtruebar130.4"
   }
+
+  test("get") {
+    iso.get(IntWrapper(5)) shouldEqual 5
+  }
+
+  test("reverseGet") {
+    iso.reverseGet(5) shouldEqual IntWrapper(5)
+  }
+
+  test("find") {
+    iso.find(_ > 5)(IntWrapper(9)) shouldEqual Some(9)
+    iso.find(_ > 5)(IntWrapper(3)) shouldEqual None
+  }
+
+  test("exist") {
+    iso.exist(_ > 5)(IntWrapper(9)) shouldEqual true
+    iso.exist(_ > 5)(IntWrapper(3)) shouldEqual false
+  }
+
+  test("set") {
+    iso.set(5)(IntWrapper(0)) shouldEqual IntWrapper(5)
+  }
+
+  test("modify") {
+    iso.modify(_ + 1)(IntWrapper(0)) shouldEqual IntWrapper(1)
+  }
+  
 }
 

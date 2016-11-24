@@ -48,21 +48,25 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   @inline final def getAll(s: S): List[A] =
     foldMap(List(_))(s)
 
-  /** find the first target of a [[PTraversal]] matching the predicate  */
-  @inline final def find(p: A => Boolean)(s: S): Option[A] =
-    foldMap(a => (if(p(a)) Some(a) else None).first)(s).unwrap
+  /** find the first target matching the predicate  */
+  @inline final def find(p: A => Boolean): S => Option[A] =
+    foldMap(a => (if(p(a)) Some(a) else None).first)(_).unwrap
 
-  /** get the first target of a [[PTraversal]] */
+  /** get the first target */
   @inline final def headOption(s: S): Option[A] =
-    find(_ => true)(s)
+    foldMap(Option(_).first)(s).unwrap
+
+  /** get the last target */
+  @inline final def lastOption(s: S): Option[A] =
+    foldMap(Option(_).last)(s).unwrap
 
   /** check if at least one target satisfies the predicate */
-  @inline final def exist(p: A => Boolean)(s: S): Boolean =
-    foldMap(p(_).disjunction)(s).unwrap
+  @inline final def exist(p: A => Boolean): S => Boolean =
+    foldMap(p(_).disjunction)(_).unwrap
 
   /** check if all targets satisfy the predicate */
-  @inline final def all(p: A => Boolean)(s: S): Boolean =
-    foldMap(p(_).conjunction)(s).unwrap
+  @inline final def all(p: A => Boolean): S => Boolean =
+    foldMap(p(_).conjunction)(_).unwrap
 
   /** modify polymorphically the target of a [[PTraversal]] with a function */
   @inline final def modify(f: A => B): S => T =
@@ -89,6 +93,14 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   /** calculate the number of targets */
   @inline final def length(s: S): Int =
     foldMap(_ => 1)(s)
+
+  /** check if there is no target */
+  @inline final def isEmpty(s: S): Boolean =
+    foldMap(_ => false.conjunction)(s).unwrap
+
+  /** check if there is at least one target */
+  @inline final def nonEmpty(s: S): Boolean =
+    !isEmpty(s)
 
   /****************************************************************/
   /** Compose methods between a [[PTraversal]] and another Optics */

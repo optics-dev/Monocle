@@ -1,6 +1,8 @@
 package monocle
 
 import monocle.law.discipline.{OptionalTests, PrismTests, SetterTests, TraversalTests}
+import monocle.macros.GenIso
+import monocle.macros.GenPrism
 
 import scalaz._
 import scalaz.std.list._
@@ -83,4 +85,72 @@ class PrismSpec extends MonocleSuite {
       case _quintary(c, b, s, i, f) => "" + c + b + s + i + f
     }) shouldEqual "xtruebar130.4"
   }
+
+  sealed trait IntOrString
+  case class I(i: Int) extends IntOrString
+  case class S(s: String) extends IntOrString
+
+  val i = GenPrism[IntOrString, I] composeIso GenIso[I, Int]
+  val s = Prism[IntOrString, String]{case S(s) => Some(s); case _ => None}(S.apply)
+
+  test("getOption") {
+    i.getOption(I(1))  shouldEqual Some(1)
+    i.getOption(S("")) shouldEqual None
+
+    s.getOption(S("hello")) shouldEqual Some("hello")
+    s.getOption(I(10))      shouldEqual None
+  }
+
+  test("reverseGet") {
+    i.reverseGet(3)     shouldEqual I(3)
+    s.reverseGet("Yop") shouldEqual S("Yop")
+  }
+
+  test("isEmpty") {
+    i.isEmpty(I(1))  shouldEqual false
+    i.isEmpty(S("")) shouldEqual true
+  }
+
+  test("nonEmpty") {
+    i.nonEmpty(I(1))  shouldEqual true
+    i.nonEmpty(S("")) shouldEqual false
+  }
+
+  test("find") {
+    i.find(_ > 5)(I(9)) shouldEqual Some(9)
+    i.find(_ > 5)(I(2)) shouldEqual None
+  }
+
+  test("exist") {
+    i.exist(_ > 5)(I(9))  shouldEqual true
+    i.exist(_ > 5)(I(2))  shouldEqual false
+    i.exist(_ > 5)(S("")) shouldEqual false
+  }
+
+  test("all") {
+    i.all(_ > 5)(I(9))  shouldEqual true
+    i.all(_ > 5)(I(2))  shouldEqual false
+    i.all(_ > 5)(S("")) shouldEqual true
+  }
+
+  test("modify") {
+    i.modify(_ + 1)(I(3))   shouldEqual I(4)
+    i.modify(_ + 1)(S(""))  shouldEqual S("")
+  }
+
+  test("modifyOption") {
+    i.modifyOption(_ + 1)(I(3))   shouldEqual Some(I(4))
+    i.modifyOption(_ + 1)(S(""))  shouldEqual None
+  }
+
+  test("set") {
+    i.set(1)(I(3))   shouldEqual I(1)
+    i.set(1)(S(""))  shouldEqual S("")
+  }
+
+  test("setOption") {
+    i.setOption(1)(I(3))   shouldEqual Some(I(1))
+    i.setOption(1)(S(""))  shouldEqual None
+  }
+
 }

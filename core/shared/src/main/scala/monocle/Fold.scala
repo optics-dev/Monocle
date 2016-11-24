@@ -6,7 +6,7 @@ import scalaz.std.option._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 import scalaz.syntax.tag._
-import scalaz.{Choice, Foldable, Maybe, Monoid, \/}
+import scalaz.{Choice, Foldable, Monoid, \/}
 
 /**
  * A [[Fold]] can be seen as a [[Getter]] with many targets or
@@ -31,27 +31,41 @@ abstract class Fold[S, A] extends Serializable { self =>
   @inline final def fold(s: S)(implicit ev: Monoid[A]): A =
     foldMap(identity)(s)
 
-  /**
-   * get all the targets of a [[Fold]]
-   */
+  /** get all the targets of a [[Fold]] */
   @inline final def getAll(s: S): List[A] =
     foldMap(List(_))(s)
 
-  /** find the first target of a [[Fold]] matching the predicate  */
-  @inline final def find(p: A => Boolean)(s: S): Option[A] =
-    foldMap(a => (if(p(a)) Some(a) else None).first)(s).unwrap
+  /** find the first target matching the predicate  */
+  @inline final def find(p: A => Boolean): S => Option[A] =
+    foldMap(a => (if(p(a)) Some(a) else None).first)(_).unwrap
 
-  /** get the first target of a [[Fold]] */
+  /** get the first target */
   @inline final def headOption(s: S): Option[A] =
-    find(_ => true)(s)
+    foldMap(Option(_).first)(s).unwrap
+
+  /** get the last target */
+  @inline final def lastOption(s: S): Option[A] =
+    foldMap(Option(_).last)(s).unwrap
 
   /** check if at least one target satisfies the predicate */
-  @inline final def exist(p: A => Boolean)(s: S): Boolean =
-    foldMap(p(_).disjunction)(s).unwrap
+  @inline final def exist(p: A => Boolean): S => Boolean =
+    foldMap(p(_).disjunction)(_).unwrap
 
   /** check if all targets satisfy the predicate */
-  @inline final def all(p: A => Boolean)(s: S): Boolean =
-    foldMap(p(_).conjunction)(s).unwrap
+  @inline final def all(p: A => Boolean): S => Boolean =
+    foldMap(p(_).conjunction)(_).unwrap
+
+  /** calculate the number of targets */
+  @inline final def length(s: S): Int =
+    foldMap(_ => 1)(s)
+
+  /** check if there is no target */
+  @inline final def isEmpty(s: S): Boolean =
+    foldMap(_ => false.conjunction)(s).unwrap
+
+  /** check if there is at least one target */
+  @inline final def nonEmpty(s: S): Boolean =
+    !isEmpty(s)
 
   /** join two [[Fold]] with the same target */
   @inline final def choice[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
@@ -75,10 +89,6 @@ abstract class Fold[S, A] extends Serializable { self =>
   @deprecated("use choice", since = "1.2.0")
   @inline final def sum[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
     choice(other)
-
-  /** calculate the number of targets */
-  @inline final def length(s: S): Int =
-    foldMap(_ => 1)(s)
 
   /**********************************************************/
   /** Compose methods between a [[Fold]] and another Optics */

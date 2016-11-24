@@ -31,7 +31,7 @@ val head = Optional[List[Int], Int] {
 }
 ```
 
-Once we have an `Optional`, we can use the supplied `isMatching` function to know if it matches:
+Once we have an `Optional`, we can use the supplied `nonEmpty` function to know if it matches:
 
 ```tut:silent
 val xs = List(1, 2, 3)
@@ -39,8 +39,8 @@ val ys = List.empty[Int]
 ```
 
 ```tut:book
-head.isMatching(xs)
-head.isMatching(ys)
+head.nonEmpty(xs)
+head.nonEmpty(ys)
 ```
 
 We can use the supplied `getOrModify` function to retrieve the target if it matches, or the original value:

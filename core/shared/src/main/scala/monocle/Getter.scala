@@ -15,6 +15,16 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** get the target of a [[Getter]] */
   def get(s: S): A
 
+  /** find if the target satisfies the predicate  */
+  @inline final def find(p: A => Boolean): S => Option[A] = s => {
+    val a = get(s)
+    if(p(a)) Some(a) else None
+  }
+
+  /** check if the target satisfies the predicate */
+  @inline final def exist(p: A => Boolean): S => Boolean =
+    p compose get
+
   /** join two [[Getter]] with the same target */
   @inline final def choice[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
     Getter[S \/ S1, A](_.fold(self.get, other.get))

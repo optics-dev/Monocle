@@ -60,6 +60,16 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       Functor[F].map(fb)(self.reverseGet)
     }
 
+  /** find if the target satisfies the predicate  */
+  @inline final def find(p: A => Boolean): S => Option[A] = s => {
+    val a = get(s)
+    if(p(a)) Some(a) else None
+  }
+
+  /** check if the target satisfies the predicate */
+  @inline final def exist(p: A => Boolean): S => Boolean =
+    p compose get
+
   /** modify polymorphically the target of a [[PIso]] with a Functor function */
   @inline final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
     Functor[F].map(f(get(s)))(reverseGet)
