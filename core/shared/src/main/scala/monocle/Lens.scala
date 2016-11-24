@@ -44,6 +44,16 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /** modify polymorphically the target of a [[PLens]] using a function */
   def modify(f: A => B): S => T
 
+  /** find if the target satisfies the predicate */
+  @inline final def find(p: A => Boolean): S => Option[A] = s => {
+    val a = get(s)
+    if(p(a)) Some(a) else None
+  }
+
+  /** check if the target satisfies the predicate */
+  @inline final def exist(p: A => Boolean): S => Boolean =
+    p compose get
+
   /** join two [[PLens]] with the same target */
   @inline final def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[S \/ S1, T \/ T1, A, B] =
     PLens[S \/ S1, T \/ T1, A, B](_.fold(self.get, other.get)){

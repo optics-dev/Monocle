@@ -24,11 +24,11 @@ object HasCompanion3 extends Bar with Baz
 
 class LensSpec extends MonocleSuite {
 
-  val _s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
-  val _p = Lens[Example, Point](_.p)(p => ex => ex.copy(p = p))
+  val s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
+  val p = Lens[Example, Point](_.p)(p => ex => ex.copy(p = p))
 
-  val _x = Lens[Point, Int](_.x)(x => p => p.copy(x = x))
-  val _y = Lens[Point, Int](_.y)(y => p => p.copy(y = y))
+  val x = Lens[Point, Int](_.x)(x => p => p.copy(x = x))
+  val y = Lens[Point, Int](_.y)(y => p => p.copy(y = y))
 
   implicit val exampleGen: Arbitrary[Example] = Arbitrary(for {
     s <- arbitrary[String]
@@ -38,22 +38,22 @@ class LensSpec extends MonocleSuite {
 
   implicit val exampleEq = Equal.equalA[Example]
 
-  checkAll("apply Lens", LensTests(_s))
+  checkAll("apply Lens", LensTests(s))
   checkAll("GenLens", LensTests(GenLens[Example](_.s)))
   checkAll("GenLens chain", LensTests(GenLens[Example](_.p.x)))
   checkAll("Lenses",  LensTests(Example.s))
 
-  checkAll("lens.asOptional" , OptionalTests(_s.asOptional))
-  checkAll("lens.asTraversal", TraversalTests(_s.asTraversal))
-  checkAll("lens.asSetter"   , SetterTests(_s.asSetter))
+  checkAll("lens.asOptional" , OptionalTests(s.asOptional))
+  checkAll("lens.asTraversal", TraversalTests(s.asTraversal))
+  checkAll("lens.asSetter"   , SetterTests(s.asSetter))
 
-  checkAll("first" ,  LensTests(_s.first[Boolean]))
-  checkAll("second",  LensTests(_s.second[Boolean]))
+  checkAll("first" ,  LensTests(s.first[Boolean]))
+  checkAll("second",  LensTests(s.second[Boolean]))
 
   // test implicit resolution of type classes
 
   test("Lens has a Compose instance") {
-    Compose[Lens].compose(_x, _p).get(Example("plop", Point(3, 4))) shouldEqual 3
+    Compose[Lens].compose(x, p).get(Example("plop", Point(3, 4))) shouldEqual 3
   }
 
   test("Lens has a Category instance") {
@@ -61,11 +61,33 @@ class LensSpec extends MonocleSuite {
   }
 
   test("Lens has a Choice instance") {
-    Choice[Lens].choice(_x, _y).get(\/-(Point(5, 6))) shouldEqual 6
+    Choice[Lens].choice(x, y).get(\/-(Point(5, 6))) shouldEqual 6
   }
 
   test("Lens has a Split instance") {
-    Split[Lens].split(_x, _y).get((Point(0, 1), Point(5, 6))) shouldEqual ((0, 6))
+    Split[Lens].split(x, y).get((Point(0, 1), Point(5, 6))) shouldEqual ((0, 6))
+  }
+
+  test("get") {
+    x.get(Point(5, 2)) shouldEqual 5
+  }
+
+  test("find") {
+    x.find(_ > 5)(Point(9, 2)) shouldEqual Some(9)
+    x.find(_ > 5)(Point(3, 2)) shouldEqual None
+  }
+
+  test("exist") {
+    x.exist(_ > 5)(Point(9, 2)) shouldEqual true
+    x.exist(_ > 5)(Point(3, 2)) shouldEqual false
+  }
+
+  test("set") {
+    x.set(5)(Point(9, 2)) shouldEqual Point(5, 2)
+  }
+
+  test("modify") {
+    x.modify(_ + 1)(Point(9, 2)) shouldEqual Point(10, 2)
   }
   
 }

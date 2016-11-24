@@ -55,9 +55,25 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   @inline final def setOption(b: B): S => Option[T] =
     modifyOption(_ => b)
 
-  /** check if a [[POptional]] has a target */
-  @inline final def isMatching(s: S): Boolean =
+  /** check if there is no target */
+  @inline final def isEmpty(s: S): Boolean =
+    getOption(s).isEmpty
+
+  /** check if there is a target */
+  @inline final def nonEmpty(s: S): Boolean =
     getOption(s).isDefined
+
+  /** find if the target satisfies the predicate */
+  @inline final def find(p: A => Boolean): S => Option[A] =
+    getOption(_).flatMap(a => if(p(a)) Some(a) else None)
+
+  /** check if there is a target and it satisfies the predicate */
+  @inline final def exist(p: A => Boolean): S => Boolean =
+    getOption(_).fold(false)(p)
+
+  /** check if there is no target or the target satisfies the predicate */
+  @inline final def all(p: A => Boolean): S => Boolean =
+    getOption(_).fold(true)(p)
 
   /** join two [[POptional]] with the same target */
   @inline final def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =

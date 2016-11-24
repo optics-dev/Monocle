@@ -5,7 +5,9 @@ import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 
-import scalaz._
+import scalaz.{-\/, Category, Choice, Compose, Equal}
+import scalaz.std.string._
+import scalaz.std.list._
 
 class TraversalSpec extends MonocleSuite {
 
@@ -16,7 +18,8 @@ class TraversalSpec extends MonocleSuite {
       oldLoc.copy(latitude = newLat, longitude = newLong)
   }
 
-  def all[A]: Traversal[IList[A], A] = PTraversal.fromTraverse[IList, A, A]
+  def eachL[A]: Traversal[List[A], A] = PTraversal.fromTraverse[List, A, A]
+  val eachLi: Traversal[List[Int], Int] = eachL[Int]
 
   implicit val locationGen: Arbitrary[Location] = Arbitrary(for {
     x <- arbitrary[Int]
@@ -25,34 +28,6 @@ class TraversalSpec extends MonocleSuite {
   } yield Location(x, y, n))
 
   implicit val exampleEq = Equal.equalA[Location]
-
-
-  checkAll("apply2 Traversal", TraversalTests(coordinates))
-  checkAll("fromTraverse Traversal" , TraversalTests(all[Int]))
-
-  checkAll("traversal.asSetter", SetterTests(coordinates.asSetter))
-
-  test("length") {
-    all[Location].length(IList(Location(1,2,""), Location(3,4,""))) shouldEqual 2
-    all[Location].length(INil[Location])                            shouldEqual 0
-  }
-
-  // test implicit resolution of type classes
-
-  test("Traversal has a Compose instance") {
-    Compose[Traversal].compose(coordinates, all[Location])
-      .modify(_ + 1)(IList(Location(1,2,""), Location(3,4,""))) shouldEqual IList(Location(2,3,""), Location(4,5,""))
-  }
-
-  test("Traversal has a Category instance") {
-    Category[Traversal].id[Int].getAll(3) shouldEqual List(3)
-  }
-
-  test("Traversal has a Choice instance") {
-    Choice[Traversal].choice(all[Int], coordinates).modify(_ + 1)(-\/(IList(1,2,3))) shouldEqual -\/(IList(2,3,4))
-  }
-
-
 
   // Below we test a 7-lenses Traversal created using applyN
 
@@ -85,6 +60,83 @@ class TraversalSpec extends MonocleSuite {
 
   implicit val eqForManyPropObject = Equal.equalA[ManyPropObject]
 
+  checkAll("apply2 Traversal", TraversalTests(coordinates))
   checkAll("applyN Traversal", TraversalTests(traversalN))
+  checkAll("fromTraverse Traversal" , TraversalTests(eachLi))
+
+  checkAll("traversal.asSetter", SetterTests(coordinates.asSetter))
+
+  // test implicit resolution of type classes
+
+  test("Traversal has a Compose instance") {
+    Compose[Traversal].compose(coordinates, eachL[Location])
+      .modify(_ + 1)(List(Location(1,2,""), Location(3,4,""))) shouldEqual List(Location(2,3,""), Location(4,5,""))
+  }
+
+  test("Traversal has a Category instance") {
+    Category[Traversal].id[Int].getAll(3) shouldEqual List(3)
+  }
+
+  test("Traversal has a Choice instance") {
+    Choice[Traversal].choice(eachL[Int], coordinates).modify(_ + 1)(-\/(List(1,2,3))) shouldEqual -\/(List(2,3,4))
+  }
+
+
+
+  test("foldMap") {
+    eachLi.foldMap(_.toString)(List(1,2,3,4,5)) shouldEqual "12345"
+  }
+
+  test("getAll") {
+    eachLi.getAll(List(1,2,3,4)) shouldEqual List(1,2,3,4)
+  }
+
+  test("headOption") {
+    eachLi.headOption(List(1,2,3,4)) shouldEqual Some(1)
+  }
+
+  test("lastOption") {
+    eachLi.lastOption(List(1,2,3,4)) shouldEqual Some(4)
+  }
+
+  test("length") {
+    eachLi.length(List(1,2,3,4)) shouldEqual 4
+    eachLi.length(Nil)           shouldEqual 0
+  }
+
+  test("isEmpty") {
+    eachLi.isEmpty(List(1,2,3,4)) shouldEqual false
+    eachLi.isEmpty(Nil)           shouldEqual true
+  }
+
+  test("nonEmpty") {
+    eachLi.nonEmpty(List(1,2,3,4)) shouldEqual true
+    eachLi.nonEmpty(Nil)           shouldEqual false
+  }
+
+  test("find") {
+    eachLi.find(_ > 2)(List(1,2,3,4)) shouldEqual Some(3)
+    eachLi.find(_ > 9)(List(1,2,3,4)) shouldEqual None
+  }
+
+  test("exist") {
+    eachLi.exist(_ > 2)(List(1,2,3,4)) shouldEqual true
+    eachLi.exist(_ > 9)(List(1,2,3,4)) shouldEqual false
+    eachLi.exist(_ > 9)(Nil)           shouldEqual false
+  }
+
+  test("all") {
+    eachLi.all(_ > 2)(List(1,2,3,4)) shouldEqual false
+    eachLi.all(_ > 0)(List(1,2,3,4)) shouldEqual true
+    eachLi.all(_ > 0)(Nil)           shouldEqual true
+  }
+
+  test("set") {
+    eachLi.set(0)(List(1,2,3,4)) shouldEqual List(0,0,0,0)
+  }
+
+  test("modify") {
+    eachLi.modify(_ + 1)(List(1,2,3,4)) shouldEqual List(2,3,4,5)
+  }
 
 }
