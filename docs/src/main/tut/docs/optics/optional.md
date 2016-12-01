@@ -2,8 +2,8 @@
 layout: docs
 title:  "Optional"
 section: "optics"
-scaladoc: "http://julien-truffaut.github.io/Monocle/api/#monocle.POptional"
-pageSource: "https://raw.githubusercontent.com/julien-truffaut/Monocle/master/docs/src/main/tut/optional.md"
+source: "core/src/main/scala/monocle/POptional.scala"
+scaladoc: "#monocle.Prism"
 ---
 # Optional
 
@@ -19,7 +19,7 @@ We can create an `Optional[List[Int], Int]` which zoom from a `List[Int]` to its
 *   `getOption: List[Int] => Option[Int]`
 *   `set: Int => List[Int] => List[Int]`
 
-```scala
+```tut:silent
 import monocle.Optional
 val head = Optional[List[Int], Int] {
   case Nil => None
@@ -33,34 +33,21 @@ val head = Optional[List[Int], Int] {
 
 Once we have an `Optional`, we can use the supplied `isMatching` function to know if it matches:
 
-```scala
-scala> val xs = List(1, 2, 3)
-xs: List[Int] = List(1, 2, 3)
+```tut:silent
+val xs = List(1, 2, 3)
+val ys = List.empty[Int]
+```
 
-scala> val ys = List.empty[Int]
-ys: List[Int] = Nil
-
-scala> head.isMatching(xs)
-res0: Boolean = true
-
-scala> head.isMatching(ys)
-res1: Boolean = false
+```tut:book
+head.isMatching(xs)
+head.isMatching(ys)
 ```
 
 We can use the supplied `getOrModify` function to retrieve the target if it matches, or the original value:
 
-```scala
-scala> val xs = List(1, 2, 3)
-xs: List[Int] = List(1, 2, 3)
-
-scala> val ys = List.empty[Int]
-ys: List[Int] = Nil
-
-scala> head.getOrModify(xs)
-res0: scalaz.\/[List[Int],Int] = -\/(List())
-
-scala> head.isMatching(ys)
-res1: scalaz.\/[List[Int],Int] = \/-(1)
+```tut:book
+head.getOrModify(xs)
+head.getOrModify(ys)
 ```
 
 The function `getOrModify` is mostly use for polymorphic optics.
@@ -68,47 +55,38 @@ If you use monomorphic optics, use function `getOption`
 
 We can use the supplied `getOption` and `set` functions:
 
-```scala
-scala> val xs = List(1, 2, 3)
-xs: List[Int] = List(1, 2, 3)
+```tut:book
+head.getOption(xs)
+head.set(5)(xs)
 
-scala> head.getOption(xs)
-res0: Option[Int] = Some(1)
-
-scala> head.set(5)(xs)
-res1: List[Int] = List(5, 2, 3)
-```
-
-If we use the `Optional` on an empty list:
-
-```scala
-scala> val xs = List.empty[Int]
-xs: List[Int] = Nil
-
-scala> head.getOption(xs)
-res0: Option[Int] = None
-
-scala> head.set(5)(xs)
-res1: List[Int] = Nil
+head.getOption(ys)
+head.set(5)(ys)
 ```
 
 We can also `modify` the target of `Optional` with a function:
 
-```scala
-scala> head.modify(_ + 1)(xs)
-res2: List[Int] = List(2, 2, 3)
+```tut:book
+head.modify(_ + 1)(xs)
+head.modify(_ + 1)(ys)
+```
+
+Or use `modifyOption` / `setOption` to know if the update was successful:
+
+```tut:book
+head.modifyOption(_ + 1)(xs)
+head.modifyOption(_ + 1)(ys)
 ```
 
 ## Laws
 
-```scala
+```tut:silent
 class OptionalLaws[S, A](optional: Optional[S, A]) {
 
-  def getOptionSet(s: S): IsEq[S] =
-    optional.getOrModify(s).fold(identity, optional.set(_)(s)) <==> s
+  def getOptionSet(s: S): Boolean =
+    optional.getOrModify(s).fold(identity, optional.set(_)(s)) == s
 
-  def setGetOption(s: S, a: A): IsEq[Option[A]] =
-    optional.getOption(optional.set(a)(s)) <==> optional.getOption(s).map(_ => a)
+  def setGetOption(s: S, a: A): Boolean =
+    optional.getOption(optional.set(a)(s)) == optional.getOption(s).map(_ => a)
 
 }
 ```
