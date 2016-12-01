@@ -11,7 +11,7 @@ Monocle define the following optics:
 -   [Prism](optics/prism.html)
 -   [Lens](optics/lens.html)
 -   [Optional](optics/optional.html)
--   Traversal
+-   [Traversal](optics/traversal.html)
 -   Setter
 -   Getter
 -   Fold

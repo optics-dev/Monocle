@@ -16,6 +16,8 @@ options:
        url: docs/optics/prism.html
      - title: Optional
        url: docs/optics/optional.html
+     - title: Traversal
+       url: docs/optics/traversal.html
 
   - title: Typeclasses
     url: docs/typeclasses.html
