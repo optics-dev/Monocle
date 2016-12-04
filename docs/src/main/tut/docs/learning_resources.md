@@ -10,7 +10,7 @@ Here are some various learning resources concerning optics. Feel free to send a 
 ### Presentations
 -   [Beyond Lenses](https://www.youtube.com/watch?v=6nyGVgGEKdA): how `Iso`, `Prism`, `Lens` and `Optional`
 relate to each other (by [Julien Truffaut](https://github.com/julien-truffaut))
--   [Optics with Monocle: Modeling The Part and The Whole](https://www.youtube.com/watch?v=NvCcNM2vp3k)
+-   [Optics with Monocle: Modeling The Part and The Whole](https://www.youtube.com/watch?v=NvCcNM2vp3k): Van Laarhoven Lenses, Prisms and Isos in Monocle, Id/Const Functors, Prism laws & Property testing
 (by [Ilan Godik](https://github.com/NightRa))
 -   [Lenses: compositional data access and manipulation](https://skillsmatter.com/skillscasts/4251-lenses-compositional-data-access-and-manipulation):
 haskell `Lens` implementation (by [Simon Peyton Jones](https://github.com/simonpj))
