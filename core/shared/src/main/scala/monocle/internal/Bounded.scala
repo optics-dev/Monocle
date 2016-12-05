@@ -3,8 +3,7 @@ package monocle.internal
 import monocle.Prism
 
 import scalaz.syntax.order._
-import scalaz.{Maybe, Order}
-
+import scalaz.Order
 
 private[monocle] trait Bounded[T] {
   def MinValue: T
@@ -44,6 +43,4 @@ private[monocle] trait BoundedInstances {
     val MaxValue: Int = Int.MaxValue
     val MinValue: Int = Int.MinValue
   }
-
-
 }

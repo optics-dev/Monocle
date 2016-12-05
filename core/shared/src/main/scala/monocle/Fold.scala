@@ -6,7 +6,7 @@ import scalaz.std.option._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 import scalaz.syntax.tag._
-import scalaz.{Choice, Foldable, Maybe, Monoid, \/}
+import scalaz.{Choice, Foldable, Monoid, \/}
 
 /**
  * A [[Fold]] can be seen as a [[Getter]] with many targets or
@@ -162,7 +162,6 @@ object Fold extends FoldInstances {
         Foldable[F].foldMap(s)(f)
     }
 }
-
 
 sealed abstract class FoldInstances {
   implicit val foldChoice: Choice[Fold] = new Choice[Fold]{

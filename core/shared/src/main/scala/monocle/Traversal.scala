@@ -7,8 +7,7 @@ import scalaz.std.option._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 import scalaz.syntax.tag._
-import scalaz.{Applicative, Choice, Const, Functor, Maybe, Monoid, Traverse, \/}
-
+import scalaz.{Applicative, Choice, Const, Functor, Monoid, Traverse, \/}
 
 /**
  * A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
@@ -276,4 +275,3 @@ sealed abstract class TraversalInstances {
       f1 choice f2
   }
 }
-
