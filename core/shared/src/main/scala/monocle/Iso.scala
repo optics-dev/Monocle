@@ -3,7 +3,7 @@ package monocle
 import scalaz.Isomorphism.{<=>, <~>}
 import scalaz.Leibniz.===
 import scalaz.Liskov.<~<
-import scalaz.{Applicative, Category, Functor, Maybe, Monoid, Split, \/}
+import scalaz.{Applicative, Category, Functor, Monoid, Split, \/}
 
 /**
  * A [[PIso]] defines an isomorphism between types S, A and B, T:

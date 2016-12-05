@@ -2,8 +2,7 @@ package monocle.syntax
 
 import monocle._
 
-import scalaz.syntax.std.option._
-import scalaz.{Maybe, Monoid}
+import scalaz.Monoid
 
 object apply extends ApplySyntax
 

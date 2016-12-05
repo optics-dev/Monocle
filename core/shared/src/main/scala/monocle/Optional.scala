@@ -1,7 +1,6 @@
 package monocle
 
-import scalaz.{Applicative, Choice, Maybe, Monoid, \/}
-import scalaz.syntax.std.option._
+import scalaz.{Applicative, Choice, Monoid, \/}
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
