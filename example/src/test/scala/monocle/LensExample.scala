@@ -1,6 +1,7 @@
 package monocle
 
 import monocle.macros.{GenLens, Lenses, PLenses}
+import monocle.macros.syntax.lens._
 import shapeless.test.illTyped
 
 class LensMonoExample extends MonocleSuite {
@@ -29,6 +30,7 @@ class LensMonoExample extends MonocleSuite {
     Manual._name.get(john) shouldEqual "John"
     Semi.name.get(john)    shouldEqual "John"
     Person.name.get(john)  shouldEqual "John"
+    john.lens(_.name).get  shouldEqual "John"
   }
 
   test("set") {
@@ -37,12 +39,14 @@ class LensMonoExample extends MonocleSuite {
     Manual._age.set(45)(john) shouldEqual changedJohn
     Semi.age.set(45)(john)    shouldEqual changedJohn
     Person.age.set(45)(john)  shouldEqual changedJohn
+    john.lens(_.age).set(45)  shouldEqual changedJohn
   }
 
   test("compose") {
     (Manual._address composeLens Manual._streetNumber).get(john) shouldEqual 126
     (Semi.address composeLens Semi.streetNumber).get(john)       shouldEqual 126
     (Person.address composeLens Address.streetNumber).get(john)  shouldEqual 126
+    john.lens(_.address.streetNumber).get                        shouldEqual 126
   }
 
   @Lenses("_") // this generates lenses prefixed with _ in the Cat companion object
