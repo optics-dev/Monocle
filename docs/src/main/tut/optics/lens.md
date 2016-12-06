@@ -7,7 +7,7 @@ scaladoc: "#monocle.Lens"
 ---
 # Lens
 
-A `Lens` is an Optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`.
+A `Lens` is an optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`.
 
 `Lenses` have two type parameters generally called `S` and `A`: `Lens[S, A]` where `S` represents the `Product` and `A` an element inside of `S`.
 
@@ -22,27 +22,41 @@ We can create a `Lens[Address, Int]` which zoom from an `Address` to its field `
 *   `get: Address => Int`
 *   `set: Int => Address => Address`
 
-```tut:silent
+```tut:silent:invisible
+// REPL bug: `error: not found: value n` if I rename _streetNumber to streetNumber
 import monocle.Lens
 val _streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
+val streetNumber = _streetNumber
+```
+
+```scala
+import monocle.Lens
+val streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
+```
+
+This case is really straightforward so we automated the generation of `Lenses` from case classes using a macro:
+
+```tut:silent
+import monocle.macros.GenLens
+val streetNumber = GenLens[Address](_.streetNumber)
 ```
 
 Once we have a `Lens`, we can use the supplied `get` and `set` functions (nothing fancy!):
 
-```tut
+```tut:book
 val address = Address(10, "High Street")
 
-_streetNumber.get(address)
-_streetNumber.set(5)(address)
+streetNumber.get(address)
+streetNumber.set(5)(address)
 ```
 
 We can also `modify` the target of `Lens` with a function, this equivalent to call `get` and then `set`:
 
-```tut
-_streetNumber.modify(_ + 1)(address)
+```tut:book
+streetNumber.modify(_ + 1)(address)
 
-val n = _streetNumber.get(address)
-_streetNumber.set(n + 1)(address)
+val n = streetNumber.get(address)
+streetNumber.set(n + 1)(address)
 ```
 
 We can push push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `scalaz.Functor`:
@@ -55,37 +69,38 @@ import scalaz.std.list._ // to get Functor[List] instance
 ```
 
 ```tut
-_streetNumber.modifyF(neighbors)(address)
-_streetNumber.modifyF(neighbors)(Address(135, "High Street"))
+streetNumber.modifyF(neighbors)(address)
+streetNumber.modifyF(neighbors)(Address(135, "High Street"))
 ```
 
-This would work with any kind of `Functor` and is especially useful in conjunction with asynchronous APIs, where one has the task to update a deeply nested structure (see Lens Composition) with the result of an asynchronous computation:
+This would work with any kind of `Functor` and is especially useful in conjunction with asynchronous APIs, 
+where one has the task to update a deeply nested structure with the result of an asynchronous computation:
 
 ```tut:silent
 import scalaz.std.scalaFuture._
 import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits._ // to get Future Functor instance
+import scala.concurrent.ExecutionContext.Implicits._ // to get global ExecutionContext
+
+def updateNumber(n: Int): Future[Int] = Future.successful(n + 1)
 ```
 
-```tut
-def updateNumber(n: Int) : Future[Int] = Future.successful ( n + 1)
-_streetNumber.modifyF(updateNumber)(address)
+```tut:book
+streetNumber.modifyF(updateNumber)(address)
 ```
 
-Most importantly, `Lenses` compose to zoom deeper in a data structure
+Most importantly, `Lenses` compose together allowing to zoom deeper in a data structure
 
 ```tut:silent
 case class Person(name: String, age: Int, address: Address)
 val john = Person("John", 20, address)
+
+val address = GenLens[Person](_.address)
 ```
 
-```scala
-val _address = Lens[Person, Address](_.address)(a => p => p.copy(address = a))
-
-(_address composeLens _streetNumber).get(john)
-(_address composeLens _streetNumber).set(2)(john)
+```tut:book
+(address composeLens streetNumber).get(john)
+(address composeLens streetNumber).set(2)(john)
 ```
-
 
 ## Lens Generation
 
@@ -98,7 +113,7 @@ libraryDependencies += "com.github.julien-truffaut"  %%  "monocle-macro"  % ${ve
 
 ```tut:silent
 import monocle.macros.GenLens
-val _age = GenLens[Person](_.age)
+val age = GenLens[Person](_.age)
 ```
 
 `GenLens` can also be used to generate `Lens` several level deep:
@@ -113,31 +128,43 @@ For those who want to push `Lenses` generation even further, we created `@Lenses
 ```tut:silent
 import monocle.macros.Lenses
 @Lenses case class Point(x: Int, y: Int)
+val p = Point(5, 3)
 ```
 
-```tut
-val p = Point(5, 3)
+```tut:book
 Point.x.get(p)
 Point.y.set(0)(p)
 ```
 
-## Laws
+You can also add a prefix to `@Lenses` in order to prefix the generated `Lenses`: 
 
 ```tut:silent
-class LensLaws[S, A](lens: Lens[S, A]) {
-
-  def getSetLaw(s: S): Boolean =
-    lens.set(lens.get(s)) == s
-
-  def setGetLaw(s: S, a: A): Boolean =
-    lens.get(lens.set(a)(s)) == a
-
-}
+@Lenses("_") case class Point(x: Int, y: Int)
+val p = Point(5, 3)
 ```
 
-`getSetLaw` states that if you `get` a value `A` from `S` and then `set` it back in, the result is an object identical to the original one.
-A side effect of this law is that `set` is constraint to only update the `A` it points to, for example it cannot
-increment a counter or modify another value of type `A`.
+```tut:book
+Point._x.get(p)
+```
 
-`setGetLaw` states that if you `set` a value, you always `get` the same value back. This law guarantees that `set` is
- actually updating a value of type `A`.
+## Laws
+
+A `Lens` must satisfies all properties defined in `LensLaws` from the `core` module.
+You can check the validity of your own `Lenses` using `LensTests` from the `law` module.
+
+In particular, a `Lens` must respect the `getSet` law which states that if you `get` a value `A` from `S` and 
+`set` it back in, the result is an object identical to the original one. A side effect of this law is that `set` 
+must only update the `A` it points to, for example it cannot increment a counter or modify another value.
+
+```tut:silent
+def getSet[S, A](l: Lens[S, A], s: S): Boolean =
+  l.set(l.get(s))(s) == s
+```
+
+On the other hand, the `setGet` law states that if you `set` a value, you always `get` the same value back. 
+This law guarantees that `set` is actually updating a value `A` inside of `S`.
+
+```tut:silent
+def setGet[S, A](l: Lens[S, A], s: S, a: A): Boolean =
+  l.get(l.set(a)(s)) == a
+```

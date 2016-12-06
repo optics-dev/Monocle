@@ -37,14 +37,10 @@ eachL.all(_ % 2 == 0)(xs)
 
 `Traversal` also offers smart constructors to build a `Traversal` for a fix number of target (currently 2 to 6 targets):
 
-```scala
+```tut:silent
 case class Point(id: String, x: Int, y: Int)
 
 val points = Traversal.apply2[Point, Int](_.x, _.y)((x, y, p) => p.copy(x = x, y = y))
-```
-
-```tut:invisible
-import monocle.example.TraversalExample._ // because of SI-7139
 ```
 
 ```tut:book

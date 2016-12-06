@@ -10,8 +10,8 @@ import sbtunidoc.Plugin.UnidocKeys._
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
-  scalaVersion       := "2.12.0",
-  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0"),
+  scalaVersion       := "2.12.1",
+  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",

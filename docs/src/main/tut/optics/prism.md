@@ -7,120 +7,139 @@ scaladoc: "#monocle.Prism"
 ---
 # Prism
 
-A `Prism` is an Optic used to select part of a `Sum` type (also known as `Coproduct`), e.g. `sealed trait` or `Enum`.
+A `Prism` is an optic used to select part of a `Sum` type (also known as `Coproduct`), e.g. `sealed trait` or `Enum`.
 
-`Prism`s have two type parameters generally called `S` and `A`: `Prism[S, A]` where `S` represents the `Sum` and `A` a part of the `Sum`.
+`Prisms` have two type parameters generally called `S` and `A`: `Prism[S, A]` where `S` represents the `Sum` and `A` a part of the `Sum`.
 
-Let's take the example of a simple enum:
+Let's take a simplified `Json` encoding:
 
 ```tut:silent
-sealed trait Day
-case object Monday extends Day
-case object Tuesday extends Day
-// ...
-case object Sunday extends Day
+sealed trait Json
+case object JNull extends Json
+case class JStr(v: String) extends Json
+case class JNum(v: Double) extends Json
+case class JObj(v: Map[String, Json]) extends Json
 ```
 
-We can define a `Prism` which only selects `Tuesday`.
-`Tuesday` is a singleton, so it is isomorphic to `Unit` (type with a single inhabitant):
+We can define a `Prism` which only selects `Json` elements built with a `JStr` constructor by supplying a pair of functions:
+
+*   `getOption: Json => Option[String]`
+*   `reverseGet (aka apply): String => Json`
 
 ```tut:silent
 import monocle.Prism
 
-val _tuesday = Prism[Day, Unit]{
-  case Tuesday => Some(())
+val jStr = Prism[Json, String]{
+  case JStr(v) => Some(v)
   case _       => None
-}(_ => Tuesday)
+}(JStr)
 ```
 
-`_tuesday` can then be used as constructor of `Day`:
-
-```tut
-_tuesday.reverseGet(())
-```
-
-or as a replacement of pattern matching:
-
-```tut
-_tuesday.getOption(Monday)
-_tuesday.getOption(Tuesday)
-```
-
-Let's have look at `Prism` toward larger types such as `LinkedList`.
-A `LinkedList` is recursive data type that either empty or a cons, so we can easily define a `Prism` from a `LinkedList`
-to each of the two constructors:
-
-```scala
-sealed trait LinkedList[A]
-case class Nil[A]() extends LinkedList[A]
-case class Cons[A](head: A, tail: LinkedList[A]) extends LinkedList[A]
-
-def _nil[A] = Prism[LinkedList[A], Unit]{
-  case Nil()      => Some(())
-  case Cons(_, _) => None
-}(_ => Nil())
-
-def _cons[A] = Prism[LinkedList[A], (A, LinkedList[A])]{
-  case Nil()      => None
-  case Cons(h, t) => Some((h, t))
-}{ case (h, t) => Cons(h, t)}
-```
-
-```tut:invisible
-import monocle.example.PrismExample._ // don't know why it fails to compile if defined in tut
-```
+It is common to create a `Prism` by pattern matching on constructor, so we also added `partial` which takes a `PartialFunction`:
 
 ```tut:silent
-val l1 = Cons(1, Cons(2, Cons(3, Nil())))
-val l2 = _nil[Int].reverseGet(())
+val jStr = Prism.partial[Json, String]{case JStr(v) => v}(JStr)
 ```
 
-A few usage of `Prism`:
+We can use the supplied `getOption` and `apply` methods as constructor and pattern matcher for `JStr`:
 
-```tut
-_cons.getOption(l1)
-_cons.nonEmpty(l1)
-_cons[Int].modify(_.copy(_1 = 5))(l1)
-_cons[Int].modify(_.copy(_1 = 5))(l2)
+```tut:book
+jStr("hello")
+
+jStr.getOption(JStr("Hello"))
+jStr.getOption(JNum(3.2))
 ```
 
-Contrarily to a `Lens`, a `Prism` can fail so `modify` is noop if a `Prism` fails to match. If you want to know if `modify`
-has an effect, you can use `modifyOption` instead:
-
-```tut
-_cons[Int].modifyOption(_.copy(_1 = 5))(l1)
-_cons[Int].modifyOption(_.copy(_1 = 5))(l2)
-```
-
-It is quite annoying that we need to use `copy` to `modify` the first element of a tuple. A tuple is a `Product` so we
-should be able to use a `Lens` to zoom further:
-
-```tut
-import monocle.function.fields._ // to have access to first, second, ...
-import monocle.std.tuple2._      // to get instance Fields instance for Tuple2
-
-(_cons[Int] composeLens first).set(5)(l1)
-(_cons[Int] composeLens first).set(5)(l2)
-```
-
-Composing a `Prism` with a `Lens` gives an `Optional` (TODO `Optional` doc).
-
-## Prism Laws
+A `Prism` can be used in a pattern matching position:
 
 ```tut:silent
-class PrismLaws[S, A](prism: Prism[S, A]) {
-
-  def partialRoundTripOneWayLaw(s: S): Boolean =
-    prism.getOption(s).fold(true)(prism.reverseGet(_) == s)
-
-  def roundTripOtherWayLaw(a: A): Boolean =
-    prism.getOption(prism.reverseGet(a)) == Some(a)
-
+def isLongString(json: Json): Boolean = json match {
+  case jStr(v) => v.length > 100
+  case _       => false
 }
 ```
 
-The first law states that if a `Prism` matches (i.e. `getOption` returns a `Some`), you can always come back
-to the original value using `reverseGet`.
+We can also use `set` and `modify` to update a `Json` only if it is a `JStr`:
 
-The second laws states that starting from an `A`, you can do a complete round trip. This law is equivalent to the
-second law of `Iso`.
+```tut:book
+jStr.set("Bar")(JStr("Hello"))
+jStr.modify(_.reverse)(JStr("Hello"))
+```
+
+If we supply another type of `Json`, `set` and `modify` will be a no operation:
+
+```tut:book
+jStr.set("Bar")(JNum(10))
+jStr.modify(_.reverse)(JNum(10))
+```
+
+If we care about the success or failure of the update, we can use `setOption` or `modifyOption`:
+
+```tut:book
+jStr.modifyOption(_.reverse)(JStr("Hello"))
+jStr.modifyOption(_.reverse)(JNum(10))
+```
+
+As all other optics `Prisms` compose together:
+
+```tut:silent
+import monocle.std.double.doubleToInt // Prism[Double, Int] defined in Monocle
+
+val jNum: Prism[Json, Double] = Prism.partial[Json, Double]{case JNum(v) => v}(JNum)
+
+val jInt: Prism[Json, Int] = jNum composePrism doubleToInt
+```
+
+```tut:book
+jInt(5)
+
+jInt.getOption(JNum(5.0))
+jInt.getOption(JNum(5.2))
+jInt.getOption(JStr("Hello"))
+```
+
+## Prism Generation
+
+Generating `Prisms` for subclasses is fairly common, so we added a macro to simplify the process:
+ 
+```tut:silent
+import monocle.macros.GenPrism
+
+val rawJNum: Prism[Json, JNum] = GenPrism[Json, JNum]
+```
+
+```tut:book
+rawJNum.getOption(JNum(4.5))
+rawJNum.getOption(JStr("Hello"))
+```
+
+If you want to get a `Prism[Json, Double]` instead of a `Prism[Json, JNum]`, you can compose `GenPrism` 
+with `GenIso` (see `Iso` documentation):
+
+```tut:silent
+import monocle.macros.GenIso
+
+val jNum: Prism[Json, Double] = GenPrism[Json, JNum] composeIso GenIso[JNum, Double]
+val jNull: Prism[Json, Unit] = GenPrism[Json, JNull.type] composeIso GenIso.unit[JNull.type]
+```
+
+A [ticket](https://github.com/julien-truffaut/Monocle/issues/363) currently exists to add a macro to merge these two steps together.
+
+## Prism Laws
+
+A `Prism` must satisfies all properties defined in `PrismLaws` from the `core` module.
+You can check the validity of your own `Prisms` using `PrismTests` from the `law` module.
+
+In particular, a `Prism` must verifies that `getOption` and `reverseGet` allow a full round trip if the `Prism` matches
+i.e. if `getOption` returns a `Some`.
+
+```tut:silent
+def partialRoundTripOneWay[S, A](p: Prism[S, A], s: S): Boolean =
+  p.getOption(s) match {
+    case None    => true // nothing to prove
+    case Some(a) => p.reverseGet(a) == s
+  }
+  
+def partialRoundTripOneWay[S, A](p: Prism[S, A], a: A): Boolean =
+  p.getOption(p.reverseGet(a)) == Some(a)
+```

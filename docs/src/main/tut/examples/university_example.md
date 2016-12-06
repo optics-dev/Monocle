@@ -77,8 +77,6 @@ which zooms into all elements of a container (e.g. `List`, `Vector` `Map`)
 
 ```tut:silent
 import monocle.function.all._ // to get each and other typeclass based optics such as at or headOption
-import monocle.std.list._     // to get List instance for Each
-import monocle.std.map._      // to get Map instance for Each
 import monocle.Traversal
 
 val allLecturers: Traversal[University, Lecturer] = departments composeTraversal each composeLens lecturers composeTraversal each
@@ -86,7 +84,7 @@ val allLecturers: Traversal[University, Lecturer] = departments composeTraversal
 
 Note that we used `each` twice, the first time on `Map` and the second time on `List`.
 
-```tut
+```tut:book
 (allLecturers composeLens salary).modify(_ + 2)(uni)
 ```
 
