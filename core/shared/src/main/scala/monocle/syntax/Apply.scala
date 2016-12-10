@@ -262,7 +262,7 @@ final case class ApplySetter[S, T, A, B](s: S, setter: PSetter[S, T, A, B]) {
 final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A, B]){
   @inline def getAll: List[A] = traversal.getAll(s)
   @inline def headOption: Option[A] = traversal.headOption(s)
-  @inline def LastOption: Option[A] = traversal.lastOption(s)
+  @inline def lastOption: Option[A] = traversal.lastOption(s)
 
   @inline def set(b: B): T = traversal.set(b)(s)
   @inline def modify(f: A => B): T = traversal.modify(f)(s)
