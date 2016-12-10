@@ -1,7 +1,7 @@
 ---
 layout: docs
 title:  "Prism"
-section: "optics"
+section: "optics_menu"
 source: "core/src/main/scala/monocle/PPrism.scala"
 scaladoc: "#monocle.Prism"
 ---

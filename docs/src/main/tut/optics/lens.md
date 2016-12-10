@@ -1,7 +1,7 @@
 ---
 layout: docs
 title:  "Lens"
-section: "optics"
+section: "optics_menu"
 source: "core/src/main/scala/monocle/PLens.scala"
 scaladoc: "#monocle.Lens"
 ---
@@ -80,7 +80,7 @@ val john = Person("John", 20, address)
 ```
 
 ```scala
-val _address = Lens[Person, Address](_.address)(a => p => p.copy(address = a)) 
+val _address = Lens[Person, Address](_.address)(a => p => p.copy(address = a))
 
 (_address composeLens _streetNumber).get(john)
 (_address composeLens _streetNumber).set(2)(john)

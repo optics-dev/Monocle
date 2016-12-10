@@ -1,6 +1,7 @@
 ---
 layout: docs
 title:  "Adopters"
+section: "main_menu"
 ---
 
 ## Adopters

@@ -1,42 +1,133 @@
 options:
 
   - title: Getting Started
-    url: docs/index.html
+    url: getting_started.html
+    menu_type: main_menu
+
+  - title: Main menu
+    url: getting_started.html
+    menu_type: optics_menu
+
+  - title: Main menu
+    url: getting_started.html
+    menu_type: typeclasses_menu
+
+  - title: Main menu
+    url: getting_started.html
+    menu_type: examples_menu
+
+  - title: Optics ...
+    url: optics.html
+    menu_type: main_menu
 
   - title: Optics
-    url: docs/optics.html
-    menu_section: optics
+    url: optics.html
+    menu_type: optics_menu
+    menu_section: optics_section
 
     nested_options:
      - title: Iso
-       url: docs/optics/iso.html
+       url: optics/iso.html
+       menu_section: optics_section
      - title: Lens
-       url: docs/optics/lens.html
+       url: optics/lens.html
+       menu_section: optics_section
      - title: Prism
-       url: docs/optics/prism.html
+       url: optics/prism.html
+       menu_section: optics_section
      - title: Optional
-       url: docs/optics/optional.html
+       url: optics/optional.html
+       menu_section: optics_section
      - title: Traversal
-       url: docs/optics/traversal.html
+       url: optics/traversal.html
+       menu_section: optics_section
+     - title: Setter
+       url: optics/setter.html
+       menu_section: optics_section
+     - title: Getter
+       url: optics/getter.html
+       menu_section: optics_section
+     - title: Fold
+       url: optics/fold.html
+       menu_section: optics_section
 
-  - title: Typeclasses
-    url: docs/typeclasses.html
+  - title: Type Classes ...
+    url: typeclasses.html
+    menu_type: main_menu
+
+  - title: Type Classes
+    url: typeclasses.html
+    menu_type: typeclasses_menu
+    menu_section: typeclasses_section
+
+    nested_options:
+     - title: At
+       url: typeclasses/at.html
+       menu_section: typeclasses_section
+     - title: Cons
+       url: typeclasses/cons.html
+       menu_section: typeclasses_section
+     - title: Cons1
+       url: typeclasses/cons1.html
+       menu_section: typeclasses_section
+     - title: Curry
+       url: typeclasses/curry.html
+       menu_section: typeclasses_section
+     - title: Each
+       url: typeclasses/each.html
+       menu_section: typeclasses_section
+     - title: Empty
+       url: typeclasses/empty.html
+       menu_section: typeclasses_section
+     - title: Field1 to Field6
+       url: typeclasses/fieldx.html
+       menu_section: typeclasses_section
+     - title: Index
+       url: typeclasses/index.html
+       menu_section: typeclasses_section
+     - title: Plated
+       url: typeclasses/plated.html
+       menu_section: typeclasses_section
+     - title: Reverse
+       url: typeclasses/reverse.html
+       menu_section: typeclasses_section
+     - title: Snoc
+       url: typeclasses/snoc.html
+       menu_section: typeclasses_section
+     - title: Snoc1
+       url: typeclasses/snoc1.html
+       menu_section: typeclasses_section
+
+  - title: Examples ...
+    url: examples.html
+    menu_type: main_menu
 
   - title: Examples
-    url: docs/examples.html
+    url: examples.html
+    menu_type: examples_menu
+    menu_section: examples_section
 
     nested_options:
      - title: University
-       url: docs/examples/university_example.html
+       url: examples/university_example.html
+       menu_section: examples_section
 
   - title: FAQ
-    url: docs/faq.html
+    url: faq.html
+    menu_type: main_menu
 
   - title: Release Notes
-    url: docs/release_notes.html
+    url: release_notes.html
+    menu_type: main_menu
 
   - title: Learning Resources
-    url: docs/learning_resources.html
+    url: learning_resources.html
+    menu_type: main_menu
 
   - title: Adopters
-    url: docs/adopters.html
+    url: adopters.html
+    menu_type: main_menu
+
+  - title: Unsafe Module
+    url: unsafe_module.html
+    menu_type: main_menu

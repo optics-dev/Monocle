@@ -1,6 +1,8 @@
 ---
 layout: docs
 title:  "Getting Started"
+section: "main_menu"
+position: 1
 ---
 
 ## Getting Started
@@ -23,12 +25,12 @@ libraryDependencies ++= Seq(
   "com.github.julien-truffaut"  %%  "monocle-state"   % libraryVersion,
   "com.github.julien-truffaut"  %%  "monocle-refined" % libraryVersion,
   "com.github.julien-truffaut"  %%  "monocle-unsafe"  % libraryVersion,
-  "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % "test" 
+  "com.github.julien-truffaut"  %%  "monocle-law"     % libraryVersion % "test"
 )
 
 // for @Lenses macro support
 addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full)
-```  
+```
 
 ## Project Structure
 

@@ -1,11 +1,10 @@
 ---
 layout: docs
 title:  "Iso"
-section: "optics"
+section: "optics_menu"
 source: "core/src/main/scala/monocle/PIso.scala"
 scaladoc: "#monocle.Iso"
 ---
-
 # Iso
 
 An `Iso` is an Optic which converts elements of type `S` into elements of type `A` without loss.
@@ -60,7 +59,7 @@ vectorToList.get(Vector(1,2,3))
 so we should be able to transform all functions `List[Char] => List[Char]` into `String => String`:
 
 ```scala
-val stringToList = Iso[String, List[Char]](_.toList)(_.mkString("")) 
+val stringToList = Iso[String, List[Char]](_.toList)(_.mkString(""))
 ```
 
 ```tut

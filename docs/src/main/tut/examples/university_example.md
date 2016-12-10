@@ -1,11 +1,11 @@
 ---
 layout: docs
-title:  "University Example"
-section: "examples"
+title:  "University"
+section: "examples_menu"
 ---
 # University Example
 
-Let's take a basic model of a `University` containing a few `Department`s where each `Department` has a budget 
+Let's take a basic model of a `University` containing a few `Department`s where each `Department` has a budget
 and a few `Lecturer`s.
 
 ```tut:silent
@@ -20,13 +20,13 @@ val uni = University("oxford", Map(
   )),
   "History" -> Department(30, List(
     Lecturer("arnold", "stones", 20)
-  )) 
+  ))
 ))
 ```
 
 ## How to remove or add elements in a Map
 
-Our university is having some financial issues and it has to close the History department. 
+Our university is having some financial issues and it has to close the History department.
 
 First, we need to zoom into `University` to the departments field using a `Lens`
 
@@ -49,7 +49,7 @@ import monocle.std.map._      // to get Map instance for At
 ```
 
 if instead we wanted to create a department, we would have used `set` with `Some`:
- 
+
 ```tut:silent
 val physics = Department(36, List(
   Lecturer("daniel", "jones", 12),
@@ -93,7 +93,7 @@ Note that we used `each` twice, the first time on `Map` and the second time on `
 ## How to create your own Traversal
 
 We realised that our data is not formatted correctly, in particular first and last name are not upper cased.
-We can reused the `Traversal` to all `Lecturer`s we previously created but this time we need to zoom into the first 
+We can reused the `Traversal` to all `Lecturer`s we previously created but this time we need to zoom into the first
 character of both `firstName` and `lastName`.
 
 You know the drill, first we need to create the `Lens`es we need.
@@ -115,7 +115,7 @@ val upperCasedFirstName = (allLecturers composeLens firstName composeOptional he
 (allLecturers composeLens lastName composeOptional headOption).modify(_.toUpper)(upperCasedFirstName)
 ```
 
-It is annoying that we have to call `modify` on first name and then repeat the same action on last name. Ideally, we 
+It is annoying that we have to call `modify` on first name and then repeat the same action on last name. Ideally, we
 would like to focus to both first and last name. To do that we need to create our own `Traversal`
 
 
