@@ -1,6 +1,7 @@
 ---
 layout: docs
 title:  "Release Notes"
+section: "main_menu"
 ---
 
 ## Release Notes
@@ -30,8 +31,8 @@ title:  "Release Notes"
 -   add `Wrapped` typeclass [#365](https://github.com/julien-truffaut/Monocle/pull/394) (thanks to [puffnfresh](https://github.com/puffnfresh))
 -   add `State` syntax for `Optional` [#387](https://github.com/julien-truffaut/Monocle/pull/387) (thanks to [cb372](https://github.com/cb372))
 -   add `transformM` and `transformCounting` to `Plated` [#391](https://github.com/julien-truffaut/Monocle/pull/391) (thanks to [arkadius](https://github.com/arkadius))
--   add `applyN` for `Traversal` [#379](https://github.com/julien-truffaut/Monocle/pull/379) (thanks to [jule64](https://github.com/jule64)) 
--   add `mapping` [#396](https://github.com/julien-truffaut/Monocle/pull/396) (thanks to [mdulac](https://github.com/mdulac)) 
+-   add `applyN` for `Traversal` [#379](https://github.com/julien-truffaut/Monocle/pull/379) (thanks to [jule64](https://github.com/jule64))
+-   add `mapping` [#396](https://github.com/julien-truffaut/Monocle/pull/396) (thanks to [mdulac](https://github.com/mdulac))
 
 ### Deprecation
 
@@ -91,7 +92,7 @@ title:  "Release Notes"
 
 ### Documentation
 
--   add example, typeclass and faq sections to the website [#314](https://github.com/julien-truffaut/Monocle/pull/314), [#316](https://github.com/julien-truffaut/Monocle/pull/316) 
+-   add example, typeclass and faq sections to the website [#314](https://github.com/julien-truffaut/Monocle/pull/314), [#316](https://github.com/julien-truffaut/Monocle/pull/316)
 -   document [SI-7139](https://issues.scala-lang.org/browse/SI-7139) limitation for optics constructor in REPL and tut [#309](https://github.com/julien-truffaut/Monocle/pull/309)
 
 ### Bug Fixes
@@ -169,18 +170,18 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 -   optics defined for `scalaz.Validation` [#211](https://github.com/julien-truffaut/Monocle/pull/211) (thanks to [anakos](https://github.com/anakos))
 -   `hListAt` is now public [see](https://github.com/julien-truffaut/Monocle/commit/b8567a677dc70e3db8548c421f487e213f206946)
 -   add basic state support for `Lens` in an experimental `state` module [see](https://github.com/julien-truffaut/Monocle/commit/ee2dbd70cc47693615ad539b2dfd5d9c09bcd2be)
--   add `void` for `Optional`, `Traversal`, `Fold` and `Setter` [see](https://github.com/julien-truffaut/Monocle/commit/03f199847a1f572891f48e3e5aef080631f87e2c) 
+-   add `void` for `Optional`, `Traversal`, `Fold` and `Setter` [see](https://github.com/julien-truffaut/Monocle/commit/03f199847a1f572891f48e3e5aef080631f87e2c)
 -   add `Setter` constructor using `scalaz.Contravariant` and `scalaz.Profunctor` [see](https://github.com/julien-truffaut/Monocle/commit/d50ec207b0c0b92061e2ad23de4bcaa841874a75)
 -   `GenIso` for object and empty case classes [#219](https://github.com/julien-truffaut/Monocle/pull/219) and [#223](https://github.com/julien-truffaut/Monocle/pull/223) (thanks to [adelbertc](https://github.com/adelbertc))
 -   add `optionToDisjunction` `Iso` [#226](https://github.com/julien-truffaut/Monocle/pull/226) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
 -   add monomorphic optics for `Option`, `Either`, `scalaz.Disjunction`, `scalaz.Validation` [#181](https://github.com/julien-truffaut/Monocle/issues/181)
 
 ### Build
-- publish snapshot automatically [#207](https://github.com/julien-truffaut/Monocle/issues/207)  
+- publish snapshot automatically [#207](https://github.com/julien-truffaut/Monocle/issues/207)
 - create basic web site using compile time verified examples with `tut` [#227](https://github.com/julien-truffaut/Monocle/pull/227)
 
 ### Bug Fixes
--   [#205](https://github.com/julien-truffaut/Monocle/issues/205) 
+-   [#205](https://github.com/julien-truffaut/Monocle/issues/205)
 
 ### Upgrades
 -   scala to 2.10.5 and 2.11.7
@@ -214,7 +215,7 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 -   Optics and type classes extends `Serializable`
 
 ### Syntax
--   using optics as an infix operator operator requires a single import `monocle.syntax.apply` or `monocle.syntax._` 
+-   using optics as an infix operator operator requires a single import `monocle.syntax.apply` or `monocle.syntax._`
 
 # 1.0.0
 
@@ -247,8 +248,8 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 -   Shuffle methods and parameters order to be consistent between Optics
 
 ### Use Maybe and IList from scalaz instead of Option and List from std
--   `Maybe` can be transformed to `Option` by calling `toOption` 
--   `IList` can be transformed to `List` by calling `toList` 
+-   `Maybe` can be transformed to `Option` by calling `toOption`
+-   `IList` can be transformed to `List` by calling `toList`
 -   benefits: no variance, better scalaz support, safer methods
 
 ### Simplified type classes
@@ -271,7 +272,7 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 
 -   Add `@Lenses` Macro annotation to generate `SimpleLens` automatically for case classes
 -   Add `Lenser` Macro to generate `SimpleLens` with a better IDE support than Macro annotation
--   Deprecate `mkLens` Macro as `Lenser` is strictly more powerful  
+-   Deprecate `mkLens` Macro as `Lenser` is strictly more powerful
 
 ### Bug Fix
 
@@ -295,16 +296,16 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
     polymorphic optics to packages:
     -   `monocle.std` for standard Scala and scalaz classes
     -   `monocle.generic` for shapeless classes
-    
+
     Check out this [example](../example/src/test/scala/other/ImportExample) to see how it affects imports
 -   reverseModify has been moved from Monocle package object to `Prism` syntax
-    
+
 ### New Features
 
 -   Add setOption and modifyOption for `Optional`
 -   Flipped curried version of `set => setF`, `modify => modifyF`, `setOption => setOptionF`, `modifyOption => modifyOptionF`
     See [example](../example/src/test/scala/monocle/LensExample.scala#L43)
--   New constructors for simple optics with better type inference, see [example](../test/src/test/scala/monocle/LensSpec.scala#L13-L16)    
+-   New constructors for simple optics with better type inference, see [example](../test/src/test/scala/monocle/LensSpec.scala#L13-L16)
 -   implicit not found annotations have been added to polymorphic optics to help user figuring out which import is missing
 -   `monocle.scalaz.Either` has been renamed `monocle.scalaz.Disjunction` to avoid clashes wih `monocle.std.Either`
 -   Add `Each`, `Index`, `Field1`, `Head`, `Tail` and `LastOption` instances for `scalaz.OneAnd`

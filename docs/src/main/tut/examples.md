@@ -1,6 +1,8 @@
 ---
 layout: docs
 title:  "Examples"
+section: "examples_menu"
+position: 4
 ---
 
 ## Examples

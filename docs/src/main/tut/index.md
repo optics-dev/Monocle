@@ -82,7 +82,7 @@ Therefore, after composing `company`, `address`, `street` and `name`, we obtain 
 In the above example, we used capitalize to upper case the first letter of a `String`.
 It works but it would be clearer if we could use `Lens` to zoom into the first character of a `String`.
 However, we cannot write such a `Lens` because a `Lens` defines how to focus from an object `S` into a *mandatory*
-object `A` and in our case, the first character of a `String` is optional as a `String` might be empty. For this 
+object `A` and in our case, the first character of a `String` is optional as a `String` might be empty. For this
 we need a sort of partial `Lens`, in Monocle it is called `Optional`.
 
 ```tut:silent
@@ -106,7 +106,7 @@ relation between Optics).
 There are 3 ways to create `Lens`, each with their pro and cons:
 
 1.   The manual method where we construct a `Lens` by passing `get` and `set` functions:
-     
+
      ```scala
      import monocle.Lens
      val company = Lens[Employee, Company](_.company)(c => e => e.copy(company = c))
@@ -126,18 +126,18 @@ There are 3 ways to create `Lens`, each with their pro and cons:
      This solution is the most boiler plate free but it has several disadvantages:
      1.   users need to add the macro paradise plugin to their project.
      2.   requires access to the case classes since you need to annotate them.
-     
+
      ```scala
      import monocle.macros.Lenses
      @Lenses case class Employee(name: String, company: Company)
      // generates Employee.company: Lens[Employee, Company]
      // and       Employee.name   : Lens[Employee, String]
-     
+
      // you can add a prefix to Lenses constructor
-     
+
      @Lenses("_")
      case class Employee(company: Company, name: String)
-     
+
      // generates Employee._company: Lens[Employee, Company]
      ```
 
@@ -145,14 +145,14 @@ Note: `GenLens` and `@Lenses` are both limited to case classes
 
 ### Optics in the REPL and tut
 
-`Iso`, `Prism`, `Lens`, `Optional`, `Traversal` and `Setter` are all type aliases for more general polymorphic optics, 
+`Iso`, `Prism`, `Lens`, `Optional`, `Traversal` and `Setter` are all type aliases for more general polymorphic optics,
 for example here is the definition of `Lens`:
 
 ```scala
 type Lens[S, A] = PLens[S, S, A, A]
 
 object Lens {
-  def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] = 
+  def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] =
     PLens(get)(set)
 }
 ```
@@ -175,13 +175,13 @@ scala> val i = Lens[Example, Int](_.i)(i => _.copy(i = i))
        val i = Lens[Example, Int](_.i)(i => _.copy(i = i))
 ```
 
-We managed to create the first `Lens` but the second call to `apply` failed. This is a known bug in the REPL which is 
+We managed to create the first `Lens` but the second call to `apply` failed. This is a known bug in the REPL which is
 tracked by [SI-7139](https://issues.scala-lang.org/browse/SI-7139). You will also face this error if you use [tut](https://github.com/tpolecat/tut)
 to create documentation. This issue should be fixed in scala 2.12.1
 
 ### Typeclass and instance location
 
-All typeclasses are defined in `monocle.function` package, you can import optic individually with 
+All typeclasses are defined in `monocle.function` package, you can import optic individually with
 
 ```scala
 import monocle.function.$TYPE_CLASS.$OPTIC
@@ -237,7 +237,7 @@ and the [contributors](https://github.com/julien-truffaut/Monocle/graphs/contrib
 
 ### Copyright and license
 
-All code is available to you under the MIT license, available [here](http://opensource.org/licenses/mit-license.php). 
+All code is available to you under the MIT license, available [here](http://opensource.org/licenses/mit-license.php).
 The design is informed by many other projects, in particular Haskell [Lens](https://github.com/ekmett/lens).
 
 Copyright the maintainers, 2016.

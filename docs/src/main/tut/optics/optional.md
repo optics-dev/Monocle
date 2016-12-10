@@ -1,7 +1,7 @@
 ---
 layout: docs
 title:  "Optional"
-section: "optics"
+section: "optics_menu"
 source: "core/src/main/scala/monocle/POptional.scala"
 scaladoc: "#monocle.Prism"
 ---

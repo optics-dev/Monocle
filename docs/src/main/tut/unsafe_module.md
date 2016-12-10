@@ -1,11 +1,12 @@
 ---
 layout: docs
 title:  "Unsafe Module"
+section: "main_menu"
 ---
 
 ## Unsafe module
 
-The `unsafe` module contains `Optics` that do not fully satisfy the set of `Optics` `Laws` of the `core` module.  
+The `unsafe` module contains `Optics` that do not fully satisfy the set of `Optics` `Laws` of the `core` module.
 
 These `Optics` hence require additional care from the end user to avoid unlawful usages as those are not enforced by the library.
 
@@ -39,6 +40,3 @@ import monocle.macros.GenLens
 ```
 
 In this example the age is reset to `0` which invalidates the original predicate of `age >= 18`. More formally `UnsafeSelect` can invalidate the `roundTripOtherWayLaw` law.
-
-
-

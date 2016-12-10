@@ -1,16 +1,16 @@
 ---
 layout: docs
 title:  "Traversal"
-section: "optics"
+section: "optics_menu"
 source: "core/src/main/scala/monocle/PTraversal.scala"
 scaladoc: "#monocle.Traversal"
 ---
 # Traversal
 
-A `Traversal` is the generalisation of an `Optional` to several targets. In other word, a `Traversal` allows 
+A `Traversal` is the generalisation of an `Optional` to several targets. In other word, a `Traversal` allows
 to focus from a type `S` into 0 to n values of type `A`.
 
-The most common example of a `Traversal` would be to focus into all elements inside of a container (e.g. `List`, `Vector`, `Option`). 
+The most common example of a `Traversal` would be to focus into all elements inside of a container (e.g. `List`, `Vector`, `Option`).
 To do this we will use the relation between the typeclass `scalaz.Traverse` and `Traversal`:
 
 ```tut:silent
@@ -71,7 +71,7 @@ def filterKey[K, V](predicate: K => Boolean): Traversal[Map[K, V], V] =
           k -> (if(predicate(k)) f(v) else v.pure[F])
         }.sequenceU
     }
-    
+
 val m = Map(1 -> "one", 2 -> "two", 3 -> "three", 4 -> "Four")
 ```
 
@@ -95,7 +95,7 @@ def modifyGetAll[S, A](t: Traversal[S, A], s: S, f: A => A): Boolean =
 ```
 
 Another important law is `composeModify` also known as `fusion` law:
- 
+
 ```tut:silent
 def composeModify[S, A](t: Traversal[S, A], s: S, f: A => A, g: A => A): Boolean =
     t.modify(g)(t.modify(f)(s)) == t.modify(g compose f)(s)

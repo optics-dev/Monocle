@@ -1,8 +1,9 @@
 ---
 layout: docs
+section: "optics_menu"
 title:  "Optics"
+position: 2
 ---
-
 ## Optics
 
 Monocle define the following optics:
@@ -12,6 +13,6 @@ Monocle define the following optics:
 -   [Lens](optics/lens.html)
 -   [Optional](optics/optional.html)
 -   [Traversal](optics/traversal.html)
--   Setter
--   Getter
--   Fold
+-   [Setter](optics/setter.html)
+-   [Getter](optics/getter.html)
+-   [Fold](optics/fold.html)
