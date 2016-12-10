@@ -64,10 +64,14 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   @inline def foldMap[M: Monoid](f: A => M): M = _fold.foldMap(f)(s)
 
   @inline def getAll: List[A] = _fold.getAll(s)
+  @inline def find(p: A => Boolean): S => Option[A] = _fold.find(p)
   @inline def headOption: Option[A] = _fold.headOption(s)
-
+  @inline def lastOption: Option[A] = _fold.lastOption(s)
   @inline def exist(p: A => Boolean): Boolean = _fold.exist(p)(s)
   @inline def all(p: A => Boolean): Boolean = _fold.all(p)(s)
+  @inline def length: Int = _fold.length(s)
+  @inline def isEmpty: Boolean = _fold.isEmpty(s)
+  @inline def nonEmpty: Boolean = _fold.nonEmpty(s)
 
   @inline def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] = ApplyFold(s, _fold composeFold other)
   @inline def composeGetter[B](other: Getter[A, B]): ApplyFold[S, B] = ApplyFold(s, _fold composeGetter other)
@@ -192,6 +196,11 @@ final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]){
 
   @inline def set(b: B): T = prism.set(b)(s)
   @inline def setOption(b: B): Option[T] = prism.setOption(b)(s)
+  @inline def isEmpty: Boolean = prism.isEmpty(s)
+  @inline def nonEmpty: Boolean = prism.nonEmpty(s)
+  @inline def find(p: A => Boolean): Option[A] = prism.find(p)(s)
+  @inline def exist(p: A => Boolean): Boolean = prism.exist(p)(s)
+  @inline def all(p: A => Boolean): Boolean = prism.all(p)(s)
 
   @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, prism composeSetter other)
   @inline def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, prism composeFold other)
