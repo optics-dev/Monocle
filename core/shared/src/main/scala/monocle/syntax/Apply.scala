@@ -92,6 +92,8 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
 
 final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]){
   @inline def get: A = getter.get(s)
+  @inline def exist(p: A => Boolean): S => Boolean = getter.exist(p)
+  @inline def find(p: A => Boolean): S => Option[A] = getter.find(p)
 
   @inline def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] = ApplyFold(s, getter composeFold other)
   @inline def composeGetter[B](other: Getter[A, B]): ApplyGetter[S, B] = ApplyGetter(s, getter composeGetter other)
@@ -108,6 +110,8 @@ final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
   @inline def get: A = iso.get(s)
   @inline def set(b: B): T = iso.set(b)(s)
   @inline def modify(f: A => B): T = iso.modify(f)(s)
+  @inline def exist(p: A => Boolean): S => Boolean = iso.exist(p)
+  @inline def find(p: A => Boolean): S => Option[A] = iso.find(p)
 
   @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, iso composeSetter other)
   @inline def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, iso composeFold other)
@@ -134,6 +138,8 @@ final case class ApplyLens[S, T, A, B](s: S, lens: PLens[S, T, A, B]){
   @inline def get: A = lens.get(s)
   @inline def set(b: B): T = lens.set(b)(s)
   @inline def modify(f: A => B): T = lens.modify(f)(s)
+  @inline def exist(p: A => Boolean): S => Boolean = lens.exist(p)
+  @inline def find(p: A => Boolean): S => Option[A] = lens.find(p)
 
   @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, lens composeSetter other)
   @inline def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, lens composeFold other)
@@ -158,6 +164,13 @@ final case class ApplyLens[S, T, A, B](s: S, lens: PLens[S, T, A, B]){
 
 final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]){
   @inline def getOption: Option[A] = optional.getOption(s)
+
+  @inline def isEmpty(s: S): Boolean =  optional.isEmpty(s)
+  @inline def nonEmpty(s: S): Boolean = optional.nonEmpty(s)
+  @inline def all(p: A => Boolean): S => Boolean = optional.all(p)
+
+  @inline def exist(p: A => Boolean): S => Boolean = optional.exist(p)
+  @inline def find(p: A => Boolean): S => Option[A] = optional.find(p)
 
   @inline def modify(f: A => B): T = optional.modify(f)(s)
   @inline def modifyOption(f: A => B): Option[T] = optional.modifyOption(f)(s)
@@ -241,9 +254,16 @@ final case class ApplySetter[S, T, A, B](s: S, setter: PSetter[S, T, A, B]) {
 final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A, B]){
   @inline def getAll: List[A] = traversal.getAll(s)
   @inline def headOption: Option[A] = traversal.headOption(s)
+  @inline def LastOption: Option[A] = traversal.lastOption(s)
 
   @inline def set(b: B): T = traversal.set(b)(s)
   @inline def modify(f: A => B): T = traversal.modify(f)(s)
+
+  @inline def find(p: A => Boolean): S => Option[A] = traversal.find(p)
+  @inline def exist(p: A => Boolean): S => Boolean = traversal.exist(p)
+  @inline def all(p: A => Boolean): S => Boolean = traversal.all(p)
+  @inline def isEmpty(s: S): Boolean =  traversal.isEmpty(s)
+  @inline def nonEmpty(s: S): Boolean = traversal.nonEmpty(s)
 
   @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] = ApplySetter(s, traversal composeSetter other)
   @inline def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = ApplyFold(s, traversal composeFold other)
