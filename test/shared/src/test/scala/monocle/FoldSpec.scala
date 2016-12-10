@@ -32,6 +32,16 @@ class FoldSpec extends MonocleSuite {
     iListFold.length(INil())           shouldEqual 0
   }
 
+  test("select (satisfied predicate)") {
+    val select = Fold.select[IList[Int]](_.endsWith(IList(2,3)))
+    select.getAll(IList(1,2,3)) shouldEqual List(IList(1,2,3))
+  }
+
+  test("select (unsatisfied predicate)") {
+    val select = Fold.select[IList[Int]](_.endsWith(IList(2,3)))
+    select.getAll(IList(1,2,3,4)) shouldEqual List()
+  }
+
   def nestedIListFold[A] = new Fold[IList[IList[A]], IList[A]]{
     def foldMap[M: Monoid](f: (IList[A]) => M)(s: IList[IList[A]]): M =
       s.foldRight(Monoid[M].zero)((l, acc) => Monoid[M].append(f(l), acc))

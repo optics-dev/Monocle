@@ -151,6 +151,12 @@ object Fold extends FoldInstances {
         s.fold(f,f)
     }
 
+  def select[A](p: A => Boolean): Fold[A, A] =
+    new Fold[A, A] {
+      def foldMap[M: Monoid](f: A => M)(s: A): M =
+        if (p(s)) f(s) else Monoid[M].zero
+    }
+
   /** [[Fold]] that points to nothing */
   def void[S, A]: Fold[S, A] =
     Optional.void.asFold
