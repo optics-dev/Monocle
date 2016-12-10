@@ -269,22 +269,8 @@ a type S and a type A.">
                         </a>
                       </li><li class="current-entities indented1">
                         <a class="object" href="PIso$.html" title=""></a>
-                        <a class="class" href="" title="A PIso defines an isomorphism between types S, A and B, T:
-HtmlTag(&lt;pre&gt;
-             get                           reverse.get
-    --------------------&gt;             --------------------&gt;
-  S                       A         T                       B
-    &lt;--------------------             &lt;--------------------
-      reverse.reverseGet                   reverseGet
-&lt;/pre&gt;)HtmlTag(&lt;/pre&gt;)"></a>
-                        <a href="" title="A PIso defines an isomorphism between types S, A and B, T:
-HtmlTag(&lt;pre&gt;
-             get                           reverse.get
-    --------------------&gt;             --------------------&gt;
-  S                       A         T                       B
-    &lt;--------------------             &lt;--------------------
-      reverse.reverseGet                   reverseGet
-&lt;/pre&gt;)HtmlTag(&lt;/pre&gt;)">
+                        <a class="class" href="" title="Iso is a type alias for PIso where S = A and T = B:"></a>
+                        <a href="" title="Iso is a type alias for PIso where S = A and T = B:">
                           PIso
                         </a>
                       </li><li class="current-entities indented1">
@@ -391,24 +377,24 @@ where n can be infinite.">
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <a href="" class="extype" name="monocle.PIso">PIso</a> defines an isomorphism between types S, A and B, T:
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p><a href="index.html#Iso[S,A]=monocle.PIso[S,S,A,A]" class="extmbr" name="monocle.Iso">Iso</a> is a type alias for <a href="" class="extype" name="monocle.PIso">PIso</a> where <code>S</code> = <code>A</code> and <code>T</code> = <code>B</code>:</p><pre><span class="kw">type</span> Iso[S, A] = PIso[S, S, A, A]</pre><p>An <a href="index.html#Iso[S,A]=monocle.PIso[S,S,A,A]" class="extmbr" name="monocle.Iso">Iso</a> defines an isomorphism between a type S and A:
 <pre>
-             get                           reverse.get
-    -------------------->             -------------------->
-  S                       A         T                       B
-    <--------------------             <--------------------
-      reverse.reverseGet                   reverseGet
-</pre></p><p>In addition, if f and g forms an isomorphism between <code>A</code> and <code>B</code>, i.e. if <code>f . g = id</code> and <code>g . f = id</code>,
-then a <a href="" class="extype" name="monocle.PIso">PIso</a> defines an isomorphism between <code>S</code> and <code>T</code>:
+            get
+    -------------------->
+  S                       A
+    <--------------------
+         reverseGet
+</pre></p><p>A <a href="" class="extype" name="monocle.PIso">PIso</a> allows to lift a function <code>f: A =&gt; B</code> to <code>S =&gt; T</code> and a function <code>g: T =&gt; S</code> to <code>B =&gt; A</code>
 <pre>
-    S           T                                   S           T
-    |           ↑                                   ↑           |
+                                                          g
+    S           T                                   S <-------- T
+    |           ↑                                   |           ↑
     |           |                                   |           |
 get |           | reverseGet     reverse.reverseGet |           | reverse.get
     |           |                                   |           |
-    ↓     f     |                                   |     g     ↓
-    A --------> B                                   A <-------- B
-</pre></p><p><a href="index.html#Iso[S,A]=monocle.PIso[S,S,A,A]" class="extmbr" name="monocle.Iso">Iso</a> is a type alias for <a href="" class="extype" name="monocle.PIso">PIso</a> where <code>S</code> = <code>A</code> and <code>T</code> = <code>B</code>:</p><pre><span class="kw">type</span> Iso[S, A] = PIso[S, S, A, A]</pre><p>A <a href="" class="extype" name="monocle.PIso">PIso</a> is also a valid <a href="Getter.html" class="extype" name="monocle.Getter">Getter</a>, <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a>, <a href="PLens.html" class="extype" name="monocle.PLens">PLens</a>, <a href="PPrism.html" class="extype" name="monocle.PPrism">PPrism</a>, <a href="POptional.html" class="extype" name="monocle.POptional">POptional</a>, <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a> and <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a>
+    ↓     f     |                                   ↓           |
+    A --------> B                                   A           B
+</pre></p><p>A <a href="" class="extype" name="monocle.PIso">PIso</a> is also a valid <a href="Getter.html" class="extype" name="monocle.Getter">Getter</a>, <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a>, <a href="PLens.html" class="extype" name="monocle.PLens">PLens</a>, <a href="PPrism.html" class="extype" name="monocle.PPrism">PPrism</a>, <a href="POptional.html" class="extype" name="monocle.POptional">POptional</a>, <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a> and <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a>
 </p></div><dl class="paramcmts block"><dt class="tparam">S</dt><dd class="cmt"><p>the source of a <a href="" class="extype" name="monocle.PIso">PIso</a></p></dd><dt class="tparam">T</dt><dd class="cmt"><p>the modified source of a <a href="" class="extype" name="monocle.PIso">PIso</a></p></dd><dt class="tparam">A</dt><dd class="cmt"><p>the target of a <a href="" class="extype" name="monocle.PIso">PIso</a></p></dd><dt class="tparam">B</dt><dd class="cmt"><p>the modified target of a <a href="" class="extype" name="monocle.PIso">PIso</a></p></dd></dl><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="monocle.PIso">PIso</a>[<span class="extype" name="monocle.PIso.S">S</span>, <span class="extype" name="monocle.PIso.T">T</span>, <span class="extype" name="monocle.PIso.A">A</span>, <span class="extype" name="monocle.PIso.B">B</span>]</dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/Iso.scala" target="_blank">Iso.scala</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="law/IsoLaws.html" class="extype" name="monocle.law.IsoLaws">monocle.law.IsoLaws</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
