@@ -6,31 +6,31 @@ import scalaz.Liskov.<~<
 import scalaz.{Applicative, Category, Functor, Monoid, Split, \/}
 
 /**
- * A [[PIso]] defines an isomorphism between types S, A and B, T:
- * <pre>
- *              get                           reverse.get
- *     -------------------->             -------------------->
- *   S                       A         T                       B
- *     <--------------------             <--------------------
- *       reverse.reverseGet                   reverseGet
- * </pre>
- *
- * In addition, if f and g forms an isomorphism between `A` and `B`, i.e. if `f . g = id` and `g . f = id`,
- * then a [[PIso]] defines an isomorphism between `S` and `T`:
- * <pre>
- *     S           T                                   S           T
- *     |           ↑                                   ↑           |
- *     |           |                                   |           |
- * get |           | reverseGet     reverse.reverseGet |           | reverse.get
- *     |           |                                   |           |
- *     ↓     f     |                                   |     g     ↓
- *     A --------> B                                   A <-------- B
- * </pre>
- *
  * [[Iso]] is a type alias for [[PIso]] where `S` = `A` and `T` = `B`:
  * {{{
  * type Iso[S, A] = PIso[S, S, A, A]
  * }}}
+ *
+ * An [[Iso]] defines an isomorphism between a type S and A:
+ * <pre>
+ *             get
+ *     -------------------->
+ *   S                       A
+ *     <--------------------
+ *          reverseGet
+ * </pre>
+ *
+ * A [[PIso]] allows to lift a function `f: A => B` to `S => T` and a function `g: T => S` to `B => A`
+ * <pre>
+ *                                                           g
+ *     S           T                                   S <-------- T
+ *     |           ↑                                   |           ↑
+ *     |           |                                   |           |
+ * get |           | reverseGet     reverse.reverseGet |           | reverse.get
+ *     |           |                                   |           |
+ *     ↓     f     |                                   ↓           |
+ *     A --------> B                                   A           B
+ * </pre>
  *
  * A [[PIso]] is also a valid [[Getter]], [[Fold]], [[PLens]], [[PPrism]], [[POptional]], [[PTraversal]] and [[PSetter]]
  *
