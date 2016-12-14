@@ -8,8 +8,8 @@ import monocle._
 object chars extends CharsInstances
 
 trait CharsInstances {
-  implicit val lowerCase: Prism[Char, LowerCaseChar] = toCase[LowerCase](c => c.isLower)
-  implicit val upperCase: Prism[Char, UpperCaseChar] = toCase[UpperCase](c => c.isUpper)
+  val lowerCase: Prism[Char, LowerCaseChar] = toCase[LowerCase](c => c.isLower)
+  val upperCase: Prism[Char, UpperCaseChar] = toCase[UpperCase](c => c.isUpper)
 
   private def toCase[P](p: Char => Boolean): Prism[Char, Refined[Char, P]] = {
     Prism[Char, Refined[Char, P]] {
