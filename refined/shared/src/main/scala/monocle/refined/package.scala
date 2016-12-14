@@ -2,6 +2,7 @@ package monocle
 
 import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
+import eu.timepit.refined.char.{LowerCase, UpperCase}
 import eu.timepit.refined.numeric.Interval
 
 package object refined {
@@ -11,4 +12,8 @@ package object refined {
   type CharBits = ZeroTo[W.`15`.T]
   type IntBits = ZeroTo[W.`31`.T]
   type LongBits = ZeroTo[W.`63`.T]
+
+  type LowerCaseChar = Char Refined LowerCase
+  type UpperCaseChar = Char Refined UpperCase
+
 }
