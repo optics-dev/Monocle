@@ -32,8 +32,8 @@ class HttpRequestExample extends MonocleSuite {
   val post = GenPrism[HttpMethod, POST.type] composeIso GenIso.unit[POST.type]
 
   test("get and post") {
-    (method composePrism get).isMatching(r1) shouldBe true
-    (method composePrism post).isMatching(r1) shouldBe false
+    (method composePrism get).nonEmpty(r1) shouldBe true
+    (method composePrism post).nonEmpty(r1) shouldBe false
     (method composePrism post).getOption(r2) shouldBe Some(())
   }
 

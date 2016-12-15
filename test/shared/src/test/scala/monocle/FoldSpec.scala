@@ -1,56 +1,23 @@
 package monocle
 
-import scalaz._
 import scalaz.std.anyVal._
+import scalaz.std.list._
 import scalaz.std.string._
+import scalaz.{-\/, Category, Choice, Compose, Monoid}
 
 class FoldSpec extends MonocleSuite {
 
-  val iListFold = Fold.fromFoldable[IList, Int]
+  val eachLi: Fold[List[Int], Int] = Fold.fromFoldable[List, Int]
 
-  test("foldMap") {
-    iListFold.foldMap(_.toString)(IList(1,2,3,4,5)) shouldEqual "12345"
-  }
-
-  test("headMaybe") {
-    iListFold.headOption(IList(1,2,3,4,5)) shouldEqual Some(1)
-    iListFold.headOption(INil())           shouldEqual None
-  }
-
-  test("exist") {
-    iListFold.exist(_ % 2 == 0)(IList(1,2,3)) shouldEqual true
-    iListFold.exist(_ == 7)(IList(1,2,3))     shouldEqual false
-  }
-
-  test("all") {
-    iListFold.all(_ % 2 == 0)(IList(1,2,3)) shouldEqual false
-    iListFold.all(_ <= 7)(IList(1,2,3))     shouldEqual true
-  }
-
-  test("length") {
-    iListFold.length(IList(1,2,3,4,5)) shouldEqual 5
-    iListFold.length(INil())           shouldEqual 0
-  }
-
-  test("select (satisfied predicate)") {
-    val select = Fold.select[IList[Int]](_.endsWith(IList(2,3)))
-    select.getAll(IList(1,2,3)) shouldEqual List(IList(1,2,3))
-  }
-
-  test("select (unsatisfied predicate)") {
-    val select = Fold.select[IList[Int]](_.endsWith(IList(2,3)))
-    select.getAll(IList(1,2,3,4)) shouldEqual List()
-  }
-
-  def nestedIListFold[A] = new Fold[IList[IList[A]], IList[A]]{
-    def foldMap[M: Monoid](f: (IList[A]) => M)(s: IList[IList[A]]): M =
+  def nestedListFold[A] = new Fold[List[List[A]], List[A]]{
+    def foldMap[M: Monoid](f: (List[A]) => M)(s: List[List[A]]): M =
       s.foldRight(Monoid[M].zero)((l, acc) => Monoid[M].append(f(l), acc))
   }
 
   // test implicit resolution of type classes
 
   test("Fold has a Compose instance") {
-    Compose[Fold].compose(iListFold, nestedIListFold[Int]).fold(IList(IList(1,2,3), IList(4,5), IList(6))) shouldEqual 21
+    Compose[Fold].compose(eachLi, nestedListFold[Int]).fold(List(List(1,2,3), List(4,5), List(6))) shouldEqual 21
   }
 
   test("Fold has a Category instance") {
@@ -58,7 +25,66 @@ class FoldSpec extends MonocleSuite {
   }
 
   test("Fold has a Choice instance") {
-    Choice[Fold].choice(iListFold, Choice[Fold].id[Int]).fold(-\/(IList(1,2,3))) shouldEqual 6
+    Choice[Fold].choice(eachLi, Choice[Fold].id[Int]).fold(-\/(List(1,2,3))) shouldEqual 6
+  }
+
+
+  test("foldMap") {
+    eachLi.foldMap(_.toString)(List(1,2,3,4,5)) shouldEqual "12345"
+  }
+
+  test("getAll") {
+    eachLi.getAll(List(1,2,3,4)) shouldEqual List(1,2,3,4)
+  }
+
+  test("headOption") {
+    eachLi.headOption(List(1,2,3,4)) shouldEqual Some(1)
+  }
+
+  test("lastOption") {
+    eachLi.lastOption(List(1,2,3,4)) shouldEqual Some(4)
+  }
+
+  test("length") {
+    eachLi.length(List(1,2,3,4)) shouldEqual 4
+    eachLi.length(Nil)           shouldEqual 0
+  }
+
+  test("isEmpty") {
+    eachLi.isEmpty(List(1,2,3,4)) shouldEqual false
+    eachLi.isEmpty(Nil)           shouldEqual true
+  }
+
+  test("nonEmpty") {
+    eachLi.nonEmpty(List(1,2,3,4)) shouldEqual true
+    eachLi.nonEmpty(Nil)           shouldEqual false
+  }
+
+  test("find") {
+    eachLi.find(_ > 2)(List(1,2,3,4)) shouldEqual Some(3)
+    eachLi.find(_ > 9)(List(1,2,3,4)) shouldEqual None
+  }
+
+  test("exist") {
+    eachLi.exist(_ > 2)(List(1,2,3,4)) shouldEqual true
+    eachLi.exist(_ > 9)(List(1,2,3,4)) shouldEqual false
+    eachLi.exist(_ > 9)(Nil)           shouldEqual false
+  }
+
+  test("all") {
+    eachLi.all(_ > 2)(List(1,2,3,4)) shouldEqual false
+    eachLi.all(_ > 0)(List(1,2,3,4)) shouldEqual true
+    eachLi.all(_ > 0)(Nil)           shouldEqual true
+  }
+
+  test("select (satisfied predicate)") {
+    val select = Fold.select[List[Int]](_.endsWith(List(2,3)))
+    select.getAll(List(1,2,3)) shouldEqual List(List(1,2,3))
+  }
+
+  test("select (unsatisfied predicate)") {
+    val select = Fold.select[List[Int]](_.endsWith(List(2,3)))
+    select.getAll(List(1,2,3,4)) shouldEqual List()
   }
 
 }

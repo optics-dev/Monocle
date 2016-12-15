@@ -79,7 +79,7 @@ A few usage of `Prism`:
 
 ```tut
 _cons.getOption(l1)
-_cons.isMatching(l1)
+_cons.nonEmpty(l1)
 _cons[Int].modify(_.copy(_1 = 5))(l1)
 _cons[Int].modify(_.copy(_1 = 5))(l2)
 ```
