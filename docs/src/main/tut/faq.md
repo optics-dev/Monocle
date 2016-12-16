@@ -55,7 +55,6 @@ Both `at` and `index` define indexed optics. However, `at` is a `Lens` and `inde
 `at` is stronger than `index`. Let's take the example of a `Map`
 
 ```tut:silent
-import monocle.std.map._ // to get both Index and At instances for Map
 import monocle.Iso
 
 val m = Map("one" -> 1, "two" -> 2)

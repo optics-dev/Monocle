@@ -10,8 +10,6 @@ section: "home"
 
 ## Table of contents
 - [Motivation](#motivation)
-- [Lens creation](#lens-creation)
-- [Typeclass and instance location](#typeclass-and-instance-location)
 - [Optics hierarchy](#optics-hierarchy)
 - [Maintainers and contributors](#maintainers-and-contributors)
 - [Copyright and licence](#copyright-and-license)
@@ -101,48 +99,6 @@ creates a third `Optional` from A to C. All `Lens` can be seen as `Optional` whe
 present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class diagram for full inheritance
 relation between Optics).
 
-### Lens creation
-
-There are 3 ways to create `Lens`, each with their pro and cons:
-
-1.   The manual method where we construct a `Lens` by passing `get` and `set` functions:
-
-     ```scala
-     import monocle.Lens
-     val company = Lens[Employee, Company](_.company)(c => e => e.copy(company = c))
-     // or with some type inference
-     val company = Lens((_: Employee).company)(c => e => e.copy(company = c))
-     ```
-
-2.   The semi-automatic method using the `GenLens` blackbox macro:
-
-     ```scala
-     import monocle.macros.GenLens
-     val company = GenLens[Employee](_.company)
-     ```
-
-3.   Finally, the fully automatic method using the `@Lenses` macro annotation.
-     `@Lenses` generates `Lens` for every accessor of a case class in its companion object (even if there is no companion object defined).
-     This solution is the most boiler plate free but it has several disadvantages:
-     1.   users need to add the macro paradise plugin to their project.
-     2.   requires access to the case classes since you need to annotate them.
-
-     ```scala
-     import monocle.macros.Lenses
-     @Lenses case class Employee(name: String, company: Company)
-     // generates Employee.company: Lens[Employee, Company]
-     // and       Employee.name   : Lens[Employee, String]
-
-     // you can add a prefix to Lenses constructor
-
-     @Lenses("_")
-     case class Employee(company: Company, name: String)
-
-     // generates Employee._company: Lens[Employee, Company]
-     ```
-
-Note: `GenLens` and `@Lenses` are both limited to case classes
-
 ### Optics in the REPL and tut
 
 `Iso`, `Prism`, `Lens`, `Optional`, `Traversal` and `Setter` are all type aliases for more general polymorphic optics,
@@ -177,50 +133,7 @@ scala> val i = Lens[Example, Int](_.i)(i => _.copy(i = i))
 
 We managed to create the first `Lens` but the second call to `apply` failed. This is a known bug in the REPL which is
 tracked by [SI-7139](https://issues.scala-lang.org/browse/SI-7139). You will also face this error if you use [tut](https://github.com/tpolecat/tut)
-to create documentation. This issue should be fixed in scala 2.12.1
-
-### Typeclass and instance location
-
-All typeclasses are defined in `monocle.function` package, you can import optic individually with
-
-```scala
-import monocle.function.$TYPE_CLASS.$OPTIC
-```
-
-For example
-
-```tut:silent
-import monocle.function.At.at
-import monocle.function.Cons.{headOption, tailOption}
-```
-
-or you can import all typeclass based optics with
-
-```tut:silent
-import monocle.function.all._
-```
-
-Here is a complete example
-
-```tut:reset:silent
-import monocle.function.all._
-import monocle.macros.GenLens
-
-case class Foo(s: String, is: List[Int])
-val foo = Foo("Hello", List(1,2,3))
-
-val is = GenLens[Foo](_.is)
-```
-
-```tut:book
-(is composeOptional headOption).getOption(foo)
-```
-
-Note: if you use a version of monocle before 1.4.x, you need another import to get the typeclass instance
-
-```tut:silent
-import monocle.std.list._
-```
+to create documentation. This issue is fixed in scala 2.12.1
 
 ### Optics hierarchy
 ![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
