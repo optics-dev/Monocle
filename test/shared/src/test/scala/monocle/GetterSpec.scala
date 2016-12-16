@@ -37,6 +37,12 @@ class GetterSpec extends MonocleSuite {
     Arrow[Getter].arr((_: Int) * 2).get(4) shouldEqual 8
   }
 
+  test("Getter has a Zip instance") {
+    val length = Getter[String, Int](_.length)
+    val upper = Getter[String, String](_.toUpperCase)
+    Zip[Getter[String, ?]].zip(length, upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
+  }
+
   test("get") {
     i.get(Bar(5)) shouldEqual 5
   }

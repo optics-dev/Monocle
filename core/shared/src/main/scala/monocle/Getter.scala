@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Arrow, Choice, Monoid, \/}
+import scalaz.{Arrow, Choice, Monoid, Zip, \/}
 
 /**
  * A [[Getter]] can be seen as a glorified get method between
@@ -32,6 +32,9 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** pair two disjoint [[Getter]] */
   @inline final def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
     Getter[(S, S1), (A, A1)]{case (s, s1) => (self.get(s), other.get(s1))}
+
+  @inline final def zip[A1](other: Getter[S, A1]): Getter[S, (A, A1)] =
+    Getter[S, (A, A1)](s => (self.get(s), other.get(s)))
 
   @inline final def first[B]: Getter[(S, B), (A, B)] =
     Getter[(S, B), (A, B)]{case (s, b) => (self.get(s), b)}
@@ -154,6 +157,10 @@ sealed abstract class GetterInstances extends GetterInstances0 {
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
       g composeGetter f
+  }
+
+  implicit def getterZip[S]: Zip[Getter[S, ?]] = new Zip[Getter[S, ?]] {
+    override def zip[A, B](a: => Getter[S, A], b: => Getter[S, B]) = a zip b
   }
 }
 
