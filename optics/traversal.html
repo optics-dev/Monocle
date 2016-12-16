@@ -6,15 +6,15 @@ to focus from a type <code class="highlighter-rouge">S</code> into 0 to n values
 <p>The most common example of a <code class="highlighter-rouge">Traversal</code> would be to focus into all elements inside of a container (e.g. <code class="highlighter-rouge">List</code>, <code class="highlighter-rouge">Vector</code>, <code class="highlighter-rouge">Option</code>).
 To do this we will use the relation between the typeclass <code class="highlighter-rouge">scalaz.Traverse</code> and <code class="highlighter-rouge">Traversal</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Traversal</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Traversal</span>
 <span class="k">import</span> <span class="nn">scalaz.std.list._</span>   <span class="c1">// to get the Traverse instance for List
 </span>
 <span class="k">val</span> <span class="n">xs</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">)</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">eachL</span> <span class="k">=</span> <span class="nc">Traversal</span><span class="o">.</span><span class="n">fromTraverse</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span><span class="o">]</span>
-<span class="c1">// eachL: monocle.Traversal[List[Int],Int] = monocle.PTraversal$$anon$5@55a42b93
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">eachL</span> <span class="k">=</span> <span class="nc">Traversal</span><span class="o">.</span><span class="n">fromTraverse</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span><span class="o">]</span>
+<span class="c1">// eachL: monocle.Traversal[List[Int],Int] = monocle.PTraversal$$anon$5@4d435b4d
 </span>
 <span class="n">eachL</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="n">xs</span><span class="o">)</span>
 <span class="c1">// res1: List[Int] = List(0, 0, 0, 0, 0)
@@ -26,7 +26,7 @@ To do this we will use the relation between the typeclass <code class="highlight
 
 <p>A <code class="highlighter-rouge">Traversal</code> is also a <code class="highlighter-rouge">Fold</code>, so we have access to a few interesting methods to query our data:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">eachL</span><span class="o">.</span><span class="n">getAll</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">eachL</span><span class="o">.</span><span class="n">getAll</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
 <span class="c1">// res3: List[Int] = List(1, 2, 3, 4, 5)
 </span>
 <span class="n">eachL</span><span class="o">.</span><span class="n">headOption</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
@@ -42,14 +42,14 @@ To do this we will use the relation between the typeclass <code class="highlight
 
 <p><code class="highlighter-rouge">Traversal</code> also offers smart constructors to build a <code class="highlighter-rouge">Traversal</code> for a fix number of target (currently 2 to 6 targets):</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Point</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Point</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
 
 <span class="k">val</span> <span class="n">points</span> <span class="k">=</span> <span class="nc">Traversal</span><span class="o">.</span><span class="n">apply2</span><span class="o">[</span><span class="kt">Point</span>, <span class="kt">Int</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">x</span><span class="o">,</span> <span class="k">_</span><span class="o">.</span><span class="n">y</span><span class="o">)((</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">p</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">p</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">x</span> <span class="k">=</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span> <span class="k">=</span> <span class="n">y</span><span class="o">))</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">points</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">5</span><span class="o">)(</span><span class="nc">Point</span><span class="o">(</span><span class="s">"bottom-left"</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">))</span>
-<span class="c1">// res7: monocle.example.TraversalExample.Point = Point(bottom-left,5,5)
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">points</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">5</span><span class="o">)(</span><span class="nc">Point</span><span class="o">(</span><span class="s">"bottom-left"</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">))</span>
+<span class="c1">// res8: Point = Point(bottom-left,5,5)
 </span></code></pre>
 </div>
 
@@ -58,7 +58,7 @@ A <code class="highlighter-rouge">Traversal</code> is defined by a single method
 
 <p>For example, let’s write a <code class="highlighter-rouge">Traversal</code> for <code class="highlighter-rouge">Map</code> that will focus into all values where the key satisfies a certain predicate:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Traversal</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Traversal</span>
 <span class="k">import</span> <span class="nn">scalaz.Applicative</span>
 <span class="k">import</span> <span class="nn">scalaz.std.map._</span>
 <span class="k">import</span> <span class="nn">scalaz.syntax.traverse._</span>
@@ -76,11 +76,11 @@ A <code class="highlighter-rouge">Traversal</code> is defined by a single method
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">filterEven</span> <span class="k">=</span> <span class="n">filterKey</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">String</span><span class="o">](</span><span class="k">_</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
-<span class="c1">// filterEven: monocle.Traversal[Map[Int,String],String] = $anon$1@d8243bd
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">filterEven</span> <span class="k">=</span> <span class="n">filterKey</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">String</span><span class="o">](</span><span class="k">_</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+<span class="c1">// filterEven: monocle.Traversal[Map[Int,String],String] = $anon$1@be82ab2
 </span>
 <span class="n">filterEven</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toUpperCase</span><span class="o">)(</span><span class="n">m</span><span class="o">)</span>
-<span class="c1">// res10: Map[Int,String] = Map(1 -&gt; one, 2 -&gt; TWO, 3 -&gt; three, 4 -&gt; FOUR)
+<span class="c1">// res11: Map[Int,String] = Map(1 -&gt; one, 2 -&gt; TWO, 3 -&gt; three, 4 -&gt; FOUR)
 </span></code></pre>
 </div>
 
@@ -91,14 +91,14 @@ You can check the validity of your own <code class="highlighter-rouge">Traversal
 
 <p>In particular, a <code class="highlighter-rouge">Traversal</code> must respect the <code class="highlighter-rouge">modifyGetAll</code> law which check that you can modify all elements targeted by a <code class="highlighter-rouge">Traversal</code></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">modifyGetAll</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">t</span><span class="k">:</span> <span class="kt">Traversal</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">modifyGetAll</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">t</span><span class="k">:</span> <span class="kt">Traversal</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
     <span class="n">t</span><span class="o">.</span><span class="n">getAll</span><span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="n">f</span><span class="o">)(</span><span class="n">s</span><span class="o">))</span> <span class="o">==</span> <span class="n">t</span><span class="o">.</span><span class="n">getAll</span><span class="o">(</span><span class="n">s</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">f</span><span class="o">)</span>
 </code></pre>
 </div>
 
 <p>Another important law is <code class="highlighter-rouge">composeModify</code> also known as <code class="highlighter-rouge">fusion</code> law:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">composeModify</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">t</span><span class="k">:</span> <span class="kt">Traversal</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">,</span> <span class="n">g</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">composeModify</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">t</span><span class="k">:</span> <span class="kt">Traversal</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">,</span> <span class="n">g</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
     <span class="n">t</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="n">g</span><span class="o">)(</span><span class="n">t</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="n">f</span><span class="o">)(</span><span class="n">s</span><span class="o">))</span> <span class="o">==</span> <span class="n">t</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="n">g</span> <span class="n">compose</span> <span class="n">f</span><span class="o">)(</span><span class="n">s</span><span class="o">)</span>
 </code></pre>
 </div>

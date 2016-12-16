@@ -1,138 +1,165 @@
 <html><head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Monocle</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Optics library for Scala" /><meta name="author" content="com.github.julien-truffaut" /><meta name="og:image" content="/Monocle/img/poster.png" /><meta name="og:title" content="Monocle" /><meta name="og:site_name" content="Monocle" /><meta name="og:url" content="http://julien-truffaut.github.io/Monocle" /><meta name="og:type" content="website" /><meta name="og:description" content="Optics library for Scala" /><meta name="twitter:image" content="/Monocle/img/poster.png" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:site" content="" /><link rel="icon" type="image/png" href="/Monocle/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/Monocle/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/Monocle/css/style.css" /><link rel="stylesheet" href="/Monocle/css/palette.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/Monocle/" class="brand"><div class="brand-wrapper" style="background:url('/Monocle/img/sidebar_brand.png') no-repeat"><span>Monocle</span></div></a></li>  <li><a href="/Monocle/getting_started.html" class="">Main menu</a></li>    <li><a href="/Monocle/optics.html" class="">Optics</a> <ul class="sub_section"> <li><a href="/Monocle/optics/iso.html" class="">Iso</a></li> <li><a href="/Monocle/optics/lens.html" class="">Lens</a></li> <li><a href="/Monocle/optics/prism.html" class=" active ">Prism</a></li> <li><a href="/Monocle/optics/optional.html" class="">Optional</a></li> <li><a href="/Monocle/optics/traversal.html" class="">Traversal</a></li> <li><a href="/Monocle/optics/setter.html" class="">Setter</a></li> <li><a href="/Monocle/optics/getter.html" class="">Getter</a></li> <li><a href="/Monocle/optics/fold.html" class="">Fold</a></li></ul></li>         </ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Monocle Optics library for Scala');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Monocle Optics library for Scala');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="julien-truffaut" data-github-repo="Monocle"><div class="content-wrapper"><section><h1 id="prism">Prism</h1>
 
-<p>A <code class="highlighter-rouge">Prism</code> is an Optic used to select part of a <code class="highlighter-rouge">Sum</code> type (also known as <code class="highlighter-rouge">Coproduct</code>), e.g. <code class="highlighter-rouge">sealed trait</code> or <code class="highlighter-rouge">Enum</code>.</p>
+<p>A <code class="highlighter-rouge">Prism</code> is an optic used to select part of a <code class="highlighter-rouge">Sum</code> type (also known as <code class="highlighter-rouge">Coproduct</code>), e.g. <code class="highlighter-rouge">sealed trait</code> or <code class="highlighter-rouge">Enum</code>.</p>
 
-<p><code class="highlighter-rouge">Prism</code>s have two type parameters generally called <code class="highlighter-rouge">S</code> and <code class="highlighter-rouge">A</code>: <code class="highlighter-rouge">Prism[S, A]</code> where <code class="highlighter-rouge">S</code> represents the <code class="highlighter-rouge">Sum</code> and <code class="highlighter-rouge">A</code> a part of the <code class="highlighter-rouge">Sum</code>.</p>
+<p><code class="highlighter-rouge">Prisms</code> have two type parameters generally called <code class="highlighter-rouge">S</code> and <code class="highlighter-rouge">A</code>: <code class="highlighter-rouge">Prism[S, A]</code> where <code class="highlighter-rouge">S</code> represents the <code class="highlighter-rouge">Sum</code> and <code class="highlighter-rouge">A</code> a part of the <code class="highlighter-rouge">Sum</code>.</p>
 
-<p>Let’s take the example of a simple enum:</p>
+<p>Let’s take a simplified <code class="highlighter-rouge">Json</code> encoding:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">Day</span>
-<span class="k">case</span> <span class="k">object</span> <span class="nc">Monday</span> <span class="k">extends</span> <span class="nc">Day</span>
-<span class="k">case</span> <span class="k">object</span> <span class="nc">Tuesday</span> <span class="k">extends</span> <span class="nc">Day</span>
-<span class="c1">// ...
-</span><span class="k">case</span> <span class="k">object</span> <span class="nc">Sunday</span> <span class="k">extends</span> <span class="nc">Day</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">Json</span>
+<span class="k">case</span> <span class="k">object</span> <span class="nc">JNull</span> <span class="k">extends</span> <span class="nc">Json</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">JStr</span><span class="o">(</span><span class="n">v</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Json</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">JNum</span><span class="o">(</span><span class="n">v</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Json</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">JObj</span><span class="o">(</span><span class="n">v</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Json</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">Json</span>
 </code></pre>
 </div>
 
-<p>We can define a <code class="highlighter-rouge">Prism</code> which only selects <code class="highlighter-rouge">Tuesday</code>.
-<code class="highlighter-rouge">Tuesday</code> is a singleton, so it is isomorphic to <code class="highlighter-rouge">Unit</code> (type with a single inhabitant):</p>
+<p>We can define a <code class="highlighter-rouge">Prism</code> which only selects <code class="highlighter-rouge">Json</code> elements built with a <code class="highlighter-rouge">JStr</code> constructor by supplying a pair of functions:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Prism</span>
+<ul>
+  <li><code class="highlighter-rouge">getOption: Json =&gt; Option[String]</code></li>
+  <li><code class="highlighter-rouge">reverseGet (aka apply): String =&gt; Json</code></li>
+</ul>
 
-<span class="k">val</span> <span class="nc">_tuesday</span> <span class="k">=</span> <span class="nc">Prism</span><span class="o">[</span><span class="kt">Day</span>, <span class="kt">Unit</span><span class="o">]{</span>
-  <span class="k">case</span> <span class="nc">Tuesday</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(())</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Prism</span>
+
+<span class="k">val</span> <span class="n">jStr</span> <span class="k">=</span> <span class="nc">Prism</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">String</span><span class="o">]{</span>
+  <span class="k">case</span> <span class="nc">JStr</span><span class="o">(</span><span class="n">v</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">v</span><span class="o">)</span>
   <span class="k">case</span> <span class="k">_</span>       <span class="k">=&gt;</span> <span class="nc">None</span>
-<span class="o">}(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">Tuesday</span><span class="o">)</span>
+<span class="o">}(</span><span class="nc">JStr</span><span class="o">)</span>
 </code></pre>
 </div>
 
-<p><code class="highlighter-rouge">_tuesday</code> can then be used as constructor of <code class="highlighter-rouge">Day</code>:</p>
+<p>It is common to create a <code class="highlighter-rouge">Prism</code> by pattern matching on constructor, so we also added <code class="highlighter-rouge">partial</code> which takes a <code class="highlighter-rouge">PartialFunction</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_tuesday</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">(())</span>
-<span class="n">res2</span><span class="k">:</span> <span class="kt">Day</span> <span class="o">=</span> <span class="nc">Tuesday</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">jStr</span> <span class="k">=</span> <span class="nc">Prism</span><span class="o">.</span><span class="n">partial</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">String</span><span class="o">]{</span><span class="k">case</span> <span class="nc">JStr</span><span class="o">(</span><span class="n">v</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">v</span><span class="o">}(</span><span class="nc">JStr</span><span class="o">)</span>
 </code></pre>
 </div>
 
-<p>or as a replacement of pattern matching:</p>
+<p>We can use the supplied <code class="highlighter-rouge">getOption</code> and <code class="highlighter-rouge">apply</code> methods as constructor and pattern matcher for <code class="highlighter-rouge">JStr</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_tuesday</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">Monday</span><span class="o">)</span>
-<span class="n">res3</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
-
-<span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_tuesday</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">Tuesday</span><span class="o">)</span>
-<span class="n">res4</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(())</span>
-</code></pre>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">jStr</span><span class="o">(</span><span class="s">"hello"</span><span class="o">)</span>
+<span class="c1">// res1: Json = JStr(hello)
+</span>
+<span class="n">jStr</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">JStr</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">))</span>
+<span class="c1">// res2: Option[String] = Some(Hello)
+</span>
+<span class="n">jStr</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">JNum</span><span class="o">(</span><span class="mf">3.2</span><span class="o">))</span>
+<span class="c1">// res3: Option[String] = None
+</span></code></pre>
 </div>
 
-<p>Let’s have look at <code class="highlighter-rouge">Prism</code> toward larger types such as <code class="highlighter-rouge">LinkedList</code>.
-A <code class="highlighter-rouge">LinkedList</code> is recursive data type that either empty or a cons, so we can easily define a <code class="highlighter-rouge">Prism</code> from a <code class="highlighter-rouge">LinkedList</code>
-to each of the two constructors:</p>
+<p>A <code class="highlighter-rouge">Prism</code> can be used in a pattern matching position:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-<span class="nc">case</span> <span class="k">class</span> <span class="nc">Nil</span><span class="o">[</span><span class="kt">A</span><span class="o">]()</span> <span class="k">extends</span> <span class="nc">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-
-<span class="k">def</span> <span class="nc">_nil</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Prism</span><span class="o">[</span><span class="kt">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>, <span class="kt">Unit</span><span class="o">]{</span>
-  <span class="k">case</span> <span class="nc">Nil</span><span class="o">()</span>      <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(())</span>
-  <span class="k">case</span> <span class="nc">Cons</span><span class="o">(</span><span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">None</span>
-<span class="o">}(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">Nil</span><span class="o">())</span>
-
-<span class="k">def</span> <span class="nc">_cons</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Prism</span><span class="o">[</span><span class="kt">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>, <span class="o">(</span><span class="kt">A</span>, <span class="kt">LinkedList</span><span class="o">[</span><span class="kt">A</span><span class="o">])]{</span>
-  <span class="k">case</span> <span class="nc">Nil</span><span class="o">()</span>      <span class="k">=&gt;</span> <span class="nc">None</span>
-  <span class="k">case</span> <span class="nc">Cons</span><span class="o">(</span><span class="n">h</span><span class="o">,</span> <span class="n">t</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">((</span><span class="n">h</span><span class="o">,</span> <span class="n">t</span><span class="o">))</span>
-<span class="o">}{</span> <span class="k">case</span> <span class="o">(</span><span class="n">h</span><span class="o">,</span> <span class="n">t</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Cons</span><span class="o">(</span><span class="n">h</span><span class="o">,</span> <span class="n">t</span><span class="o">)}</span>
-</code></pre>
-</div>
-
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">l1</span> <span class="k">=</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">())))</span>
-<span class="k">val</span> <span class="n">l2</span> <span class="k">=</span> <span class="nc">_nil</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">reverseGet</span><span class="o">(())</span>
-</code></pre>
-</div>
-
-<p>A few usage of <code class="highlighter-rouge">Prism</code>:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">l1</span><span class="o">)</span>
-<span class="n">res5</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[(</span><span class="kt">Int</span>, <span class="kt">monocle.example.PrismExample.LinkedList</span><span class="o">[</span><span class="kt">Int</span><span class="o">])]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">((</span><span class="mi">1</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="nc">Nil</span><span class="o">()))))</span>
-
-<span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">.</span><span class="n">nonEmpty</span><span class="o">(</span><span class="n">l1</span><span class="o">)</span>
-<span class="n">res6</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
-
-<span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">_1</span> <span class="k">=</span> <span class="mi">5</span><span class="o">))(</span><span class="n">l1</span><span class="o">)</span>
-<span class="n">res7</span><span class="k">:</span> <span class="kt">monocle.example.PrismExample.LinkedList</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="nc">Nil</span><span class="o">())))</span>
-
-<span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">_1</span> <span class="k">=</span> <span class="mi">5</span><span class="o">))(</span><span class="n">l2</span><span class="o">)</span>
-<span class="n">res8</span><span class="k">:</span> <span class="kt">monocle.example.PrismExample.LinkedList</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">()</span>
-</code></pre>
-</div>
-
-<p>Contrarily to a <code class="highlighter-rouge">Lens</code>, a <code class="highlighter-rouge">Prism</code> can fail so <code class="highlighter-rouge">modify</code> is noop if a <code class="highlighter-rouge">Prism</code> fails to match. If you want to know if <code class="highlighter-rouge">modify</code>
-has an effect, you can use <code class="highlighter-rouge">modifyOption</code> instead:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">_1</span> <span class="k">=</span> <span class="mi">5</span><span class="o">))(</span><span class="n">l1</span><span class="o">)</span>
-<span class="n">res9</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">monocle.example.PrismExample.LinkedList</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="nc">Nil</span><span class="o">()))))</span>
-
-<span class="n">scala</span><span class="o">&gt;</span> <span class="nc">_cons</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">_1</span> <span class="k">=</span> <span class="mi">5</span><span class="o">))(</span><span class="n">l2</span><span class="o">)</span>
-<span class="n">res10</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">monocle.example.PrismExample.LinkedList</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">None</span>
-</code></pre>
-</div>
-
-<p>It is quite annoying that we need to use <code class="highlighter-rouge">copy</code> to <code class="highlighter-rouge">modify</code> the first element of a tuple. A tuple is a <code class="highlighter-rouge">Product</code> so we
-should be able to use a <code class="highlighter-rouge">Lens</code> to zoom further:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">monocle.function.fields._</span> <span class="c1">// to have access to first, second, ...
-</span><span class="k">import</span> <span class="nn">monocle.function.fields._</span>
-
-<span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">monocle.std.tuple2._</span>      <span class="c1">// to get instance Fields instance for Tuple2
-</span><span class="k">import</span> <span class="nn">monocle.std.tuple2._</span>
-
-<span class="n">scala</span><span class="o">&gt;</span> <span class="o">(</span><span class="nc">_cons</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="n">composeLens</span> <span class="n">first</span><span class="o">).</span><span class="n">set</span><span class="o">(</span><span class="mi">5</span><span class="o">)(</span><span class="n">l1</span><span class="o">)</span>
-<span class="n">res11</span><span class="k">:</span> <span class="kt">monocle.example.PrismExample.LinkedList</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="nc">Cons</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="nc">Nil</span><span class="o">())))</span>
-
-<span class="n">scala</span><span class="o">&gt;</span> <span class="o">(</span><span class="nc">_cons</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="n">composeLens</span> <span class="n">first</span><span class="o">).</span><span class="n">set</span><span class="o">(</span><span class="mi">5</span><span class="o">)(</span><span class="n">l2</span><span class="o">)</span>
-<span class="n">res12</span><span class="k">:</span> <span class="kt">monocle.example.PrismExample.LinkedList</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">()</span>
-</code></pre>
-</div>
-
-<p>Composing a <code class="highlighter-rouge">Prism</code> with a <code class="highlighter-rouge">Lens</code> gives an <code class="highlighter-rouge">Optional</code> (TODO <code class="highlighter-rouge">Optional</code> doc).</p>
-
-<h2 id="prism-laws">Prism Laws</h2>
-
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PrismLaws</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">prism</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">])</span> <span class="o">{</span>
-
-  <span class="k">def</span> <span class="n">partialRoundTripOneWayLaw</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
-    <span class="n">prism</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">s</span><span class="o">).</span><span class="n">fold</span><span class="o">(</span><span class="kc">true</span><span class="o">)(</span><span class="n">prism</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">(</span><span class="k">_</span><span class="o">)</span> <span class="o">==</span> <span class="n">s</span><span class="o">)</span>
-
-  <span class="k">def</span> <span class="n">roundTripOtherWayLaw</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
-    <span class="n">prism</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">prism</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">(</span><span class="n">a</span><span class="o">))</span> <span class="o">==</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
-
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">isLongString</span><span class="o">(</span><span class="n">json</span><span class="k">:</span> <span class="kt">Json</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="n">json</span> <span class="k">match</span> <span class="o">{</span>
+  <span class="k">case</span> <span class="n">jStr</span><span class="o">(</span><span class="n">v</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">100</span>
+  <span class="k">case</span> <span class="k">_</span>       <span class="k">=&gt;</span> <span class="kc">false</span>
 <span class="o">}</span>
 </code></pre>
 </div>
 
-<p>The first law states that if a <code class="highlighter-rouge">Prism</code> matches (i.e. <code class="highlighter-rouge">getOption</code> returns a <code class="highlighter-rouge">Some</code>), you can always come back
-to the original value using <code class="highlighter-rouge">reverseGet</code>.</p>
+<p>We can also use <code class="highlighter-rouge">set</code> and <code class="highlighter-rouge">modify</code> to update a <code class="highlighter-rouge">Json</code> only if it is a <code class="highlighter-rouge">JStr</code>:</p>
 
-<p>The second laws states that starting from an <code class="highlighter-rouge">A</code>, you can do a complete round trip. This law is equivalent to the
-second law of <code class="highlighter-rouge">Iso</code>.</p>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">jStr</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="s">"Bar"</span><span class="o">)(</span><span class="nc">JStr</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">))</span>
+<span class="c1">// res4: Json = JStr(Bar)
+</span>
+<span class="n">jStr</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">)(</span><span class="nc">JStr</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">))</span>
+<span class="c1">// res5: Json = JStr(olleH)
+</span></code></pre>
+</div>
+
+<p>If we supply another type of <code class="highlighter-rouge">Json</code>, <code class="highlighter-rouge">set</code> and <code class="highlighter-rouge">modify</code> will be a no operation:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">jStr</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="s">"Bar"</span><span class="o">)(</span><span class="nc">JNum</span><span class="o">(</span><span class="mi">10</span><span class="o">))</span>
+<span class="c1">// res6: Json = JNum(10.0)
+</span>
+<span class="n">jStr</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">)(</span><span class="nc">JNum</span><span class="o">(</span><span class="mi">10</span><span class="o">))</span>
+<span class="c1">// res7: Json = JNum(10.0)
+</span></code></pre>
+</div>
+
+<p>If we care about the success or failure of the update, we can use <code class="highlighter-rouge">setOption</code> or <code class="highlighter-rouge">modifyOption</code>:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">jStr</span><span class="o">.</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">)(</span><span class="nc">JStr</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">))</span>
+<span class="c1">// res8: Option[Json] = Some(JStr(olleH))
+</span>
+<span class="n">jStr</span><span class="o">.</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">)(</span><span class="nc">JNum</span><span class="o">(</span><span class="mi">10</span><span class="o">))</span>
+<span class="c1">// res9: Option[Json] = None
+</span></code></pre>
+</div>
+
+<p>As all other optics <code class="highlighter-rouge">Prisms</code> compose together:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.std.double.doubleToInt</span> <span class="c1">// Prism[Double, Int] defined in Monocle
+</span>
+<span class="k">val</span> <span class="n">jNum</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Prism</span><span class="o">.</span><span class="n">partial</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">Double</span><span class="o">]{</span><span class="k">case</span> <span class="nc">JNum</span><span class="o">(</span><span class="n">v</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">v</span><span class="o">}(</span><span class="nc">JNum</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">jInt</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="n">jNum</span> <span class="n">composePrism</span> <span class="n">doubleToInt</span>
+</code></pre>
+</div>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">jInt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+<span class="c1">// res12: Json = JNum(5.0)
+</span>
+<span class="n">jInt</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">JNum</span><span class="o">(</span><span class="mf">5.0</span><span class="o">))</span>
+<span class="c1">// res13: Option[Int] = Some(5)
+</span>
+<span class="n">jInt</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">JNum</span><span class="o">(</span><span class="mf">5.2</span><span class="o">))</span>
+<span class="c1">// res14: Option[Int] = None
+</span>
+<span class="n">jInt</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">JStr</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">))</span>
+<span class="c1">// res15: Option[Int] = None
+</span></code></pre>
+</div>
+
+<h2 id="prism-generation">Prism Generation</h2>
+
+<p>Generating <code class="highlighter-rouge">Prisms</code> for subclasses is fairly common, so we added a macro to simplify the process:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.GenPrism</span>
+
+<span class="k">val</span> <span class="n">rawJNum</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">JNum</span><span class="o">]</span> <span class="k">=</span> <span class="nc">GenPrism</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">JNum</span><span class="o">]</span>
+</code></pre>
+</div>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">rawJNum</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">JNum</span><span class="o">(</span><span class="mf">4.5</span><span class="o">))</span>
+<span class="c1">// res17: Option[JNum] = Some(JNum(4.5))
+</span>
+<span class="n">rawJNum</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="nc">JStr</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">))</span>
+<span class="c1">// res18: Option[JNum] = None
+</span></code></pre>
+</div>
+
+<p>If you want to get a <code class="highlighter-rouge">Prism[Json, Double]</code> instead of a <code class="highlighter-rouge">Prism[Json, JNum]</code>, you can compose <code class="highlighter-rouge">GenPrism</code> 
+with <code class="highlighter-rouge">GenIso</code> (see <code class="highlighter-rouge">Iso</code> documentation):</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.GenIso</span>
+
+<span class="k">val</span> <span class="n">jNum</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="nc">GenPrism</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">JNum</span><span class="o">]</span> <span class="n">composeIso</span> <span class="nc">GenIso</span><span class="o">[</span><span class="kt">JNum</span>, <span class="kt">Double</span><span class="o">]</span>
+<span class="k">val</span> <span class="n">jNull</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="nc">GenPrism</span><span class="o">[</span><span class="kt">Json</span>, <span class="kt">JNull.</span><span class="k">type</span><span class="o">]</span> <span class="n">composeIso</span> <span class="nc">GenIso</span><span class="o">.</span><span class="n">unit</span><span class="o">[</span><span class="kt">JNull.</span><span class="k">type</span><span class="o">]</span>
+</code></pre>
+</div>
+
+<p>A <a href="https://github.com/julien-truffaut/Monocle/issues/363">ticket</a> currently exists to add a macro to merge these two steps together.</p>
+
+<h2 id="prism-laws">Prism Laws</h2>
+
+<p>A <code class="highlighter-rouge">Prism</code> must satisfies all properties defined in <code class="highlighter-rouge">PrismLaws</code> from the <code class="highlighter-rouge">core</code> module.
+You can check the validity of your own <code class="highlighter-rouge">Prisms</code> using <code class="highlighter-rouge">PrismTests</code> from the <code class="highlighter-rouge">law</code> module.</p>
+
+<p>In particular, a <code class="highlighter-rouge">Prism</code> must verifies that <code class="highlighter-rouge">getOption</code> and <code class="highlighter-rouge">reverseGet</code> allow a full round trip if the <code class="highlighter-rouge">Prism</code> matches
+i.e. if <code class="highlighter-rouge">getOption</code> returns a <code class="highlighter-rouge">Some</code>.</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">partialRoundTripOneWay</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">p</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+  <span class="n">p</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">None</span>    <span class="k">=&gt;</span> <span class="kc">true</span> <span class="c1">// nothing to prove
+</span>    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">p</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">==</span> <span class="n">s</span>
+  <span class="o">}</span>
+  
+<span class="k">def</span> <span class="n">partialRoundTripOneWay</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">p</span><span class="k">:</span> <span class="kt">Prism</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+  <span class="n">p</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">(</span><span class="n">a</span><span class="o">))</span> <span class="o">==</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
+</code></pre>
+</div>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/Monocle/highlight/highlight.pack.js"></script><script>hljs.configure({
 languages:['scala','java','bash']
 });

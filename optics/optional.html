@@ -14,7 +14,7 @@ Unlike the <code class="highlighter-rouge">Lens</code>, the element that the <co
   <li><code class="highlighter-rouge">set: Int =&gt; List[Int] =&gt; List[Int]</code></li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Optional</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Optional</span>
 <span class="k">val</span> <span class="n">head</span> <span class="k">=</span> <span class="nc">Optional</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>, <span class="kt">Int</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">None</span>
   <span class="k">case</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">x</span><span class="o">)</span>
@@ -28,12 +28,12 @@ Unlike the <code class="highlighter-rouge">Lens</code>, the element that the <co
 
 <p>Once we have an <code class="highlighter-rouge">Optional</code>, we can use the supplied <code class="highlighter-rouge">nonEmpty</code> function to know if it matches:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">xs</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">xs</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">ys</span> <span class="k">=</span> <span class="nc">List</span><span class="o">.</span><span class="n">empty</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">nonEmpty</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">nonEmpty</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
 <span class="c1">// res0: Boolean = true
 </span>
 <span class="n">head</span><span class="o">.</span><span class="n">nonEmpty</span><span class="o">(</span><span class="n">ys</span><span class="o">)</span>
@@ -43,7 +43,7 @@ Unlike the <code class="highlighter-rouge">Lens</code>, the element that the <co
 
 <p>We can use the supplied <code class="highlighter-rouge">getOrModify</code> function to retrieve the target if it matches, or the original value:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">getOrModify</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">getOrModify</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
 <span class="c1">// res2: scalaz.\/[List[Int],Int] = \/-(1)
 </span>
 <span class="n">head</span><span class="o">.</span><span class="n">getOrModify</span><span class="o">(</span><span class="n">ys</span><span class="o">)</span>
@@ -56,7 +56,7 @@ If you use monomorphic optics, use function <code class="highlighter-rouge">getO
 
 <p>We can use the supplied <code class="highlighter-rouge">getOption</code> and <code class="highlighter-rouge">set</code> functions:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">getOption</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
 <span class="c1">// res4: Option[Int] = Some(1)
 </span>
 <span class="n">head</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">5</span><span class="o">)(</span><span class="n">xs</span><span class="o">)</span>
@@ -72,7 +72,7 @@ If you use monomorphic optics, use function <code class="highlighter-rouge">getO
 
 <p>We can also <code class="highlighter-rouge">modify</code> the target of <code class="highlighter-rouge">Optional</code> with a function:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">xs</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">xs</span><span class="o">)</span>
 <span class="c1">// res8: List[Int] = List(2, 2, 3)
 </span>
 <span class="n">head</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">ys</span><span class="o">)</span>
@@ -82,7 +82,7 @@ If you use monomorphic optics, use function <code class="highlighter-rouge">getO
 
 <p>Or use <code class="highlighter-rouge">modifyOption</code> / <code class="highlighter-rouge">setOption</code> to know if the update was successful:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">xs</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">xs</span><span class="o">)</span>
 <span class="c1">// res10: Option[List[Int]] = Some(List(2, 2, 3))
 </span>
 <span class="n">head</span><span class="o">.</span><span class="n">modifyOption</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">ys</span><span class="o">)</span>
@@ -92,7 +92,7 @@ If you use monomorphic optics, use function <code class="highlighter-rouge">getO
 
 <h2 id="laws">Laws</h2>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">OptionalLaws</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">optional</span><span class="k">:</span> <span class="kt">Optional</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">])</span> <span class="o">{</span>
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">OptionalLaws</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">optional</span><span class="k">:</span> <span class="kt">Optional</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">])</span> <span class="o">{</span>
 
   <span class="k">def</span> <span class="n">getOptionSet</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
     <span class="n">optional</span><span class="o">.</span><span class="n">getOrModify</span><span class="o">(</span><span class="n">s</span><span class="o">).</span><span class="n">fold</span><span class="o">(</span><span class="n">identity</span><span class="o">,</span> <span class="n">optional</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="k">_</span><span class="o">)(</span><span class="n">s</span><span class="o">))</span> <span class="o">==</span> <span class="n">s</span>
