@@ -631,9 +631,9 @@ all traversal methods are written in terms of modifyF
               
         </dd></dl></div>
     </li><li name="monocle.PTraversal#all" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="all(p:A=&gt;Boolean)(s:S):Boolean"></a><a id="all((A)⇒Boolean)(S):Boolean"></a>
+      <a id="all(p:A=&gt;Boolean):S=&gt;Boolean"></a><a id="all((A)⇒Boolean):(S)⇒Boolean"></a>
       <span class="permalink">
-      <a href="../monocle/PTraversal.html#all(p:A=&gt;Boolean)(s:S):Boolean" title="Permalink">
+      <a href="../monocle/PTraversal.html#all(p:A=&gt;Boolean):S=&gt;Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -642,7 +642,7 @@ all traversal methods are written in terms of modifyF
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">all</span><span class="params">(<span name="p">p: (<span class="extype" name="monocle.PTraversal.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PTraversal.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">all</span><span class="params">(<span name="p">p: (<span class="extype" name="monocle.PTraversal.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: (<span class="extype" name="monocle.PTraversal.S">S</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <p class="shortcomment cmt">check if all targets satisfy the predicate</p><div class="fullcomment"><div class="comment cmt"><p>check if all targets satisfy the predicate</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -929,9 +929,9 @@ all traversal methods are written in terms of modifyF
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="monocle.PTraversal#exist" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="exist(p:A=&gt;Boolean)(s:S):Boolean"></a><a id="exist((A)⇒Boolean)(S):Boolean"></a>
+      <a id="exist(p:A=&gt;Boolean):S=&gt;Boolean"></a><a id="exist((A)⇒Boolean):(S)⇒Boolean"></a>
       <span class="permalink">
-      <a href="../monocle/PTraversal.html#exist(p:A=&gt;Boolean)(s:S):Boolean" title="Permalink">
+      <a href="../monocle/PTraversal.html#exist(p:A=&gt;Boolean):S=&gt;Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -940,7 +940,7 @@ all traversal methods are written in terms of modifyF
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">exist</span><span class="params">(<span name="p">p: (<span class="extype" name="monocle.PTraversal.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PTraversal.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">exist</span><span class="params">(<span name="p">p: (<span class="extype" name="monocle.PTraversal.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: (<span class="extype" name="monocle.PTraversal.S">S</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <p class="shortcomment cmt">check if at least one target satisfies the predicate</p><div class="fullcomment"><div class="comment cmt"><p>check if at least one target satisfies the predicate</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -970,9 +970,9 @@ all traversal methods are written in terms of modifyF
               
         </dd></dl></div>
     </li><li name="monocle.PTraversal#find" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="find(p:A=&gt;Boolean)(s:S):Option[A]"></a><a id="find((A)⇒Boolean)(S):Option[A]"></a>
+      <a id="find(p:A=&gt;Boolean):S=&gt;Option[A]"></a><a id="find((A)⇒Boolean):(S)⇒Option[A]"></a>
       <span class="permalink">
-      <a href="../monocle/PTraversal.html#find(p:A=&gt;Boolean)(s:S):Option[A]" title="Permalink">
+      <a href="../monocle/PTraversal.html#find(p:A=&gt;Boolean):S=&gt;Option[A]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -981,10 +981,10 @@ all traversal methods are written in terms of modifyF
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">find</span><span class="params">(<span name="p">p: (<span class="extype" name="monocle.PTraversal.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PTraversal.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.PTraversal.A">A</span>]</span>
+        <span class="name">find</span><span class="params">(<span name="p">p: (<span class="extype" name="monocle.PTraversal.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: (<span class="extype" name="monocle.PTraversal.S">S</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.PTraversal.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">find the first target of a <a href="" class="extype" name="monocle.PTraversal">PTraversal</a> matching the predicate</p><div class="fullcomment"><div class="comment cmt"><p>find the first target of a <a href="" class="extype" name="monocle.PTraversal">PTraversal</a> matching the predicate</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+      <p class="shortcomment cmt">find the first target matching the predicate</p><div class="fullcomment"><div class="comment cmt"><p>find the first target matching the predicate</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -1092,7 +1092,26 @@ all traversal methods are written in terms of modifyF
         <span class="name">headOption</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PTraversal.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.PTraversal.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">get the first target of a <a href="" class="extype" name="monocle.PTraversal">PTraversal</a></p><div class="fullcomment"><div class="comment cmt"><p>get the first target of a <a href="" class="extype" name="monocle.PTraversal">PTraversal</a></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+      <p class="shortcomment cmt">get the first target</p><div class="fullcomment"><div class="comment cmt"><p>get the first target</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="monocle.PTraversal#isEmpty" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isEmpty(s:S):Boolean"></a><a id="isEmpty(S):Boolean"></a>
+      <span class="permalink">
+      <a href="../monocle/PTraversal.html#isEmpty(s:S):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isEmpty</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PTraversal.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">check if there is no target</p><div class="fullcomment"><div class="comment cmt"><p>check if there is no target</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -1112,6 +1131,25 @@ all traversal methods are written in terms of modifyF
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="monocle.PTraversal#lastOption" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="lastOption(s:S):Option[A]"></a><a id="lastOption(S):Option[A]"></a>
+      <span class="permalink">
+      <a href="../monocle/PTraversal.html#lastOption(s:S):Option[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lastOption</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PTraversal.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="monocle.PTraversal.A">A</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">get the last target</p><div class="fullcomment"><div class="comment cmt"><p>get the last target</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="monocle.PTraversal#length" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="length(s:S):Int"></a><a id="length(S):Int"></a>
       <span class="permalink">
@@ -1166,6 +1204,25 @@ all traversal methods are written in terms of modifyF
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="monocle.PTraversal#nonEmpty" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="nonEmpty(s:S):Boolean"></a><a id="nonEmpty(S):Boolean"></a>
+      <span class="permalink">
+      <a href="../monocle/PTraversal.html#nonEmpty(s:S):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nonEmpty</span><span class="params">(<span name="s">s: <span class="extype" name="monocle.PTraversal.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">check if there is at least one target</p><div class="fullcomment"><div class="comment cmt"><p>check if there is at least one target</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">

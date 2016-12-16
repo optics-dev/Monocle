@@ -26,17 +26,17 @@ Unlike the <code class="highlighter-rouge">Lens</code>, the element that the <co
 </code></pre>
 </div>
 
-<p>Once we have an <code class="highlighter-rouge">Optional</code>, we can use the supplied <code class="highlighter-rouge">isMatching</code> function to know if it matches:</p>
+<p>Once we have an <code class="highlighter-rouge">Optional</code>, we can use the supplied <code class="highlighter-rouge">nonEmpty</code> function to know if it matches:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">xs</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">ys</span> <span class="k">=</span> <span class="nc">List</span><span class="o">.</span><span class="n">empty</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">isMatching</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">nonEmpty</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
 <span class="c1">// res0: Boolean = true
 </span>
-<span class="n">head</span><span class="o">.</span><span class="n">isMatching</span><span class="o">(</span><span class="n">ys</span><span class="o">)</span>
+<span class="n">head</span><span class="o">.</span><span class="n">nonEmpty</span><span class="o">(</span><span class="n">ys</span><span class="o">)</span>
 <span class="c1">// res1: Boolean = false
 </span></code></pre>
 </div>
