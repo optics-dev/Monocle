@@ -2,6 +2,7 @@
 layout: docs
 title:  "Release Notes"
 section: "main_menu"
+position: 5
 ---
 
 ## Release Notes

@@ -5,26 +5,34 @@ section: "home"
 ---
 
 [![Join the chat at https://gitter.im/julien-truffaut/Monocle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/julien-truffaut/Monocle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.julien-truffaut/monocle_2.11.svg)](http://search.maven.org/#search|ga|1|com.github.julien-truffaut.monocle)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.julien-truffaut/monocle_2.12.svg)](http://search.maven.org/#search|ga|1|com.github.julien-truffaut.monocle)
 [![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.svg?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
 
-## Table of contents
-- [Motivation](#motivation)
-- [Optics hierarchy](#optics-hierarchy)
-- [Maintainers and contributors](#maintainers-and-contributors)
-- [Copyright and licence](#copyright-and-license)
+Monocle is an optics library for Scala (and [Scala.js](https://www.scala-js.org/)) strongly inspired by Haskell [Lens](https://github.com/ekmett/lens).
 
-### Motivation
+Optics are a group of purely functional abstractions to manipulate (`get`, `set`, `modify`, ...) immutable objects.
 
-Monocle is a `Lens` library, or more generally an Optics library where Optics gather the concepts
-of `Lens`, `Traversal`, `Optional`, `Prism` and `Iso`. Monocle is strongly inspired by Haskell [Lens](https://github.com/ekmett/lens).
+## Getting started
 
-#### What does it mean?
+Monocle is published to Maven Central and cross-built for Scala `2.10`, `2.11`, and `2.12` so you can just add the following to your build:
 
-Optics are a set of purely functional abstractions to manipulate (get, set, modify) immutable objects.
-Optics compose between each other and particularly shine with nested objects.
+```scala
+val monocleVersion = "1.4.0-M1"
 
-#### Why do I need this?
+libraryDependencies ++= Seq(
+  "com.github.julien-truffaut" %%  "monocle-core"  % monocleVersion,
+  "com.github.julien-truffaut" %%  "monocle-macro" % monocleVersion,
+  "com.github.julien-truffaut" %%  "monocle-law"   % monocleVersion % "test"
+)
+```
+
+If you want to use macro annotations such as `@Lenses`, you will also need to include:
+
+```scala
+addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full)
+```
+
+## Motivation
 
 Scala already provides getters and setters for case classes but modifying nested object is verbose which makes code
 difficult to understand and reason about. Let's have a look at some examples:
@@ -36,7 +44,7 @@ case class Company(name: String, address: Address)
 case class Employee(name: String, company: Company)
 ```
 
-Let's say we have an employee and we need to set the first character of his company street name address in upper case.
+Let's say we have an employee and we need to upper case the first character of his company street name.
 Here is how we could write it in vanilla Scala:
 
 ```tut:silent
@@ -55,8 +63,8 @@ employee.copy(
 )
 ```
 
-As you can see copy is not convenient to update nested objects as we need to repeat at each level the full path
-to reach it. Let's see what could we do with Monocle (type annotations are only for clarity):
+As we can see `copy` is not convenient to update nested objects because we need to repeat ourselves.
+Let's see what could we do with Monocle (type annotations are only added for clarity):
 
 ```tut:silent
 import monocle.Lens
@@ -66,22 +74,23 @@ val company   : Lens[Employee, Company] = GenLens[Employee](_.company)
 val address   : Lens[Company , Address] = GenLens[Company](_.address)
 val street    : Lens[Address , Street]  = GenLens[Address](_.street)
 val streetName: Lens[Street  , String]  = GenLens[Street](_.name)
+
+company composeLens address composeLens street composeLens streetName
 ```
+
+`composeLens` takes two `Lenses`, one from `A` to `B` and another one from `B` to `C` and creates a third `Lens` from `A` to `C`.
+Therefore, after composing `company`, `address`, `street` and `name`, we obtain a `Lens` from `Employee` to `String` (the street name).
+Now we can use this `Lens` issued from the composition to `modify` the street name using the function `capitalize`:
 
 ```tut:book
 (company composeLens address composeLens street composeLens streetName).modify(_.capitalize)(employee)
 ```
 
-ComposeLens takes two `Lens`, one from A to B and another from B to C and creates a third `Lens` from A to C.
-Therefore, after composing `company`, `address`, `street` and `name`, we obtain a `Lens` from `Employee` to `String` (the street name).
-
-#### More abstractions
-
-In the above example, we used capitalize to upper case the first letter of a `String`.
-It works but it would be clearer if we could use `Lens` to zoom into the first character of a `String`.
-However, we cannot write such a `Lens` because a `Lens` defines how to focus from an object `S` into a *mandatory*
-object `A` and in our case, the first character of a `String` is optional as a `String` might be empty. For this
-we need a sort of partial `Lens`, in Monocle it is called `Optional`.
+Here `modify` lift a function `String => String` to a function `Employee => Employee`.
+It works but it would be clearer if we could zoom into the first character of a `String` with a `Lens`.
+However, we cannot write such a `Lens` because `Lenses` require the field they are directed at to be *mandatory*.
+In our case the first character of a `String` is optional as a `String` can be empty.
+So we need another abstraction that would be a sort of partial `Lens`, in Monocle it is called an `Optional`.
 
 ```tut:silent
 import monocle.function.Cons.headOption // to use headOption (an optic from Cons typeclass)
@@ -94,51 +103,23 @@ import monocle.function.Cons.headOption // to use headOption (an optic from Cons
          composeOptional headOption).modify(_.toUpper)(employee)
 ```
 
-Similarly to composeLens, composeOptional takes two `Optional`, one from A to B and another from B to C and
-creates a third `Optional` from A to C. All `Lens` can be seen as `Optional` where the optional element to zoom to is always
-present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class diagram for full inheritance
-relation between Optics).
+Similarly to `composeLens`, `composeOptional` takes two `Optionals`, one from `A` to `B` and another from `B` to `C` and
+creates a third `Optional` from `A` to `C`. All `Lenses` can be seen as `Optionals` where the optional element to zoom into is always
+present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class [diagram](optics.html) for full inheritance
+relation between optics).
 
-### Optics in the REPL and tut
+Monocle offers various functions and macros to cut the boiler plate even further, here is an example:
 
-`Iso`, `Prism`, `Lens`, `Optional`, `Traversal` and `Setter` are all type aliases for more general polymorphic optics,
-for example here is the definition of `Lens`:
+```tut:book
+import monocle.macros.syntax.lens._
 
-```scala
-type Lens[S, A] = PLens[S, S, A, A]
-
-object Lens {
-  def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] =
-    PLens(get)(set)
-}
+employee.lens(_.company.address.street.name).composeOptional(headOption).modify(_.toUpper)
 ```
 
-This is a completely fine Scala definition and it will work perfectly in your code. However, if you try to create optics
-in the REPL you will probably encounter a similar error:
+Please consult the [documentation](modules.html) or the [scaladoc](/Monocle/api) for more details and examples.
 
-```
-scala> import monocle.Lens
-import monocle.Lens
+## Maintainers and contributors
 
-scala> case class Example(s: String, i: Int)
-defined class Example
-
-scala> val s = Lens[Example, String](_.s)(s => _.copy(s = s))
-s: monocle.Lens[Example,String] = monocle.PLens$$anon$7@46aa4219
-
-scala> val i = Lens[Example, Int](_.i)(i => _.copy(i = i))
-<console>:13: error: object Lens does not take type parameters.
-       val i = Lens[Example, Int](_.i)(i => _.copy(i = i))
-```
-
-We managed to create the first `Lens` but the second call to `apply` failed. This is a known bug in the REPL which is
-tracked by [SI-7139](https://issues.scala-lang.org/browse/SI-7139). You will also face this error if you use [tut](https://github.com/tpolecat/tut)
-to create documentation. This issue is fixed in scala 2.12.1
-
-### Optics hierarchy
-![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)<br>
-
-### Maintainers and contributors
 The current maintainers (people who can merge pull requests) are:
 
 * Julien Truffaut - [@julien-truffaut](https://github.com/julien-truffaut)
@@ -148,7 +129,7 @@ The current maintainers (people who can merge pull requests) are:
 
 and the [contributors](https://github.com/julien-truffaut/Monocle/graphs/contributors) (people who committed to Monocle).
 
-### Copyright and license
+## Copyright and license
 
 All code is available to you under the MIT license, available [here](http://opensource.org/licenses/mit-license.php).
 The design is informed by many other projects, in particular Haskell [Lens](https://github.com/ekmett/lens).

@@ -70,7 +70,8 @@ stringToList.modify(_.tail)("Hello")
 
 ## Iso Generation
 
-We defined several macro to simplify the generation of `Iso` between a case class and its `Tuple` equivalent.
+We defined several macro to simplify the generation of `Iso` between a case class and its `Tuple` equivalent. All macros
+are defined in a separate module (see [modules](../modules.html)).
 
 ```tut:silent
 case class MyString(s: String)

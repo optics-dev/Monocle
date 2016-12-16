@@ -105,11 +105,7 @@ val address = GenLens[Person](_.address)
 ## Lens Generation
 
 `Lens` creation is rather boiler platy but we developed a few macros to generate them automatically. All macros
-are defined in a separate module:
-
-```scala
-libraryDependencies += "com.github.julien-truffaut"  %%  "monocle-macro"  % ${version}
-```
+are defined in a separate module (see [modules](../modules.html)).
 
 ```tut:silent
 import monocle.macros.GenLens

@@ -100,7 +100,8 @@ jInt.getOption(JStr("Hello"))
 
 ## Prism Generation
 
-Generating `Prisms` for subclasses is fairly common, so we added a macro to simplify the process:
+Generating `Prisms` for subclasses is fairly common, so we added a macro to simplify the process. All macros
+are defined in a separate module (see [modules](../modules.html)).
  
 ```tut:silent
 import monocle.macros.GenPrism

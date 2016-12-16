@@ -6,13 +6,6 @@ position: 2
 ---
 ## Optics
 
-Monocle define the following optics:
+Here is a diagram to visualise how optics relate to each other:
 
--   [Iso](optics/iso.html)
--   [Prism](optics/prism.html)
--   [Lens](optics/lens.html)
--   [Optional](optics/optional.html)
--   [Traversal](optics/traversal.html)
--   [Setter](optics/setter.html)
--   [Getter](optics/getter.html)
--   [Fold](optics/fold.html)
+![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)
