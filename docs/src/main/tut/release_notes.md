@@ -6,6 +6,40 @@ section: "main_menu"
 
 ## Release Notes
 
+# 1.4.0-M1
+
+> 16 December 2016
+
+### Addition
+
+-   add macro based syntax for `ApplyLens` [#434](https://github.com/julien-truffaut/Monocle/pull/434) (thanks to [cvogt](https://github.com/cvogt))
+-   add lookup methods to various optics [#425](https://github.com/julien-truffaut/Monocle/pull/425) (thanks to [kubum](https://github.com/kubum), [emmedema](https://github.com/emmedema) and [julien-truffaut](https://github.com/julien-truffaut))
+-   add state ops for `Getter` and `Setter` [#415](https://github.com/julien-truffaut/Monocle/pull/415) (thanks to [jeslg](https://github.com/jeslg))
+-   add `extract`, `extracts`, `assign_` and `mod_` to state ops [#415](https://github.com/julien-truffaut/Monocle/pull/415) (thanks to [jeslg](https://github.com/jeslg))
+-   add `select` [#441](https://github.com/julien-truffaut/Monocle/pull/441) (thanks to [sepulkarz](https://github.com/sepulkarz))
+-   add `lowerCase` and `upperCase` [#446](https://github.com/julien-truffaut/Monocle/pull/446) (thanks to [sindoudou](https://github.com/sindoudou))
+
+### Refactor
+
+-   major refactor of typeclasses [#405](https://github.com/julien-truffaut/Monocle/pull/405): 
+    -   abstract class instead of trait. This would allow to add methods without breaking binary compatibility
+    -   move typeclass instances from `monocle.std._` to the typeclass companion object. This change will reduce the number of imports required to use a typeclass
+-   curry `find`, `exist` and `all` [#425](https://github.com/julien-truffaut/Monocle/pull/425) 
+-   improve performance of `Index` instance for `List` and `Vector` [#413](https://github.com/julien-truffaut/Monocle/pull/413)
+-   simplify `Plated` instance for `Free` [#404](https://github.com/julien-truffaut/Monocle/pull/404) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   remove `Order` instance for `Char` [#405](https://github.com/julien-truffaut/Monocle/commit/9d036d760d88e438544d150e0bca55523bf454c8)
+-   prevent warning for `higherKinds` in `Lens` macro [#434](https://github.com/julien-truffaut/Monocle/pull/434/files#diff-ab3ae99e3b07e5b065b8e9db86af3c48R80) (thanks to [cvogt](https://github.com/cvogt))
+
+### Doc
+-   use `sbt-microsite` [#411](https://github.com/julien-truffaut/Monocle/pull/411) and [#444](https://github.com/julien-truffaut/Monocle/pull/444) (thanks to [VlachJosef](https://github.com/VlachJosef))
+-   new icons for website and stickers [#421](https://github.com/julien-truffaut/Monocle/pull/421) (thanks to [mbcltd](https://github.com/mbcltd))
+-   add doc for `Optional` [#424](https://github.com/julien-truffaut/Monocle/pull/424) (thanks to [mdulac](https://github.com/mdulac))
+-   add doc for `Traversal` [#423](https://github.com/julien-truffaut/Monocle/pull/423)
+
+### Other
+-   `kenji` aka [xuwei-k](https://github.com/xuwei-k) is now a maintainer
+-   update build settings for scala.js [#406](https://github.com/julien-truffaut/Monocle/pull/406) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+
 # 1.3.2
 
 > 02 November 2016
