@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.{Arrow, Choice, Monoid, Zip, \/}
+import scalaz.{Arrow, Choice, Monoid, Unzip, Zip, \/}
 
 /**
  * A [[Getter]] can be seen as a glorified get method between
@@ -161,6 +161,11 @@ sealed abstract class GetterInstances extends GetterInstances0 {
 
   implicit def getterZip[S]: Zip[Getter[S, ?]] = new Zip[Getter[S, ?]] {
     override def zip[A, B](a: => Getter[S, A], b: => Getter[S, B]) = a zip b
+  }
+
+  implicit def getterUnzip[S]: Unzip[Getter[S, ?]] = new Unzip[Getter[S, ?]] {
+    override def unzip[A, B](g: Getter[S, (A, B)]): (Getter[S, A], Getter[S, B]) =
+      (Getter[S, A](s => g.get(s)._1), Getter[S, B](s => g.get(s)._2))
   }
 }
 
