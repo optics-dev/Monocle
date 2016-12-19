@@ -18,6 +18,7 @@ trait StdInstances
   with    OptionOptics
   with    StringOptics
   with    Tuple1Optics
+  with    TryOptics
   // Scalaz Instances
   with    CofreeOptics
   with    Either3Optics

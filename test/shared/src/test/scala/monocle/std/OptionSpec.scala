@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.MonocleSuite
 import monocle.law.discipline.{PrismTests, IsoTests}
-import monocle.law.discipline.function.{EachTests, EmptyTests}
+import monocle.law.discipline.function.{EachTests, PossibleTests, EmptyTests}
 
 class OptionSpec extends MonocleSuite {
   checkAll("some", PrismTests(some[Int]))
@@ -11,5 +11,6 @@ class OptionSpec extends MonocleSuite {
   checkAll("pOptionToDisjunction", IsoTests(pOptionToDisjunction[Int, Int]))
 
   checkAll("each Option", EachTests[Option[Int], Int])
+  checkAll("possible Option", PossibleTests[Option[Int], Int])
   checkAll("empty Option",EmptyTests[Option[Int]])
 }
