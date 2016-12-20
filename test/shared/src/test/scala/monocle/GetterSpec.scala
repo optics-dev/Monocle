@@ -43,6 +43,13 @@ class GetterSpec extends MonocleSuite {
     Zip[Getter[String, ?]].zip(length, upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
   }
 
+  test("Getter has a Unzip instance") {
+    val lengthAndUpper = Getter[String, (Int, String)](s => s.length -> s.toUpperCase)
+    val (length, upper) = Unzip[Getter[String, ?]].unzip(lengthAndUpper)
+    length.get("helloworld") shouldEqual 10
+    upper.get("helloworld") shouldEqual "HELLOWORLD"
+  }
+
   test("get") {
     i.get(Bar(5)) shouldEqual 5
   }
@@ -57,4 +64,18 @@ class GetterSpec extends MonocleSuite {
     i.exist(_ > 5)(Bar(3)) shouldEqual false
   }
 
+  test("zip") {
+    val length = Getter[String, Int](_.length)
+    val upper = Getter[String, String](_.toUpperCase)
+    length.zip(upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
+  }
+
+  test("zip/unzip roundtrip") {
+    val length = Getter[String, Int](_.length)
+    val upper = Getter[String, String](_.toUpperCase)
+
+    val (length1, upper1) = Unzip[Getter[String, ?]].unzip(length.zip(upper))
+    length1.get("helloworld") shouldEqual length.get("helloworld")
+    upper.get("helloworld") shouldEqual upper.get("helloworld")
+  }
 }
