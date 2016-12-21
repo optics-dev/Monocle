@@ -18,6 +18,7 @@ trait GenericOptics
   with    FilterIndexFunctions
   with    IndexFunctions
   with    PlatedFunctions
+  with    PossibleFunctions
   with    ReverseFunctions
   with    SnocFunctions
   with    Snoc1Functions
