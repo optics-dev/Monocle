@@ -2,6 +2,7 @@
 layout: docs
 title:  "FAQ"
 section: "main_menu"
+position: 4
 ---
 
 ## FAQ

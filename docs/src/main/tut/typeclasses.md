@@ -1,6 +1,6 @@
 ---
 layout: docs
-title:  "Type Classes"
+title:  "Typeclasses"
 section: "typeclasses_menu"
 position: 3
 ---

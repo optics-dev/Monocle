@@ -1,19 +1,19 @@
 options:
 
-  - title: Getting Started
-    url: getting_started.html
+  - title: Modules
+    url: modules.html
     menu_type: main_menu
 
   - title: Main menu
-    url: getting_started.html
+    url: modules.html
     menu_type: optics_menu
 
   - title: Main menu
-    url: getting_started.html
+    url: modules.html
     menu_type: typeclasses_menu
 
   - title: Main menu
-    url: getting_started.html
+    url: modules.html
     menu_type: examples_menu
 
   - title: Optics ...
@@ -51,11 +51,11 @@ options:
        url: optics/fold.html
        menu_section: optics_section
 
-  - title: Type Classes ...
+  - title: Typeclasses ...
     url: typeclasses.html
     menu_type: main_menu
 
-  - title: Type Classes
+  - title: Typeclasses
     url: typeclasses.html
     menu_type: typeclasses_menu
     menu_section: typeclasses_section
