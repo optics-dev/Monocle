@@ -6,32 +6,32 @@
 
 <p>Let’s take a simple case class with two fields:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Address</span><span class="o">(</span><span class="n">streetNumber</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">streetName</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Address</span><span class="o">(</span><span class="n">streetNumber</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">streetName</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 </code></pre>
 </div>
 
-<p>We can create a <code class="highlighter-rouge">Lens[Address, Int]</code> which zoom from an <code class="highlighter-rouge">Address</code> to its field <code class="highlighter-rouge">streetNumber</code> by supplying a pair of functions:</p>
+<p>We can create a <code class="highlighter-rouge">Lens[Address, Int]</code> which zooms from an <code class="highlighter-rouge">Address</code> to its field <code class="highlighter-rouge">streetNumber</code> by supplying a pair of functions:</p>
 
 <ul>
   <li><code class="highlighter-rouge">get: Address =&gt; Int</code></li>
   <li><code class="highlighter-rouge">set: Int =&gt; Address =&gt; Address</code></li>
 </ul>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Lens</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Lens</span>
 <span class="k">val</span> <span class="n">streetNumber</span> <span class="k">=</span> <span class="nc">Lens</span><span class="o">[</span><span class="kt">Address</span>, <span class="kt">Int</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">streetNumber</span><span class="o">)(</span><span class="n">n</span> <span class="k">=&gt;</span> <span class="n">a</span> <span class="k">=&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">streetNumber</span> <span class="k">=</span> <span class="n">n</span><span class="o">))</span>
 </code></pre>
 </div>
 
 <p>This case is really straightforward so we automated the generation of <code class="highlighter-rouge">Lenses</code> from case classes using a macro:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
 <span class="k">val</span> <span class="n">streetNumber</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Address</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">streetNumber</span><span class="o">)</span>
 </code></pre>
 </div>
 
 <p>Once we have a <code class="highlighter-rouge">Lens</code>, we can use the supplied <code class="highlighter-rouge">get</code> and <code class="highlighter-rouge">set</code> functions (nothing fancy!):</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">address</span> <span class="k">=</span> <span class="nc">Address</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="s">"High Street"</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">address</span> <span class="k">=</span> <span class="nc">Address</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="s">"High Street"</span><span class="o">)</span>
 <span class="c1">// address: Address = Address(10,High Street)
 </span>
 <span class="n">streetNumber</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">address</span><span class="o">)</span>
@@ -42,9 +42,9 @@
 </span></code></pre>
 </div>
 
-<p>We can also <code class="highlighter-rouge">modify</code> the target of <code class="highlighter-rouge">Lens</code> with a function, this equivalent to call <code class="highlighter-rouge">get</code> and then <code class="highlighter-rouge">set</code>:</p>
+<p>We can also <code class="highlighter-rouge">modify</code> the target of <code class="highlighter-rouge">Lens</code> with a function, this is equivalent to call <code class="highlighter-rouge">get</code> and then <code class="highlighter-rouge">set</code>:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">streetNumber</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">streetNumber</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
 <span class="c1">// res3: Address = Address(11,High Street)
 </span>
 <span class="k">val</span> <span class="n">n</span> <span class="k">=</span> <span class="n">streetNumber</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">address</span><span class="o">)</span>
@@ -55,16 +55,16 @@
 </span></code></pre>
 </div>
 
-<p>We can push push the idea even further, with <code class="highlighter-rouge">modifyF</code> we can update the target of a <code class="highlighter-rouge">Lens</code> in a context, cf <code class="highlighter-rouge">scalaz.Functor</code>:</p>
+<p>We can push the idea even further, with <code class="highlighter-rouge">modifyF</code> we can update the target of a <code class="highlighter-rouge">Lens</code> in a context, cf <code class="highlighter-rouge">scalaz.Functor</code>:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">neighbors</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">neighbors</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
   <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="nc">List</span><span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="k">else</span> <span class="nc">List</span><span class="o">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
 
 <span class="k">import</span> <span class="nn">scalaz.std.list._</span> <span class="c1">// to get Functor[List] instance
 </span></code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">streetNumber</span><span class="o">.</span><span class="n">modifyF</span><span class="o">(</span><span class="n">neighbors</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">streetNumber</span><span class="o">.</span><span class="n">modifyF</span><span class="o">(</span><span class="n">neighbors</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
 <span class="n">res6</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Address</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Address</span><span class="o">(</span><span class="mi">9</span><span class="o">,</span><span class="nc">High</span> <span class="nc">Street</span><span class="o">),</span> <span class="nc">Address</span><span class="o">(</span><span class="mi">11</span><span class="o">,</span><span class="nc">High</span> <span class="nc">Street</span><span class="o">))</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">streetNumber</span><span class="o">.</span><span class="n">modifyF</span><span class="o">(</span><span class="n">neighbors</span><span class="o">)(</span><span class="nc">Address</span><span class="o">(</span><span class="mi">135</span><span class="o">,</span> <span class="s">"High Street"</span><span class="o">))</span>
@@ -75,7 +75,7 @@
 <p>This would work with any kind of <code class="highlighter-rouge">Functor</code> and is especially useful in conjunction with asynchronous APIs, 
 where one has the task to update a deeply nested structure with the result of an asynchronous computation:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">scalaz.std.scalaFuture._</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">scalaz.std.scalaFuture._</span>
 <span class="k">import</span> <span class="nn">scala.concurrent._</span>
 <span class="k">import</span> <span class="nn">scala.concurrent.ExecutionContext.Implicits._</span> <span class="c1">// to get global ExecutionContext
 </span>
@@ -83,21 +83,21 @@ where one has the task to update a deeply nested structure with the result of an
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">streetNumber</span><span class="o">.</span><span class="n">modifyF</span><span class="o">(</span><span class="n">updateNumber</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">streetNumber</span><span class="o">.</span><span class="n">modifyF</span><span class="o">(</span><span class="n">updateNumber</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
 <span class="c1">// res9: scala.concurrent.Future[Address] = Future(&lt;not completed&gt;)
 </span></code></pre>
 </div>
 
 <p>Most importantly, <code class="highlighter-rouge">Lenses</code> compose together allowing to zoom deeper in a data structure</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">age</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">address</span><span class="k">:</span> <span class="kt">Address</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">age</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">address</span><span class="k">:</span> <span class="kt">Address</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">john</span> <span class="k">=</span> <span class="nc">Person</span><span class="o">(</span><span class="s">"John"</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="n">address</span><span class="o">)</span>
 
 <span class="k">val</span> <span class="n">address</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">address</span><span class="o">)</span>
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">address</span> <span class="n">composeLens</span> <span class="n">streetNumber</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="n">john</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">address</span> <span class="n">composeLens</span> <span class="n">streetNumber</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="n">john</span><span class="o">)</span>
 <span class="c1">// res11: Int = 10
 </span>
 <span class="o">(</span><span class="n">address</span> <span class="n">composeLens</span> <span class="n">streetNumber</span><span class="o">).</span><span class="n">set</span><span class="o">(</span><span class="mi">2</span><span class="o">)(</span><span class="n">john</span><span class="o">)</span>
@@ -110,14 +110,14 @@ where one has the task to update a deeply nested structure with the result of an
 <p><code class="highlighter-rouge">Lens</code> creation is rather boiler platy but we developed a few macros to generate them automatically. All macros
 are defined in a separate module (see <a href="../modules.html">modules</a>).</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
 <span class="k">val</span> <span class="n">age</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">age</span><span class="o">)</span>
 </code></pre>
 </div>
 
 <p><code class="highlighter-rouge">GenLens</code> can also be used to generate <code class="highlighter-rouge">Lens</code> several level deep:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">streetName</span><span class="o">).</span><span class="n">set</span><span class="o">(</span><span class="s">"Iffley Road"</span><span class="o">)(</span><span class="n">john</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">streetName</span><span class="o">).</span><span class="n">set</span><span class="o">(</span><span class="s">"Iffley Road"</span><span class="o">)(</span><span class="n">john</span><span class="o">)</span>
 <span class="n">res13</span><span class="k">:</span> <span class="kt">Person</span> <span class="o">=</span> <span class="nc">Person</span><span class="o">(</span><span class="nc">John</span><span class="o">,</span><span class="mi">20</span><span class="o">,</span><span class="nc">Address</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span><span class="nc">Iffley</span> <span class="nc">Road</span><span class="o">))</span>
 </code></pre>
 </div>
@@ -125,13 +125,13 @@ are defined in a separate module (see <a href="../modules.html">modules</a>).</p
 <p>For those who want to push <code class="highlighter-rouge">Lenses</code> generation even further, we created <code class="highlighter-rouge">@Lenses</code> macro annotation which generate
 <code class="highlighter-rouge">Lenses</code> for <em>all</em> fields of a case class. The generated <code class="highlighter-rouge">Lenses</code> are in the companion object of the case class:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.Lenses</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.Lenses</span>
 <span class="nd">@Lenses</span> <span class="k">case</span> <span class="k">class</span> <span class="nc">Point</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">p</span> <span class="k">=</span> <span class="nc">Point</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="nc">Point</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">p</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nc">Point</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">p</span><span class="o">)</span>
 <span class="c1">// res14: Int = 5
 </span>
 <span class="nc">Point</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="n">p</span><span class="o">)</span>
@@ -141,26 +141,26 @@ are defined in a separate module (see <a href="../modules.html">modules</a>).</p
 
 <p>You can also add a prefix to <code class="highlighter-rouge">@Lenses</code> in order to prefix the generated <code class="highlighter-rouge">Lenses</code>:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="nd">@Lenses</span><span class="o">(</span><span class="s">"_"</span><span class="o">)</span> <span class="k">case</span> <span class="k">class</span> <span class="nc">Point</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nd">@Lenses</span><span class="o">(</span><span class="s">"_"</span><span class="o">)</span> <span class="k">case</span> <span class="k">class</span> <span class="nc">Point</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">p</span> <span class="k">=</span> <span class="nc">Point</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="nc">Point</span><span class="o">.</span><span class="nc">_x</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">p</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nc">Point</span><span class="o">.</span><span class="nc">_x</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">p</span><span class="o">)</span>
 <span class="c1">// res16: Int = 5
 </span></code></pre>
 </div>
 
 <h2 id="laws">Laws</h2>
 
-<p>A <code class="highlighter-rouge">Lens</code> must satisfies all properties defined in <code class="highlighter-rouge">LensLaws</code> from the <code class="highlighter-rouge">core</code> module.
+<p>A <code class="highlighter-rouge">Lens</code> must satisfy all properties defined in <code class="highlighter-rouge">LensLaws</code> from the <code class="highlighter-rouge">core</code> module.
 You can check the validity of your own <code class="highlighter-rouge">Lenses</code> using <code class="highlighter-rouge">LensTests</code> from the <code class="highlighter-rouge">law</code> module.</p>
 
 <p>In particular, a <code class="highlighter-rouge">Lens</code> must respect the <code class="highlighter-rouge">getSet</code> law which states that if you <code class="highlighter-rouge">get</code> a value <code class="highlighter-rouge">A</code> from <code class="highlighter-rouge">S</code> and 
 <code class="highlighter-rouge">set</code> it back in, the result is an object identical to the original one. A side effect of this law is that <code class="highlighter-rouge">set</code> 
 must only update the <code class="highlighter-rouge">A</code> it points to, for example it cannot increment a counter or modify another value.</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">getSet</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">l</span><span class="k">:</span> <span class="kt">Lens</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">getSet</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">l</span><span class="k">:</span> <span class="kt">Lens</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
   <span class="n">l</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">s</span><span class="o">))(</span><span class="n">s</span><span class="o">)</span> <span class="o">==</span> <span class="n">s</span>
 </code></pre>
 </div>
@@ -168,7 +168,7 @@ must only update the <code class="highlighter-rouge">A</code> it points to, for 
 <p>On the other hand, the <code class="highlighter-rouge">setGet</code> law states that if you <code class="highlighter-rouge">set</code> a value, you always <code class="highlighter-rouge">get</code> the same value back. 
 This law guarantees that <code class="highlighter-rouge">set</code> is actually updating a value <code class="highlighter-rouge">A</code> inside of <code class="highlighter-rouge">S</code>.</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">setGet</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">l</span><span class="k">:</span> <span class="kt">Lens</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">setGet</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">l</span><span class="k">:</span> <span class="kt">Lens</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
   <span class="n">l</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="n">a</span><span class="o">)(</span><span class="n">s</span><span class="o">))</span> <span class="o">==</span> <span class="n">a</span>
 </code></pre>
 </div>

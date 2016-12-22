@@ -18,13 +18,13 @@ type class instances for standard library types and scalaz data types</li>
 
 <p>You can add a module to your build by adding the following line to <code class="highlighter-rouge">libraryDependencies</code>:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="s">"com.github.julien-truffaut"</span>  <span class="o">%%</span>  <span class="s">"monocle-${module}"</span> <span class="o">%</span> <span class="n">$</span><span class="o">{</span><span class="n">version</span><span class="o">}</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="s">"com.github.julien-truffaut"</span>  <span class="o">%%</span>  <span class="s">"monocle-${module}"</span> <span class="o">%</span> <span class="n">$</span><span class="o">{</span><span class="n">version</span><span class="o">}</span>
 </code></pre>
 </div>
 
 <p>Here is the complete list of published artifacts:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
   <span class="s">"com.github.julien-truffaut"</span>  <span class="o">%%</span>  <span class="s">"monocle-core"</span>    <span class="o">%</span> <span class="n">$</span><span class="o">{</span><span class="n">version</span><span class="o">},</span>
   <span class="s">"com.github.julien-truffaut"</span>  <span class="o">%%</span>  <span class="s">"monocle-generic"</span> <span class="o">%</span> <span class="n">$</span><span class="o">{</span><span class="n">version</span><span class="o">},</span>
   <span class="s">"com.github.julien-truffaut"</span>  <span class="o">%%</span>  <span class="s">"monocle-macro"</span>   <span class="o">%</span> <span class="n">$</span><span class="o">{</span><span class="n">version</span><span class="o">},</span>

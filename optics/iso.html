@@ -4,24 +4,24 @@
 
 <p>Consider a case class <code class="highlighter-rouge">Person</code> with two fields:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">age</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">age</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
 </code></pre>
 </div>
 
 <p><code class="highlighter-rouge">Person</code> is equivalent to a tuple <code class="highlighter-rouge">(String, Int)</code> and a tuple <code class="highlighter-rouge">(String, Int)</code> is equivalent to <code class="highlighter-rouge">Person</code>.
-So we can create an <code class="highlighter-rouge">Iso</code> between <code class="highlighter-rouge">Person</code> and <code class="highlighter-rouge">(String, Int)</code> using two two total functions:</p>
+So we can create an <code class="highlighter-rouge">Iso</code> between <code class="highlighter-rouge">Person</code> and <code class="highlighter-rouge">(String, Int)</code> using two total functions:</p>
 
 <ul>
   <li><code class="highlighter-rouge">get: Person =&gt; (String, Int)</code></li>
   <li><code class="highlighter-rouge">reverseGet (aka apply): (String, Int) =&gt; Person</code></li>
 </ul>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Iso</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Iso</span>
 <span class="k">val</span> <span class="n">personToTuple</span> <span class="k">=</span> <span class="nc">Iso</span><span class="o">[</span><span class="kt">Person</span>, <span class="o">(</span><span class="kt">String</span>, <span class="kt">Int</span><span class="o">)](</span><span class="n">p</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="n">age</span><span class="o">)){</span><span class="k">case</span> <span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">age</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">age</span><span class="o">)}</span>
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">personToTuple</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="nc">Person</span><span class="o">(</span><span class="s">"Zoe"</span><span class="o">,</span> <span class="mi">25</span><span class="o">))</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">personToTuple</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="nc">Person</span><span class="o">(</span><span class="s">"Zoe"</span><span class="o">,</span> <span class="mi">25</span><span class="o">))</span>
 <span class="c1">// res0: (String, Int) = (Zoe,25)
 </span>
 <span class="n">personToTuple</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">((</span><span class="s">"Zoe"</span><span class="o">,</span> <span class="mi">25</span><span class="o">))</span>
@@ -31,7 +31,7 @@ So we can create an <code class="highlighter-rouge">Iso</code> between <code cla
 
 <p>Or simply:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">personToTuple</span><span class="o">((</span><span class="s">"Zoe"</span><span class="o">,</span> <span class="mi">25</span><span class="o">))</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">personToTuple</span><span class="o">((</span><span class="s">"Zoe"</span><span class="o">,</span> <span class="mi">25</span><span class="o">))</span>
 <span class="c1">// res2: Person = Person(Zoe,25)
 </span></code></pre>
 </div>
@@ -40,18 +40,18 @@ So we can create an <code class="highlighter-rouge">Iso</code> between <code cla
 ordered sequence of elements but they have different performance characteristics. Therefore, we can define an <code class="highlighter-rouge">Iso</code> between
 a <code class="highlighter-rouge">List[A]</code> and a <code class="highlighter-rouge">Vector[A]</code>:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">listToVector</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Iso</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>, <span class="kt">Vector</span><span class="o">[</span><span class="kt">A</span><span class="o">]](</span><span class="k">_</span><span class="o">.</span><span class="n">toVector</span><span class="o">)(</span><span class="k">_</span><span class="o">.</span><span class="n">toList</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">listToVector</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Iso</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>, <span class="kt">Vector</span><span class="o">[</span><span class="kt">A</span><span class="o">]](</span><span class="k">_</span><span class="o">.</span><span class="n">toVector</span><span class="o">)(</span><span class="k">_</span><span class="o">.</span><span class="n">toList</span><span class="o">)</span>
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">listToVector</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">))</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">listToVector</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">))</span>
 <span class="c1">// res3: Vector[Int] = Vector(1, 2, 3)
 </span></code></pre>
 </div>
 
 <p>We can also <code class="highlighter-rouge">reverse</code> an <code class="highlighter-rouge">Iso</code> since it defines a symmetric transformation:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">vectorToList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="n">listToVector</span><span class="o">[</span><span class="kt">A</span><span class="o">].</span><span class="n">reverse</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">vectorToList</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="n">listToVector</span><span class="o">[</span><span class="kt">A</span><span class="o">].</span><span class="n">reverse</span>
 <span class="c1">// vectorToList: [A]=&gt; monocle.PIso[Vector[A],Vector[A],List[A],List[A]]
 </span>
 <span class="n">vectorToList</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="nc">Vector</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">))</span>
@@ -62,21 +62,21 @@ a <code class="highlighter-rouge">List[A]</code> and a <code class="highlighter-
 <p><code class="highlighter-rouge">Iso</code> are also convenient to lift methods from one type to another, for example a <code class="highlighter-rouge">String</code> can be seen as a <code class="highlighter-rouge">List[Char]</code>
 so we should be able to transform all functions <code class="highlighter-rouge">List[Char] =&gt; List[Char]</code> into <code class="highlighter-rouge">String =&gt; String</code>:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">stringToList</span> <span class="k">=</span> <span class="nc">Iso</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">List</span><span class="o">[</span><span class="kt">Char</span><span class="o">]](</span><span class="k">_</span><span class="o">.</span><span class="n">toList</span><span class="o">)(</span><span class="k">_</span><span class="o">.</span><span class="n">mkString</span><span class="o">(</span><span class="s">""</span><span class="o">))</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">stringToList</span> <span class="k">=</span> <span class="nc">Iso</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">List</span><span class="o">[</span><span class="kt">Char</span><span class="o">]](</span><span class="k">_</span><span class="o">.</span><span class="n">toList</span><span class="o">)(</span><span class="k">_</span><span class="o">.</span><span class="n">mkString</span><span class="o">(</span><span class="s">""</span><span class="o">))</span>
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">stringToList</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">tail</span><span class="o">)(</span><span class="s">"Hello"</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">stringToList</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">tail</span><span class="o">)(</span><span class="s">"Hello"</span><span class="o">)</span>
 <span class="c1">// res5: String = ello
 </span></code></pre>
 </div>
 
 <h2 id="iso-generation">Iso Generation</h2>
 
-<p>We defined several macro to simplify the generation of <code class="highlighter-rouge">Iso</code> between a case class and its <code class="highlighter-rouge">Tuple</code> equivalent. All macros
+<p>We defined several macros to simplify the generation of <code class="highlighter-rouge">Iso</code> between a case class and its <code class="highlighter-rouge">Tuple</code> equivalent. All macros
 are defined in a separate module (see <a href="../modules.html">modules</a>).</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">MyString</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">MyString</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Foo</span><span class="o">()</span>
 <span class="k">case</span> <span class="k">object</span> <span class="nc">Bar</span>
 
@@ -86,39 +86,39 @@ are defined in a separate module (see <a href="../modules.html">modules</a>).</p
 
 <p>First of all, <code class="highlighter-rouge">GenIso.apply</code> generates an <code class="highlighter-rouge">Iso</code> for <code class="highlighter-rouge">newtype</code> i.e. case class with a single type parameter:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="nc">GenIso</span><span class="o">[</span><span class="kt">MyString</span>, <span class="kt">String</span><span class="o">].</span><span class="n">get</span><span class="o">(</span><span class="nc">MyString</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">))</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nc">GenIso</span><span class="o">[</span><span class="kt">MyString</span>, <span class="kt">String</span><span class="o">].</span><span class="n">get</span><span class="o">(</span><span class="nc">MyString</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">))</span>
 <span class="c1">// res7: String = Hello
 </span></code></pre>
 </div>
 
 <p>Then, <code class="highlighter-rouge">GenIso.unit</code> generates an <code class="highlighter-rouge">Iso</code> for object or case classes with no field:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="nc">GenIso</span><span class="o">.</span><span class="n">unit</span><span class="o">[</span><span class="kt">Foo</span><span class="o">]</span>
-<span class="c1">// res8: monocle.Iso[Foo,Unit] = monocle.PIso$$anon$10@3cd98f87
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nc">GenIso</span><span class="o">.</span><span class="n">unit</span><span class="o">[</span><span class="kt">Foo</span><span class="o">]</span>
+<span class="c1">// res8: monocle.Iso[Foo,Unit] = monocle.PIso$$anon$10@1fd0993c
 </span>
 <span class="nc">GenIso</span><span class="o">.</span><span class="n">unit</span><span class="o">[</span><span class="kt">Bar.</span><span class="k">type</span><span class="o">]</span>
-<span class="c1">// res9: monocle.Iso[Bar.type,Unit] = monocle.PIso$$anon$10@612a57a9
+<span class="c1">// res9: monocle.Iso[Bar.type,Unit] = monocle.PIso$$anon$10@4fd81c2f
 </span></code></pre>
 </div>
 
 <p>Finally, <code class="highlighter-rouge">GenIso.fields</code> is a whitebox macro which generalise <code class="highlighter-rouge">GenIso.apply</code> to all case classes:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="nc">GenIso</span><span class="o">.</span><span class="n">fields</span><span class="o">[</span><span class="kt">Person</span><span class="o">].</span><span class="n">get</span><span class="o">(</span><span class="nc">Person</span><span class="o">(</span><span class="s">"John"</span><span class="o">,</span> <span class="mi">42</span><span class="o">))</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nc">GenIso</span><span class="o">.</span><span class="n">fields</span><span class="o">[</span><span class="kt">Person</span><span class="o">].</span><span class="n">get</span><span class="o">(</span><span class="nc">Person</span><span class="o">(</span><span class="s">"John"</span><span class="o">,</span> <span class="mi">42</span><span class="o">))</span>
 <span class="c1">// res10: (String, Int) = (John,42)
 </span></code></pre>
 </div>
 
-<p>Be aware that whitebox macros are not supported by all IDE.</p>
+<p>Be aware that whitebox macros are not supported by all IDEs.</p>
 
 <h2 id="laws">Laws</h2>
 
-<p>An <code class="highlighter-rouge">Iso</code> must satisfies all properties defined in <code class="highlighter-rouge">IsoLaws</code> from the <code class="highlighter-rouge">core</code> module.
+<p>An <code class="highlighter-rouge">Iso</code> must satisfy all properties defined in <code class="highlighter-rouge">IsoLaws</code> from the <code class="highlighter-rouge">core</code> module.
 You can check the validity of your own <code class="highlighter-rouge">Iso</code> using <code class="highlighter-rouge">IsoTests</code> from the <code class="highlighter-rouge">law</code> module.</p>
 
-<p>In particular, an <code class="highlighter-rouge">Iso</code> must verifies that <code class="highlighter-rouge">get</code> and <code class="highlighter-rouge">reverseGet</code> are inverse. This is done via
+<p>In particular, an <code class="highlighter-rouge">Iso</code> must verify that <code class="highlighter-rouge">get</code> and <code class="highlighter-rouge">reverseGet</code> are inverse. This is done via
 <code class="highlighter-rouge">roundTripOneWay</code> and <code class="highlighter-rouge">roundTripOtherWay</code> laws:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">roundTripOneWay</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">i</span><span class="k">:</span> <span class="kt">Iso</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">roundTripOneWay</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">i</span><span class="k">:</span> <span class="kt">Iso</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
   <span class="n">i</span><span class="o">.</span><span class="n">reverseGet</span><span class="o">(</span><span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">s</span><span class="o">))</span> <span class="o">==</span> <span class="n">s</span>
   
 <span class="k">def</span> <span class="n">roundTripOtherWay</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">i</span><span class="k">:</span> <span class="kt">Iso</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>

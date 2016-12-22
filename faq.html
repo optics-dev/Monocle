@@ -4,26 +4,26 @@
 
 <p>All typeclasses are defined in <code class="highlighter-rouge">monocle.function</code> package, you can import optic individually with</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.$TYPE_CLASS.$OPTIC</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.$TYPE_CLASS.$OPTIC</span>
 </code></pre>
 </div>
 
 <p>For example</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.At.at</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.At.at</span>
 <span class="k">import</span> <span class="nn">monocle.function.Cons.</span><span class="o">{</span><span class="n">headOption</span><span class="o">,</span> <span class="n">tailOption</span><span class="o">}</span>
 </code></pre>
 </div>
 
 <p>or you can import all typeclass based optics with</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.all._</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.all._</span>
 </code></pre>
 </div>
 
 <p>Here is a complete example</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.all._</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.all._</span>
 <span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Foo</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">is</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span>
@@ -33,14 +33,14 @@
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">is</span> <span class="n">composeOptional</span> <span class="n">headOption</span><span class="o">).</span><span class="n">getOption</span><span class="o">(</span><span class="n">foo</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">is</span> <span class="n">composeOptional</span> <span class="n">headOption</span><span class="o">).</span><span class="n">getOption</span><span class="o">(</span><span class="n">foo</span><span class="o">)</span>
 <span class="c1">// res2: Option[Int] = Some(1)
 </span></code></pre>
 </div>
 
 <p>Note: if you use a version of monocle before 1.4.x, you need another import to get the typeclass instance</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.std.list._</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.std.list._</span>
 </code></pre>
 </div>
 
@@ -49,7 +49,7 @@
 <p>Both <code class="highlighter-rouge">at</code> and <code class="highlighter-rouge">index</code> define indexed optics. However, <code class="highlighter-rouge">at</code> is a <code class="highlighter-rouge">Lens</code> and <code class="highlighter-rouge">index</code> is an <code class="highlighter-rouge">Optional</code> which means
 <code class="highlighter-rouge">at</code> is stronger than <code class="highlighter-rouge">index</code>. Let’s take the example of a <code class="highlighter-rouge">Map</code></p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Iso</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Iso</span>
 
 <span class="k">val</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="s">"one"</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">,</span> <span class="s">"two"</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">)</span>
 
@@ -57,7 +57,7 @@
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">root</span> <span class="n">composeOptional</span> <span class="n">index</span><span class="o">(</span><span class="s">"two"</span><span class="o">)).</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="n">m</span><span class="o">)</span>   <span class="c1">// update value at index "two"
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">root</span> <span class="n">composeOptional</span> <span class="n">index</span><span class="o">(</span><span class="s">"two"</span><span class="o">)).</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="n">m</span><span class="o">)</span>   <span class="c1">// update value at index "two"
 // res5: Map[String,Int] = Map(one -&gt; 1, two -&gt; 0)
 </span>
 <span class="o">(</span><span class="n">root</span> <span class="n">composeOptional</span> <span class="n">index</span><span class="o">(</span><span class="s">"three"</span><span class="o">)).</span><span class="n">set</span><span class="o">(</span><span class="mi">3</span><span class="o">)(</span><span class="n">m</span><span class="o">)</span> <span class="c1">// noop because m doesn't have a value at "three"
@@ -82,7 +82,7 @@ arbitrary index of a sequence.</p>
 
 <p>Note: <code class="highlighter-rouge">root</code> is a trick to help type inference. Without it, we would get the following error</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">index</span><span class="o">(</span><span class="s">"two"</span><span class="o">).</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="n">m</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">index</span><span class="o">(</span><span class="s">"two"</span><span class="o">).</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="n">m</span><span class="o">)</span>
 <span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">25</span><span class="k">:</span> <span class="kt">error:</span> <span class="k">type</span> <span class="kt">mismatch</span><span class="o">;</span>
  <span class="n">found</span>   <span class="k">:</span> <span class="kt">monocle.function.Index</span><span class="o">[</span><span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>,<span class="kt">Nothing</span><span class="o">]</span>,<span class="kt">String</span>,<span class="kt">Nothing</span><span class="o">]</span>
  <span class="n">required</span><span class="k">:</span> <span class="kt">monocle.function.Index</span><span class="o">[</span><span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>,<span class="kt">Nothing</span><span class="o">]</span>,<span class="kt">String</span>,<span class="kt">A</span><span class="o">]</span>
@@ -97,10 +97,10 @@ arbitrary index of a sequence.</p>
 <code class="highlighter-rouge">Iso.id[Map[String, Int]]</code> as a prefix, we give a hint to the type inference saying we focus on a <code class="highlighter-rouge">Map[String, Int]</code>.
 Similarly, if the <code class="highlighter-rouge">Map</code> was in a case class, a <code class="highlighter-rouge">Lens</code> would provide the same kind of hint than <code class="highlighter-rouge">Iso.id</code></p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Bar</span><span class="o">(</span><span class="n">kv</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Int</span><span class="o">])</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Bar</span><span class="o">(</span><span class="n">kv</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Int</span><span class="o">])</span>
 </code></pre>
 </div>
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="nc">GenLens</span><span class="o">[</span><span class="kt">Bar</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">kv</span><span class="o">)</span> <span class="n">composeOptional</span> <span class="n">index</span><span class="o">(</span><span class="s">"two"</span><span class="o">)).</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="nc">Bar</span><span class="o">(</span><span class="n">m</span><span class="o">))</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="nc">GenLens</span><span class="o">[</span><span class="kt">Bar</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">kv</span><span class="o">)</span> <span class="n">composeOptional</span> <span class="n">index</span><span class="o">(</span><span class="s">"two"</span><span class="o">)).</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="nc">Bar</span><span class="o">(</span><span class="n">m</span><span class="o">))</span>
 <span class="c1">// res11: Bar = Bar(Map(one -&gt; 1, two -&gt; 0))
 </span></code></pre>
 </div>

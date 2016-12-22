@@ -10,7 +10,7 @@
 
 <p>Monocle is published to Maven Central and cross-built for Scala <code class="highlighter-rouge">2.10</code>, <code class="highlighter-rouge">2.11</code>, and <code class="highlighter-rouge">2.12</code> so you can just add the following to your build:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">monocleVersion</span> <span class="k">=</span> <span class="s">"1.4.0-M1"</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">monocleVersion</span> <span class="k">=</span> <span class="s">"1.4.0-M1"</span>
 
 <span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
   <span class="s">"com.github.julien-truffaut"</span> <span class="o">%%</span>  <span class="s">"monocle-core"</span>  <span class="o">%</span> <span class="n">monocleVersion</span><span class="o">,</span>
@@ -22,7 +22,7 @@
 
 <p>If you want to use macro annotations such as <code class="highlighter-rouge">@Lenses</code>, you will also need to include:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">addCompilerPlugin</span><span class="o">(</span><span class="s">"org.scalamacros"</span> <span class="o">%%</span> <span class="s">"paradise"</span> <span class="o">%</span> <span class="s">"2.1.0"</span> <span class="n">cross</span> <span class="nc">CrossVersion</span><span class="o">.</span><span class="n">full</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">addCompilerPlugin</span><span class="o">(</span><span class="s">"org.scalamacros"</span> <span class="o">%%</span> <span class="s">"paradise"</span> <span class="o">%</span> <span class="s">"2.1.0"</span> <span class="n">cross</span> <span class="nc">CrossVersion</span><span class="o">.</span><span class="n">full</span><span class="o">)</span>
 </code></pre>
 </div>
 
@@ -31,7 +31,7 @@
 <p>Scala already provides getters and setters for case classes but modifying nested object is verbose which makes code
 difficult to understand and reason about. Let’s have a look at some examples:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Street</span><span class="o">(</span><span class="n">number</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Street</span><span class="o">(</span><span class="n">number</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Address</span><span class="o">(</span><span class="n">city</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">street</span><span class="k">:</span> <span class="kt">Street</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">address</span><span class="k">:</span> <span class="kt">Address</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Employee</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">company</span><span class="k">:</span> <span class="kt">Company</span><span class="o">)</span>
@@ -41,11 +41,11 @@ difficult to understand and reason about. Let’s have a look at some examples:<
 <p>Let’s say we have an employee and we need to upper case the first character of his company street name.
 Here is how we could write it in vanilla Scala:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">employee</span> <span class="k">=</span> <span class="nc">Employee</span><span class="o">(</span><span class="s">"john"</span><span class="o">,</span> <span class="nc">Company</span><span class="o">(</span><span class="s">"awesome inc"</span><span class="o">,</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"london"</span><span class="o">,</span> <span class="nc">Street</span><span class="o">(</span><span class="mi">23</span><span class="o">,</span> <span class="s">"high street"</span><span class="o">))))</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">employee</span> <span class="k">=</span> <span class="nc">Employee</span><span class="o">(</span><span class="s">"john"</span><span class="o">,</span> <span class="nc">Company</span><span class="o">(</span><span class="s">"awesome inc"</span><span class="o">,</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"london"</span><span class="o">,</span> <span class="nc">Street</span><span class="o">(</span><span class="mi">23</span><span class="o">,</span> <span class="s">"high street"</span><span class="o">))))</span>
 </code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">employee</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">employee</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span>
   <span class="n">company</span> <span class="k">=</span> <span class="n">employee</span><span class="o">.</span><span class="n">company</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span>
     <span class="n">address</span> <span class="k">=</span> <span class="n">employee</span><span class="o">.</span><span class="n">company</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span>
       <span class="n">street</span> <span class="k">=</span> <span class="n">employee</span><span class="o">.</span><span class="n">company</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">street</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span>
@@ -61,7 +61,7 @@ Here is how we could write it in vanilla Scala:</p>
 <p>As we can see <code class="highlighter-rouge">copy</code> is not convenient to update nested objects because we need to repeat ourselves.
 Let’s see what could we do with Monocle (type annotations are only added for clarity):</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Lens</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Lens</span>
 <span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
 
 <span class="k">val</span> <span class="n">company</span>   <span class="k">:</span> <span class="kt">Lens</span><span class="o">[</span><span class="kt">Employee</span>, <span class="kt">Company</span><span class="o">]</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Employee</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">company</span><span class="o">)</span>
@@ -77,7 +77,7 @@ Let’s see what could we do with Monocle (type annotations are only added for c
 Therefore, after composing <code class="highlighter-rouge">company</code>, <code class="highlighter-rouge">address</code>, <code class="highlighter-rouge">street</code> and <code class="highlighter-rouge">name</code>, we obtain a <code class="highlighter-rouge">Lens</code> from <code class="highlighter-rouge">Employee</code> to <code class="highlighter-rouge">String</code> (the street name).
 Now we can use this <code class="highlighter-rouge">Lens</code> issued from the composition to <code class="highlighter-rouge">modify</code> the street name using the function <code class="highlighter-rouge">capitalize</code>:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">company</span> <span class="n">composeLens</span> <span class="n">address</span> <span class="n">composeLens</span> <span class="n">street</span> <span class="n">composeLens</span> <span class="n">streetName</span><span class="o">).</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">capitalize</span><span class="o">)(</span><span class="n">employee</span><span class="o">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">company</span> <span class="n">composeLens</span> <span class="n">address</span> <span class="n">composeLens</span> <span class="n">street</span> <span class="n">composeLens</span> <span class="n">streetName</span><span class="o">).</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">capitalize</span><span class="o">)(</span><span class="n">employee</span><span class="o">)</span>
 <span class="c1">// res4: Employee = Employee(john,Company(awesome inc,Address(london,Street(23,High street))))
 </span></code></pre>
 </div>
@@ -88,11 +88,11 @@ However, we cannot write such a <code class="highlighter-rouge">Lens</code> beca
 In our case the first character of a <code class="highlighter-rouge">String</code> is optional as a <code class="highlighter-rouge">String</code> can be empty.
 So we need another abstraction that would be a sort of partial <code class="highlighter-rouge">Lens</code>, in Monocle it is called an <code class="highlighter-rouge">Optional</code>.</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.Cons.headOption</span> <span class="c1">// to use headOption (an optic from Cons typeclass)
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.function.Cons.headOption</span> <span class="c1">// to use headOption (an optic from Cons typeclass)
 </span></code></pre>
 </div>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">company</span> <span class="n">composeLens</span> <span class="n">address</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="n">company</span> <span class="n">composeLens</span> <span class="n">address</span>
          <span class="n">composeLens</span> <span class="n">street</span>
          <span class="n">composeLens</span> <span class="n">streetName</span>
          <span class="n">composeOptional</span> <span class="n">headOption</span><span class="o">).</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toUpper</span><span class="o">)(</span><span class="n">employee</span><span class="o">)</span>
@@ -107,7 +107,7 @@ relation between optics).</p>
 
 <p>Monocle offers various functions and macros to cut the boiler plate even further, here is an example:</p>
 
-<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.syntax.lens._</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.syntax.lens._</span>
 <span class="c1">// import monocle.macros.syntax.lens._
 </span>
 <span class="n">employee</span><span class="o">.</span><span class="n">lens</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">company</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">street</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">composeOptional</span><span class="o">(</span><span class="n">headOption</span><span class="o">).</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toUpper</span><span class="o">)</span>
