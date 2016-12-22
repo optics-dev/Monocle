@@ -35,7 +35,7 @@ eachL.find(_ > 3)(xs)
 eachL.all(_ % 2 == 0)(xs)
 ```
 
-`Traversal` also offers smart constructors to build a `Traversal` for a fix number of target (currently 2 to 6 targets):
+`Traversal` also offers smart constructors to build a `Traversal` for a fixed number of target (currently 2 to 6 targets):
 
 ```tut:silent
 case class Point(id: String, x: Int, y: Int)
@@ -79,11 +79,11 @@ filterEven.modify(_.toUpperCase)(m)
 
 ## Laws
 
-A `Traversal` must satisfies all properties defined in `TraversalLaws` from the `core` module.
+A `Traversal` must satisfy all properties defined in `TraversalLaws` from the `core` module.
 You can check the validity of your own `Traversal` using `TraversalTests` from the `law` module.
 
 
-In particular, a `Traversal` must respect the `modifyGetAll` law which check that you can modify all elements targeted by a `Traversal`
+In particular, a `Traversal` must respect the `modifyGetAll` law which checks that you can modify all elements targeted by a `Traversal`
 
 ```tut:silent
 def modifyGetAll[S, A](t: Traversal[S, A], s: S, f: A => A): Boolean =

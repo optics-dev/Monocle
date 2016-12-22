@@ -8,13 +8,13 @@ scaladoc: "#monocle.Prism"
 # Optional
 
 An `Optional` is an Optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`.
-Unlike the `Lens`, the element that the `Optional` focus on may not exist.
+Unlike the `Lens`, the element that the `Optional` focuses on may not exist.
 
 `Optionals` have two type parameters generally called `S` and `A`: `Optional[S, A]` where `S` represents the `Product` and `A` an optional element inside of `S`.
 
 Let's take a simple list with integers.
 
-We can create an `Optional[List[Int], Int]` which zoom from a `List[Int]` to its potential head by supplying a pair of functions:
+We can create an `Optional[List[Int], Int]` which zooms from a `List[Int]` to its potential head by supplying a pair of functions:
 
 *   `getOption: List[Int] => Option[Int]`
 *   `set: Int => List[Int] => List[Int]`
@@ -50,7 +50,7 @@ head.getOrModify(xs)
 head.getOrModify(ys)
 ```
 
-The function `getOrModify` is mostly use for polymorphic optics.
+The function `getOrModify` is mostly used for polymorphic optics.
 If you use monomorphic optics, use function `getOption`
 
 We can use the supplied `getOption` and `set` functions:
@@ -91,7 +91,7 @@ class OptionalLaws[S, A](optional: Optional[S, A]) {
 }
 ```
 
-An `Optional` must satisfies all properties defined in `OptionalLaws` in `core` module.
+An `Optional` must satisfy all properties defined in `OptionalLaws` in `core` module.
 You can check the validity of your own `Optional` using `OptionalTests` in `law` module.
 
 `getOptionSet` states that if you `getOrModify` a value `A` from `S` and then `set` it back in, the result is an object identical to the original one.

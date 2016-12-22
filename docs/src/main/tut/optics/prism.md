@@ -128,10 +128,10 @@ A [ticket](https://github.com/julien-truffaut/Monocle/issues/363) currently exis
 
 ## Prism Laws
 
-A `Prism` must satisfies all properties defined in `PrismLaws` from the `core` module.
+A `Prism` must satisfy all properties defined in `PrismLaws` from the `core` module.
 You can check the validity of your own `Prisms` using `PrismTests` from the `law` module.
 
-In particular, a `Prism` must verifies that `getOption` and `reverseGet` allow a full round trip if the `Prism` matches
+In particular, a `Prism` must verify that `getOption` and `reverseGet` allow a full round trip if the `Prism` matches
 i.e. if `getOption` returns a `Some`.
 
 ```tut:silent

@@ -17,7 +17,7 @@ Let's take a simple case class with two fields:
 case class Address(streetNumber: Int, streetName: String)
 ```
 
-We can create a `Lens[Address, Int]` which zoom from an `Address` to its field `streetNumber` by supplying a pair of functions:
+We can create a `Lens[Address, Int]` which zooms from an `Address` to its field `streetNumber` by supplying a pair of functions:
 
 *   `get: Address => Int`
 *   `set: Int => Address => Address`
@@ -50,7 +50,7 @@ streetNumber.get(address)
 streetNumber.set(5)(address)
 ```
 
-We can also `modify` the target of `Lens` with a function, this equivalent to call `get` and then `set`:
+We can also `modify` the target of `Lens` with a function, this is equivalent to call `get` and then `set`:
 
 ```tut:book
 streetNumber.modify(_ + 1)(address)
@@ -59,7 +59,7 @@ val n = streetNumber.get(address)
 streetNumber.set(n + 1)(address)
 ```
 
-We can push push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `scalaz.Functor`:
+We can push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `scalaz.Functor`:
 
 ```tut:silent
 def neighbors(n: Int): List[Int] =
@@ -145,7 +145,7 @@ Point._x.get(p)
 
 ## Laws
 
-A `Lens` must satisfies all properties defined in `LensLaws` from the `core` module.
+A `Lens` must satisfy all properties defined in `LensLaws` from the `core` module.
 You can check the validity of your own `Lenses` using `LensTests` from the `law` module.
 
 In particular, a `Lens` must respect the `getSet` law which states that if you `get` a value `A` from `S` and 

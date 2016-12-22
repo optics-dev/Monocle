@@ -10,7 +10,7 @@ The `unsafe` module contains `Optics` that do not fully satisfy the set of `Opti
 
 These `Optics` hence require additional care from the end user to avoid unlawful usages as those are not enforced by the library.
 
-The module currently defines one `Optic`, `UnsafeSelect`, but more will added as required.
+The module currently defines one `Optic`, `UnsafeSelect`, but more will be added as required.
 
 
 ## UnsafeSelect
