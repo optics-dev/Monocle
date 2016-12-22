@@ -91,7 +91,7 @@ Note that we used `each` twice, the first time on `Map` and the second time on `
 ## How to create your own Traversal
 
 We realised that our data is not formatted correctly, in particular first and last name are not upper cased.
-We can reused the `Traversal` to all `Lecturer`s we previously created but this time we need to zoom into the first
+We can reuse the `Traversal` to all `Lecturer`s we previously created but this time we need to zoom into the first
 character of both `firstName` and `lastName`.
 
 You know the drill, first we need to create the `Lens`es we need.

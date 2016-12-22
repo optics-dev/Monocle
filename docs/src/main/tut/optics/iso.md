@@ -16,7 +16,7 @@ case class Person(name: String, age: Int)
 ```
 
 `Person` is equivalent to a tuple `(String, Int)` and a tuple `(String, Int)` is equivalent to `Person`.
-So we can create an `Iso` between `Person` and `(String, Int)` using two two total functions:
+So we can create an `Iso` between `Person` and `(String, Int)` using two total functions:
 
 * `get: Person => (String, Int)`
 * `reverseGet (aka apply): (String, Int) => Person`
@@ -70,7 +70,7 @@ stringToList.modify(_.tail)("Hello")
 
 ## Iso Generation
 
-We defined several macro to simplify the generation of `Iso` between a case class and its `Tuple` equivalent. All macros
+We defined several macros to simplify the generation of `Iso` between a case class and its `Tuple` equivalent. All macros
 are defined in a separate module (see [modules](../modules.html)).
 
 ```tut:silent
@@ -100,14 +100,14 @@ Finally, `GenIso.fields` is a whitebox macro which generalise `GenIso.apply` to 
 GenIso.fields[Person].get(Person("John", 42))
 ```
 
-Be aware that whitebox macros are not supported by all IDE.
+Be aware that whitebox macros are not supported by all IDEs.
 
 ## Laws
 
-An `Iso` must satisfies all properties defined in `IsoLaws` from the `core` module.
+An `Iso` must satisfy all properties defined in `IsoLaws` from the `core` module.
 You can check the validity of your own `Iso` using `IsoTests` from the `law` module.
 
-In particular, an `Iso` must verifies that `get` and `reverseGet` are inverse. This is done via
+In particular, an `Iso` must verify that `get` and `reverseGet` are inverse. This is done via
 `roundTripOneWay` and `roundTripOtherWay` laws:
 
 ```tut:silent
