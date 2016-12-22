@@ -88,6 +88,9 @@ options:
      - title: Plated
        url: typeclasses/plated.html
        menu_section: typeclasses_section
+     - title: Possible
+       url: typeclasses/possible.html
+       menu_section: typeclasses_section
      - title: Reverse
        url: typeclasses/reverse.html
        menu_section: typeclasses_section
