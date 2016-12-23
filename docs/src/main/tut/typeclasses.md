@@ -21,6 +21,7 @@ Here is the list of typeclasses defined in Monocle:
 -   [Field1 to Field6](typeclasses/fieldx.html)
 -   [Index](typeclasses/index.html)
 -   [Plated](typeclasses/plated.html)
+-   [Possible](typeclasses/possible.html)
 -   [Reverse](typeclasses/reverse.html)
 -   [Snoc](typeclasses/snoc.html)
 -   [Snoc1](typeclasses/snoc1.html)
