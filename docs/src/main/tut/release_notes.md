@@ -7,6 +7,16 @@ position: 5
 
 ## Release Notes
 
+# 1.4.0-M2
+
+> 23 December 2016
+
+-   do not require java 8 for scala 2.11 [#463](https://github.com/julien-truffaut/Monocle/pull/463)
+-   add `Possible` typeclass [#450](https://github.com/julien-truffaut/Monocle/issues/450) (thanks to [kenbot](https://github.com/kenbot))
+-   add `zip` and `unzip` for `Getter` [#453](https://github.com/julien-truffaut/Monocle/pull/453) and [#458](https://github.com/julien-truffaut/Monocle/pull/458) (thanks to [lunaryorn](https://github.com/lunaryorn))
+-   upgrade scala to 2.12.1 and fix doc issue around [SI-7139](https://issues.scala-lang.org/browse/SI-7139) [#435](https://github.com/julien-truffaut/Monocle/pull/435)
+-   upgrade scala.js to 0.6.14 [#466](https://github.com/julien-truffaut/Monocle/pull/466)
+
 # 1.4.0-M1
 
 > 16 December 2016
