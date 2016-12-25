@@ -35,14 +35,14 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.2.7")
+lazy val scalaz     = Def.setting("org.scalaz"      %%% "scalaz-core" % "7.2.8")
 lazy val shapeless  = Def.setting("com.chuusai"     %%% "shapeless"   % "2.3.2")
 
-lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % "0.6.0")
+lazy val refinedDep = Def.setting("eu.timepit"      %%% "refined"     % "0.6.1")
 
 lazy val discipline = Def.setting("org.typelevel"   %%% "discipline"  % "0.7.2")
 lazy val scalacheck = Def.setting("org.scalacheck"  %%% "scalacheck"  % "1.13.4")
-lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.0"  % "test")
+lazy val scalatest  = Def.setting("org.scalatest"   %%% "scalatest"   % "3.0.1"  % "test")
 
 lazy val macroCompat = Def.setting("org.typelevel" %%% "macro-compat" % "1.1.1")
 
