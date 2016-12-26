@@ -13,7 +13,7 @@ import scalaz.std.option._
  * A [[PPrism]] could also be defined as a weaker [[PIso]] where get can fail.
  *
  * Typically a [[PPrism]] or [[Prism]] encodes the relation between a Sum or
- * CoProduct type (e.g. sealed trait) and one of it is element.
+ * CoProduct type (e.g. sealed trait) and one of its element.
  *
  * [[PPrism]] stands for Polymorphic Prism as it set and modify methods change
  * a type `A` to `B` and `S` to `T`.
