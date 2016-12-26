@@ -21,7 +21,7 @@ import scalaz.{Applicative, Choice, Functor, Monoid, Split, \/}
  * [[PTraversal]] and [[PSetter]]
  *
  * Typically a [[PLens]] or [[Lens]] can be defined between a Product
- * (e.g. case class, tuple, HList) and one of it is component.
+ * (e.g. case class, tuple, HList) and one of its component.
  *
  * @see [[monocle.law.LensLaws]]
  *
