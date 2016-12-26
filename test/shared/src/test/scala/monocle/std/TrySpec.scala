@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.MonocleSuite
 import monocle.law.discipline.{IsoTests, PrismTests}
-import monocle.law.discipline.function.PossibleTests
+import monocle.law.discipline.function.{EachTests, PossibleTests}
 
 import scala.util.Try
 
@@ -19,5 +19,6 @@ class TrySpec extends MonocleSuite {
     
   checkAll("trySuccess", PrismTests(monocle.std.utilTry.trySuccess[Int]))
   checkAll("tryFailure", PrismTests(monocle.std.utilTry.tryFailure[Int]))
+  checkAll("each Try", EachTests[Try[Int], Int])
   checkAll("possible Try", PossibleTests[Try[Int], Int])
 }
