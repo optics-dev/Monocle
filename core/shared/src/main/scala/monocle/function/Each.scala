@@ -39,6 +39,7 @@ object Each extends EachFunctions {
   import scalaz.std.map._
   import scalaz.std.stream._
   import scalaz.std.vector._
+  import scala.util.Try
 
   implicit def listEach[A]: Each[List[A], A] = traverseEach
 
@@ -79,6 +80,10 @@ object Each extends EachFunctions {
   }
 
   implicit def vectorEach[A]: Each[Vector[A], A] = traverseEach
+
+  implicit def tryEach[A]: Each[Try[A], A] = new Each[Try[A], A] {
+    def each = monocle.std.utilTry.trySuccess.asTraversal
+  }
 
   /************************************************************************************************/
   /** Scalaz instances                                                                            */
