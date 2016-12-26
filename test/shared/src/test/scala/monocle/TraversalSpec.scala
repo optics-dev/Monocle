@@ -5,7 +5,7 @@ import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 
-import scalaz.{-\/, Category, Choice, Compose, Equal}
+import scalaz.{-\/, Category, Choice, Compose, Equal, Unzip}
 import scalaz.std.string._
 import scalaz.std.list._
 
@@ -20,6 +20,7 @@ class TraversalSpec extends MonocleSuite {
 
   def eachL[A]: Traversal[List[A], A] = PTraversal.fromTraverse[List, A, A]
   val eachLi: Traversal[List[Int], Int] = eachL[Int]
+  def eachL2[A, B]: Traversal[List[(A, B)], (A, B)] = eachL[(A, B)]
 
   implicit val locationGen: Arbitrary[Location] = Arbitrary(for {
     x <- arbitrary[Int]
@@ -81,6 +82,11 @@ class TraversalSpec extends MonocleSuite {
     Choice[Traversal].choice(eachL[Int], coordinates).modify(_ + 1)(-\/(List(1,2,3))) shouldEqual -\/(List(2,3,4))
   }
 
+  test("Traversal has an Unzip instance") {
+    val (int, string) = Unzip[Traversal[List[(Int, String)], ?]].unzip(eachL2[Int, String])
+    int.getAll(List((1, "a"), (2, "b"))) shouldEqual List(1, 2)
+    string.getAll(List((1, "a"), (2, "b"))) shouldEqual List("a", "b")
+  }
 
 
   test("foldMap") {

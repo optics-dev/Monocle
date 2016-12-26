@@ -14,6 +14,7 @@ class OptionalSpec extends MonocleSuite {
   }
   
   def headOptionI: Optional[List[Int], Int] = headOption[Int]
+  def headOption2[A, B]: Optional[List[(A, B)], (A, B)] = headOption[(A, B)]
 
   checkAll("apply Optional", OptionalTests(headOptionI))
 
@@ -40,6 +41,12 @@ class OptionalSpec extends MonocleSuite {
 
   test("Optional has a Choice instance") {
     Choice[Optional].choice(headOptionI, Category[Optional].id[Int]).getOption(-\/(List(1,2,3))) shouldEqual Some(1)
+  }
+
+  test("Optional has an Unzip instance") {
+    val (int, string) = Unzip[Optional[List[(Int, String)], ?]].unzip(headOption2[Int, String])
+    int.getOption(List((1, "a"))) shouldEqual Some(1)
+    string.getOption(List((1, "a"))) shouldEqual Some("a")
   }
 
 

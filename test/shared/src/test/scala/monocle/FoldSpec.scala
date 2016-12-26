@@ -3,11 +3,12 @@ package monocle
 import scalaz.std.anyVal._
 import scalaz.std.list._
 import scalaz.std.string._
-import scalaz.{-\/, Category, Choice, Compose, Monoid}
+import scalaz.{-\/, Category, Choice, Compose, Monoid, Unzip}
 
 class FoldSpec extends MonocleSuite {
 
   val eachLi: Fold[List[Int], Int] = Fold.fromFoldable[List, Int]
+  def eachL2[A, B]: Fold[List[(A, B)], (A, B)] = Fold.fromFoldable[List, (A, B)]
 
   def nestedListFold[A] = new Fold[List[List[A]], List[A]]{
     def foldMap[M: Monoid](f: (List[A]) => M)(s: List[List[A]]): M =
@@ -26,6 +27,12 @@ class FoldSpec extends MonocleSuite {
 
   test("Fold has a Choice instance") {
     Choice[Fold].choice(eachLi, Choice[Fold].id[Int]).fold(-\/(List(1,2,3))) shouldEqual 6
+  }
+
+  test("Fold has an Unzip instance") {
+    val (int, string) = Unzip[Fold[List[(Int, String)], ?]].unzip(eachL2[Int, String])
+    int.fold(List((1, "a"), (2, "b"))) shouldEqual 3
+    string.fold(List((1, "a"), (2, "b"))) shouldEqual "ab"
   }
 
 
