@@ -13,23 +13,23 @@ class GetterSpec extends MonocleSuite {
 
   // test implicit resolution of type classes
 
-  test("Getter has a Compose)stance") {
+  test("Getter has a Compose instance") {
     Compose[Getter].compose(i, bar).get(Foo(Bar(3))) shouldEqual 3
   }
 
-  test("Getter has a Category)stance") {
+  test("Getter has a Category instance") {
     Category[Getter].id[Int].get(3) shouldEqual 3
   }
 
-  test("Getter has a Choice)stance") {
+  test("Getter has a Choice instance") {
     Choice[Getter].choice(i, Choice[Getter].id[Int]).get(-\/(Bar(3))) shouldEqual 3
   }
 
-  test("Getter has a Split)stance") {
+  test("Getter has a Split instance") {
     Split[Getter].split(i, bar).get((Bar(3), Foo(Bar(3)))) shouldEqual ((3, Bar(3)))
   }
 
-  test("Getter has a Profunctor)stance") {
+  test("Getter has a Profunctor instance") {
     Profunctor[Getter].mapsnd(bar)(_.i).get(Foo(Bar(3))) shouldEqual 3
   }
 
@@ -43,7 +43,7 @@ class GetterSpec extends MonocleSuite {
     Zip[Getter[String, ?]].zip(length, upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
   }
 
-  test("Getter has a Unzip instance") {
+  test("Getter has an Unzip instance") {
     val lengthAndUpper = Getter[String, (Int, String)](s => s.length -> s.toUpperCase)
     val (length, upper) = Unzip[Getter[String, ?]].unzip(lengthAndUpper)
     length.get("helloworld") shouldEqual 10
