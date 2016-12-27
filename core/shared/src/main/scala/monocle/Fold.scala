@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.function.fields._
+import monocle.function.fields.{first, second}
 import scalaz.std.anyVal._
 import scalaz.std.list._
 import scalaz.std.option._

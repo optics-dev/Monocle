@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.function.fields._
+import monocle.function.fields.{first, second}
 import scalaz.{Applicative, Choice, Functor, Monoid, Split, Unzip, \/}
 
 /**
