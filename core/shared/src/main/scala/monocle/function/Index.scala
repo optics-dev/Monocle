@@ -22,9 +22,8 @@ abstract class Index[S, I, A] extends Serializable {
 trait IndexFunctions {
   def index[S, I, A](i: I)(implicit ev: Index[S, I, A]): Optional[S, A] = ev.index(i)
 
-  def atIndex[S, I, A](implicit ev: At[S, I, Option[A]]) = new Index[S, I, A] {
-    def index(i: I) = ev.at(i) composePrism monocle.std.option.some
-  }
+  @deprecated("use Index.fromAt", since = "1.4.0")
+  def atIndex[S, I, A](implicit ev: At[S, I, Option[A]]) = Index.fromAt[S, I, A]
 }
 
 object Index extends IndexFunctions{
@@ -32,6 +31,10 @@ object Index extends IndexFunctions{
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: Index[A, I, B]): Index[S, I, B] = new Index[S, I, B] {
     def index(i: I): Optional[S, B] =
       iso composeOptional ev.index(i)
+  }
+
+  def fromAt[S, I, A](implicit ev: At[S, I, Option[A]]) = new Index[S, I, A] {
+    def index(i: I) = ev.at(i) composePrism monocle.std.option.some
   }
 
   /************************************************************************************************/
@@ -48,7 +51,7 @@ object Index extends IndexFunctions{
     )
   }
 
-  implicit def mapIndex[K, V]: Index[Map[K, V], K, V] = atIndex
+  implicit def mapIndex[K, V]: Index[Map[K, V], K, V] = fromAt
 
   implicit def streamIndex[A]: Index[Stream[A], Int, A] = new Index[Stream[A], Int, A] {
     def index(i: Int) = Optional[Stream[A], A](
@@ -71,7 +74,6 @@ object Index extends IndexFunctions{
   /************************************************************************************************/
   /** Scalaz instances                                                                            */
   /************************************************************************************************/
-
   import monocle.function.Cons1.{oneAndCons1, nelCons1}
   import scalaz.{==>>, IList, Order, NonEmptyList, OneAnd}
 
@@ -85,7 +87,7 @@ object Index extends IndexFunctions{
     )
   }
 
-  implicit def iMapIndex[K: Order, V]: Index[K ==>> V, K, V] = atIndex
+  implicit def iMapIndex[K: Order, V]: Index[K ==>> V, K, V] = fromAt
 
   implicit def nelIndex[A]: Index[NonEmptyList[A], Int, A] =
     new Index[NonEmptyList[A], Int, A] {

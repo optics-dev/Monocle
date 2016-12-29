@@ -20,9 +20,8 @@ abstract class Each[S, A] extends Serializable {
 trait EachFunctions {
   def each[S, A](implicit ev: Each[S, A]): Traversal[S, A] = ev.each
 
-  def traverseEach[S[_]: Traverse, A]: Each[S[A], A] = new Each[S[A], A] {
-    def each = PTraversal.fromTraverse[S, A, A]
-  }
+  @deprecated("use Each.fromTraverse", since = "1.4.0")
+  def traverseEach[S[_]: Traverse, A]: Each[S[A], A] = Each.fromTraverse[S, A]
 }
 
 object Each extends EachFunctions {
@@ -30,6 +29,10 @@ object Each extends EachFunctions {
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Each[A, B]): Each[S, B] = new Each[S, B] {
     val each: Traversal[S, B] =
       iso composeTraversal ev.each
+  }
+
+  def fromTraverse[S[_]: Traverse, A]: Each[S[A], A] = new Each[S[A], A] {
+    def each = PTraversal.fromTraverse[S, A, A]
   }
 
   /************************************************************************************************/
@@ -45,15 +48,15 @@ object Each extends EachFunctions {
     def each = monocle.std.either.stdRight.asTraversal
   }
 
-  implicit def listEach[A]: Each[List[A], A] = traverseEach
+  implicit def listEach[A]: Each[List[A], A] = fromTraverse
 
-  implicit def mapEach[K, V]: Each[Map[K, V], V] = traverseEach[Map[K, ?], V]
+  implicit def mapEach[K, V]: Each[Map[K, V], V] = fromTraverse[Map[K, ?], V]
 
   implicit def optEach[A]: Each[Option[A], A] = new Each[Option[A], A] {
     def each = monocle.std.option.some[A].asTraversal
   }
 
-  implicit def streamEach[A]: Each[Stream[A], A] = traverseEach
+  implicit def streamEach[A]: Each[Stream[A], A] = fromTraverse
 
   implicit val stringEach: Each[String, Char] = new Each[String, Char] {
     val each = monocle.std.string.stringToList composeTraversal Each.each[List[Char], Char]
@@ -87,28 +90,28 @@ object Each extends EachFunctions {
     val each = PTraversal.apply6[(A, A, A, A, A, A), (A, A, A, A, A, A), A, A](_._1,_._2,_._3,_._4,_._5, _._6)((b1, b2, b3, b4, b5, b6, _) => (b1, b2, b3, b4, b5, b6))
   }
 
-  implicit def vectorEach[A]: Each[Vector[A], A] = traverseEach
+  implicit def vectorEach[A]: Each[Vector[A], A] = fromTraverse
 
   /************************************************************************************************/
   /** Scalaz instances                                                                            */
   /************************************************************************************************/
   import scalaz.{==>>, \/, Cofree, IList, Maybe, NonEmptyList, OneAnd, Tree, Validation}
 
-  implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] = traverseEach[Cofree[S, ?], A]
+  implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] = fromTraverse[Cofree[S, ?], A]
 
   implicit def disjunctionEach[A, B]: Each[A \/ B, B] = new Each[A \/ B, B] {
     def each = monocle.std.disjunction.right.asTraversal
   }
 
-  implicit def iListEach[A]: Each[IList[A], A] = traverseEach
+  implicit def iListEach[A]: Each[IList[A], A] = fromTraverse
 
-  implicit def iMapEach[K, V]: Each[K ==>> V, V] = traverseEach[K ==>> ?, V]
+  implicit def iMapEach[K, V]: Each[K ==>> V, V] = fromTraverse[K ==>> ?, V]
 
   implicit def maybeEach[A]: Each[Maybe[A], A] = new Each[Maybe[A], A]{
     def each = monocle.std.maybe.just.asTraversal
   }
 
-  implicit def nelEach[A]: Each[NonEmptyList[A], A] = traverseEach
+  implicit def nelEach[A]: Each[NonEmptyList[A], A] = fromTraverse
 
   implicit def oneAndEach[T[_], A](implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
     new Each[OneAnd[T, A], A]{
@@ -118,7 +121,7 @@ object Each extends EachFunctions {
       }
     }
 
-  implicit def treeEach[A]: Each[Tree[A], A] = traverseEach
+  implicit def treeEach[A]: Each[Tree[A], A] = fromTraverse
 
   implicit def validationEach[A, B]: Each[Validation[A, B], B] = new Each[Validation[A, B], B] {
     def each = monocle.std.validation.success.asTraversal
