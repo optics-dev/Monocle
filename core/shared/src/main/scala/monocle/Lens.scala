@@ -277,11 +277,8 @@ sealed abstract class LensInstances extends LensInstances0 {
   }
 
   implicit def lensUnzip[S]: Unzip[Lens[S, ?]] = new Unzip[Lens[S, ?]] {
-    override def unzip[A, B](f: Lens[S, (A, B)]): (Lens[S, A], Lens[S, B]) =
-      (
-        Lens[S, A](f composeLens first get)(f composeLens first set),
-        Lens[S, B](f composeLens second get)(f composeLens second set)
-      )
+    def unzip[A, B](f: Lens[S, (A, B)]): (Lens[S, A], Lens[S, B]) =
+      (f composeLens first, f composeLens second)
   }
 }
 

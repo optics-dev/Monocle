@@ -41,6 +41,10 @@ object Each extends EachFunctions {
   import scalaz.std.vector._
   import scala.util.Try
 
+  implicit def eitherEach[A, B]: Each[Either[A, B], B] = new Each[Either[A, B], B] {
+    def each = monocle.std.either.stdRight.asTraversal
+  }
+
   implicit def listEach[A]: Each[List[A], A] = traverseEach
 
   implicit def mapEach[K, V]: Each[Map[K, V], V] = traverseEach[Map[K, ?], V]
@@ -49,18 +53,14 @@ object Each extends EachFunctions {
     def each = monocle.std.option.some[A].asTraversal
   }
 
-  implicit def eitherEach[A, B]: Each[Either[A, B], B] = new Each[Either[A, B], B] {
-    def each = monocle.std.either.stdRight.asTraversal
-  }
-
-  implicit def tryEach[A]: Each[Try[A], A] = new Each[Try[A], A] {
-    def each = monocle.std.utilTry.trySuccess.asTraversal
-  }
-
   implicit def streamEach[A]: Each[Stream[A], A] = traverseEach
 
   implicit val stringEach: Each[String, Char] = new Each[String, Char] {
     val each = monocle.std.string.stringToList composeTraversal Each.each[List[Char], Char]
+  }
+
+  implicit def tryEach[A]: Each[Try[A], A] = new Each[Try[A], A] {
+    def each = monocle.std.utilTry.trySuccess.asTraversal
   }
 
   implicit def tuple1Each[A]: Each[Tuple1[A], A] = new Each[Tuple1[A], A] {
@@ -96,20 +96,16 @@ object Each extends EachFunctions {
 
   implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] = traverseEach[Cofree[S, ?], A]
 
+  implicit def disjunctionEach[A, B]: Each[A \/ B, B] = new Each[A \/ B, B] {
+    def each = monocle.std.disjunction.right.asTraversal
+  }
+
   implicit def iListEach[A]: Each[IList[A], A] = traverseEach
 
   implicit def iMapEach[K, V]: Each[K ==>> V, V] = traverseEach[K ==>> ?, V]
 
   implicit def maybeEach[A]: Each[Maybe[A], A] = new Each[Maybe[A], A]{
     def each = monocle.std.maybe.just.asTraversal
-  }
-
-  implicit def disjunctionEach[A, B]: Each[A \/ B, B] = new Each[A \/ B, B] {
-    def each = monocle.std.disjunction.right.asTraversal
-  }
-
-  implicit def validationEach[A, B]: Each[Validation[A, B], B] = new Each[Validation[A, B], B] {
-    def each = monocle.std.validation.success.asTraversal
   }
 
   implicit def nelEach[A]: Each[NonEmptyList[A], A] = traverseEach
@@ -123,4 +119,8 @@ object Each extends EachFunctions {
     }
 
   implicit def treeEach[A]: Each[Tree[A], A] = traverseEach
+
+  implicit def validationEach[A, B]: Each[Validation[A, B], B] = new Each[Validation[A, B], B] {
+    def each = monocle.std.validation.success.asTraversal
+  }
 }
