@@ -1,12 +1,13 @@
 package monocle
 
+import monocle.function.fields.{first, second}
 import scalaz.std.anyVal._
 import scalaz.std.list._
 import scalaz.std.option._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 import scalaz.syntax.tag._
-import scalaz.{Choice, Foldable, Monoid, \/}
+import scalaz.{Choice, Foldable, Monoid, Unzip, \/}
 
 /**
  * A [[Fold]] can be seen as a [[Getter]] with many targets or
@@ -189,5 +190,10 @@ sealed abstract class FoldInstances {
 
     def compose[A, B, C](f: Fold[B, C], g: Fold[A, B]): Fold[A, C] =
       g composeFold f
+  }
+
+  implicit def foldUnzip[S]: Unzip[Fold[S, ?]] = new Unzip[Fold[S, ?]] {
+    override def unzip[A, B](f: Fold[S, (A, B)]): (Fold[S, A], Fold[S, B]) =
+      (f composeLens first, f composeLens second)
   }
 }

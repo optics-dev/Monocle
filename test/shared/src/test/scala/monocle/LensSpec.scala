@@ -29,6 +29,7 @@ class LensSpec extends MonocleSuite {
 
   val x = Lens[Point, Int](_.x)(x => p => p.copy(x = x))
   val y = Lens[Point, Int](_.y)(y => p => p.copy(y = y))
+  val xy = Lens[Point, (Int, Int)](p => (p.x, p.y))(xy => p => p.copy(x = xy._1, y = xy._2))
 
   implicit val exampleGen: Arbitrary[Example] = Arbitrary(for {
     s <- arbitrary[String]
@@ -66,6 +67,12 @@ class LensSpec extends MonocleSuite {
 
   test("Lens has a Split instance") {
     Split[Lens].split(x, y).get((Point(0, 1), Point(5, 6))) shouldEqual ((0, 6))
+  }
+
+  test("Lens has an Unzip instance") {
+    val (unzipX, unzipY) = Unzip[Lens[Point, ?]].unzip(xy)
+    unzipX.get(Point(1, 2)) shouldEqual 1
+    unzipY.get(Point(1, 2)) shouldEqual 2
   }
 
   test("get") {

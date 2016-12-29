@@ -1,6 +1,7 @@
 package monocle
 
-import scalaz.{Applicative, Choice, Functor, Monoid, Split, \/}
+import monocle.function.fields.{first, second}
+import scalaz.{Applicative, Choice, Functor, Monoid, Split, Unzip, \/}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
@@ -273,6 +274,14 @@ sealed abstract class LensInstances extends LensInstances0 {
 
     def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
       g composeLens f
+  }
+
+  implicit def lensUnzip[S]: Unzip[Lens[S, ?]] = new Unzip[Lens[S, ?]] {
+    override def unzip[A, B](f: Lens[S, (A, B)]): (Lens[S, A], Lens[S, B]) =
+      (
+        Lens[S, A](f composeLens first get)(f composeLens first set),
+        Lens[S, B](f composeLens second get)(f composeLens second set)
+      )
   }
 }
 

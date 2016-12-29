@@ -1,6 +1,7 @@
 package monocle
 
-import scalaz.{Applicative, Choice, Monoid, \/}
+import monocle.function.fields.{first, second}
+import scalaz.{Applicative, Choice, Monoid, Unzip, \/}
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
@@ -280,5 +281,10 @@ sealed abstract class OptionalInstances {
 
     def compose[A, B, C](f: Optional[B, C], g: Optional[A, B]): Optional[A, C] =
       g composeOptional f
+  }
+
+  implicit def optionalUnzip[S]: Unzip[Optional[S, ?]] = new Unzip[Optional[S, ?]] {
+    override def unzip[A, B](f: Optional[S, (A, B)]): (Optional[S, A], Optional[S, B]) =
+      (f composeLens first, f composeLens second)
   }
 }

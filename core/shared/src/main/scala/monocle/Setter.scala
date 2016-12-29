@@ -1,6 +1,7 @@
 package monocle
 
-import scalaz.{Choice, Contravariant, Functor, Profunctor, \/}
+import monocle.function.fields.{first, second}
+import scalaz.{Choice, Contravariant, Functor, Profunctor, Unzip, \/}
 
 /**
  * A [[PSetter]] is a generalisation of Functor map:
@@ -158,5 +159,10 @@ sealed abstract class SetterInstances {
 
     def choice[A, B, C](f1: => Setter[A, C], f2: => Setter[B, C]): Setter[A \/ B, C] =
       f1 choice f2
+  }
+
+  implicit def setterUnzip[S]: Unzip[Setter[S, ?]] = new Unzip[Setter[S, ?]] {
+    override def unzip[A, B](f: Setter[S, (A, B)]): (Setter[S, A], Setter[S, B]) =
+      (f composeLens first, f composeLens second)
   }
 }

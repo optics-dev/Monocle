@@ -1,5 +1,6 @@
 package monocle
 
+import monocle.function.fields.{first, second}
 import scalaz.Id.Id
 import scalaz.std.anyVal._
 import scalaz.std.list._
@@ -7,7 +8,7 @@ import scalaz.std.option._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 import scalaz.syntax.tag._
-import scalaz.{Applicative, Choice, Const, Functor, Monoid, Traverse, \/}
+import scalaz.{Applicative, Choice, Const, Functor, Monoid, Traverse, Unzip, \/}
 
 /**
  * A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
@@ -285,5 +286,10 @@ sealed abstract class TraversalInstances {
 
     def choice[A, B, C](f1: => Traversal[A, C], f2: => Traversal[B, C]): Traversal[A \/ B, C] =
       f1 choice f2
+  }
+
+  implicit def traversalUnzip[S]: Unzip[Traversal[S, ?]] = new Unzip[Traversal[S, ?]] {
+    override def unzip[A, B](f: Traversal[S, (A, B)]): (Traversal[S, A], Traversal[S, B]) =
+      (f composeLens first, f composeLens second)
   }
 }
