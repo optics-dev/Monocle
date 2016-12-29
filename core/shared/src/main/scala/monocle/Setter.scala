@@ -38,10 +38,6 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
       b => _.bimap(self.modify(b), other.modify(b))
     )
 
-  @deprecated("use choice", since = "1.2.0")
-  @inline final def sum[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[S \/ S1, T \/ T1, A, B] =
-    choice(other)
-
   /*************************************************************/
   /** Compose methods between a [[PSetter]] and another Optics */
   /*************************************************************/

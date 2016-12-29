@@ -98,10 +98,6 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  @deprecated("use choice", since = "1.2.0")
-  @inline final def sum[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
-    choice(other)
-
   /***************************************************************/
   /** Compose methods between a [[POptional]] and another Optics */
   /***************************************************************/

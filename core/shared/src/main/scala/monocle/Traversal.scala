@@ -86,10 +86,6 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
         )
     }
 
-  @deprecated("use choice", since = "1.2.0")
-  @inline final def sum[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[S \/ S1, T \/ T1, A, B] =
-    choice(other)
-
   /** calculate the number of targets */
   @inline final def length(s: S): Int =
     foldMap(_ => 1)(s)
