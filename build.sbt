@@ -39,7 +39,7 @@ lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"   
 lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.2")
 
 lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.6.1")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.6.1")
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.6.1" % "test")
 
 lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.7.2")
 lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.13.4")
@@ -135,7 +135,7 @@ lazy val lawJS  = law.js
 lazy val law    = crossProject.dependsOn(core)
   .settings(moduleName := "monocle-law")
   .configureCross(monocleCrossSettings)
-  .settings(libraryDependencies ++= Seq(discipline.value, scalacheck.value, refinedScalacheck.value))
+  .settings(libraryDependencies ++= Seq(discipline.value, scalacheck.value))
 
 lazy val macrosJVM = macros.jvm
 lazy val macrosJS  = macros.js
@@ -179,7 +179,7 @@ lazy val test    = crossProject.dependsOn(core, generic, macros, law, state, ref
   .configureCross(monocleCrossSettings)
   .settings(noPublishSettings: _*)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, refinedScalacheck.value, compilerPlugin(paradisePlugin))
   )
 
 lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)

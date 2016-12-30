@@ -10,7 +10,7 @@ import eu.timepit.refined._
 import scalaz.Equal
 
 
-class StartsWithSpec extends MonocleSuite {
+class StringsSpec extends MonocleSuite {
 
   implicit val startsWithCoGen: Cogen[StartsWithString[W.`"hello"`.T]] = Cogen[String].contramap[StartsWithString[W.`"hello"`.T]](_.value)
 

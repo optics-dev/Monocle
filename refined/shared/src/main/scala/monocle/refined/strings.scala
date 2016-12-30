@@ -4,9 +4,9 @@ import eu.timepit.refined.api.Refined
 import eu.timepit.refined.string.StartsWith
 import monocle._
 
-object startswith extends StartsWithInstances
+object strings extends StringsInstances
 
-trait StartsWithInstances {
+trait StringsInstances {
 
   def startsWith(prefix: String): Prism[String, StartsWithString[prefix.type]] = {
     Prism.partial[String, Refined[String, StartsWith[prefix.type]]] {
