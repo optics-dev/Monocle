@@ -3,6 +3,7 @@ package monocle
 import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.char.{LowerCase, UpperCase}
+import eu.timepit.refined.string.StartsWith
 import eu.timepit.refined.numeric.Interval
 
 package object refined {
@@ -15,5 +16,7 @@ package object refined {
 
   type LowerCaseChar = Char Refined LowerCase
   type UpperCaseChar = Char Refined UpperCase
+
+  type StartsWithString[T <: String] = String Refined StartsWith[T]
 
 }

@@ -5,7 +5,7 @@ import monocle.function.Plated._
 import monocle.law.discipline.function._
 import monocle.law.discipline.{IsoTests, PrismTests, TraversalTests}
 
-class StringSpec extends MonocleSuite {
+class StringsSpec extends MonocleSuite {
   checkAll("stringToList", IsoTests(stringToList))
   checkAll("reverse String", ReverseTests[String])
   checkAll("empty String", EmptyTests[String])
