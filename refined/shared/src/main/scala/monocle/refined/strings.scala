@@ -16,7 +16,7 @@ trait StringsInstances {
 
   private def refinedPrism[T, P](t: T)(implicit v: Validate[T, P]): Prism[T, T Refined P] = {
     Prism.partial[T, Refined[T, P]] {
-      case tt if v.isValid(t) => Refined.unsafeApply[T, P](tt)
+      case tt if v.isValid(tt) => Refined.unsafeApply[T, P](tt)
     } {
       _.value
     }
