@@ -13,7 +13,9 @@ import scalaz.Equal
 class StringsSpec extends MonocleSuite {
   implicit def arbitraryUUID: Arbitrary[UUID] = Arbitrary(UUID.randomUUID)
 
-  implicit def equalUUID: Equal[UUID] = (a1: UUID, a2: UUID) => a1 == a2
+  implicit def equalUUID: Equal[UUID] = new Equal[UUID] {
+    override def equal(a1: UUID, a2: UUID): Boolean = a1 == a2
+  }
 
   implicit def arbitraryUUIDtoUUID: Arbitrary[UUID => UUID] = Arbitrary(
     for (
