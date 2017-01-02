@@ -1,7 +1,7 @@
 package monocle
 
 import eu.timepit.refined._
-import eu.timepit.refined.api.Refined
+import eu.timepit.refined.api.{Refined, Validate}
 import eu.timepit.refined.char.{LowerCase, UpperCase}
 import eu.timepit.refined.string.{EndsWith, StartsWith}
 import eu.timepit.refined.numeric.Interval
@@ -20,4 +20,10 @@ package object refined {
   type StartsWithString[T <: String] = String Refined StartsWith[T]
   type EndsWithString[T <: String] = String Refined EndsWith[T]
 
+  private[refined] def refinedPrism[T, P](implicit v: Validate[T, P]): Prism[T, T Refined P] =
+    Prism.partial[T, T Refined P] {
+      case t if v.isValid(t) => Refined.unsafeApply(t)
+    } {
+      _.value
+    }
 }
