@@ -1,8 +1,10 @@
 package monocle
 
+import java.util.UUID
+
 import org.scalacheck.Arbitrary._
 import org.scalacheck.rng.Seed
-import org.scalacheck.{Cogen, Arbitrary, Gen}
+import org.scalacheck.{Arbitrary, Cogen, Gen}
 import org.scalactic.Equality
 
 import scalaz.Tree.Node
@@ -38,6 +40,7 @@ trait TestInstances {
   implicit val unitEqual       = Equal.equalA[Unit]
   implicit val bigIntEqual     = Equal.equalA[BigInt]
   implicit val bigDecimalEqual = Equal.equalA[BigDecimal]
+  implicit val uuidEqual       = Equal.equalA[UUID]
 
   implicit def optEq[A: Equal] = scalaz.std.option.optionEqual[A]
   implicit def someEq[A: Equal] = Equal.equalA[Some[A]]
@@ -187,5 +190,10 @@ trait TestInstances {
 
   implicit def cogenStreamCofree[A](implicit A: Cogen[A]): Cogen[Cofree[Stream, A]] =
     Cogen[Cofree[Stream, A]]((seed: Seed, t: Cofree[Stream, A]) => Cogen[(A, Stream[Cofree[Stream, A]])].perturb(seed, (t.head, t.tail)))
+
+  implicit def uuidArbitrary: Arbitrary[UUID] = Arbitrary(UUID.randomUUID)
+
+  implicit def uuidCoGen: Cogen[UUID] =
+    Cogen[(Long, Long)].contramap[UUID]((u: UUID) => (u.getMostSignificantBits, u.getLeastSignificantBits))
 
 }

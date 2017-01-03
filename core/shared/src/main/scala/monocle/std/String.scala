@@ -1,7 +1,10 @@
 package monocle.std
 
+import java.util.UUID
+
 import monocle.{Iso, Prism}
 
+import scala.util.Try
 import scalaz.std.list._
 import scalaz.std.option._
 import scalaz.syntax.traverse._
@@ -24,6 +27,9 @@ trait StringOptics {
 
   val stringToByte: Prism[String, Byte] =
     stringToLong composePrism long.longToByte
+
+  val stringToUUID: Prism[String, UUID] =
+    Prism{s: String => Try(UUID.fromString(s)).toOption}(_.toString)
 
   private def parseLong(s: String): Option[Long] = {
     // we reject cases where String will be an invalid Prism according 2nd Prism law
