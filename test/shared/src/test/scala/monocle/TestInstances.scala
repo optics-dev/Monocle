@@ -1,5 +1,6 @@
 package monocle
 
+import java.net.{URI, URL}
 import java.util.UUID
 
 import org.scalacheck.Arbitrary._
@@ -41,6 +42,8 @@ trait TestInstances {
   implicit val bigIntEqual     = Equal.equalA[BigInt]
   implicit val bigDecimalEqual = Equal.equalA[BigDecimal]
   implicit val uuidEqual       = Equal.equalA[UUID]
+  implicit val uriEqual        = Equal.equalA[URI]
+  implicit val urlEqual        = Equal.equalA[URL]
 
   implicit def optEq[A: Equal] = scalaz.std.option.optionEqual[A]
   implicit def someEq[A: Equal] = Equal.equalA[Some[A]]
@@ -196,4 +199,28 @@ trait TestInstances {
   implicit def uuidCoGen: Cogen[UUID] =
     Cogen[(Long, Long)].contramap[UUID]((u: UUID) => (u.getMostSignificantBits, u.getLeastSignificantBits))
 
+  implicit def uriArbitrary: Arbitrary[URI] = Arbitrary {
+    def idGen = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString)
+    for {
+      scheme <- idGen
+      ssp <- idGen
+      fragment <- Gen.option(idGen)
+    } yield new URI(scheme, ssp, fragment.orNull)
+  }
+
+  implicit def uriCoGen: Cogen[URI] =
+    Cogen[String].contramap[URI](_.toString)
+
+  implicit def urlArbitrary: Arbitrary[URL] = Arbitrary {
+    for {
+      protocol <- Gen.oneOf("http", "https")
+      host <- Gen.alphaStr
+      port <- Gen.choose(0, 65535)
+      length <- Gen.choose(0, 5)
+      path <- Gen.listOfN(length, Gen.alphaStr)
+    } yield new URL(protocol, host, port, path.mkString("/", "/", ""))
+  }
+
+  implicit def urlCoGen: Cogen[URL] =
+    Cogen[String].contramap[URL](_.toString)
 }

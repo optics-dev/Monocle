@@ -20,6 +20,8 @@ class StringsSpec extends MonocleSuite {
   checkAll("String to Int"     , PrismTests(stringToInt))
   checkAll("String to Long"    , PrismTests(stringToLong))
   checkAll("String to UUID"    , PrismTests(stringToUUID))
+  checkAll("String to URI"     , PrismTests(stringToURI))
+  checkAll("String to URL"     , PrismTests(stringToURL))
 
   checkAll("plated String", TraversalTests(plate[String]))
 
