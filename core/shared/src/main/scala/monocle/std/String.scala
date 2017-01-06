@@ -1,6 +1,6 @@
 package monocle.std
 
-import java.net.{URI, URL}
+import java.net.URI
 import java.util.UUID
 
 import monocle.{Iso, Prism}
@@ -12,7 +12,7 @@ import scalaz.syntax.traverse._
 
 object string extends StringOptics
 
-trait StringOptics {
+trait StringOptics extends PlatformSpecificStringOptics {
 
   val stringToList: Iso[String, List[Char]] =
     Iso((_: String).toList)(_.mkString)
@@ -34,9 +34,6 @@ trait StringOptics {
 
   val stringToURI: Prism[String, URI] =
     Prism{s: String => Try(new URI(s)).toOption}(_.toString)
-
-  val stringToURL: Prism[String, URL] =
-    Prism{s: String => Try(new URL(s)).toOption}(_.toString)
 
   private def parseLong(s: String): Option[Long] = {
     // we reject cases where String will be an invalid Prism according 2nd Prism law
