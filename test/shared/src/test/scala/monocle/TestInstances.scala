@@ -199,7 +199,7 @@ trait TestInstances extends PlatformSpecificTestInstances {
     Cogen[(Long, Long)].contramap[UUID]((u: UUID) => (u.getMostSignificantBits, u.getLeastSignificantBits))
 
   implicit def uriArbitrary: Arbitrary[URI] = Arbitrary {
-    def idGen = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString)
+    val idGen = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString)
     for {
       scheme <- idGen
       ssp <- idGen
