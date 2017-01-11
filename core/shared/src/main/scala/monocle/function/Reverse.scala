@@ -12,9 +12,8 @@ abstract class Reverse[S, A] extends Serializable {
 }
 
 trait ReverseFunctions {
-  def reverseFromReverseFunction[S](_reverse: S => S): Reverse[S, S] = new Reverse[S, S] {
-    val reverse = Iso(_reverse)(_reverse)
-  }
+  @deprecated("use Reverse.fromReverseFunction", since = "1.4.0")
+  def reverseFromReverseFunction[S](_reverse: S => S): Reverse[S, S] = Reverse.fromReverseFunction(_reverse)
 
   def reverse[S, A](implicit ev: Reverse[S, A]): Iso[S, A] = ev.reverse
 
@@ -22,18 +21,22 @@ trait ReverseFunctions {
 }
 
 object Reverse extends ReverseFunctions {
+  def fromReverseFunction[S](_reverse: S => S): Reverse[S, S] = new Reverse[S, S] {
+    val reverse = Iso(_reverse)(_reverse)
+  }
+
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
 
   implicit def listReverse[A]: Reverse[List[A], List[A]] =
-    reverseFromReverseFunction(_.reverse)
+    fromReverseFunction(_.reverse)
 
   implicit def streamReverse[A]: Reverse[Stream[A], Stream[A]] =
-    reverseFromReverseFunction(_.reverse)
+    fromReverseFunction(_.reverse)
 
   implicit val stringReverse: Reverse[String, String] =
-    reverseFromReverseFunction(_.reverse)
+    fromReverseFunction(_.reverse)
 
   implicit def tuple1Reverse[A]: Reverse[Tuple1[A], Tuple1[A]] = new Reverse[Tuple1[A], Tuple1[A]] {
     val reverse = Iso.id[Tuple1[A]]
@@ -60,7 +63,7 @@ object Reverse extends ReverseFunctions {
   }
 
   implicit def vectorReverse[A]: Reverse[Vector[A], Vector[A]] =
-    reverseFromReverseFunction(_.reverse)
+    fromReverseFunction(_.reverse)
 
   /************************************************************************************************/
   /** Scalaz instances                                                                            */
@@ -68,10 +71,10 @@ object Reverse extends ReverseFunctions {
   import scalaz.{IList, NonEmptyList, Tree}
 
   implicit def iListReverse[A]: Reverse[IList[A], IList[A]] =
-    reverseFromReverseFunction(_.reverse)
+    fromReverseFunction(_.reverse)
 
   implicit def nelReverse[A]: Reverse[NonEmptyList[A], NonEmptyList[A]] =
-    reverseFromReverseFunction(_.reverse)
+    fromReverseFunction(_.reverse)
 
   implicit def treeReverse[A]: Reverse[Tree[A], Tree[A]] = new Reverse[Tree[A], Tree[A]] {
     val reverse = Iso[Tree[A], Tree[A]](reverseTree)(reverseTree)

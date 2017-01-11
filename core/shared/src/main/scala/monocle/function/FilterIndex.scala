@@ -21,12 +21,9 @@ abstract class FilterIndex[S, I, A] extends Serializable {
 trait FilterIndexFunctions {
   def filterIndex[S, I, A](predicate: I => Boolean)(implicit ev: FilterIndex[S, I, A]): Traversal[S, A] = ev.filterIndex(predicate)
 
-  def traverseFilterIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] = new FilterIndex[S[A], Int, A]{
-    def filterIndex(predicate: Int => Boolean) = new Traversal[S[A], A] {
-      def modifyF[F[_]: Applicative](f: A => F[A])(s: S[A]): F[S[A]] =
-        zipWithIndex(s).traverse { case (a, j) => if(predicate(j)) f(a) else Applicative[F].point(a) }
-    }
-  }
+  @deprecated("use FilterIndex.fromTraverse", since = "1.4.0")
+  def traverseFilterIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] =
+    FilterIndex.fromTraverse(zipWithIndex)
 }
 
 object FilterIndex extends FilterIndexFunctions {
@@ -34,6 +31,13 @@ object FilterIndex extends FilterIndexFunctions {
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: FilterIndex[A, I, B]): FilterIndex[S, I, B] = new FilterIndex[S, I, B] {
     def filterIndex(predicate: I => Boolean): Traversal[S, B] =
       iso composeTraversal ev.filterIndex(predicate)
+  }
+
+  def fromTraverse[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] = new FilterIndex[S[A], Int, A]{
+    def filterIndex(predicate: Int => Boolean) = new Traversal[S[A], A] {
+      def modifyF[F[_]: Applicative](f: A => F[A])(s: S[A]): F[S[A]] =
+        zipWithIndex(s).traverse { case (a, j) => if(predicate(j)) f(a) else Applicative[F].point(a) }
+    }
   }
 
   /************************************************************************************************/
@@ -44,7 +48,7 @@ object FilterIndex extends FilterIndexFunctions {
   import scalaz.std.vector._
 
   implicit def listFilterIndex[A]: FilterIndex[List[A], Int, A] =
-    traverseFilterIndex(_.zipWithIndex)
+    fromTraverse(_.zipWithIndex)
 
   implicit def mapFilterIndex[K, V]: FilterIndex[Map[K,V], K, V] = new FilterIndex[Map[K, V], K, V] {
     import scalaz.syntax.applicative._
@@ -57,7 +61,7 @@ object FilterIndex extends FilterIndexFunctions {
   }
 
   implicit def streamFilterIndex[A]: FilterIndex[Stream[A], Int, A] =
-    traverseFilterIndex(_.zipWithIndex)
+    fromTraverse(_.zipWithIndex)
 
   implicit val stringFilterIndex: FilterIndex[String, Int, Char] = new FilterIndex[String, Int, Char]{
     def filterIndex(predicate: Int => Boolean) =
@@ -65,7 +69,7 @@ object FilterIndex extends FilterIndexFunctions {
   }
 
   implicit def vectorFilterIndex[A]: FilterIndex[Vector[A], Int, A] =
-    traverseFilterIndex(_.zipWithIndex)
+    fromTraverse(_.zipWithIndex)
 
   /************************************************************************************************/
   /** Scalaz instances                                                                            */
@@ -73,7 +77,7 @@ object FilterIndex extends FilterIndexFunctions {
   import scalaz.{==>>, IList, NonEmptyList, Order}
 
   implicit def iListFilterIndex[A]: FilterIndex[IList[A], Int, A] =
-    traverseFilterIndex(_.zipWithIndex)
+    fromTraverse(_.zipWithIndex)
 
   implicit def iMapFilterIndex[K: Order, V]: FilterIndex[K ==>> V, K, V] = new FilterIndex[K ==>> V, K, V] {
     import scalaz.syntax.applicative._
@@ -86,5 +90,5 @@ object FilterIndex extends FilterIndexFunctions {
   }
 
   implicit def nelFilterIndex[A]: FilterIndex[NonEmptyList[A], Int, A] =
-    traverseFilterIndex(_.zipWithIndex)
+    fromTraverse(_.zipWithIndex)
 }
