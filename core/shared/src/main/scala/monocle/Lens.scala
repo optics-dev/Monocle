@@ -86,14 +86,6 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  @deprecated("use choice", since = "1.2.0")
-  @inline final def sum[S1, T1](other: PLens[S1, T1, A, B]): PLens[S \/ S1, T \/ T1, A, B] =
-    choice(other)
-
-  @deprecated("use split", since = "1.2.0")
-  @inline final def product[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
-    split(other)
-
   /***********************************************************/
   /** Compose methods between a [[PLens]] and another Optics */
   /***********************************************************/

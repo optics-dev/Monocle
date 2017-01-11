@@ -48,14 +48,6 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def right[C]: Getter[C \/ S, C \/ A] =
     Getter[C \/ S, C \/ A](_.map(get))
 
-  @deprecated("use choice", "1.2.0")
-  @inline final def sum[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
-    choice(other)
-
-  @deprecated("use split", "1.2.0")
-  @inline final def product[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
-    split(other)
-
   /*************************************************************/
   /** Compose methods between a [[Getter]] and another Optics  */
   /*************************************************************/

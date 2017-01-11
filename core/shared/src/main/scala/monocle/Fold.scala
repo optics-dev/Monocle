@@ -87,10 +87,6 @@ abstract class Fold[S, A] extends Serializable { self =>
         s.fold(c => f(\/.left(c)), self.foldMap(a => f(\/.right(a))))
     }
 
-  @deprecated("use choice", since = "1.2.0")
-  @inline final def sum[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
-    choice(other)
-
   /**********************************************************/
   /** Compose methods between a [[Fold]] and another Optics */
   /**********************************************************/
