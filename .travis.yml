@@ -30,7 +30,7 @@ env:
   matrix:
     - TARGET=JVM PRE=test:compile
     - TARGET=JS  PRE=test:fastOptJS
-  sudo: false
+sudo: true
 cache:
   directories:
     - $HOME/.ivy2/cache
