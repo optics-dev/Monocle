@@ -7,6 +7,23 @@ position: 5
 
 ## Release Notes
 
+# 1.4.0
+
+> 14 January 2016
+
+### Addition
+
+-   add `Each` instance for `Try`, `Either`, `scalaz.\/`, `scalaz.Validation` [#472](https://github.com/julien-truffaut/Monocle/pull/472) and [#476](https://github.com/julien-truffaut/Monocle/pull/476) (thanks to [n4to4](https://github.com/n4to4))
+-   add `Unzip` instance for `Lens`, `Fold`, `Optional`, `Traversal`, `Setter` [#474](https://github.com/julien-truffaut/Monocle/pull/474) (thanks to [n4to4](https://github.com/n4to4))
+-   add refined `startsWith` and `endWith` [#480](https://github.com/julien-truffaut/Monocle/pull/480) and [#483](https://github.com/julien-truffaut/Monocle/pull/483) (thanks to [valydia](https://github.com/valydia), [mrcmatuszak](https://github.com/mrcmatuszak) and [fthomas](https://github.com/fthomas))
+-   add `uuid`, `url`, `uri` [#487](https://github.com/julien-truffaut/Monocle/pull/487) and [#490](https://github.com/julien-truffaut/Monocle/pull/490) (thanks to [mjjc](https://github.com/mjjc) and [n4to4](https://github.com/n4to4))
+
+### Other
+
+-   deprecate global constructor of typeclasses [#478](https://github.com/julien-truffaut/Monocle/pull/478)
+-   remove deprecated methods `sum` and `product` [#479](https://github.com/julien-truffaut/Monocle/pull/479)
+-   execute packageSrc in travis-ci to avoid regressing like [#492](https://github.com/julien-truffaut/Monocle/pull/492) [#494](https://github.com/julien-truffaut/Monocle/pull/494) (thanks to [xuwei-k](https://github.com/xuwei-k))
+
 # 1.4.0-M2
 
 > 23 December 2016
