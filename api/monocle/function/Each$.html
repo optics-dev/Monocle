@@ -565,9 +565,9 @@ Snoc1 is like Snoc but for types that have *always* an init and a last element, 
               
         </dd></dl></div>
     </li><li name="monocle.function.Each#cofreeEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="cofreeEach[S[_],A](implicitevidence$2:scalaz.Traverse[S]):monocle.function.Each[scalaz.Cofree[S,A],A]"></a><a id="cofreeEach[S[_],A](Traverse[S]):Each[Cofree[S,A],A]"></a>
+      <a id="cofreeEach[S[_],A](implicitevidence$3:scalaz.Traverse[S]):monocle.function.Each[scalaz.Cofree[S,A],A]"></a><a id="cofreeEach[S[_],A](Traverse[S]):Each[Cofree[S,A],A]"></a>
       <span class="permalink">
-      <a href="../../monocle/function/Each$.html#cofreeEach[S[_],A](implicitevidence$2:scalaz.Traverse[S]):monocle.function.Each[scalaz.Cofree[S,A],A]" title="Permalink">
+      <a href="../../monocle/function/Each$.html#cofreeEach[S[_],A](implicitevidence$3:scalaz.Traverse[S]):monocle.function.Each[scalaz.Cofree[S,A],A]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -577,6 +577,22 @@ Snoc1 is like Snoc but for types that have *always* an init and a last element, 
       </span>
       <span class="symbol">
         <span class="name">cofreeEach</span><span class="tparams">[<span name="S">S<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scalaz.Traverse">Traverse</span>[<span class="extype" name="monocle.function.Each.cofreeEach.S">S</span>]</span>)</span><span class="result">: <a href="Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scalaz.Cofree">Cofree</span>[<span class="extype" name="monocle.function.Each.cofreeEach.S">S</span>, <span class="extype" name="monocle.function.Each.cofreeEach.A">A</span>], <span class="extype" name="monocle.function.Each.cofreeEach.A">A</span>]</span>
+      </span>
+      
+      
+    </li><li name="monocle.function.Each#disjunctionEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="disjunctionEach[A,B]:monocle.function.Each[scalaz.\/[A,B],B]"></a><a id="disjunctionEach[A,B]:Each[\/[A,B],B]"></a>
+      <span class="permalink">
+      <a href="../../monocle/function/Each$.html#disjunctionEach[A,B]:monocle.function.Each[scalaz.\/[A,B],B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">disjunctionEach</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result">: <a href="Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scalaz.\/">\/</span>[<span class="extype" name="monocle.function.Each.disjunctionEach.A">A</span>, <span class="extype" name="monocle.function.Each.disjunctionEach.B">B</span>], <span class="extype" name="monocle.function.Each.disjunctionEach.B">B</span>]</span>
       </span>
       
       
@@ -596,6 +612,22 @@ Snoc1 is like Snoc but for types that have *always* an init and a last element, 
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EachFunctions.html" class="extype" name="monocle.function.EachFunctions">EachFunctions</a></dd></dl></div>
+    </li><li name="monocle.function.Each#eitherEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="eitherEach[A,B]:monocle.function.Each[Either[A,B],B]"></a><a id="eitherEach[A,B]:Each[Either[A,B],B]"></a>
+      <span class="permalink">
+      <a href="../../monocle/function/Each$.html#eitherEach[A,B]:monocle.function.Each[Either[A,B],B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eitherEach</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result">: <a href="Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scala.Either">Either</span>[<span class="extype" name="monocle.function.Each.eitherEach.A">A</span>, <span class="extype" name="monocle.function.Each.eitherEach.B">B</span>], <span class="extype" name="monocle.function.Each.eitherEach.B">B</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -666,6 +698,22 @@ Snoc1 is like Snoc but for types that have *always* an init and a last element, 
       </span>
       
       <p class="shortcomment cmt">lift an instance of <a href="Each.html" class="extype" name="monocle.function.Each">Each</a> using an <a href="../index.html#Iso[S,A]=monocle.PIso[S,S,A,A]" class="extmbr" name="monocle.Iso">Iso</a></p>
+    </li><li name="monocle.function.Each#fromTraverse" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fromTraverse[S[_],A](implicitevidence$2:scalaz.Traverse[S]):monocle.function.Each[S[A],A]"></a><a id="fromTraverse[S[_],A](Traverse[S]):Each[S[A],A]"></a>
+      <span class="permalink">
+      <a href="../../monocle/function/Each$.html#fromTraverse[S[_],A](implicitevidence$2:scalaz.Traverse[S]):monocle.function.Each[S[A],A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fromTraverse</span><span class="tparams">[<span name="S">S<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scalaz.Traverse">Traverse</span>[<span class="extype" name="monocle.function.Each.fromTraverse.S">S</span>]</span>)</span><span class="result">: <a href="Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="monocle.function.Each.fromTraverse.S">S</span>[<span class="extype" name="monocle.function.Each.fromTraverse.A">A</span>], <span class="extype" name="monocle.function.Each.fromTraverse.A">A</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -954,22 +1002,6 @@ Snoc1 is like Snoc but for types that have *always* an init and a last element, 
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="monocle.function.EachFunctions#traverseEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="traverseEach[S[_],A](implicitevidence$1:scalaz.Traverse[S]):monocle.function.Each[S[A],A]"></a><a id="traverseEach[S[_],A](Traverse[S]):Each[S[A],A]"></a>
-      <span class="permalink">
-      <a href="../../monocle/function/Each$.html#traverseEach[S[_],A](implicitevidence$1:scalaz.Traverse[S]):monocle.function.Each[S[A],A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">traverseEach</span><span class="tparams">[<span name="S">S<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scalaz.Traverse">Traverse</span>[<span class="extype" name="monocle.function.EachFunctions.traverseEach.S">S</span>]</span>)</span><span class="result">: <a href="Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="monocle.function.EachFunctions.traverseEach.S">S</span>[<span class="extype" name="monocle.function.EachFunctions.traverseEach.A">A</span>], <span class="extype" name="monocle.function.EachFunctions.traverseEach.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EachFunctions.html" class="extype" name="monocle.function.EachFunctions">EachFunctions</a></dd></dl></div>
     </li><li name="monocle.function.Each#treeEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="treeEach[A]:monocle.function.Each[scalaz.Tree[A],A]"></a><a id="treeEach[A]:Each[Tree[A],A]"></a>
       <span class="permalink">
@@ -983,6 +1015,22 @@ Snoc1 is like Snoc but for types that have *always* an init and a last element, 
       </span>
       <span class="symbol">
         <span class="name">treeEach</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scalaz.Tree">Tree</span>[<span class="extype" name="monocle.function.Each.treeEach.A">A</span>], <span class="extype" name="monocle.function.Each.treeEach.A">A</span>]</span>
+      </span>
+      
+      
+    </li><li name="monocle.function.Each#tryEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tryEach[A]:monocle.function.Each[scala.util.Try[A],A]"></a><a id="tryEach[A]:Each[Try[A],A]"></a>
+      <span class="permalink">
+      <a href="../../monocle/function/Each$.html#tryEach[A]:monocle.function.Each[scala.util.Try[A],A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tryEach</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="monocle.function.Each.tryEach.A">A</span>], <span class="extype" name="monocle.function.Each.tryEach.A">A</span>]</span>
       </span>
       
       
@@ -1082,6 +1130,22 @@ Snoc1 is like Snoc but for types that have *always* an init and a last element, 
       </span>
       
       
+    </li><li name="monocle.function.Each#validationEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="validationEach[A,B]:monocle.function.Each[scalaz.Validation[A,B],B]"></a><a id="validationEach[A,B]:Each[Validation[A,B],B]"></a>
+      <span class="permalink">
+      <a href="../../monocle/function/Each$.html#validationEach[A,B]:monocle.function.Each[scalaz.Validation[A,B],B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">validationEach</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result">: <a href="Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="scalaz.Validation">Validation</span>[<span class="extype" name="monocle.function.Each.validationEach.A">A</span>, <span class="extype" name="monocle.function.Each.validationEach.B">B</span>], <span class="extype" name="monocle.function.Each.validationEach.B">B</span>]</span>
+      </span>
+      
+      
     </li><li name="monocle.function.Each#vectorEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="vectorEach[A]:monocle.function.Each[Vector[A],A]"></a><a id="vectorEach[A]:Each[Vector[A],A]"></a>
       <span class="permalink">
@@ -1170,7 +1234,29 @@ Snoc1 is like Snoc but for types that have *always* an init and a last element, 
 
         
 
-        
+        <div class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="monocle.function.EachFunctions#traverseEach" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="traverseEach[S[_],A](implicitevidence$1:scalaz.Traverse[S]):monocle.function.Each[S[A],A]"></a><a id="traverseEach[S[_],A](Traverse[S]):Each[S[A],A]"></a>
+      <span class="permalink">
+      <a href="../../monocle/function/Each$.html#traverseEach[S[_],A](implicitevidence$1:scalaz.Traverse[S]):monocle.function.Each[S[A],A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 1.4.0) use Each.fromTraverse">traverseEach</span><span class="tparams">[<span name="S">S<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scalaz.Traverse">Traverse</span>[<span class="extype" name="monocle.function.EachFunctions.traverseEach.S">S</span>]</span>)</span><span class="result">: <a href="Each.html" class="extype" name="monocle.function.Each">Each</a>[<span class="extype" name="monocle.function.EachFunctions.traverseEach.S">S</span>[<span class="extype" name="monocle.function.EachFunctions.traverseEach.A">A</span>], <span class="extype" name="monocle.function.EachFunctions.traverseEach.A">A</span>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EachFunctions.html" class="extype" name="monocle.function.EachFunctions">EachFunctions</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.4.0)</i> use Each.fromTraverse</p></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

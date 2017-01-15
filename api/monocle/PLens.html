@@ -382,7 +382,7 @@ an additional parameter than reverseGet.</p><p><a href="" class="extype" name="m
 a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
 <a href="index.html#Lens[S,A]=monocle.PLens[S,S,A,A]" class="extmbr" name="monocle.Lens">Lens</a> is a type alias for <a href="" class="extype" name="monocle.PLens">PLens</a> restricted to monomorphic updates:</p><pre><span class="kw">type</span> Lens[S, A] = PLens[S, S, A, A]</pre><p>A <a href="" class="extype" name="monocle.PLens">PLens</a> is also a valid <a href="Getter.html" class="extype" name="monocle.Getter">Getter</a>, <a href="Fold.html" class="extype" name="monocle.Fold">Fold</a>, <a href="POptional.html" class="extype" name="monocle.POptional">POptional</a>,
 <a href="PTraversal.html" class="extype" name="monocle.PTraversal">PTraversal</a> and <a href="PSetter.html" class="extype" name="monocle.PSetter">PSetter</a></p><p>Typically a <a href="" class="extype" name="monocle.PLens">PLens</a> or <a href="index.html#Lens[S,A]=monocle.PLens[S,S,A,A]" class="extmbr" name="monocle.Lens">Lens</a> can be defined between a Product
-(e.g. case class, tuple, HList) and one of it is component.
+(e.g. case class, tuple, HList) and one of its component.
 </p></div><dl class="paramcmts block"><dt class="tparam">S</dt><dd class="cmt"><p>the source of a <a href="" class="extype" name="monocle.PLens">PLens</a></p></dd><dt class="tparam">T</dt><dd class="cmt"><p>the modified source of a <a href="" class="extype" name="monocle.PLens">PLens</a></p></dd><dt class="tparam">A</dt><dd class="cmt"><p>the target of a <a href="" class="extype" name="monocle.PLens">PLens</a></p></dd><dt class="tparam">B</dt><dd class="cmt"><p>the modified target of a <a href="" class="extype" name="monocle.PLens">PLens</a></p></dd></dl><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="monocle.PLens">PLens</a>[<span class="extype" name="monocle.PLens.S">S</span>, <span class="extype" name="monocle.PLens.T">T</span>, <span class="extype" name="monocle.PLens.A">A</span>, <span class="extype" name="monocle.PLens.B">B</span>]</dd><dt>Source</dt><dd><a href="https://github.com/julien-truffaut/Monocle/tree/master/core/shared/src/main/scala/monocle/Lens.scala" target="_blank">Lens.scala</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="law/LensLaws.html" class="extype" name="monocle.law.LensLaws">monocle.law.LensLaws</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -1332,52 +1332,7 @@ a type <code>A</code> to <code>B</code> and <code>S</code> to <code>T</code>.
 
         
 
-        <div class="values members">
-              <h3>Deprecated Value Members</h3>
-              <ol><li name="monocle.PLens#product" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="product[S1,T1,A1,B1](other:monocle.PLens[S1,T1,A1,B1]):monocle.PLens[(S,S1),(T,T1),(A,A1),(B,B1)]"></a><a id="product[S1,T1,A1,B1](PLens[S1,T1,A1,B1]):PLens[(S,S1),(T,T1),(A,A1),(B,B1)]"></a>
-      <span class="permalink">
-      <a href="../monocle/PLens.html#product[S1,T1,A1,B1](other:monocle.PLens[S1,T1,A1,B1]):monocle.PLens[(S,S1),(T,T1),(A,A1),(B,B1)]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 1.2.0) use split">product</span><span class="tparams">[<span name="S1">S1</span>, <span name="T1">T1</span>, <span name="A1">A1</span>, <span name="B1">B1</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="monocle.PLens">PLens</a>[<span class="extype" name="monocle.PLens.product.S1">S1</span>, <span class="extype" name="monocle.PLens.product.T1">T1</span>, <span class="extype" name="monocle.PLens.product.A1">A1</span>, <span class="extype" name="monocle.PLens.product.B1">B1</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.PLens">PLens</a>[(<span class="extype" name="monocle.PLens.S">S</span>, <span class="extype" name="monocle.PLens.product.S1">S1</span>), (<span class="extype" name="monocle.PLens.T">T</span>, <span class="extype" name="monocle.PLens.product.T1">T1</span>), (<span class="extype" name="monocle.PLens.A">A</span>, <span class="extype" name="monocle.PLens.product.A1">A1</span>), (<span class="extype" name="monocle.PLens.B">B</span>, <span class="extype" name="monocle.PLens.product.B1">B1</span>)]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-                <span class="name">@inline</span><span class="args">()</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.2.0)</i> use split</p></dd></dl></div>
-    </li><li name="monocle.PLens#sum" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="sum[S1,T1](other:monocle.PLens[S1,T1,A,B]):monocle.PLens[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]"></a><a id="sum[S1,T1](PLens[S1,T1,A,B]):PLens[\/[S,S1],\/[T,T1],A,B]"></a>
-      <span class="permalink">
-      <a href="../monocle/PLens.html#sum[S1,T1](other:monocle.PLens[S1,T1,A,B]):monocle.PLens[scalaz.\/[S,S1],scalaz.\/[T,T1],A,B]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 1.2.0) use choice">sum</span><span class="tparams">[<span name="S1">S1</span>, <span name="T1">T1</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="monocle.PLens">PLens</a>[<span class="extype" name="monocle.PLens.sum.S1">S1</span>, <span class="extype" name="monocle.PLens.sum.T1">T1</span>, <span class="extype" name="monocle.PLens.A">A</span>, <span class="extype" name="monocle.PLens.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="monocle.PLens">PLens</a>[<span class="extype" name="scalaz.\/">\/</span>[<span class="extype" name="monocle.PLens.S">S</span>, <span class="extype" name="monocle.PLens.sum.S1">S1</span>], <span class="extype" name="scalaz.\/">\/</span>[<span class="extype" name="monocle.PLens.T">T</span>, <span class="extype" name="monocle.PLens.sum.T1">T1</span>], <span class="extype" name="monocle.PLens.A">A</span>, <span class="extype" name="monocle.PLens.B">B</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-                <span class="name">@inline</span><span class="args">()</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.2.0)</i> use choice</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
         </div>
 
         <div id="inheritedMembers">

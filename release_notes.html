@@ -1,5 +1,28 @@
 <html><head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Monocle</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Optics library for Scala" /><meta name="author" content="com.github.julien-truffaut" /><meta name="og:image" content="/Monocle/img/poster.png" /><meta name="og:title" content="Monocle" /><meta name="og:site_name" content="Monocle" /><meta name="og:url" content="http://julien-truffaut.github.io/Monocle" /><meta name="og:type" content="website" /><meta name="og:description" content="Optics library for Scala" /><meta name="twitter:image" content="/Monocle/img/poster.png" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:site" content="" /><link rel="icon" type="image/png" href="/Monocle/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/Monocle/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/Monocle/css/style.css" /><link rel="stylesheet" href="/Monocle/css/palette.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/Monocle/" class="brand"><div class="brand-wrapper" style="background:url('/Monocle/img/sidebar_brand.png') no-repeat"><span>Monocle</span></div></a></li> <li><a href="/Monocle/modules.html" class="">Modules</a></li>    <li><a href="/Monocle/optics.html" class="">Optics ...</a></li>  <li><a href="/Monocle/typeclasses.html" class="">Typeclasses ...</a></li>  <li><a href="/Monocle/examples.html" class="">Examples ...</a></li>  <li><a href="/Monocle/faq.html" class="">FAQ</a></li> <li><a href="/Monocle/release_notes.html" class=" active ">Release Notes</a></li> <li><a href="/Monocle/learning_resources.html" class="">Learning Resources</a></li> <li><a href="/Monocle/adopters.html" class="">Adopters</a></li> <li><a href="/Monocle/unsafe_module.html" class="">Unsafe Module</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Monocle Optics library for Scala');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Monocle Optics library for Scala');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="julien-truffaut" data-github-repo="Monocle"><div class="content-wrapper"><section><h2 id="release-notes">Release Notes</h2>
 
+<h1 id="section">1.4.0</h1>
+
+<blockquote>
+  <p>14 January 2016</p>
+</blockquote>
+
+<h3 id="addition">Addition</h3>
+
+<ul>
+  <li>add <code class="highlighter-rouge">Each</code> instance for <code class="highlighter-rouge">Try</code>, <code class="highlighter-rouge">Either</code>, <code class="highlighter-rouge">scalaz.\/</code>, <code class="highlighter-rouge">scalaz.Validation</code> <a href="https://github.com/julien-truffaut/Monocle/pull/472">#472</a> and <a href="https://github.com/julien-truffaut/Monocle/pull/476">#476</a> (thanks to <a href="https://github.com/n4to4">n4to4</a>)</li>
+  <li>add <code class="highlighter-rouge">Unzip</code> instance for <code class="highlighter-rouge">Lens</code>, <code class="highlighter-rouge">Fold</code>, <code class="highlighter-rouge">Optional</code>, <code class="highlighter-rouge">Traversal</code>, <code class="highlighter-rouge">Setter</code> <a href="https://github.com/julien-truffaut/Monocle/pull/474">#474</a> (thanks to <a href="https://github.com/n4to4">n4to4</a>)</li>
+  <li>add refined <code class="highlighter-rouge">startsWith</code> and <code class="highlighter-rouge">endWith</code> <a href="https://github.com/julien-truffaut/Monocle/pull/480">#480</a> and <a href="https://github.com/julien-truffaut/Monocle/pull/483">#483</a> (thanks to <a href="https://github.com/valydia">valydia</a>, <a href="https://github.com/mrcmatuszak">mrcmatuszak</a> and <a href="https://github.com/fthomas">fthomas</a>)</li>
+  <li>add <code class="highlighter-rouge">uuid</code>, <code class="highlighter-rouge">url</code>, <code class="highlighter-rouge">uri</code> <a href="https://github.com/julien-truffaut/Monocle/pull/487">#487</a> and <a href="https://github.com/julien-truffaut/Monocle/pull/490">#490</a> (thanks to <a href="https://github.com/mjjc">mjjc</a> and <a href="https://github.com/n4to4">n4to4</a>)</li>
+</ul>
+
+<h3 id="other">Other</h3>
+
+<ul>
+  <li>deprecate global constructor of typeclasses <a href="https://github.com/julien-truffaut/Monocle/pull/478">#478</a></li>
+  <li>remove deprecated methods <code class="highlighter-rouge">sum</code> and <code class="highlighter-rouge">product</code> <a href="https://github.com/julien-truffaut/Monocle/pull/479">#479</a></li>
+  <li>execute packageSrc in travis-ci to avoid regressing like <a href="https://github.com/julien-truffaut/Monocle/pull/492">#492</a> <a href="https://github.com/julien-truffaut/Monocle/pull/494">#494</a> (thanks to <a href="https://github.com/xuwei-k">xuwei-k</a>)</li>
+</ul>
+
 <h1 id="m2">1.4.0-M2</h1>
 
 <blockquote>
@@ -20,7 +43,7 @@
   <p>16 December 2016</p>
 </blockquote>
 
-<h3 id="addition">Addition</h3>
+<h3 id="addition-1">Addition</h3>
 
 <ul>
   <li>add macro based syntax for <code class="highlighter-rouge">ApplyLens</code> <a href="https://github.com/julien-truffaut/Monocle/pull/434">#434</a> (thanks to <a href="https://github.com/cvogt">cvogt</a>)</li>
@@ -55,13 +78,13 @@
   <li>add doc for <code class="highlighter-rouge">Traversal</code> <a href="https://github.com/julien-truffaut/Monocle/pull/423">#423</a></li>
 </ul>
 
-<h3 id="other">Other</h3>
+<h3 id="other-1">Other</h3>
 <ul>
   <li><code class="highlighter-rouge">kenji</code> aka <a href="https://github.com/xuwei-k">xuwei-k</a> is now a maintainer</li>
   <li>update build settings for scala.js <a href="https://github.com/julien-truffaut/Monocle/pull/406">#406</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
 </ul>
 
-<h1 id="section">1.3.2</h1>
+<h1 id="section-1">1.3.2</h1>
 
 <blockquote>
   <p>02 November 2016</p>
@@ -73,7 +96,7 @@
   <li>update build settings for scala.js <a href="https://github.com/julien-truffaut/Monocle/pull/406">#406</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino </a>)</li>
 </ul>
 
-<h1 id="section-1">1.3.1</h1>
+<h1 id="section-2">1.3.1</h1>
 
 <blockquote>
   <p>21 October 2016</p>
@@ -83,13 +106,13 @@
   <li>add support for scala 2.12.0-RC2</li>
 </ul>
 
-<h1 id="section-2">1.3.0</h1>
+<h1 id="section-3">1.3.0</h1>
 
 <blockquote>
   <p>18 October 2016</p>
 </blockquote>
 
-<h3 id="addition-1">Addition</h3>
+<h3 id="addition-2">Addition</h3>
 
 <ul>
   <li>add <code class="highlighter-rouge">unsafe</code> module with <code class="highlighter-rouge">select</code> <a href="https://github.com/julien-truffaut/Monocle/pull/394">#394</a> (thanks to <a href="https://github.com/cesartl">cesartl</a>)</li>
@@ -141,13 +164,13 @@
   </tbody>
 </table>
 
-<h1 id="section-3">1.2.2</h1>
+<h1 id="section-4">1.2.2</h1>
 
 <blockquote>
   <p>9 June 2016</p>
 </blockquote>
 
-<h3 id="addition-2">Addition</h3>
+<h3 id="addition-3">Addition</h3>
 
 <ul>
   <li>add <code class="highlighter-rouge">apply</code> methods for <code class="highlighter-rouge">Prism</code> and <code class="highlighter-rouge">Iso</code> <a href="https://github.com/julien-truffaut/Monocle/pull/354">#354</a> (thanks to <a href="https://github.com/sellout">sellout</a>)</li>
@@ -161,13 +184,13 @@
   <li>various improvements from <a href="https://github.com/Unisay">Unisay</a>, <a href="https://github.com/fthomas">fthomas</a> and <a href="https://github.com/amrhassan">amrhassan</a></li>
 </ul>
 
-<h1 id="section-4">1.2.1</h1>
+<h1 id="section-5">1.2.1</h1>
 
 <blockquote>
   <p>13 April 2016</p>
 </blockquote>
 
-<h3 id="addition-3">Addition</h3>
+<h3 id="addition-4">Addition</h3>
 
 <ul>
   <li>support for scala.js <a href="https://github.com/julien-truffaut/Monocle/pull/335">#335</a> (thanks to <a href="https://github.com/japgolly">japgolly</a>)</li>
@@ -194,7 +217,7 @@
   <li>scalaz to 7.2.2</li>
 </ul>
 
-<h1 id="section-5">1.2.0</h1>
+<h1 id="section-6">1.2.0</h1>
 
 <blockquote>
   <p>17 December 2015</p>
@@ -231,7 +254,7 @@
 
 <p>Thanks to all the 14 contributors since <a href="https://github.com/julien-truffaut/Monocle/compare/v1.2.0-M1...v1.2.0-M2">1.2.0-M1</a></p>
 
-<h3 id="addition-4">Addition</h3>
+<h3 id="addition-5">Addition</h3>
 
 <ul>
   <li>add <code class="highlighter-rouge">only</code> <code class="highlighter-rouge">Prism</code> to match a single value <a href="https://github.com/julien-truffaut/Monocle/commit/5f6d414019883045ab5e92ea1a6cc650e1f5e0f5">see</a></li>
@@ -331,7 +354,7 @@ Properties are still defined in <code class="highlighter-rouge">law</code> modul
   <li>kind projector to 0.6.0</li>
 </ul>
 
-<h1 id="section-6">1.1.0</h1>
+<h1 id="section-7">1.1.0</h1>
 
 <blockquote>
   <p>31 Mars 2015</p>
@@ -373,7 +396,7 @@ Properties are still defined in <code class="highlighter-rouge">law</code> modul
   <li>using optics as an infix operator operator requires a single import <code class="highlighter-rouge">monocle.syntax.apply</code> or <code class="highlighter-rouge">monocle.syntax._</code></li>
 </ul>
 
-<h1 id="section-7">1.0.0</h1>
+<h1 id="section-8">1.0.0</h1>
 
 <blockquote>
   <p>14 December 2014</p>
@@ -438,7 +461,7 @@ Properties are still defined in <code class="highlighter-rouge">law</code> modul
   <li><code class="highlighter-rouge">mkLens</code> has been moved to <code class="highlighter-rouge">monocle.macros.internal</code>, i.e. it is not public anymore. Use <code class="highlighter-rouge">Lenser</code> or <code class="highlighter-rouge">@Lenses</code></li>
 </ul>
 
-<h1 id="section-8">0.5.1</h1>
+<h1 id="section-9">0.5.1</h1>
 
 <blockquote>
   <p>29 September 2014</p>
@@ -458,7 +481,7 @@ Properties are still defined in <code class="highlighter-rouge">law</code> modul
   <li><a href="https://github.com/julien-truffaut/Monocle/commit/a544743ca439b485ac2be178f290a85bbf6c2c80">Fix</a> <code class="highlighter-rouge">SafeCast</code> between <code class="highlighter-rouge">String</code> to <code class="highlighter-rouge">Int</code></li>
 </ul>
 
-<h1 id="section-9">0.5.0</h1>
+<h1 id="section-10">0.5.0</h1>
 
 <blockquote>
   <p>03 August 2014</p>
@@ -502,7 +525,7 @@ See <a href="../example/src/test/scala/monocle/LensExample.scala#L43">example</a
   <li>Add <code class="highlighter-rouge">Each</code>, <code class="highlighter-rouge">HeadOption</code>, and <code class="highlighter-rouge">LastOption</code> for <code class="highlighter-rouge">scala.Some</code></li>
 </ul>
 
-<h1 id="section-10">0.4.0</h1>
+<h1 id="section-11">0.4.0</h1>
 
 <blockquote>
   <p>28 May 2014</p>
@@ -551,7 +574,7 @@ elements with a mandatory head, last, tail and init. Implemented on 2-6 tuple an
   <li>Add import for all syntax: <code class="highlighter-rouge">import monocle.syntax._</code></li>
 </ul>
 
-<h1 id="section-11">0.3.0</h1>
+<h1 id="section-12">0.3.0</h1>
 
 <blockquote>
   <p>02 May 2014</p>
@@ -571,7 +594,7 @@ elements with a mandatory head, last, tail and init. Implemented on 2-6 tuple an
     -    Remove <code class="highlighter-rouge">_1</code>, <code class="highlighter-rouge">_2</code>, <code class="highlighter-rouge">_3</code> Lens using shapeless <code class="highlighter-rouge">Generic</code>, since composing <code class="highlighter-rouge">toHList</code> Iso and <code class="highlighter-rouge">Fields</code> Lens is equivalent</li>
 </ul>
 
-<h1 id="section-12">0.2.0</h1>
+<h1 id="section-13">0.2.0</h1>
 
 <blockquote>
   <p>27 April 2014</p>
@@ -608,7 +631,7 @@ add and delete elements. Implemented for Map</li>
   <li>Add documentation in examples</li>
 </ul>
 
-<h1 id="section-13">0.1.0</h1>
+<h1 id="section-14">0.1.0</h1>
 
 <blockquote>
   <p>27 February 2014</p>
