@@ -96,5 +96,16 @@ class LensSpec extends MonocleSuite {
   test("modify") {
     x.modify(_ + 1)(Point(9, 2)) shouldEqual Point(10, 2)
   }
+
+  test("GenLens macro works with private[package] members") {
+    object N {
+      case class A(private[N] val z: Int)
+      val zLens = GenLens[A](_.z)
+    }
+    N.zLens.get(N.A(10)) shouldEqual 10
+    N.zLens.set(5)(N.A(10)) shouldEqual N.A(5)
+
+    "GenLens[N.A](_.z)" shouldNot compile
+  }
   
 }
