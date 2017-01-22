@@ -1,6 +1,6 @@
 package other
 
-import monocle.{Iso, MonocleSuite}
+import monocle.{Iso, MonocleSuite, Prism}
 import monocle.law.discipline.{IsoTests, LensTests, PrismTests}
 import monocle.macros.{GenIso, GenLens, GenPrism}
 import org.scalacheck.Arbitrary.{arbOption => _, _}
@@ -44,6 +44,7 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
   implicit val emptyCaseEq: Equal[EmptyCase] = Equal.equalA[EmptyCase]
   implicit def emptyCaseTypeEq[A]: Equal[EmptyCaseType[A]] = Equal.equalA[EmptyCaseType[A]]
   implicit val bar1Eq: Equal[Bar1] = Equal.equalA[Bar1]
+  implicit val optBar1Eq = scalaz.std.option.optionEqual[Bar1]
   implicit val fooEq: Equal[Foo] = Equal.equalA[Foo]
 
   checkAll("GenIso"                                       , IsoTests(GenIso[Example, Int]))
@@ -69,4 +70,26 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
   testGenIsoFields("empty case class with type param", GenIso.fields[EmptyCaseType[Int]]).expect[Unit]
   testGenIsoFields("case class 1 with type param",     GenIso.fields[ExampleType[Int]]  ).expect[Option[Int]]
   testGenIsoFields("case class 2 with type param",     GenIso.fields[Example2Type[Int]] ).expect[(Int, Option[Int])]
+
+  val exampleIso = Iso[Example, Int](e => e.i){i => Example(i)}
+  val exampleObjectIso = Iso[ExampleObject.type, Unit](_ => ()){_ => ExampleObject}
+  val example2Iso = Iso[Example2, (Long, String)](e => (e.l, e.s)){ case (l, s) => Example2(l, s) }
+
+  test("GenIso equality") {
+    GenIso[Example, Int] shouldEqual exampleIso
+  }
+
+  test("GenIso.unit equality") {
+    GenIso.unit[ExampleObject.type] shouldEqual exampleObjectIso
+  }
+
+  test("GenIso.fields equality") {
+    GenIso.fields[Example2] shouldEqual example2Iso
+  }
+
+  val bar1Prism = Prism.partial[Foo, Bar1]{ case Bar1(s) => Bar1(s) }(_.asInstanceOf[Foo])
+
+  test("GenPrism equality") {
+    GenPrism[Foo, Bar1] shouldEqual bar1Prism
+  }
 }

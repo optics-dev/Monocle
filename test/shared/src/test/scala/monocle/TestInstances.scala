@@ -65,6 +65,20 @@ trait TestInstances extends PlatformSpecificTestInstances {
   implicit def streamCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[Stream, A]] =
     Equal.equal { (a, b) =>  A.equal(a.head, b.head) && a.tail === b.tail }
 
+  implicit def function1Eq[A, B](implicit A: Arbitrary[A], B: Equal[B]) = new Equal[A => B] {
+    val samples = Stream.continually(A.arbitrary.sample).flatten
+    val samplesCount = 50
+
+    override def equal(f: A => B, g: A => B) =
+      samples.take(samplesCount).forall { a => B.equal(f(a), g(a)) }
+  }
+
+  implicit def isoEq[A, B](implicit AtoB: Equal[A => B], BtoA: Equal[B => A]): Equal[Iso[A, B]] =
+    Equal.equal { (a, b) => AtoB.equal(a.get, b.get) && BtoA.equal(a.reverseGet, b.reverseGet) }
+
+  implicit def prismEq[A, B](implicit AtoOptB: Equal[A => Option[B]], BtoA: Equal[B => A]): Equal[Prism[A, B]] =
+    Equal.equal { (a, b) => AtoOptB.equal(a.getOption, b.getOption) && BtoA.equal(a.reverseGet, b.reverseGet) }
+
   // Order instances
 
   implicit val intOrder = Order.fromScalaOrdering[Int]
