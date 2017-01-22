@@ -72,11 +72,16 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
   testGenIsoFields("case class 2 with type param",     GenIso.fields[Example2Type[Int]] ).expect[(Int, Option[Int])]
 
   val exampleIso = Iso[Example, Int](e => e.i){i => Example(i)}
+  val exampleNegIso = Iso[Example, Int](e => -e.i){i => Example(-i)}
   val exampleObjectIso = Iso[ExampleObject.type, Unit](_ => ()){_ => ExampleObject}
   val example2Iso = Iso[Example2, (Long, String)](e => (e.l, e.s)){ case (l, s) => Example2(l, s) }
 
   test("GenIso equality") {
     GenIso[Example, Int] shouldEqual exampleIso
+  }
+
+  test("GenIso inequality") {
+    GenIso[Example, Int] shouldNot equal(exampleNegIso)
   }
 
   test("GenIso.unit equality") {
@@ -88,8 +93,14 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
   }
 
   val bar1Prism = Prism.partial[Foo, Bar1]{ case Bar1(s) => Bar1(s) }(_.asInstanceOf[Foo])
+  val bar1RevPrism = Prism.partial[Foo, Bar1]{ case Bar1(s) => Bar1(s.reverse)}{ case Bar1(s) => Bar1(s.reverse) }
 
   test("GenPrism equality") {
     GenPrism[Foo, Bar1] shouldEqual bar1Prism
   }
+
+  test("GenPrism inequality") {
+    GenPrism[Foo, Bar1] shouldNot equal(bar1RevPrism)
+  }
+
 }
