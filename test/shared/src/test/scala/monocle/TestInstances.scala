@@ -44,6 +44,12 @@ trait TestInstances extends PlatformSpecificTestInstances {
   implicit val uuidEqual       = Equal.equalA[UUID]
   implicit val uriEqual        = Equal.equalA[URI]
 
+  implicit val aritiesEq       = Equal.equalA[Arities]
+  implicit val nullaryEq       = Equal.equalA[Nullary]
+  implicit val unaryEq         = Equal.equalA[Unary]
+  implicit val binaryEq        = Equal.equalA[Binary]
+  implicit val quintaryEq      = Equal.equalA[Quintary]
+
   implicit def optEq[A: Equal] = scalaz.std.option.optionEqual[A]
   implicit def someEq[A: Equal] = Equal.equalA[Some[A]]
   implicit def eitherEq[A: Equal, B: Equal] = scalaz.std.either.eitherEqual[A, B]
@@ -223,4 +229,16 @@ trait TestInstances extends PlatformSpecificTestInstances {
 
   implicit def uriCoGen: Cogen[URI] =
     Cogen[String].contramap[URI](_.toString)
+
+  implicit val nullaryGen: Arbitrary[Nullary] = Arbitrary(Gen.const(Nullary()))
+  implicit val unaryGen: Arbitrary[Unary] = Arbitrary(arbitrary[Int].map(Unary.apply))
+  implicit val binaryGen: Arbitrary[Binary] = Arbitrary(arbitrary[(String, Int)].map((Binary.apply _) tupled))
+  implicit val quintaryGen: Arbitrary[Quintary] = Arbitrary(arbitrary[(Char, Boolean, String, Int, Double)].map((Quintary.apply _) tupled))
+  implicit val aritiesGen: Arbitrary[Arities] =
+    Arbitrary(Gen.oneOf(
+      nullaryGen.arbitrary,
+      unaryGen.arbitrary,
+      binaryGen.arbitrary,
+      quintaryGen.arbitrary
+    ))
 }

@@ -126,6 +126,22 @@ class IsoSpec extends MonocleSuite {
   test("modify") {
     iso.modify(_ + 1)(IntWrapper(0)) shouldEqual IntWrapper(1)
   }
+
+  test("GenIso nullary equality") {
+    GenIso.unit[Nullary] shouldEqual _nullary
+  }
+
+  test("GenIso unary equality") {
+    GenIso[Unary, Int] shouldEqual _unary
+  }
+
+  test("GenIso binary equality") {
+    GenIso.fields[Binary] shouldEqual _binary
+  }
+
+  test("GenIso quintary equality") {
+    GenIso.fields[Quintary] shouldEqual _quintary
+  }
   
 }
 
