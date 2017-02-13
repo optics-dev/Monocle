@@ -6,7 +6,6 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import org.scalajs.sbtplugin.cross.CrossProject
 import sbt.Keys._
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
-import sbtunidoc.Plugin.UnidocKeys._
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
@@ -201,10 +200,10 @@ lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM,
 
 lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
   .enablePlugins(MicrositesPlugin)
+  .enablePlugins(ScalaUnidocPlugin)
   .settings(moduleName := "monocle-docs")
   .settings(monocleSettings)
   .settings(noPublishSettings)
-  .settings(unidocSettings)
   .settings(ghpages.settings)
   .settings(docSettings)
   .settings(tutScalacOptions ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))))
