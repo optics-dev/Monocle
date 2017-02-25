@@ -27,6 +27,9 @@ class LensSpec extends MonocleSuite {
   val s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
   val p = Lens[Example, Point](_.p)(p => ex => ex.copy(p = p))
 
+  implicit def ev = IndexedStoreT.storeTComonadStore[Id.Id, String]
+  val t = Lens.storeFCoalg[Store[String, ?], Example, String](ex => Store(s => ex.copy(s = s), ex.s))
+
   val x = Lens[Point, Int](_.x)(x => p => p.copy(x = x))
   val y = Lens[Point, Int](_.y)(y => p => p.copy(y = y))
   val xy = Lens[Point, (Int, Int)](p => (p.x, p.y))(xy => p => p.copy(x = xy._1, y = xy._2))
@@ -40,6 +43,7 @@ class LensSpec extends MonocleSuite {
   implicit val exampleEq = Equal.equalA[Example]
 
   checkAll("apply Lens", LensTests(s))
+  checkAll("Store-coalgebra Lens", LensTests(t))
   checkAll("GenLens", LensTests(GenLens[Example](_.s)))
   checkAll("GenLens chain", LensTests(GenLens[Example](_.p.x)))
   checkAll("Lenses",  LensTests(Example.s))
@@ -96,5 +100,5 @@ class LensSpec extends MonocleSuite {
   test("modify") {
     x.modify(_ + 1)(Point(9, 2)) shouldEqual Point(10, 2)
   }
-  
+
 }
