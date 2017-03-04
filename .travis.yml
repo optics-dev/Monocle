@@ -44,3 +44,17 @@ install:
   - gem install jekyll -v 3.2.1
 after_success:
 - '[[ $TRAVIS_BRANCH == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]] && { sbt +publish ghpagesPushSite; };'
+matrix:
+  include:
+  - scala: 2.11.8
+    jdk: oraclejdk8
+    sudo: required
+    before_install:
+    - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
+    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    - sudo add-apt-repository -y "deb http://apt.llvm.org/precise/ llvm-toolchain-precise main"
+    - sudo add-apt-repository -y "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-3.7 main"
+    - sudo apt-get update -qq
+    - sudo apt-get install -y libgc-dev clang++-3.7 llvm-3.7 llvm-3.7-dev llvm-3.7-runtime llvm-3.7-tool libunwind7-dev
+    script:
+    - sbt ++$TRAVIS_SCALA_VERSION testNative/run
