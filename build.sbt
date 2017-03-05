@@ -47,7 +47,7 @@ lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"     
 lazy val macroCompat        = Def.setting("org.typelevel"   %%% "macro-compat" % "1.1.1")
 
 lazy val macroVersion = "2.1.0"
-lazy val paradisePlugin = "org.scalamacros" %  "paradise"      % macroVersion cross CrossVersion.full
+lazy val paradisePlugin = "org.scalamacros" % "paradise"       % macroVersion cross CrossVersion.patch
 lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.3" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
@@ -145,8 +145,8 @@ lazy val macros    = crossProject.dependsOn(core)
   .settings(
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect"  % scalaVersion.value,
-      "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
+      scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
+      scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
       macroCompat.value
     ),
     addCompilerPlugin(paradisePlugin),
