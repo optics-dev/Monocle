@@ -60,8 +60,14 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
 
     val strFieldName = c.eval(c.Expr[String](c.untypecheck(fieldName.tree.duplicate)))
 
+    // when using 'private[package] val name' members, they get mangled to 'name$access$number' by the scala compiler
+    // so also accept these
+    def isNameOrMangledFrom(symbolName: String, fieldName: String): Boolean = {
+      symbolName == fieldName || symbolName.startsWith(fieldName + "$access$")
+    }
+
     val fieldMethod = sTpe.decls.collectFirst {
-      case m: MethodSymbol if m.isCaseAccessor && m.name.decodedName.toString == strFieldName => m
+      case m: MethodSymbol if m.isCaseAccessor && isNameOrMangledFrom(m.name.decodedName.toString, strFieldName)  => m
     }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $strFieldName in $sTpe"))
 
     val constructor = sTpe.decls.collectFirst {
