@@ -5,7 +5,7 @@ import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 
-import scalaz.{-\/, Category, Choice, Compose, Equal, Unzip}
+import scalaz.{-\/, Category, Choice, Compose, Equal, FreeAp, IndexedStore, Unzip}
 import scalaz.std.string._
 import scalaz.std.list._
 
@@ -47,6 +47,13 @@ class TraversalSpec extends MonocleSuite {
   // the 7-lenses Traversal generated using applyN
   val traversalN: Traversal[ManyPropObject, Int] = Traversal.applyN(l1,l2,l3,l4,l5,l6,l7)
 
+  // the Traversal generated using PTraversal.apply (no lenses involved)
+  val ptraversalN: Traversal[ManyPropObject, Int] = PTraversal { obj =>
+    (obj.p1 ~ obj.p2 ~ obj.p4 ~ obj.p5 ~ obj.p6 ~ obj.p7 ~ obj.p8) {
+      ManyPropObject(_, _, obj.p3, _, _, _, _, _)
+    }
+  }
+
   // the stub for generating random test objects
   implicit val manyPropObjectGen: Arbitrary[ManyPropObject] = Arbitrary(for {
     p1 <- arbitrary[Int]
@@ -63,7 +70,8 @@ class TraversalSpec extends MonocleSuite {
 
   checkAll("apply2 Traversal", TraversalTests(coordinates))
   checkAll("applyN Traversal", TraversalTests(traversalN))
-  checkAll("fromTraverse Traversal" , TraversalTests(eachLi))
+  checkAll("applyN PTraversal", TraversalTests(ptraversalN))
+  checkAll("fromTraverse Traversal", TraversalTests(eachLi))
 
   checkAll("traversal.asSetter", SetterTests(coordinates.asSetter))
 
