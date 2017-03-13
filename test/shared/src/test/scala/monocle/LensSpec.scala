@@ -26,9 +26,9 @@ class LensSpec extends MonocleSuite {
 
   val s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
   val p = Lens[Example, Point](_.p)(p => ex => ex.copy(p = p))
-
-  implicit def ev = IndexedStoreT.storeTComonadStore[Id.Id, String]
-  val t = Lens.storeFCoalg[Store[String, ?], Example, String](ex => Store(s => ex.copy(s = s), ex.s))
+  val t = PLens.contextCoalg[Example, Example, String, String] { ex =>
+    Store(s => ex.copy(s = s), ex.s)
+  }
 
   val x = Lens[Point, Int](_.x)(x => p => p.copy(x = x))
   val y = Lens[Point, Int](_.y)(y => p => p.copy(y = y))

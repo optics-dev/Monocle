@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.function.fields.{first, second}
-import scalaz.{Applicative, Choice, ComonadStore, Functor, Monoid, Split, Unzip, \/}
+import scalaz.{Applicative, Choice, IndexedStore, Functor, Monoid, Split, Unzip, \/}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
@@ -224,6 +224,12 @@ object PLens extends LensInstances {
     )(t => _.bimap(_ => t, _ => t))
 
   /**
+   * create a [[PLens]] from a context (indexed store) coalgebra.
+   */
+  def contextCoalg[S, T, A, B](f: S => IndexedStore[A, B, T]): PLens[S, T, A, B] =
+    PLens[S, T, A, B](s => f(s).pos)(b => s => f(s).peek(b))
+
+  /**
    * create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
    * @see macro module for methods generating [[PLens]] with less boiler plate
    */
@@ -250,10 +256,6 @@ object Lens {
 
   def codiagonal[S]: Lens[S \/ S, S] =
     PLens.codiagonal
-
-  /** creates a [[Lens]] from a Store comonad coalgebra */
-  def storeFCoalg[F[_], S, A](f: S => F[S])(implicit CS: ComonadStore[F, A]): Lens[S, A] =
-    Lens[S, A](s => CS.pos(f(s)))(a => s => CS.peek(a, f(s)))
 
   /** alias for [[PLens]] apply with a monomorphic set function */
   def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] =
