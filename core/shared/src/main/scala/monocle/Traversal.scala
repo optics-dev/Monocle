@@ -5,10 +5,11 @@ import scalaz.Id.Id
 import scalaz.std.anyVal._
 import scalaz.std.list._
 import scalaz.std.option._
+import scalaz.syntax.functor._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 import scalaz.syntax.tag._
-import scalaz.{Applicative, Choice, Const, Functor, Monoid, Traverse, Unzip, \/}
+import scalaz.{Applicative, Choice, Const, IndexedStore, FreeAp, Functor, Monoid, Traverse, Unzip, \/, ~>}
 
 /**
  * A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
@@ -225,6 +226,13 @@ object PTraversal extends TraversalInstances {
         Applicative[F].apply6(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)), f(get6(s)))(_set(_, _, _, _, _, _, s))
     }
 
+  def apply[S, T, A, B](f: S => FreeAp[IndexedStore[A, B, ?], T]) =
+    new PTraversal[S, T, A, B] {
+      def modifyF[F[_]: Applicative](g: A => F[B])(s: S): F[T] =
+        f(s).foldMap(new (IndexedStore[A, B, ?] ~> F) {
+          def apply[X](is: IndexedStore[A, B, X]) = g(is.pos).map(is.set)
+        })
+    }
 }
 
 object Traversal {
