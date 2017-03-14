@@ -226,7 +226,7 @@ object PLens extends LensInstances {
   /**
    * create a [[PLens]] from a context (indexed store) coalgebra.
    */
-  def contextCoalg[S, T, A, B](f: S => IndexedStore[A, B, T]): PLens[S, T, A, B] =
+  def fromStore[S, T, A, B](f: S => IndexedStore[A, B, T]): PLens[S, T, A, B] =
     PLens[S, T, A, B](s => f(s).pos)(b => s => f(s).peek(b))
 
   /**

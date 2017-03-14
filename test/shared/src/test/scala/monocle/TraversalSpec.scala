@@ -48,7 +48,7 @@ class TraversalSpec extends MonocleSuite {
   val traversalN: Traversal[ManyPropObject, Int] = Traversal.applyN(l1,l2,l3,l4,l5,l6,l7)
 
   // the Traversal generated using PTraversal.apply (no lenses involved)
-  val ptraversalN: Traversal[ManyPropObject, Int] = PTraversal { obj =>
+  val ptraversalN: Traversal[ManyPropObject, Int] = PTraversal.fromStore { obj =>
     (toTraversalBuilder(obj.p1) ~ obj.p2 ~ obj.p4 ~ obj.p5 ~ obj.p6 ~ obj.p7 ~ obj.p8) {
       ManyPropObject(_, _, obj.p3, _, _, _, _, _)
     }

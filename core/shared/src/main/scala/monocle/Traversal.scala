@@ -226,7 +226,7 @@ object PTraversal extends TraversalInstances {
         Applicative[F].apply6(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)), f(get6(s)))(_set(_, _, _, _, _, _, s))
     }
 
-  def apply[S, T, A, B](f: S => FreeAp[IndexedStore[A, B, ?], T]) =
+  def fromStore[S, T, A, B](f: S => FreeAp[IndexedStore[A, B, ?], T]) =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](g: A => F[B])(s: S): F[T] =
         f(s).foldMap(new (IndexedStore[A, B, ?] ~> F) {

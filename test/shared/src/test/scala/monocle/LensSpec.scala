@@ -26,7 +26,7 @@ class LensSpec extends MonocleSuite {
 
   val s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
   val p = Lens[Example, Point](_.p)(p => ex => ex.copy(p = p))
-  val t = PLens.contextCoalg[Example, Example, String, String] { ex =>
+  val t = PLens.fromStore[Example, Example, String, String] { ex =>
     Store(s => ex.copy(s = s), ex.s)
   }
 
