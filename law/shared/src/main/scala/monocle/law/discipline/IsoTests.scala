@@ -6,7 +6,7 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 object IsoTests extends Laws {
 

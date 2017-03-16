@@ -3,8 +3,8 @@ package monocle.function
 import monocle.{Iso, Traversal}
 
 import scala.annotation.implicitNotFound
-import scalaz.syntax.traverse._
-import scalaz.{Applicative, Traverse}
+import cats.syntax.traverse._
+import cats.{Applicative, Traverse}
 
 /**
  * Typeclass that defines a [[Traversal]] from an `S` to all its elements `A` whose index `I` in `S` satisfies the predicate
@@ -43,19 +43,21 @@ object FilterIndex extends FilterIndexFunctions {
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  import scalaz.std.list._
-  import scalaz.std.stream._
-  import scalaz.std.vector._
+  import cats.instances.list._
+  import cats.instances.stream._
+  import cats.instances.vector._
 
   implicit def listFilterIndex[A]: FilterIndex[List[A], Int, A] =
     fromTraverse(_.zipWithIndex)
 
   implicit def mapFilterIndex[K, V]: FilterIndex[Map[K,V], K, V] = new FilterIndex[Map[K, V], K, V] {
-    import scalaz.syntax.applicative._
+    import cats.syntax.applicative._
+    import cats.syntax.functor._
+
     def filterIndex(predicate: K => Boolean) = new Traversal[Map[K, V], V] {
       def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
         s.toList.traverse{ case (k, v) =>
-          (if(predicate(k)) f(v) else v.pure[F]).strengthL(k)
+          (if(predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
         }.map(_.toMap)
     }
   }
@@ -72,22 +74,9 @@ object FilterIndex extends FilterIndexFunctions {
     fromTraverse(_.zipWithIndex)
 
   /************************************************************************************************/
-  /** Scalaz instances                                                                            */
+  /** Cats instances                                                                            */
   /************************************************************************************************/
-  import scalaz.{==>>, IList, NonEmptyList, Order}
-
-  implicit def iListFilterIndex[A]: FilterIndex[IList[A], Int, A] =
-    fromTraverse(_.zipWithIndex)
-
-  implicit def iMapFilterIndex[K: Order, V]: FilterIndex[K ==>> V, K, V] = new FilterIndex[K ==>> V, K, V] {
-    import scalaz.syntax.applicative._
-    def filterIndex(predicate: K => Boolean) = new Traversal[K ==>> V, V] {
-      def modifyF[F[_]: Applicative](f: V => F[V])(s: K ==>> V): F[K ==>> V] =
-        s.toList.traverse{ case (k, v) =>
-          (if(predicate(k)) f(v) else v.pure[F]).strengthL(k)
-        }.map(==>>.fromList(_))
-    }
-  }
+  import cats.data.NonEmptyList
 
   implicit def nelFilterIndex[A]: FilterIndex[NonEmptyList[A], Int, A] =
     fromTraverse(_.zipWithIndex)

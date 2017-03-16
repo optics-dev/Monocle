@@ -4,7 +4,6 @@ import monocle.{Iso, Optional}
 
 import scala.annotation.implicitNotFound
 import scala.util.Try
-import scalaz.Id._
 
 /**
  * Typeclass that defines an [[Optional]] from an `S` to an `A` at an index `I`
@@ -40,7 +39,6 @@ object Index extends IndexFunctions{
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  import scalaz.syntax.traverse._
 
   implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
     def index(i: Int) = Optional[List[A], A](
@@ -70,28 +68,16 @@ object Index extends IndexFunctions{
   }
 
   /************************************************************************************************/
-  /** Scalaz instances                                                                            */
+  /** Cats instances                                                                            */
   /************************************************************************************************/
   import monocle.function.Cons1.{oneAndCons1, nelCons1}
-  import scalaz.{==>>, IList, Order, NonEmptyList, OneAnd}
-
-  implicit def iListIndex[A]: Index[IList[A], Int, A] = new Index[IList[A], Int, A] {
-    def index(i: Int) = Optional[IList[A], A](
-      il      => if(i < 0) None else il.drop(i).headOption)(
-      a => il => il.zipWithIndex.traverse[Id, A]{
-        case (_    , index) if index == i => a
-        case (value, index)               => value
-      }
-    )
-  }
-
-  implicit def iMapIndex[K: Order, V]: Index[K ==>> V, K, V] = fromAt
+  import cats.data.{NonEmptyList, OneAnd}
 
   implicit def nelIndex[A]: Index[NonEmptyList[A], Int, A] =
     new Index[NonEmptyList[A], Int, A] {
       def index(i: Int): Optional[NonEmptyList[A], A] = i match {
         case 0 => nelCons1.head.asOptional
-        case _ => nelCons1.tail composeOptional iListIndex.index(i-1)
+        case _ => nelCons1.tail composeOptional listIndex.index(i-1)
       }
     }
 

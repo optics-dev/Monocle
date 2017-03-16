@@ -4,7 +4,8 @@ import monocle.MonocleSuite
 import monocle.law.discipline.IsoTests
 import monocle.law.discipline.function._
 
-import scalaz.{IList, NonEmptyList}
+import cats.data.NonEmptyList
+import scala.{List => IList}
 
 class NonEmptyListSpec extends MonocleSuite {
   checkAll("nelToAndOne", IsoTests(nelToOneAnd[Int]))

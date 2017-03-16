@@ -6,16 +6,16 @@ import monocle.law.discipline.function.{EachTests, PossibleTests}
 
 import scala.util.Try
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 
 class TrySpec extends MonocleSuite {
 
   private implicit def tryEqual[A]: Equal[Try[A]] = 
-    Equal.equalA[Try[A]]
+    Equal.fromUniversalEquals[Try[A]]
 
   private implicit def throwableEqual[A]: Equal[Throwable] = 
-    Equal.equalA[Throwable]
+    Equal.fromUniversalEquals[Throwable]
     
   checkAll("trySuccess", PrismTests(monocle.std.utilTry.trySuccess[Int]))
   checkAll("tryFailure", PrismTests(monocle.std.utilTry.tryFailure[Int]))

@@ -4,8 +4,9 @@ import monocle.law.discipline.{OptionalTests, PrismTests, SetterTests, Traversal
 import monocle.macros.GenIso
 import monocle.macros.GenPrism
 
-import scalaz._
-import scalaz.std.list._
+import cats.arrow.{Category, Compose}
+import cats.syntax.either._
+import scala.{Either => \/, Right => \/-}
 
 class PrismSpec extends MonocleSuite {
 

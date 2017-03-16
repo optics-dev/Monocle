@@ -3,7 +3,7 @@ package monocle.std
 import monocle.MonocleSuite
 import monocle.law.discipline.{IsoTests, PrismTests}
 import monocle.law.discipline.function.{EachTests, PossibleTests}
-import scalaz.Validation
+import cats.data.{Validated => Validation}
 
 class ValidationSpec extends MonocleSuite {
   checkAll("Validation is isomorphic to Disjunction", IsoTests(monocle.std.validation.validationToDisjunction[String, Int]))

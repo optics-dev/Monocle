@@ -6,8 +6,8 @@ import monocle.law.discipline.PrismTests
 import org.scalacheck.{Arbitrary, Prop}
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
-import scalaz.std.anyVal._
+import cats.{Eq => Equal}
+import cats.instances.unit._
 
 object EmptyTests extends Laws {
 

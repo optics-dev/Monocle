@@ -1,7 +1,7 @@
 package monocle
 
-import scalaz.std.list._
-import scalaz.{Category, Choice, Compose, Unzip, \/-}
+import cats.arrow.{Category, Choice, Compose}
+import scala.{Right => \/-}
 
 class SetterSpec extends MonocleSuite {
 
@@ -23,12 +23,6 @@ class SetterSpec extends MonocleSuite {
 
   test("Setter has a Choice instance") {
     Choice[Setter].choice(eachL[Int], even[Int]).modify(_ + 1)(\/-(List(1,2,3,4))) shouldEqual \/-(List(2,2,4,4))
-  }
-
-  test("Setter has an Unzip instance") {
-    val (int, string) = Unzip[Setter[List[(Int, String)], ?]].unzip(eachL2[Int, String])
-    int.modify(_ + 1)(List((1, "a"), (2, "b"))) shouldEqual List((2, "a"), (3, "b"))
-    string.modify(_ + "!")(List((1, "a"), (2, "b"))) shouldEqual List((1, "a!"), (2, "b!"))
   }
 
 

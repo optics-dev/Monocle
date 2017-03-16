@@ -5,13 +5,13 @@ import monocle.law.discipline.IsoTests
 import monocle.law.discipline.function.EachTests
 import org.scalacheck.Arbitrary
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 class ProductSpec extends MonocleSuite {
 
   case class Person(name: String, age: Int)
 
-  implicit val personEq: Equal[Person] = Equal.equalA
+  implicit val personEq: Equal[Person] = Equal.fromUniversalEquals
   implicit val personArb: Arbitrary[Person] = Arbitrary(for {
     n <- Arbitrary.arbitrary[String]
     a <- Arbitrary.arbitrary[Int]
@@ -19,7 +19,7 @@ class ProductSpec extends MonocleSuite {
 
   case class Permissions(read: Boolean, write: Boolean, execute: Boolean)
 
-  implicit val nameEq: Equal[Permissions] = Equal.equalA
+  implicit val nameEq: Equal[Permissions] = Equal.fromUniversalEquals
   implicit val nameArb: Arbitrary[Permissions] = Arbitrary(for {
     f <- Arbitrary.arbitrary[Boolean]
     l <- Arbitrary.arbitrary[Boolean]

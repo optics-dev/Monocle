@@ -2,7 +2,7 @@ package monocle.syntax
 
 import monocle._
 
-import scalaz.{Applicative, Functor, Monoid}
+import cats.{Applicative, Functor, Monoid}
 
 object apply extends ApplySyntax
 

@@ -21,5 +21,4 @@ trait MonocleSuite extends FunSuite
                       with StateLensSyntax
                       with StateOptionalSyntax
                       with StateGetterSyntax
-                      with StateSetterSyntax
                       with ReaderGetterSyntax

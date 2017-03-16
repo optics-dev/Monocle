@@ -2,7 +2,7 @@ package monocle.function
 
 import monocle.MonocleSuite
 
-import scalaz.IList
+import scala.{List => IList}
 
 class TailOptionExample extends MonocleSuite {
 

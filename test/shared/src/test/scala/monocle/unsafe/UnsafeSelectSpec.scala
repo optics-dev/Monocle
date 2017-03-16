@@ -6,7 +6,7 @@ import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 
 class UnsafeSelectSpec extends MonocleSuite with GeneratorDrivenPropertyChecks {
@@ -36,7 +36,7 @@ class UnsafeSelectSpec extends MonocleSuite with GeneratorDrivenPropertyChecks {
 
   case class Person(name: String, age: Int)
 
-  implicit val personEq: Equal[Person] = Equal.equalA
+  implicit val personEq: Equal[Person] = Equal.fromUniversalEquals
 
   implicit val personGen: Arbitrary[Person] = Arbitrary(for {
     name <- Arbitrary.arbitrary[String]

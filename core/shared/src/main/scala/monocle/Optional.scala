@@ -1,7 +1,9 @@
 package monocle
 
-import monocle.function.fields.{first, second}
-import scalaz.{Applicative, Choice, Monoid, Unzip, \/}
+import cats.{Applicative, Monoid}
+import cats.arrow.Choice
+import cats.syntax.either._
+import scala.{Either => \/}
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
@@ -180,7 +182,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   /** view a [[POptional]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](f: A => M)(s: S): M =
-      self.getOption(s) map f getOrElse Monoid[M].zero
+      self.getOption(s) map f getOrElse Monoid[M].empty
   }
 
   /** view a [[POptional]] as a [[PSetter]] */
@@ -269,7 +271,7 @@ object Optional {
 
 sealed abstract class OptionalInstances {
   implicit val optionalChoice: Choice[Optional] = new Choice[Optional] {
-    def choice[A, B, C](f: => Optional[A, C], g: => Optional[B, C]): Optional[A \/ B, C] =
+    def choice[A, B, C](f: Optional[A, C], g: Optional[B, C]): Optional[A \/ B, C] =
       f choice g
 
     def id[A]: Optional[A, A] =
@@ -277,10 +279,5 @@ sealed abstract class OptionalInstances {
 
     def compose[A, B, C](f: Optional[B, C], g: Optional[A, B]): Optional[A, C] =
       g composeOptional f
-  }
-
-  implicit def optionalUnzip[S]: Unzip[Optional[S, ?]] = new Unzip[Optional[S, ?]] {
-    override def unzip[A, B](f: Optional[S, (A, B)]): (Optional[S, A], Optional[S, B]) =
-      (f composeLens first, f composeLens second)
   }
 }

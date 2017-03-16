@@ -1,13 +1,12 @@
 package monocle
 
-import monocle.function.fields.{first, second}
-import scalaz.std.anyVal._
-import scalaz.std.list._
-import scalaz.std.option._
-import scalaz.syntax.std.boolean._
-import scalaz.syntax.std.option._
-import scalaz.syntax.tag._
-import scalaz.{Choice, Foldable, Monoid, Unzip, \/}
+import cats.{Foldable, Monoid}
+import cats.arrow.Choice
+import cats.instances.int._
+import cats.instances.list._
+import cats.syntax.either._
+import newts.syntax.all._
+import scala.{Either => \/}
 
 /**
  * A [[Fold]] can be seen as a [[Getter]] with many targets or
@@ -38,23 +37,23 @@ abstract class Fold[S, A] extends Serializable { self =>
 
   /** find the first target matching the predicate  */
   @inline final def find(p: A => Boolean): S => Option[A] =
-    foldMap(a => (if(p(a)) Some(a) else None).first)(_).unwrap
+    foldMap(a => (if(p(a)) Some(a) else None).asFirstOption)(_).unwrap
 
   /** get the first target */
   @inline final def headOption(s: S): Option[A] =
-    foldMap(Option(_).first)(s).unwrap
+    foldMap(Option(_).asFirstOption)(s).unwrap
 
   /** get the last target */
   @inline final def lastOption(s: S): Option[A] =
-    foldMap(Option(_).last)(s).unwrap
+    foldMap(Option(_).asLastOption)(s).unwrap
 
   /** check if at least one target satisfies the predicate */
   @inline final def exist(p: A => Boolean): S => Boolean =
-    foldMap(p(_).disjunction)(_).unwrap
+    foldMap(p(_).asAny)(_).unwrap
 
   /** check if all targets satisfy the predicate */
   @inline final def all(p: A => Boolean): S => Boolean =
-    foldMap(p(_).conjunction)(_).unwrap
+    foldMap(p(_).asAll)(_).unwrap
 
   /** calculate the number of targets */
   @inline final def length(s: S): Int =
@@ -62,7 +61,7 @@ abstract class Fold[S, A] extends Serializable { self =>
 
   /** check if there is no target */
   @inline final def isEmpty(s: S): Boolean =
-    foldMap(_ => false.conjunction)(s).unwrap
+    foldMap(_ => false.asAll)(s).unwrap
 
   /** check if there is at least one target */
   @inline final def nonEmpty(s: S): Boolean =
@@ -161,7 +160,7 @@ object Fold extends FoldInstances {
   def select[A](p: A => Boolean): Fold[A, A] =
     new Fold[A, A] {
       def foldMap[M: Monoid](f: A => M)(s: A): M =
-        if (p(s)) f(s) else Monoid[M].zero
+        if (p(s)) f(s) else Monoid[M].empty
     }
 
   /** [[Fold]] that points to nothing */
@@ -178,7 +177,7 @@ object Fold extends FoldInstances {
 
 sealed abstract class FoldInstances {
   implicit val foldChoice: Choice[Fold] = new Choice[Fold]{
-    def choice[A, B, C](f: => Fold[A, C], g: => Fold[B, C]): Fold[A \/ B, C] =
+    def choice[A, B, C](f: Fold[A, C], g: Fold[B, C]): Fold[A \/ B, C] =
       f choice g
 
     def id[A]: Fold[A, A] =
@@ -186,10 +185,5 @@ sealed abstract class FoldInstances {
 
     def compose[A, B, C](f: Fold[B, C], g: Fold[A, B]): Fold[A, C] =
       g composeFold f
-  }
-
-  implicit def foldUnzip[S]: Unzip[Fold[S, ?]] = new Unzip[Fold[S, ?]] {
-    override def unzip[A, B](f: Fold[S, (A, B)]): (Fold[S, A], Fold[S, B]) =
-      (f composeLens first, f composeLens second)
   }
 }

@@ -6,7 +6,7 @@ import monocle.law.discipline.IsoTests
 import org.scalacheck.{Arbitrary, Prop}
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 object ReverseTests extends Laws {
 

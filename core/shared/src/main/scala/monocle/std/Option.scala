@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.{Iso, PIso, PPrism, Prism}
 
-import scalaz.{-\/, \/, \/-}
+import scala.{Left => -\/, Either => \/, Right => \/-}
 
 object option extends OptionOptics
 
@@ -17,7 +17,7 @@ trait OptionOptics {
     Prism[Option[A], Unit]{ case None => Some(()); case Some(_) => None }(_ => None)
 
   final def pOptionToDisjunction[A, B]: PIso[Option[A], Option[B], Unit \/ A, Unit \/ B] =
-    PIso[Option[A], Option[B], Unit \/ A, Unit \/ B](_.map(\/-(_)) getOrElse -\/(()))(_.toOption)
+    PIso[Option[A], Option[B], Unit \/ A, Unit \/ B](_.map(\/-(_)) getOrElse -\/(()))(_.right.toOption)
 
   final def optionToDisjunction[A]: Iso[Option[A], Unit \/ A] =
     pOptionToDisjunction[A, A]

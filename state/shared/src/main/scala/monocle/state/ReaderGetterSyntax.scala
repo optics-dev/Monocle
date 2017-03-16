@@ -2,7 +2,7 @@ package monocle.state
 
 import monocle.Getter
 
-import scalaz.{Reader}
+import cats.data.Reader
 
 trait ReaderGetterSyntax {
   implicit def toReaderGetterOps[S, A](getter: Getter[S, A]): ReaderGetterOps[S, A] =

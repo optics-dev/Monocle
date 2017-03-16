@@ -1,15 +1,13 @@
 package monocle
 
-import monocle.function.fields.{first, second}
-import scalaz.Id.Id
-import scalaz.std.anyVal._
-import scalaz.std.list._
-import scalaz.std.option._
-import scalaz.syntax.functor._
-import scalaz.syntax.std.boolean._
-import scalaz.syntax.std.option._
-import scalaz.syntax.tag._
-import scalaz.{Applicative, Choice, Const, IndexedStore, FreeAp, Functor, Monoid, Traverse, Unzip, \/, ~>}
+import cats.{Applicative, Functor, Id, Monoid, Traverse}
+import cats.arrow.Choice
+import cats.data.Const
+import cats.instances.int._
+import cats.instances.list._
+import cats.syntax.either._
+import newts.syntax.all._
+import scala.{Either => \/}
 
 /**
  * A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
@@ -51,23 +49,23 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 
   /** find the first target matching the predicate  */
   @inline final def find(p: A => Boolean): S => Option[A] =
-    foldMap(a => (if(p(a)) Some(a) else None).first)(_).unwrap
+    foldMap(a => (if(p(a)) Some(a) else None).asFirstOption)(_).unwrap
 
   /** get the first target */
   @inline final def headOption(s: S): Option[A] =
-    foldMap(Option(_).first)(s).unwrap
+    foldMap(Option(_).asFirstOption)(s).unwrap
 
   /** get the last target */
   @inline final def lastOption(s: S): Option[A] =
-    foldMap(Option(_).last)(s).unwrap
+    foldMap(Option(_).asLastOption)(s).unwrap
 
   /** check if at least one target satisfies the predicate */
   @inline final def exist(p: A => Boolean): S => Boolean =
-    foldMap(p(_).disjunction)(_).unwrap
+    foldMap(p(_).asAny)(_).unwrap
 
   /** check if all targets satisfy the predicate */
   @inline final def all(p: A => Boolean): S => Boolean =
-    foldMap(p(_).conjunction)(_).unwrap
+    foldMap(p(_).asAll)(_).unwrap
 
   /** modify polymorphically the target of a [[PTraversal]] with a function */
   @inline final def modify(f: A => B): S => T =
@@ -93,7 +91,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 
   /** check if there is no target */
   @inline final def isEmpty(s: S): Boolean =
-    foldMap(_ => false.conjunction)(s).unwrap
+    foldMap(_ => false.asAll)(s).unwrap
 
   /** check if there is at least one target */
   @inline final def nonEmpty(s: S): Boolean =
@@ -199,39 +197,31 @@ object PTraversal extends TraversalInstances {
   def apply2[S, T, A, B](get1: S => A, get2: S => A)(_set: (B, B, S) => T): PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        Applicative[F].apply2(f(get1(s)), f(get2(s)))(_set(_, _, s))
+        Applicative[F].map2(f(get1(s)), f(get2(s)))(_set(_, _, s))
     }
 
   def apply3[S, T, A, B](get1: S => A, get2: S => A, get3: S => A)(_set: (B, B, B, S) => T): PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        Applicative[F].apply3(f(get1(s)), f(get2(s)), f(get3(s)))(_set(_, _, _, s))
+        Applicative[F].map3(f(get1(s)), f(get2(s)), f(get3(s)))(_set(_, _, _, s))
     }
 
   def apply4[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A)(_set: (B, B, B, B, S) => T): PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        Applicative[F].apply4(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)))(_set(_, _, _, _, s))
+        Applicative[F].map4(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)))(_set(_, _, _, _, s))
     }
 
   def apply5[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(_set: (B, B, B, B, B, S) => T): PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        Applicative[F].apply5(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)))(_set(_, _, _, _, _, s))
+        Applicative[F].map5(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)))(_set(_, _, _, _, _, s))
     }
 
   def apply6[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(_set: (B, B, B, B, B, B, S) => T): PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        Applicative[F].apply6(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)), f(get6(s)))(_set(_, _, _, _, _, _, s))
-    }
-
-  def fromStore[S, T, A, B](f: S => FreeAp[IndexedStore[A, B, ?], T]) =
-    new PTraversal[S, T, A, B] {
-      def modifyF[F[_]: Applicative](g: A => F[B])(s: S): F[T] =
-        f(s).foldMap(new (IndexedStore[A, B, ?] ~> F) {
-          def apply[X](is: IndexedStore[A, B, X]) = g(is.pos).map(is.set)
-        })
+        Applicative[F].map6(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)), f(get6(s)))(_set(_, _, _, _, _, _, s))
     }
 }
 
@@ -273,7 +263,7 @@ object Traversal {
     new PTraversal[S, S, A, A] {
       def modifyF[F[_] : Applicative](f: A => F[A])(s: S): F[S] = {
         xs.foldLeft(Applicative[F].pure(s))((fs, lens) =>
-          Applicative[F].apply2(f(lens.get(s)), fs)((a, s) => lens.set(a)(s))
+          Applicative[F].map2(f(lens.get(s)), fs)((a, s) => lens.set(a)(s))
         )
       }
     }
@@ -288,12 +278,7 @@ sealed abstract class TraversalInstances {
     def id[A]: Traversal[A, A] =
       Traversal.id
 
-    def choice[A, B, C](f1: => Traversal[A, C], f2: => Traversal[B, C]): Traversal[A \/ B, C] =
+    def choice[A, B, C](f1: Traversal[A, C], f2: Traversal[B, C]): Traversal[A \/ B, C] =
       f1 choice f2
-  }
-
-  implicit def traversalUnzip[S]: Unzip[Traversal[S, ?]] = new Unzip[Traversal[S, ?]] {
-    override def unzip[A, B](f: Traversal[S, (A, B)]): (Traversal[S, A], Traversal[S, B]) =
-      (f composeLens first, f composeLens second)
   }
 }

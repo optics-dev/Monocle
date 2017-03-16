@@ -3,7 +3,7 @@ package monocle.function
 import monocle.MonocleSuite
 import monocle.law.discipline.function.Cons1Tests
 
-import scalaz.IList
+import scala.{List => IList}
 
 class Cons1Spec extends MonocleSuite {
 

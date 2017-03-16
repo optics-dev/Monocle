@@ -2,7 +2,7 @@ package monocle.function
 
 import monocle.MonocleSuite
 
-import scalaz.OneAnd
+import cats.data.OneAnd
 
 class HeadExample extends MonocleSuite {
 

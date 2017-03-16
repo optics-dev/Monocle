@@ -6,8 +6,7 @@ import monocle.macros.{GenIso, GenLens, GenPrism}
 import org.scalacheck.Arbitrary.{arbOption => _, _}
 import org.scalacheck.{Cogen, Arbitrary, Gen}
 
-import scalaz.Equal
-import scalaz.std.option._
+import cats.{Eq => Equal}
 
 class MacroOutSideMonocleSpec extends MonocleSuite {
 
@@ -36,15 +35,15 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
   implicit def example2TypeArb[A: Arbitrary]: Arbitrary[Example2Type[A]] =
     Arbitrary(for {x <- arbitrary[A]; y <- Arbitrary.arbOption[A].arbitrary} yield Example2Type(x, y))
 
-  implicit val exampleEq: Equal[Example] = Equal.equalA[Example]
-  implicit val example2Eq: Equal[Example2] = Equal.equalA[Example2]
-  implicit def exampleTypeEq[A](implicit as: Equal[Option[A]]): Equal[ExampleType[A]] = as.contramap(_.as)
-  implicit def example2TypeEq[A](implicit a: Equal[A], as: Equal[Option[A]]): Equal[Example2Type[A]] = Equal.equal((x, y) => a.equal(x.a, y.a) && as.equal(x.as, y.as))
-  implicit val exampleObjEq: Equal[ExampleObject.type] = Equal.equalA[ExampleObject.type]
-  implicit val emptyCaseEq: Equal[EmptyCase] = Equal.equalA[EmptyCase]
-  implicit def emptyCaseTypeEq[A]: Equal[EmptyCaseType[A]] = Equal.equalA[EmptyCaseType[A]]
-  implicit val bar1Eq: Equal[Bar1] = Equal.equalA[Bar1]
-  implicit val fooEq: Equal[Foo] = Equal.equalA[Foo]
+  implicit val exampleEq: Equal[Example] = Equal.fromUniversalEquals[Example]
+  implicit val example2Eq: Equal[Example2] = Equal.fromUniversalEquals[Example2]
+  implicit def exampleTypeEq[A](implicit as: Equal[Option[A]]): Equal[ExampleType[A]] = as.on(_.as)
+  implicit def example2TypeEq[A](implicit a: Equal[A], as: Equal[Option[A]]): Equal[Example2Type[A]] = Equal.instance((x, y) => a.eqv(x.a, y.a) && as.eqv(x.as, y.as))
+  implicit val exampleObjEq: Equal[ExampleObject.type] = Equal.fromUniversalEquals[ExampleObject.type]
+  implicit val emptyCaseEq: Equal[EmptyCase] = Equal.fromUniversalEquals[EmptyCase]
+  implicit def emptyCaseTypeEq[A]: Equal[EmptyCaseType[A]] = Equal.fromUniversalEquals[EmptyCaseType[A]]
+  implicit val bar1Eq: Equal[Bar1] = Equal.fromUniversalEquals[Bar1]
+  implicit val fooEq: Equal[Foo] = Equal.fromUniversalEquals[Foo]
 
   checkAll("GenIso"                                       , IsoTests(GenIso[Example, Int]))
   checkAll("GenIso.unit object"                           , IsoTests(GenIso.unit[ExampleObject.type]))

@@ -11,11 +11,11 @@ A `Traversal` is the generalisation of an `Optional` to several targets. In othe
 to focus from a type `S` into 0 to n values of type `A`.
 
 The most common example of a `Traversal` would be to focus into all elements inside of a container (e.g. `List`, `Vector`, `Option`).
-To do this we will use the relation between the typeclass `scalaz.Traverse` and `Traversal`:
+To do this we will use the relation between the typeclass `cats.Traverse` and `Traversal`:
 
 ```tut:silent
 import monocle.Traversal
-import scalaz.std.list._   // to get the Traverse instance for List
+import cats.syntax.list._   // to get the Traverse instance for List
 
 val xs = List(1,2,3,4,5)
 ```
@@ -55,10 +55,10 @@ For example, let's write a `Traversal` for `Map` that will focus into all values
 
 ```tut:silent
 import monocle.Traversal
-import scalaz.Applicative
-import scalaz.std.map._
-import scalaz.syntax.traverse._
-import scalaz.syntax.applicative._
+import cats.Applicative
+import cats.instances.map._
+import cats.syntax.traverse._
+import cats.syntax.applicative._
 
 def filterKey[K, V](predicate: K => Boolean): Traversal[Map[K, V], V] =
     new Traversal[Map[K, V], V]{

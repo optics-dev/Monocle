@@ -3,7 +3,7 @@ package monocle.std
 import monocle.Prism
 import monocle.internal.Bounded
 
-import scalaz.std.anyVal._
+import cats.instances.int._
 
 object int extends IntOptics
 

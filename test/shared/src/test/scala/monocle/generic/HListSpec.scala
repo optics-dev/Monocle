@@ -7,7 +7,7 @@ import shapeless.HList._
 import shapeless.ops.hlist.{Init => HListInit, IsHCons}
 import shapeless.{::, HNil}
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 class HListSpec extends MonocleSuite {
 
@@ -22,11 +22,11 @@ class HListSpec extends MonocleSuite {
   type HTail    = isHCons.T
   type HInit    = hListinit.Out
 
-  implicit val exampleEq  = Equal.equalA[Example]
-  implicit val hEq        = Equal.equal[H]((a1, a2) => fromHList[H, Example].get(a1) === fromHList[H, Example].get(a2))
-  implicit val reverseHEq = Equal.equal[ReverseH]((a1, a2) => a1.reverse === a2.reverse)
-  implicit val hTailEq    = Equal.equal[HTail]((a1, a2) => (1 :: a1) === (1 :: a2))
-  implicit val hInitEq    = Equal.equal[HInit]((a1, a2) => (a1.tail :+ 3.5) === (a2.tail :+ 3.5))
+  implicit val exampleEq  = Equal.fromUniversalEquals[Example]
+  implicit val hEq        = Equal.instance[H]((a1, a2) => fromHList[H, Example].get(a1) === fromHList[H, Example].get(a2))
+  implicit val reverseHEq = Equal.instance[ReverseH]((a1, a2) => a1.reverse === a2.reverse)
+  implicit val hTailEq    = Equal.instance[HTail]((a1, a2) => (1 :: a1) === (1 :: a2))
+  implicit val hInitEq    = Equal.instance[HInit]((a1, a2) => (a1.tail :+ 3.5) === (a2.tail :+ 3.5))
 
   implicit val exampleArb: Arbitrary[Example] = Arbitrary(for{
     i <- Arbitrary.arbitrary[Int]

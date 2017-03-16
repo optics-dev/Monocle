@@ -6,7 +6,7 @@ import monocle.law.discipline.OptionalTests
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 
 object PossibleTests extends Laws {

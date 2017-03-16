@@ -4,7 +4,7 @@ import monocle.{Prism, PPrism}
 
 import scala.util.{Try, Success, Failure}
 
-import scalaz.{-\/, \/-}
+import scala.{Left => -\/, Right => \/-}
 
 object utilTry extends TryOptics
 

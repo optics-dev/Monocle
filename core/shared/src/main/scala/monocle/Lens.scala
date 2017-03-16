@@ -1,7 +1,9 @@
 package monocle
 
-import monocle.function.fields.{first, second}
-import scalaz.{Applicative, Choice, IndexedStore, Functor, Monoid, Split, Unzip, \/}
+import cats.{Applicative, Functor, Monoid}
+import cats.arrow.Choice
+import cats.syntax.either._
+import scala.{Either => \/}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
@@ -224,12 +226,6 @@ object PLens extends LensInstances {
     )(t => _.bimap(_ => t, _ => t))
 
   /**
-   * create a [[PLens]] from a context (indexed store) coalgebra.
-   */
-  def fromStore[S, T, A, B](f: S => IndexedStore[A, B, T]): PLens[S, T, A, B] =
-    PLens[S, T, A, B](s => f(s).pos)(b => s => f(s).peek(b))
-
-  /**
    * create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
    * @see macro module for methods generating [[PLens]] with less boiler plate
    */
@@ -262,28 +258,13 @@ object Lens {
     PLens(get)(set)
 }
 
-sealed abstract class LensInstances extends LensInstances0 {
+sealed abstract class LensInstances {
   implicit val lensChoice: Choice[Lens] = new Choice[Lens] {
-    def choice[A, B, C](f: => Lens[A, C], g: => Lens[B, C]): Lens[A \/ B, C] =
+    def choice[A, B, C](f: Lens[A, C], g: Lens[B, C]): Lens[A \/ B, C] =
       f choice g
 
     def id[A]: Lens[A, A] =
       Lens.id
-
-    def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
-      g composeLens f
-  }
-
-  implicit def lensUnzip[S]: Unzip[Lens[S, ?]] = new Unzip[Lens[S, ?]] {
-    def unzip[A, B](f: Lens[S, (A, B)]): (Lens[S, A], Lens[S, B]) =
-      (f composeLens first, f composeLens second)
-  }
-}
-
-sealed abstract class LensInstances0 {
-  implicit val lensSplit: Split[Lens]  = new Split[Lens] {
-    def split[A, B, C, D](f: Lens[A, B], g: Lens[C, D]): Lens[(A, C), (B, D)] =
-      f split g
 
     def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
       g composeLens f

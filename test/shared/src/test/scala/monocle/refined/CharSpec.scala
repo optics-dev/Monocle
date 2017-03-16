@@ -5,7 +5,7 @@ import monocle._
 import monocle.law.discipline.PrismTests
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 class CharSpec extends MonocleSuite {
   implicit val lowerCaseRefinedCharArb: Arbitrary[LowerCaseChar] =
@@ -17,9 +17,8 @@ class CharSpec extends MonocleSuite {
   implicit val lowerCaseCoGen: Cogen[LowerCaseChar] = Cogen[Char].contramap[LowerCaseChar](_.value)
   implicit val upperCaseCoGen: Cogen[UpperCaseChar] = Cogen[Char].contramap[UpperCaseChar](_.value)
 
-  implicit val eqLowerCase: Equal[LowerCaseChar] = Equal.equalA[LowerCaseChar]
-  implicit val eqUpperCase: Equal[UpperCaseChar] = Equal.equalA[UpperCaseChar]
-  implicit val eqChar: Equal[Char] = Equal.equalA[Char]
+  implicit val eqLowerCase: Equal[LowerCaseChar] = Equal.fromUniversalEquals[LowerCaseChar]
+  implicit val eqUpperCase: Equal[UpperCaseChar] = Equal.fromUniversalEquals[UpperCaseChar]
 
   checkAll("lower cases", PrismTests(lowerCase))
   checkAll("upper cases", PrismTests(upperCase))

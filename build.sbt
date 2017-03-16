@@ -41,17 +41,23 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.13")
-lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.2")
+lazy val catsVersion = "1.0.0-MF"
 
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.6.1")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.6.1" % "test")
+lazy val cats              = Def.setting("org.typelevel"              %%% "cats-core"          % catsVersion)
+lazy val catsFree          = Def.setting("org.typelevel"              %%% "cats-free"          % catsVersion)
+lazy val catsLaws          = Def.setting("org.typelevel"              %%% "cats-laws"          % catsVersion)
+lazy val newts             = Def.setting("com.github.julien-truffaut" %%% "newts-core"         % "0.3.0-MF-2")
+lazy val scalaz            = Def.setting("org.scalaz"                 %%% "scalaz-core"        % "7.2.13")
+lazy val shapeless         = Def.setting("com.chuusai"                %%% "shapeless"          % "2.3.2")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.7.3")
-lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.13.5")
-lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.3"  % "test")
+lazy val refinedDep        = Def.setting("eu.timepit"                 %%% "refined"            % "0.6.1")
+lazy val refinedScalacheck = Def.setting("eu.timepit"                 %%% "refined-scalacheck" % "0.6.1" % "test")
 
-lazy val macroCompat        = Def.setting("org.typelevel"   %%% "macro-compat" % "1.1.1")
+lazy val discipline        = Def.setting("org.typelevel"              %%% "discipline"         % "0.7.3")
+lazy val scalacheck        = Def.setting("org.scalacheck"             %%% "scalacheck"         % "1.13.5")
+lazy val scalatest         = Def.setting("org.scalatest"              %%% "scalatest"          % "3.0.3"  % "test")
+
+lazy val macroCompat       = Def.setting("org.typelevel"              %%% "macro-compat"       % "1.1.1")
 
 lazy val macroVersion = "2.1.0"
 lazy val paradisePlugin = "org.scalamacros" % "paradise"       % macroVersion cross CrossVersion.patch
@@ -127,7 +133,7 @@ lazy val core       = crossProject(JVMPlatform, JSPlatform, NativePlatform)
     _.nativeSettings(monocleNativeSettings)
   )
   .jvmSettings(mimaSettings("core"): _*)
-  .settings(libraryDependencies += scalaz.value)
+  .settings(libraryDependencies ++= Seq(cats.value, catsFree.value, newts.value))
   .jvmSettings(
     libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
       case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
@@ -143,7 +149,7 @@ lazy val generic    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("generic"): _*)
-  .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
+  .settings(libraryDependencies ++= Seq(cats.value, shapeless.value))
 
 lazy val refinedJVM = refined.jvm
 lazy val refinedJS  = refined.js
@@ -153,7 +159,7 @@ lazy val refined    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .settings(libraryDependencies ++= Seq(scalaz.value, refinedDep.value))
+  .settings(libraryDependencies ++= Seq(cats.value, refinedDep.value))
 
 lazy val lawJVM = law.jvm
 lazy val lawJS  = law.js
@@ -198,7 +204,7 @@ lazy val state       = crossProject(JVMPlatform, JSPlatform, NativePlatform).dep
     _.jsSettings(monocleJsSettings),
     _.nativeSettings(monocleNativeSettings)
   )
-  .settings(libraryDependencies ++= Seq(scalaz.value))
+  .settings(libraryDependencies ++= Seq(cats.value))
 
 lazy val unsafeJVM = unsafe.jvm
 lazy val unsafeJS  = unsafe.js
@@ -209,7 +215,7 @@ lazy val unsafe    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("unsafe"): _*)
-  .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
+  .settings(libraryDependencies ++= Seq(cats.value, shapeless.value))
 
 lazy val testJVM = test.jvm
 lazy val testJS  = test.js
@@ -221,14 +227,14 @@ lazy val test    = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic
   )
   .settings(noPublishSettings: _*)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, refinedScalacheck.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(cats.value, catsLaws.value, shapeless.value, scalatest.value, refinedScalacheck.value, compilerPlugin(paradisePlugin))
   )
 lazy val testNative = project.in(file("testNative")).dependsOn(coreNative, stateNative)
   .settings(moduleName := "monocle-test-native")
   .settings(monocleNativeSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value)
+    libraryDependencies ++= Seq(cats.value)
   )
   .enablePlugins(ScalaNativePlugin)
 
@@ -237,6 +243,7 @@ lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(libraryDependencies ++= Seq(
+    scalaz.value,
     shapeless.value,
     compilerPlugin(paradisePlugin)
   )).enablePlugins(JmhPlugin)
@@ -246,7 +253,7 @@ lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM,
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(cats.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
   )
 
 lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
@@ -259,7 +266,7 @@ lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
   .settings(docSettings)
   .settings(tutScalacOptions ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))))
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(cats.value, shapeless.value, compilerPlugin(paradisePlugin))
   )
 
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")

@@ -1,9 +1,8 @@
 package monocle
 
-import scalaz.std.anyVal._
-import scalaz.std.list._
-import scalaz.std.string._
-import scalaz.{-\/, Category, Choice, Compose, Monoid, Unzip}
+import cats.Monoid
+import cats.arrow.{Category, Choice, Compose}
+import scala.{Left => -\/}
 
 class FoldSpec extends MonocleSuite {
 
@@ -12,7 +11,7 @@ class FoldSpec extends MonocleSuite {
 
   def nestedListFold[A] = new Fold[List[List[A]], List[A]]{
     def foldMap[M: Monoid](f: (List[A]) => M)(s: List[List[A]]): M =
-      s.foldRight(Monoid[M].zero)((l, acc) => Monoid[M].append(f(l), acc))
+      s.foldRight(Monoid[M].empty)((l, acc) => Monoid[M].combine(f(l), acc))
   }
 
   // test implicit resolution of type classes
@@ -27,12 +26,6 @@ class FoldSpec extends MonocleSuite {
 
   test("Fold has a Choice instance") {
     Choice[Fold].choice(eachLi, Choice[Fold].id[Int]).fold(-\/(List(1,2,3))) shouldEqual 6
-  }
-
-  test("Fold has an Unzip instance") {
-    val (int, string) = Unzip[Fold[List[(Int, String)], ?]].unzip(eachL2[Int, String])
-    int.fold(List((1, "a"), (2, "b"))) shouldEqual 3
-    string.fold(List((1, "a"), (2, "b"))) shouldEqual "ab"
   }
 
 
