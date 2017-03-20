@@ -126,6 +126,7 @@ The current maintainers (people who can merge pull requests) are:
 * Ilan Godik - [@NightRa](https://github.com/NightRa)
 * Naoki Aoyama - [@aoiroaoino](https://github.com/aoiroaoino)
 * Kenji Yoshida - [@xuwei-k](https://github.com/xuwei-k)
+* Ken Scambler - [@kenbot](https://github.com/kenbot)
 
 and the [contributors](https://github.com/julien-truffaut/Monocle/graphs/contributors) (people who committed to Monocle).
 
