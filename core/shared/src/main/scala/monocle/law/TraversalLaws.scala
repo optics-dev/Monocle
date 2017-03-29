@@ -3,10 +3,6 @@ package monocle.law
 import monocle.Traversal
 import monocle.internal.IsEq
 
-import scalaz.Tags.First
-import scalaz._
-import scalaz.Id._
-
 case class TraversalLaws[S, A](traversal: Traversal[S, A]) {
   import IsEq.syntax
 

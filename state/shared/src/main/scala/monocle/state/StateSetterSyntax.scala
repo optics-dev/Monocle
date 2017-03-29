@@ -2,7 +2,7 @@ package monocle.state
 
 import monocle.PSetter
 
-import scalaz.{IndexedState, State}
+import scalaz.IndexedState
 
 trait StateSetterSyntax {
   implicit def toStateSetterOps[S, T, A, B](setter: PSetter[S, T, A, B]): StateSetterOps[S, T, A, B] =

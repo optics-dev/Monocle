@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle.law.discipline.function.ConsTests
-import monocle.{Iso, MonocleSuite}
+import monocle.MonocleSuite
 
 class ConsSpec extends MonocleSuite {
 

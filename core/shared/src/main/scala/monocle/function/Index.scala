@@ -41,8 +41,6 @@ object Index extends IndexFunctions{
   /** Std instances                                                                               */
   /************************************************************************************************/
   import scalaz.syntax.traverse._
-  import scalaz.std.list._
-  import scalaz.std.stream._
 
   implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
     def index(i: Int) = Optional[List[A], A](

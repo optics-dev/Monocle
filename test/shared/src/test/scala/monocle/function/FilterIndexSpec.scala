@@ -1,7 +1,7 @@
 package monocle.function
 
 import monocle.MonocleSuite
-import monocle.law.discipline.function.{FilterIndexTests, AtTests}
+import monocle.law.discipline.function.FilterIndexTests
 
 class FilterIndexSpec extends MonocleSuite {
 

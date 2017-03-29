@@ -3,7 +3,6 @@ package monocle.state
 import monocle.POptional
 
 import scalaz.{IndexedState, State}
-import scalaz.syntax.functor._
 
 trait StateOptionalSyntax {
   implicit def toStateOptionalOps[S, T, A, B](optional: POptional[S, T, A, B]): StateOptionalOps[S, T, A, B] =

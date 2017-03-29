@@ -1,13 +1,9 @@
 package monocle.function
 
 import monocle.MonocleSuite
-import monocle.function.all.{unwrapped, wrapped}
 
-import scalaz.{@@, Tags}
+import scalaz.Tags
 import scalaz.std.anyVal._
-import scalaz.std.list._
-import scalaz.std.function._
-import scalaz.syntax.foldable._
 
 class WrappedExample extends MonocleSuite {
 
