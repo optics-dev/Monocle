@@ -24,9 +24,15 @@ lazy val buildSettings = Seq(
     "-Ywarn-value-discard",
     "-Xfuture"
   ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 10)) => Seq("-Yno-generic-signatures") // no generic signatures for scala 2.10.x, see SI-7932, #571 and #828
-    case _             => Seq()
+    case Some((2, 10)) =>
+      Seq("-Yno-generic-signatures") // no generic signatures for scala 2.10.x, see SI-7932, #571 and #828
+    case Some((2, n)) if n >= 11 =>
+      Seq("-Ywarn-unused-import")
+    case None =>
+      Seq()
   }),
+  scalacOptions in (Compile, console) -= "-Ywarn-unused-import",
+  scalacOptions in (Test, console) -= "-Ywarn-unused-import",
   addCompilerPlugin(kindProjector),
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),

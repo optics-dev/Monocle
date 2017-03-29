@@ -1,6 +1,5 @@
 package monocle.function
 
-import eu.timepit.refined._
 import monocle.MonocleSuite
 import monocle.refined._
 import shapeless.test.illTyped

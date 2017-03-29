@@ -5,7 +5,7 @@ import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 
-import scalaz.{-\/, Category, Choice, Compose, Equal, FreeAp, IndexedStore, Unzip}
+import scalaz.{-\/, Category, Choice, Compose, Equal, Unzip}
 import scalaz.std.string._
 import scalaz.std.list._
 

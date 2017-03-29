@@ -2,7 +2,7 @@ package monocle.state
 
 import monocle.Getter
 
-import scalaz.{IndexedState, State}
+import scalaz.State
 
 trait StateGetterSyntax {
   implicit def toStateGetterOps[S, A](getter: Getter[S, A]): StateGetterOps[S, A] =

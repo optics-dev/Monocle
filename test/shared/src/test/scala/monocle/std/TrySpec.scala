@@ -1,7 +1,7 @@
 package monocle.std
 
 import monocle.MonocleSuite
-import monocle.law.discipline.{IsoTests, PrismTests}
+import monocle.law.discipline.PrismTests
 import monocle.law.discipline.function.{EachTests, PossibleTests}
 
 import scala.util.Try

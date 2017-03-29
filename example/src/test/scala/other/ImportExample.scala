@@ -29,7 +29,6 @@ class ImportExample extends FunSuite with Discipline with Matchers with TestInst
     // do not compile because Each instance for List is not in the scope
     illTyped { """each[List[Int], Int].modify(List(1,2,3), _ + 1)""" }
 
-    import monocle.std.list._
     each[List[Int], Int].modify(_ + 1)(List(1,2,3)) shouldEqual List(2,3,4)
 
     // also compile because Head instance for Custom is in the companion of Custom
@@ -38,7 +37,6 @@ class ImportExample extends FunSuite with Discipline with Matchers with TestInst
 
   test("monocle.syntax.all._ permits to use optics as operator which improves type inference") {
     import monocle.function.all._
-    import monocle.std.list._
 
     // do not compile because scala cannot infer which instance of Each is required
     illTyped { """each.modify(List(1,2,3), _ + 1)""" }
@@ -48,7 +46,6 @@ class ImportExample extends FunSuite with Discipline with Matchers with TestInst
 
   test("monocle.std.all._ brings all polymorphic Optic instances in scope for standard Scala classes") {
     import monocle.function.all._
-    import monocle.std.all._
 
     // do not compile because Head instance for HList is not in scope
     illTyped { """head[Int :: HNil, Int].modify(1 :: HNil, _ + 1) shouldEqual (2 :: HNil)""" }

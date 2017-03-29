@@ -3,7 +3,7 @@ package monocle.law.discipline
 import monocle.Traversal
 import monocle.law.TraversalLaws
 import org.scalacheck.Prop._
-import org.scalacheck.{Arbitrary, Prop}
+import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
 import scalaz.Equal

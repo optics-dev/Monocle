@@ -2,7 +2,6 @@ package monocle.function
 
 import monocle.MonocleSuite
 import monocle.law.discipline.LensTests
-import monocle.law.discipline.function.ConsTests
 
 class FieldsSpec extends MonocleSuite {
 

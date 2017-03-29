@@ -1,9 +1,9 @@
 package monocle.unsafe
 
 import monocle.MonocleSuite
-import monocle.law.discipline.{OptionalTests, PrismTests}
+import monocle.law.discipline.OptionalTests
 import monocle.macros.GenLens
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 import scalaz.Equal
