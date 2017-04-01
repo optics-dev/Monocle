@@ -92,7 +92,7 @@ object Plated extends PlatedFunctions {
       def modifyF[F[_]: Applicative](f: List[A] => F[List[A]])(s: List[A]): F[List[A]] =
         s match {
           case x :: xs => Applicative[F].map(f(xs))(x :: _)
-          case Nil => Applicative[F].point(Nil)
+          case Nil => Applicative[F].pure(Nil)
         }
     }
   }
@@ -102,7 +102,7 @@ object Plated extends PlatedFunctions {
       def modifyF[F[_]: Applicative](f: Stream[A] => F[Stream[A]])(s: Stream[A]): F[Stream[A]] =
         s match {
           case x #:: xs => Applicative[F].map(f(xs))(x #:: _)
-          case Stream() => Applicative[F].point(Stream.empty)
+          case Stream() => Applicative[F].pure(Stream.empty)
         }
     }
   }
@@ -112,7 +112,7 @@ object Plated extends PlatedFunctions {
       def modifyF[F[_]: Applicative](f: String => F[String])(s: String): F[String] =
         s.headOption match {
           case Some(h) => Applicative[F].map(f(s.tail))(h.toString ++ _)
-          case None => Applicative[F].point("")
+          case None => Applicative[F].pure("")
         }
     }
   }
@@ -122,7 +122,7 @@ object Plated extends PlatedFunctions {
       def modifyF[F[_]: Applicative](f: Vector[A] => F[Vector[A]])(s: Vector[A]): F[Vector[A]] =
         s match {
           case h +: t => Applicative[F].map(f(t))(h +: _)
-          case _ => Applicative[F].point(Vector.empty)
+          case _ => Applicative[F].pure(Vector.empty)
         }
     }
   }
@@ -144,7 +144,7 @@ object Plated extends PlatedFunctions {
       def modifyF[F[_]: Applicative](f: Free[S, A] => F[Free[S, A]])(s: Free[S, A]): F[Free[S, A]] =
         s.resume.fold(
           as => Applicative[F].map(Traverse[S].traverse(as)(f))(Free.roll),
-          x => Applicative[F].point(Free.point(x))
+          x => Applicative[F].pure(Free.pure(x))
         )
     }
   }
@@ -154,7 +154,7 @@ object Plated extends PlatedFunctions {
       def modifyF[F[_]: Applicative](f: IList[A] => F[IList[A]])(s: IList[A]): F[IList[A]] =
         s match {
           case ICons(x, xs) => Applicative[F].map(f(xs))(x :: _)
-          case INil() => Applicative[F].point(INil())
+          case INil() => Applicative[F].pure(INil())
         }
     }
   }

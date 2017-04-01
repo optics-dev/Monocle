@@ -29,7 +29,7 @@ case class PrismLaws[S, A](prism: Prism[S, A]) {
     prism.set(a)(s) <==> prism.modify(_ => a)(s)
 
   def consistentModifyModifyId(s: S, f: A => A): IsEq[S] =
-    prism.modify(f)(s) <==> prism.modifyF(a => id.point(f(a)))(s)
+    prism.modify(f)(s) <==> prism.modifyF(a => id.pure(f(a)))(s)
 
   def consistentGetOptionModifyId(s: S): IsEq[Option[A]] =
     prism.getOption(s) <==> prism.modifyF[Const[Option[A] @@ First, ?]](a => Const(Some(a).first))(s).getConst.unwrap

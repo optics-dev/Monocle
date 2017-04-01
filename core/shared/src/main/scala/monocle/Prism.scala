@@ -45,7 +45,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /** modify polymorphically the target of a [[PPrism]] with an Applicative function */
   @inline final def modifyF[F[_] : Applicative](f: A => F[B])(s: S): F[T] =
     getOrModify(s).fold(
-      t => Applicative[F].point(t),
+      t => Applicative[F].pure(t),
       a => Applicative[F].map(f(a))(reverseGet)
     )
 

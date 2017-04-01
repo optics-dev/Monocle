@@ -36,7 +36,7 @@ object FilterIndex extends FilterIndexFunctions {
   def fromTraverse[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] = new FilterIndex[S[A], Int, A]{
     def filterIndex(predicate: Int => Boolean) = new Traversal[S[A], A] {
       def modifyF[F[_]: Applicative](f: A => F[A])(s: S[A]): F[S[A]] =
-        zipWithIndex(s).traverse { case (a, j) => if(predicate(j)) f(a) else Applicative[F].point(a) }
+        zipWithIndex(s).traverse { case (a, j) => if(predicate(j)) f(a) else Applicative[F].pure(a) }
     }
   }
 
@@ -55,7 +55,7 @@ object FilterIndex extends FilterIndexFunctions {
     def filterIndex(predicate: K => Boolean) = new Traversal[Map[K, V], V] {
       def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
         s.toList.traverse{ case (k, v) =>
-          (if(predicate(k)) f(v) else v.point[F]).strengthL(k)
+          (if(predicate(k)) f(v) else v.pure[F]).strengthL(k)
         }.map(_.toMap)
     }
   }
@@ -84,7 +84,7 @@ object FilterIndex extends FilterIndexFunctions {
     def filterIndex(predicate: K => Boolean) = new Traversal[K ==>> V, V] {
       def modifyF[F[_]: Applicative](f: V => F[V])(s: K ==>> V): F[K ==>> V] =
         s.toList.traverse{ case (k, v) =>
-          (if(predicate(k)) f(v) else v.point[F]).strengthL(k)
+          (if(predicate(k)) f(v) else v.pure[F]).strengthL(k)
         }.map(==>>.fromList(_))
     }
   }

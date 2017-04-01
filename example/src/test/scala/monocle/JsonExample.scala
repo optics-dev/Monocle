@@ -153,7 +153,7 @@ class JsonExample extends MonocleSuite {
     val plate: Traversal[Json, Json] = new Traversal[Json, Json] {
       def modifyF[F[_]: Applicative](f: Json => F[Json])(a: Json): F[Json] =
         a match {
-          case j@(JsString(_) | JsNumber(_)) => Applicative[F].point(j)
+          case j@(JsString(_) | JsNumber(_)) => Applicative[F].pure(j)
           case JsArray(l) => l.traverse(f).map(JsArray)
           case JsObject(m) => m.traverse(f).map(JsObject)
         }
