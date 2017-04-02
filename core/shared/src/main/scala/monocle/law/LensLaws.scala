@@ -28,7 +28,7 @@ case class LensLaws[S, A](lens: Lens[S, A]) {
     lens.set(a)(s) <==> lens.modify(_ => a)(s)
 
   def consistentModifyModifyId(s: S, f: A => A): IsEq[S] =
-    lens.modify(f)(s) <==> lens.modifyF(a => id.point(f(a)))(s)
+    lens.modify(f)(s) <==> lens.modifyF(a => id.pure(f(a)))(s)
 
   def consistentGetModifyId(s: S): IsEq[A] =
     lens.get(s) <==> lens.modifyF[Const[A, ?]](Const(_))(s).getConst

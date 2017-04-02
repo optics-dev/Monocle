@@ -224,7 +224,7 @@ object POptional extends OptionalInstances {
 
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         _getOrModify(s).fold(
-          t => Applicative[F].point(t),
+          t => Applicative[F].pure(t),
           a => Applicative[F].map(f(a))(_set(_)(s))
         )
 
@@ -258,7 +258,7 @@ object Optional {
 
       def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
         _getOption(s).fold(
-          Applicative[F].point(s))(
+          Applicative[F].pure(s))(
           a => Applicative[F].map(f(a))(_set(_)(s))
         )
 

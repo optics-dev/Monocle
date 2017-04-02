@@ -26,7 +26,7 @@ case class IsoLaws[S, A](iso: Iso[S, A]) {
     iso.set(a)(s) <==> iso.modify(_ => a)(s)
 
   def consistentModifyModifyId(s: S, f: A => A): IsEq[S] =
-    iso.modify(f)(s) <==> iso.modifyF(a => id.point(f(a)))(s)
+    iso.modify(f)(s) <==> iso.modifyF(a => id.pure(f(a)))(s)
 
   def consistentGetModifyId(s: S): IsEq[A] =
     iso.get(s) <==> iso.modifyF[Const[A, ?]](Const(_))(s).getConst

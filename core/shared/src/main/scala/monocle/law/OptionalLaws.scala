@@ -32,7 +32,7 @@ case class OptionalLaws[S, A](optional: Optional[S, A]) {
     optional.set(a)(s) <==> optional.modify(_ => a)(s)
 
   def consistentModifyModifyId(s: S, f: A => A): IsEq[S] =
-    optional.modify(f)(s) <==> optional.modifyF(a => id.point(f(a)))(s)
+    optional.modify(f)(s) <==> optional.modifyF(a => id.pure(f(a)))(s)
 
   def consistentGetOptionModifyId(s: S): IsEq[Option[A]] =
     optional.getOption(s) <==> optional.modifyF[Const[Option[A] @@ First, ?]](a => Const(Some(a).first))(s).getConst.unwrap

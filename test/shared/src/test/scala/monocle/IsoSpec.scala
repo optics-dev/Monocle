@@ -80,8 +80,8 @@ class IsoSpec extends MonocleSuite {
   test("mapping") {
     import scalaz.Id._
 
-    iso.mapping[Id].get(id.point(IntWrapper(3))) shouldEqual id.point(3)
-    iso.mapping[Id].reverseGet(id.point(3)) shouldEqual id.point(IntWrapper(3))
+    iso.mapping[Id].get(id.pure(IntWrapper(3))) shouldEqual id.pure(3)
+    iso.mapping[Id].reverseGet(id.pure(3)) shouldEqual id.pure(IntWrapper(3))
   }
 
   test("apply") {

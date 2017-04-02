@@ -105,7 +105,7 @@ trait TraversalBuilder[A, B, T] {
     }
   }
 
-  private def pt[X](x: X) = FreeAp.point[IndexedStore[A, B, ?], X](x)
+  private def pt[X](x: X) = FreeAp.pure[IndexedStore[A, B, ?], X](x)
 
   private def ap[X](h: A, x: => FreeAp[IndexedStore[A, B, ?], B => X]) =
     FreeAp[IndexedStore[A, B, ?], B, X](IndexedStore(identity, h), x)
