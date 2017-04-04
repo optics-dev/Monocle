@@ -1,13 +1,11 @@
 package monocle.bench
 
 import scala.util.Random
-import scalaz._
-import scalaz.std.anyVal._
 
 
 object BenchModel {
 
-  def safeDivide(a: Int, b: Int): Maybe[Int] = if(b == 0) Maybe.empty else Maybe.just(a / b)
+  def safeDivide(a: Int, b: Int): Option[Int] = if(b == 0) None else Some(a / b)
 
   case class Nested0(s: String, i: Int, n: Nested1, l: Long)
   case class Nested1(s: String, i: Int, n: Nested2, l: Long)
@@ -37,7 +35,7 @@ object BenchModel {
   case class Point3(x: Int, y: Int, z: Int)
   val p = Point3(2, 10, 24)
 
-  val iMap = IMap.fromList(Stream.from(1).take(200).map(_ -> 5).toList)
+  val map = 1.to(200).map(_ -> 5).toMap
 
 
   case class IntWrapper0(i: Int)

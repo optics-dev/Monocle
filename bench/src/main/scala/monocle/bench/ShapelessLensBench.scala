@@ -7,8 +7,6 @@ import monocle.bench.input.Nested0Input
 import org.openjdk.jmh.annotations._
 import shapeless._
 
-import scalaz.Maybe
-
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
@@ -44,8 +42,8 @@ class ShapelessLensBench extends LensBench {
   @Benchmark def lensModify6(in: Nested0Input) = _n0Ton6I.modify(in.n0)(_ + 1)
 
 
-  def lensModifyF0(in: Nested0Input): Maybe[Nested0] = ???
-  def lensModifyF3(in: Nested0Input): Maybe[Nested0] = ???
-  def lensModifyF6(in: Nested0Input): Maybe[Nested0] = ???
+  def lensModifyF0(in: Nested0Input): Option[Nested0] = ???
+  def lensModifyF3(in: Nested0Input): Option[Nested0] = ???
+  def lensModifyF6(in: Nested0Input): Option[Nested0] = ???
 
 }
