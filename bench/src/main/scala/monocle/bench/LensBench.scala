@@ -3,8 +3,6 @@ package monocle.bench
 import monocle.bench.BenchModel.Nested0
 import monocle.bench.input.Nested0Input
 
-import scalaz.Maybe
-
 trait LensBench {
 
   def lensGet0(in: Nested0Input): Int
@@ -22,8 +20,8 @@ trait LensBench {
   def lensModify6(in: Nested0Input): Nested0
 
 
-  def lensModifyF0(in: Nested0Input): Maybe[Nested0]
-  def lensModifyF3(in: Nested0Input): Maybe[Nested0]
-  def lensModifyF6(in: Nested0Input): Maybe[Nested0]
+  def lensModifyF0(in: Nested0Input): Option[Nested0]
+  def lensModifyF3(in: Nested0Input): Option[Nested0]
+  def lensModifyF6(in: Nested0Input): Option[Nested0]
 
 }
