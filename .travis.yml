@@ -37,6 +37,8 @@ cache:
     - $HOME/.sbt/boot
 before_install:
  - export PATH=${PATH}:./vendor/bundle
+before_script:
+  - sudo chmod +x /usr/local/bin/sbt
 install:
   - rvm use 2.2.3 --install --fuzzy
   - gem update --system
