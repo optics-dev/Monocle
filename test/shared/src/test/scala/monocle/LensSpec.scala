@@ -22,6 +22,10 @@ trait Bar; trait Baz
 @Lenses case class HasCompanion3[A](a: A)
 object HasCompanion3 extends Bar with Baz
 
+class annot extends annotation.StaticAnnotation
+@Lenses case class HasCompanion4(l: Long, s: String)
+@annot object HasCompanion4
+
 class LensSpec extends MonocleSuite {
 
   val s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
