@@ -2,7 +2,7 @@ package monocle.syntax
 
 import monocle._
 
-import scalaz.Monoid
+import scalaz.{Applicative, Functor, Monoid}
 
 object apply extends ApplySyntax
 
@@ -113,6 +113,7 @@ final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
   @inline def get: A = iso.get(s)
   @inline def set(b: B): T = iso.set(b)(s)
   @inline def modify(f: A => B): T = iso.modify(f)(s)
+  @inline def modifyF[F[_]: Functor](f: A => F[B]): F[T] = iso.modifyF(f)(s)
   @inline def exist(p: A => Boolean): S => Boolean = iso.exist(p)
   @inline def find(p: A => Boolean): S => Option[A] = iso.find(p)
 
@@ -141,6 +142,7 @@ final case class ApplyLens[S, T, A, B](s: S, lens: PLens[S, T, A, B]){
   @inline def get: A = lens.get(s)
   @inline def set(b: B): T = lens.set(b)(s)
   @inline def modify(f: A => B): T = lens.modify(f)(s)
+  @inline def modifyF[F[_]: Functor](f: A => F[B]): F[T] = lens.modifyF(f)(s)
   @inline def exist(p: A => Boolean): S => Boolean = lens.exist(p)
   @inline def find(p: A => Boolean): S => Option[A] = lens.find(p)
 
@@ -176,6 +178,7 @@ final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]
   @inline def find(p: A => Boolean): S => Option[A] = optional.find(p)
 
   @inline def modify(f: A => B): T = optional.modify(f)(s)
+  @inline def modifyF[F[_]: Applicative](f: A => F[B]): F[T] = optional.modifyF(f)(s)
   @inline def modifyOption(f: A => B): Option[T] = optional.modifyOption(f)(s)
 
   @inline def set(b: B): T = optional.set(b)(s)
@@ -205,6 +208,7 @@ final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]){
   @inline def getOption: Option[A] = prism.getOption(s)
 
   @inline def modify(f: A => B): T = prism.modify(f)(s)
+  @inline def modifyF[F[_]: Applicative](f: A => F[B]): F[T] = prism.modifyF(f)(s)
   @inline def modifyOption(f: A => B): Option[T] = prism.modifyOption(f)(s)
 
   @inline def set(b: B): T = prism.set(b)(s)
@@ -266,6 +270,7 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
 
   @inline def set(b: B): T = traversal.set(b)(s)
   @inline def modify(f: A => B): T = traversal.modify(f)(s)
+  @inline def modifyF[F[_]: Applicative](f: A => F[B]): F[T] = traversal.modifyF(f)(s)
 
   @inline def find(p: A => Boolean): S => Option[A] = traversal.find(p)
   @inline def exist(p: A => Boolean): S => Boolean = traversal.exist(p)
