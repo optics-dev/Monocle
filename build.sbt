@@ -11,7 +11,7 @@ lazy val Scala211 = "2.11.8"
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.12.2",
-  crossScalaVersions := Seq("2.10.6", Scala211, "2.12.2"),
+  crossScalaVersions := Seq(Scala211, "2.12.2"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -24,8 +24,6 @@ lazy val buildSettings = Seq(
     "-Ywarn-value-discard",
     "-Xfuture"
   ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 10)) =>
-      Seq("-Yno-generic-signatures") // no generic signatures for scala 2.10.x, see SI-7932, #571 and #828
     case Some((2, n)) if n >= 11 =>
       Seq("-Ywarn-unused-import")
     case None =>
@@ -86,15 +84,9 @@ lazy val scalajsSettings = Seq(
                            "-minSuccessfulTests", "50")
 )
 
-lazy val scalanativeSettings = Seq(
-  scalaVersion := Scala211,
-  crossScalaVersions := Seq(Scala211)
-)
-
 lazy val monocleSettings    = buildSettings ++ publishSettings
 lazy val monocleJvmSettings = monocleSettings
 lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
-lazy val monocleNativeSettings = monocleSettings ++ scalanativeSettings
 
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
@@ -116,21 +108,13 @@ lazy val monocleJS = project.in(file(".monocleJS"))
   .aggregate(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS)
   .dependsOn(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS  % "test-internal -> test")
 
-lazy val monocleNative = project.in(file(".monocleNative"))
-  .settings(monocleNativeSettings)
-  .settings(noPublishSettings)
-  .aggregate(coreNative, stateNative, testNative)
-  .dependsOn(coreNative, stateNative, testNative)
-
 lazy val coreJVM    = core.jvm
 lazy val coreJS     = core.js
-lazy val coreNative = core.native
-lazy val core       = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+lazy val core       = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-core")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings),
-    _.nativeSettings(monocleNativeSettings)
+    _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, catsFree.value, newts.value))
@@ -196,13 +180,11 @@ lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
 
 lazy val stateJVM    = state.jvm
 lazy val stateJS     = state.js
-lazy val stateNative = state.native
-lazy val state       = crossProject(JVMPlatform, JSPlatform, NativePlatform).dependsOn(core)
+lazy val state       = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   .settings(moduleName := "monocle-state")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings),
-    _.nativeSettings(monocleNativeSettings)
+    _.jsSettings(monocleJsSettings)
   )
   .settings(libraryDependencies ++= Seq(cats.value))
 
@@ -229,14 +211,6 @@ lazy val test    = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic
   .settings(
     libraryDependencies ++= Seq(cats.value, catsLaws.value, shapeless.value, scalatest.value, refinedScalacheck.value, compilerPlugin(paradisePlugin))
   )
-lazy val testNative = project.in(file("testNative")).dependsOn(coreNative, stateNative)
-  .settings(moduleName := "monocle-test-native")
-  .settings(monocleNativeSettings)
-  .settings(noPublishSettings)
-  .settings(
-    libraryDependencies ++= Seq(cats.value)
-  )
-  .enablePlugins(ScalaNativePlugin)
 
 lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
   .settings(moduleName := "monocle-bench")
@@ -353,13 +327,11 @@ lazy val publishSettings = Seq(
     inquireVersions,
     runTest,
     releaseStepCommand(s"++$Scala211"),
-    releaseStepCommand("testNative/run"),
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
     publishArtifacts,
     releaseStepCommand(s"++$Scala211"),
-    releaseStepCommand("monocleNative/publishSigned"),
     setNextVersion,
     commitNextVersion,
     pushChanges
