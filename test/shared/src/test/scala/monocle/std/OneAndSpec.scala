@@ -3,7 +3,7 @@ package monocle.std
 import monocle.MonocleSuite
 import monocle.law.discipline.function.{Cons1Tests, EachTests, IndexTests}
 
-import scalaz.OneAnd
+import cats.data.OneAnd
 
 class OneAndSpec extends MonocleSuite {
   checkAll("each OneAnd", EachTests[OneAnd[List, Int], Int])

@@ -4,7 +4,6 @@ import monocle.function.fields._
 import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
-import scalaz.{ICons, INil}
 
 /**
  * Typeclass that defines a [[Prism]] between an `S` and its head `A` and tail `S`
@@ -73,18 +72,5 @@ object Cons extends ConsFunctions {
       case Vector() => None
       case x +: xs  => Some((x, xs))
     }{ case (a, s) => a +: s }
-  }
-
-  /************************************************************************************************/
-  /** Scalaz instances                                                                            */
-  /************************************************************************************************/
-
-  import scalaz.IList
-
-  implicit def iListCons[A]: Cons[IList[A], A] = new Cons[IList[A], A]{
-    val cons = Prism[IList[A], (A, IList[A])]{
-      case INil()       => None
-      case ICons(x, xs) => Some((x, xs))
-    }{ case (a, s) => ICons(a, s) }
   }
 }

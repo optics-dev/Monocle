@@ -11,7 +11,7 @@ lazy val Scala211 = "2.11.8"
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.12.2",
-  crossScalaVersions := Seq("2.10.6", Scala211, "2.12.2"),
+  crossScalaVersions := Seq(Scala211, "2.12.2"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -24,8 +24,6 @@ lazy val buildSettings = Seq(
     "-Ywarn-value-discard",
     "-Xfuture"
   ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 10)) =>
-      Seq("-Yno-generic-signatures") // no generic signatures for scala 2.10.x, see SI-7932, #571 and #828
     case Some((2, n)) if n >= 11 =>
       Seq("-Ywarn-unused-import")
     case None =>
@@ -41,17 +39,23 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.13")
-lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.2")
+lazy val catsVersion = "1.0.0-MF"
 
+
+lazy val cats              = Def.setting("org.typelevel"              %%% "cats-core"          % catsVersion)
+lazy val catsFree          = Def.setting("org.typelevel"              %%% "cats-free"          % catsVersion)
+lazy val catsLaws          = Def.setting("org.typelevel"              %%% "cats-laws"          % catsVersion)
+lazy val newts             = Def.setting("com.github.julien-truffaut" %%% "newts-core"         % "0.3.0-MF-2")
+lazy val scalaz            = Def.setting("org.scalaz"                 %%% "scalaz-core"        % "7.2.13")
+lazy val shapeless         = Def.setting("com.chuusai"                %%% "shapeless"          % "2.3.2")
 lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.8.2")
 lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.8.2" % "test")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.7.3")
-lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.13.5")
-lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.3"  % "test")
+lazy val discipline        = Def.setting("org.typelevel"              %%% "discipline"         % "0.7.3")
+lazy val scalacheck        = Def.setting("org.scalacheck"             %%% "scalacheck"         % "1.13.5")
+lazy val scalatest         = Def.setting("org.scalatest"              %%% "scalatest"          % "3.0.3"  % "test")
 
-lazy val macroCompat        = Def.setting("org.typelevel"   %%% "macro-compat" % "1.1.1")
+lazy val macroCompat       = Def.setting("org.typelevel"              %%% "macro-compat"       % "1.1.1")
 
 lazy val macroVersion = "2.1.0"
 lazy val paradisePlugin = "org.scalamacros" % "paradise"       % macroVersion cross CrossVersion.patch
@@ -80,15 +84,9 @@ lazy val scalajsSettings = Seq(
                            "-minSuccessfulTests", "50")
 )
 
-lazy val scalanativeSettings = Seq(
-  scalaVersion := Scala211,
-  crossScalaVersions := Seq(Scala211)
-)
-
 lazy val monocleSettings    = buildSettings ++ publishSettings
 lazy val monocleJvmSettings = monocleSettings
 lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
-lazy val monocleNativeSettings = monocleSettings ++ scalanativeSettings
 
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
@@ -110,24 +108,16 @@ lazy val monocleJS = project.in(file(".monocleJS"))
   .aggregate(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS)
   .dependsOn(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS  % "test-internal -> test")
 
-lazy val monocleNative = project.in(file(".monocleNative"))
-  .settings(monocleNativeSettings)
-  .settings(noPublishSettings)
-  .aggregate(coreNative, stateNative, testNative)
-  .dependsOn(coreNative, stateNative, testNative)
-
 lazy val coreJVM    = core.jvm
 lazy val coreJS     = core.js
-lazy val coreNative = core.native
-lazy val core       = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+lazy val core       = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-core")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings),
-    _.nativeSettings(monocleNativeSettings)
+    _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("core"): _*)
-  .settings(libraryDependencies += scalaz.value)
+  .settings(libraryDependencies ++= Seq(cats.value, catsFree.value, newts.value))
   .jvmSettings(
     libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
       case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
@@ -143,7 +133,7 @@ lazy val generic    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("generic"): _*)
-  .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
+  .settings(libraryDependencies ++= Seq(cats.value, shapeless.value))
 
 lazy val refinedJVM = refined.jvm
 lazy val refinedJS  = refined.js
@@ -153,7 +143,7 @@ lazy val refined    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .settings(libraryDependencies ++= Seq(scalaz.value, refinedDep.value))
+  .settings(libraryDependencies ++= Seq(cats.value, refinedDep.value))
 
 lazy val lawJVM = law.jvm
 lazy val lawJS  = law.js
@@ -190,15 +180,13 @@ lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
 
 lazy val stateJVM    = state.jvm
 lazy val stateJS     = state.js
-lazy val stateNative = state.native
-lazy val state       = crossProject(JVMPlatform, JSPlatform, NativePlatform).dependsOn(core)
+lazy val state       = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   .settings(moduleName := "monocle-state")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings),
-    _.nativeSettings(monocleNativeSettings)
+    _.jsSettings(monocleJsSettings)
   )
-  .settings(libraryDependencies ++= Seq(scalaz.value))
+  .settings(libraryDependencies ++= Seq(cats.value))
 
 lazy val unsafeJVM = unsafe.jvm
 lazy val unsafeJS  = unsafe.js
@@ -209,7 +197,7 @@ lazy val unsafe    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("unsafe"): _*)
-  .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
+  .settings(libraryDependencies ++= Seq(cats.value, shapeless.value))
 
 lazy val testJVM = test.jvm
 lazy val testJS  = test.js
@@ -221,22 +209,15 @@ lazy val test    = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic
   )
   .settings(noPublishSettings: _*)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, refinedScalacheck.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(cats.value, catsLaws.value, shapeless.value, scalatest.value, refinedScalacheck.value, compilerPlugin(paradisePlugin))
   )
-lazy val testNative = project.in(file("testNative")).dependsOn(coreNative, stateNative)
-  .settings(moduleName := "monocle-test-native")
-  .settings(monocleNativeSettings)
-  .settings(noPublishSettings)
-  .settings(
-    libraryDependencies ++= Seq(scalaz.value)
-  )
-  .enablePlugins(ScalaNativePlugin)
 
 lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
   .settings(moduleName := "monocle-bench")
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(libraryDependencies ++= Seq(
+    scalaz.value,
     shapeless.value,
     compilerPlugin(paradisePlugin)
   )).enablePlugins(JmhPlugin)
@@ -246,7 +227,7 @@ lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM,
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(cats.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
   )
 
 lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
@@ -259,7 +240,7 @@ lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
   .settings(docSettings)
   .settings(tutScalacOptions ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))))
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(cats.value, shapeless.value, compilerPlugin(paradisePlugin))
   )
 
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
@@ -346,13 +327,11 @@ lazy val publishSettings = Seq(
     inquireVersions,
     runTest,
     releaseStepCommand(s"++$Scala211"),
-    releaseStepCommand("testNative/run"),
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
     publishArtifacts,
     releaseStepCommand(s"++$Scala211"),
-    releaseStepCommand("monocleNative/publishSigned"),
     setNextVersion,
     commitNextVersion,
     pushChanges

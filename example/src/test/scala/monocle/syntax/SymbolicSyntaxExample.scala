@@ -25,8 +25,8 @@ class SymbolicSyntaxExample extends MonocleSuite {
       (myStore &|-> _articles ^|-? headOption ^<-? _sofa ^|-> _color getOption)
 
 
-    (_articles ^<-> iListToList.reverse ^|->> each ^<-? _sofa ^|-> _price).modify(_ / 2)(myStore) ===
-    (myStore &|-> _articles ^<-> iListToList.reverse ^|->> each ^<-? _sofa ^|-> _price modify(_ / 2))
+    (_articles ^<-> reverse ^|->> each ^<-? _sofa ^|-> _price).modify(_ / 2)(myStore) ===
+    (myStore &|-> _articles ^<-> reverse ^|->> each ^<-? _sofa ^|-> _price modify(_ / 2))
 
     (myStore.articles &|-? index(1) ^<-? _sofa getOption) shouldEqual None
   }

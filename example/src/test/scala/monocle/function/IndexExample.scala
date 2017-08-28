@@ -2,8 +2,8 @@ package monocle.function
 
 import monocle.MonocleSuite
 
-import scalaz.std.string._
-import scalaz.{IMap, OneAnd}
+import scala.collection.immutable.{Map => IMap}
+import cats.data.OneAnd
 
 class IndexExample extends MonocleSuite {
 

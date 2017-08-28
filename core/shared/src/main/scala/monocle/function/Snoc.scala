@@ -4,7 +4,10 @@ import monocle.function.fields._
 import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
-import scalaz.{Applicative, \/}
+import cats.Applicative
+import cats.instances.option._
+import cats.syntax.either._
+import scala.{Either => \/}
 
 /**
  * Typeclass that defines a [[Prism]] between an `S` and its init `S` and last `S`
@@ -45,11 +48,10 @@ object Snoc extends SnocFunctions {
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  import scalaz.std.option._
 
   implicit def listSnoc[A]: Snoc[List[A], A] = new Snoc[List[A], A]{
     val snoc = Prism[List[A], (List[A], A)](
-      s => Applicative[Option].apply2(\/.fromTryCatchNonFatal(s.init).toOption, s.lastOption)((_,_))){
+      s => Applicative[Option].map2(\/.catchNonFatal(s.init).toOption, s.lastOption)((_,_))){
       case (init, last) => init :+ last
     }
   }
@@ -76,18 +78,6 @@ object Snoc extends SnocFunctions {
     val snoc = Prism[Vector[A], (Vector[A], A)](
       v => if(v.isEmpty) None else Some((v.init, v.last))){
       case (xs, x) => xs :+ x
-    }
-  }
-
-  /************************************************************************************************/
-  /** Scalaz instances                                                                            */
-  /************************************************************************************************/
-  import scalaz.IList
-
-  implicit def iListSnoc[A]: Snoc[IList[A], A] = new Snoc[IList[A], A]{
-    val snoc = Prism[IList[A], (IList[A], A)](
-      il => Applicative[Option].apply2(il.initOption, il.lastOption)((_,_))){
-      case (init, last) => init :+ last
     }
   }
 }

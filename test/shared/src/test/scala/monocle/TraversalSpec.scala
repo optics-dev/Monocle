@@ -5,9 +5,9 @@ import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 
-import scalaz.{-\/, Category, Choice, Compose, Equal, Unzip}
-import scalaz.std.string._
-import scalaz.std.list._
+import cats.{Eq => Equal}
+import cats.arrow.{Category, Choice, Compose}
+import scala.{Left => -\/}
 
 class TraversalSpec extends MonocleSuite {
 
@@ -28,7 +28,7 @@ class TraversalSpec extends MonocleSuite {
     n <- arbitrary[String]
   } yield Location(x, y, n))
 
-  implicit val exampleEq = Equal.equalA[Location]
+  implicit val exampleEq = Equal.fromUniversalEquals[Location]
 
   // Below we test a 7-lenses Traversal created using applyN
 
@@ -47,13 +47,6 @@ class TraversalSpec extends MonocleSuite {
   // the 7-lenses Traversal generated using applyN
   val traversalN: Traversal[ManyPropObject, Int] = Traversal.applyN(l1,l2,l3,l4,l5,l6,l7)
 
-  // the Traversal generated using PTraversal.apply (no lenses involved)
-  val ptraversalN: Traversal[ManyPropObject, Int] = PTraversal.fromStore { obj =>
-    (toTraversalBuilder(obj.p1) ~ obj.p2 ~ obj.p4 ~ obj.p5 ~ obj.p6 ~ obj.p7 ~ obj.p8) {
-      ManyPropObject(_, _, obj.p3, _, _, _, _, _)
-    }
-  }
-
   // the stub for generating random test objects
   implicit val manyPropObjectGen: Arbitrary[ManyPropObject] = Arbitrary(for {
     p1 <- arbitrary[Int]
@@ -66,11 +59,10 @@ class TraversalSpec extends MonocleSuite {
     p8 <- arbitrary[Int]
   } yield ManyPropObject(p1,p2,p3,p4,p5,p6,p7,p8))
 
-  implicit val eqForManyPropObject = Equal.equalA[ManyPropObject]
+  implicit val eqForManyPropObject = Equal.fromUniversalEquals[ManyPropObject]
 
   checkAll("apply2 Traversal", TraversalTests(coordinates))
   checkAll("applyN Traversal", TraversalTests(traversalN))
-  checkAll("applyN PTraversal", TraversalTests(ptraversalN))
   checkAll("fromTraverse Traversal", TraversalTests(eachLi))
 
   checkAll("traversal.asSetter", SetterTests(coordinates.asSetter))
@@ -88,12 +80,6 @@ class TraversalSpec extends MonocleSuite {
 
   test("Traversal has a Choice instance") {
     Choice[Traversal].choice(eachL[Int], coordinates).modify(_ + 1)(-\/(List(1,2,3))) shouldEqual -\/(List(2,3,4))
-  }
-
-  test("Traversal has an Unzip instance") {
-    val (int, string) = Unzip[Traversal[List[(Int, String)], ?]].unzip(eachL2[Int, String])
-    int.getAll(List((1, "a"), (2, "b"))) shouldEqual List(1, 2)
-    string.getAll(List((1, "a"), (2, "b"))) shouldEqual List("a", "b")
   }
 
 

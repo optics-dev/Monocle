@@ -2,7 +2,8 @@ package monocle
 
 import monocle.law.discipline.{OptionalTests, SetterTests, TraversalTests}
 
-import scalaz._
+import cats.arrow.{Category, Choice, Compose}
+import scala.{Left => -\/}
 
 class OptionalSpec extends MonocleSuite {
 
@@ -41,12 +42,6 @@ class OptionalSpec extends MonocleSuite {
 
   test("Optional has a Choice instance") {
     Choice[Optional].choice(headOptionI, Category[Optional].id[Int]).getOption(-\/(List(1,2,3))) shouldEqual Some(1)
-  }
-
-  test("Optional has an Unzip instance") {
-    val (int, string) = Unzip[Optional[List[(Int, String)], ?]].unzip(headOption2[Int, String])
-    int.getOption(List((1, "a"))) shouldEqual Some(1)
-    string.getOption(List((1, "a"))) shouldEqual Some("a")
   }
 
 

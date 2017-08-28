@@ -1,6 +1,9 @@
 package monocle
 
-import scalaz.{Arrow, Choice, Monoid, Unzip, Zip, \/}
+import cats.{Monoid, Cartesian => Zip}
+import cats.arrow.{Arrow, Choice}
+import cats.implicits._
+import scala.{Either => \/}
 
 /**
  * A [[Getter]] can be seen as a glorified get method between
@@ -135,7 +138,7 @@ object Getter extends GetterInstances {
 
 sealed abstract class GetterInstances extends GetterInstances0 {
   implicit val getterArrow: Arrow[Getter] = new Arrow[Getter]{
-    def arr[A, B](f: (A) => B): Getter[A, B] =
+    def lift[A, B](f: (A) => B): Getter[A, B] =
       Getter(f)
 
     def first[A, B, C](f: Getter[A, B]): Getter[(A, C), (B, C)] =
@@ -152,18 +155,13 @@ sealed abstract class GetterInstances extends GetterInstances0 {
   }
 
   implicit def getterZip[S]: Zip[Getter[S, ?]] = new Zip[Getter[S, ?]] {
-    override def zip[A, B](a: => Getter[S, A], b: => Getter[S, B]) = a zip b
-  }
-
-  implicit def getterUnzip[S]: Unzip[Getter[S, ?]] = new Unzip[Getter[S, ?]] {
-    override def unzip[A, B](g: Getter[S, (A, B)]): (Getter[S, A], Getter[S, B]) =
-      (Getter[S, A](s => g.get(s)._1), Getter[S, B](s => g.get(s)._2))
+    override def product[A, B](a: Getter[S, A], b: Getter[S, B]) = a zip b
   }
 }
 
 sealed abstract class GetterInstances0 {
   implicit val getterChoice: Choice[Getter] = new Choice[Getter]{
-    def choice[A, B, C](f: => Getter[A, C], g: => Getter[B, C]): Getter[A \/ B, C] =
+    def choice[A, B, C](f: Getter[A, C], g: Getter[B, C]): Getter[A \/ B, C] =
       f choice g
 
     def id[A]: Getter[A, A] =

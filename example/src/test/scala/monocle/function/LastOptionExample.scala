@@ -2,7 +2,7 @@ package monocle.function
 
 import monocle.MonocleSuite
 
-import scalaz.IList
+import scala.collection.immutable.{List => IList}
 
 class LastOptionExample extends MonocleSuite {
 

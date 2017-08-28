@@ -3,7 +3,7 @@ package monocle.std
 import monocle.Prism
 import monocle.internal.Bounded
 
-import scalaz.std.anyVal._
+import cats.instances.byte._
 
 object byte extends ByteOptics
 

@@ -5,8 +5,8 @@ import monocle.macros.GenIso
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary._
 
-import scalaz.std.anyVal._
-import scalaz.{Category, Compose, Equal, Split}
+import cats.{Eq => Equal}
+import cats.arrow.{Category, Compose}
 
 class IsoSpec extends MonocleSuite {
 
@@ -23,23 +23,23 @@ class IsoSpec extends MonocleSuite {
 
   case class IntWrapper(i: Int)
   implicit val intWrapperGen: Arbitrary[IntWrapper] = Arbitrary(arbitrary[Int].map(IntWrapper.apply))
-  implicit val intWrapperEq = Equal.equalA[IntWrapper]
+  implicit val intWrapperEq = Equal.fromUniversalEquals[IntWrapper]
 
   case class IdWrapper[A](value: A)
   implicit def idWrapperGen[A: Arbitrary]: Arbitrary[IdWrapper[A]] = Arbitrary(arbitrary[A].map(IdWrapper.apply))
-  implicit def idWrapperEq[A: Equal]: Equal[IdWrapper[A]] = Equal.equalA
+  implicit def idWrapperEq[A: Equal]: Equal[IdWrapper[A]] = Equal.fromUniversalEquals
 
   case object AnObject
   implicit val anObjectGen: Arbitrary[AnObject.type] = Arbitrary(Gen.const(AnObject))
-  implicit val anObjectEq = Equal.equalA[AnObject.type]
+  implicit val anObjectEq = Equal.fromUniversalEquals[AnObject.type]
 
   case class EmptyCase()
   implicit val emptyCaseGen: Arbitrary[EmptyCase] = Arbitrary(Gen.const(EmptyCase()))
-  implicit val emptyCaseEq = Equal.equalA[EmptyCase]
+  implicit val emptyCaseEq = Equal.fromUniversalEquals[EmptyCase]
 
   case class EmptyCaseType[A]()
   implicit def emptyCaseTypeGen[A]: Arbitrary[EmptyCaseType[A]] = Arbitrary(Gen.const(EmptyCaseType()))
-  implicit def emptyCaseTypeEq[A] = Equal.equalA[EmptyCaseType[A]]
+  implicit def emptyCaseTypeEq[A] = Equal.fromUniversalEquals[EmptyCaseType[A]]
 
   val iso = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)
 
@@ -73,15 +73,11 @@ class IsoSpec extends MonocleSuite {
     Category[Iso].id[Int].get(3) shouldEqual 3
   }
 
-  test("Iso has a Split instance") {
-    Split[Iso].split(iso, iso.reverse).get((IntWrapper(3), 3)) shouldEqual ((3, IntWrapper(3)))
-  }
-
   test("mapping") {
-    import scalaz.Id._
+    import cats.Id
 
-    iso.mapping[Id].get(id.pure(IntWrapper(3))) shouldEqual id.pure(3)
-    iso.mapping[Id].reverseGet(id.pure(3)) shouldEqual id.pure(IntWrapper(3))
+    iso.mapping[Id].get(IntWrapper(3)) shouldEqual 3
+    iso.mapping[Id].reverseGet(3) shouldEqual IntWrapper(3)
   }
 
   test("apply") {

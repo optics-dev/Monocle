@@ -2,8 +2,6 @@ package monocle.function
 
 import monocle._
 
-import scalaz.Tree._
-
 class ReverseExample extends MonocleSuite {
 
   test("reverse creates an Iso from a List to its reversed version") {
@@ -25,10 +23,6 @@ class ReverseExample extends MonocleSuite {
 
   test("reverse creates an Iso from a String to its reversed version") {
     ("Hello" applyIso reverse get) shouldEqual "olleH"
-  }
-
-  test("reverse creates an Iso from a Tree to its reversed version") {
-    (Node(1, Stream(Leaf(2), Leaf(3))) applyIso reverse get) shouldEqual Node(1, Stream(Leaf(3), Leaf(2)))
   }
 
   test("reverse creates an Iso from a Vector to its reversed version") {

@@ -6,7 +6,7 @@ import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Gen}
 import shapeless.{:+:, CNil, Coproduct, Inl, Inr}
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 class CoproductSpec extends MonocleSuite {
 
@@ -18,7 +18,7 @@ class CoproductSpec extends MonocleSuite {
   ))
 
   implicit val isbEqual = new Equal[IB]{
-    override def equal(a1: IB, a2: IB): Boolean = (a1, a2) match {
+    override def eqv(a1: IB, a2: IB): Boolean = (a1, a2) match {
       case (Inl(i1), Inl(i2)) => i1 == i2
       case (Inr(b1), Inr(b2)) => b1 == b2
       case _                  => false

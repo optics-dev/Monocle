@@ -6,8 +6,8 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
-import scalaz.std.option._
+import cats.{Eq => Equal}
+import cats.instances.option._
 
 object OptionalTests extends Laws {
 

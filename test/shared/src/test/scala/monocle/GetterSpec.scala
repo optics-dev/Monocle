@@ -1,6 +1,9 @@
 package monocle
 
-import scalaz._
+import cats.{Cartesian => Zip}
+import cats.arrow.{Arrow, Category, Compose, Choice}
+import cats.functor.Profunctor
+import scala.{Left => -\/}
 
 class GetterSpec extends MonocleSuite {
 
@@ -25,29 +28,18 @@ class GetterSpec extends MonocleSuite {
     Choice[Getter].choice(i, Choice[Getter].id[Int]).get(-\/(Bar(3))) shouldEqual 3
   }
 
-  test("Getter has a Split instance") {
-    Split[Getter].split(i, bar).get((Bar(3), Foo(Bar(3)))) shouldEqual ((3, Bar(3)))
-  }
-
   test("Getter has a Profunctor instance") {
-    Profunctor[Getter].mapsnd(bar)(_.i).get(Foo(Bar(3))) shouldEqual 3
+    Profunctor[Getter].rmap(bar)(_.i).get(Foo(Bar(3))) shouldEqual 3
   }
 
   test("Getter has a Arrow instance") {
-    Arrow[Getter].arr((_: Int) * 2).get(4) shouldEqual 8
+    Arrow[Getter].lift((_: Int) * 2).get(4) shouldEqual 8
   }
 
   test("Getter has a Zip instance") {
     val length = Getter[String, Int](_.length)
     val upper = Getter[String, String](_.toUpperCase)
-    Zip[Getter[String, ?]].zip(length, upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
-  }
-
-  test("Getter has an Unzip instance") {
-    val lengthAndUpper = Getter[String, (Int, String)](s => s.length -> s.toUpperCase)
-    val (length, upper) = Unzip[Getter[String, ?]].unzip(lengthAndUpper)
-    length.get("helloworld") shouldEqual 10
-    upper.get("helloworld") shouldEqual "HELLOWORLD"
+    Zip[Getter[String, ?]].product(length, upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
   }
 
   test("get") {
@@ -68,14 +60,5 @@ class GetterSpec extends MonocleSuite {
     val length = Getter[String, Int](_.length)
     val upper = Getter[String, String](_.toUpperCase)
     length.zip(upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
-  }
-
-  test("zip/unzip roundtrip") {
-    val length = Getter[String, Int](_.length)
-    val upper = Getter[String, String](_.toUpperCase)
-
-    val (length1, upper1) = Unzip[Getter[String, ?]].unzip(length.zip(upper))
-    length1.get("helloworld") shouldEqual length.get("helloworld")
-    upper.get("helloworld") shouldEqual upper.get("helloworld")
   }
 }

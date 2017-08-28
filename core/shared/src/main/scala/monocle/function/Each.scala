@@ -3,7 +3,7 @@ package monocle.function
 import monocle.{Iso, PTraversal, Traversal}
 
 import scala.annotation.implicitNotFound
-import scalaz.{Applicative, Traverse}
+import cats.{Applicative, Traverse}
 
 /**
  * Typeclass that defines a [[Traversal]] from a monomorphic container `S` to all of its elements of type `A`
@@ -38,10 +38,10 @@ object Each extends EachFunctions {
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  import scalaz.std.list._
-  import scalaz.std.map._
-  import scalaz.std.stream._
-  import scalaz.std.vector._
+  import cats.instances.list._
+  import cats.instances.map._
+  import cats.instances.stream._
+  import cats.instances.vector._
   import scala.util.Try
 
   implicit def eitherEach[A, B]: Each[Either[A, B], B] = new Each[Either[A, B], B] {
@@ -93,23 +93,12 @@ object Each extends EachFunctions {
   implicit def vectorEach[A]: Each[Vector[A], A] = fromTraverse
 
   /************************************************************************************************/
-  /** Scalaz instances                                                                            */
+  /** Cats instances                                                                            */
   /************************************************************************************************/
-  import scalaz.{==>>, \/, Cofree, IList, Maybe, NonEmptyList, OneAnd, Tree, Validation}
+  import cats.data.{NonEmptyList, OneAnd, Validated => Validation}
+  import cats.free.Cofree
 
   implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] = fromTraverse[Cofree[S, ?], A]
-
-  implicit def disjunctionEach[A, B]: Each[A \/ B, B] = new Each[A \/ B, B] {
-    def each = monocle.std.disjunction.right.asTraversal
-  }
-
-  implicit def iListEach[A]: Each[IList[A], A] = fromTraverse
-
-  implicit def iMapEach[K, V]: Each[K ==>> V, V] = fromTraverse[K ==>> ?, V]
-
-  implicit def maybeEach[A]: Each[Maybe[A], A] = new Each[Maybe[A], A]{
-    def each = monocle.std.maybe.just.asTraversal
-  }
 
   implicit def nelEach[A]: Each[NonEmptyList[A], A] = fromTraverse
 
@@ -117,11 +106,9 @@ object Each extends EachFunctions {
     new Each[OneAnd[T, A], A]{
       val each = new Traversal[OneAnd[T, A], A]{
         def modifyF[F[_]: Applicative](f: A => F[A])(s: OneAnd[T, A]): F[OneAnd[T, A]] =
-          Applicative[F].apply2(f(s.head), ev.each.modifyF(f)(s.tail))((head, tail) => new OneAnd(head, tail))
+          Applicative[F].map2(f(s.head), ev.each.modifyF(f)(s.tail))((head, tail) => new OneAnd(head, tail))
       }
     }
-
-  implicit def treeEach[A]: Each[Tree[A], A] = fromTraverse
 
   implicit def validationEach[A, B]: Each[Validation[A, B], B] = new Each[Validation[A, B], B] {
     def each = monocle.std.validation.success.asTraversal

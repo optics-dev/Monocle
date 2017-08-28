@@ -4,7 +4,7 @@ import monocle.bench.BenchModel._
 import monocle.{PTraversal, Traversal}
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 
-import scalaz.std.map._
+import cats.instances.map._
 
 @State(Scope.Benchmark)
 class MonocleTraversalBench {

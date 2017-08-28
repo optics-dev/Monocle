@@ -6,9 +6,9 @@ import org.scalacheck.Prop._
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
-import scalaz.std.list._
-import scalaz.std.option._
+import cats.{Eq => Equal}
+import cats.instances.list._
+import cats.instances.option._
 
 object TraversalTests extends Laws {
 

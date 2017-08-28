@@ -6,8 +6,8 @@ import monocle.law.discipline.{OptionalTests, PrismTests}
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
-import scalaz.std.tuple._
+import cats.{Eq => Equal}
+import cats.instances.tuple._
 
 object SnocTests extends Laws {
 

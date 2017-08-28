@@ -59,13 +59,13 @@ val n = streetNumber.get(address)
 streetNumber.set(n + 1)(address)
 ```
 
-We can push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `scalaz.Functor`:
+We can push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `cats.Functor`:
 
 ```tut:silent
 def neighbors(n: Int): List[Int] =
   if(n > 0) List(n - 1, n + 1) else List(n + 1)
 
-import scalaz.std.list._ // to get Functor[List] instance
+import cats.syntax.list._ // to get Functor[List] instance
 ```
 
 ```tut
@@ -77,7 +77,7 @@ This would work with any kind of `Functor` and is especially useful in conjuncti
 where one has the task to update a deeply nested structure with the result of an asynchronous computation:
 
 ```tut:silent
-import scalaz.std.scalaFuture._
+import cats.instances.scalaFuture._
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits._ // to get global ExecutionContext
 

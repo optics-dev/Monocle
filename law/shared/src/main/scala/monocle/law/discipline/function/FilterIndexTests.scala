@@ -6,7 +6,7 @@ import monocle.law.discipline.TraversalTests
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
+import cats.{Eq => Equal}
 
 object FilterIndexTests extends Laws {
 

@@ -1,7 +1,7 @@
 package monocle.std
 
-import monocle.{Prism, PPrism, Iso, PIso}
-import scalaz.{\/, -\/, \/-}
+import monocle.{Prism, PPrism}
+import scala.{Left => -\/, Right => \/-}
 
 object either extends EitherOptics
 
@@ -24,10 +24,4 @@ trait EitherOptics {
 
   final def stdRight[A, B]: Prism[Either[A, B], B] =
     pStdRight[A, B, B]
-
-  final def pEitherToDisjunction[E1, E2, A1, A2]: PIso[Either[E1, A1], Either[E2, A2], E1 \/ A1, E2 \/ A2] =
-    disjunction.pDisjunctionToEither[E2, E1, A2, A1].reverse
-
-  final def eitherToDisjunction[E, A]: Iso[Either[E, A], E \/ A] =
-    pEitherToDisjunction[E, E, A, A]
 }

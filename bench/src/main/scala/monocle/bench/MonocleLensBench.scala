@@ -7,7 +7,7 @@ import monocle.bench.BenchModel._
 import monocle.bench.input.Nested0Input
 import org.openjdk.jmh.annotations._
 
-import scalaz.std.option._
+import cats.instances.option._
 
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.MICROSECONDS)

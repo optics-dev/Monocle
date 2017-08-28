@@ -1,9 +1,11 @@
 package monocle
 
-import scalaz.Leibniz.===
-import scalaz.Liskov.<~<
-import scalaz.{Applicative, Category, Equal, Monoid, Traverse, \/}
-import scalaz.std.option._
+import cats.{Applicative, Eq => Equal, Monoid, Traverse}
+import cats.arrow.Category
+import cats.evidence.{<~<, Is => ===}
+import cats.instances.option._
+import cats.syntax.either._
+import scala.{Either => \/}
 
 /**
  * A [[PPrism]] can be seen as a pair of functions:
@@ -195,7 +197,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /** view a [[PPrism]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] = new Fold[S, A]{
     def foldMap[M: Monoid](f: A => M)(s: S): M =
-      getOption(s) map f getOrElse Monoid[M].zero
+      getOption(s) map f getOrElse Monoid[M].empty
   }
 
   /** view a [[PPrism]] as a [[Setter]] */
@@ -239,7 +241,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /*************************************************************************/
 
   def apply()(implicit ev: B === Unit): T =
-    ev.subst[PPrism[S, T, A, ?]](self).reverseGet(())
+    ev.substitute[PPrism[S, T, A, ?]](self).reverseGet(())
 
   def apply(b: B): T = reverseGet(b)
 
@@ -304,7 +306,7 @@ object Prism {
 
   /** a [[Prism]] that checks for equality with a given value */
   def only[A](a: A)(implicit A: Equal[A]): Prism[A, Unit] =
-    Prism[A, Unit](a2 => if(A.equal(a, a2)) Some(()) else None)(_ => a)
+    Prism[A, Unit](a2 => if(A.eqv(a, a2)) Some(()) else None)(_ => a)
 }
 
 sealed abstract class PrismInstances {

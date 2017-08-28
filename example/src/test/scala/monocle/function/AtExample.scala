@@ -5,8 +5,7 @@ import monocle.refined._
 import shapeless.test.illTyped
 import eu.timepit.refined.auto._
 
-import scalaz.IMap
-import scalaz.std.string._
+import scala.collection.immutable.{Map => IMap}
 
 class AtExample extends MonocleSuite {
 

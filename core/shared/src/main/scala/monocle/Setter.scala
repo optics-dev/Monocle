@@ -1,7 +1,10 @@
 package monocle
 
-import monocle.function.fields.{first, second}
-import scalaz.{Choice, Contravariant, Functor, Profunctor, Unzip, \/}
+import cats.Functor
+import cats.arrow.Choice
+import cats.functor.{Contravariant, Profunctor}
+import cats.syntax.either._
+import scala.{Either => \/}
 
 /**
  * A [[PSetter]] is a generalisation of Functor map:
@@ -115,7 +118,7 @@ object PSetter extends SetterInstances {
         _modify(_ => b)
     }
 
-  /** create a [[PSetter]] from a scalaz.Functor */
+  /** create a [[PSetter]] from a cats.Functor */
   def fromFunctor[F[_], A, B](implicit F: Functor[F]): PSetter[F[A], F[B], A, B] =
     PSetter[F[A], F[B], A, B](f => F.map(_)(f))
 
@@ -125,7 +128,7 @@ object PSetter extends SetterInstances {
 
   /** create a [[PSetter]] from a Profunctor */
   def fromProfunctor[P[_, _], A, B, C](implicit P: Profunctor[P]): PSetter[P[B, C], P[A, C], A, B] =
-    PSetter[P[B, C], P[A, C], A, B](f => P.mapfst(_)(f))
+    PSetter[P[B, C], P[A, C], A, B](f => P.lmap(_)(f))
 
 }
 
@@ -153,12 +156,7 @@ sealed abstract class SetterInstances {
     def id[A]: Setter[A, A] =
       Setter.id
 
-    def choice[A, B, C](f1: => Setter[A, C], f2: => Setter[B, C]): Setter[A \/ B, C] =
+    def choice[A, B, C](f1: Setter[A, C], f2: Setter[B, C]): Setter[A \/ B, C] =
       f1 choice f2
-  }
-
-  implicit def setterUnzip[S]: Unzip[Setter[S, ?]] = new Unzip[Setter[S, ?]] {
-    override def unzip[A, B](f: Setter[S, (A, B)]): (Setter[S, A], Setter[S, B]) =
-      (f composeLens first, f composeLens second)
   }
 }

@@ -6,7 +6,7 @@ import org.typelevel.discipline.scalatest.Discipline
 import shapeless.test.illTyped
 import shapeless.{::, HNil}
 
-import scalaz.IList
+import scala.collection.immutable.{List => IList}
 
 case class Custom(value: Int)
 

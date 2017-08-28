@@ -5,8 +5,8 @@ import monocle.PTraversal
 import monocle.function.Each
 import monocle.{ Iso, Traversal }
 import monocle.generic.internal.TupleGeneric
-import scalaz.Applicative
-import scalaz.syntax.apply._
+import cats.Applicative
+import cats.syntax.apply._
 import shapeless.{ ::, Generic, HList, HNil }
 
 object product extends ProductOptics
@@ -22,7 +22,7 @@ trait ProductOptics {
   implicit def hConsEach[A, Rest <: HList](implicit restEach: Each[Rest, A]) = new Each[A :: Rest, A] {
     def each: Traversal[A :: Rest, A] = new PTraversal[A :: Rest, A :: Rest, A, A] {
       def modifyF[F[_]: Applicative](f: A => F[A])(s: A :: Rest): F[A :: Rest] =
-        (f(s.head) |@| restEach.each.modifyF(f)(s.tail)).apply(_ :: _)
+        (f(s.head), restEach.each.modifyF(f)(s.tail)).mapN(_ :: _)
     }
   }
 

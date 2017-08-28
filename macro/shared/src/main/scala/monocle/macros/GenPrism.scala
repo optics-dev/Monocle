@@ -19,7 +19,7 @@ private class GenPrismImpl(val c: blackbox.Context) {
     val sTpeSym = sTpe.typeSymbol.companion
     c.Expr[Prism[S, A]](q"""
       import monocle.Prism
-      import scalaz.{\/, \/-, -\/}
+      import scala.{Either => \/, Right => \/-, Left => -\/}
 
       new Prism[$sTpe, $aTpe]{
         def getOrModify(s: $sTpe): $sTpe \/ $aTpe =

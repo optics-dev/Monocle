@@ -10,7 +10,7 @@ position: 1
 In an attempt to be modular, Monocle is broken up into several modules:
 
 * *core* - contains optics (e.g. `Lens`, `Prism`, `Traversal`) and type class definitions (e.g. `Index`, `Each`, `Plated`) and
-  type class instances for standard library types and scalaz data types
+  type class instances for standard library types and cats data types
 * *macro* - macros to simplify the generation of optics
 * *laws* - laws for the optics and type classes
 * *generic* - optics and type class instances for `HList` and `Coproduct` from [shapeless](https://github.com/milessabin/shapeless)

@@ -3,7 +3,7 @@ package monocle.std
 import monocle.Prism
 import monocle.internal.Bounded
 
-import scalaz.std.anyVal.{char => charInstances}
+import cats.instances.char._
 
 object char extends CharOptics
 

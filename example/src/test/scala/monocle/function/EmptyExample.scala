@@ -3,8 +3,6 @@ package monocle.function
 import monocle.MonocleSuite
 import monocle.function.all.{empty => mempty}
 
-import scalaz.{==>>, IMap}
-
 class EmptyExample extends MonocleSuite {
 
   test("empty is a Prism that is successful only when S is empty") {
@@ -18,7 +16,6 @@ class EmptyExample extends MonocleSuite {
   test("_empty return the empty value of a given type") {
     _empty[List[Int]]        shouldEqual List.empty[Int]
     _empty[Map[Int, String]] shouldEqual Map.empty[Int, String]
-    _empty[Int ==>> String]  shouldEqual IMap.empty[Int, String]
     _empty[String]           shouldEqual ""
   }
 

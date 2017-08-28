@@ -1,9 +1,10 @@
 package monocle
 
-import scalaz.Isomorphism.{<=>, <~>}
-import scalaz.Leibniz.===
-import scalaz.Liskov.<~<
-import scalaz.{Applicative, Category, Functor, Monoid, Split, \/}
+import cats.{Applicative, Functor, Monoid}
+import cats.arrow.Category
+import cats.evidence.{<~<, Is => ===}
+import cats.syntax.either._
+import scala.{Either => \/}
 
 /**
  * [[Iso]] is a type alias for [[PIso]] where `S` = `A` and `T` = `B`:
@@ -276,7 +277,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /*************************************************************************/
 
   def apply()(implicit ev: B === Unit): T =
-    ev.subst[PIso[S, T, A, ?]](self).reverseGet(())
+    ev.substitute[PIso[S, T, A, ?]](self).reverseGet(())
 
   def apply(b: B): T = reverseGet(b)
 
@@ -337,10 +338,6 @@ object PIso extends IsoInstances {
           def reverse: PIso[S, T, S, T] = self
         }
     }
-
-  /** transform a natural transformation in a [[PIso]] */
-  def fromIsoFunctor[F[_], G[_], A, B](isoFunctor: F <~> G): PIso[F[A], F[B], G[A], G[B]] =
-    PIso(isoFunctor.to.apply[A])(isoFunctor.from.apply[B])
 }
 
 object Iso {
@@ -351,23 +348,9 @@ object Iso {
   /** alias for [[PIso]] id when S = T and A = B */
   def id[S]: Iso[S, S] =
     PIso.id[S, S]
-
-  /** transform an Iso in a [[Iso]] */
-  def fromIsoSet[A, B](isoSet: A <=> B): Iso[A, B] =
-    Iso(isoSet.to)(isoSet.from)
 }
 
-sealed abstract class IsoInstances extends IsoInstances0 {
-  implicit val isoSplit: Split[Iso] = new Split[Iso] {
-    def split[A, B, C, D](f: Iso[A, B], g: Iso[C, D]): Iso[(A, C), (B, D)] =
-      f split g
-
-    def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
-      g composeIso f
-  }
-}
-
-sealed abstract class IsoInstances0 {
+sealed abstract class IsoInstances {
   implicit val isoCategory: Category[Iso] = new Category[Iso]{
     def id[A]: Iso[A, A] =
       Iso.id[A]

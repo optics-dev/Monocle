@@ -2,8 +2,7 @@ package monocle.function
 
 import monocle.MonocleSuite
 
-import scalaz.std.string._
-import scalaz.{IList, IMap}
+import scala.collection.immutable.{List => IList, Map => IMap}
 
 class FilterIndexExample extends MonocleSuite {
 
