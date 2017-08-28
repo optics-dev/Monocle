@@ -41,15 +41,15 @@ lazy val buildSettings = Seq(
 
 lazy val catsVersion = "1.0.0-MF"
 
+
 lazy val cats              = Def.setting("org.typelevel"              %%% "cats-core"          % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"              %%% "cats-free"          % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel"              %%% "cats-laws"          % catsVersion)
 lazy val newts             = Def.setting("com.github.julien-truffaut" %%% "newts-core"         % "0.3.0-MF-2")
 lazy val scalaz            = Def.setting("org.scalaz"                 %%% "scalaz-core"        % "7.2.13")
 lazy val shapeless         = Def.setting("com.chuusai"                %%% "shapeless"          % "2.3.2")
-
-lazy val refinedDep        = Def.setting("eu.timepit"                 %%% "refined"            % "0.6.1")
-lazy val refinedScalacheck = Def.setting("eu.timepit"                 %%% "refined-scalacheck" % "0.6.1" % "test")
+lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.8.2")
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.8.2" % "test")
 
 lazy val discipline        = Def.setting("org.typelevel"              %%% "discipline"         % "0.7.3")
 lazy val scalacheck        = Def.setting("org.scalacheck"             %%% "scalacheck"         % "1.13.5")
