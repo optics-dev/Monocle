@@ -9,9 +9,8 @@ import cats.{Eq => Equal}
 
 class CharSpec extends MonocleSuite {
 
-  implicit val eqLowerCase: Equal[LowerCaseChar] = Equal.equalA[LowerCaseChar]
-  implicit val eqUpperCase: Equal[UpperCaseChar] = Equal.equalA[UpperCaseChar]
-  implicit val eqChar: Equal[Char] = Equal.equalA[Char]
+  implicit val eqLowerCase: Equal[LowerCaseChar] = Equal.fromUniversalEquals[LowerCaseChar]
+  implicit val eqUpperCase: Equal[UpperCaseChar] = Equal.fromUniversalEquals[UpperCaseChar]
 
   checkAll("lower cases", PrismTests(lowerCase))
   checkAll("upper cases", PrismTests(upperCase))
