@@ -44,10 +44,10 @@ Unlike the <code class="highlighter-rouge">Lens</code>, the element that the <co
 <p>We can use the supplied <code class="highlighter-rouge">getOrModify</code> function to retrieve the target if it matches, or the original value:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">head</span><span class="o">.</span><span class="n">getOrModify</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
-<span class="c1">// res2: scalaz.\/[List[Int],Int] = \/-(1)
+<span class="c1">// res2: List[Int] \/ Int = \/-(1)
 </span>
 <span class="n">head</span><span class="o">.</span><span class="n">getOrModify</span><span class="o">(</span><span class="n">ys</span><span class="o">)</span>
-<span class="c1">// res3: scalaz.\/[List[Int],Int] = -\/(List())
+<span class="c1">// res3: List[Int] \/ Int = -\/(List())
 </span></code></pre>
 </div>
 
