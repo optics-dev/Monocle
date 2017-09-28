@@ -250,7 +250,7 @@ class StateExample extends MonocleSuite {
 
   // first and second projections of a triple
   def _pi12Tr[A, B, C] = PTraversal.fromStore[(A, A, C), (B, B, C), A, B] {
-    case (a1, a2, c) => (a1 ~ a2)((_, _, c))
+    case (a1, a2, c) => (toTraversalBuilder[A, B, (B, B, C)](a1) ~ a2)((_, _, c))
   }
 
   test("extract for Traversal"){
