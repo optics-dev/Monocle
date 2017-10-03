@@ -37,7 +37,7 @@ abstract class Fold[S, A] extends Serializable { self =>
 
   /** find the first target matching the predicate  */
   @inline final def find(p: A => Boolean): S => Option[A] =
-    foldMap(a => if(p(a)) Some(a) else None)(_)(Monoids.firstOption)
+    foldMap(a => Some(a).filter(p))(_)(Monoids.firstOption)
 
   /** get the first target */
   @inline final def headOption(s: S): Option[A] =
