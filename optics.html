@@ -3,6 +3,97 @@
 <p>Here is a diagram to visualise how optics relate to each other:</p>
 
 <p><img src="https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png" alt="Class Diagram" /></p>
+
+<h2 id="optic-composition-table">Optic Composition Table</h2>
+
+<p>Almost all optics compose with the other optics. The composition of one type and itself results in the same type of optic.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">Getter</th>
+      <th style="text-align: center">Iso</th>
+      <th style="text-align: center">Lens</th>
+      <th style="text-align: center">Optional</th>
+      <th style="text-align: center">Prism</th>
+      <th style="text-align: center">Setter</th>
+      <th style="text-align: center">Traversal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Getter</strong></td>
+      <td style="text-align: center"><strong>Getter</strong></td>
+      <td style="text-align: center">Getter</td>
+      <td style="text-align: center">Getter</td>
+      <td style="text-align: center">Fold</td>
+      <td style="text-align: center">Fold</td>
+      <td style="text-align: center">-</td>
+      <td style="text-align: center">Fold</td>
+    </tr>
+    <tr>
+      <td><strong>Iso</strong></td>
+      <td style="text-align: center">Getter</td>
+      <td style="text-align: center"><strong>Iso</strong></td>
+      <td style="text-align: center">Lens</td>
+      <td style="text-align: center">Optional</td>
+      <td style="text-align: center">Prism</td>
+      <td style="text-align: center">Setter</td>
+      <td style="text-align: center">Traversal</td>
+    </tr>
+    <tr>
+      <td><strong>Lens</strong></td>
+      <td style="text-align: center">Getter</td>
+      <td style="text-align: center">Lens</td>
+      <td style="text-align: center"><strong>Lens</strong></td>
+      <td style="text-align: center">Optional</td>
+      <td style="text-align: center">Optional</td>
+      <td style="text-align: center">Setter</td>
+      <td style="text-align: center">Traversal</td>
+    </tr>
+    <tr>
+      <td><strong>Optional</strong></td>
+      <td style="text-align: center">Fold</td>
+      <td style="text-align: center">Optional</td>
+      <td style="text-align: center">Optional</td>
+      <td style="text-align: center"><strong>Optional</strong></td>
+      <td style="text-align: center">Optional</td>
+      <td style="text-align: center">Setter</td>
+      <td style="text-align: center">Traversal</td>
+    </tr>
+    <tr>
+      <td><strong>Prism</strong></td>
+      <td style="text-align: center">Fold</td>
+      <td style="text-align: center">Prism</td>
+      <td style="text-align: center">Optional</td>
+      <td style="text-align: center">Optional</td>
+      <td style="text-align: center"><strong>Prism</strong></td>
+      <td style="text-align: center">Setter</td>
+      <td style="text-align: center">Traversal</td>
+    </tr>
+    <tr>
+      <td><strong>Setter</strong></td>
+      <td style="text-align: center">-</td>
+      <td style="text-align: center">Setter</td>
+      <td style="text-align: center">Setter</td>
+      <td style="text-align: center">Setter</td>
+      <td style="text-align: center">Setter</td>
+      <td style="text-align: center"><strong>Setter</strong></td>
+      <td style="text-align: center">Setter</td>
+    </tr>
+    <tr>
+      <td><strong>Traversal</strong></td>
+      <td style="text-align: center">Fold</td>
+      <td style="text-align: center">Traversal</td>
+      <td style="text-align: center">Traversal</td>
+      <td style="text-align: center">Traversal</td>
+      <td style="text-align: center">Traversal</td>
+      <td style="text-align: center">Setter</td>
+      <td style="text-align: center"><strong>Traversal</strong></td>
+    </tr>
+  </tbody>
+</table>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/Monocle/highlight/highlight.pack.js"></script><script>hljs.configure({
 languages:['scala','java','bash']
 });
