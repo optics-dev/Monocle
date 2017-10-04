@@ -5,4 +5,5 @@ object all extends StateLensSyntax
   with StateGetterSyntax
   with StateSetterSyntax
   with StateTraversalSyntax
+  with StateITraversalSyntax
   with ReaderGetterSyntax

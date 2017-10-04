@@ -7,4 +7,5 @@ package object monocle {
   type Lens[S, A]      = PLens[S, S, A, A]
   type Iso[S, A]       = PIso[S, S, A, A]
 
+  type ITraversal[I, S, A] = IPTraversal[I, S, S, A, A]
 }

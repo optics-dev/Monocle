@@ -149,6 +149,18 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
     composeOptional(other.asOptional)
 
+  final def composeITraversal[I, C, D](other: IPTraversal[I, A, B, C, D]): IPTraversal[I, S, T, C, D] =
+    new IPTraversal[I, S, T, C, D] {
+      import scalaz.syntax.applicative._
+      def modifyF[
+            F[_]: Applicative,
+            P[_, _]: Indexable[I, ?[_, _]]](
+          f: P[C, F[D]])(s: S): F[T] =
+        self.getOrModify(s).fold(
+          t => t.pure[F],
+          a => other.modifyF(f)(a).map(self.set(_)(s)))
+    }
+
   /********************************************/
   /** Experimental aliases of compose methods */
   /********************************************/
@@ -172,6 +184,9 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   /** alias to composeIso */
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
     composeIso(other)
+
+  final def ^|->>[I, C, D](other: IPTraversal[I, A, B, C, D]): IPTraversal[I, S, T, C, D] =
+    composeITraversal(other)
 
   /*********************************************************************/
   /** Transformation methods to view a [[POptional]] as another Optics */
