@@ -44,8 +44,8 @@ lazy val buildSettings = Seq(
 lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.13")
 lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.2")
 
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.8.2")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.8.2" % "test")
+lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.8.4")
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.8.4" % "test")
 
 lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.7.3")
 lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.13.5")
