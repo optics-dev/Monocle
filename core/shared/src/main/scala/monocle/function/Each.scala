@@ -3,7 +3,7 @@ package monocle.function
 import monocle.{Iso, PTraversal, Traversal}
 
 import scala.annotation.implicitNotFound
-import cats.{Applicative, Traverse}
+import cats.{Applicative, Order, Traverse}
 
 /**
  * Typeclass that defines a [[Traversal]] from a monomorphic container `S` to all of its elements of type `A`
@@ -39,9 +39,10 @@ object Each extends EachFunctions {
   /** Std instances                                                                               */
   /************************************************************************************************/
   import cats.instances.list._
-  import cats.instances.map._
+  import cats.instances.sortedMap._
   import cats.instances.stream._
   import cats.instances.vector._
+  import scala.collection.immutable.SortedMap
   import scala.util.Try
 
   implicit def eitherEach[A, B]: Each[Either[A, B], B] = new Each[Either[A, B], B] {
@@ -50,7 +51,7 @@ object Each extends EachFunctions {
 
   implicit def listEach[A]: Each[List[A], A] = fromTraverse
 
-  implicit def mapEach[K, V]: Each[Map[K, V], V] = fromTraverse[Map[K, ?], V]
+  implicit def mapEach[K: Order, V]: Each[SortedMap[K, V], V] = fromTraverse[SortedMap[K, ?], V]
 
   implicit def optEach[A]: Each[Option[A], A] = new Each[Option[A], A] {
     def each = monocle.std.option.some[A].asTraversal

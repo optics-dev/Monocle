@@ -37,7 +37,7 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
 
   implicit val exampleEq: Equal[Example] = Equal.fromUniversalEquals[Example]
   implicit val example2Eq: Equal[Example2] = Equal.fromUniversalEquals[Example2]
-  implicit def exampleTypeEq[A](implicit as: Equal[Option[A]]): Equal[ExampleType[A]] = as.on(_.as)
+  implicit def exampleTypeEq[A](implicit as: Equal[Option[A]]): Equal[ExampleType[A]] = Equal.by(_.as)
   implicit def example2TypeEq[A](implicit a: Equal[A], as: Equal[Option[A]]): Equal[Example2Type[A]] = Equal.instance((x, y) => a.eqv(x.a, y.a) && as.eqv(x.as, y.as))
   implicit val exampleObjEq: Equal[ExampleObject.type] = Equal.fromUniversalEquals[ExampleObject.type]
   implicit val emptyCaseEq: Equal[EmptyCase] = Equal.fromUniversalEquals[EmptyCase]

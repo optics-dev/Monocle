@@ -3,8 +3,9 @@ package monocle.function
 import monocle.{Iso, Traversal}
 
 import scala.annotation.implicitNotFound
+import scala.collection.immutable.SortedMap
 import cats.syntax.traverse._
-import cats.{Applicative, Traverse}
+import cats.{Applicative, Order, Traverse}
 
 /**
  * Typeclass that defines a [[Traversal]] from an `S` to all its elements `A` whose index `I` in `S` satisfies the predicate
@@ -50,15 +51,15 @@ object FilterIndex extends FilterIndexFunctions {
   implicit def listFilterIndex[A]: FilterIndex[List[A], Int, A] =
     fromTraverse(_.zipWithIndex)
 
-  implicit def mapFilterIndex[K, V]: FilterIndex[Map[K,V], K, V] = new FilterIndex[Map[K, V], K, V] {
+  implicit def sortedMapFilterIndex[K, V](implicit ok: Order[K]): FilterIndex[SortedMap[K,V], K, V] = new FilterIndex[SortedMap[K, V], K, V] {
     import cats.syntax.applicative._
     import cats.syntax.functor._
 
-    def filterIndex(predicate: K => Boolean) = new Traversal[Map[K, V], V] {
-      def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
+    def filterIndex(predicate: K => Boolean) = new Traversal[SortedMap[K, V], V] {
+      def modifyF[F[_]: Applicative](f: V => F[V])(s: SortedMap[K, V]): F[SortedMap[K, V]] =
         s.toList.traverse{ case (k, v) =>
           (if(predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
-        }.map(_.toMap)
+        }.map(kvs => SortedMap(kvs: _*)(ok.toOrdering))
     }
   }
 

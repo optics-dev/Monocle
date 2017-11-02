@@ -1,8 +1,7 @@
 package monocle
 
-import cats.{Cartesian => Zip}
-import cats.arrow.{Arrow, Category, Compose, Choice}
-import cats.functor.Profunctor
+import cats.{Semigroupal => Zip}
+import cats.arrow.{Arrow, Category, Compose, Choice, Profunctor}
 import scala.{Left => -\/}
 
 class GetterSpec extends MonocleSuite {

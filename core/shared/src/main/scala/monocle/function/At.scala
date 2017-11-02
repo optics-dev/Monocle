@@ -3,6 +3,7 @@ package monocle.function
 import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
+import scala.collection.immutable.SortedMap
 
 /**
  * Typeclass that defines a [[Lens]] from an `S` to an `A` at an index `I`
@@ -40,8 +41,8 @@ object At extends AtFunctions {
   /** Std instances                                                                               */
   /************************************************************************************************/
 
-  implicit def atMap[K, V]: At[Map[K, V], K, Option[V]] = new At[Map[K, V], K, Option[V]]{
-    def at(i: K) = Lens{m: Map[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
+  implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] = new At[SortedMap[K, V], K, Option[V]]{
+    def at(i: K) = Lens{m: SortedMap[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   }
 
   implicit def atSet[A]: At[Set[A], A, Boolean] = new At[Set[A], A, Boolean] {
