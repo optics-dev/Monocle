@@ -1,5 +1,6 @@
 package monocle.bench
 
+import scala.collection.immutable.SortedMap
 import scala.util.Random
 
 
@@ -35,7 +36,7 @@ object BenchModel {
   case class Point3(x: Int, y: Int, z: Int)
   val p = Point3(2, 10, 24)
 
-  val map = 1.to(200).map(_ -> 5).toMap
+  val map = SortedMap(1.to(200).map(_ -> 5): _*)
 
 
   case class IntWrapper0(i: Int)

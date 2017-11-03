@@ -2,17 +2,15 @@ package monocle.function
 
 import monocle.MonocleSuite
 
-import scala.collection.immutable.{Map => IMap}
+import scala.collection.immutable.SortedMap
 import cats.data.OneAnd
 
 class IndexExample extends MonocleSuite {
 
-  test("index creates an Optional from a Map, IMap to a value at the index") {
-    (Map("One" -> 1, "Two" -> 2) applyOptional index("One") getOption) shouldEqual Some(1)
-    (IMap("One" -> 1, "Two" -> 2) applyOptional index("One") getOption) shouldEqual Some(1)
+  test("index creates an Optional from a SortedMap, IMap to a value at the index") {
+    (SortedMap("One" -> 1, "Two" -> 2) applyOptional index("One") getOption) shouldEqual Some(1)
 
-    (Map("One" -> 1, "Two" -> 2) applyOptional index("One") set 2) shouldEqual Map("One" -> 2, "Two" -> 2)
-    (IMap("One" -> 1, "Two" -> 2) applyOptional index("One") set 2) shouldEqual IMap("One" -> 2, "Two" -> 2)
+    (SortedMap("One" -> 1, "Two" -> 2) applyOptional index("One") set 2) shouldEqual SortedMap("One" -> 2, "Two" -> 2)
   }
 
   test("index creates an Optional from a List, IList, Vector or Stream to a value at the index") {

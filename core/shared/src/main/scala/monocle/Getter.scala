@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Monoid, Cartesian => Zip}
+import cats.{Monoid, Semigroupal => Zip}
 import cats.arrow.{Arrow, Choice}
 import cats.implicits._
 import scala.{Either => \/}

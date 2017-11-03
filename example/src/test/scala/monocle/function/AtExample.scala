@@ -5,27 +5,21 @@ import monocle.refined._
 import shapeless.test.illTyped
 import eu.timepit.refined.auto._
 
-import scala.collection.immutable.{Map => IMap}
+import scala.collection.immutable.SortedMap
 
 class AtExample extends MonocleSuite {
 
-  test("at creates a Lens from a Map, IMap to an optional value") {
-    (Map("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
+  test("at creates a Lens from a SortedMap, IMap to an optional value") {
+    (SortedMap("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
 
-    (Map("One" -> 1, "Two" -> 2) applyLens at("One") set Some(-1))  shouldEqual Map("One" -> -1, "Two" -> 2)
-
-    (IMap("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
-
-    (IMap("One" -> 1, "Two" -> 2) applyLens at("One") set Some(-1))  shouldEqual IMap("One" -> -1, "Two" -> 2)
+    (SortedMap("One" -> 1, "Two" -> 2) applyLens at("One") set Some(-1))  shouldEqual SortedMap("One" -> -1, "Two" -> 2)
 
 
     // can delete a value
-    (Map("One" -> 1, "Two" -> 2) applyLens at("Two") set None) shouldEqual Map("One" -> 1)
-    (IMap("One" -> 1, "Two" -> 2) applyLens at("Two") set None) shouldEqual IMap("One" -> 1)
+    (SortedMap("One" -> 1, "Two" -> 2) applyLens at("Two") set None) shouldEqual SortedMap("One" -> 1)
 
     // add a new value
-    (Map("One" -> 1, "Two" -> 2) applyLens at("Three") set Some(3)) shouldEqual Map("One" -> 1, "Two" -> 2, "Three" -> 3)
-    (IMap("One" -> 1, "Two" -> 2) applyLens at("Three") set Some(3)) shouldEqual IMap("One" -> 1, "Two" -> 2, "Three" -> 3)
+    (SortedMap("One" -> 1, "Two" -> 2) applyLens at("Three") set Some(3)) shouldEqual SortedMap("One" -> 1, "Two" -> 2, "Three" -> 3)
   }
 
   test("at creates a Lens from a Set to an optional element of the Set") {
@@ -53,8 +47,8 @@ class AtExample extends MonocleSuite {
     ('x' applyLens at(0: CharBits) set true) shouldEqual 'y'
   }
 
-  test("remove deletes an element of a Map") {
-    remove("Foo")(Map("Foo" -> 1, "Bar" -> 2)) shouldEqual Map("Bar" -> 2)
+  test("remove deletes an element of a SortedMap") {
+    remove("Foo")(SortedMap("Foo" -> 1, "Bar" -> 2)) shouldEqual SortedMap("Bar" -> 2)
   }
 
 }

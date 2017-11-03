@@ -2,12 +2,14 @@ package monocle.std
 
 import monocle.MonocleSuite
 import monocle.law.discipline.function._
+import scala.collection.immutable.SortedMap
 
 class MapSpec extends MonocleSuite {
-  checkAll("at Map", AtTests[Map[Int, String], Int, Option[String]])
-  // typelevel/cats#1831 Map probably does not respect Traverse law at the moment
-  // checkAll("each Map", EachTests[Map[Int, String], String])
-  checkAll("empty Map", EmptyTests[Map[Int, String]])
-  checkAll("index Map", IndexTests[Map[Int, String], Int, String])
-  checkAll("filterIndex Map", FilterIndexTests[Map[Int, Char], Int, Char])
+
+  checkAll("at SortedMap", AtTests[SortedMap[Int, String], Int, Option[String]])
+  // typelevel/cats#1831 SortedMap probably does not respect Traverse law at the moment
+  // checkAll("each SortedMap", EachTests[SortedMap[Int, String], String])
+  checkAll("empty SortedMap", EmptyTests[SortedMap[Int, String]])
+  checkAll("index SortedMap", IndexTests[SortedMap[Int, String], Int, String])
+  checkAll("filterIndex SortedMap", FilterIndexTests[SortedMap[Int, Char], Int, Char])
 }

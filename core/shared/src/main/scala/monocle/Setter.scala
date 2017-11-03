@@ -1,8 +1,8 @@
 package monocle
 
-import cats.Functor
+import cats.{ Contravariant, Functor }
 import cats.arrow.Choice
-import cats.functor.{Contravariant, Profunctor}
+import cats.arrow.Profunctor
 import cats.syntax.either._
 import scala.{Either => \/}
 

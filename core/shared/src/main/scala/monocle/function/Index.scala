@@ -1,8 +1,11 @@
 package monocle.function
 
+import cats.Order
+
 import monocle.{Iso, Optional}
 
 import scala.annotation.implicitNotFound
+import scala.collection.immutable.SortedMap
 import scala.util.Try
 
 /**
@@ -47,7 +50,7 @@ object Index extends IndexFunctions{
     )
   }
 
-  implicit def mapIndex[K, V]: Index[Map[K, V], K, V] = fromAt
+  implicit def sortedMapIndex[K: Order, V]: Index[SortedMap[K, V], K, V] = fromAt
 
   implicit def streamIndex[A]: Index[Stream[A], Int, A] = new Index[Stream[A], Int, A] {
     def index(i: Int) = Optional[Stream[A], A](

@@ -3,19 +3,21 @@ package monocle.function
 import monocle._
 import org.scalacheck.{Cogen, Arbitrary}
 
-import cats.{Eq => Equal}
+import cats.{Eq => Equal, Order}
 import cats.data.NonEmptyList
 import cats.syntax.apply._
 
-case class MMap[K, V](map: Map[K, V])
+import scala.collection.immutable.SortedMap
+
+case class MMap[K, V](map: SortedMap[K, V])
 
 object MMap {
-  def toMap[K, V]: Iso[MMap[K, V], Map[K, V]] =
-    Iso[MMap[K, V], Map[K, V]](_.map)(MMap(_))
+  def toSortedMap[K, V]: Iso[MMap[K, V], SortedMap[K, V]] =
+    Iso[MMap[K, V], SortedMap[K, V]](_.map)(MMap(_))
 
   implicit def mmapEq[K, V]: Equal[MMap[K, V]] = Equal.fromUniversalEquals
-  implicit def mmapArb[K: Arbitrary, V: Arbitrary]: Arbitrary[MMap[K, V]] =
-    Arbitrary(Arbitrary.arbitrary[Map[K, V]].map(MMap(_)))
+  implicit def mmapArb[K: Arbitrary, V: Arbitrary](implicit ok: Order[K]): Arbitrary[MMap[K, V]] =
+    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MMap(SortedMap(kvs: _*)(ok.toOrdering))))
 }
 
 case class CNel(head: Char, tail: List[Char])
