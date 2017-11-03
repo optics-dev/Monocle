@@ -7,8 +7,7 @@ import scala.collection.immutable.SortedMap
 class MapSpec extends MonocleSuite {
 
   checkAll("at SortedMap", AtTests[SortedMap[Int, String], Int, Option[String]])
-  // typelevel/cats#1831 SortedMap probably does not respect Traverse law at the moment
-  // checkAll("each SortedMap", EachTests[SortedMap[Int, String], String])
+  checkAll("each SortedMap", EachTests[SortedMap[Int, String], String])
   checkAll("empty SortedMap", EmptyTests[SortedMap[Int, String]])
   checkAll("index SortedMap", IndexTests[SortedMap[Int, String], Int, String])
   checkAll("filterIndex SortedMap", FilterIndexTests[SortedMap[Int, Char], Int, Char])
