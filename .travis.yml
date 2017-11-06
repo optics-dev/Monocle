@@ -1,7 +1,7 @@
 language: scala
 scala:
-- 2.12.2
-- 2.11.8
+- 2.12.4
+- 2.11.11
 - 2.10.6
 jdk:
 - oraclejdk8
@@ -18,7 +18,7 @@ script:
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
   - |
-    if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.2 ]; then
+    if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.4 ]; then
       sbt ++$TRAVIS_SCALA_VERSION tut
     else
       echo "Skipping sbt tut"
@@ -48,7 +48,7 @@ after_success:
 - '[[ $TRAVIS_BRANCH == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]] && { sbt +publish ghpagesPushSite; };'
 matrix:
   include:
-  - scala: 2.11.8
+  - scala: 2.11.11
     jdk: oraclejdk8
     sudo: required
     before_install:
