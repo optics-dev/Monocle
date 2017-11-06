@@ -81,7 +81,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
 
   /** find if the target satisfies the predicate */
   @inline final def find(p: A => Boolean): S => Option[A] =
-    getOption(_).flatMap(a => if(p(a)) Some(a) else None)
+    getOption(_).flatMap(a => Some(a).filter(p))
 
   /** check if there is a target and it satisfies the predicate */
   @inline final def exist(p: A => Boolean): S => Boolean =

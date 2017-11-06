@@ -48,7 +48,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /** find if the target satisfies the predicate */
   @inline final def find(p: A => Boolean): S => Option[A] = s => {
     val a = get(s)
-    if(p(a)) Some(a) else None
+    Some(a).filter(p)
   }
 
   /** check if the target satisfies the predicate */
