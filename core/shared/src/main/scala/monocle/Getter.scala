@@ -16,10 +16,8 @@ abstract class Getter[S, A] extends Serializable { self =>
   def get(s: S): A
 
   /** find if the target satisfies the predicate  */
-  @inline final def find(p: A => Boolean): S => Option[A] = s => {
-    val a = get(s)
-    if(p(a)) Some(a) else None
-  }
+  @inline final def find(p: A => Boolean): S => Option[A] =
+    s => Some(get(s)).filter(p)
 
   /** check if the target satisfies the predicate */
   @inline final def exist(p: A => Boolean): S => Boolean =

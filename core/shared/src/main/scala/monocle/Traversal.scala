@@ -51,7 +51,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 
   /** find the first target matching the predicate  */
   @inline final def find(p: A => Boolean): S => Option[A] =
-    foldMap(a => (if(p(a)) Some(a) else None).first)(_).unwrap
+    foldMap(a => Some(a).filter(p).first)(_).unwrap
 
   /** get the first target */
   @inline final def headOption(s: S): Option[A] =
