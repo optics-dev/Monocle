@@ -46,10 +46,8 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   def modify(f: A => B): S => T
 
   /** find if the target satisfies the predicate */
-  @inline final def find(p: A => Boolean): S => Option[A] = s => {
-    val a = get(s)
-    Some(a).filter(p)
-  }
+  @inline final def find(p: A => Boolean): S => Option[A] =
+    s => Some(get(s)).filter(p)
 
   /** check if the target satisfies the predicate */
   @inline final def exist(p: A => Boolean): S => Boolean =
