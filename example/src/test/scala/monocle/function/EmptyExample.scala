@@ -2,7 +2,6 @@ package monocle.function
 
 import monocle.MonocleSuite
 import monocle.function.all.{empty => mempty}
-import scala.collection.immutable.SortedMap
 
 class EmptyExample extends MonocleSuite {
 
@@ -16,7 +15,7 @@ class EmptyExample extends MonocleSuite {
 
   test("_empty return the empty value of a given type") {
     _empty[List[Int]]        shouldEqual List.empty[Int]
-    _empty[SortedMap[Int, String]] shouldEqual SortedMap.empty[Int, String]
+    _empty[Map[Int, String]] shouldEqual Map.empty[Int, String]
     _empty[String]           shouldEqual ""
   }
 

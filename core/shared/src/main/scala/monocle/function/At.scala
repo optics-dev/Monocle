@@ -45,6 +45,10 @@ object At extends AtFunctions {
     def at(i: K) = Lens{m: SortedMap[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   }
 
+  implicit def atMap[K, V]: At[Map[K, V], K, Option[V]] = new At[Map[K, V], K, Option[V]]{
+    def at(i: K) = Lens{m: Map[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
+  }
+
   implicit def atSet[A]: At[Set[A], A, Boolean] = new At[Set[A], A, Boolean] {
     def at(a: A) = Lens[Set[A], Boolean](_.contains(a))(b => set => if(b) set + a else set - a)
   }

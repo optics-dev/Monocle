@@ -45,6 +45,7 @@ lazy val catsVersion = "1.0.0-RC1"
 lazy val cats              = Def.setting("org.typelevel"              %%% "cats-core"          % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"              %%% "cats-free"          % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel"              %%% "cats-laws"          % catsVersion)
+lazy val alleycats         = Def.setting("org.typelevel"              %%% "alleycats-core"     % catsVersion)
 lazy val newts             = Def.setting("com.github.julien-truffaut" %%% "newts-core"         % "0.3.0-RC1")
 lazy val scalaz            = Def.setting("org.scalaz"                 %%% "scalaz-core"        % "7.2.13")
 lazy val shapeless         = Def.setting("com.chuusai"                %%% "shapeless"          % "2.3.2")
@@ -197,7 +198,7 @@ lazy val unsafe    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("unsafe"): _*)
-  .settings(libraryDependencies ++= Seq(cats.value, shapeless.value))
+  .settings(libraryDependencies ++= Seq(cats.value, alleycats.value, shapeless.value))
 
 lazy val testJVM = test.jvm
 lazy val testJS  = test.js

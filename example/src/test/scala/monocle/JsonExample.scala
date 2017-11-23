@@ -1,7 +1,8 @@
 package monocle
 
+import alleycats.std.all._
 import monocle.function.Plated
-import scala.collection.immutable.SortedMap
+import monocle.unsafe.MapTraversal._
 
 /**
  * Show how could we use Optics to manipulate some Json AST
@@ -13,23 +14,23 @@ class JsonExample extends MonocleSuite {
   case class JsString(s: String) extends Json
   case class JsNumber(n: Int) extends Json
   case class JsArray(l: List[Json]) extends Json
-  case class JsObject(m: SortedMap[String, Json]) extends Json
+  case class JsObject(m: Map[String, Json]) extends Json
 
   val jsString = Prism[Json, String]{ case JsString(s) => Some(s); case _ => None}(JsString.apply)
   val jsNumber = Prism[Json, Int]{ case JsNumber(n) => Some(n); case _ => None}(JsNumber.apply)
   val jsArray  = Prism[Json, List[Json]]{ case JsArray(a) => Some(a); case _ => None}(JsArray.apply)
-  val jsObject = Prism[Json, SortedMap[String, Json]]{ case JsObject(m) => Some(m); case _ => None}(JsObject.apply)
+  val jsObject = Prism[Json, Map[String, Json]]{ case JsObject(m) => Some(m); case _ => None}(JsObject.apply)
 
-  val json: Json = JsObject(SortedMap(
+  val json: Json = JsObject(Map(
     "first_name" -> JsString("John"),
     "last_name"  -> JsString("Doe"),
     "age"        -> JsNumber(28),
     "siblings"   -> JsArray(List(
-      JsObject(SortedMap(
+      JsObject(Map(
         "first_name" -> JsString("Elia"),
         "age"        -> JsNumber(23)
       )),
-      JsObject(SortedMap(
+      JsObject(Map(
         "first_name" -> JsString("Robert"),
         "age"        -> JsNumber(25)
       ))
@@ -50,16 +51,16 @@ class JsonExample extends MonocleSuite {
               composePrism    jsObject
               composeOptional index("first_name")
               composePrism    jsString
-    ).set("Robert Jr.")(json) shouldEqual JsObject(SortedMap(
+    ).set("Robert Jr.")(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("John"),
       "last_name"  -> JsString("Doe"),
       "age"        -> JsNumber(28),
       "siblings"   -> JsArray(List(
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Elia"),
           "age"        -> JsNumber(23)
         )),
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Robert Jr."), // name is updated
           "age"        -> JsNumber(25)
         ))
@@ -68,32 +69,32 @@ class JsonExample extends MonocleSuite {
   }
 
   test("Use at to add delete fields") {
-    (jsObject composeLens at("nick_name")).set(Some(JsString("Jojo")))(json) shouldEqual JsObject(SortedMap(
+    (jsObject composeLens at("nick_name")).set(Some(JsString("Jojo")))(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("John"),
       "nick_name"  -> JsString("Jojo"), // new field
       "last_name"  -> JsString("Doe"),
       "age"        -> JsNumber(28),
       "siblings"   -> JsArray(List(
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Elia"),
           "age"        -> JsNumber(23)
         )),
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Robert"),
           "age"        -> JsNumber(25)
         ))
       ))
     ))
 
-    (jsObject composeLens at("age")).set(None)(json) shouldEqual JsObject(SortedMap(
+    (jsObject composeLens at("age")).set(None)(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("John"),
       "last_name"  -> JsString("Doe"), // John is ageless now
       "siblings"   -> JsArray(List(
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Elia"),
           "age"        -> JsNumber(23)
         )),
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Robert"),
           "age"        -> JsNumber(25)
         ))
@@ -105,16 +106,16 @@ class JsonExample extends MonocleSuite {
     (jsObject composeTraversal filterIndex((_: String).contains("name"))
               composePrism     jsString
               composeOptional  headOption
-    ).modify(_.toLower)(json) shouldEqual JsObject(SortedMap(
+    ).modify(_.toLower)(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("john"), // starts with lower case
       "last_name"  -> JsString("doe"),  // starts with lower case
       "age"        -> JsNumber(28),
       "siblings"   -> JsArray(List(
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Elia"),
           "age"        -> JsNumber(23)
         )),
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Robert"),
           "age"        -> JsNumber(25)
         ))
@@ -128,16 +129,16 @@ class JsonExample extends MonocleSuite {
               composePrism     jsObject
               composeOptional  index("age")
               composePrism     jsNumber
-    ).modify(_ + 1)(json) shouldEqual JsObject(SortedMap(
+    ).modify(_ + 1)(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("John"),
       "last_name"  -> JsString("Doe"),
       "age"        -> JsNumber(28),
       "siblings"   -> JsArray(List(
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Elia"),
           "age"        -> JsNumber(24)    // Elia is older
         )),
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("Robert"),
           "age"        -> JsNumber(26)    // Robert is older
         ))
@@ -156,7 +157,7 @@ class JsonExample extends MonocleSuite {
         a match {
           case j@(JsString(_) | JsNumber(_)) => Applicative[F].pure(j)
           case JsArray(l) => l.traverse(f).map(JsArray)
-          case JsObject(m) => Traverse[SortedMap[String, ?]].traverse(m)(f).map(JsObject)
+          case JsObject(m) => Traverse[Map[String, ?]].traverse(m)(f).map(JsObject)
         }
     }
   }
@@ -167,16 +168,16 @@ class JsonExample extends MonocleSuite {
         val u = s.toUpperCase
         if (s != u) Some(JsString(u)) else None
       case _ => None
-    }(json) shouldEqual JsObject(SortedMap(
+    }(json) shouldEqual JsObject(Map(
       "first_name" -> JsString("JOHN"),
       "last_name"  -> JsString("DOE"),
       "age"        -> JsNumber(28),
       "siblings"   -> JsArray(List(
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("ELIA"),
           "age"        -> JsNumber(23)
         )),
-        JsObject(SortedMap(
+        JsObject(Map(
           "first_name" -> JsString("ROBERT"),
           "age"        -> JsNumber(25)
         ))
