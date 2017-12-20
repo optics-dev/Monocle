@@ -1,7 +1,7 @@
 package monocle
 
 import monocle.macros.{GenLens, GenIso, GenPrism}
-import scala.collection.immutable.SortedMap
+import monocle.unsafe.MapTraversal._
 
 /**
  * Show how could we use Monocle to handle custom case classes, objects
@@ -11,14 +11,14 @@ class HttpRequestExample extends MonocleSuite {
 
   val r1 = HttpRequest(
     GET,
-    URI("localhost", 8080, "/ping", SortedMap("hop" -> "5")),
-    SortedMap("socket_timeout" -> "20", "connection_timeout" -> "10"),
+    URI("localhost", 8080, "/ping", Map("hop" -> "5")),
+    Map("socket_timeout" -> "20", "connection_timeout" -> "10"),
     "")
 
   val r2 = HttpRequest(
     POST,
-    URI("gooogle.com", 443, "/search", SortedMap("keyword" -> "monocle")),
-    SortedMap.empty,
+    URI("gooogle.com", 443, "/search", Map("keyword" -> "monocle")),
+    Map.empty,
     "")
 
   val method = GenLens[HttpRequest](_.method)
@@ -86,6 +86,6 @@ object HttpRequestExample {
   case object GET   extends HttpMethod
   case object POST  extends HttpMethod
 
-  case class URI(host: String, port: Int, path: String, query: SortedMap[String, String])
-  case class HttpRequest(method: HttpMethod, uri: URI, headers: SortedMap[String, String], body: String)
+  case class URI(host: String, port: Int, path: String, query: Map[String, String])
+  case class HttpRequest(method: HttpMethod, uri: URI, headers: Map[String, String], body: String)
 }

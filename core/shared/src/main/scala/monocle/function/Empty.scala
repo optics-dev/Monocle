@@ -1,8 +1,7 @@
 package monocle.function
 
-import monocle.{Iso, Prism}
-
 import cats.Order
+import monocle.{Iso, Prism}
 
 import scala.annotation.implicitNotFound
 import scala.collection.immutable.SortedMap
@@ -41,6 +40,10 @@ object Empty extends EmptyFunctions {
 
   implicit def listEmpty[A]: Empty[List[A]] = new Empty[List[A]] {
     val empty = Prism[List[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => List.empty)
+  }
+
+  implicit def mapEmpty[K, V]: Empty[Map[K, V]] = new Empty[Map[K, V]] {
+    val empty = Prism[Map[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Map.empty)
   }
 
   implicit def sortedMapEmpty[K, V](implicit ok: Order[K]): Empty[SortedMap[K, V]] = new Empty[SortedMap[K, V]] {

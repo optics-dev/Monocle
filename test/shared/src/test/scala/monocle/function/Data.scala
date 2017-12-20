@@ -9,15 +9,26 @@ import cats.syntax.apply._
 
 import scala.collection.immutable.SortedMap
 
-case class MMap[K, V](map: SortedMap[K, V])
+case class MSorteMap[K, V](map: SortedMap[K, V])
+
+object MSorteMap {
+  def toSortedMap[K, V]: Iso[MSorteMap[K, V], SortedMap[K, V]] =
+    Iso[MSorteMap[K, V], SortedMap[K, V]](_.map)(MSorteMap(_))
+
+  implicit def mmapEq[K, V]: Equal[MSorteMap[K, V]] = Equal.fromUniversalEquals
+  implicit def mmapArb[K: Arbitrary, V: Arbitrary](implicit ok: Order[K]): Arbitrary[MSorteMap[K, V]] =
+    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MSorteMap(SortedMap(kvs: _*)(ok.toOrdering))))
+}
+
+case class MMap[K, V](map: Map[K, V])
 
 object MMap {
-  def toSortedMap[K, V]: Iso[MMap[K, V], SortedMap[K, V]] =
-    Iso[MMap[K, V], SortedMap[K, V]](_.map)(MMap(_))
+  def toMap[K, V]: Iso[MMap[K, V], Map[K, V]] =
+    Iso[MMap[K, V], Map[K, V]](_.map)(MMap(_))
 
   implicit def mmapEq[K, V]: Equal[MMap[K, V]] = Equal.fromUniversalEquals
-  implicit def mmapArb[K: Arbitrary, V: Arbitrary](implicit ok: Order[K]): Arbitrary[MMap[K, V]] =
-    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MMap(SortedMap(kvs: _*)(ok.toOrdering))))
+  implicit def mmapArb[K: Arbitrary, V: Arbitrary]: Arbitrary[MMap[K, V]] =
+    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MMap(Map(kvs: _*))))
 }
 
 case class CNel(head: Char, tail: List[Char])

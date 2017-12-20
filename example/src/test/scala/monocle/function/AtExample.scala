@@ -9,25 +9,26 @@ import scala.collection.immutable.SortedMap
 
 class AtExample extends MonocleSuite {
 
-  test("at creates a Lens from a SortedMap, IMap to an optional value") {
+  test("at creates a Lens from a Map, SortedMap to an optional value") {
+    (Map("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
     (SortedMap("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
 
-    (SortedMap("One" -> 1, "Two" -> 2) applyLens at("One") set Some(-1))  shouldEqual SortedMap("One" -> -1, "Two" -> 2)
+    (Map("One" -> 1, "Two" -> 2) applyLens at("One") set Some(-1))  shouldEqual Map("One" -> -1, "Two" -> 2)
 
 
     // can delete a value
-    (SortedMap("One" -> 1, "Two" -> 2) applyLens at("Two") set None) shouldEqual SortedMap("One" -> 1)
+    (Map("One" -> 1, "Two" -> 2) applyLens at("Two") set None) shouldEqual Map("One" -> 1)
 
     // add a new value
-    (SortedMap("One" -> 1, "Two" -> 2) applyLens at("Three") set Some(3)) shouldEqual SortedMap("One" -> 1, "Two" -> 2, "Three" -> 3)
+    (Map("One" -> 1, "Two" -> 2) applyLens at("Three") set Some(3)) shouldEqual Map("One" -> 1, "Two" -> 2, "Three" -> 3)
   }
 
   test("at creates a Lens from a Set to an optional element of the Set") {
     (Set(1, 2, 3) applyLens at(2) get) shouldEqual true
     (Set(1, 2, 3) applyLens at(4) get) shouldEqual false
 
-    (Set(1, 2, 3) applyLens at(4) set true) shouldEqual Set(1, 2, 3, 4)
-    (Set(1, 2, 3) applyLens at(2) set false)     shouldEqual Set(1, 3)
+    (Set(1, 2, 3) applyLens at(4) set true)  shouldEqual Set(1, 2, 3, 4)
+    (Set(1, 2, 3) applyLens at(2) set false) shouldEqual Set(1, 3)
   }
 
   test("at creates a Lens from Int to one of its bit") {
@@ -47,8 +48,8 @@ class AtExample extends MonocleSuite {
     ('x' applyLens at(0: CharBits) set true) shouldEqual 'y'
   }
 
-  test("remove deletes an element of a SortedMap") {
-    remove("Foo")(SortedMap("Foo" -> 1, "Bar" -> 2)) shouldEqual SortedMap("Bar" -> 2)
+  test("remove deletes an element of a Map") {
+    remove("Foo")(Map("Foo" -> 1, "Bar" -> 2)) shouldEqual Map("Bar" -> 2)
   }
 
 }
