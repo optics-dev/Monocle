@@ -147,7 +147,7 @@ sealed abstract class GetterInstances extends GetterInstances0 {
     override def second[A, B, C](f: Getter[A, B]): Getter[(C, A), (C, B)] =
       f.second
 
-    def id[A]: Getter[A, A] =
+    override def id[A]: Getter[A, A] =
       Getter.id
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =

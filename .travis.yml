@@ -1,7 +1,7 @@
 language: scala
 scala:
-- 2.12.2
-- 2.11.8
+- 2.12.4
+- 2.11.12
 jdk:
 - oraclejdk8
 notifications:
@@ -17,7 +17,7 @@ script:
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
   - |
-    if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.2 ]; then
+    if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.4 ]; then
       sbt ++$TRAVIS_SCALA_VERSION tut
     else
       echo "Skipping sbt tut"
@@ -39,7 +39,7 @@ before_install:
 before_script:
   - sudo chmod +x /usr/local/bin/sbt
 install:
-  - rvm use 2.2.3 --install --fuzzy
+  - rvm use 2.2.8 --install --fuzzy
   - gem update --system
   - gem install sass
   - gem install jekyll -v 3.2.1
