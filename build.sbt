@@ -41,21 +41,21 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.13")
-lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.2")
+lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.18")
+lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.3")
 
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.8.4")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.8.4" % "test")
+lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.8.6")
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.8.6" % "test")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.7.3")
+lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.8")
 lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.13.5")
-lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.3"  % "test")
+lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.4"  % "test")
 
 lazy val macroCompat        = Def.setting("org.typelevel"   %%% "macro-compat" % "1.1.1")
 
 lazy val macroVersion = "2.1.0"
 lazy val paradisePlugin = "org.scalamacros" % "paradise"       % macroVersion cross CrossVersion.patch
-lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.4" cross CrossVersion.binary
+lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.5" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.3.0")
