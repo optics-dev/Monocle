@@ -6,7 +6,7 @@ import sbtcrossproject.crossProject
 import sbt.Keys._
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-lazy val Scala211 = "2.11.11"
+lazy val Scala211 = "2.11.12"
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
