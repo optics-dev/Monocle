@@ -48,7 +48,7 @@ lazy val catsLaws          = Def.setting("org.typelevel"              %%% "cats-
 lazy val alleycats         = Def.setting("org.typelevel"              %%% "alleycats-core"     % catsVersion)
 lazy val newts             = Def.setting("com.github.julien-truffaut" %%% "newts-core"         % "0.3.0")
 lazy val scalaz            = Def.setting("org.scalaz"                 %%% "scalaz-core"        % "7.2.18")
-lazy val shapeless         = Def.setting("com.chuusai"                %%% "shapeless"          % "2.3.2")
+lazy val shapeless         = Def.setting("com.chuusai"                %%% "shapeless"          % "2.3.3")
 lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.8.6")
 lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.8.6" % "test")
 
