@@ -7,7 +7,7 @@ addSbtPlugin("pl.project13.scala" % "sbt-jmh"              % "0.2.25")
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"          % "0.6.20")
 addSbtPlugin("org.scala-native"   % "sbt-crossproject"         % "0.1.0")
 addSbtPlugin("org.scala-native"   % "sbt-scalajs-crossproject" % "0.1.0")
-addSbtPlugin("org.scala-native"   % "sbt-scala-native"         % "0.2.1")
+addSbtPlugin("org.scala-native"   % "sbt-scala-native"         % "0.3.6")
 addSbtPlugin("com.fortysevendeg"  % "sbt-microsites"       % "0.4.0")
 
 scalacOptions += "-deprecation"
