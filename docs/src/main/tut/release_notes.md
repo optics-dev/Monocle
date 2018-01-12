@@ -7,9 +7,22 @@ position: 5
 
 ## Release Notes
 
+# 1.5.0 and 1.5.0-cats
+
+> 3 January 2018
+
+-   add coalgebroid-based constructors for `Lens` and `Traversal` [#502](https://github.com/julien-truffaut/Monocle/pull/502) (thanks to [jeslg](https://github.com/jeslg))
+-   add state syntax for traversal [#533](https://github.com/julien-truffaut/Monocle/pull/533) (thanks to [jeslg](https://github.com/jeslg))
+-   add `modifyF` to `Apply` syntax [#525](https://github.com/julien-truffaut/Monocle/pull/525) (thanks to [colin-passiv](https://github.com/colin-passiv))
+-   add optics composition table [#532](https://github.com/julien-truffaut/Monocle/pull/532) (thanks to [jdegoes](https://github.com/jdegoes))
+-   support scala native [#508](https://github.com/julien-truffaut/Monocle/pull/508) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   bug fix: allow for annotations on companion objects of `@Lenses`-annotated case classes [#524](https://github.com/julien-truffaut/Monocle/pull/524) (thanks to [hrhino](https://github.com/hrhino))
+
+-   create a cats branch where cats replaces scalaz [#528](https://github.com/julien-truffaut/Monocle/pull/528) and [#539](https://github.com/julien-truffaut/Monocle/pull/539) (thanks to [sellout](https://github.com/sellout) and [tpolecat](https://github.com/tpolecat))
+
 # 1.4.0
 
-> 14 January 2016
+> 14 January 2017
 
 ### Addition
 
