@@ -1,9 +1,27 @@
-<html><head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Monocle</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Optics library for Scala" /><meta name="author" content="com.github.julien-truffaut" /><meta name="og:image" content="/Monocle/img/poster.png" /><meta name="og:title" content="Monocle" /><meta name="og:site_name" content="Monocle" /><meta name="og:url" content="http://julien-truffaut.github.io/Monocle" /><meta name="og:type" content="website" /><meta name="og:description" content="Optics library for Scala" /><meta name="twitter:image" content="/Monocle/img/poster.png" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:site" content="" /><link rel="icon" type="image/png" href="/Monocle/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/Monocle/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/Monocle/css/style.css" /><link rel="stylesheet" href="/Monocle/css/palette.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/Monocle/" class="brand"><div class="brand-wrapper" style="background:url('/Monocle/img/sidebar_brand.png') no-repeat"><span>Monocle</span></div></a></li> <li><a href="/Monocle/modules.html" class="">Modules</a></li>    <li><a href="/Monocle/optics.html" class="">Optics ...</a></li>  <li><a href="/Monocle/typeclasses.html" class="">Typeclasses ...</a></li>  <li><a href="/Monocle/examples.html" class="">Examples ...</a></li>  <li><a href="/Monocle/faq.html" class="">FAQ</a></li> <li><a href="/Monocle/release_notes.html" class=" active ">Release Notes</a></li> <li><a href="/Monocle/learning_resources.html" class="">Learning Resources</a></li> <li><a href="/Monocle/adopters.html" class="">Adopters</a></li> <li><a href="/Monocle/unsafe_module.html" class="">Unsafe Module</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Monocle Optics library for Scala');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Monocle Optics library for Scala');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="julien-truffaut" data-github-repo="Monocle"><div class="content-wrapper"><section><h2 id="release-notes">Release Notes</h2>
+<html><head><title>Monocle</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="com.github.julien-truffaut" /><meta name="description" content="Optics library for Scala" /><meta name="og:image" content="/Monocle/img/poster.png" /><meta name="og:title" content="Monocle" /><meta name="og:site_name" content="Monocle" /><meta name="og:url" content="http://julien-truffaut.github.io/Monocle" /><meta name="og:type" content="website" /><meta name="og:description" content="Optics library for Scala" /><link rel="icon" type="image/png" href="/Monocle/img/favicon.png" /><meta name="twitter:title" content="Monocle" /><meta name="twitter:image" content="http://julien-truffaut.github.io/Monocleimg/poster.png" /><meta name="twitter:description" content="Optics library for Scala" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/Monocle/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/Monocle/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/Monocle/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/Monocle/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/Monocle/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/Monocle/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/Monocle/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/Monocle/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/Monocle/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/Monocle/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/Monocle/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/Monocle/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/Monocle/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/Monocle/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/Monocle/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/Monocle/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/Monocle/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/Monocle/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/Monocle/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/Monocle/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/Monocle/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/Monocle/css/style.css" /><link rel="stylesheet" href="/Monocle/css/palette.css" /><link rel="stylesheet" href="/Monocle/css/codemirror.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/Monocle/" class="brand"><div class="brand-wrapper"><span>Monocle</span></div></a></li> <li><a href="/Monocle/modules.html" class="">Modules</a></li>    <li><a href="/Monocle/optics.html" class="">Optics ...</a></li>  <li><a href="/Monocle/typeclasses.html" class="">Typeclasses ...</a></li>  <li><a href="/Monocle/examples.html" class="">Examples ...</a></li>  <li><a href="/Monocle/faq.html" class="">FAQ</a></li> <li><a href="/Monocle/release_notes.html" class=" active ">Release Notes</a></li> <li><a href="/Monocle/learning_resources.html" class="">Learning Resources</a></li> <li><a href="/Monocle/adopters.html" class="">Adopters</a></li> <li><a href="/Monocle/unsafe_module.html" class="">Unsafe Module</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/julien-truffaut/Monocle"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Monocle Optics library for Scala');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Monocle Optics library for Scala');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="julien-truffaut" data-github-repo="Monocle"><div class="content-wrapper"><section><h2 id="release-notes">Release Notes</h2>
 
-<h1 id="section">1.4.0</h1>
+<h1 id="150-and-150-cats">1.5.0 and 1.5.0-cats</h1>
 
 <blockquote>
-  <p>14 January 2016</p>
+  <p>3 January 2018</p>
+</blockquote>
+
+<ul>
+  <li>add coalgebroid-based constructors for <code class="highlighter-rouge">Lens</code> and <code class="highlighter-rouge">Traversal</code> <a href="https://github.com/julien-truffaut/Monocle/pull/502">#502</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</li>
+  <li>add state syntax for traversal <a href="https://github.com/julien-truffaut/Monocle/pull/533">#533</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</li>
+  <li>add <code class="highlighter-rouge">modifyF</code> to <code class="highlighter-rouge">Apply</code> syntax <a href="https://github.com/julien-truffaut/Monocle/pull/525">#525</a> (thanks to <a href="https://github.com/colin-passiv">colin-passiv</a>)</li>
+  <li>add optics composition table <a href="https://github.com/julien-truffaut/Monocle/pull/532">#532</a> (thanks to <a href="https://github.com/jdegoes">jdegoes</a>)</li>
+  <li>support scala native <a href="https://github.com/julien-truffaut/Monocle/pull/508">#508</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+  <li>
+    <p>bug fix: allow for annotations on companion objects of <code class="highlighter-rouge">@Lenses</code>-annotated case classes <a href="https://github.com/julien-truffaut/Monocle/pull/524">#524</a> (thanks to <a href="https://github.com/hrhino">hrhino</a>)</p>
+  </li>
+  <li>create a cats branch where cats replaces scalaz <a href="https://github.com/julien-truffaut/Monocle/pull/528">#528</a> and <a href="https://github.com/julien-truffaut/Monocle/pull/539">#539</a> (thanks to <a href="https://github.com/sellout">sellout</a> and <a href="https://github.com/tpolecat">tpolecat</a>)</li>
+</ul>
+
+<h1 id="140">1.4.0</h1>
+
+<blockquote>
+  <p>14 January 2017</p>
 </blockquote>
 
 <h3 id="addition">Addition</h3>
@@ -23,7 +41,7 @@
   <li>execute packageSrc in travis-ci to avoid regressing like <a href="https://github.com/julien-truffaut/Monocle/pull/492">#492</a> <a href="https://github.com/julien-truffaut/Monocle/pull/494">#494</a> (thanks to <a href="https://github.com/xuwei-k">xuwei-k</a>)</li>
 </ul>
 
-<h1 id="m2">1.4.0-M2</h1>
+<h1 id="140-m2">1.4.0-M2</h1>
 
 <blockquote>
   <p>23 December 2016</p>
@@ -37,7 +55,7 @@
   <li>upgrade scala.js to 0.6.14 <a href="https://github.com/julien-truffaut/Monocle/pull/466">#466</a></li>
 </ul>
 
-<h1 id="m1">1.4.0-M1</h1>
+<h1 id="140-m1">1.4.0-M1</h1>
 
 <blockquote>
   <p>16 December 2016</p>
@@ -84,7 +102,7 @@
   <li>update build settings for scala.js <a href="https://github.com/julien-truffaut/Monocle/pull/406">#406</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
 </ul>
 
-<h1 id="section-1">1.3.2</h1>
+<h1 id="132">1.3.2</h1>
 
 <blockquote>
   <p>02 November 2016</p>
@@ -96,7 +114,7 @@
   <li>update build settings for scala.js <a href="https://github.com/julien-truffaut/Monocle/pull/406">#406</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino </a>)</li>
 </ul>
 
-<h1 id="section-2">1.3.1</h1>
+<h1 id="131">1.3.1</h1>
 
 <blockquote>
   <p>21 October 2016</p>
@@ -106,7 +124,7 @@
   <li>add support for scala 2.12.0-RC2</li>
 </ul>
 
-<h1 id="section-3">1.3.0</h1>
+<h1 id="130">1.3.0</h1>
 
 <blockquote>
   <p>18 October 2016</p>
@@ -164,7 +182,7 @@
   </tbody>
 </table>
 
-<h1 id="section-4">1.2.2</h1>
+<h1 id="122">1.2.2</h1>
 
 <blockquote>
   <p>9 June 2016</p>
@@ -184,7 +202,7 @@
   <li>various improvements from <a href="https://github.com/Unisay">Unisay</a>, <a href="https://github.com/fthomas">fthomas</a> and <a href="https://github.com/amrhassan">amrhassan</a></li>
 </ul>
 
-<h1 id="section-5">1.2.1</h1>
+<h1 id="121">1.2.1</h1>
 
 <blockquote>
   <p>13 April 2016</p>
@@ -217,7 +235,7 @@
   <li>scalaz to 7.2.2</li>
 </ul>
 
-<h1 id="section-6">1.2.0</h1>
+<h1 id="120">1.2.0</h1>
 
 <blockquote>
   <p>17 December 2015</p>
@@ -246,7 +264,7 @@
   <li>macro paradise to 2.1.0</li>
 </ul>
 
-<h1 id="m2-1">1.2.0-M2</h1>
+<h1 id="120-m2">1.2.0-M2</h1>
 
 <blockquote>
   <p>22 November 2015</p>
@@ -316,7 +334,7 @@
   <li>macro paradise to 2.1.0-M5</li>
 </ul>
 
-<h1 id="m1-1">1.2.0-M1</h1>
+<h1 id="120-m1">1.2.0-M1</h1>
 
 <blockquote>
   <p>06 July 2015</p>
@@ -354,7 +372,7 @@ Properties are still defined in <code class="highlighter-rouge">law</code> modul
   <li>kind projector to 0.6.0</li>
 </ul>
 
-<h1 id="section-7">1.1.0</h1>
+<h1 id="110">1.1.0</h1>
 
 <blockquote>
   <p>31 Mars 2015</p>
@@ -396,7 +414,7 @@ Properties are still defined in <code class="highlighter-rouge">law</code> modul
   <li>using optics as an infix operator operator requires a single import <code class="highlighter-rouge">monocle.syntax.apply</code> or <code class="highlighter-rouge">monocle.syntax._</code></li>
 </ul>
 
-<h1 id="section-8">1.0.0</h1>
+<h1 id="100">1.0.0</h1>
 
 <blockquote>
   <p>14 December 2014</p>
@@ -461,7 +479,7 @@ Properties are still defined in <code class="highlighter-rouge">law</code> modul
   <li><code class="highlighter-rouge">mkLens</code> has been moved to <code class="highlighter-rouge">monocle.macros.internal</code>, i.e. it is not public anymore. Use <code class="highlighter-rouge">Lenser</code> or <code class="highlighter-rouge">@Lenses</code></li>
 </ul>
 
-<h1 id="section-9">0.5.1</h1>
+<h1 id="051">0.5.1</h1>
 
 <blockquote>
   <p>29 September 2014</p>
@@ -481,7 +499,7 @@ Properties are still defined in <code class="highlighter-rouge">law</code> modul
   <li><a href="https://github.com/julien-truffaut/Monocle/commit/a544743ca439b485ac2be178f290a85bbf6c2c80">Fix</a> <code class="highlighter-rouge">SafeCast</code> between <code class="highlighter-rouge">String</code> to <code class="highlighter-rouge">Int</code></li>
 </ul>
 
-<h1 id="section-10">0.5.0</h1>
+<h1 id="050">0.5.0</h1>
 
 <blockquote>
   <p>03 August 2014</p>
@@ -525,7 +543,7 @@ See <a href="../example/src/test/scala/monocle/LensExample.scala#L43">example</a
   <li>Add <code class="highlighter-rouge">Each</code>, <code class="highlighter-rouge">HeadOption</code>, and <code class="highlighter-rouge">LastOption</code> for <code class="highlighter-rouge">scala.Some</code></li>
 </ul>
 
-<h1 id="section-11">0.4.0</h1>
+<h1 id="040">0.4.0</h1>
 
 <blockquote>
   <p>28 May 2014</p>
@@ -574,7 +592,7 @@ elements with a mandatory head, last, tail and init. Implemented on 2-6 tuple an
   <li>Add import for all syntax: <code class="highlighter-rouge">import monocle.syntax._</code></li>
 </ul>
 
-<h1 id="section-12">0.3.0</h1>
+<h1 id="030">0.3.0</h1>
 
 <blockquote>
   <p>02 May 2014</p>
@@ -594,7 +612,7 @@ elements with a mandatory head, last, tail and init. Implemented on 2-6 tuple an
     -    Remove <code class="highlighter-rouge">_1</code>, <code class="highlighter-rouge">_2</code>, <code class="highlighter-rouge">_3</code> Lens using shapeless <code class="highlighter-rouge">Generic</code>, since composing <code class="highlighter-rouge">toHList</code> Iso and <code class="highlighter-rouge">Fields</code> Lens is equivalent</li>
 </ul>
 
-<h1 id="section-13">0.2.0</h1>
+<h1 id="020">0.2.0</h1>
 
 <blockquote>
   <p>27 April 2014</p>
@@ -631,7 +649,7 @@ add and delete elements. Implemented for Map</li>
   <li>Add documentation in examples</li>
 </ul>
 
-<h1 id="section-14">0.1.0</h1>
+<h1 id="010">0.1.0</h1>
 
 <blockquote>
   <p>27 February 2014</p>
@@ -644,4 +662,5 @@ add and delete elements. Implemented for Map</li>
 languages:['scala','java','bash']
 });
 hljs.initHighlighting();
-             </script><script src="/Monocle/js/main.js"></script></body></html>
+             </script><script>((window.gitter = {}).chat = {}).options = {
+room: 'julien-truffaut/Monocle'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/Monocle/js/main.js"></script></body></html>
