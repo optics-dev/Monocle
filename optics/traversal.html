@@ -13,7 +13,7 @@ To do this we will use the relation between the typeclass <code class="highlight
 </code></pre></div></div>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="n">eachL</span> <span class="k">=</span> <span class="nc">Traversal</span><span class="o">.</span><span class="n">fromTraverse</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span><span class="o">]</span>
-<span class="c1">// eachL: monocle.Traversal[List[Int],Int] = monocle.PTraversal$$anon$5@5d00c1cb
+<span class="c1">// eachL: monocle.Traversal[List[Int],Int] = monocle.PTraversal$$anon$5@54a4a74e
 </span>
 <span class="n">eachL</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="n">xs</span><span class="o">)</span>
 <span class="c1">// res1: List[Int] = List(0, 0, 0, 0, 0)
@@ -71,7 +71,7 @@ A <code class="highlighter-rouge">Traversal</code> is defined by a single method
 </code></pre></div></div>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="n">filterEven</span> <span class="k">=</span> <span class="n">filterKey</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">String</span><span class="o">](</span><span class="k">_</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
-<span class="c1">// filterEven: monocle.Traversal[Map[Int,String],String] = $anon$1@33de7f9c
+<span class="c1">// filterEven: monocle.Traversal[Map[Int,String],String] = $anon$1@13b8bdf7
 </span>
 <span class="n">filterEven</span><span class="o">.</span><span class="n">modify</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toUpperCase</span><span class="o">)(</span><span class="n">m</span><span class="o">)</span>
 <span class="c1">// res11: Map[Int,String] = Map(1 -&gt; one, 2 -&gt; TWO, 3 -&gt; three, 4 -&gt; FOUR)
