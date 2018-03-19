@@ -38,14 +38,14 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val catsVersion = "1.0.1"
+lazy val catsVersion = "1.1.0"
 
 
 lazy val cats              = Def.setting("org.typelevel"              %%% "cats-core"          % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"              %%% "cats-free"          % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel"              %%% "cats-laws"          % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel"              %%% "alleycats-core"     % catsVersion)
-lazy val newts             = Def.setting("com.github.julien-truffaut" %%% "newts-core"         % "0.3.0")
+lazy val newts             = Def.setting("com.github.julien-truffaut" %%% "newts-core"         % "0.3.1")
 lazy val scalaz            = Def.setting("org.scalaz"                 %%% "scalaz-core"        % "7.2.18")
 lazy val shapeless         = Def.setting("com.chuusai"                %%% "shapeless"          % "2.3.3")
 lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.8.6")
