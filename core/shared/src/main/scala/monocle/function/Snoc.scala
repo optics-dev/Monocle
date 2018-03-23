@@ -36,58 +36,61 @@ trait SnocFunctions {
 }
 
 object Snoc extends SnocFunctions {
-  /** lift an instance of [[Snoc]] using an [[Iso]] */
-  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Snoc[A, B]): Snoc[S, B] = new Snoc[S, B] {
-    val snoc: Prism[S, (S, B)] =
-      iso composePrism ev.snoc composeIso iso.reverse.first
+
+  def apply[S, A](prism: Prism[S, (S, A)]): Snoc[S, A] = new Snoc[S, A] {
+    override val snoc: Prism[S, (S, A)] = prism
   }
+
+  /** lift an instance of [[Snoc]] using an [[Iso]] */
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Snoc[A, B]): Snoc[S, B] = Snoc(
+    iso composePrism ev.snoc composeIso iso.reverse.first
+  )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
   import scalaz.std.option._
 
-  implicit def listSnoc[A]: Snoc[List[A], A] = new Snoc[List[A], A]{
-    val snoc = Prism[List[A], (List[A], A)](
+  implicit def listSnoc[A]: Snoc[List[A], A] = Snoc(
+    Prism[List[A], (List[A], A)](
       s => Applicative[Option].apply2(\/.fromTryCatchNonFatal(s.init).toOption, s.lastOption)((_,_))){
       case (init, last) => init :+ last
     }
-  }
+  )
 
-  implicit def streamSnoc[A]: Snoc[Stream[A], A] = new Snoc[Stream[A], A]{
-    val snoc = Prism[Stream[A], (Stream[A], A)]( s =>
+  implicit def streamSnoc[A]: Snoc[Stream[A], A] = Snoc(
+    Prism[Stream[A], (Stream[A], A)]( s =>
       for {
         init <- if(s.isEmpty) None else Some(s.init)
         last <- s.lastOption
       } yield (init, last)){
       case (init, last) => init :+ last
     }
-  }
+  )
 
-  implicit val stringSnoc: Snoc[String, Char] = new Snoc[String, Char]{
-    val snoc =
-      Prism[String, (String, Char)](
+  implicit val stringSnoc: Snoc[String, Char] = Snoc(
+    Prism[String, (String, Char)](
         s => if(s.isEmpty) None else Some((s.init, s.last))){
         case (init, last) => init :+ last
       }
-  }
+  )
 
-  implicit def vectorSnoc[A]: Snoc[Vector[A], A] = new Snoc[Vector[A], A]{
-    val snoc = Prism[Vector[A], (Vector[A], A)](
+  implicit def vectorSnoc[A]: Snoc[Vector[A], A] = Snoc(
+    Prism[Vector[A], (Vector[A], A)](
       v => if(v.isEmpty) None else Some((v.init, v.last))){
       case (xs, x) => xs :+ x
     }
-  }
+  )
 
   /************************************************************************************************/
   /** Scalaz instances                                                                            */
   /************************************************************************************************/
   import scalaz.IList
 
-  implicit def iListSnoc[A]: Snoc[IList[A], A] = new Snoc[IList[A], A]{
-    val snoc = Prism[IList[A], (IList[A], A)](
+  implicit def iListSnoc[A]: Snoc[IList[A], A] = Snoc(
+    Prism[IList[A], (IList[A], A)](
       il => Applicative[Option].apply2(il.initOption, il.lastOption)((_,_))){
       case (init, last) => init :+ last
     }
-  }
+  )
 }

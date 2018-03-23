@@ -37,35 +37,39 @@ trait Cons1Functions {
 }
 
 object Cons1 extends Cons1Functions {
-  /** lift an instance of [[Cons1]] using an [[Iso]] */
-  def fromIso[S, A, H, T](iso: Iso[S, A])(implicit ev: Cons1[A, H, T]): Cons1[S, H, T] = new Cons1[S, H, T] {
-    val cons1: Iso[S, (H, T)] =
-      iso composeIso ev.cons1
+
+  def apply[S, H, T](iso: Iso[S, (H, T)]) : Cons1[S, H, T] = new Cons1[S, H, T] {
+    val cons1: Iso[S, (H, T)] = iso
   }
+
+  /** lift an instance of [[Cons1]] using an [[Iso]] */
+  def fromIso[S, A, H, T](iso: Iso[S, A])(implicit ev: Cons1[A, H, T]): Cons1[S, H, T] = Cons1(
+    iso composeIso ev.cons1
+  )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
 
-  implicit def tuple2Cons1[A1, A2]: Cons1[(A1, A2), A1, A2] = new Cons1[(A1, A2), A1, A2] {
-    val cons1 = Iso[(A1, A2), (A1, A2)](identity)(identity)
-  }
+  implicit def tuple2Cons1[A1, A2]: Cons1[(A1, A2), A1, A2] = Cons1(
+    Iso[(A1, A2), (A1, A2)](identity)(identity)
+  )
 
-  implicit def tuple3Cons1[A1, A2, A3]: Cons1[(A1, A2, A3), A1, (A2, A3)] = new Cons1[(A1, A2, A3), A1, (A2, A3)] {
-    val cons1 = Iso[(A1, A2, A3), (A1, (A2, A3))](t => (t._1, (t._2, t._3))){ case (h, t) => (h, t._1, t._2) }
-  }
+  implicit def tuple3Cons1[A1, A2, A3]: Cons1[(A1, A2, A3), A1, (A2, A3)] = Cons1(
+    Iso[(A1, A2, A3), (A1, (A2, A3))](t => (t._1, (t._2, t._3))){ case (h, t) => (h, t._1, t._2) }
+  )
 
-  implicit def tuple4Cons1[A1, A2, A3, A4]: Cons1[(A1, A2, A3, A4), A1, (A2, A3, A4)] = new Cons1[(A1, A2, A3, A4), A1, (A2, A3, A4)]{
-    val cons1 = Iso[(A1, A2, A3, A4), (A1, (A2, A3, A4))](t => (t._1, (t._2, t._3, t._4))){ case (h, t) => (h, t._1, t._2, t._3) }
-  }
+  implicit def tuple4Cons1[A1, A2, A3, A4]: Cons1[(A1, A2, A3, A4), A1, (A2, A3, A4)] = Cons1(
+    Iso[(A1, A2, A3, A4), (A1, (A2, A3, A4))](t => (t._1, (t._2, t._3, t._4))){ case (h, t) => (h, t._1, t._2, t._3) }
+  )
 
-  implicit def tuple5Cons1[A1, A2, A3, A4, A5]: Cons1[(A1, A2, A3, A4, A5), A1, (A2, A3, A4, A5)] = new Cons1[(A1, A2, A3, A4, A5), A1, (A2, A3, A4, A5)]{
-    val cons1 = Iso[(A1, A2, A3, A4, A5), (A1, (A2, A3, A4, A5))](t => (t._1, (t._2, t._3, t._4, t._5))){ case (h, t) => (h, t._1, t._2, t._3, t._4) }
-  }
+  implicit def tuple5Cons1[A1, A2, A3, A4, A5]: Cons1[(A1, A2, A3, A4, A5), A1, (A2, A3, A4, A5)] = Cons1(
+    Iso[(A1, A2, A3, A4, A5), (A1, (A2, A3, A4, A5))](t => (t._1, (t._2, t._3, t._4, t._5))){ case (h, t) => (h, t._1, t._2, t._3, t._4) }
+  )
 
-  implicit def tuple6Cons1[A1, A2, A3, A4, A5, A6]: Cons1[(A1, A2, A3, A4, A5, A6), A1, (A2, A3, A4, A5, A6)] = new Cons1[(A1, A2, A3, A4, A5, A6), A1, (A2, A3, A4, A5, A6)]{
-    val cons1 = Iso[(A1, A2, A3, A4, A5, A6), (A1, (A2, A3, A4, A5, A6))](t => (t._1, (t._2, t._3, t._4, t._5, t._6))){ case (h, t) => (h, t._1, t._2, t._3, t._4, t._5) }
-  }
+  implicit def tuple6Cons1[A1, A2, A3, A4, A5, A6]: Cons1[(A1, A2, A3, A4, A5, A6), A1, (A2, A3, A4, A5, A6)] = Cons1(
+    Iso[(A1, A2, A3, A4, A5, A6), (A1, (A2, A3, A4, A5, A6))](t => (t._1, (t._2, t._3, t._4, t._5, t._6))){ case (h, t) => (h, t._1, t._2, t._3, t._4, t._5) }
+  )
 
   /************************************************************************************************/
   /** Scalaz instances                                                                            */
@@ -84,13 +88,11 @@ object Cons1 extends Cons1Functions {
       Lens((c: Cofree[S, A]) => c.head)(h => c => Cofree.delay(h, c.tail))
     }
 
-  implicit def nelCons1[A]: Cons1[NonEmptyList[A], A, IList[A]] =
-    new Cons1[NonEmptyList[A],A,IList[A]]{
-      val cons1: Iso[NonEmptyList[A], (A, IList[A])] =
-        Iso((nel: NonEmptyList[A]) => (nel.head,nel.tail)){case (h,t) => NonEmptyList.nel(h, t)}
-    }
+  implicit def nelCons1[A]: Cons1[NonEmptyList[A], A, IList[A]] = Cons1(
+    Iso((nel: NonEmptyList[A]) => (nel.head,nel.tail)){case (h,t) => NonEmptyList.nel(h, t)}
+  )
 
-  implicit def oneAndCons1[T[_], A]: Cons1[OneAnd[T, A], A, T[A]] = new Cons1[OneAnd[T, A], A, T[A]] {
-    val cons1 = Iso[OneAnd[T, A], (A, T[A])](o => (o.head, o.tail)){ case (h, t) => OneAnd(h, t)}
-  }
+  implicit def oneAndCons1[T[_], A]: Cons1[OneAnd[T, A], A, T[A]] = Cons1(
+    Iso[OneAnd[T, A], (A, T[A])](o => (o.head, o.tail)){ case (h, t) => OneAnd(h, t)}
+  )
 }
