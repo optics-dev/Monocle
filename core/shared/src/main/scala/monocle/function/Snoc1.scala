@@ -59,6 +59,10 @@ object Snoc1 extends Snoc1Functions {
     val snoc1 = Iso[(A1, A2, A3, A4), ((A1, A2, A3), A4)](t => ((t._1, t._2, t._3), t._4)){ case (i, l) => (i._1, i._2, i._3, l) }
   }
 
+  implicit def tuple5Snoc1[A1, A2, A3, A4, A5]: Snoc1[(A1, A2, A3, A4, A5), (A1, A2, A3, A4), A5] = new Snoc1[(A1, A2, A3, A4, A5), (A1, A2, A3, A4), A5]{
+    val snoc1 = Iso[(A1, A2, A3, A4, A5), ((A1, A2, A3, A4), A5)](t => ((t._1, t._2, t._3, t._4), t._5)){ case (i, l) => (i._1, i._2, i._3, i._4, l) }
+  }
+
   implicit def tuple6Snoc1[A1, A2, A3, A4, A5, A6]: Snoc1[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5), A6] = new Snoc1[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5), A6]{
     val snoc1 = Iso[(A1, A2, A3, A4, A5, A6), ((A1, A2, A3, A4, A5), A6)](t => ((t._1, t._2, t._3, t._4, t._5), t._6)){ case (i, l) => (i._1, i._2, i._3, i._4, i._5, l) }
   }

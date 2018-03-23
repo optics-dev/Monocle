@@ -63,10 +63,6 @@ object Cons1 extends Cons1Functions {
     val cons1 = Iso[(A1, A2, A3, A4, A5), (A1, (A2, A3, A4, A5))](t => (t._1, (t._2, t._3, t._4, t._5))){ case (h, t) => (h, t._1, t._2, t._3, t._4) }
   }
 
-  implicit def tuple5Snoc1[A1, A2, A3, A4, A5]: Snoc1[(A1, A2, A3, A4, A5), (A1, A2, A3, A4), A5] = new Snoc1[(A1, A2, A3, A4, A5), (A1, A2, A3, A4), A5]{
-    def snoc1 = Iso[(A1, A2, A3, A4, A5), ((A1, A2, A3, A4), A5)](t => ((t._1, t._2, t._3, t._4), t._5)){ case (i, l) => (i._1, i._2, i._3, i._4, l) }
-  }
-
   implicit def tuple6Cons1[A1, A2, A3, A4, A5, A6]: Cons1[(A1, A2, A3, A4, A5, A6), A1, (A2, A3, A4, A5, A6)] = new Cons1[(A1, A2, A3, A4, A5, A6), A1, (A2, A3, A4, A5, A6)]{
     val cons1 = Iso[(A1, A2, A3, A4, A5, A6), (A1, (A2, A3, A4, A5, A6))](t => (t._1, (t._2, t._3, t._4, t._5, t._6))){ case (h, t) => (h, t._1, t._2, t._3, t._4, t._5) }
   }
