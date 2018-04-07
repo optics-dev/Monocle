@@ -27,48 +27,50 @@ trait IndexFunctions {
 }
 
 object Index extends IndexFunctions{
-  /** lift an instance of [[Index]] using an [[Iso]] */
-  def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: Index[A, I, B]): Index[S, I, B] = new Index[S, I, B] {
-    def index(i: I): Optional[S, B] =
-      iso composeOptional ev.index(i)
+
+  def apply[S, I, A](optional : I => Optional[S, A]): Index[S, I, A] = new Index[S, I, A] {
+    override def index(i: I): Optional[S, A] = optional(i)
   }
 
-  def fromAt[S, I, A](implicit ev: At[S, I, Option[A]]) = new Index[S, I, A] {
-    def index(i: I) = ev.at(i) composePrism monocle.std.option.some
-  }
+  /** lift an instance of [[Index]] using an [[Iso]] */
+  def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: Index[A, I, B]): Index[S, I, B] = Index(
+    iso composeOptional ev.index(_)
+  )
+
+  def fromAt[S, I, A](implicit ev: At[S, I, Option[A]]): Index[S, I, A] = Index(
+    ev.at(_) composePrism monocle.std.option.some
+  )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
 
-  implicit def listIndex[A]: Index[List[A], Int, A] = new Index[List[A], Int, A] {
-    def index(i: Int) = Optional[List[A], A](
-      l      => if(i < 0) None else l.drop(i).headOption)(
-      a => l => if(i < 0) l    else Try(l.updated(i, a)).getOrElse(l) // if(i < 0) required for scala 2.10
-    )
-  }
+  implicit def listIndex[A]: Index[List[A], Int, A] = Index(i =>
+    if (i < 0)
+      Optional[List[A], A](_ => None)(_ => identity)
+    else
+      Optional[List[A], A](_.drop(i).headOption)(a => s => Try(s.updated(i, a)).getOrElse(s))
+  )
 
   implicit def mapIndex[K, V]: Index[Map[K, V], K, V] = fromAt
 
   implicit def sortedMapIndex[K, V]: Index[SortedMap[K, V], K, V] = fromAt
 
-  implicit def streamIndex[A]: Index[Stream[A], Int, A] = new Index[Stream[A], Int, A] {
-    def index(i: Int) = Optional[Stream[A], A](
-      s      => if(i < 0) None else s.drop(i).headOption)(
-      a => s => if(i < 0) s    else Try(s.updated(i, a)).getOrElse(s) // if(i < 0) required for scala 2.10
-    )
-  }
+  implicit def streamIndex[A]: Index[Stream[A], Int, A] = Index(i =>
+    if (i < 0)
+      Optional[Stream[A], A](_ => None)(_ => identity)
+    else
+      Optional[Stream[A], A](_.drop(i).headOption)(a => s => Try(s.updated(i, a)).getOrElse(s))
+  )
 
-  implicit val stringIndex: Index[String, Int, Char] = new Index[String, Int, Char]{
-    def index(i: Int) = monocle.std.string.stringToList composeOptional Index.index[List[Char], Int, Char](i)
-  }
+  implicit val stringIndex: Index[String, Int, Char] = Index(
+    monocle.std.string.stringToList composeOptional Index.index[List[Char], Int, Char](_)
+  )
 
-  implicit def vectorIndex[A]: Index[Vector[A], Int, A] = new Index[Vector[A], Int, A] {
-    def index(i: Int) =
-      Optional[Vector[A], A](v =>
-        if(v.isDefinedAt(i)) Some(v(i))     else None)(a => v =>
-        if(v.isDefinedAt(i)) v.updated(i,a) else v)
-  }
+  implicit def vectorIndex[A]: Index[Vector[A], Int, A] = Index(i => Optional[Vector[A], A]
+    (v => if(v.isDefinedAt(i)) Some(v(i)) else None)
+    (a => v => if(v.isDefinedAt(i)) v.updated(i,a) else v)
+  )
 
   /************************************************************************************************/
   /** Cats instances                                                                            */
@@ -128,11 +130,9 @@ object Index extends IndexFunctions{
       }
     }
 
-  implicit def oneAndIndex[T[_], A](implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] =
-    new Index[OneAnd[T, A], Int, A]{
-      def index(i: Int) = i match {
-        case 0 => oneAndCons1[T, A].head.asOptional
-        case _ => oneAndCons1[T, A].tail composeOptional ev.index(i - 1)
-      }
-    }
+
+  implicit def oneAndIndex[T[_], A](implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] = Index {
+    case 0 => oneAndCons1[T, A].head.asOptional
+    case i => oneAndCons1[T, A].tail composeOptional ev.index(i - 1)
+  }
 }

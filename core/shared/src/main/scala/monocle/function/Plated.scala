@@ -84,49 +84,54 @@ trait PlatedFunctions {
 }
 
 object Plated extends PlatedFunctions {
+
+  def apply[A](traversal: Traversal[A, A]): Plated[A] = new Plated[A] {
+    override val plate: Traversal[A, A] = traversal
+  }
+
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
 
-  implicit def listPlated[A]: Plated[List[A]] = new Plated[List[A]] {
-    val plate: Traversal[List[A], List[A]] = new Traversal[List[A], List[A]] {
+  implicit def listPlated[A]: Plated[List[A]] = Plated(
+    new Traversal[List[A], List[A]] {
       def modifyF[F[_]: Applicative](f: List[A] => F[List[A]])(s: List[A]): F[List[A]] =
         s match {
           case x :: xs => Applicative[F].map(f(xs))(x :: _)
           case Nil => Applicative[F].pure(Nil)
         }
     }
-  }
+  )
 
-  implicit def streamPlated[A]: Plated[Stream[A]] = new Plated[Stream[A]] {
-    val plate: Traversal[Stream[A], Stream[A]] = new Traversal[Stream[A], Stream[A]] {
+  implicit def streamPlated[A]: Plated[Stream[A]] = Plated(
+    new Traversal[Stream[A], Stream[A]] {
       def modifyF[F[_]: Applicative](f: Stream[A] => F[Stream[A]])(s: Stream[A]): F[Stream[A]] =
         s match {
           case x #:: xs => Applicative[F].map(f(xs))(x #:: _)
           case Stream() => Applicative[F].pure(Stream.empty)
         }
     }
-  }
+  )
 
-  implicit val stringPlated: Plated[String] = new Plated[String] {
-    val plate: Traversal[String, String] = new Traversal[String, String] {
+  implicit val stringPlated: Plated[String] = Plated(
+    new Traversal[String, String] {
       def modifyF[F[_]: Applicative](f: String => F[String])(s: String): F[String] =
         s.headOption match {
           case Some(h) => Applicative[F].map(f(s.tail))(h.toString ++ _)
           case None => Applicative[F].pure("")
         }
     }
-  }
+  )
 
-  implicit def vectorPlated[A]: Plated[Vector[A]] = new Plated[Vector[A]] {
-    val plate: Traversal[Vector[A], Vector[A]] = new Traversal[Vector[A], Vector[A]] {
+  implicit def vectorPlated[A]: Plated[Vector[A]] = Plated(
+    new Traversal[Vector[A], Vector[A]] {
       def modifyF[F[_]: Applicative](f: Vector[A] => F[Vector[A]])(s: Vector[A]): F[Vector[A]] =
         s match {
           case h +: t => Applicative[F].map(f(t))(h +: _)
           case _ => Applicative[F].pure(Vector.empty)
         }
     }
-  }
+  )
 
   /************************************************************************************************/
   /** Cats instances                                                                            */
@@ -145,20 +150,20 @@ object Plated extends PlatedFunctions {
     }
   }
 
-  implicit def cofreePlated[S[_]: Traverse, A]: Plated[Cofree[S, A]] = new Plated[Cofree[S, A]] {
-    val plate: Traversal[Cofree[S, A], Cofree[S, A]] = new Traversal[Cofree[S, A], Cofree[S, A]] {
+  implicit def cofreePlated[S[_]: Traverse, A]: Plated[Cofree[S, A]] = Plated(
+    new Traversal[Cofree[S, A], Cofree[S, A]] {
       def modifyF[F[_]: Applicative](f: Cofree[S, A] => F[Cofree[S, A]])(s: Cofree[S, A]): F[Cofree[S, A]] =
         Applicative[F].map(Traverse[S].traverse(s.tail.value)(f))(t => Cofree(s.head, Now(t)))
     }
-  }
+  )
 
-  implicit def freePlated[S[_]: Traverse, A]: Plated[Free[S, A]] = new Plated[Free[S, A]] {
-    val plate: Traversal[Free[S, A], Free[S, A]] = new Traversal[Free[S, A], Free[S, A]] {
+  implicit def freePlated[S[_]: Traverse, A]: Plated[Free[S, A]] = Plated(
+    new Traversal[Free[S, A], Free[S, A]] {
       def modifyF[F[_]: Applicative](f: Free[S, A] => F[Free[S, A]])(s: Free[S, A]): F[Free[S, A]] =
         s.resume.fold(
           as => Applicative[F].map(Traverse[S].traverse(as)(f))(Free.roll),
           x => Applicative[F].pure(Free.pure(x))
         )
     }
-  }
+  )
 }

@@ -25,11 +25,15 @@ trait EachFunctions {
 }
 
 object Each extends EachFunctions {
-  /** lift an instance of [[Each]] using an [[Iso]] */
-  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Each[A, B]): Each[S, B] = new Each[S, B] {
-    val each: Traversal[S, B] =
-      iso composeTraversal ev.each
+
+  def apply[S, A](traversal: Traversal[S, A]) : Each[S, A] = new Each[S, A] {
+    override val each: Traversal[S, A] = traversal
   }
+
+  /** lift an instance of [[Each]] using an [[Iso]] */
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Each[A, B]): Each[S, B] = Each(
+    iso composeTraversal ev.each
+  )
 
   def fromTraverse[S[_]: Traverse, A]: Each[S[A], A] = new Each[S[A], A] {
     def each = PTraversal.fromTraverse[S, A, A]
@@ -59,37 +63,37 @@ object Each extends EachFunctions {
 
   implicit def streamEach[A]: Each[Stream[A], A] = fromTraverse
 
-  implicit val stringEach: Each[String, Char] = new Each[String, Char] {
-    val each = monocle.std.string.stringToList composeTraversal Each.each[List[Char], Char]
-  }
+  implicit val stringEach: Each[String, Char] = Each(
+    monocle.std.string.stringToList composeTraversal Each.each[List[Char], Char]
+  )
 
   implicit def tryEach[A]: Each[Try[A], A] = new Each[Try[A], A] {
     def each = monocle.std.utilTry.trySuccess.asTraversal
   }
 
-  implicit def tuple1Each[A]: Each[Tuple1[A], A] = new Each[Tuple1[A], A] {
-    val each = monocle.std.tuple1.tuple1Iso[A].asTraversal
-  }
+  implicit def tuple1Each[A]: Each[Tuple1[A], A] = Each(
+    monocle.std.tuple1.tuple1Iso[A].asTraversal
+  )
 
-  implicit def tuple2Each[A]: Each[(A, A), A] = new Each[(A, A), A] {
-    val each = PTraversal.apply2[(A, A), (A, A), A, A](_._1,_._2)((b1, b2, _) => (b1, b2))
-  }
+  implicit def tuple2Each[A]: Each[(A, A), A] = Each(
+    PTraversal.apply2[(A, A), (A, A), A, A](_._1,_._2)((b1, b2, _) => (b1, b2))
+  )
 
-  implicit def tuple3Each[A]: Each[(A, A, A), A] = new Each[(A, A, A), A] {
-    val each = PTraversal.apply3[(A, A, A), (A, A, A), A, A](_._1,_._2,_._3)((b1, b2, b3, _) => (b1, b2, b3))
-  }
+  implicit def tuple3Each[A]: Each[(A, A, A), A] = Each(
+    PTraversal.apply3[(A, A, A), (A, A, A), A, A](_._1,_._2,_._3)((b1, b2, b3, _) => (b1, b2, b3))
+  )
 
-  implicit def tuple4Each[A]: Each[(A, A, A, A), A] = new Each[(A, A, A, A), A] {
-    val each = PTraversal.apply4[(A, A, A, A), (A, A, A, A), A, A](_._1,_._2,_._3,_._4)((b1, b2, b3, b4, _) => (b1, b2, b3, b4))
-  }
+  implicit def tuple4Each[A]: Each[(A, A, A, A), A] = Each(
+    PTraversal.apply4[(A, A, A, A), (A, A, A, A), A, A](_._1,_._2,_._3,_._4)((b1, b2, b3, b4, _) => (b1, b2, b3, b4))
+  )
 
-  implicit def tuple5Each[A]: Each[(A, A, A, A, A), A] = new Each[(A, A, A, A, A), A] {
-    val each = PTraversal.apply5[(A, A, A, A, A), (A, A, A, A, A), A, A](_._1,_._2,_._3,_._4,_._5)((b1, b2, b3, b4, b5, _) => (b1, b2, b3, b4, b5))
-  }
+  implicit def tuple5Each[A]: Each[(A, A, A, A, A), A] = Each(
+    PTraversal.apply5[(A, A, A, A, A), (A, A, A, A, A), A, A](_._1,_._2,_._3,_._4,_._5)((b1, b2, b3, b4, b5, _) => (b1, b2, b3, b4, b5))
+  )
 
-  implicit def tuple6Each[A]: Each[(A, A, A, A, A, A), A] = new Each[(A, A, A, A, A, A), A] {
-    val each = PTraversal.apply6[(A, A, A, A, A, A), (A, A, A, A, A, A), A, A](_._1,_._2,_._3,_._4,_._5, _._6)((b1, b2, b3, b4, b5, b6, _) => (b1, b2, b3, b4, b5, b6))
-  }
+  implicit def tuple6Each[A]: Each[(A, A, A, A, A, A), A] = Each(
+    PTraversal.apply6[(A, A, A, A, A, A), (A, A, A, A, A, A), A, A](_._1,_._2,_._3,_._4,_._5, _._6)((b1, b2, b3, b4, b5, b6, _) => (b1, b2, b3, b4, b5, b6))
+  )
 
   implicit def vectorEach[A]: Each[Vector[A], A] = fromTraverse
 
@@ -110,12 +114,12 @@ object Each extends EachFunctions {
   implicit def nevEach[A]: Each[NonEmptyVector[A], A] = fromTraverse
 
   implicit def oneAndEach[T[_], A](implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
-    new Each[OneAnd[T, A], A]{
-      val each = new Traversal[OneAnd[T, A], A]{
+    Each(
+      new Traversal[OneAnd[T, A], A]{
         def modifyF[F[_]: Applicative](f: A => F[A])(s: OneAnd[T, A]): F[OneAnd[T, A]] =
           Applicative[F].map2(f(s.head), ev.each.modifyF(f)(s.tail))((head, tail) => new OneAnd(head, tail))
       }
-    }
+    )
 
   implicit def validationEach[A, B]: Each[Validation[A, B], B] = new Each[Validation[A, B], B] {
     def each = monocle.std.validation.success.asTraversal

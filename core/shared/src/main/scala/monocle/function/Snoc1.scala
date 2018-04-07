@@ -37,31 +37,39 @@ trait Snoc1Functions {
 }
 
 object Snoc1 extends Snoc1Functions {
-  /** lift an instance of [[Snoc1]] using an [[Iso]] */
-  def fromIso[S, A, I, L](iso: Iso[S, A])(implicit ev: Snoc1[A, I, L]): Snoc1[S, I, L] = new Snoc1[S, I, L] {
-    val snoc1: Iso[S, (I, L)] =
-      iso composeIso ev.snoc1
+
+  def apply[S, I, L](iso: Iso[S, (I, L)]): Snoc1[S, I, L] = new Snoc1[S, I, L]{
+    override val snoc1: Iso[S, (I, L)] = iso
   }
+
+  /** lift an instance of [[Snoc1]] using an [[Iso]] */
+  def fromIso[S, A, I, L](iso: Iso[S, A])(implicit ev: Snoc1[A, I, L]): Snoc1[S, I, L] = Snoc1(
+    iso composeIso ev.snoc1
+  )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
 
-  implicit def tuple2Snoc1[A1, A2]: Snoc1[(A1, A2), A1, A2] = new Snoc1[(A1, A2), A1, A2] {
-    val snoc1 = Iso[(A1, A2), (A1, A2)](identity)(identity)
-  }
+  implicit def tuple2Snoc1[A1, A2]: Snoc1[(A1, A2), A1, A2] = Snoc1(
+    Iso[(A1, A2), (A1, A2)](identity)(identity)
+  )
 
-  implicit def tuple3Snoc1[A1, A2, A3]: Snoc1[(A1, A2, A3), (A1, A2), A3] = new Snoc1[(A1, A2, A3), (A1, A2), A3]{
-    val snoc1 = Iso[(A1, A2, A3), ((A1, A2), A3)](t => ((t._1, t._2), t._3)){ case (i, l) => (i._1, i._2, l) }
-  }
+  implicit def tuple3Snoc1[A1, A2, A3]: Snoc1[(A1, A2, A3), (A1, A2), A3] = Snoc1(
+    Iso[(A1, A2, A3), ((A1, A2), A3)](t => ((t._1, t._2), t._3)){ case (i, l) => (i._1, i._2, l) }
+  )
 
-  implicit def tuple4Snoc1[A1, A2, A3, A4]: Snoc1[(A1, A2, A3, A4), (A1, A2, A3), A4] = new Snoc1[(A1, A2, A3, A4), (A1, A2, A3), A4]{
-    val snoc1 = Iso[(A1, A2, A3, A4), ((A1, A2, A3), A4)](t => ((t._1, t._2, t._3), t._4)){ case (i, l) => (i._1, i._2, i._3, l) }
-  }
+  implicit def tuple4Snoc1[A1, A2, A3, A4]: Snoc1[(A1, A2, A3, A4), (A1, A2, A3), A4] = Snoc1(
+    Iso[(A1, A2, A3, A4), ((A1, A2, A3), A4)](t => ((t._1, t._2, t._3), t._4)){ case (i, l) => (i._1, i._2, i._3, l) }
+  )
 
-  implicit def tuple6Snoc1[A1, A2, A3, A4, A5, A6]: Snoc1[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5), A6] = new Snoc1[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5), A6]{
-    val snoc1 = Iso[(A1, A2, A3, A4, A5, A6), ((A1, A2, A3, A4, A5), A6)](t => ((t._1, t._2, t._3, t._4, t._5), t._6)){ case (i, l) => (i._1, i._2, i._3, i._4, i._5, l) }
-  }
+  implicit def tuple5Snoc1[A1, A2, A3, A4, A5]: Snoc1[(A1, A2, A3, A4, A5), (A1, A2, A3, A4), A5] = Snoc1(
+    Iso[(A1, A2, A3, A4, A5), ((A1, A2, A3, A4), A5)](t => ((t._1, t._2, t._3, t._4), t._5)){ case (i, l) => (i._1, i._2, i._3, i._4, l) }
+  )
+
+  implicit def tuple6Snoc1[A1, A2, A3, A4, A5, A6]: Snoc1[(A1, A2, A3, A4, A5, A6), (A1, A2, A3, A4, A5), A6] = Snoc1(
+    Iso[(A1, A2, A3, A4, A5, A6), ((A1, A2, A3, A4, A5), A6)](t => ((t._1, t._2, t._3, t._4, t._5), t._6)){ case (i, l) => (i._1, i._2, i._3, i._4, i._5, l) }
+  )
 
   /************************************************************************************************/
   /** Cats instances                                                                            */
