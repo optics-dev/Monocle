@@ -17,25 +17,30 @@ trait CurryFunctions {
 }
 
 object Curry extends CurryFunctions with CurryInstances {
-  implicit def curry5[A, B, C, D, E, F] = new Curry[(A, B, C, D, E) => F, A => B => C => D => E => F] {
-    val curry = Iso((_: (A, B, C, D, E) => F).curried)(f => Function.uncurried(f))
+
+  def apply[F, G](iso: Iso[F, G]) : Curry[F, G] = new Curry[F, G] {
+    val curry: Iso[F, G] = iso
   }
+
+  implicit def curry5[A, B, C, D, E, F] = Curry(
+    Iso((_: (A, B, C, D, E) => F).curried)(f => Function.uncurried(f))
+  )
 }
 
 trait CurryInstances extends CurryInstances1 {
-  implicit def curry4[A, B, C, D, E] = new Curry[(A, B, C, D) => E, A => B => C => D => E] {
-    val curry = Iso((_: (A, B, C, D) => E).curried)(f => Function.uncurried(f))
-  }
+  implicit def curry4[A, B, C, D, E] = Curry(
+    Iso((_: (A, B, C, D) => E).curried)(f => Function.uncurried(f))
+  )
 }
 
 trait CurryInstances1 extends CurryInstances2 {
-  implicit def curry3[A, B, C, D] = new Curry[(A, B, C) => D, A => B => C => D] {
-    val curry = Iso((_: (A, B, C) => D).curried)(f => Function.uncurried(f))
-  }
+  implicit def curry3[A, B, C, D] = Curry(
+    Iso((_: (A, B, C) => D).curried)(f => Function.uncurried(f))
+  )
 }
 
 trait CurryInstances2 {
-  implicit def curry2[A, B, C] = new Curry[(A, B) => C, A => B => C] {
-    val curry = Iso((_: (A, B) => C).curried)(f => Function.uncurried(f))
-  }
+  implicit def curry2[A, B, C] = Curry(
+    Iso((_: (A, B) => C).curried)(f => Function.uncurried(f))
+  )
 }
