@@ -82,7 +82,9 @@ lazy val scalajsSettings = Seq(
 
 lazy val scalanativeSettings = Seq(
   scalaVersion := Scala211,
-  crossScalaVersions := Seq(Scala211)
+  crossScalaVersions := Seq(Scala211),
+  // workaround. see: https://github.com/scala-native/scala-native/issues/1121
+  sources in (Compile, doc) := Seq.empty
 )
 
 lazy val monocleSettings    = buildSettings ++ publishSettings
@@ -112,7 +114,6 @@ lazy val monocleJS = project.in(file(".monocleJS"))
 
 lazy val monocleNative = project.in(file(".monocleNative"))
   .settings(monocleNativeSettings)
-  .settings(noPublishSettings)
   .aggregate(coreNative, stateNative, testNative)
   .dependsOn(coreNative, stateNative, testNative)
 
