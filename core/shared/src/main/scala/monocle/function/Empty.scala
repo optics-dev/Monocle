@@ -26,43 +26,47 @@ trait EmptyFunctions {
 }
 
 object Empty extends EmptyFunctions {
-  /** lift an instance of [[Empty]] using an [[Iso]] */
-  def fromIso[S, A](iso: Iso[S, A])(implicit ev: Empty[A]): Empty[S] = new Empty[S] {
-    val empty: Prism[S, Unit] =
-      iso composePrism ev.empty
+
+  def apply[S](prism: Prism[S, Unit]) : Empty[S] = new Empty[S] {
+    override val empty: Prism[S, Unit] = prism
   }
+
+  /** lift an instance of [[Empty]] using an [[Iso]] */
+  def fromIso[S, A](iso: Iso[S, A])(implicit ev: Empty[A]): Empty[S] = Empty(
+    iso composePrism ev.empty
+  )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
 
-  implicit def listEmpty[A]: Empty[List[A]] = new Empty[List[A]] {
-    val empty = Prism[List[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => List.empty)
-  }
+  implicit def listEmpty[A]: Empty[List[A]] = Empty(
+    Prism[List[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => List.empty)
+  )
 
-  implicit def mapEmpty[K, V]: Empty[Map[K, V]] = new Empty[Map[K, V]] {
-    val empty = Prism[Map[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Map.empty)
-  }
+  implicit def mapEmpty[K, V]: Empty[Map[K, V]] = Empty(
+    Prism[Map[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Map.empty)
+  )
 
-  implicit def optionEmpty[A]: Empty[Option[A]] = new Empty[Option[A]] {
-    val empty = monocle.std.option.none[A]
-  }
+  implicit def optionEmpty[A]: Empty[Option[A]] = Empty(
+    monocle.std.option.none[A]
+  )
 
-  implicit def emptySet[A]: Empty[Set[A]] = new Empty[Set[A]] {
-    val empty = Prism[Set[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Set.empty[A])
-  }
+  implicit def emptySet[A]: Empty[Set[A]] = Empty(
+    Prism[Set[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Set.empty[A])
+  )
 
-  implicit def streamEmpty[A]: Empty[Stream[A]] = new Empty[Stream[A]] {
-    val empty = Prism[Stream[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Stream.empty)
-  }
+  implicit def streamEmpty[A]: Empty[Stream[A]] = Empty(
+    Prism[Stream[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Stream.empty)
+  )
 
-  implicit val stringEmpty: Empty[String] = new Empty[String] {
-    val empty = Prism[String, Unit](s => if(s.isEmpty) Some(()) else None)(_ => "")
-  }
+  implicit val stringEmpty: Empty[String] = Empty(
+    Prism[String, Unit](s => if(s.isEmpty) Some(()) else None)(_ => "")
+  )
 
-  implicit def vectorEmpty[A]: Empty[Vector[A]] = new Empty[Vector[A]] {
-    val empty = Prism[Vector[A], Unit](v => if(v.isEmpty) Some(()) else None)(_ => Vector.empty)
-  }
+  implicit def vectorEmpty[A]: Empty[Vector[A]] = Empty(
+    Prism[Vector[A], Unit](v => if(v.isEmpty) Some(()) else None)(_ => Vector.empty)
+  )
 
   /************************************************************************************************/
   /** Scalaz instances                                                                            */

@@ -1,5 +1,6 @@
 package monocle.refined
 
+import monocle.Lens
 import monocle.function.At
 import monocle.refined.internal.Bits
 
@@ -13,6 +14,6 @@ trait BitsInstances {
   implicit val longAt: At[Long, LongBits, Boolean] = fromBits[Long, LongBits](_.value)
 
   def fromBits[S, I](toInt: I => Int)(implicit S: Bits[S]): At[S, I, Boolean] =
-    At[S, I, Boolean](i => s => S.testBit(s, toInt(i)))(i => a => s => S.updateBit(a)(s, toInt(i)))
+    At(i => Lens(S.testBit(_: S, toInt(i)))(a => S.updateBit(a)(_, toInt(i))))
 
 }

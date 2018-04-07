@@ -25,28 +25,32 @@ trait AtFunctions {
 }
 
 object At extends AtFunctions {
+
+  def apply[S, I, A](lens: I => Lens[S, A]): At[S, I, A] = new At[S, I , A] {
+    override def at(i: I): Lens[S, A] = lens(i)
+  }
+
   def apply[S, I, A](get: I => S => A)(set: I => A => S => S): At[S, I, A] =
     new At[S, I, A] {
       def at(i: I): Lens[S, A] = Lens(get(i))(set(i))
     }
 
   /** lift an instance of [[At]] using an [[Iso]] */
-  def fromIso[S, U, I, A](iso: Iso[S, U])(implicit ev: At[U, I, A]): At[S, I, A] = new At[S, I, A]{
-    def at(i: I): Lens[S, A] =
-      iso composeLens ev.at(i)
-  }
+  def fromIso[S, U, I, A](iso: Iso[S, U])(implicit ev: At[U, I, A]): At[S, I, A] = At(
+    iso composeLens ev.at(_)
+  )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
 
-  implicit def atMap[K, V]: At[Map[K, V], K, Option[V]] = new At[Map[K, V], K, Option[V]]{
-    def at(i: K) = Lens{m: Map[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
-  }
+  implicit def atMap[K, V]: At[Map[K, V], K, Option[V]] = At(
+    i => Lens{m: Map[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
+  )
 
-  implicit def atSet[A]: At[Set[A], A, Boolean] = new At[Set[A], A, Boolean] {
-    def at(a: A) = Lens[Set[A], Boolean](_.contains(a))(b => set => if(b) set + a else set - a)
-  }
+  implicit def atSet[A]: At[Set[A], A, Boolean] = At(
+    a => Lens[Set[A], Boolean](_.contains(a))(b => set => if(b) set + a else set - a)
+  )
 
   /************************************************************************************************/
   /** Scalaz instances                                                                            */
@@ -54,11 +58,11 @@ object At extends AtFunctions {
 
   import scalaz.{==>>, ISet, Order}
 
-  implicit def atIMap[K: Order, V]: At[K ==>> V, K, Option[V]] = new At[K ==>> V, K, Option[V]]{
-    def at(i: K) = Lens{m: ==>>[K, V] => m.lookup(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
-  }
+  implicit def atIMap[K: Order, V]: At[K ==>> V, K, Option[V]] = At(
+    i => Lens{m: ==>>[K, V] => m.lookup(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
+  )
 
-  implicit def atISet[A: Order]: At[ISet[A], A, Boolean] = new At[ISet[A], A, Boolean] {
-    def at(a: A) = Lens[ISet[A], Boolean](_.member(a))(b => set => if(b) set insert a else set delete a)
-  }
+  implicit def atISet[A: Order]: At[ISet[A], A, Boolean] = At(
+    a => Lens[ISet[A], Boolean](_.member(a))(b => set => if(b) set insert a else set delete a)
+  )
 }
