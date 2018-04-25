@@ -22,4 +22,5 @@ trait StdInstances
   with    CofreeOptics
   with    TheseOptics
   with    NonEmptyListOptics
+  with    NonEmptyVectorOptics
   with    ValidationOptics

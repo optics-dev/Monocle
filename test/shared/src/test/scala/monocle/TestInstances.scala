@@ -8,13 +8,13 @@ import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 import org.scalactic.Equality
 
-import cats.data.{Ior => \&/, NonEmptyList, OneAnd, Validated => Validation}
+import cats.data.{Ior => \&/, NonEmptyList, NonEmptyVector, OneAnd, Validated => Validation}
 import cats.data.Ior.{Both, Right => That, Left => This}
 import cats.{Eq => Equal, _}
 import cats.free.Cofree
 import cats.syntax.either._
 import cats.syntax.eq._
-import scala.{Either => \/, List => IList}
+import scala.{Either => \/, List => IList, Vector => IVector}
 
 trait TestInstances extends PlatformSpecificTestInstances with cats.instances.AllInstances {
 
@@ -104,8 +104,14 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
   implicit def nelArbitrary[A: Arbitrary]: Arbitrary[NonEmptyList[A]] =
     Arbitrary(oneAndArbitrary[List,A].arbitrary.map( o => NonEmptyList(o.head, o.tail)))
 
+  implicit def nevArbitrary[A: Arbitrary]: Arbitrary[NonEmptyVector[A]] =
+    Arbitrary(oneAndArbitrary[Vector,A].arbitrary.map( o => NonEmptyVector(o.head, o.tail)))
+
   implicit def nelCoGen[A: Cogen]: Cogen[NonEmptyList[A]] =
     Cogen[(A, IList[A])].contramap[NonEmptyList[A]](nel => (nel.head, nel.tail))
+
+  implicit def nevCoGen[A: Cogen]: Cogen[NonEmptyVector[A]] =
+    Cogen[(A, IVector[A])].contramap[NonEmptyVector[A]](nel => (nel.head, nel.tail))
 
   implicit def optionCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[Option, A]] =
     Arbitrary(Arbitrary.arbitrary[OneAnd[List, A]].map( xs =>

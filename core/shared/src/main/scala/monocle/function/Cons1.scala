@@ -75,9 +75,9 @@ object Cons1 extends Cons1Functions {
   /** Cats instances                                                                            */
   /************************************************************************************************/
   import cats.Now
-  import cats.data.{NonEmptyList, OneAnd}
+  import cats.data.{NonEmptyList, NonEmptyVector, OneAnd}
   import cats.free.Cofree
-  import scala.{List => IList}
+  import scala.{List => IList, Vector => IVector}
 
   implicit def cofreeCons1[S[_], A]: Cons1[Cofree[S, A], A, S[Cofree[S, A]]] =
     new Cons1[Cofree[S, A], A, S[Cofree[S, A]]] {
@@ -95,6 +95,12 @@ object Cons1 extends Cons1Functions {
     new Cons1[NonEmptyList[A],A,IList[A]]{
       val cons1: Iso[NonEmptyList[A], (A, IList[A])] =
         Iso((nel: NonEmptyList[A]) => (nel.head,nel.tail)){case (h,t) => NonEmptyList(h, t)}
+    }
+
+  implicit def nevCons1[A]: Cons1[NonEmptyVector[A], A, IVector[A]] =
+    new Cons1[NonEmptyVector[A],A,IVector[A]]{
+      val cons1: Iso[NonEmptyVector[A], (A, IVector[A])] =
+        Iso((nev: NonEmptyVector[A]) => (nev.head,nev.tail)){case (h,t) => NonEmptyVector(h, t)}
     }
 
   implicit def oneAndCons1[T[_], A]: Cons1[OneAnd[T, A], A, T[A]] = new Cons1[OneAnd[T, A], A, T[A]] {
