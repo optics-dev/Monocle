@@ -76,6 +76,6 @@ object Snoc1 extends Snoc1Functions {
 
   implicit def nevSnoc1[A]:Snoc1[NonEmptyVector[A], IVector[A], A] = new Snoc1[NonEmptyVector[A], IVector[A], A]{
     val snoc1: Iso[NonEmptyVector[A], (IVector[A], A)] =
-      Iso((nel:NonEmptyVector[A]) => nel.init -> nel.last){case (i,l) => NonEmptyVector(l, i.reverse).reverse}
+      Iso((nev:NonEmptyVector[A]) => nev.init -> nev.last){case (i,l) => NonEmptyVector(l, i.reverse).reverse}
   }
 }

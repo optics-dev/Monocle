@@ -10,7 +10,7 @@ object nev extends NonEmptyVectorOptics
 trait NonEmptyVectorOptics {
 
   final def pNevToOneAnd[A, B]: PIso[NonEmptyVector[A], NonEmptyVector[B], OneAnd[Vector,A], OneAnd[Vector,B]] =
-    PIso((nel: NonEmptyVector[A])    => OneAnd[Vector,A](nel.head, nel.tail))(
+    PIso((nev: NonEmptyVector[A])    => OneAnd[Vector,A](nev.head, nev.tail))(
       (oneAnd: OneAnd[Vector, B]) => NonEmptyVector(oneAnd.head, oneAnd.tail))
 
   final def nevToOneAnd[A]: Iso[NonEmptyVector[A], OneAnd[Vector,A]] =

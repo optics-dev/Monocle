@@ -8,8 +8,8 @@ import monocle.law.discipline.function._
 import scala.{Vector => IVector}
 
 class NonEmptyVectorSpec extends MonocleSuite {
-  checkAll("nevToAndOne", IsoTests(nelToOneAnd[Int]))
-  checkAll("optNevToVector", IsoTests(optNelToList[Int]))
+  checkAll("nevToAndOne", IsoTests(nevToOneAnd[Int]))
+  checkAll("optNevToVector", IsoTests(optNevToVector[Int]))
 
   checkAll("each NonEmptyVector", EachTests[NonEmptyVector[Int], Int])
   checkAll("index NonEmptyVector", IndexTests[NonEmptyVector[Int], Int, Int])

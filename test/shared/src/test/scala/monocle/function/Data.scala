@@ -46,7 +46,7 @@ object CNev extends TestInstances {
   val toNev: Iso[CNev, NonEmptyVector[Char]] =
     Iso[CNev, NonEmptyVector[Char]](c => NonEmptyVector(c.head, c.tail))(n => CNev(n.head, n.tail))
 
-  implicit val cNevEq: Equal[CNel] = Equal.fromUniversalEquals
+  implicit val cNevEq: Equal[CNev] = Equal.fromUniversalEquals
   implicit val cNevArb: Arbitrary[CNev] = Arbitrary((Arbitrary.arbitrary[Char], Arbitrary.arbitrary[Vector[Char]]).mapN(CNev.apply))
 }
 

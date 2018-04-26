@@ -111,7 +111,7 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
     Cogen[(A, IList[A])].contramap[NonEmptyList[A]](nel => (nel.head, nel.tail))
 
   implicit def nevCoGen[A: Cogen]: Cogen[NonEmptyVector[A]] =
-    Cogen[(A, IVector[A])].contramap[NonEmptyVector[A]](nel => (nel.head, nel.tail))
+    Cogen[(A, IVector[A])].contramap[NonEmptyVector[A]](nev => (nev.head, nev.tail))
 
   implicit def optionCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[Option, A]] =
     Arbitrary(Arbitrary.arbitrary[OneAnd[List, A]].map( xs =>
