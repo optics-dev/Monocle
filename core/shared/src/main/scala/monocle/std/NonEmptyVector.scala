@@ -1,6 +1,6 @@
 package monocle.std
 
-import monocle.{Iso, PIso}
+import monocle.{Iso, PIso, PPrism, Prism}
 import cats.data.{NonEmptyVector, OneAnd}
 
 import scala.{Vector => IVector}
@@ -24,4 +24,9 @@ trait NonEmptyVectorOptics {
   final def optNevToVector[A]: Iso[Option[NonEmptyVector[A]], Vector[A]] =
     pOptNevToVector[A, A]
 
+  final def pVectorToNev[A, B]: PPrism[Vector[A], Vector[B], NonEmptyVector[A], NonEmptyVector[B]] =
+    ???
+
+  final def vectorToNev[A]: Prism[Vector[A], NonEmptyVector[A]] =
+    Prism(NonEmptyVector.fromVector[A])(_.toVector)
 }
