@@ -25,8 +25,9 @@ trait NonEmptyVectorOptics {
     pOptNevToVector[A, A]
 
   final def pVectorToNev[A, B]: PPrism[Vector[A], Vector[B], NonEmptyVector[A], NonEmptyVector[B]] =
-    ???
+    PPrism((v: Vector[A]) => NonEmptyVector.fromVector[A](v).toRight(Vector.empty[B]))((nev: NonEmptyVector[B]) => nev.toVector)
 
   final def vectorToNev[A]: Prism[Vector[A], NonEmptyVector[A]] =
-    Prism(NonEmptyVector.fromVector[A])(_.toVector)
+    pVectorToNev[A, A]
+
 }
