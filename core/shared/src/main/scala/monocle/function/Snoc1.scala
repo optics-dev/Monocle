@@ -66,11 +66,16 @@ object Snoc1 extends Snoc1Functions {
   /************************************************************************************************/
   /** Cats instances                                                                            */
   /************************************************************************************************/
-  import cats.data.NonEmptyList
-  import scala.{List => IList}
+  import cats.data.{NonEmptyList, NonEmptyVector}
+  import scala.{List => IList, Vector => IVector}
 
   implicit def nelSnoc1[A]:Snoc1[NonEmptyList[A], IList[A], A] = new Snoc1[NonEmptyList[A], IList[A], A]{
     val snoc1: Iso[NonEmptyList[A], (IList[A], A)] =
       Iso((nel:NonEmptyList[A]) => nel.init -> nel.last){case (i,l) => NonEmptyList(l, i.reverse).reverse}
+  }
+
+  implicit def nevSnoc1[A]:Snoc1[NonEmptyVector[A], IVector[A], A] = new Snoc1[NonEmptyVector[A], IVector[A], A]{
+    val snoc1: Iso[NonEmptyVector[A], (IVector[A], A)] =
+      Iso((nev:NonEmptyVector[A]) => nev.init -> nev.last){case (i,l) => NonEmptyVector(l, i.reverse).reverse}
   }
 }

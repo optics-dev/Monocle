@@ -1,10 +1,9 @@
 package monocle.function
 
 import monocle._
-import org.scalacheck.{Cogen, Arbitrary}
-
-import cats.{Eq => Equal, Order}
-import cats.data.NonEmptyList
+import org.scalacheck.{Arbitrary, Cogen}
+import cats.{Order, Eq => Equal}
+import cats.data.{NonEmptyList, NonEmptyVector}
 import cats.syntax.apply._
 
 import scala.collection.immutable.SortedMap
@@ -39,6 +38,16 @@ object CNel extends TestInstances {
 
   implicit val cNelEq: Equal[CNel] = Equal.fromUniversalEquals
   implicit val cNelArb: Arbitrary[CNel] = Arbitrary((Arbitrary.arbitrary[Char], Arbitrary.arbitrary[List[Char]]).mapN(CNel.apply))
+}
+
+case class CNev(head: Char, tail: Vector[Char])
+
+object CNev extends TestInstances {
+  val toNev: Iso[CNev, NonEmptyVector[Char]] =
+    Iso[CNev, NonEmptyVector[Char]](c => NonEmptyVector(c.head, c.tail))(n => CNev(n.head, n.tail))
+
+  implicit val cNevEq: Equal[CNev] = Equal.fromUniversalEquals
+  implicit val cNevArb: Arbitrary[CNev] = Arbitrary((Arbitrary.arbitrary[Char], Arbitrary.arbitrary[Vector[Char]]).mapN(CNev.apply))
 }
 
 case class CList(list: List[Char])

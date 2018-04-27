@@ -68,8 +68,11 @@ object Reverse extends ReverseFunctions {
   /************************************************************************************************/
   /** Cats instances                                                                            */
   /************************************************************************************************/
-  import cats.data.NonEmptyList
+  import cats.data.{NonEmptyList, NonEmptyVector}
 
   implicit def nelReverse[A]: Reverse[NonEmptyList[A], NonEmptyList[A]] =
+    fromReverseFunction(_.reverse)
+
+  implicit def nevReverse[A]: Reverse[NonEmptyVector[A], NonEmptyVector[A]] =
     fromReverseFunction(_.reverse)
 }

@@ -73,14 +73,22 @@ object Index extends IndexFunctions{
   /************************************************************************************************/
   /** Cats instances                                                                            */
   /************************************************************************************************/
-  import cats.data.{NonEmptyList, OneAnd}
-  import monocle.function.Cons1.{nelCons1, oneAndCons1}
+  import cats.data.{NonEmptyList, NonEmptyVector, OneAnd}
+  import monocle.function.Cons1.{nelCons1, nevCons1, oneAndCons1}
 
   implicit def nelIndex[A]: Index[NonEmptyList[A], Int, A] =
     new Index[NonEmptyList[A], Int, A] {
       def index(i: Int): Optional[NonEmptyList[A], A] = i match {
         case 0 => nelCons1.head.asOptional
         case _ => nelCons1.tail composeOptional listIndex.index(i-1)
+      }
+    }
+
+  implicit def nevIndex[A]: Index[NonEmptyVector[A], Int, A] =
+    new Index[NonEmptyVector[A], Int, A] {
+      def index(i: Int): Optional[NonEmptyVector[A], A] = i match {
+        case 0 => nevCons1.head.asOptional
+        case _ => nevCons1.tail composeOptional vectorIndex.index(i-1)
       }
     }
 
