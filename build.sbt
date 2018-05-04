@@ -9,7 +9,7 @@ lazy val Scala211 = "2.11.12"
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
-  scalaVersion       := "2.12.4",
+  scalaVersion       := "2.12.6",
   crossScalaVersions := Seq(Scala211, "2.12.4"),
   scalacOptions     ++= Seq(
     "-deprecation",
