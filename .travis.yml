@@ -1,8 +1,8 @@
 language: scala
 scala:
-- 2.12.4
+- 2.12.6
 - 2.11.12
-- 2.10.6
+- 2.10.7
 jdk:
 - oraclejdk8
 notifications:
@@ -18,7 +18,7 @@ script:
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
   - |
-    if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.4 ]; then
+    if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.6 ]; then
       sbt ++$TRAVIS_SCALA_VERSION tut
     else
       echo "Skipping sbt tut"

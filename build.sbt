@@ -9,8 +9,8 @@ lazy val Scala211 = "2.11.12"
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
-  scalaVersion       := "2.12.4",
-  crossScalaVersions := Seq("2.10.6", Scala211, "2.12.4"),
+  scalaVersion       := "2.12.6",
+  crossScalaVersions := Seq("2.10.7", Scala211, "2.12.6"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
