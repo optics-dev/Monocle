@@ -17,8 +17,6 @@ lazy val buildSettings = Seq(
     "-feature",
     "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
     "-unchecked",
-    "-Xfatal-warnings",
-    "-Yno-adapted-args",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
     "-Xfuture"
@@ -30,6 +28,13 @@ lazy val buildSettings = Seq(
     case None =>
       Seq()
   }),
+  scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+    case Some((2, n)) if n <= 12 =>
+      Seq(
+        "-Yno-adapted-args",
+        "-Xfatal-warnings"
+      )
+  }.toList.flatten,
   scalacOptions in (Compile, console) -= "-Ywarn-unused-import",
   scalacOptions in (Test, console) -= "-Ywarn-unused-import",
   addCompilerPlugin(kindProjector),
