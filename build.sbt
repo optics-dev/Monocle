@@ -58,7 +58,20 @@ lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"     
 lazy val macroCompat        = Def.setting("org.typelevel"   %%% "macro-compat" % "1.1.1")
 
 lazy val macroVersion = "2.1.1"
-lazy val paradisePlugin = "org.scalamacros" % "paradise"       % macroVersion cross CrossVersion.patch
+
+lazy val paradisePlugin = Def.setting{
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, v)) if v <= 12 =>
+      Seq(
+        compilerPlugin("org.scalamacros" % "paradise" % macroVersion cross CrossVersion.patch)
+      )
+    case _ =>
+      // if scala 2.13.0-M4 or later, macro annotations merged into scala-reflect
+      // https://github.com/scala/scala/pull/6606
+      Nil
+  }
+}
+
 lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.7" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
@@ -187,7 +200,7 @@ lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
       scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
       macroCompat.value
     ),
-    addCompilerPlugin(paradisePlugin),
+    libraryDependencies ++= paradisePlugin.value,
     libraryDependencies ++= CrossVersion partialVersion scalaVersion.value collect {
         case (2, scalaMajor) if scalaMajor < 11 => Seq("org.scalamacros" %% "quasiquotes" % macroVersion)
       } getOrElse Nil,
@@ -227,7 +240,8 @@ lazy val test    = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic
   )
   .settings(noPublishSettings: _*)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, refinedScalacheck.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, refinedScalacheck.value),
+    libraryDependencies ++= paradisePlugin.value
   )
 lazy val testNative = project.in(file("testNative")).dependsOn(coreNative, stateNative)
   .settings(moduleName := "monocle-test-native")
@@ -242,17 +256,18 @@ lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
   .settings(moduleName := "monocle-bench")
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
-  .settings(libraryDependencies ++= Seq(
-    shapeless.value,
-    compilerPlugin(paradisePlugin)
-  )).enablePlugins(JmhPlugin)
+  .settings(
+    libraryDependencies ++= Seq(shapeless.value),
+    libraryDependencies ++= paradisePlugin.value
+  ).enablePlugins(JmhPlugin)
 
 lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM, stateJVM, testJVM % "test->test")
   .settings(moduleName := "monocle-example")
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value),
+    libraryDependencies ++= paradisePlugin.value
   )
 
 lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
@@ -264,7 +279,8 @@ lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
   .settings(docSettings)
   .settings(scalacOptions in Tut ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))))
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(scalaz.value, shapeless.value),
+    libraryDependencies ++= paradisePlugin.value
   )
   .enablePlugins(GhpagesPlugin)
 
