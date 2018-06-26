@@ -2,7 +2,6 @@ language: scala
 scala:
 - 2.12.6
 - 2.11.12
-- 2.10.7
 jdk:
 - oraclejdk8
 notifications:
@@ -50,7 +49,7 @@ matrix:
   include:
   - scala: 2.13.0-M4
     script:
-    - sbt "++${TRAVIS_SCALA_VERSION}!" coreJVM/compile coreJS/compile stateJVM/compile stateJS/compile macrosJVM/compile macrosJS/compile genericJVM/compile genericJS/compile
+    - sbt "++${TRAVIS_SCALA_VERSION}!" coreJVM/compile coreJS/compile stateJVM/compile stateJS/compile macrosJVM/compile macrosJS/compile genericJVM/compile genericJS/compile lawJVM/compile lawJS/compile
   - scala: 2.11.11
     jdk: oraclejdk8
     sudo: required
