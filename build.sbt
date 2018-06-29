@@ -10,7 +10,7 @@ lazy val Scala211 = "2.11.12"
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.12.6",
-  crossScalaVersions := Seq("2.10.7", Scala211, "2.12.6"),
+  crossScalaVersions := Seq(Scala211, "2.12.6"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -21,8 +21,6 @@ lazy val buildSettings = Seq(
     "-Ywarn-value-discard",
     "-Xfuture"
   ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 10)) =>
-      Seq("-Yno-generic-signatures") // no generic signatures for scala 2.10.x, see SI-7932, #571 and #828
     case Some((2, n)) if n >= 11 =>
       Seq("-Ywarn-unused-import")
     case None =>
@@ -48,12 +46,12 @@ lazy val buildSettings = Seq(
 lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.23")
 lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.3")
 
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.0")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.0" % "test")
+lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.1")
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.1" % "test")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.9.0")
-lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.13.5")
-lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.5"  % "test")
+lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.10.0")
+lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
+lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.6-SNAP1" % "test")
 
 lazy val macroCompat        = Def.setting("org.typelevel"   %%% "macro-compat" % "1.1.1")
 
