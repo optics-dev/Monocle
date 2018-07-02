@@ -1,7 +1,7 @@
 package monocle.generic
 
 import monocle.MonocleSuite
-import monocle.law.discipline.PrismTests
+import monocle.law.discipline.{PrismTests, IsoTests}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Gen}
 import shapeless.{:+:, CNil, Coproduct, Inl, Inr}
@@ -27,4 +27,7 @@ class CoproductSpec extends MonocleSuite {
 
   checkAll("Coproduct Prism", PrismTests(coProductPrism[IB, Boolean]))
 
+  checkAll("Coproduct Iso", IsoTests(coProductIso[IB].apply))
+
+  checkAll("Coproduct Disjunction Iso", IsoTests(coProductDisjunctionIso[IB].apply))
 }
