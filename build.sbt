@@ -27,6 +27,12 @@ lazy val buildSettings = Seq(
       Seq()
   }),
   scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+    case Some((2, n)) if n >= 13 =>
+      Seq(
+        "-Ymacro-annotations"
+      )
+  }.toList.flatten,
+  scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
     case Some((2, n)) if n <= 12 =>
       Seq(
         "-Yno-adapted-args",
@@ -46,8 +52,8 @@ lazy val buildSettings = Seq(
 lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.23")
 lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.3")
 
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.1")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.1" % "test")
+lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.2")
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.2" % "test")
 
 lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.10.0")
 lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
