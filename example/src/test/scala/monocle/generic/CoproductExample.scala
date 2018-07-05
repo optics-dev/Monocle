@@ -29,18 +29,33 @@ class CoproductExample extends MonocleSuite {
       illTyped("""coProductPrism[ISB, Float]""")
   }
 
-  test("coProductIso creates an Iso between a Coproduct and the sum of its parts") {
+  test("coProductEitherIso creates an Iso between a Coproduct and the sum of its parts") {
     val i = Coproduct[ISB](3)
     val s = Coproduct[ISB]("hello")
     val b = Coproduct[ISB](true)
 
-    coProductIso[ISB].apply.get(i) shouldEqual Left(3)
-    coProductIso[ISB].apply.get(s) shouldEqual Right(Left("hello"))
-    coProductIso[ISB].apply.get(b) shouldEqual Right(Right(true))
+    coProductEitherIso[ISB].apply.get(i) shouldEqual Left(3)
+    coProductEitherIso[ISB].apply.get(s) shouldEqual Right(Left("hello"))
+    coProductEitherIso[ISB].apply.get(b) shouldEqual Right(Right(true))
 
-    coProductIso[ISB].apply.reverseGet(Left(3)) shouldEqual i
-    coProductIso[ISB].apply.reverseGet(Right(Left("hello"))) shouldEqual s
-    coProductIso[ISB].apply.reverseGet(Right(Right(true))) shouldEqual b
+    coProductEitherIso[ISB].apply.reverseGet(Left(3)) shouldEqual i
+    coProductEitherIso[ISB].apply.reverseGet(Right(Left("hello"))) shouldEqual s
+    coProductEitherIso[ISB].apply.reverseGet(Right(Right(true))) shouldEqual b
+  }
+
+  test("coProductToEither creates an Iso between a sealed trait and the sum of its parts") {
+    sealed trait S
+    case class A(name: String) extends S
+    case class B(name: String) extends S
+    case class C(otherName: String) extends S
+
+    coProductToEither[S].apply.get(A("a")) shouldEqual Left(A("a"))
+    coProductToEither[S].apply.get(B("b")) shouldEqual Right(Left(B("b")))
+    coProductToEither[S].apply.get(C("c")) shouldEqual Right(Right(C("c")))
+
+    coProductToEither[S].apply.reverseGet(Left(A("a"))) shouldEqual A("a")
+    coProductToEither[S].apply.reverseGet(Right(Left(B("b")))) shouldEqual B("b")
+    coProductToEither[S].apply.reverseGet(Right(Right(C("c")))) shouldEqual C("c")
   }
 
   test("coProductDisjunctionIso creates an Iso between a Coproduct and the sum of its parts") {
@@ -57,15 +72,30 @@ class CoproductExample extends MonocleSuite {
     coProductDisjunctionIso[ISB].apply.reverseGet(\/-(\/-(true))) shouldEqual b
   }
 
-  test("coProductDisjunctionIso can be composed with toGeneric") {
-    sealed trait X
-    case class A(a: String) extends X
-    case class B(b: String) extends X
-    case class C(c: String) extends X
+  test("coProductToDisjunction creates an Iso between a sealed trait and the sum of its parts") {
+    sealed trait S
+    case class A(name: String) extends S
+    case class B(name: String) extends S
+    case class C(otherName: String) extends S
 
-    val lens: Lens[X, String] =
-      toGeneric[X] composeIso coProductDisjunctionIso.apply composeLens
-        (GenLens[A](_.a) choice (GenLens[B](_.b) choice GenLens[C](_.c)))
+    coProductToDisjunction[S].apply.get(A("a")) shouldEqual -\/(A("a"))
+    coProductToDisjunction[S].apply.get(B("b")) shouldEqual \/-(-\/(B("b")))
+    coProductToDisjunction[S].apply.get(C("c")) shouldEqual \/-(\/-(C("c")))
+
+    coProductToDisjunction[S].apply.reverseGet(-\/(A("a"))) shouldEqual A("a")
+    coProductToDisjunction[S].apply.reverseGet(\/-(-\/(B("b")))) shouldEqual B("b")
+    coProductToDisjunction[S].apply.reverseGet(\/-(\/-(C("c")))) shouldEqual C("c")
+  }
+
+  test("coProductToDisjunction can be used to zoom in on a sealed trait's classes.") {
+    sealed trait S
+    case class A(name: String) extends S
+    case class B(name: String) extends S
+    case class C(otherName: String) extends S
+
+    val lens: Lens[S, String] =
+      coProductToDisjunction[S].apply composeLens
+        (GenLens[A](_.name) choice (GenLens[B](_.name) choice GenLens[C](_.otherName)))
 
     lens.get(A("a")) shouldEqual "a"
     lens.get(B("b")) shouldEqual "b"
