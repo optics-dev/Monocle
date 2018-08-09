@@ -22,14 +22,14 @@ private class GenPrismImpl(val c: blackbox.Context) {
       import scalaz.{\/, \/-, -\/}
 
       new Prism[$sTpe, $aTpe]{
-        def getOrModify(s: $sTpe): $sTpe \/ $aTpe =
+        override def getOrModify(s: $sTpe): $sTpe \/ $aTpe =
           if(s.isInstanceOf[$aTpe]) \/-(s.asInstanceOf[$aTpe])
           else -\/(s)
 
-        def reverseGet(a: $aTpe): $sTpe =
+        override def reverseGet(a: $aTpe): $sTpe =
           a.asInstanceOf[$sTpe]
 
-        def getOption(s: $sTpe): Option[$aTpe] =
+        override def getOption(s: $sTpe): Option[$aTpe] =
           if(s.isInstanceOf[$aTpe]) Some(s.asInstanceOf[$aTpe])
           else None
       }

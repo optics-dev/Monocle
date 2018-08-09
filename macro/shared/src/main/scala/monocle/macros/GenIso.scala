@@ -76,21 +76,21 @@ class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
       import monocle.Iso
 
       new Iso[$sTpe, $aTpe]{ self =>
-        def get(s: $sTpe): $aTpe =
+        override def get(s: $sTpe): $aTpe =
           s.$fieldMethod
 
-        def reverseGet(a: $aTpe): $sTpe =
+        override def reverseGet(a: $aTpe): $sTpe =
          $sTpeSym(a)
 
-        def reverse: Iso[$aTpe, $sTpe] =
+        override def reverse: Iso[$aTpe, $sTpe] =
           new Iso[$aTpe, $sTpe]{
-            def get(a: $aTpe): $sTpe =
+            override def get(a: $aTpe): $sTpe =
               $sTpeSym(a)
 
-            def reverseGet(s: $sTpe): $aTpe =
+            override def reverseGet(s: $sTpe): $aTpe =
               s.$fieldMethod
 
-            def reverse: Iso[$sTpe, $aTpe] =
+            override def reverse: Iso[$sTpe, $aTpe] =
               self
           }
       }
