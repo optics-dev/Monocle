@@ -80,16 +80,16 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
       import _root_.scala.language.higherKinds // prevent warning at call site
 
       new PLens[$sTpe, $tTpe, $aTpe, $bTpe]{
-        def get(s: $sTpe): $aTpe =
+        override def get(s: $sTpe): $aTpe =
           s.$fieldMethod
 
-        def set(a: $bTpe): $sTpe => $tTpe =
+        override def set(a: $bTpe): $sTpe => $tTpe =
           _.copy($field = a)
 
-        def modifyF[$F[_]: Functor](f: $aTpe => $F[$bTpe])(s: $sTpe): $F[$tTpe] =
+        override def modifyF[$F[_]: Functor](f: $aTpe => $F[$bTpe])(s: $sTpe): $F[$tTpe] =
           Functor[$F].map(f(s.$fieldMethod))(a => s.copy($field = a))
 
-        def modify(f: $aTpe => $bTpe): $sTpe => $tTpe =
+        override def modify(f: $aTpe => $bTpe): $sTpe => $tTpe =
          s => s.copy($field = f(s.$fieldMethod))
       }
     """)
