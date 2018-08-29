@@ -21,9 +21,9 @@ lazy val buildSettings = Seq(
     "-Ywarn-value-discard",
     "-Xfuture"
   ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, n)) if n >= 11 =>
+    case Some((2, 11 | 12)) =>
       Seq("-Ywarn-unused-import")
-    case None =>
+    case _ =>
       Seq()
   }),
   scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
