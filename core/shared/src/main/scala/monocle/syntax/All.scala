@@ -2,4 +2,4 @@ package monocle.syntax
 
 object all extends Syntaxes
 
-trait Syntaxes extends ApplySyntax
+trait Syntaxes extends ApplySyntax with FieldsSyntax
