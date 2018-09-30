@@ -38,7 +38,7 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val catsVersion = "1.1.0"
+lazy val catsVersion = "1.4.0"
 
 
 lazy val cats              = Def.setting("org.typelevel"              %%% "cats-core"          % catsVersion)
