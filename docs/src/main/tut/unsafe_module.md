@@ -30,7 +30,7 @@ import monocle.macros.GenLens
 (UnsafeSelect.unsafeSelect[Person](_.age >= 18) composeLens GenLens[Person](_.name)).modify("Adult " + _)
 ```
 
-This operator is considered unsafe because it allows for inconsistency if a `Lens` is then used to change one of the value used in the predicates. For example:
+This operator is considered unsafe because it allows for inconsistency if a `Lens` is then used to change one of the values used in the predicates. For example:
 
 ```tut:silent
 import monocle.unsafe.UnsafeSelect
