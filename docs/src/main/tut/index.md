@@ -34,7 +34,7 @@ addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.f
 
 ## Motivation
 
-Scala already provides getters and setters for case classes but modifying nested object is verbose which makes code
+Scala already provides getters and setters for case classes but modifying nested objects is verbose which makes code
 difficult to understand and reason about. Let's have a look at some examples:
 
 ```tut:silent
