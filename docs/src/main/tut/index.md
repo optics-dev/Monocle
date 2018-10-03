@@ -34,7 +34,7 @@ addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.f
 
 ## Motivation
 
-Scala already provides getters and setters for case classes but modifying nested object is verbose which makes code
+Scala already provides getters and setters for case classes but modifying nested objects is verbose which makes code
 difficult to understand and reason about. Let's have a look at some examples:
 
 ```tut:silent
@@ -86,7 +86,7 @@ Now we can use this `Lens` issued from the composition to `modify` the street na
 (company composeLens address composeLens street composeLens streetName).modify(_.capitalize)(employee)
 ```
 
-Here `modify` lift a function `String => String` to a function `Employee => Employee`.
+Here `modify` lifts a function `String => String` to a function `Employee => Employee`.
 It works but it would be clearer if we could zoom into the first character of a `String` with a `Lens`.
 However, we cannot write such a `Lens` because `Lenses` require the field they are directed at to be *mandatory*.
 In our case the first character of a `String` is optional as a `String` can be empty.
@@ -108,7 +108,7 @@ creates a third `Optional` from `A` to `C`. All `Lenses` can be seen as `Optiona
 present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class [diagram](optics.html) for full inheritance
 relation between optics).
 
-Monocle offers various functions and macros to cut the boiler plate even further, here is an example:
+Monocle offers various functions and macros to cut the boilerplate even further, here is an example:
 
 ```tut:book
 import monocle.macros.syntax.lens._
