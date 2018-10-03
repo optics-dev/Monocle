@@ -108,7 +108,7 @@ creates a third `Optional` from `A` to `C`. All `Lenses` can be seen as `Optiona
 present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class [diagram](optics.html) for full inheritance
 relation between optics).
 
-Monocle offers various functions and macros to cut the boiler plate even further, here is an example:
+Monocle offers various functions and macros to cut the boilerplate even further, here is an example:
 
 ```tut:book
 import monocle.macros.syntax.lens._
