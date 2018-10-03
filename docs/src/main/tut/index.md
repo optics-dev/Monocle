@@ -86,7 +86,7 @@ Now we can use this `Lens` issued from the composition to `modify` the street na
 (company composeLens address composeLens street composeLens streetName).modify(_.capitalize)(employee)
 ```
 
-Here `modify` lift a function `String => String` to a function `Employee => Employee`.
+Here `modify` lifts a function `String => String` to a function `Employee => Employee`.
 It works but it would be clearer if we could zoom into the first character of a `String` with a `Lens`.
 However, we cannot write such a `Lens` because `Lenses` require the field they are directed at to be *mandatory*.
 In our case the first character of a `String` is optional as a `String` can be empty.
