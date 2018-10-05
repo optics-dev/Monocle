@@ -1,4 +1,4 @@
-addSbtPlugin("com.eed3si9n"       % "sbt-unidoc"                    % "0.4.1")
+addSbtPlugin("com.eed3si9n"       % "sbt-unidoc"                    % "0.4.2")
 addSbtPlugin("com.github.gseitz"  % "sbt-release"                   % "1.0.8")
 addSbtPlugin("com.jsuereth"       % "sbt-pgp"                       % "1.1.1")
 addSbtPlugin("com.typesafe"       % "sbt-mima-plugin"               % "0.2.0")
