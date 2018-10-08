@@ -1,4 +1,4 @@
-addSbtPlugin("com.eed3si9n"       % "sbt-unidoc"                    % "0.4.1")
+addSbtPlugin("com.eed3si9n"       % "sbt-unidoc"                    % "0.4.2")
 addSbtPlugin("com.github.gseitz"  % "sbt-release"                   % "1.0.9")
 addSbtPlugin("com.jsuereth"       % "sbt-pgp"                       % "1.1.1")
 addSbtPlugin("com.typesafe"       % "sbt-mima-plugin"               % "0.2.0")
@@ -10,6 +10,6 @@ addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject"      % "0.5.0")
 addSbtPlugin("org.portable-scala" % "sbt-scala-native-crossproject" % "0.5.0")
 addSbtPlugin("org.scala-native"   % "sbt-scala-native"              % "0.3.7")
 addSbtPlugin("com.47deg"          % "sbt-microsites"                % "0.7.18")
-addSbtPlugin("org.tpolecat"       % "tut-plugin"                    % "0.6.6")
+addSbtPlugin("org.tpolecat"       % "tut-plugin"                    % "0.6.7")
 
 scalacOptions += "-deprecation"
