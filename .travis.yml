@@ -2,7 +2,6 @@ language: scala
 scala:
 - 2.12.6
 - 2.11.12
-- 2.13.0-M4
 jdk:
 - oraclejdk8
 notifications:
@@ -57,10 +56,12 @@ matrix:
     script:
     - sbt ++$TRAVIS_SCALA_VERSION testNative/run
   - scala: 2.13.0-M5
-    before_script:
-    - git clone -b v0.9.7 https://github.com/non/kind-projector.git
-    - cd kind-projector
-    - sbt "++ ${TRAVIS_SCALA_VERSION}!" publishLocal
-    - cd ..
     script:
-    - sbt "++${TRAVIS_SCALA_VERSION}!" coreJVM/compile stateJVM/compile
+    - sbt "++${TRAVIS_SCALA_VERSION}!"
+      bench/compile
+      stateJVM/compile
+      unsafeJVM/compile
+      genericJS/compile
+      macrosJS/compile
+      stateJS/compile
+      unsafeJS/compile
