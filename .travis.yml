@@ -44,8 +44,3 @@ env:
   matrix:
     - TARGET=JVM PRE=test:compile
     - TARGET=JS  PRE=test:fastOptJS
-
-cache:
-  directories:
-    - $HOME/.ivy2/cache
-    - $HOME/.sbt
