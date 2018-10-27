@@ -61,7 +61,9 @@ matrix:
       bench/compile
       stateJVM/compile
       unsafeJVM/compile
+      lawJVM/compile
       genericJS/compile
       macrosJS/compile
       stateJS/compile
       unsafeJS/compile
+      lawJS/compile
