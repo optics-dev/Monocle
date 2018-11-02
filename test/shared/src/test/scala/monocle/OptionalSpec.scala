@@ -2,7 +2,7 @@ package monocle
 
 import monocle.law.discipline.{OptionalTests, SetterTests, TraversalTests}
 
-import scalaz._
+import scalaz.{Optional => _, _}
 
 class OptionalSpec extends MonocleSuite {
 

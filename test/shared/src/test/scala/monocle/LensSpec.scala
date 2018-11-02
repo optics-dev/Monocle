@@ -5,7 +5,7 @@ import monocle.macros.{GenLens, Lenses}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 
-import scalaz._
+import scalaz.{Lens => _, PLens => _, _}
 
 case class Point(x: Int, y: Int)
 @Lenses case class Example(s: String, p: Point)
