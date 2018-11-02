@@ -2,6 +2,7 @@ language: scala
 scala:
 - 2.12.7
 - 2.11.12
+- 2.13.0-M5
 jdk:
 - oraclejdk8
 notifications:
@@ -55,15 +56,3 @@ matrix:
     - curl https://raw.githubusercontent.com/scala-native/scala-native/master/scripts/travis_setup.sh | bash -
     script:
     - sbt ++$TRAVIS_SCALA_VERSION testNative/run
-  - scala: 2.13.0-M5
-    script:
-    - sbt "++${TRAVIS_SCALA_VERSION}!"
-      bench/compile
-      stateJVM/compile
-      unsafeJVM/compile
-      lawJVM/compile
-      genericJS/compile
-      macrosJS/compile
-      stateJS/compile
-      unsafeJS/compile
-      lawJS/compile
