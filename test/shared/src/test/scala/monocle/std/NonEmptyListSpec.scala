@@ -8,6 +8,8 @@ import cats.data.NonEmptyList
 import scala.{List => IList}
 
 class NonEmptyListSpec extends MonocleSuite {
+  import cats.laws.discipline.arbitrary._
+
   checkAll("nelToAndOne", IsoTests(nelToOneAnd[Int]))
   checkAll("optNelToList", IsoTests(optNelToList[Int]))
 

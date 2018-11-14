@@ -132,7 +132,18 @@ object Plated extends PlatedFunctions {
   /** Cats instances                                                                            */
   /************************************************************************************************/
   import cats.Now
+  import cats.data.Chain
   import cats.free.{Cofree, Free}
+
+  implicit def chainPlated[A]: Plated[Chain[A]] = new Plated[Chain[A]] {
+    val plate: Traversal[Chain[A], Chain[A]] = new Traversal[Chain[A], Chain[A]] {
+      def modifyF[F[_] : Applicative](f: Chain[A] => F[Chain[A]])(s: Chain[A]): F[Chain[A]] =
+        s.uncons match {
+          case Some((x, xs)) => Applicative[F].map(f(xs))(_.prepend(x))
+          case None          => Applicative[F].pure(Chain.empty)
+        }
+    }
+  }
 
   implicit def cofreePlated[S[_]: Traverse, A]: Plated[Cofree[S, A]] = new Plated[Cofree[S, A]] {
     val plate: Traversal[Cofree[S, A], Cofree[S, A]] = new Traversal[Cofree[S, A], Cofree[S, A]] {

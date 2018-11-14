@@ -3,7 +3,7 @@ package monocle.function
 import monocle.function.fields._
 import monocle.{Iso, Optional, Prism}
 
-import scala.annotation.implicitNotFound
+import scala.annotation.{implicitNotFound, tailrec}
 import cats.Applicative
 import cats.instances.option._
 import cats.syntax.either._
@@ -78,6 +78,28 @@ object Snoc extends SnocFunctions {
     val snoc = Prism[Vector[A], (Vector[A], A)](
       v => if(v.isEmpty) None else Some((v.init, v.last))){
       case (xs, x) => xs :+ x
+    }
+  }
+
+  /************************************************************************************************/
+  /** Cats instances                                                                              */
+  /************************************************************************************************/
+  import cats.data.Chain
+
+  implicit def chainSnoc[A]: Snoc[Chain[A], A] = new Snoc[Chain[A], A] {
+    val snoc = Prism[Chain[A], (Chain[A], A)] {
+      c =>
+        @tailrec
+        def go(oldC: Chain[A], newC: Chain[A]): Option[(Chain[A], A)] =
+          oldC.uncons match {
+            case Some((h, t)) if t.isEmpty => Some((newC, h))
+            case Some((h, t))              => go(t, newC.append(h))
+            case None                      => None
+          }
+
+        go(c, Chain.empty)
+    } {
+      case (init, last) => init.append(last)
     }
   }
 }

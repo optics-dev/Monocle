@@ -69,4 +69,13 @@ object Empty extends EmptyFunctions {
   implicit def vectorEmpty[A]: Empty[Vector[A]] = new Empty[Vector[A]] {
     val empty = Prism[Vector[A], Unit](v => if(v.isEmpty) Some(()) else None)(_ => Vector.empty)
   }
+
+  /************************************************************************************************/
+  /** Cats instances                                                                              */
+  /************************************************************************************************/
+  import cats.data.Chain
+
+  implicit def chainEmpty[A]: Empty[Chain[A]] = new Empty[Chain[A]] {
+    val empty = Prism[Chain[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => Chain.empty)
+  }
 }

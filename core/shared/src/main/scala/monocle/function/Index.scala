@@ -2,7 +2,7 @@ package monocle.function
 
 import monocle.{Iso, Optional}
 
-import scala.annotation.implicitNotFound
+import scala.annotation.{implicitNotFound, tailrec}
 import scala.collection.immutable.SortedMap
 import scala.util.Try
 
@@ -73,8 +73,44 @@ object Index extends IndexFunctions{
   /************************************************************************************************/
   /** Cats instances                                                                            */
   /************************************************************************************************/
-  import cats.data.{NonEmptyList, NonEmptyVector, OneAnd}
-  import monocle.function.Cons1.{nelCons1, nevCons1, oneAndCons1}
+  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd}
+  import monocle.function.Cons1.{necCons1, nelCons1, nevCons1, oneAndCons1}
+
+  implicit def chainIndex[A]: Index[Chain[A], Int, A] = new Index[Chain[A], Int, A] {
+    def index(i: Int) = Optional[Chain[A], A](
+      c => {
+        if (i < 0)
+          None
+        else {
+          val it = c.iterator.drop(i)
+          if (it.hasNext) Some(it.next)
+          else            None
+        }
+      })(
+      a => c => {
+        @tailrec
+        def go(cur: Int, oldC: Chain[A], newC: Chain[A]): Chain[A] =
+          oldC.uncons match {
+            case Some((h, t)) =>
+              if (cur == i)
+                newC.append(a).concat(t)
+              else
+                go(cur + 1, t, newC.append(h))
+            case None         => newC
+          }
+
+        if (i >= 0 && i < c.length) go(0, c, Chain.empty) else c
+      }
+    )
+  }
+
+  implicit def necIndex[A]: Index[NonEmptyChain[A], Int, A] =
+    new Index[NonEmptyChain[A], Int, A] {
+      def index(i: Int): Optional[NonEmptyChain[A], A] = i match {
+        case 0 => necCons1.head.asOptional
+        case _ => necCons1.tail composeOptional chainIndex.index(i-1)
+      }
+    }
 
   implicit def nelIndex[A]: Index[NonEmptyList[A], Int, A] =
     new Index[NonEmptyList[A], Int, A] {

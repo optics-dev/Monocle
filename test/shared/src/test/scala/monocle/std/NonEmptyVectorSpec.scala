@@ -8,6 +8,8 @@ import monocle.law.discipline.function._
 import scala.{Vector => IVector}
 
 class NonEmptyVectorSpec extends MonocleSuite {
+  import cats.laws.discipline.arbitrary._
+
   checkAll("nevToAndOne", IsoTests(nevToOneAnd[Int]))
   checkAll("optNevToVector", IsoTests(optNevToVector[Int]))
   checkAll("vectorToNev", PrismTests(vectorToNev[Int]))

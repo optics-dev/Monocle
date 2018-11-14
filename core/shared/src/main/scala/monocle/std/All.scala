@@ -21,6 +21,8 @@ trait StdInstances
   // Cats Instances
   with    CofreeOptics
   with    TheseOptics
+  with    ChainOptics
+  with    NonEmptyChainOptics
   with    NonEmptyListOptics
   with    NonEmptyVectorOptics
   with    ValidationOptics

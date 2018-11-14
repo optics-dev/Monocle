@@ -8,13 +8,11 @@ import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 import org.scalactic.Equality
 
-import cats.data.{Ior => \&/, NonEmptyList, NonEmptyVector, OneAnd, Validated => Validation}
-import cats.data.Ior.{Both, Right => That, Left => This}
+import cats.data.OneAnd
 import cats.{Eq => Equal, _}
 import cats.free.Cofree
-import cats.syntax.either._
+import cats.laws.discipline.arbitrary._
 import cats.syntax.eq._
-import scala.{Either => \/, List => IList, Vector => IVector}
 
 trait TestInstances extends PlatformSpecificTestInstances with cats.instances.AllInstances {
 
@@ -69,29 +67,6 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
 
   implicit def someArbitrary[A: Arbitrary]: Arbitrary[Some[A]] = Arbitrary(Arbitrary.arbitrary[A].map(Some(_)))
 
-  implicit def validationArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[Validation[A, B]] =
-    Arbitrary(arbitrary[A \/ B].map(_.toValidated))
-
-  implicit def coGenValidation[E: Cogen, A: Cogen]: Cogen[Validation[E, A]] =
-    Cogen.cogenEither[E, A].contramap[Validation[E, A]](_.toEither)
-
-  implicit def theseArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \&/ B] =
-    Arbitrary(Gen.oneOf(
-      arbitrary[A].map(This(_)),
-      arbitrary[B].map(That(_)),
-      for {
-        a <- arbitrary[A]
-        b <- arbitrary[B]
-      } yield Both(a, b)))
-
-  implicit def oneAndArbitrary[T[_], A](implicit a: Arbitrary[A], ta: Arbitrary[T[A]]): Arbitrary[OneAnd[T, A]] = Arbitrary(for {
-    head <- Arbitrary.arbitrary[A]
-    tail <- Arbitrary.arbitrary[T[A]]
-  } yield OneAnd(head, tail))
-
-  implicit def oneAndCoGen[T[_], A](implicit a: Cogen[A], ta: Cogen[T[A]]): Cogen[OneAnd[T, A]] =
-    Cogen[(A, T[A])].contramap[OneAnd[T, A]](o => (o.head, o.tail))
-
   implicit def vectorArbitrary[A: Arbitrary]: Arbitrary[Vector[A]] =
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toVector))
 
@@ -101,17 +76,6 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
   implicit def setArbitrary[A: Arbitrary]: Arbitrary[Set[A]] =
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toSet))
 
-  implicit def nelArbitrary[A: Arbitrary]: Arbitrary[NonEmptyList[A]] =
-    Arbitrary(oneAndArbitrary[List,A].arbitrary.map( o => NonEmptyList(o.head, o.tail)))
-
-  implicit def nevArbitrary[A: Arbitrary]: Arbitrary[NonEmptyVector[A]] =
-    Arbitrary(oneAndArbitrary[Vector,A].arbitrary.map( o => NonEmptyVector(o.head, o.tail)))
-
-  implicit def nelCoGen[A: Cogen]: Cogen[NonEmptyList[A]] =
-    Cogen[(A, IList[A])].contramap[NonEmptyList[A]](nel => (nel.head, nel.tail))
-
-  implicit def nevCoGen[A: Cogen]: Cogen[NonEmptyVector[A]] =
-    Cogen[(A, IVector[A])].contramap[NonEmptyVector[A]](nev => (nev.head, nev.tail))
 
   implicit def optionCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[Option, A]] =
     Arbitrary(Arbitrary.arbitrary[OneAnd[List, A]].map( xs =>
