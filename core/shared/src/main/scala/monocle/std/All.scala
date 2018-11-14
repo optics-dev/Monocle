@@ -19,9 +19,9 @@ trait StdInstances
   with    Tuple1Optics
   with    TryOptics
   // Cats Instances
+  with    ChainOptics
   with    CofreeOptics
   with    TheseOptics
-  with    ChainOptics
   with    NonEmptyChainOptics
   with    NonEmptyListOptics
   with    NonEmptyVectorOptics
