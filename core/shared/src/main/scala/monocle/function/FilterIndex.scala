@@ -77,7 +77,13 @@ object FilterIndex extends FilterIndexFunctions {
   /************************************************************************************************/
   /** Cats instances                                                                            */
   /************************************************************************************************/
-  import cats.data.{NonEmptyList, NonEmptyVector}
+  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
+
+  implicit def chainFilterIndex[A]: FilterIndex[Chain[A], Int, A] =
+    fromTraverse(_.zipWithIndex)
+
+  implicit def necFilterIndex[A]: FilterIndex[NonEmptyChain[A], Int, A] =
+    fromTraverse(_.zipWithIndex)
 
   implicit def nelFilterIndex[A]: FilterIndex[NonEmptyList[A], Int, A] =
     fromTraverse(_.zipWithIndex)

@@ -66,8 +66,21 @@ object Snoc1 extends Snoc1Functions {
   /************************************************************************************************/
   /** Cats instances                                                                            */
   /************************************************************************************************/
-  import cats.data.{NonEmptyList, NonEmptyVector}
+  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
   import scala.{List => IList, Vector => IVector}
+
+  implicit def necSnoc1[A]:Snoc1[NonEmptyChain[A], Chain[A], A] = new Snoc1[NonEmptyChain[A], Chain[A], A] {
+    val snoc1: Iso[NonEmptyChain[A], (Chain[A], A)] =
+      Iso {
+        nec: NonEmptyChain[A] =>
+          Snoc.chainSnoc.snoc.getOption(nec.toChain) match {
+            case Some(tuple) => tuple
+            case None        => (nec.tail, nec.head)
+          }
+      } {
+        case (c, a) => NonEmptyChain.fromChainAppend(c, a)
+      }
+  }
 
   implicit def nelSnoc1[A]:Snoc1[NonEmptyList[A], IList[A], A] = new Snoc1[NonEmptyList[A], IList[A], A]{
     val snoc1: Iso[NonEmptyList[A], (IList[A], A)] =

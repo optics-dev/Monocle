@@ -96,10 +96,14 @@ object Each extends EachFunctions {
   /************************************************************************************************/
   /** Cats instances                                                                            */
   /************************************************************************************************/
-  import cats.data.{NonEmptyList, NonEmptyVector, OneAnd, Validated => Validation}
+  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd, Validated => Validation}
   import cats.free.Cofree
 
   implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] = fromTraverse[Cofree[S, ?], A]
+
+  implicit def chainEach[A]: Each[Chain[A], A] = fromTraverse
+
+  implicit def necEach[A]: Each[NonEmptyChain[A], A] = fromTraverse
 
   implicit def nelEach[A]: Each[NonEmptyList[A], A] = fromTraverse
 

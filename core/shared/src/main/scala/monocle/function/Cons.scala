@@ -73,4 +73,15 @@ object Cons extends ConsFunctions {
       case x +: xs  => Some((x, xs))
     }{ case (a, s) => a +: s }
   }
+
+  /************************************************************************************************/
+  /** Cats instances                                                                              */
+  /************************************************************************************************/
+  import cats.data.Chain
+
+  implicit def chainCons[A]: Cons[Chain[A], A] = new Cons[Chain[A], A]{
+    val cons = Prism[Chain[A], (A, Chain[A])](_.uncons) {
+      case (a, s) => s.prepend(a)
+    }
+  }
 }

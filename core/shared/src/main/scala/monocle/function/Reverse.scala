@@ -68,7 +68,13 @@ object Reverse extends ReverseFunctions {
   /************************************************************************************************/
   /** Cats instances                                                                            */
   /************************************************************************************************/
-  import cats.data.{NonEmptyList, NonEmptyVector}
+  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
+
+  implicit def chainReverse[A]: Reverse[Chain[A], Chain[A]] =
+    fromReverseFunction(_.reverse)
+
+  implicit def necReverse[A]: Reverse[NonEmptyChain[A], NonEmptyChain[A]] =
+    fromReverseFunction(_.reverse)
 
   implicit def nelReverse[A]: Reverse[NonEmptyList[A], NonEmptyList[A]] =
     fromReverseFunction(_.reverse)

@@ -72,10 +72,10 @@ object Cons1 extends Cons1Functions {
   }
 
   /************************************************************************************************/
-  /** Cats instances                                                                            */
+  /** Cats instances                                                                              */
   /************************************************************************************************/
   import cats.Now
-  import cats.data.{NonEmptyList, NonEmptyVector, OneAnd}
+  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd}
   import cats.free.Cofree
   import scala.{List => IList, Vector => IVector}
 
@@ -89,6 +89,12 @@ object Cons1 extends Cons1Functions {
         * interested in using the `head` */
       override def head: Lens[Cofree[S, A], A] =
       Lens((c: Cofree[S, A]) => c.head)(h => c => Cofree(h, c.tail))
+    }
+
+  implicit def necCons1[A]: Cons1[NonEmptyChain[A], A, Chain[A]] =
+    new Cons1[NonEmptyChain[A],A,Chain[A]]{
+      val cons1: Iso[NonEmptyChain[A], (A, Chain[A])] =
+        Iso((nec: NonEmptyChain[A]) => (nec.head,nec.tail)){case (h,t) => NonEmptyChain.fromChainPrepend(h, t)}
     }
 
   implicit def nelCons1[A]: Cons1[NonEmptyList[A], A, IList[A]] =
