@@ -102,6 +102,45 @@ val address = GenLens[Person](_.address)
 (address composeLens streetNumber).set(2)(john)
 ```
 
+## Other Ways of Lens Composition
+
+Is possible to compose few `Lenses` together by using `compose`:
+
+```tut:silent
+GenLens[Person](_.name).set("Mike") compose
+GenLens[Person](_.age).modify(_ + 1)
+```
+
+Same but with the simplified macro based syntax:
+
+```tut:silent
+import monocle.macros.syntax.lens.
+
+john
+  .lens(_.name).set("Mike") compose
+  .lens(_.age).modify(_ + 1)
+```
+
+(All `Setter` like optics offer `set` and `modify` methods that returns an `EndoFunction` (i.e. `S => S`) which means that we can compose modification using basic function composition.)
+
+Sometimes you need an easy way to update `Product` type inside
+`Sum` type - for that case you can compose `Prism` with `Lens` by using `some`:
+
+```tut:book
+import monocle.std.option.some
+import monocle.macros.GenLens
+
+case class B(c: Int)
+case class A(b: Option[B])
+
+val c = GenLens[B](_.c)
+val b = GenLens[A](_.b)
+
+(b composePrism some composeLens c).getOption(A(Some(B(1))))
+```
+
+For more detailed view of the various optics composition see [Optics](../optics.html)
+
 ## Lens Generation
 
 `Lens` creation is rather boiler platy but we developed a few macros to generate them automatically. All macros
