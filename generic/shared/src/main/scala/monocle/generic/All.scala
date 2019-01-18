@@ -7,3 +7,4 @@ trait GenericInstances
   with    HListInstances
   with    ProductOptics
   with    TupleNInstances
+  with    GenericOptics
