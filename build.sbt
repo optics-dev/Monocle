@@ -59,8 +59,6 @@ lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"    
 lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
 lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.6-SNAP5" % "test")
 
-lazy val macroCompat        = Def.setting("org.typelevel"   %%% "macro-compat" % "1.1.1")
-
 lazy val macroVersion = "2.1.1"
 
 lazy val paradisePlugin = Def.setting{
@@ -202,7 +200,6 @@ lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     libraryDependencies ++= Seq(
       scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
       scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
-      macroCompat.value
     ),
     libraryDependencies ++= paradisePlugin.value,
     libraryDependencies ++= CrossVersion partialVersion scalaVersion.value collect {
