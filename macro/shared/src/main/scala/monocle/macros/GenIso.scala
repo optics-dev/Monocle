@@ -23,7 +23,6 @@ object GenIso {
   def fields[S]: Iso[S, _] = macro GenIsoImplW.genIso_fields_impl[S]
 }
 
-@macrocompat.bundle
 sealed abstract class GenIsoImplBase {
   val c: blackbox.Context
   import c.universe._
@@ -57,7 +56,6 @@ sealed abstract class GenIsoImplBase {
   }
 }
 
-@macrocompat.bundle
 class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
   import c.universe._
 
@@ -101,7 +99,6 @@ class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
     c.Expr[Iso[S, Unit]](genIso_unit_tree[S])
 }
 
-@macrocompat.bundle
 class GenIsoImplW(override val c: whitebox.Context) extends GenIsoImplBase {
   import c.universe._
 

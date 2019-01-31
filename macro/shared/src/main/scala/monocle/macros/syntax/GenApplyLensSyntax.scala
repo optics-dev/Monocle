@@ -10,7 +10,6 @@ class GenApplyLensOps[A](private val value: A) extends AnyVal {
   def lens[C]( field: A => C ): ApplyLens[A,A,C,C] = macro GenApplyLensOpsImpl.lens_impl[A, C]
 }
 
-@macrocompat.bundle
 class GenApplyLensOpsImpl(val c: blackbox.Context){
   def lens_impl[A: c.WeakTypeTag, C](field: c.Expr[A => C]): c.Expr[ApplyLens[A,A,C,C]] = {
     import c.universe._
