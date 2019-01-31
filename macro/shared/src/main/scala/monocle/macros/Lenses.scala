@@ -10,7 +10,6 @@ class PLenses(prefix: String = "") extends scala.annotation.StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro LensesImpl.plensesAnnotationMacro
 }
 
-@macrocompat.bundle
 private[macros] class LensesImpl(val c: blackbox.Context) {
 
   def lensesAnnotationMacro(annottees: c.Expr[Any]*): c.Expr[Any] = annotationMacro(annottees, poly = false)

@@ -9,7 +9,6 @@ object GenPrism {
   def apply[S, A <: S]: Prism[S, A] = macro GenPrismImpl.genPrism_impl[S, A]
 }
 
-@macrocompat.bundle
 private class GenPrismImpl(val c: blackbox.Context) {
   def genPrism_impl[S: c.WeakTypeTag, A: c.WeakTypeTag]: c.Expr[Prism[S, A]] = {
     import c.universe._
