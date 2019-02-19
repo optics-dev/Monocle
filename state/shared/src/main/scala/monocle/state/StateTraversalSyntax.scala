@@ -9,7 +9,7 @@ trait StateTraversalSyntax {
     new StateTraversalOps[S, T, A, B](traversal)
 }
 
-final class StateTraversalOps[S, T, A, B](traversal: PTraversal[S, T, A, B]) {
+final class StateTraversalOps[S, T, A, B](private val traversal: PTraversal[S, T, A, B]) extends AnyVal {
   /** transforms a PTraversal into a State */
   def toState: State[S, List[A]] =
     State(s => (s, traversal.getAll(s)))

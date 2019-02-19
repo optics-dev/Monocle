@@ -9,7 +9,7 @@ trait StateGetterSyntax {
     new StateGetterOps[S, A](getter)
 }
 
-final class StateGetterOps[S, A](getter: Getter[S, A]) {
+final class StateGetterOps[S, A](private val getter: Getter[S, A]) extends AnyVal {
   /** transforms a Getter into a State */
   def toState: State[S, A] =
     State(s => (s, getter.get(s)))
