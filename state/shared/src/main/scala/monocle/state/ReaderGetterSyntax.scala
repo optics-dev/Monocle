@@ -9,7 +9,7 @@ trait ReaderGetterSyntax {
     new ReaderGetterOps[S, A](getter)
 }
 
-final class ReaderGetterOps[S, A](getter: Getter[S, A]) {
+final class ReaderGetterOps[S, A](private val getter: Getter[S, A]) extends AnyVal {
   /** transforms a Getter into a Reader */
   def toReader: Reader[S, A] =
     Reader(getter.get)
