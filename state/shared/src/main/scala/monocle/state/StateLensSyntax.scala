@@ -9,7 +9,7 @@ trait StateLensSyntax {
     new StateLensOps[S, T, A, B](lens)
 }
 
-final class StateLensOps[S, T, A, B](lens: PLens[S, T, A, B]) {
+final class StateLensOps[S, T, A, B](private val lens: PLens[S, T, A, B]) extends AnyVal {
   /** transforms a PLens into a State */
   def toState: State[S, A] =
     State(s => (s, lens.get(s)))
