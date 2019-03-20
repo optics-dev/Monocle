@@ -3,9 +3,9 @@ package monocle.function
 import monocle.MonocleSuite
 import monocle.law.discipline.function.AtTests
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class AtSpec extends MonocleSuite with GeneratorDrivenPropertyChecks {
+class AtSpec extends MonocleSuite with ScalaCheckDrivenPropertyChecks {
 
   implicit def mmapAt[K, V]: At[MMap[K, V], K, Option[V]] = At.fromIso(MMap.toMap)
 

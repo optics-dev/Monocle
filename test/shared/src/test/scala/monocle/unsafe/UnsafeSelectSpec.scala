@@ -4,12 +4,12 @@ import monocle.MonocleSuite
 import monocle.law.discipline.OptionalTests
 import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 import cats.{Eq => Equal}
 
 
-class UnsafeSelectSpec extends MonocleSuite with GeneratorDrivenPropertyChecks {
+class UnsafeSelectSpec extends MonocleSuite with ScalaCheckDrivenPropertyChecks {
   /*
     This fails the "unsafe.Prism.round trip other way" test with value -1
     checkAll("unsafe", PrismTests(UnsafeSelect.unsafeSelect((a: Int) => a > Int.MaxValue / 2)))
