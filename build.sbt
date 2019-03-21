@@ -9,8 +9,8 @@ lazy val Scala211 = "2.11.12"
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
-  scalaVersion       := "2.12.7",
-  crossScalaVersions := Seq(Scala211, "2.12.7", "2.13.0-M5"),
+  scalaVersion       := "2.12.8",
+  crossScalaVersions := Seq(Scala211, "2.12.8", "2.13.0-M5"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -49,17 +49,15 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.26")
+lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.27")
 lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.3")
 
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.3")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.3" % "test")
+lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.4")
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.4" % "test")
 
 lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.10.0")
 lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
-lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.6-SNAP4" % "test")
-
-lazy val macroCompat        = Def.setting("org.typelevel"   %%% "macro-compat" % "1.1.1")
+lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.7" % "test")
 
 lazy val macroVersion = "2.1.1"
 
@@ -76,7 +74,7 @@ lazy val paradisePlugin = Def.setting{
   }
 }
 
-lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.8" cross CrossVersion.binary
+lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.9" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.3.0")
@@ -202,7 +200,6 @@ lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     libraryDependencies ++= Seq(
       scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
       scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
-      macroCompat.value
     ),
     libraryDependencies ++= paradisePlugin.value,
     libraryDependencies ++= CrossVersion partialVersion scalaVersion.value collect {

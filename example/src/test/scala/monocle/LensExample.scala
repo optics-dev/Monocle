@@ -69,6 +69,16 @@ class LensMonoExample extends MonocleSuite {
   test("@Lenses is for case classes only") {
     illTyped( """@Lenses class C""", "Invalid annotation target: must be a case class")
   }
+
+  test("GenApplyLensOps has no collision with .value") {
+    case class MyString(s: String)
+    object MyString {
+      implicit class Ops(self: MyString) {
+        val value: String = self.s
+      }
+    }
+    MyString("a").value shouldEqual "a"
+  }
 }
 
 class LensPolyExample extends MonocleSuite {

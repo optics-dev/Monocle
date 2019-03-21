@@ -9,7 +9,7 @@ final case class IsEq[A](lhs: A, rhs: A)
 object IsEq {
   implicit def syntax[A](lhs: A): IsEqOps[A] = new IsEqOps(lhs)
 
-  final class IsEqOps[A](val lhs: A) extends AnyVal {
+  final class IsEqOps[A](private val lhs: A) extends AnyVal {
     def <==>(rhs: A): IsEq[A] = IsEq(lhs, rhs)
   }
 }
