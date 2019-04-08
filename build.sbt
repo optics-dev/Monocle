@@ -7,10 +7,20 @@ import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 lazy val Scala211 = "2.11.12"
 
+lazy val scalatestVersion = settingKey[String]("")
+
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.12.8",
-  crossScalaVersions := Seq(Scala211, "2.12.8", "2.13.0-M5"),
+  crossScalaVersions := Seq(Scala211, "2.12.8"), // TODO add 2.13.0-RC1
+  scalatestVersion   := {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 11 | 12)) =>
+        "3.0.7"
+      case _ =>
+        "3.0.8-RC2"
+    }
+  },
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -55,9 +65,9 @@ lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"     
 lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.4")
 lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.4" % "test")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.10.0")
+lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.11.1")
 lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
-lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % "3.0.7" % "test")
+lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % scalatestVersion.value % "test")
 
 lazy val macroVersion = "2.1.1"
 
@@ -74,7 +84,7 @@ lazy val paradisePlugin = Def.setting{
   }
 }
 
-lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.9" cross CrossVersion.binary
+lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.10" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.3.0")

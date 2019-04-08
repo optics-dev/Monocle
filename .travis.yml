@@ -2,7 +2,6 @@ language: scala
 scala:
 - 2.12.8
 - 2.11.12
-- 2.13.0-M5
 jdk:
 - oraclejdk8
 notifications:
@@ -48,6 +47,10 @@ after_success:
 - '[[ $TRAVIS_BRANCH == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]] && { sbt ci-release ghpagesPushSite; };'
 matrix:
   include:
+  - scala: 2.13.0-RC1
+    script:
+    # TODO refined for Scala 2.13
+    - sbt "++ ${TRAVIS_SCALA_VERSION}!" "all bench/compile coreJS/compile coreJVM/compile genericJS/compile genericJVM/compile lawJS/compile lawJVM/compile stateJS/compile stateJVM/compile unsafeJS/compile unsafeJVM/compile"
   - scala: 2.11.11
     jdk: oraclejdk8
     sudo: required
