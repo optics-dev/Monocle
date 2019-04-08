@@ -7,10 +7,20 @@ import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 lazy val Scala211 = "2.11.12"
 
+lazy val scalatestVersion = settingKey[String]("")
+
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.12.8",
-  crossScalaVersions := Seq(Scala211, "2.12.8"),
+  crossScalaVersions := Seq(Scala211, "2.12.8"), // TODO add 2.13.0-RC1
+  scalatestVersion   := {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 11 | 12)) =>
+        "3.0.7"
+      case _ =>
+        "3.0.8-RC2"
+    }
+  },
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -28,6 +38,19 @@ lazy val buildSettings = Seq(
     case None =>
       Seq()
   }),
+  scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+    case Some((2, n)) if n >= 13 =>
+      Seq(
+        "-Ymacro-annotations"
+      )
+  }.toList.flatten,
+  scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+    case Some((2, n)) if n <= 12 =>
+      Seq(
+        "-Yno-adapted-args",
+        "-Xfatal-warnings"
+      )
+  }.toList.flatten,
   scalacOptions in (Compile, console) -= "-Ywarn-unused-import",
   scalacOptions in (Test, console) -= "-Ywarn-unused-import",
   addCompilerPlugin(kindProjector),
@@ -50,12 +73,25 @@ lazy val shapeless         = Def.setting("com.chuusai"                %%% "shape
 lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.4")
 lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.4" % "test")
 
-lazy val discipline        = Def.setting("org.typelevel"              %%% "discipline"         % "0.10.0")
-lazy val scalacheck        = Def.setting("org.scalacheck"             %%% "scalacheck"         % "1.14.0")
-lazy val scalatest         = Def.setting("org.scalatest"              %%% "scalatest"          % "3.0.7"  % "test")
+lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.11.1")
+lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
+lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % scalatestVersion.value % "test")
 
 lazy val macroVersion = "2.1.1"
-lazy val paradisePlugin = "org.scalamacros" % "paradise"       % macroVersion cross CrossVersion.patch
+
+lazy val paradisePlugin = Def.setting{
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, v)) if v <= 12 =>
+      Seq(
+        compilerPlugin("org.scalamacros" % "paradise" % macroVersion cross CrossVersion.patch)
+      )
+    case _ =>
+      // if scala 2.13.0-M4 or later, macro annotations merged into scala-reflect
+      // https://github.com/scala/scala/pull/6606
+      Nil
+  }
+}
+
 lazy val kindProjector  = "org.typelevel" % "kind-projector" % "0.10.0" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
@@ -168,10 +204,7 @@ lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
       scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
       scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
     ),
-    addCompilerPlugin(paradisePlugin),
-    libraryDependencies ++= CrossVersion partialVersion scalaVersion.value collect {
-        case (2, scalaMajor) if scalaMajor < 11 => Seq("org.scalamacros" %% "quasiquotes" % macroVersion)
-      } getOrElse Nil,
+    libraryDependencies ++= paradisePlugin.value,
     unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
   )
 
@@ -206,7 +239,8 @@ lazy val test    = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic
   )
   .settings(noPublishSettings: _*)
   .settings(
-    libraryDependencies ++= Seq(cats.value, catsLaws.value, shapeless.value, scalatest.value, refinedScalacheck.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(cats.value, catsLaws.value, shapeless.value, scalatest.value, refinedScalacheck.value),
+    libraryDependencies ++= paradisePlugin.value
   )
 
 lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
@@ -215,16 +249,17 @@ lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
   .settings(noPublishSettings)
   .settings(libraryDependencies ++= Seq(
     scalaz.value,
-    shapeless.value,
-    compilerPlugin(paradisePlugin)
-  )).enablePlugins(JmhPlugin)
+    shapeless.value),
+    libraryDependencies ++= paradisePlugin.value
+  ).enablePlugins(JmhPlugin)
 
 lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM, stateJVM, testJVM % "test->test")
   .settings(moduleName := "monocle-example")
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(cats.value, shapeless.value, scalatest.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(cats.value, shapeless.value, scalatest.value),
+    libraryDependencies ++= paradisePlugin.value
   )
 
 lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
@@ -236,7 +271,8 @@ lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
   .settings(docSettings)
   .settings(scalacOptions in Tut ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))))
   .settings(
-    libraryDependencies ++= Seq(cats.value, shapeless.value, compilerPlugin(paradisePlugin))
+    libraryDependencies ++= Seq(cats.value, shapeless.value),
+    libraryDependencies ++= paradisePlugin.value
   )
   .enablePlugins(GhpagesPlugin)
 
