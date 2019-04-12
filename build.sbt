@@ -84,7 +84,7 @@ lazy val paradisePlugin = Def.setting{
   }
 }
 
-lazy val kindProjector  = "org.spire-math"  % "kind-projector" % "0.9.10" cross CrossVersion.binary
+lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.10.0" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.3.0")
