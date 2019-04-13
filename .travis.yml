@@ -44,7 +44,7 @@ install:
   - gem install sass
   - gem install jekyll -v 3.8.5
 after_success:
-- '[[ $TRAVIS_BRANCH == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]] && { sbt ci-release ghpagesPushSite; };'
+- '[[ $TRAVIS_BRANCH == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]] && { sbt ci-release; };'
 matrix:
   include:
   - scala: 2.13.0-RC1
