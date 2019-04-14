@@ -1,27 +1,12 @@
 language: scala
+
 scala:
 - 2.12.8
 - 2.11.12
+
 jdk:
 - oraclejdk8
-notifications:
-  webhooks:
-    urls:
-    - https://webhooks.gitter.im/e/20b8e51c61363eee95e8
-    on_success: change
-    on_failure: always
-    on_start: false
-  email:
-  - truffaut.julien@gmail.com
-script:
-  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
-  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
-  - |
-    if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.8 ]; then
-      sbt ++$TRAVIS_SCALA_VERSION tut
-    else
-      echo "Skipping sbt tut"
-    fi
+
 env:
   global:
     - secure: lJxaR+9VM96s7rfaigL3K2FbcP3XiZ+AerbgOBOpYi2anRkMPQ91h1g60HYTwEDGJIKybyNWFuXZM8hNtQMCxzxgu7ev1SyRr5Otfzg5ehGqB5UWbSAgpXlqhR5dAonwmqyEEDF2OK+k1fa0N6mIwpQeuUCwrt68kTp4f0K9jMQ=
@@ -43,8 +28,27 @@ install:
   - gem update --system
   - gem install sass
   - gem install jekyll -v 3.8.5
-after_success:
-- '[[ $TRAVIS_BRANCH == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]] && { sbt ci-release; };'
+
+stages:
+  - name: test
+  - name: release
+    if: (branch = master AND type = push) OR (tag IS present)
+
+jobs:
+  include:
+    - stage: test
+      script:
+        - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
+        - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
+        - |
+        if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.8 ]; then
+        sbt ++$TRAVIS_SCALA_VERSION tut
+        else
+        echo "Skipping sbt tut"
+        fi
+    - stage: release
+      script: sbt ci-release
+
 matrix:
   include:
   - scala: 2.13.0-RC1
@@ -59,3 +63,14 @@ matrix:
     - curl https://raw.githubusercontent.com/scala-native/scala-native/master/scripts/travis_setup.sh | bash -
     script:
     - sbt ++$TRAVIS_SCALA_VERSION testNative/run
+
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/20b8e51c61363eee95e8
+    on_success: change
+    on_failure: always
+    on_start: false
+  email:
+    - truffaut.julien@gmail.com
