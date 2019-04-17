@@ -47,6 +47,9 @@ after_success:
 
 
 env:
-  matrix:
+  global:
     - secure: lJxaR+9VM96s7rfaigL3K2FbcP3XiZ+AerbgOBOpYi2anRkMPQ91h1g60HYTwEDGJIKybyNWFuXZM8hNtQMCxzxgu7ev1SyRr5Otfzg5ehGqB5UWbSAgpXlqhR5dAonwmqyEEDF2OK+k1fa0N6mIwpQeuUCwrt68kTp4f0K9jMQ=
     - secure: NZQn8lB04I+FO3Om680CXWP29scS/zRhITbLO/1sM3dnuG8ygn0fzlFMQhgCO3fCjnclThAi+6MN7UnyV8BwDbFhCDe627+06px5fHUw2TPdzhz/BwngAW9pRsx6m0b8eBqQmt8Q6mlgeYOPemsFOeqQTKZulpIhSYnO1R1Nwzc=
+  matrix:
+    - TARGET=JVM PRE=test:compile
+    - TARGET=JS  PRE=test:fastOptJS
