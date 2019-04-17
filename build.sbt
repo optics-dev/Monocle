@@ -12,7 +12,7 @@ lazy val scalatestVersion = settingKey[String]("")
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.12.8",
-  crossScalaVersions := Seq(Scala211, "2.12.8"), // TODO add 2.13.0-RC1
+  crossScalaVersions := Seq(Scala211, "2.12.8", "2.13.0-RC1"),
   scalatestVersion   := {
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, 11 | 12)) =>

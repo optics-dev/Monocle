@@ -49,8 +49,8 @@ matrix:
   include:
   - scala: 2.13.0-RC1
     script:
-    # TODO refined for Scala 2.13
-    - sbt "++ ${TRAVIS_SCALA_VERSION}!" "all bench/compile coreJS/compile coreJVM/compile genericJS/compile genericJVM/compile lawJS/compile lawJVM/compile stateJS/compile stateJVM/compile unsafeJS/compile unsafeJVM/compile"
+    # TODO enable test
+    - sbt "++ ${TRAVIS_SCALA_VERSION}!" compile
   - scala: 2.11.11
     jdk: oraclejdk8
     sudo: required
