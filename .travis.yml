@@ -6,10 +6,21 @@ scala:
 jdk:
 - oraclejdk8
 
+before_install:
+- git fetch --tags
+- export PATH=${PATH}:./vendor/bundle
+
+install:
+- rvm use 2.3.3 --install --fuzzy
+- gem update --system
+- gem install sass
+- gem install jekyll -v 3.8.3
+
 stages:
   - name: test
   - name: release
     if: (branch = master AND type = push) OR (tag IS present)
+
 
 jobs:
   include:
@@ -18,52 +29,24 @@ jobs:
         - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
         - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
         - |
-        if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.8 ]; then
-        sbt ++$TRAVIS_SCALA_VERSION tut
-        else
-        echo "Skipping sbt tut"
-        fi
+          if [ $TARGET = JVM && $TRAVIS_SCALA_VERSION == 2.12.8 ]; then
+            sbt ++$TRAVIS_SCALA_VERSION tut
+          else
+            echo "Skipping sbt tut"
+          fi
     - stage: release
       script: sbt ci-release
 
-matrix:
-  include:
-    - scala: 2.13.0-RC1
-      script:
-        # TODO enable test
-        - sbt "++ ${TRAVIS_SCALA_VERSION}!" compile
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash
+  scripts/publishMicrosite.sh; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then echo "Not in master branch, skipping
+  deploy and release"; fi
+
 
 env:
-  global:
+  matrix:
     - secure: lJxaR+9VM96s7rfaigL3K2FbcP3XiZ+AerbgOBOpYi2anRkMPQ91h1g60HYTwEDGJIKybyNWFuXZM8hNtQMCxzxgu7ev1SyRr5Otfzg5ehGqB5UWbSAgpXlqhR5dAonwmqyEEDF2OK+k1fa0N6mIwpQeuUCwrt68kTp4f0K9jMQ=
     - secure: NZQn8lB04I+FO3Om680CXWP29scS/zRhITbLO/1sM3dnuG8ygn0fzlFMQhgCO3fCjnclThAi+6MN7UnyV8BwDbFhCDe627+06px5fHUw2TPdzhz/BwngAW9pRsx6m0b8eBqQmt8Q6mlgeYOPemsFOeqQTKZulpIhSYnO1R1Nwzc=
-  matrix:
-    - TARGET=JVM PRE=test:compile
-    - TARGET=JS  PRE=test:fastOptJS
-sudo: true
-cache:
-  directories:
-    - $HOME/.ivy2/cache
-    - $HOME/.sbt/boot
-
-before_install:
- - export PATH=${PATH}:./vendor/bundle
- 
-before_script:
-  - sudo chmod +x /usr/local/bin/sbt
-
-install:
-  - rvm use 2.5.3 --install --fuzzy
-  - gem update --system
-  - gem install sass
-  - gem install jekyll -v 3.8.5
-
-notifications:
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/20b8e51c61363eee95e8
-    on_success: change
-    on_failure: always
-    on_start: false
-  email:
-    - truffaut.julien@gmail.com
