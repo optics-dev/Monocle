@@ -53,3 +53,10 @@ env:
   matrix:
     - TARGET=JVM PRE=test:compile
     - TARGET=JS  PRE=test:fastOptJS
+
+matrix:
+  include:
+  - scala: 2.13.0-RC1
+    script:
+    # TODO enable test
+    - sbt "++ ${TRAVIS_SCALA_VERSION}!" compile
