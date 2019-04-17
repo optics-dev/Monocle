@@ -1,7 +1,6 @@
 language: scala
 scala:
 - 2.12.8
-- 2.11.12
 jdk:
 - oraclejdk8
 notifications:
@@ -51,11 +50,3 @@ matrix:
     script:
     # TODO enable test
     - sbt "++ ${TRAVIS_SCALA_VERSION}!" compile
-  - scala: 2.11.11
-    jdk: oraclejdk8
-    sudo: required
-    before_install:
-    - sudo apt-get update
-    - curl https://raw.githubusercontent.com/scala-native/scala-native/master/scripts/travis_setup.sh | bash -
-    script:
-    - sbt ++$TRAVIS_SCALA_VERSION testNative/run

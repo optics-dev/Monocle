@@ -5,17 +5,15 @@ import sbtcrossproject.crossProject
 import sbt.Keys._
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-lazy val Scala211 = "2.11.12"
-
 lazy val scalatestVersion = settingKey[String]("")
 
 lazy val buildSettings = Seq(
   organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.12.8",
-  crossScalaVersions := Seq(Scala211, "2.12.8", "2.13.0-RC1"),
+  crossScalaVersions := Seq("2.12.8", "2.13.0-RC1"),
   scalatestVersion   := {
     CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, 11 | 12)) =>
+      case Some((2, 12)) =>
         "3.0.7"
       case _ =>
         "3.0.8-RC2"
@@ -31,7 +29,7 @@ lazy val buildSettings = Seq(
     "-Ywarn-value-discard",
     "-Xfuture"
   ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 11 | 12)) =>
+    case Some((2, 12)) =>
       Seq("-Ywarn-unused-import")
     case _ =>
       Seq()
@@ -40,13 +38,6 @@ lazy val buildSettings = Seq(
     case Some((2, n)) if n >= 13 =>
       Seq(
         "-Ymacro-annotations"
-      )
-  }.toList.flatten,
-  scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-    case Some((2, n)) if n <= 12 =>
-      Seq(
-        "-Yno-adapted-args",
-        "-Xfatal-warnings"
       )
   }.toList.flatten,
   scalacOptions in (Compile, console) -= "-Ywarn-unused-import",
@@ -93,8 +84,7 @@ def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
 lazy val tagName = Def.setting(
  s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}")
 
-lazy val gitRev =
-  sys.process.Process("git rev-parse HEAD").lineStream_!.head
+lazy val gitRev = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
 lazy val scalajsSettings = Seq(
   scalacOptions += {
@@ -110,17 +100,10 @@ lazy val scalajsSettings = Seq(
                            "-minSuccessfulTests", "50")
 )
 
-lazy val scalanativeSettings = Seq(
-  scalaVersion := Scala211,
-  crossScalaVersions := Seq(Scala211),
-  // workaround. see: https://github.com/scala-native/scala-native/issues/1121
-  sources in (Compile, doc) := Seq.empty
-)
 
 lazy val monocleSettings    = buildSettings ++ publishSettings
 lazy val monocleJvmSettings = monocleSettings
 lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
-lazy val monocleNativeSettings = monocleSettings ++ scalanativeSettings
 
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
@@ -142,20 +125,13 @@ lazy val monocleJS = project.in(file(".monocleJS"))
   .aggregate(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS)
   .dependsOn(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS  % "test-internal -> test")
 
-lazy val monocleNative = project.in(file(".monocleNative"))
-  .settings(monocleNativeSettings)
-  .aggregate(coreNative, stateNative, testNative)
-  .dependsOn(coreNative, stateNative, testNative)
-
 lazy val coreJVM    = core.jvm
 lazy val coreJS     = core.js
-lazy val coreNative = core.native
-lazy val core       = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+lazy val core       = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-core")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings),
-    _.nativeSettings(monocleNativeSettings)
   )
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies += scalaz.value)
@@ -220,13 +196,11 @@ lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
 
 lazy val stateJVM    = state.jvm
 lazy val stateJS     = state.js
-lazy val stateNative = state.native
-lazy val state       = crossProject(JVMPlatform, JSPlatform, NativePlatform).dependsOn(core)
+lazy val state       = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   .settings(moduleName := "monocle-state")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings),
-    _.nativeSettings(monocleNativeSettings)
   )
   .settings(libraryDependencies ++= Seq(scalaz.value))
 
@@ -254,14 +228,6 @@ lazy val test    = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic
     libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, refinedScalacheck.value),
     libraryDependencies ++= paradisePlugin.value
   )
-lazy val testNative = project.in(file("testNative")).dependsOn(coreNative, stateNative)
-  .settings(moduleName := "monocle-test-native")
-  .settings(monocleNativeSettings)
-  .settings(noPublishSettings)
-  .settings(
-    libraryDependencies ++= Seq(scalaz.value)
-  )
-  .enablePlugins(ScalaNativePlugin)
 
 lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
   .settings(moduleName := "monocle-bench")
@@ -378,14 +344,10 @@ lazy val publishSettings = Seq(
     checkSnapshotDependencies,
     inquireVersions,
     runTest,
-    releaseStepCommand(s"++$Scala211"),
-    releaseStepCommand("testNative/run"),
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
     publishArtifacts,
-    releaseStepCommand(s"++$Scala211"),
-    releaseStepCommand("monocleNative/publishSigned"),
     setNextVersion,
     commitNextVersion,
     pushChanges
