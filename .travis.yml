@@ -1,6 +1,7 @@
 language: scala
 
 scala:
+- 2.13.0-RC1
 - 2.12.8
 
 jdk:
@@ -39,7 +40,6 @@ jobs:
 
 
 after_success:
-- bash <(curl -s https://codecov.io/bash)
 - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash
   scripts/publishMicrosite.sh; fi
 - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then echo "Not in master branch, skipping
@@ -53,10 +53,3 @@ env:
   matrix:
     - TARGET=JVM PRE=test:compile
     - TARGET=JS  PRE=test:fastOptJS
-
-matrix:
-  include:
-  - scala: 2.13.0-RC1
-    script:
-    # TODO enable test
-    - sbt "++ ${TRAVIS_SCALA_VERSION}!" compile

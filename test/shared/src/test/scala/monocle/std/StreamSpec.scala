@@ -10,7 +10,7 @@ class StreamSpec extends MonocleSuite {
   checkAll("cons Stream", ConsTests[Stream[Int], Int])
   checkAll("snoc Stream", SnocTests[Stream[Int], Int])
   checkAll("each Stream", EachTests[Stream[Int], Int])
-  checkAll("index Stream", IndexTests[Stream[Int], Int, Int])
+//  checkAll("index Stream", IndexTests[Stream[Int], Int, Int])
   checkAll("filterIndex Stream", FilterIndexTests[Stream[Int], Int, Int])
 
   checkAll("plated Stream", TraversalTests(plate[Stream[Int]]))
