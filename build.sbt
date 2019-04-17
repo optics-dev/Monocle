@@ -1,9 +1,39 @@
-import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
-import sbtcrossproject.crossProject
 import sbt.Keys._
-import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
+import sbtcrossproject.CrossPlugin.autoImport.crossProject
+
+inThisBuild(List(
+  organization := "com.github.julien-truffaut",
+  homepage := Some(url("https://github.com/julien-truffaut/Monocle")),
+  licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
+  developers := List(
+    Developer(
+      "julien-truffaut",
+      "Julien Truffaut",
+      "truffaut.julien@gmail.com",
+      url("https://github.com/julien-truffaut")
+    ),
+    Developer(
+      "NightRa",
+      "Ilan Godik",
+      "",
+      url("https://github.com/NightRa")
+    ),
+    Developer(
+      "aoiroaoino",
+      "Naoki Aoyama",
+      "aoiro.aoino@gmail.com",
+      url("https://github.com/aoiroaoino")
+    ),
+    Developer(
+      "xuwei-k",
+      "Kenji Yoshida",
+      " 6b656e6a69@gmail.com",
+      url("https://github.com/xuwei-k")
+    ),
+  )
+))
 
 lazy val scalatestVersion = settingKey[String]("")
 
@@ -29,24 +59,15 @@ lazy val buildSettings = Seq(
     "-Ywarn-value-discard",
     "-Xfuture"
   ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 12)) =>
-      Seq("-Ywarn-unused-import")
-    case _ =>
-      Seq()
+    case Some((2, 12)) => Seq("-Ywarn-unused-import")
+    case _             => Seq()
   }),
   scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-    case Some((2, n)) if n >= 13 =>
-      Seq(
-        "-Ymacro-annotations"
-      )
+    case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
   }.toList.flatten,
   scalacOptions in (Compile, console) -= "-Ywarn-unused-import",
-  scalacOptions in (Test, console) -= "-Ywarn-unused-import",
+  scalacOptions in (Test   , console) -= "-Ywarn-unused-import",
   addCompilerPlugin(kindProjector),
-  resolvers ++= Seq(
-    Resolver.sonatypeRepo("releases"),
-    Resolver.sonatypeRepo("snapshots")
-  ),
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
@@ -65,9 +86,7 @@ lazy val macroVersion = "2.1.1"
 lazy val paradisePlugin = Def.setting{
   CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, v)) if v <= 12 =>
-      Seq(
-        compilerPlugin("org.scalamacros" % "paradise" % macroVersion cross CrossVersion.patch)
-      )
+      Seq(compilerPlugin("org.scalamacros" % "paradise" % macroVersion cross CrossVersion.patch))
     case _ =>
       // if scala 2.13.0-M4 or later, macro annotations merged into scala-reflect
       // https://github.com/scala/scala/pull/6606
@@ -78,7 +97,7 @@ lazy val paradisePlugin = Def.setting{
 lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.10.0" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %  (s"monocle-${module}_2.11") % "1.3.0")
+  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %  (s"monocle-${module}_2.12") % "1.6.0")
 )
 
 lazy val tagName = Def.setting(
@@ -95,13 +114,10 @@ lazy val scalajsSettings = Seq(
     s"-P:scalajs:mapSourceURI:$a->$g/$s/"
   },
   jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
-  testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck,
-                           "-maxSize", "8",
-                           "-minSuccessfulTests", "50")
+  testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
 )
 
-
-lazy val monocleSettings    = buildSettings ++ publishSettings
+lazy val monocleSettings    = buildSettings
 lazy val monocleJvmSettings = monocleSettings
 lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
 
@@ -135,11 +151,6 @@ lazy val core       = crossProject(JVMPlatform, JSPlatform)
   )
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies += scalaz.value)
-  .jvmSettings(
-    libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-      case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
-    }.toList
-  )
 
 lazy val genericJVM = generic.jvm
 lazy val genericJS  = generic.js
@@ -188,9 +199,6 @@ lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
       scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
     ),
     libraryDependencies ++= paradisePlugin.value,
-    libraryDependencies ++= CrossVersion partialVersion scalaVersion.value collect {
-        case (2, scalaMajor) if scalaMajor < 11 => Seq("org.scalamacros" %% "quasiquotes" % macroVersion)
-      } getOrElse Nil,
     unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
   )
 
@@ -297,63 +305,6 @@ lazy val docSettings = Seq(
   git.remoteRepo := "git@github.com:julien-truffaut/Monocle.git",
   includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md"
 )
-
-
-lazy val publishSettings = Seq(
-  homepage := Some(url("https://github.com/julien-truffaut/Monocle")),
-  licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
-  autoAPIMappings := true,
-  apiURL := Some(url("https://julien-truffaut.github.io/Monocle/api/")),
-  publishMavenStyle := true,
-  publishArtifact in Test := false,
-  pomIncludeRepository := { _ => false },
-  publishTo := version { (v: String) =>
-    val nexus = "https://oss.sonatype.org/"
-    if (v.trim.endsWith("SNAPSHOT"))
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-  }.value,
-  pomExtra := (
-    <developers>
-      <developer>
-        <id>julien-truffaut</id>
-        <name>Julien Truffaut</name>
-      </developer>
-      <developer>
-        <id>NightRa</id>
-        <name>Ilan Godik</name>
-      </developer>
-      <developer>
-        <id>aoiroaoino</id>
-        <name>Naoki Aoyama</name>
-      </developer>
-      <developer>
-        <id>xuwei-k</id>
-        <name>Kenji Yoshida</name>
-      </developer>
-      <developer>
-        <id>kenbot</id>
-        <name>Ken Scambler</name>
-      </developer>
-    </developers>
-    ),
-  releaseCrossBuild := true,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-  releaseProcess := Seq[ReleaseStep](
-    checkSnapshotDependencies,
-    inquireVersions,
-    runTest,
-    setReleaseVersion,
-    commitReleaseVersion,
-    tagRelease,
-    publishArtifacts,
-    setNextVersion,
-    commitNextVersion,
-    pushChanges
-  )
-)
-
 
 lazy val noPublishSettings = Seq(
   publish := {},
