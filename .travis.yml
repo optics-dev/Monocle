@@ -1,26 +1,26 @@
 language: scala
 
 scala:
-  - 2.12.8
-  - 2.13.0-RC1
+- 2.13.0-RC1
+- 2.12.8
 
 jdk:
-  - openjdk8
+- oraclejdk8
 
 before_install:
-  - git fetch --tags
-  - export PATH=${PATH}:./vendor/bundle
+- git fetch --tags
+- export PATH=${PATH}:./vendor/bundle
 
 install:
-  - rvm use 2.3.3 --install --fuzzy
-  - gem update --system
-  - gem install sass
-  - gem install jekyll -v 3.8.3
+- rvm use 2.3.3 --install --fuzzy
+- gem update --system
+- gem install sass
+- gem install jekyll -v 3.8.3
 
 stages:
   - name: test
   - name: release
-    if: ((branch = master AND type = push) OR (tag IS present)) AND (repo = julien-truffaut/Monocle)
+    if: (branch = master AND type = push) OR (tag IS present)
 
 script:
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
@@ -33,10 +33,10 @@ jobs:
       script: sbt ci-release
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash
-    scripts/publishMicrosite.sh; fi
-  - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then echo "Not in master branch, skipping
-    deploy and release"; fi
+- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash
+  scripts/publishMicrosite.sh; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then echo "Not in master branch, skipping
+  deploy and release"; fi
 
 env:
   global:
@@ -45,3 +45,8 @@ env:
   matrix:
     - TARGET=JVM PRE=test:compile
     - TARGET=JS  PRE=test:fastOptJS
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
