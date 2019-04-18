@@ -22,13 +22,12 @@ stages:
   - name: release
     if: (branch = master AND type = push) OR (tag IS present)
 
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
+  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
 
 jobs:
   include:
-    - stage: test
-      script:
-        - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
-        - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
     - stage: release
       script: sbt ci-release
 
