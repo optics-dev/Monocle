@@ -29,8 +29,8 @@ script:
 jobs:
   include:
     - stage: release
+      name: Release
       script: sbt ci-release
-
 
 after_success:
 - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash
