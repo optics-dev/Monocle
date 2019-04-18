@@ -22,16 +22,15 @@ stages:
   - name: release
     if: (branch = master AND type = push) OR (tag IS present)
 
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
+  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
 
 jobs:
   include:
-    - stage: test
-      script:
-        - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
-        - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
     - stage: release
+      name: Release
       script: sbt ci-release
-
 
 after_success:
 - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash
