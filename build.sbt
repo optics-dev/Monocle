@@ -38,7 +38,6 @@ inThisBuild(List(
 lazy val scalatestVersion = settingKey[String]("")
 
 lazy val buildSettings = Seq(
-  organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.13.0-RC1",
   crossScalaVersions := Seq("2.12.8", "2.13.0-RC1"),
   scalatestVersion   := {
@@ -97,7 +96,7 @@ lazy val paradisePlugin = Def.setting{
 lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.10.0" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %  (s"monocle-${module}_2.12") % "1.6.0")
+  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "1.6.0")
 )
 
 lazy val tagName = Def.setting(

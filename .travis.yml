@@ -39,7 +39,6 @@ after_success:
 - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then echo "Not in master branch, skipping
   deploy and release"; fi
 
-
 env:
   global:
     - secure: lJxaR+9VM96s7rfaigL3K2FbcP3XiZ+AerbgOBOpYi2anRkMPQ91h1g60HYTwEDGJIKybyNWFuXZM8hNtQMCxzxgu7ev1SyRr5Otfzg5ehGqB5UWbSAgpXlqhR5dAonwmqyEEDF2OK+k1fa0N6mIwpQeuUCwrt68kTp4f0K9jMQ=
@@ -47,3 +46,8 @@ env:
   matrix:
     - TARGET=JVM PRE=test:compile
     - TARGET=JS  PRE=test:fastOptJS
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
