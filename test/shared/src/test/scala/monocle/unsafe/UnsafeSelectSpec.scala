@@ -22,6 +22,7 @@ class UnsafeSelectSpec extends MonocleSuite {
     prism.getOption(prism.reverseGet(valueBad)) shouldEqual None
   }
 
+// TODO commented for 2.13
 //  test("Predicate should work") {
 //    val p: Int => Boolean = _ > 10
 //    val prism = UnsafeSelect.unsafeSelect(p)
