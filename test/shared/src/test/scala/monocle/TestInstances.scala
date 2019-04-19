@@ -18,10 +18,7 @@ import scalaz.syntax.equal._
 trait TestInstances extends PlatformSpecificTestInstances {
 
   implicit def equality[A](implicit A: Equal[A]): Equality[A] =
-    new Equality[A]{
-      override def areEqual(a: A, b: Any): Boolean =
-        A.equal(a, b.asInstanceOf[A])
-    }
+    (a: A, b: Any) => A.equal(a, b.asInstanceOf[A])
 
   implicit val genApplicative: Applicative[Gen] = new Applicative[Gen] {
     override def ap[A, B](fa: => Gen[A])(f: => Gen[A => B]): Gen[B] = fa.flatMap(a => f.map(_(a)))

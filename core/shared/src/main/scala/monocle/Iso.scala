@@ -199,10 +199,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
 
   /** view a [[PIso]] as a [[Getter]] */
   @inline final def asGetter: Getter[S, A] =
-    new Getter[S, A]{
-      def get(s: S): A =
-        self.get(s)
-    }
+    (s: S) => self.get(s)
 
   /** view a [[PIso]] as a [[Setter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
