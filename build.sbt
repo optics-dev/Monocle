@@ -58,16 +58,16 @@ lazy val buildSettings = Seq(
     "-Yno-adapted-args",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
-    "-Xfuture"
-  ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 12)) => Seq("-Ywarn-unused-import")
-    case _             => Seq()
-  }),
+    "-Ywarn-unused:imports",
+  ),
+  scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+    case Some((2, n)) if n <= 12 => Seq("-Xfuture")
+  }.toList.flatten,
   scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
     case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
   }.toList.flatten,
-  scalacOptions in (Compile, console) -= "-Ywarn-unused-import",
-  scalacOptions in (Test   , console) -= "-Ywarn-unused-import",
+  scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
+  scalacOptions in (Test   , console) -= "-Ywarn-unused:imports",
   addCompilerPlugin(kindProjector),
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
@@ -270,7 +270,7 @@ lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
   .settings(monocleSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
-  .settings(scalacOptions in Tut ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))))
+  .settings(scalacOptions in Tut ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
   .settings(
     libraryDependencies ++= Seq(cats.value, shapeless.value),
     libraryDependencies ++= paradisePlugin.value
