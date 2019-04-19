@@ -11,9 +11,7 @@ class Tuple1Spec extends MonocleSuite {
     Arbitrary(arb.arbitrary.map(Tuple1.apply))
 
   implicit def equalTuple1[T](implicit eql: Equal[T]): Equal[Tuple1[T]] =
-    new Equal[Tuple1[T]]{
-      def equal(x: Tuple1[T], y: Tuple1[T]): Boolean = eql.equal(x._1, y._1)
-    }
+    (x: Tuple1[T], y: Tuple1[T]) => eql.equal(x._1, y._1)
 
   checkAll("first tuple1", LensTests(first[Tuple1[Int], Int]))
   checkAll("reverse tuple1", ReverseTests[Tuple1[Int], Tuple1[Int]])

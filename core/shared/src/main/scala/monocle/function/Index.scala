@@ -28,9 +28,7 @@ trait IndexFunctions {
 
 object Index extends IndexFunctions{
 
-  def apply[S, I, A](optional : I => Optional[S, A]): Index[S, I, A] = new Index[S, I, A] {
-    override def index(i: I): Optional[S, A] = optional(i)
-  }
+  def apply[S, I, A](optional : I => Optional[S, A]): Index[S, I, A] = (i: I) => optional(i)
 
   /** lift an instance of [[Index]] using an [[Iso]] */
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: Index[A, I, B]): Index[S, I, B] = Index(
