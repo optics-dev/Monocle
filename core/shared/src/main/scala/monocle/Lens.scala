@@ -171,10 +171,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
 
   /** view a [[PLens]] as a [[Getter]] */
   @inline final def asGetter: Getter[S, A] =
-    new Getter[S, A]{
-      def get(s: S): A =
-        self.get(s)
-    }
+    (s: S) => self.get(s)
 
   /** view a [[PLens]] as a [[PSetter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
