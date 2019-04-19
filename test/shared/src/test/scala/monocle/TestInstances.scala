@@ -17,10 +17,7 @@ import cats.syntax.eq._
 trait TestInstances extends PlatformSpecificTestInstances with cats.instances.AllInstances {
 
   implicit def equality[A](implicit A: Equal[A]): Equality[A] =
-    new Equality[A]{
-      override def areEqual(a: A, b: Any): Boolean =
-        A.eqv(a, b.asInstanceOf[A])
-    }
+    (a: A, b: Any) => A.eqv(a, b.asInstanceOf[A])
 
   implicit val genApplicative: Applicative[Gen] = new Applicative[Gen] {
     override def ap[A, B](f: Gen[A => B])(fa: Gen[A]): Gen[B] = fa.flatMap(a => f.map(_(a)))

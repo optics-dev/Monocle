@@ -27,14 +27,10 @@ trait AtFunctions {
 
 object At extends AtFunctions {
 
-  def apply[S, I, A](lens: I => Lens[S, A]): At[S, I, A] = new At[S, I , A] {
-    override def at(i: I): Lens[S, A] = lens(i)
-  }
+  def apply[S, I, A](lens: I => Lens[S, A]): At[S, I, A] = (i: I) => lens(i)
 
   def apply[S, I, A](get: I => S => A)(set: I => A => S => S): At[S, I, A] =
-    new At[S, I, A] {
-      def at(i: I): Lens[S, A] = Lens(get(i))(set(i))
-    }
+    (i: I) => Lens(get(i))(set(i))
 
   /** lift an instance of [[At]] using an [[Iso]] */
   def fromIso[S, U, I, A](iso: Iso[S, U])(implicit ev: At[U, I, A]): At[S, I, A] = At(

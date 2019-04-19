@@ -59,10 +59,7 @@ abstract class Getter[S, A] extends Serializable { self =>
 
   /** compose a [[Getter]] with a [[Getter]] */
   @inline final def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
-    new Getter[S, B]{
-      def get(s: S): B =
-        other.get(self.get(s))
-    }
+    (s: S) => other.get(self.get(s))
 
   /** compose a [[Getter]] with a [[PTraversal]] */
   @inline final def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
@@ -128,10 +125,7 @@ object Getter extends GetterInstances {
     Getter[A \/ A, A](_.fold(identity, identity))
 
   def apply[S, A](_get: S => A): Getter[S, A] =
-    new Getter[S, A]{
-      def get(s: S): A =
-        _get(s)
-    }
+    (s: S) => _get(s)
 }
 
 sealed abstract class GetterInstances extends GetterInstances0 {
