@@ -95,7 +95,7 @@ class LensPolyExample extends MonocleSuite {
     def default[A,B] = GenLens[Foo[A,B]](_.default)
   }
 
-  val candyTrade = Foo(Map[(Int,Symbol),Double]((0,'Buy) -> -3.0, (12,'Sell) -> 7), 0.0)
+  val candyTrade = Foo(Map[(Int,Symbol),Double]((0, Symbol("Buy")) -> -3.0, (12, Symbol("Sell")) -> 7), 0.0)
 
   test("get") {
     Manual.default.get(candyTrade) shouldEqual 0.0
@@ -104,8 +104,8 @@ class LensPolyExample extends MonocleSuite {
   }
 
   test("set") {
-    val changedTrade = candyTrade.copy(q = candyTrade.q.updated((0,'Buy), -2.0))
-    Foo.q.modify((_: Map[(Int,Symbol),Double]).updated((0,'Buy), -2.0))(candyTrade) shouldEqual changedTrade
+    val changedTrade = candyTrade.copy(q = candyTrade.q.updated((0, Symbol("Buy")), -2.0))
+    Foo.q.modify((_: Map[(Int,Symbol),Double]).updated((0, Symbol("Buy")), -2.0))(candyTrade) shouldEqual changedTrade
   }
 
   test("@PLenses generates polymorphic lenses") {
