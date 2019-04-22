@@ -57,12 +57,12 @@ object Snoc extends SnocFunctions {
       case (init, last) => init :+ last
     }
   )
-
-  implicit def streamSnoc[A]: Snoc[Stream[A], A] = Snoc(
-    Prism[Stream[A], (Stream[A], A)]( s =>
+// replace with LazyList
+  implicit def lazyListSnoc[A]: Snoc[LazyList[A], A] = Snoc(
+    Prism[LazyList[A], (LazyList[A], A)]( ll =>
       for {
-        init <- if(s.isEmpty) None else Some(s.init)
-        last <- s.lastOption
+        init <- if(ll.isEmpty) None else Some(ll.init)
+        last <- ll.lastOption
       } yield (init, last)){
       case (init, last) => init :+ last
     }

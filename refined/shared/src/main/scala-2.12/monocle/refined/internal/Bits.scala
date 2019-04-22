@@ -110,3 +110,4 @@ private[monocle] trait BitsInstances {
   }
 
 }
+
