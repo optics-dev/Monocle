@@ -7,7 +7,7 @@ import monocle.law.discipline.PrismTests
 
 import scalaz.Equal
 
-class CharSpec extends MonocleSuite {
+class CharSpec extends MonocleSuite with CharsInstances {
   implicit val eqLowerCase: Equal[LowerCaseChar] = Equal.equalA[LowerCaseChar]
   implicit val eqUpperCase: Equal[UpperCaseChar] = Equal.equalA[UpperCaseChar]
   implicit val eqChar: Equal[Char] = Equal.equalA[Char]

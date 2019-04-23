@@ -9,7 +9,7 @@ import monocle.law.discipline.PrismTests
 import scalaz.Equal
 
 
-class StringsSpec extends MonocleSuite {
+class StringsSpec extends MonocleSuite with StringsInstances {
 
   implicit val eqStartsWith: Equal[StartsWithString[W.`"hello"`.T]] = Equal.equalA[StartsWithString[W.`"hello"`.T]]
   implicit val eqEndsWith: Equal[EndsWithString[W.`"world"`.T]] = Equal.equalA[EndsWithString[W.`"world"`.T]]

@@ -14,3 +14,8 @@ target/
 project/project/
 benchData/
 _site/
+
+## other IDE files to ignore
+.bloop/
+.metals/
+.tags
