@@ -1,6 +1,5 @@
 package monocle.generic
 
-import language.higherKinds
 import monocle.PTraversal
 import monocle.function.Each
 import monocle.{ Iso, Traversal }

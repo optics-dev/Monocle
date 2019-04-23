@@ -57,7 +57,7 @@ private[monocle] trait BitsInstances {
 
     def testBit(a: Byte, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
 
-    def signed(a: Byte): Boolean = a.sign > 0
+    def signed(a: Byte): Boolean = a.signum > 0
 
     def negate(a: Byte): Byte = (~a).toByte
   }
@@ -75,7 +75,7 @@ private[monocle] trait BitsInstances {
     def testBit(a: Char, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
 
     def negate(a: Char): Char = (~a).toChar
-    def signed(a: Char): Boolean = a.sign > 0
+    def signed(a: Char): Boolean = a.signum > 0
   }
 
   implicit val intBits = new Bits[Int] {
@@ -91,13 +91,13 @@ private[monocle] trait BitsInstances {
 
     def testBit(a: Int, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
 
-    def signed(a: Int): Boolean = a.sign > 0
+    def signed(a: Int): Boolean = a.signum > 0
 
     def negate(a: Int): Int = ~a
   }
 
   implicit val longBits = new Bits[Long] {
-    def signed(a: Long): Boolean = a.sign > 0
+    def signed(a: Long): Boolean = a.signum > 0
     def negate(a: Long): Long = ~a
     def testBit(a: Long, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0
     def singleBit(n: Int): Long = 1L << n
@@ -110,3 +110,4 @@ private[monocle] trait BitsInstances {
   }
 
 }
+
