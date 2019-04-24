@@ -68,7 +68,7 @@ object Cons extends ConsFunctions {
   implicit val stringCons: Cons[String, Char] = Cons(
     Prism[String, (Char, String)](s =>
       if(s.isEmpty) None else Some((s.head, s.tail))
-    ){ case (h, t) => h + t }
+    ){ case (h, t) => s"$h$t" }
   )
 
   implicit def vectorCons[A]: Cons[Vector[A], A] = Cons(

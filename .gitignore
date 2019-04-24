@@ -14,3 +14,10 @@ target/
 project/project/
 benchData/
 _site/
+
+## Metals files to ignore
+.metals/
+.bloop/
+
+## CTags files to ignore
+.ctags
