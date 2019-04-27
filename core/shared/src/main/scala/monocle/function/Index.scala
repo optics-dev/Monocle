@@ -57,7 +57,9 @@ object Index extends IndexFunctions{
     if (i < 0)
       Optional[Stream[A], A](_ => None)(_ => identity)
     else
-      Optional[Stream[A], A](_.drop(i).headOption)(a => s => Try(s.updated(i, a)).getOrElse(s))
+      Optional[Stream[A], A](_.drop(i).headOption)(a => s =>
+        s.zipWithIndex.map{ case (value, index) => if(i == index) a else value }
+      )
   )
 
   implicit val stringIndex: Index[String, Int, Char] = Index(
