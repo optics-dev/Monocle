@@ -7,6 +7,17 @@ position: 5
 
 ## Release Notes
 
+# 1.6.0-cats
+
+> WIP
+
+-   add `apply` helper methods to typeclasses [#560](https://github.com/julien-truffaut/Monocle/pull/560) (thanks to [jbgi](https://github.com/jbgi))
+-   add `coProductIso`, `coProductDisjunctionIso` and `toGeneric` [#578](https://github.com/julien-truffaut/Monocle/pull/578) (thanks to [dcastro](https://github.com/dcastro))
+-   add override modifiers in macro generated code [#581](https://github.com/julien-truffaut/Monocle/pull/581) (thanks to [omervk](https://github.com/omervk))
+-   add FieldsSyntax to global import [#583](https://github.com/julien-truffaut/Monocle/pull/583) (thanks to [kubukoz](https://github.com/kubukoz))
+-   fix name collisions in implicit classes [#629](https://github.com/julien-truffaut/Monocle/pull/629) (thanks to [vladimirkl](https://github.com/vladimirkl))
+-   release from ci, stop support of scala 2.11 and scala native [#646](https://github.com/julien-truffaut/Monocle/pull/646)
+
 # 1.5.0 and 1.5.0-cats
 
 > 3 January 2018
