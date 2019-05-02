@@ -45,7 +45,6 @@ lazy val cats              = Def.setting("org.typelevel"              %%% "cats-
 lazy val catsFree          = Def.setting("org.typelevel"              %%% "cats-free"          % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel"              %%% "cats-laws"          % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel"              %%% "alleycats-core"     % catsVersion)
-lazy val newts             = Def.setting("com.github.julien-truffaut" %%% "newts-core"         % "0.3.1")
 lazy val scalaz            = Def.setting("org.scalaz"                 %%% "scalaz-core"        % "7.2.18")
 lazy val shapeless         = Def.setting("com.chuusai"                %%% "shapeless"          % "2.3.3")
 lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.8.6")
@@ -118,7 +117,7 @@ lazy val core       = crossProject(JVMPlatform, JSPlatform)
     _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("core"): _*)
-  .settings(libraryDependencies ++= Seq(cats.value, catsFree.value, newts.value))
+  .settings(libraryDependencies ++= Seq(cats.value, catsFree.value))
   .jvmSettings(
     libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
       case Some((2, 11)) => "org.scala-lang.modules" %% "scala-java8-compat" % "0.7.0"
