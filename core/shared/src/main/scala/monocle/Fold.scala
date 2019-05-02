@@ -5,7 +5,7 @@ import cats.arrow.Choice
 import cats.instances.int._
 import cats.instances.list._
 import cats.syntax.either._
-import newts.syntax.all._
+import monocle.internal.Monoids
 import scala.{Either => \/}
 
 /**
@@ -37,23 +37,23 @@ abstract class Fold[S, A] extends Serializable { self =>
 
   /** find the first target matching the predicate  */
   @inline final def find(p: A => Boolean): S => Option[A] =
-    foldMap(a => (if(p(a)) Some(a) else None).asFirstOption)(_).unwrap
+    foldMap(a => if(p(a)) Some(a) else None)(_)(Monoids.firstOption)
 
   /** get the first target */
   @inline final def headOption(s: S): Option[A] =
-    foldMap(Option(_).asFirstOption)(s).unwrap
+    foldMap(Option(_))(s)(Monoids.firstOption)
 
   /** get the last target */
   @inline final def lastOption(s: S): Option[A] =
-    foldMap(Option(_).asLastOption)(s).unwrap
+    foldMap(Option(_))(s)(Monoids.lastOption)
 
   /** check if at least one target satisfies the predicate */
   @inline final def exist(p: A => Boolean): S => Boolean =
-    foldMap(p(_).asAny)(_).unwrap
+    foldMap(p(_))(_)(Monoids.any)
 
   /** check if all targets satisfy the predicate */
   @inline final def all(p: A => Boolean): S => Boolean =
-    foldMap(p(_).asAll)(_).unwrap
+    foldMap(p(_))(_)(Monoids.all)
 
   /** calculate the number of targets */
   @inline final def length(s: S): Int =
@@ -61,7 +61,7 @@ abstract class Fold[S, A] extends Serializable { self =>
 
   /** check if there is no target */
   @inline final def isEmpty(s: S): Boolean =
-    foldMap(_ => false.asAll)(s).unwrap
+    foldMap(_ => false)(s)(Monoids.all)
 
   /** check if there is at least one target */
   @inline final def nonEmpty(s: S): Boolean =
