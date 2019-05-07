@@ -1,6 +1,8 @@
 package monocle.state
 
-import monocle.{MonocleSuite, Optional, Setter, Getter, PTraversal}
+import cats.Applicative
+import cats.implicits._
+import monocle.{Getter, MonocleSuite, Optional, PTraversal, Setter}
 import monocle.macros.GenLens
 
 class StateExample extends MonocleSuite {
@@ -249,55 +251,68 @@ class StateExample extends MonocleSuite {
   }
 
   // first and second projections of a triple
-  def _pi12Tr[A, B, C] = PTraversal.fromStore[(A, A, C), (B, B, C), A, B] {
-    case (a1, a2, c) => (toTraversalBuilder[A, B, (B, B, C)](a1) ~ a2)((_, _, c))
-  }
+  def _pi12Tr[A, B, C]: PTraversal[(A, A, C), (B, B, C), A, B] =
+    new PTraversal[(A, A, C), (B, B, C), A, B] {
+      override def modifyF[F[_] : Applicative](f: A => F[B])(s: (A, A, C)): F[(B, B, C)] = {
+        val (a1, a2, c) = s
+        (f(a1), f(a2), c.pure[F]).tupled
+      }
+    }
 
   test("extract for Traversal"){
     val both = _pi12Tr[Int, Int, Char].extract
 
-    both.run((1, 2, 'a')) shouldEqual (((1, 2, 'a'), List(1, 2)))
+    both.run((1, 2, 'a')).value shouldEqual (((1, 2, 'a'), List(1, 2)))
   }
 
   test("extracts for Traversal"){
     val sum = _pi12Tr[Int, Int, Char].extracts(_.sum)
 
-    sum.run((1, 2, 'a')) shouldEqual (((1, 2, 'a'), 3))
+    sum.run((1, 2, 'a')).value shouldEqual (((1, 2, 'a'), 3))
   }
 
   test("mod for Traversal"){
     val len = _pi12Tr[String, Int, Char].mod(_.length)
 
-    len.run(("john", "doe", 'a')) shouldEqual (((4, 3, 'a'), List(4, 3)))
+    len.run(("john", "doe", 'a')).value shouldEqual (((4, 3, 'a'), List(4, 3)))
+  }
+
+  test("modF for Traversal"){
+    val len = _pi12Tr[String, Int, Char].modF[Option]{ s =>
+      val len = s.length
+      if (len > 0) Some(len) else None
+    }
+
+    len.run(("john", "doe", 'a')).get shouldEqual (((4, 3, 'a'), List(4, 3)))
   }
 
   test("modo for Traversal"){
     val len = _pi12Tr[String, Int, Char].modo(_.length)
 
-    len.run(("john", "doe", 'a')) shouldEqual (((4, 3, 'a'), List("john", "doe")))
+    len.run(("john", "doe", 'a')).value shouldEqual (((4, 3, 'a'), List("john", "doe")))
   }
 
   test("mod_ for Traversal"){
     val len = _pi12Tr[String, Int, Char].mod_(_.length)
 
-    len.run(("john", "doe", 'a')) shouldEqual (((4, 3, 'a'), ()))
+    len.run(("john", "doe", 'a')).value shouldEqual (((4, 3, 'a'), ()))
   }
 
   test("assign for Traversal"){
     val toTrue = _pi12Tr[Int, Boolean, Char].assign(true)
 
-    toTrue.run((1, 2, 'a')) shouldEqual (((true, true, 'a'), List(true, true)))
+    toTrue.run((1, 2, 'a')).value shouldEqual (((true, true, 'a'), List(true, true)))
   }
 
   test("assigno for Traversal"){
     val toTrue = _pi12Tr[Int, Boolean, Char].assigno(true)
 
-    toTrue.run((1, 2, 'a')) shouldEqual (((true, true, 'a'), List(1, 2)))
+    toTrue.run((1, 2, 'a')).value shouldEqual (((true, true, 'a'), List(1, 2)))
   }
 
   test("assign_ for Traversal"){
     val toTrue = _pi12Tr[Int, Boolean, Char].assign_(true)
 
-    toTrue.run((1, 2, 'a')) shouldEqual (((true, true, 'a'), ()))
+    toTrue.run((1, 2, 'a')).value shouldEqual (((true, true, 'a'), ()))
   }
 }
