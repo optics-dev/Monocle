@@ -91,25 +91,19 @@ object Cons1 extends Cons1Functions {
       Lens((c: Cofree[S, A]) => c.head)(h => c => Cofree(h, c.tail))
     }
 
-  implicit def necCons1[A]: Cons1[NonEmptyChain[A], A, Chain[A]] =
-    new Cons1[NonEmptyChain[A],A,Chain[A]]{
-      val cons1: Iso[NonEmptyChain[A], (A, Chain[A])] =
-        Iso((nec: NonEmptyChain[A]) => (nec.head,nec.tail)){case (h,t) => NonEmptyChain.fromChainPrepend(h, t)}
-    }
+  implicit def necCons1[A]: Cons1[NonEmptyChain[A], A, Chain[A]] = Cons1(
+    Iso((nec: NonEmptyChain[A]) => (nec.head,nec.tail)){case (h,t) => NonEmptyChain.fromChainPrepend(h, t)}
+  )
 
-  implicit def nelCons1[A]: Cons1[NonEmptyList[A], A, IList[A]] =
-    new Cons1[NonEmptyList[A],A,IList[A]]{
-      val cons1: Iso[NonEmptyList[A], (A, IList[A])] =
-        Iso((nel: NonEmptyList[A]) => (nel.head,nel.tail)){case (h,t) => NonEmptyList(h, t)}
-    }
+  implicit def nelCons1[A]: Cons1[NonEmptyList[A], A, IList[A]] = Cons1(
+    Iso((nel: NonEmptyList[A]) => (nel.head,nel.tail)){case (h,t) => NonEmptyList(h, t)}
+  )
 
-  implicit def nevCons1[A]: Cons1[NonEmptyVector[A], A, IVector[A]] =
-    new Cons1[NonEmptyVector[A],A,IVector[A]]{
-      val cons1: Iso[NonEmptyVector[A], (A, IVector[A])] =
-        Iso((nev: NonEmptyVector[A]) => (nev.head,nev.tail)){case (h,t) => NonEmptyVector(h, t)}
-    }
+  implicit def nevCons1[A]: Cons1[NonEmptyVector[A], A, IVector[A]] = Cons1(
+    Iso((nev: NonEmptyVector[A]) => (nev.head,nev.tail)){case (h,t) => NonEmptyVector(h, t)}
+  )
 
-  implicit def oneAndCons1[T[_], A]: Cons1[OneAnd[T, A], A, T[A]] = new Cons1[OneAnd[T, A], A, T[A]] {
-    val cons1 = Iso[OneAnd[T, A], (A, T[A])](o => (o.head, o.tail)){ case (h, t) => OneAnd(h, t)}
-  }
+  implicit def oneAndCons1[T[_], A]: Cons1[OneAnd[T, A], A, T[A]] = Cons1(
+    Iso[OneAnd[T, A], (A, T[A])](o => (o.head, o.tail)){ case (h, t) => OneAnd(h, t)}
+  )
 }

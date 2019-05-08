@@ -50,13 +50,13 @@ object Empty extends EmptyFunctions {
     Prism[Map[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => Map.empty)
   )
 
-  implicit def sortedMapEmpty[K, V](implicit ok: Order[K]): Empty[SortedMap[K, V]] = new Empty[SortedMap[K, V]] {
-    val empty = Prism[SortedMap[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => SortedMap.empty(ok.toOrdering))
-  }
+  implicit def sortedMapEmpty[K, V](implicit ok: Order[K]): Empty[SortedMap[K, V]] = Empty(
+    Prism[SortedMap[K, V], Unit](m => if(m.isEmpty) Some(()) else None)(_ => SortedMap.empty(ok.toOrdering))
+  )
 
-  implicit def optionEmpty[A]: Empty[Option[A]] = new Empty[Option[A]] {
-    val empty = monocle.std.option.none[A]
-  }
+  implicit def optionEmpty[A]: Empty[Option[A]] = Empty(
+    monocle.std.option.none[A]
+  )
 
   implicit def emptySet[A]: Empty[Set[A]] = Empty(
     Prism[Set[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Set.empty[A])
@@ -79,7 +79,7 @@ object Empty extends EmptyFunctions {
   /************************************************************************************************/
   import cats.data.Chain
 
-  implicit def chainEmpty[A]: Empty[Chain[A]] = new Empty[Chain[A]] {
-    val empty = Prism[Chain[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => Chain.empty)
-  }
+  implicit def chainEmpty[A]: Empty[Chain[A]] = Empty(
+    Prism[Chain[A], Unit](l => if(l.isEmpty) Some(()) else None)(_ => Chain.empty)
+  )
 }
