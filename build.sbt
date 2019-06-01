@@ -38,8 +38,8 @@ inThisBuild(List(
 lazy val scalatestVersion = settingKey[String]("")
 
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.13.0-RC2",
-  crossScalaVersions := Seq("2.12.8", "2.13.0-RC2"),
+  scalaVersion       := "2.13.0-RC3",
+  crossScalaVersions := Seq("2.12.8", "2.13.0-RC3"),
   scalatestVersion   := {
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, 12)) =>
@@ -73,10 +73,10 @@ lazy val buildSettings = Seq(
 lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.27")
 lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.3")
 
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.6")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.6" % "test")
+lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.7")
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.7" % "test")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline-scalatest" % "0.12.0-M1")
+lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline-scalatest" % "0.12.0-M2")
 lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
 lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % scalatestVersion.value % "test")
 
@@ -93,7 +93,7 @@ lazy val paradisePlugin = Def.setting{
   }
 }
 
-lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.10.1" cross CrossVersion.binary
+lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.10.2" cross CrossVersion.binary
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "1.6.0")
