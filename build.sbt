@@ -69,7 +69,7 @@ lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"     
 lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.8")
 lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.8" % "test")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline-scalatest" % "0.12.0-M1")
+lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline-scalatest" % "0.12.0-M3")
 lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
 lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % scalatestVersion.value % "test")
 
