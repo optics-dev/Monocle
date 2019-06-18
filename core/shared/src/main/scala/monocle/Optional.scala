@@ -139,7 +139,22 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   /** compose a [[POptional]] with a [[PPrism]] */
   @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
-    composeOptional(other.asOptional)
+    new POptional[S, T, C, D]{
+      def getOrModify(s: S): T \/ C =
+        self.getOrModify(s).flatMap(a => other.getOrModify(a).bimap(self.set(_)(s), identity))
+
+      def set(d: D): S => T =
+        self.set(other.reverseGet(d))
+
+      def getOption(s: S): Option[C] =
+        self.getOption(s) flatMap other.getOption
+
+      def modifyF[F[_]: Applicative](f: C => F[D])(s: S): F[T] =
+        self.modifyF(other.modifyF(f))(s)
+
+      def modify(f: C => D): S => T =
+        self.modify(other.modify(f))
+    }
 
   /** compose a [[POptional]] with a [[PLens]] */
   @inline final def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
