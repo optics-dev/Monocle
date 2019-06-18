@@ -162,7 +162,22 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   /** compose a [[POptional]] with a [[PIso]] */
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
-    composeOptional(other.asOptional)
+    new POptional[S, T, C, D]{
+      def getOrModify(s: S): T \/ C =
+        self.getOrModify(s).map(other.get)
+
+      def set(d: D): S => T =
+        self.set(other.reverseGet(d))
+
+      def getOption(s: S): Option[C] =
+        self.getOption(s) map other.get
+
+      def modifyF[F[_]: Applicative](f: C => F[D])(s: S): F[T] =
+        self.modifyF(other.modifyF(f))(s)
+
+      def modify(f: C => D): S => T =
+        self.modify(other.modify(f))
+    }
 
   /********************************************/
   /** Experimental aliases of compose methods */
