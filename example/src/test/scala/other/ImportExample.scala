@@ -1,7 +1,8 @@
 package other
 
 import monocle.TestInstances
-import org.scalatest.{Matchers, FunSuite}
+import org.scalatest.Matchers
+import org.scalatest.FunSuite
 import org.typelevel.discipline.scalatest.Discipline
 import shapeless.test.illTyped
 import shapeless.{::, HNil}
@@ -72,5 +73,3 @@ class ImportExample extends FunSuite with Discipline with Matchers with TestInst
   }
 
 }
-
-
