@@ -1,11 +1,10 @@
 language: scala
 
 scala:
-- 2.13.0
 - 2.12.8
 
 jdk:
-- oraclejdk8
+- openjdk8
 
 before_install:
 - git fetch --tags
@@ -20,7 +19,7 @@ install:
 stages:
   - name: test
   - name: release
-    if: (branch = master AND type = push) OR (tag IS present)
+    if: ((branch = master AND type = push) OR (tag IS present)) AND (repo = julien-truffaut/Monocle)
 
 script:
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE

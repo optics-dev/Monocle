@@ -38,8 +38,8 @@ inThisBuild(List(
 lazy val scalatestVersion = settingKey[String]("")
 
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.13.0",
-  crossScalaVersions := Seq("2.12.8", "2.13.0"),
+  scalaVersion       := "2.12.8",
+  // crossScalaVersions := Seq("2.12.8", "2.13.0"),
   scalatestVersion   := "3.0.8",
   scalacOptions     ++= Seq(
     "-deprecation",
@@ -48,13 +48,12 @@ lazy val buildSettings = Seq(
     "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
     "-unchecked",
     "-Xfatal-warnings",
-    "-Yno-adapted-args",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
     "-Ywarn-unused:imports",
   ),
   scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-    case Some((2, n)) if n <= 12 => Seq("-Xfuture")
+    case Some((2, n)) if n <= 12 => Seq("-Xfuture", "-Yno-adapted-args")
   }.toList.flatten,
   scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
     case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
@@ -67,7 +66,6 @@ lazy val buildSettings = Seq(
 
 lazy val catsVersion = "1.6.1"
 
-
 lazy val cats              = Def.setting("org.typelevel"              %%% "cats-core"          % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"              %%% "cats-free"          % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel"              %%% "cats-laws"          % catsVersion)
@@ -77,8 +75,8 @@ lazy val shapeless         = Def.setting("com.chuusai"                %%% "shape
 lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.8")
 lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.8" % "test")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline-scalatest" % "0.12.0-M3")
-lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
+lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.9.0")
+lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.13.5")
 lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % scalatestVersion.value % "test")
 
 lazy val macroVersion = "2.1.1"
