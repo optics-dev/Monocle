@@ -20,7 +20,7 @@ trait ReverseFunctions {
   def _reverse[S](s: S)(implicit ev: Reverse[S, S]): S = ev.reverse.get(s)
 }
 
-object Reverse extends ReverseFunctions {
+object Reverse extends ReverseFunctions with ReverseInstancesScalaVersionSpecific {
 
   def apply[S, A](iso: Iso[S, A]): Reverse[S, A] = new Reverse[S, A] {
     override val reverse: Iso[S, A] = iso
@@ -35,9 +35,6 @@ object Reverse extends ReverseFunctions {
   /************************************************************************************************/
 
   implicit def listReverse[A]: Reverse[List[A], List[A]] =
-    fromReverseFunction(_.reverse)
-
-  implicit def streamReverse[A]: Reverse[Stream[A], Stream[A]] =
     fromReverseFunction(_.reverse)
 
   implicit val stringReverse: Reverse[String, String] =

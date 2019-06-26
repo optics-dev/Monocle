@@ -1,0 +1,3 @@
+package monocle.function
+
+trait EachInstancesScalaVersionSpecific

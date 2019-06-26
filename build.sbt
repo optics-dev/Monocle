@@ -1,7 +1,7 @@
 import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 import sbt.Keys._
-import sbtcrossproject.CrossPlugin.autoImport.crossProject
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 inThisBuild(List(
   organization := "com.github.julien-truffaut",
@@ -37,8 +37,23 @@ inThisBuild(List(
 
 lazy val scalatestVersion = settingKey[String]("")
 
+// shamelessly copied from cats
+def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scalaVersion: String) = {
+  def extraDirs(suffix: String) =
+    List(CrossType.Pure, CrossType.Full)
+      .flatMap(_.sharedSrcDir(srcBaseDir, srcName).toList.map(f => file(f.getPath + suffix)))
+
+  CrossVersion.partialVersion(scalaVersion) match {
+    case Some((2, y)) if y <= 12 =>
+      extraDirs("-2.12-")
+    case Some((2, y)) if y >= 13 =>
+      extraDirs("-2.13+")
+    case _ => Nil
+  }
+}
+
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.12.8",
+  scalaVersion       := "2.13.0",
   crossScalaVersions := Seq("2.12.8", "2.13.0"),
   scalatestVersion   := "3.1.0-SNAP13",
   scalacOptions     ++= Seq(
@@ -46,17 +61,21 @@ lazy val buildSettings = Seq(
     "-feature",
     "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
     "-unchecked",
+    "-Xfatal-warnings",
+    "-deprecation",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
     "-Ywarn-unused:imports",
   ),
   scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-    case Some((2, n)) if n <= 12 => Seq("-Xfuture", "-Yno-adapted-args", "-Xfatal-warnings", "-deprecation") // TODO Move fatal-warnings and deprecation back to on
+    case Some((2, n)) if n <= 12 => Seq("-Xfuture", "-Yno-adapted-args") // TODO Move fatal-warnings and deprecation back to on
     case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
   }.toList.flatten,
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions in (Test   , console) -= "-Ywarn-unused:imports",
   addCompilerPlugin(kindProjector),
+  Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
+  Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 

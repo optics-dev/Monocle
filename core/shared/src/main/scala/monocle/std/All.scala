@@ -20,7 +20,7 @@ trait StdInstances
   with    TryOptics
   // Cats Instances
   with    ChainOptics
-  with    CofreeOptics
+  // with    CofreeOptics
   with    TheseOptics
   with    NonEmptyChainOptics
   with    NonEmptyListOptics

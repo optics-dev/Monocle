@@ -6,7 +6,6 @@ import scala.annotation.implicitNotFound
 import cats.{Applicative, Monad, Traverse}
 import cats.data.State
 import cats.instances.int._
-import cats.instances.stream._
 import cats.syntax.flatMap._
 
 /**
@@ -21,20 +20,16 @@ abstract class Plated[A] extends Serializable { self =>
   def plate: Traversal[A, A]
 }
 
-trait PlatedFunctions {
-
+trait CommonPlatedFunctions {
   /** [[Traversal]] of immediate self-similar children */
   def plate[A](implicit P: Plated[A]): Traversal[A, A] = P.plate
 
+}
+
+trait PlatedFunctions extends CommonPlatedFunctions with PlatedFunctionsScalaVersionSpecific {
+
   /** get the immediate self-similar children of a target */
   @inline def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
-
-  /** get all transitive self-similar elements of a target, including itself */
-  def universe[A: Plated](a: A): Stream[A] = {
-    val fold = plate[A].asFold
-    def go(b: A): Stream[A] = b #:: fold.foldMap[Stream[A]](go)(b)
-    go(a)
-  }
 
   /**
     * rewrite a target by applying a rule as often as possible until it reaches
@@ -83,7 +78,7 @@ trait PlatedFunctions {
 
 }
 
-object Plated extends PlatedFunctions {
+object Plated extends PlatedFunctions with PlatedInstancesScalaVersionSpecific {
 
   def apply[A](traversal: Traversal[A, A]): Plated[A] = new Plated[A] {
     override val plate: Traversal[A, A] = traversal
@@ -99,16 +94,6 @@ object Plated extends PlatedFunctions {
         s match {
           case x :: xs => Applicative[F].map(f(xs))(x :: _)
           case Nil => Applicative[F].pure(Nil)
-        }
-    }
-  )
-
-  implicit def streamPlated[A]: Plated[Stream[A]] = Plated(
-    new Traversal[Stream[A], Stream[A]] {
-      def modifyF[F[_]: Applicative](f: Stream[A] => F[Stream[A]])(s: Stream[A]): F[Stream[A]] =
-        s match {
-          case x #:: xs => Applicative[F].map(f(xs))(x #:: _)
-          case Stream() => Applicative[F].pure(Stream.empty)
         }
     }
   )

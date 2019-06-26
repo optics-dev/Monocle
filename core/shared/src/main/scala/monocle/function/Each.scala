@@ -24,7 +24,7 @@ trait EachFunctions {
   def traverseEach[S[_]: Traverse, A]: Each[S[A], A] = Each.fromTraverse[S, A]
 }
 
-object Each extends EachFunctions {
+object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
 
   def apply[S, A](traversal: Traversal[S, A]) : Each[S, A] = new Each[S, A] {
     override val each: Traversal[S, A] = traversal
@@ -44,7 +44,6 @@ object Each extends EachFunctions {
   /************************************************************************************************/
   import cats.instances.list._
   import cats.instances.sortedMap._
-  import cats.instances.stream._
   import cats.instances.vector._
   import scala.collection.immutable.SortedMap
   import scala.util.Try
@@ -60,8 +59,6 @@ object Each extends EachFunctions {
   implicit def optEach[A]: Each[Option[A], A] = new Each[Option[A], A] {
     def each = monocle.std.option.some[A].asTraversal
   }
-
-  implicit def streamEach[A]: Each[Stream[A], A] = fromTraverse
 
   implicit val stringEach: Each[String, Char] = Each(
     monocle.std.string.stringToList composeTraversal Each.each[List[Char], Char]
