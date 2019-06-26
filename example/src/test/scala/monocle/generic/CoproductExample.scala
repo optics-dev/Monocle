@@ -10,7 +10,6 @@ class CoproductExample extends MonocleSuite {
 
   type ISB = Int :+: String :+: Boolean :+: CNil
 
-
   test("coProductPrism creates a Prism between a Coproduct and one of its choice") {
     val b = Coproduct[ISB](true)
     val i = Coproduct[ISB](3)

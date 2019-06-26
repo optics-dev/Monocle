@@ -7,7 +7,6 @@ import scala.annotation.{implicitNotFound, tailrec}
 import cats.Applicative
 import cats.instances.option._
 import cats.syntax.either._
-import scala.{Either => \/}
 
 /**
  * Typeclass that defines a [[Prism]] between an `S` and its init `S` and last `S`
@@ -55,7 +54,7 @@ object Snoc extends SnocFunctions {
 
   implicit def listSnoc[A]: Snoc[List[A], A] = Snoc(
     Prism[List[A], (List[A], A)](
-      s => Applicative[Option].map2(\/.catchNonFatal(s.init).toOption, s.lastOption)((_,_))){
+      s => Applicative[Option].map2(Either.catchNonFatal(s.init).toOption, s.lastOption)((_,_))){
       case (init, last) => init :+ last
     }
   )

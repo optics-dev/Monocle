@@ -3,12 +3,10 @@ package monocle.function
 import monocle.MonocleSuite
 import monocle.law.discipline.function.Snoc1Tests
 
-import scala.{List => IList}
-
 class Snoc1Spec extends MonocleSuite {
 
-  implicit val clistSnoc1: Snoc1[CNel, IList[Char], Char] = Snoc1.fromIso(CNel.toNel)
+  implicit val clistSnoc1: Snoc1[CNel, List[Char], Char] = Snoc1.fromIso(CNel.toNel)
 
-  checkAll("fromIso", Snoc1Tests[CNel, IList[Char], Char])
+  checkAll("fromIso", Snoc1Tests[CNel, List[Char], Char])
 
 }

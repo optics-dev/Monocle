@@ -2,7 +2,6 @@ package monocle.bench
 
 import monocle.bench.BenchModel._
 
-
 trait IsoBench {
 
   def get0(): Int

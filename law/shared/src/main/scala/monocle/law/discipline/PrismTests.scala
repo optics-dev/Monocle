@@ -6,12 +6,12 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
-import cats.{Eq => Equal}
+import cats.Eq
 import cats.instances.option._
 
 object PrismTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](prism: Prism[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
+  def apply[S: Arbitrary : Eq, A: Arbitrary : Eq](prism: Prism[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     val laws: PrismLaws[S, A] = new PrismLaws(prism)
     new SimpleRuleSet("Prism",
       "partial round trip one way" -> forAll( (s: S) => laws.partialRoundTripOneWay(s)),

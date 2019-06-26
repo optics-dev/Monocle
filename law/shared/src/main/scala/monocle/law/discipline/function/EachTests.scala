@@ -6,12 +6,11 @@ import monocle.law.discipline.TraversalTests
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
-import cats.{Eq => Equal}
-
+import cats.Eq
 
 object EachTests extends Laws {
 
-  def apply[S: Equal : Arbitrary, A: Equal : Arbitrary](implicit evEach: Each[S, A], arbAA: Arbitrary[A => A]): RuleSet =
+  def apply[S: Eq : Arbitrary, A: Eq : Arbitrary](implicit evEach: Each[S, A], arbAA: Arbitrary[A => A]): RuleSet =
     new SimpleRuleSet("Each", TraversalTests(each[S, A]).props: _*)
 
 }

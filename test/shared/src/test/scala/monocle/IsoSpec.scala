@@ -5,7 +5,7 @@ import monocle.macros.GenIso
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary._
 
-import cats.{Eq => Equal}
+import cats.Eq
 import cats.arrow.{Category, Compose}
 
 class IsoSpec extends MonocleSuite {
@@ -23,23 +23,23 @@ class IsoSpec extends MonocleSuite {
 
   case class IntWrapper(i: Int)
   implicit val intWrapperGen: Arbitrary[IntWrapper] = Arbitrary(arbitrary[Int].map(IntWrapper.apply))
-  implicit val intWrapperEq = Equal.fromUniversalEquals[IntWrapper]
+  implicit val intWrapperEq = Eq.fromUniversalEquals[IntWrapper]
 
   case class IdWrapper[A](value: A)
   implicit def idWrapperGen[A: Arbitrary]: Arbitrary[IdWrapper[A]] = Arbitrary(arbitrary[A].map(IdWrapper.apply))
-  implicit def idWrapperEq[A: Equal]: Equal[IdWrapper[A]] = Equal.fromUniversalEquals
+  implicit def idWrapperEq[A: Eq]: Eq[IdWrapper[A]] = Eq.fromUniversalEquals
 
   case object AnObject
   implicit val anObjectGen: Arbitrary[AnObject.type] = Arbitrary(Gen.const(AnObject))
-  implicit val anObjectEq = Equal.fromUniversalEquals[AnObject.type]
+  implicit val anObjectEq = Eq.fromUniversalEquals[AnObject.type]
 
   case class EmptyCase()
   implicit val emptyCaseGen: Arbitrary[EmptyCase] = Arbitrary(Gen.const(EmptyCase()))
-  implicit val emptyCaseEq = Equal.fromUniversalEquals[EmptyCase]
+  implicit val emptyCaseEq = Eq.fromUniversalEquals[EmptyCase]
 
   case class EmptyCaseType[A]()
   implicit def emptyCaseTypeGen[A]: Arbitrary[EmptyCaseType[A]] = Arbitrary(Gen.const(EmptyCaseType()))
-  implicit def emptyCaseTypeEq[A] = Equal.fromUniversalEquals[EmptyCaseType[A]]
+  implicit def emptyCaseTypeEq[A] = Eq.fromUniversalEquals[EmptyCaseType[A]]
 
   val iso = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)
 
@@ -138,6 +138,5 @@ class IsoSpec extends MonocleSuite {
   test("GenIso quintary equality") {
     GenIso.fields[Quintary] shouldEqual _quintary
   }
-  
-}
 
+}

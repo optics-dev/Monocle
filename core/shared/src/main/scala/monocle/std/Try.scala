@@ -4,16 +4,14 @@ import monocle.{Prism, PPrism}
 
 import scala.util.{Try, Success, Failure}
 
-import scala.{Left => -\/, Right => \/-}
-
 object utilTry extends TryOptics
 
 trait TryOptics {
 
   final def pTrySuccess[A, B]: PPrism[Try[A], Try[B], A, B] =
     PPrism[Try[A], Try[B], A, B] {
-      case Success(a) => \/-(a) 
-      case Failure(e) => -\/(Failure(e)) 
+      case Success(a) => Right(a)
+      case Failure(e) => Left(Failure(e))
     }(Success.apply)
 
   final def trySuccess[A]: Prism[Try[A], A] =

@@ -13,7 +13,7 @@ class IndexExample extends MonocleSuite {
     (Map("One" -> 1, "Two" -> 2) applyOptional index("One") set 2) shouldEqual Map("One" -> 2, "Two" -> 2)
   }
 
-  test("index creates an Optional from a List, IList, Vector or Stream to a value at the index") {
+  test("index creates an Optional from a List, Vector or Stream to a value at the index") {
     (List(0,1,2,3) applyOptional index(1) getOption) shouldEqual Some(1)
     (List(0,1,2,3) applyOptional index(8) getOption) shouldEqual None
 

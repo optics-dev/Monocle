@@ -5,9 +5,8 @@ import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 
-import cats.{Eq => Equal}
+import cats.Eq
 import cats.arrow.{Category, Choice, Compose}
-import scala.{Left => -\/}
 
 class TraversalSpec extends MonocleSuite {
 
@@ -28,7 +27,7 @@ class TraversalSpec extends MonocleSuite {
     n <- arbitrary[String]
   } yield Location(x, y, n))
 
-  implicit val exampleEq = Equal.fromUniversalEquals[Location]
+  implicit val exampleEq = Eq.fromUniversalEquals[Location]
 
   // Below we test a 7-lenses Traversal created using applyN
 
@@ -59,7 +58,7 @@ class TraversalSpec extends MonocleSuite {
     p8 <- arbitrary[Int]
   } yield ManyPropObject(p1,p2,p3,p4,p5,p6,p7,p8))
 
-  implicit val eqForManyPropObject = Equal.fromUniversalEquals[ManyPropObject]
+  implicit val eqForManyPropObject = Eq.fromUniversalEquals[ManyPropObject]
 
   checkAll("apply2 Traversal", TraversalTests(coordinates))
   checkAll("applyN Traversal", TraversalTests(traversalN))
@@ -79,7 +78,7 @@ class TraversalSpec extends MonocleSuite {
   }
 
   test("Traversal has a Choice instance") {
-    Choice[Traversal].choice(eachL[Int], coordinates).modify(_ + 1)(-\/(List(1,2,3))) shouldEqual -\/(List(2,3,4))
+    Choice[Traversal].choice(eachL[Int], coordinates).modify(_ + 1)(Left(List(1,2,3))) shouldEqual Left(List(2,3,4))
   }
 
 

@@ -25,4 +25,4 @@ trait StdInstances
   with    NonEmptyChainOptics
   with    NonEmptyListOptics
   with    NonEmptyVectorOptics
-  with    ValidationOptics
+  with    ValidatedOptics

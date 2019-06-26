@@ -5,8 +5,6 @@ import monocle.MonocleSuite
 import monocle.law.discipline.{IsoTests, PrismTests}
 import monocle.law.discipline.function._
 
-import scala.{Vector => IVector}
-
 class NonEmptyVectorSpec extends MonocleSuite {
   import cats.laws.discipline.arbitrary._
 
@@ -18,6 +16,6 @@ class NonEmptyVectorSpec extends MonocleSuite {
   checkAll("index NonEmptyVector", IndexTests[NonEmptyVector[Int], Int, Int])
   checkAll("filterIndex NonEmptyVector", FilterIndexTests[NonEmptyVector[Int], Int, Int])
   checkAll("reverse NonEmptyVector", ReverseTests[NonEmptyVector[Int]])
-  checkAll("cons1 NonEmptyVector", Cons1Tests[NonEmptyVector[Int], Int, IVector[Int]])
-  checkAll("snoc1 NonEmptyVector", Snoc1Tests[NonEmptyVector[Int], IVector[Int], Int])
+  checkAll("cons1 NonEmptyVector", Cons1Tests[NonEmptyVector[Int], Int, Vector[Int]])
+  checkAll("snoc1 NonEmptyVector", Snoc1Tests[NonEmptyVector[Int], Vector[Int], Int])
 }

@@ -3,7 +3,6 @@ package monocle.std
 import monocle.{Iso, PIso}
 
 import cats.data.{NonEmptyList, OneAnd}
-import scala.{List => IList}
 
 object nel extends NonEmptyListOptics
 
@@ -17,7 +16,7 @@ trait NonEmptyListOptics {
     pNelToOneAnd[A, A]
 
   final def pOptNelToList[A, B]: PIso[Option[NonEmptyList[A]], Option[NonEmptyList[B]], List[A], List[B]] =
-    PIso[Option[NonEmptyList[A]], Option[NonEmptyList[B]], IList[A], IList[B]](_.fold(IList.empty[A])(_.toList))(
+    PIso[Option[NonEmptyList[A]], Option[NonEmptyList[B]], List[A], List[B]](_.fold(List.empty[A])(_.toList))(
       NonEmptyList.fromList
     )
 

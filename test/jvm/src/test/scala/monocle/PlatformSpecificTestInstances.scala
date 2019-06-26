@@ -2,10 +2,10 @@ package monocle
 
 import java.net.URL
 import org.scalacheck.{Arbitrary, Cogen, Gen}
-import cats.{Eq => Equal}
+import cats.Eq
 
 private [monocle] trait PlatformSpecificTestInstances {
-  implicit val urlEqual = Equal.fromUniversalEquals[URL]
+  implicit val urlEqual = Eq.fromUniversalEquals[URL]
 
   implicit def urlArbitrary: Arbitrary[URL] = Arbitrary {
     val idGen = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString)

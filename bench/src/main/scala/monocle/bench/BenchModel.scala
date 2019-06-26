@@ -3,7 +3,6 @@ package monocle.bench
 import scala.collection.immutable.SortedMap
 import scala.util.Random
 
-
 object BenchModel {
 
   def safeDivide(a: Int, b: Int): Option[Int] = if(b == 0) None else Some(a / b)

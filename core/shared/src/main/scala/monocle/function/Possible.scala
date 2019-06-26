@@ -3,7 +3,7 @@ package monocle.function
 import monocle.{Iso, Optional}
 
 import scala.util.Try
-import cats.data.{Validated => Validation}
+import cats.data.Validated
 
 /**
  * Typeclass that defines an [[Optional]] from a monomorphic container `S` to a possible value `A`.
@@ -33,23 +33,23 @@ object Possible extends PossibleFunctions {
   /** Std instances                                                                               */
   /************************************************************************************************/
 
-  implicit def optionPossible[A]: Possible[Option[A], A] = 
-    new Possible[Option[A], A] { 
+  implicit def optionPossible[A]: Possible[Option[A], A] =
+    new Possible[Option[A], A] {
       def possible = monocle.std.option.some.asOptional
     }
 
-  implicit def eitherPossible[A,B]: Possible[Either[A,B], B] =
-    new Possible[Either[A,B], B] { 
+  implicit def eitherPossible[A,B]: Possible[Either[A, B], B] =
+    new Possible[Either[A, B], B] {
       def possible = monocle.std.either.stdRight.asOptional
     }
 
-  implicit def validationPossible[A,B]: Possible[Validation[A,B], B] =
-    new Possible[Validation[A,B], B] { 
+  implicit def validationPossible[A,B]: Possible[Validated[A, B], B] =
+    new Possible[Validated[A, B], B] {
       def possible = monocle.std.validation.success.asOptional
     }
 
   implicit def tryPossible[A]: Possible[Try[A], A] =
-    new Possible[Try[A], A] { 
+    new Possible[Try[A], A] {
       def possible = monocle.std.utilTry.trySuccess.asOptional
     }
 }

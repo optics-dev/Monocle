@@ -6,7 +6,6 @@ import cats.instances.int._
 import cats.instances.list._
 import cats.syntax.either._
 import monocle.internal.Monoids
-import scala.{Either => \/}
 
 /**
  * A [[Fold]] can be seen as a [[Getter]] with many targets or
@@ -68,22 +67,22 @@ abstract class Fold[S, A] extends Serializable { self =>
     !isEmpty(s)
 
   /** join two [[Fold]] with the same target */
-  @inline final def choice[S1](other: Fold[S1, A]): Fold[S \/ S1, A] =
-    new Fold[S \/ S1, A]{
-      def foldMap[M: Monoid](f: A => M)(s: S \/ S1): M =
+  @inline final def choice[S1](other: Fold[S1, A]): Fold[Either[S, S1], A] =
+    new Fold[Either[S, S1], A]{
+      def foldMap[M: Monoid](f: A => M)(s: Either[S, S1]): M =
         s.fold(self.foldMap(f), other.foldMap(f))
     }
 
-  @inline final def left[C]: Fold[S \/ C, A \/ C] =
-    new Fold[S \/ C, A \/ C]{
-      override def foldMap[M: Monoid](f: A \/ C => M)(s: S \/ C): M =
-        s.fold(self.foldMap(a => f(\/.left(a))), c => f(\/.right(c)))
+  @inline final def left[C]: Fold[Either[S, C], Either[A, C]] =
+    new Fold[Either[S, C], Either[A, C]]{
+      override def foldMap[M: Monoid](f: Either[A, C] => M)(s: Either[S, C]): M =
+        s.fold(self.foldMap(a => f(Either.left(a))), c => f(Either.right(c)))
     }
 
-  @inline final def right[C]: Fold[C \/ S, C \/ A] =
-    new Fold[C \/ S, C \/ A]{
-      override def foldMap[M: Monoid](f: C \/ A => M)(s: C \/ S): M =
-        s.fold(c => f(\/.left(c)), self.foldMap(a => f(\/.right(a))))
+  @inline final def right[C]: Fold[Either[C, S], Either[C, A]] =
+    new Fold[Either[C, S], Either[C, A]]{
+      override def foldMap[M: Monoid](f: Either[C, A] => M)(s: Either[C, S]): M =
+        s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
     }
 
   /**********************************************************/
@@ -151,9 +150,9 @@ object Fold extends FoldInstances {
   def id[A]: Fold[A, A] =
     Iso.id[A].asFold
 
-  def codiagonal[A]: Fold[A \/ A, A] =
-    new Fold[A \/ A, A]{
-      def foldMap[M: Monoid](f: A => M)(s: A \/ A): M =
+  def codiagonal[A]: Fold[Either[A, A], A] =
+    new Fold[Either[A, A], A]{
+      def foldMap[M: Monoid](f: A => M)(s: Either[A, A]): M =
         s.fold(f,f)
     }
 
@@ -177,7 +176,7 @@ object Fold extends FoldInstances {
 
 sealed abstract class FoldInstances {
   implicit val foldChoice: Choice[Fold] = new Choice[Fold]{
-    def choice[A, B, C](f: Fold[A, C], g: Fold[B, C]): Fold[A \/ B, C] =
+    def choice[A, B, C](f: Fold[A, C], g: Fold[B, C]): Fold[Either[A, B], C] =
       f choice g
 
     def id[A]: Fold[A, A] =

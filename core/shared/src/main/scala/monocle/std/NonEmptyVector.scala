@@ -3,8 +3,6 @@ package monocle.std
 import monocle.{Iso, PIso, PPrism, Prism}
 import cats.data.{NonEmptyVector, OneAnd}
 
-import scala.{Vector => IVector}
-
 object nev extends NonEmptyVectorOptics
 
 trait NonEmptyVectorOptics {
@@ -17,7 +15,7 @@ trait NonEmptyVectorOptics {
     pNevToOneAnd[A, A]
 
   final def pOptNevToVector[A, B]: PIso[Option[NonEmptyVector[A]], Option[NonEmptyVector[B]], Vector[A], Vector[B]] =
-    PIso[Option[NonEmptyVector[A]], Option[NonEmptyVector[B]], IVector[A], IVector[B]](_.fold(IVector.empty[A])(_.toVector))(
+    PIso[Option[NonEmptyVector[A]], Option[NonEmptyVector[B]], Vector[A], Vector[B]](_.fold(Vector.empty[A])(_.toVector))(
       NonEmptyVector.fromVector
     )
 

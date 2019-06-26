@@ -8,8 +8,6 @@ import cats.instances.list._
 import cats.syntax.either._
 import monocle.internal.Monoids
 
-import scala.{Either => \/}
-
 /**
  * A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
  * where n can be infinite.
@@ -89,12 +87,12 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
     modify(_ => b)
 
   /** join two [[PTraversal]] with the same target */
-  @inline final def choice[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[S \/ S1, T \/ T1, A, B] =
-    new PTraversal[S \/ S1, T \/ T1, A, B]{
-      def modifyF[F[_]: Applicative](f: A => F[B])(s: S \/ S1): F[T \/ T1] =
+  @inline final def choice[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[Either[S, S1], Either[T, T1], A, B] =
+    new PTraversal[Either[S, S1], Either[T, T1], A, B]{
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: Either[S, S1]): F[Either[T, T1]] =
         s.fold(
-          s  => Functor[F].map(self.modifyF(f)(s))(\/.left),
-          s1 => Functor[F].map(other.modifyF(f)(s1))(\/.right)
+          s  => Functor[F].map(self.modifyF(f)(s))(Either.left),
+          s1 => Functor[F].map(other.modifyF(f)(s1))(Either.right)
         )
     }
 
@@ -182,10 +180,10 @@ object PTraversal extends TraversalInstances {
   def id[S, T]: PTraversal[S, T, S, T] =
     PIso.id[S, T].asTraversal
 
-  def codiagonal[S, T]: PTraversal[S \/ S, T \/ T, S, T] =
-    new PTraversal[S \/ S, T \/ T, S, T]{
-      def modifyF[F[_]: Applicative](f: S => F[T])(s: S \/ S): F[T \/ T] =
-        s.bimap(f,f).fold(Applicative[F].map(_)(\/.left), Applicative[F].map(_)(\/.right))
+  def codiagonal[S, T]: PTraversal[Either[S, S], Either[T, T], S, T] =
+    new PTraversal[Either[S, S], Either[T, T], S, T]{
+      def modifyF[F[_]: Applicative](f: S => F[T])(s: Either[S, S]): F[Either[T, T]] =
+        s.bimap(f, f).fold(Applicative[F].map(_)(Either.left), Applicative[F].map(_)(Either.right))
     }
 
   /** create a [[PTraversal]] from a Traverse */
@@ -230,7 +228,7 @@ object Traversal {
   def id[A]: Traversal[A, A] =
     Iso.id[A].asTraversal
 
-  def codiagonal[S, T]: Traversal[S \/ S, S] =
+  def codiagonal[S, T]: Traversal[Either[S, S], S] =
     PTraversal.codiagonal
 
   /** create a [[PTraversal]] from a Traverse */
@@ -279,7 +277,7 @@ sealed abstract class TraversalInstances {
     def id[A]: Traversal[A, A] =
       Traversal.id
 
-    def choice[A, B, C](f1: Traversal[A, C], f2: Traversal[B, C]): Traversal[A \/ B, C] =
+    def choice[A, B, C](f1: Traversal[A, C], f2: Traversal[B, C]): Traversal[Either[A, B], C] =
       f1 choice f2
   }
 }

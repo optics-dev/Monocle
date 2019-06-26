@@ -2,7 +2,6 @@ package monocle
 
 import cats.Monoid
 import cats.arrow.{Category, Choice, Compose}
-import scala.{Left => -\/}
 
 class FoldSpec extends MonocleSuite {
 
@@ -25,9 +24,8 @@ class FoldSpec extends MonocleSuite {
   }
 
   test("Fold has a Choice instance") {
-    Choice[Fold].choice(eachLi, Choice[Fold].id[Int]).fold(-\/(List(1,2,3))) shouldEqual 6
+    Choice[Fold].choice(eachLi, Choice[Fold].id[Int]).fold(Left(List(1,2,3))) shouldEqual 6
   }
-
 
   test("foldMap") {
     eachLi.foldMap(_.toString)(List(1,2,3,4,5)) shouldEqual "12345"

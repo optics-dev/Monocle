@@ -5,9 +5,8 @@ import monocle.macros.{GenLens, Lenses}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 
-import cats.{Eq => Equal}
+import cats.Eq
 import cats.arrow.{Category, Choice, Compose}
-import scala.{Right => \/-}
 
 case class Point(x: Int, y: Int)
 @Lenses case class Example(s: String, p: Point)
@@ -43,7 +42,7 @@ class LensSpec extends MonocleSuite {
     y <- arbitrary[Int]
   } yield Example(s, Point(x, y)))
 
-  implicit val exampleEq = Equal.fromUniversalEquals[Example]
+  implicit val exampleEq = Eq.fromUniversalEquals[Example]
 
   checkAll("apply Lens", LensTests(s))
   checkAll("GenLens", LensTests(GenLens[Example](_.s)))
@@ -68,7 +67,7 @@ class LensSpec extends MonocleSuite {
   }
 
   test("Lens has a Choice instance") {
-    Choice[Lens].choice(x, y).get(\/-(Point(5, 6))) shouldEqual 6
+    Choice[Lens].choice(x, y).get(Right(Point(5, 6))) shouldEqual 6
   }
 
   test("get") {

@@ -1,9 +1,8 @@
 package monocle
 
-import cats.{Monoid, Semigroupal => Zip}
+import cats.{Monoid, Semigroupal}
 import cats.arrow.{Arrow, Choice}
 import cats.implicits._
-import scala.{Either => \/}
 
 /**
  * A [[Getter]] can be seen as a glorified get method between
@@ -27,8 +26,8 @@ abstract class Getter[S, A] extends Serializable { self =>
     p compose get
 
   /** join two [[Getter]] with the same target */
-  @inline final def choice[S1](other: Getter[S1, A]): Getter[S \/ S1, A] =
-    Getter[S \/ S1, A](_.fold(self.get, other.get))
+  @inline final def choice[S1](other: Getter[S1, A]): Getter[Either[S, S1], A] =
+    Getter[Either[S, S1], A](_.fold(self.get, other.get))
 
   /** pair two disjoint [[Getter]] */
   @inline final def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
@@ -43,11 +42,11 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def second[B]: Getter[(B, S), (B, A)] =
     Getter[(B, S), (B, A)]{case (b, s) => (b, self.get(s))}
 
-  @inline final def left[C] : Getter[S \/ C, A \/ C] =
-    Getter[S \/ C, A \/ C](_.leftMap(get))
+  @inline final def left[C] : Getter[Either[S, C], Either[A, C]] =
+    Getter[Either[S, C], Either[A, C]](_.leftMap(get))
 
-  @inline final def right[C]: Getter[C \/ S, C \/ A] =
-    Getter[C \/ S, C \/ A](_.map(get))
+  @inline final def right[C]: Getter[Either[C, S], Either[C, A]] =
+    Getter[Either[C, S], Either[C, A]](_.map(get))
 
   /*************************************************************/
   /** Compose methods between a [[Getter]] and another Optics  */
@@ -120,9 +119,9 @@ abstract class Getter[S, A] extends Serializable { self =>
 object Getter extends GetterInstances {
   def id[A]: Getter[A, A] =
     Iso.id[A].asGetter
-  
-  def codiagonal[A]: Getter[A \/ A, A] =
-    Getter[A \/ A, A](_.fold(identity, identity))
+
+  def codiagonal[A]: Getter[Either[A, A], A] =
+    Getter[Either[A, A], A](_.fold(identity, identity))
 
   def apply[S, A](_get: S => A): Getter[S, A] =
     (s: S) => _get(s)
@@ -146,14 +145,14 @@ sealed abstract class GetterInstances extends GetterInstances0 {
       g composeGetter f
   }
 
-  implicit def getterZip[S]: Zip[Getter[S, ?]] = new Zip[Getter[S, ?]] {
+  implicit def getterSemigroupal[S]: Semigroupal[Getter[S, ?]] = new Semigroupal[Getter[S, ?]] {
     override def product[A, B](a: Getter[S, A], b: Getter[S, B]) = a zip b
   }
 }
 
 sealed abstract class GetterInstances0 {
   implicit val getterChoice: Choice[Getter] = new Choice[Getter]{
-    def choice[A, B, C](f: Getter[A, C], g: Getter[B, C]): Getter[A \/ B, C] =
+    def choice[A, B, C](f: Getter[A, C], g: Getter[B, C]): Getter[Either[A, B], C] =
       f choice g
 
     def id[A]: Getter[A, A] =
