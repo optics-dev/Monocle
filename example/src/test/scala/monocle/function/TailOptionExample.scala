@@ -11,7 +11,6 @@ class TailOptionExample extends MonocleSuite {
 
     (List(1, 2, 3)    applyOptional tailOption set List(4, 5, 6))   shouldEqual List(1, 4, 5, 6)
     (Vector(1, 2, 3)  applyOptional tailOption set Vector(4, 5, 6)) shouldEqual Vector(1, 4, 5, 6)
-    (Stream(1, 2, 3)  applyOptional tailOption set Stream(4, 5, 6)) shouldEqual Stream(1, 4, 5, 6)
   }
 
   test("tailOption creates an Optional from a String to its tail") {

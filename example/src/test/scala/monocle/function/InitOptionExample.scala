@@ -11,7 +11,6 @@ class InitOptionExample extends MonocleSuite {
 
     (List(1, 2, 3)    applyOptional initOption set List(4, 5, 6))   shouldEqual List(4, 5, 6, 3)
     (Vector(1, 2, 3)  applyOptional initOption set Vector(4, 5, 6)) shouldEqual Vector(4, 5, 6, 3)
-    (Stream(1, 2, 3)  applyOptional initOption set Stream(4, 5, 6)) shouldEqual Stream(4, 5, 6, 3)
   }
 
   test("tail creates a Traversal from a String to its tail") {

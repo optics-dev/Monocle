@@ -6,7 +6,6 @@ class HeadOptionExample extends MonocleSuite {
 
   test("headOption creates a Traversal from a List, Stream or Vector to its optional first element") {
     (List(1,2,3)     applyOptional headOption getOption) shouldEqual Some(1)
-    (Stream(1,2,3)   applyOptional headOption getOption) shouldEqual Some(1)
     (Vector(1,2,3)   applyOptional headOption getOption) shouldEqual Some(1)
 
     (List.empty[Int] applyOptional headOption getOption)     shouldEqual None

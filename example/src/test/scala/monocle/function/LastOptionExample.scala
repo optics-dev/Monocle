@@ -6,7 +6,6 @@ class LastOptionExample extends MonocleSuite {
 
   test("lastOption creates a Traversal from a List, Stream or Vector to its optional last element") {
     (List(1,2,3)   applyOptional lastOption getOption) shouldEqual Some(3)
-    (Stream(1,2,3) applyOptional lastOption getOption) shouldEqual Some(3)
     (Vector(1,2,3) applyOptional lastOption getOption) shouldEqual Some(3)
 
     (List.empty[Int] applyOptional lastOption getOption)     shouldEqual None

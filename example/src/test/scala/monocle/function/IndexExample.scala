@@ -18,8 +18,6 @@ class IndexExample extends MonocleSuite {
     (List(0,1,2,3) applyOptional index(8) getOption) shouldEqual None
 
     (Vector(0,1,2,3) applyOptional index(1) modify(_ + 1)) shouldEqual Vector(0,2,2,3)
-    // setting or modifying a value at an index without value is a no op
-    (Stream(0,1,2,3) applyOptional index(64) set 10)       shouldEqual Stream(0,1,2,3)
   }
 
   test("index creates an Optional from a OneAnd to a value at the index") {

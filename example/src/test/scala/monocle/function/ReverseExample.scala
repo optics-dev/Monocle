@@ -17,10 +17,6 @@ class ReverseExample extends MonocleSuite {
     ((1,'b', true, 5.4, "plop", 7L, false) applyIso reverse get) shouldEqual ((false, 7L, "plop", 5.4, true, 'b',1))
   }
 
-  test("reverse creates an Iso from a Stream to its reversed version") {
-    (Stream(1,2,3) applyIso reverse get) shouldEqual Stream(3,2,1)
-  }
-
   test("reverse creates an Iso from a String to its reversed version") {
     ("Hello" applyIso reverse get) shouldEqual "olleH"
   }

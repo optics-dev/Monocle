@@ -14,7 +14,6 @@ class EachExample extends MonocleSuite {
 
   test("Each can be used on List, IList, Vector, Stream and OneAnd") {
     (List(1,2)   applyTraversal each modify( _ + 1)) shouldEqual List(2,3)
-    (Stream(1,2) applyTraversal each modify( _ + 1)) shouldEqual Stream(2,3)
     (Vector(1,2) applyTraversal each modify( _ + 1)) shouldEqual Vector(2,3)
     (OneAnd(1, List(2,3)) applyTraversal each modify( _ + 1)) shouldEqual OneAnd(2, List(3,4))
   }
