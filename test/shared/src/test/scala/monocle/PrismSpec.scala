@@ -153,20 +153,20 @@ class PrismSpec extends MonocleSuite {
     i.setOption(1)(S(""))  shouldEqual None
   }
 
-  // test("GenPrism nullary equality") {
-  //   GenPrism[Arities, Nullary] composeIso GenIso.unit[Nullary] shouldEqual _nullary
-  // }
-  //
-  // test("GenPrism unary equality") {
-  //   GenPrism[Arities, Unary] composeIso GenIso[Unary, Int] shouldEqual _unary
-  // }
-  //
-  // test("GenPrism binary equality") {
-  //   GenPrism[Arities, Binary] composeIso GenIso.fields[Binary] shouldEqual _binary
-  // }
-  //
-  // test("GenPrism quintary equality") {
-  //   GenPrism[Arities, Quintary] composeIso GenIso.fields[Quintary] shouldEqual _quintary
-  // }
+  test("GenPrism nullary equality") {
+    GenPrism[Arities, Nullary] composeIso GenIso.unit[Nullary] shouldEqual _nullary
+  }
+
+  test("GenPrism unary equality") {
+    GenPrism[Arities, Unary] composeIso GenIso[Unary, Int] shouldEqual _unary
+  }
+
+  test("GenPrism binary equality") {
+    GenPrism[Arities, Binary] composeIso GenIso.fields[Binary] shouldEqual _binary
+  }
+
+  test("GenPrism quintary equality") {
+    GenPrism[Arities, Quintary] composeIso GenIso.fields[Quintary] shouldEqual _quintary
+  }
 
 }

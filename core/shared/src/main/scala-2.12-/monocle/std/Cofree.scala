@@ -8,7 +8,6 @@ import cats.free.Cofree
 
 object cofree extends CofreeOptics
 
-
 trait CofreeOptics {
 
   /** Polymorphic isomorphism between `Cofree[Option, _]` and `OneAnd[Stream, _]` */

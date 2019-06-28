@@ -6,7 +6,7 @@ import cats.data.Validated
 import cats.syntax.either._
 import cats.syntax.validated._
 
-object validation extends ValidatedOptics
+object validated extends ValidatedOptics
 
 trait ValidatedOptics {
   final def pSuccess[E, A, B]: PPrism[Validated[E, A], Validated[E, B], A, B] =

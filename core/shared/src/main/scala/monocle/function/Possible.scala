@@ -43,9 +43,9 @@ object Possible extends PossibleFunctions {
       def possible = monocle.std.either.stdRight.asOptional
     }
 
-  implicit def validationPossible[A,B]: Possible[Validated[A, B], B] =
+  implicit def validatedPossible[A,B]: Possible[Validated[A, B], B] =
     new Possible[Validated[A, B], B] {
-      def possible = monocle.std.validation.success.asOptional
+      def possible = monocle.std.validated.success.asOptional
     }
 
   implicit def tryPossible[A]: Possible[Try[A], A] =

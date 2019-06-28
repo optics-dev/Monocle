@@ -97,7 +97,7 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
   /************************************************************************************************/
   /** Cats instances                                                                            */
   /************************************************************************************************/
-  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd, Validated => Validation}
+  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd, Validated}
   import cats.free.Cofree
 
   implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] = fromTraverse[Cofree[S, ?], A]
@@ -118,7 +118,7 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
       }
     )
 
-  implicit def validationEach[A, B]: Each[Validation[A, B], B] = new Each[Validation[A, B], B] {
-    def each = monocle.std.validation.success.asTraversal
+  implicit def validatedEach[A, B]: Each[Validated[A, B], B] = new Each[Validated[A, B], B] {
+    def each = monocle.std.validated.success.asTraversal
   }
 }
