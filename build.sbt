@@ -144,20 +144,18 @@ lazy val monocle = project.in(file("."))
 lazy val monocleJVM = project.in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
   .aggregate(
-    coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, unsafeJVM, testJVM,
+    core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm,
     example, docs, bench)
   .dependsOn(
-    coreJVM, genericJVM, lawJVM, macrosJVM, stateJVM, refinedJVM, unsafeJVM, testJVM % "test-internal -> test",
+    core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm % "test-internal -> test",
     bench % "compile-internal;test-internal -> test")
 
 lazy val monocleJS = project.in(file(".monocleJS"))
   .settings(monocleJsSettings)
-  .aggregate(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS)
-  .dependsOn(coreJS, genericJS, lawJS, macrosJS, stateJS, refinedJS, unsafeJS, testJS  % "test-internal -> test")
+  .aggregate(core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js)
+  .dependsOn(core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js  % "test-internal -> test")
 
-lazy val coreJVM    = core.jvm
-lazy val coreJS     = core.js
-lazy val core       = crossProject(JVMPlatform, JSPlatform)
+lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-core")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -166,9 +164,9 @@ lazy val core       = crossProject(JVMPlatform, JSPlatform)
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, catsFree.value))
 
-lazy val genericJVM = generic.jvm
-lazy val genericJS  = generic.js
-lazy val generic    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
+lazy val generic = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(core)
   .settings(moduleName := "monocle-generic")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -177,9 +175,9 @@ lazy val generic    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   .jvmSettings(mimaSettings("generic"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, shapeless.value))
 
-lazy val refinedJVM = refined.jvm
-lazy val refinedJS  = refined.js
-lazy val refined    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
+lazy val refined = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(core)
   .settings(moduleName := "monocle-refined")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -187,9 +185,9 @@ lazy val refined    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   )
   .settings(libraryDependencies ++= Seq(cats.value, refinedDep.value))
 
-lazy val lawJVM = law.jvm
-lazy val lawJS  = law.js
-lazy val law    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
+lazy val law = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(core)
   .settings(moduleName := "monocle-law")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -197,9 +195,9 @@ lazy val law    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   )
   .settings(libraryDependencies ++= Seq(discipline.value, scalacheck.value))
 
-lazy val macrosJVM = macros.jvm
-lazy val macrosJS  = macros.js
-lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
+lazy val macros = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(core)
   .in(file("macro"))
   .settings(moduleName := "monocle-macro")
   .configureCross(
@@ -216,9 +214,9 @@ lazy val macros    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
   )
 
-lazy val stateJVM    = state.jvm
-lazy val stateJS     = state.js
-lazy val state       = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
+lazy val state = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(core)
   .settings(moduleName := "monocle-state")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -226,9 +224,9 @@ lazy val state       = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   )
   .settings(libraryDependencies ++= Seq(cats.value))
 
-lazy val unsafeJVM = unsafe.jvm
-lazy val unsafeJS  = unsafe.js
-lazy val unsafe    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
+lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(core)
   .settings(moduleName := "monocle-unsafe")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -237,9 +235,7 @@ lazy val unsafe    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   .jvmSettings(mimaSettings("unsafe"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, alleycats.value, shapeless.value))
 
-lazy val testJVM = test.jvm
-lazy val testJS  = test.js
-lazy val test    = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, macros, law, state, refined, unsafe)
+lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, macros, law, state, refined, unsafe)
   .settings(moduleName := "monocle-test")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -251,7 +247,7 @@ lazy val test    = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic
     libraryDependencies ++= paradisePlugin.value
   )
 
-lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
+lazy val bench = project.dependsOn(core.jvm, generic.jvm, macros.jvm)
   .settings(moduleName := "monocle-bench")
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
@@ -261,7 +257,7 @@ lazy val bench = project.dependsOn(coreJVM, genericJVM, macrosJVM)
     libraryDependencies ++= paradisePlugin.value
   ).enablePlugins(JmhPlugin)
 
-lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM, stateJVM, testJVM % "test->test")
+lazy val example = project.dependsOn(core.jvm, generic.jvm, refined.jvm, macros.jvm, state.jvm, test.jvm % "test->test")
   .settings(moduleName := "monocle-example")
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
@@ -270,7 +266,7 @@ lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM,
     libraryDependencies ++= paradisePlugin.value
   )
 
-lazy val docs = project.dependsOn(coreJVM, unsafeJVM, macrosJVM, example)
+lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
   .enablePlugins(MicrositesPlugin)
   .enablePlugins(ScalaUnidocPlugin)
   .settings(moduleName := "monocle-docs")
@@ -305,7 +301,7 @@ lazy val docSettings = Seq(
     "gray-lighter"    -> "#F4F3F4",
     "white-color"     -> "#FFFFFF"),
   autoAPIMappings := true,
-  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM),
+  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(core.jvm),
   docsMappingsAPIDir := "api",
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
