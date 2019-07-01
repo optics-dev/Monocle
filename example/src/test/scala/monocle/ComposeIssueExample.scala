@@ -23,7 +23,6 @@ class ComposeIssueExample extends MonocleSuite {
   val bI2S = new B[Int, String]
   val bS2S = new B[String, String]
 
-
   test("compose same class") {
     (aI2S compose aS2S).isInstanceOf[A[_, _]] shouldEqual true
     (aS2S compose aS2S).isInstanceOf[A[_, _]] shouldEqual true

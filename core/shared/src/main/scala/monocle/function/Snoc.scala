@@ -7,7 +7,6 @@ import scala.annotation.{implicitNotFound, tailrec}
 import cats.Applicative
 import cats.instances.option._
 import cats.syntax.either._
-import scala.{Either => \/}
 
 /**
  * Typeclass that defines a [[Prism]] between an `S` and its init `S` and last `S`
@@ -38,7 +37,7 @@ trait SnocFunctions {
     ev.snoc.getOption(s)
 }
 
-object Snoc extends SnocFunctions {
+object Snoc extends SnocFunctions with SnocInstancesScalaVersionSpecific {
 
   def apply[S, A](prism: Prism[S, (S, A)]): Snoc[S, A] = new Snoc[S, A] {
     override val snoc: Prism[S, (S, A)] = prism
@@ -55,17 +54,7 @@ object Snoc extends SnocFunctions {
 
   implicit def listSnoc[A]: Snoc[List[A], A] = Snoc(
     Prism[List[A], (List[A], A)](
-      s => Applicative[Option].map2(\/.catchNonFatal(s.init).toOption, s.lastOption)((_,_))){
-      case (init, last) => init :+ last
-    }
-  )
-
-  implicit def streamSnoc[A]: Snoc[Stream[A], A] = Snoc(
-    Prism[Stream[A], (Stream[A], A)]( s =>
-      for {
-        init <- if(s.isEmpty) None else Some(s.init)
-        last <- s.lastOption
-      } yield (init, last)){
+      s => Applicative[Option].map2(Either.catchNonFatal(s.init).toOption, s.lastOption)((_,_))){
       case (init, last) => init :+ last
     }
   )

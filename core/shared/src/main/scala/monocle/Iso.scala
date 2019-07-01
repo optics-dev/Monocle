@@ -2,9 +2,8 @@ package monocle
 
 import cats.{Applicative, Functor, Monoid}
 import cats.arrow.Category
-import cats.evidence.{<~<, Is => ===}
+import cats.evidence.{<~<, Is}
 import cats.syntax.either._
-import scala.{Either => \/}
 
 /**
  * [[Iso]] is a type alias for [[PIso]] where `S` = `A` and `T` = `B`:
@@ -103,11 +102,11 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       case (c, b) => (c, reverseGet(b))
     }
 
-  @inline final def left[C] : PIso[S \/ C, T \/ C, A \/ C, B \/ C] =
-    PIso[S \/ C, T \/ C, A \/ C, B \/ C](_.leftMap(get))(_.leftMap(reverseGet))
+  @inline final def left[C] : PIso[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
+    PIso[Either[S, C], Either[T, C], Either[A, C], Either[B, C]](_.leftMap(get))(_.leftMap(reverseGet))
 
-  @inline final def right[C]: PIso[C \/ S, C \/ T, C \/ A, C \/ B] =
-    PIso[C \/ S, C \/ T, C \/ A, C \/ B](_.map(get))(_.map(reverseGet))
+  @inline final def right[C]: PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
+    PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](_.map(get))(_.map(reverseGet))
 
   /**********************************************************/
   /** Compose methods between a [[PIso]] and another Optics */
@@ -222,8 +221,8 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** view a [[PIso]] as a [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
     new POptional[S, T, A, B]{
-      def getOrModify(s: S): T \/ A =
-        \/.right(get(s))
+      def getOrModify(s: S): Either[T, A]=
+        Either.right(get(s))
 
       def set(b: B): S => T =
         self.set(b)
@@ -241,8 +240,8 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** view a [[PIso]] as a [[PPrism]] */
   @inline final def asPrism: PPrism[S, T, A, B] =
     new PPrism[S, T, A, B]{
-      def getOrModify(s: S): T \/ A =
-        \/.right(get(s))
+      def getOrModify(s: S): Either[T, A]=
+        Either.right(get(s))
 
       def reverseGet(b: B): T =
         self.reverseGet(b)
@@ -271,7 +270,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** Apply methods to treat a [[PIso]] as smart constructors for type T */
   /*************************************************************************/
 
-  def apply()(implicit ev: B === Unit): T =
+  def apply()(implicit ev: Is[B, Unit]): T =
     ev.substitute[PIso[S, T, A, ?]](self).reverseGet(())
 
   def apply(b: B): T = reverseGet(b)

@@ -1,0 +1,5 @@
+package monocle.function
+
+trait PlatedFunctionsScalaVersionSpecific
+
+trait PlatedInstancesScalaVersionSpecific

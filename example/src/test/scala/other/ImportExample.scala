@@ -2,12 +2,10 @@ package other
 
 import monocle.TestInstances
 import org.scalatest.Matchers
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.typelevel.discipline.scalatest.Discipline
 import shapeless.test.illTyped
 import shapeless.{::, HNil}
-
-import scala.collection.immutable.{List => IList}
 
 case class Custom(value: Int)
 
@@ -22,7 +20,7 @@ object Custom {
 }
 
 // Cannot use MonocleSuite as it brings all imports
-class ImportExample extends FunSuite with Discipline with Matchers with TestInstances {
+class ImportExample extends AnyFunSuite with Discipline with Matchers with TestInstances {
 
   test("monocle.function.all._ imports all polymorphic optics in the scope") {
     import monocle.function.all._
@@ -51,8 +49,7 @@ class ImportExample extends FunSuite with Discipline with Matchers with TestInst
     // do not compile because Head instance for HList is not in scope
     illTyped { """head[Int :: HNil, Int].modify(1 :: HNil, _ + 1) shouldEqual (2 :: HNil)""" }
 
-    each[List[Int], Int].modify(_ + 1)(List(1,2,3))   shouldEqual List(2,3,4)
-    each[IList[Int], Int].modify(_ + 1)(IList(1,2,3)) shouldEqual IList(2,3,4)
+    each[List[Int], Int].modify(_ + 1)(List(1,2,3)) shouldEqual List(2,3,4)
   }
 
   test("monocle.generic.all._ brings all polymorphic Optic instances in scope for Shapeless classes") {
@@ -68,8 +65,7 @@ class ImportExample extends FunSuite with Discipline with Matchers with TestInst
   test("monocle._, Monocle._ makes all Monocle core features available (no generic)") {
     import monocle._, Monocle._
 
-    each[List[Int], Int].modify(_ + 1)(List(1,2,3))   shouldEqual List(2,3,4)
-    each[IList[Int], Int].modify(_ + 1)(IList(1,2,3)) shouldEqual IList(2,3,4)
+    each[List[Int], Int].modify(_ + 1)(List(1,2,3)) shouldEqual List(2,3,4)
   }
 
 }

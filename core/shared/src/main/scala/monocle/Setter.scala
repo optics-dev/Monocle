@@ -4,7 +4,6 @@ import cats.{ Contravariant, Functor }
 import cats.arrow.Choice
 import cats.arrow.Profunctor
 import cats.syntax.either._
-import scala.{Either => \/}
 
 /**
  * A [[PSetter]] is a generalisation of Functor map:
@@ -36,8 +35,8 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   def set(b: B): S => T
 
   /** join two [[PSetter]] with the same target */
-  @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[S \/ S1, T \/ T1, A, B] =
-    PSetter[S \/ S1, T \/ T1, A, B](
+  @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
+    PSetter[Either[S, S1], Either[T, T1], A, B](
       b => _.bimap(self.modify(b), other.modify(b))
     )
 
@@ -105,8 +104,8 @@ object PSetter extends SetterInstances {
   def id[S, T]: PSetter[S, T, S, T] =
     PIso.id[S, T].asSetter
 
-  def codiagonal[S, T]: PSetter[S \/ S, T \/ T, S, T] =
-    PSetter[S \/ S, T \/ T, S, T](f => _.bimap(f,f))
+  def codiagonal[S, T]: PSetter[Either[S, S], Either[T, T], S, T] =
+    PSetter[Either[S, S], Either[T, T], S, T](f => _.bimap(f,f))
 
   /** create a [[PSetter]] using modify function */
   def apply[S, T, A, B](_modify: (A => B) => S => T): PSetter[S, T, A, B] =
@@ -136,7 +135,7 @@ object Setter {
   def id[A]: Setter[A, A] =
     Iso.id[A].asSetter
 
-  def codiagonal[S]: Setter[S \/ S, S] =
+  def codiagonal[S]: Setter[Either[S, S], S] =
     PSetter.codiagonal
 
   /** [[Setter]] that points to nothing */
@@ -156,7 +155,7 @@ sealed abstract class SetterInstances {
     def id[A]: Setter[A, A] =
       Setter.id
 
-    def choice[A, B, C](f1: Setter[A, C], f2: Setter[B, C]): Setter[A \/ B, C] =
+    def choice[A, B, C](f1: Setter[A, C], f2: Setter[B, C]): Setter[Either[A, B], C] =
       f1 choice f2
   }
 }

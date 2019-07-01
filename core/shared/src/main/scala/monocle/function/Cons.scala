@@ -34,7 +34,7 @@ trait ConsFunctions {
   ev.cons.getOption(s)
 }
 
-object Cons extends ConsFunctions {
+object Cons extends ConsFunctions with ConsInstancesScalaVersionSpecific {
 
   def apply[S, A, B](prism: Prism[S, (B, S)]) : Cons[S, B] = new Cons[S, B] {
     val cons: Prism[S, (B, S)] = prism
@@ -48,20 +48,11 @@ object Cons extends ConsFunctions {
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  import scala.collection.immutable.Stream.#::
-
   implicit def listCons[A]: Cons[List[A], A] = Cons(
     Prism[List[A], (A, List[A])]{
       case Nil     => None
       case x :: xs => Some((x, xs))
     }{ case (a, s) => a :: s }
-  )
-
-  implicit def streamCons[A]: Cons[Stream[A], A] = Cons(
-    Prism[Stream[A], (A, Stream[A])]{
-      case scala.collection.immutable.Stream.Empty => None
-      case x #:: xs => Some((x, xs))
-    }{ case (a, s) => a #:: s }
   )
 
   implicit val stringCons: Cons[String, Char] = Cons(

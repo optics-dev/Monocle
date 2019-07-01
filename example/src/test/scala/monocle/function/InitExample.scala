@@ -1,6 +1,7 @@
 package monocle.function
 
 import monocle.MonocleSuite
+
 class InitExample extends MonocleSuite {
 
   test("init creates a Lens from a 2-6 tuple to its tail") {

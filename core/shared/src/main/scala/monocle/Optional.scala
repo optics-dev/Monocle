@@ -3,11 +3,10 @@ package monocle
 import cats.{Applicative, Monoid}
 import cats.arrow.Choice
 import cats.syntax.either._
-import scala.{Either => \/}
 
 /**
  * A [[POptional]] can be seen as a pair of functions:
- *  - `getOrModify: S      => T \/ A`
+ *  - `getOrModify: S      => Either[T, A]`
  *  - `set        : (B, S) => T`
  *
  * A [[POptional]] could also be defined as a weaker [[PLens]] and
@@ -30,7 +29,7 @@ import scala.{Either => \/}
 abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   /** get the target of a [[POptional]] or return the original value while allowing the type to change if it does not match */
-  def getOrModify(s: S): T \/ A
+  def getOrModify(s: S): Either[T, A]
 
   /** get the modified source of a [[POptional]] */
   def set(b: B): S => T
@@ -79,8 +78,8 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     getOption(_).fold(true)(p)
 
   /** join two [[POptional]] with the same target */
-  @inline final def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[S \/ S1, T \/ T1, A, B] =
-    POptional[S \/ S1, T \/ T1, A, B](_.fold(self.getOrModify(_).leftMap(\/.left), other.getOrModify(_).leftMap(\/.right))){
+  @inline final def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[Either[S, S1], Either[T, T1], A, B] =
+    POptional[Either[S, S1], Either[T, T1], A, B](_.fold(self.getOrModify(_).leftMap(Either.left), other.getOrModify(_).leftMap(Either.right))){
       b => _.bimap(self.set(b), other.set(b))
     }
 
@@ -123,7 +122,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   /** compose a [[POptional]] with a [[POptional]] */
   @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     new POptional[S, T, C, D]{
-      def getOrModify(s: S): T \/ C =
+      def getOrModify(s: S): Either[T, C] =
         self.getOrModify(s).flatMap(a => other.getOrModify(a).bimap(self.set(_)(s), identity))
 
       def set(d: D): S => T =
@@ -207,15 +206,15 @@ object POptional extends OptionalInstances {
   def id[S, T]: POptional[S, T, S, T] =
     PIso.id[S, T].asOptional
 
-  def codiagonal[S, T]: POptional[S \/ S, T \/ T, S, T] =
-    POptional[S \/ S, T \/ T, S, T](
-      _.fold(\/.right, \/.right)
+  def codiagonal[S, T]: POptional[Either[S, S], Either[T, T], S, T] =
+    POptional[Either[S, S], Either[T, T], S, T](
+      _.fold(Either.right, Either.right)
     )(t => _.bimap(_ => t, _ => t))
 
   /** create a [[POptional]] using the canonical functions: getOrModify and set */
-  def apply[S, T, A, B](_getOrModify: S => T \/ A)(_set: B => S => T): POptional[S, T, A, B] =
+  def apply[S, T, A, B](_getOrModify: S => Either[T, A])(_set: B => S => T): POptional[S, T, A, B] =
     new POptional[S, T, A, B]{
-      def getOrModify(s: S): T \/ A =
+      def getOrModify(s: S): Either[T, A] =
         _getOrModify(s)
 
       def set(b: B): S => T =
@@ -239,7 +238,7 @@ object Optional {
   def id[A]: Optional[A, A] =
     Iso.id[A].asOptional
 
-  def codiagonal[S]: Optional[S \/ S, S] =
+  def codiagonal[S]: Optional[Either[S, S], S] =
     POptional.codiagonal
 
   /** [[Optional]] that points to nothing */
@@ -249,8 +248,8 @@ object Optional {
   /** alias for [[POptional]] apply restricted to monomorphic update */
   def apply[S, A](_getOption: S => Option[A])(_set: A => S => S): Optional[S, A] =
     new Optional[S, A]{
-      def getOrModify(s: S): S \/ A =
-        _getOption(s).fold[S \/ A](\/.left(s))(\/.right)
+      def getOrModify(s: S): Either[S, A] =
+        _getOption(s).fold[Either[S, A]](Either.left(s))(Either.right)
 
       def set(a: A): S => S =
         _set(a)
@@ -271,7 +270,7 @@ object Optional {
 
 sealed abstract class OptionalInstances {
   implicit val optionalChoice: Choice[Optional] = new Choice[Optional] {
-    def choice[A, B, C](f: Optional[A, C], g: Optional[B, C]): Optional[A \/ B, C] =
+    def choice[A, B, C](f: Optional[A, C], g: Optional[B, C]): Optional[Either[A, B], C] =
       f choice g
 
     def id[A]: Optional[A, A] =

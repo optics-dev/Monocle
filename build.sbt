@@ -1,7 +1,7 @@
 import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 import sbt.Keys._
-import sbtcrossproject.CrossPlugin.autoImport.crossProject
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 inThisBuild(List(
   organization := "com.github.julien-truffaut",
@@ -37,47 +37,63 @@ inThisBuild(List(
 
 lazy val scalatestVersion = settingKey[String]("")
 
+// shamelessly copied from cats
+def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scalaVersion: String) = {
+  def extraDirs(suffix: String) =
+    List(CrossType.Pure, CrossType.Full)
+      .flatMap(_.sharedSrcDir(srcBaseDir, srcName).toList.map(f => file(f.getPath + suffix)))
+
+  CrossVersion.partialVersion(scalaVersion) match {
+    case Some((2, y)) if y <= 12 =>
+      extraDirs("-2.12-")
+    case Some((2, y)) if y >= 13 =>
+      extraDirs("-2.13+")
+    case _ => Nil
+  }
+}
+
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.12.8",
-  // crossScalaVersions := Seq("2.12.8", "2.13.0"),
-  scalatestVersion   := "3.0.8",
+  scalaVersion       := "2.13.0",
+  crossScalaVersions := Seq("2.12.8", "2.13.0"),
+  scalatestVersion   := "3.1.0-SNAP13",
   scalacOptions     ++= Seq(
-    "-deprecation",
     "-encoding", "UTF-8",
     "-feature",
     "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
     "-unchecked",
     "-Xfatal-warnings",
+    "-deprecation",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
     "-Ywarn-unused:imports",
   ),
   scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-    case Some((2, n)) if n <= 12 => Seq("-Xfuture", "-Yno-adapted-args")
-  }.toList.flatten,
-  scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+    case Some((2, n)) if n <= 12 => Seq("-Xfuture", "-Yno-adapted-args") // TODO Move fatal-warnings and deprecation back to on
     case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
   }.toList.flatten,
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions in (Test   , console) -= "-Ywarn-unused:imports",
   addCompilerPlugin(kindProjector),
+  Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
+  Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val catsVersion = "1.6.1"
+lazy val catsVersion = "2.0.0-M4"
 
-lazy val cats              = Def.setting("org.typelevel"              %%% "cats-core"          % catsVersion)
-lazy val catsFree          = Def.setting("org.typelevel"              %%% "cats-free"          % catsVersion)
-lazy val catsLaws          = Def.setting("org.typelevel"              %%% "cats-laws"          % catsVersion)
-lazy val alleycats         = Def.setting("org.typelevel"              %%% "alleycats-core"     % catsVersion)
-lazy val scalaz            = Def.setting("org.scalaz"                 %%% "scalaz-core"        % "7.2.27")
-lazy val shapeless         = Def.setting("com.chuusai"                %%% "shapeless"          % "2.3.3")
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.8")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.8" % "test")
+lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"                % catsVersion)
+lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
+lazy val catsLaws          = Def.setting("org.typelevel"     %%% "cats-laws"                % catsVersion)
+lazy val alleycats         = Def.setting("org.typelevel"     %%% "alleycats-core"           % catsVersion)
+lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.2.27")
+lazy val shapeless         = Def.setting("com.chuusai"       %%% "shapeless"                % "2.3.3")
+lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.8")
+lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.8" % "test")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline"           % "0.9.0")
-lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.13.5")
-lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % scalatestVersion.value % "test")
+lazy val discipline        = Def.setting("org.typelevel"     %%% "discipline-scalatest"     % "0.12.0-M3")
+lazy val scalacheck        = Def.setting("org.scalacheck"    %%% "scalacheck"               % "1.14.0")
+lazy val scalatestplus     = Def.setting("org.scalatestplus" %%% "scalatestplus-scalacheck" % "1.0.0-SNAP8" % "test")
+lazy val scalatest         = Def.setting("org.scalatest"     %%% "scalatest"                % scalatestVersion.value % "test")
 
 lazy val macroVersion = "2.1.1"
 

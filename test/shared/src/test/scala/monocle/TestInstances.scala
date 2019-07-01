@@ -8,15 +8,13 @@ import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 import org.scalactic.Equality
 
-import cats.data.OneAnd
-import cats.{Eq => Equal, _}
+import cats._
 import cats.free.Cofree
-import cats.laws.discipline.arbitrary._
 import cats.syntax.eq._
 
-trait TestInstances extends PlatformSpecificTestInstances with cats.instances.AllInstances {
+trait TestInstances extends PlatformSpecificTestInstances with ScalaVersionSpecificTestInstances with cats.instances.AllInstances {
 
-  implicit def equality[A](implicit A: Equal[A]): Equality[A] =
+  implicit def equality[A](implicit A: Eq[A]): Equality[A] =
     (a: A, b: Any) => A.eqv(a, b.asInstanceOf[A])
 
   implicit val genApplicative: Applicative[Gen] = new Applicative[Gen] {
@@ -25,37 +23,24 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
   }
 
   // Equal instances
-  implicit val uriEqual        = Equal.fromUniversalEquals[URI]
+  implicit val uriEqual        = Eq.fromUniversalEquals[URI]
 
-  implicit val aritiesEq       = Equal.fromUniversalEquals[Arities]
-  implicit val nullaryEq       = Equal.fromUniversalEquals[Nullary]
-  implicit val unaryEq         = Equal.fromUniversalEquals[Unary]
-  implicit val binaryEq        = Equal.fromUniversalEquals[Binary]
-  implicit val quintaryEq      = Equal.fromUniversalEquals[Quintary]
+  implicit val aritiesEq       = Eq.fromUniversalEquals[Arities]
+  implicit val nullaryEq       = Eq.fromUniversalEquals[Nullary]
+  implicit val unaryEq         = Eq.fromUniversalEquals[Unary]
+  implicit val binaryEq        = Eq.fromUniversalEquals[Binary]
+  implicit val quintaryEq      = Eq.fromUniversalEquals[Quintary]
 
-  implicit def optionCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[Option, A]] =
-    Equal.instance { (a, b) =>  A.eqv(a.head, b.head) && a.tail === b.tail }
+  implicit def optionCofreeEq[A](implicit A: Eq[A]): Eq[Cofree[Option, A]] =
+    Eq.instance { (a, b) =>  A.eqv(a.head, b.head) && a.tail === b.tail }
 
-  implicit def streamCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[Stream, A]] =
-    Equal.instance { (a, b) =>  A.eqv(a.head, b.head) && a.tail === b.tail }
+  implicit def pisoEq[S, T, A, B](implicit StoA: Eq[S => A], BtoT: Eq[B => T]): Eq[PIso[S, T, A, B]] =
+    Eq.instance { (a, b) => StoA.eqv(a.get, b.get) && BtoT.eqv(a.reverseGet, b.reverseGet) }
 
-  implicit def function1Eq[A, B](implicit A: Arbitrary[A], B: Equal[B]) = new Equal[A => B] {
-    val samples = Stream.continually(A.arbitrary.sample).flatten
-    val samplesCount = 50
-
-    override def eqv(f: A => B, g: A => B) =
-      samples.take(samplesCount).forall { a => B.eqv(f(a), g(a)) }
-  }
-
-  implicit def pisoEq[S, T, A, B](implicit StoA: Equal[S => A], BtoT: Equal[B => T]): Equal[PIso[S, T, A, B]] =
-    Equal.instance { (a, b) => StoA.eqv(a.get, b.get) && BtoT.eqv(a.reverseGet, b.reverseGet) }
-
-  implicit def pprismEq[S, T, A, B](implicit StoOptA: Equal[S => Option[A]], BtoT: Equal[B => T]): Equal[PPrism[S, T, A, B]] =
-    Equal.instance { (a, b) => StoOptA.eqv(a.getOption, b.getOption) && BtoT.eqv(a.reverseGet, b.reverseGet) }
+  implicit def pprismEq[S, T, A, B](implicit StoOptA: Eq[S => Option[A]], BtoT: Eq[B => T]): Eq[PPrism[S, T, A, B]] =
+    Eq.instance { (a, b) => StoOptA.eqv(a.getOption, b.getOption) && BtoT.eqv(a.reverseGet, b.reverseGet) }
 
   // Arbitrary instances
-
-  implicit def streamCoGen[A: Cogen]: Cogen[Stream[A]] = Cogen[List[A]].contramap[Stream[A]](_.toList)
 
   implicit def optionArbitrary[A: Arbitrary]: Arbitrary[Option[A]] = Arbitrary(Gen.frequency(
     1 -> None,
@@ -74,16 +59,8 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toSet))
 
 
-  implicit def optionCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[Option, A]] =
-    Arbitrary(Arbitrary.arbitrary[OneAnd[List, A]].map( xs =>
-      monocle.std.cofree.cofreeToStream.reverseGet(xs.copy(tail = xs.tail.toStream))
-    ))
-
   implicit def cogenOptionCofree[A](implicit A: Cogen[A]): Cogen[Cofree[Option, A]] =
     Cogen[Cofree[Option, A]]((seed: Seed, t: Cofree[Option, A]) => Cogen[(A, Option[Cofree[Option, A]])].perturb(seed, (t.head, t.tail.value)))
-
-  implicit def cogenStreamCofree[A](implicit A: Cogen[A]): Cogen[Cofree[Stream, A]] =
-    Cogen[Cofree[Stream, A]]((seed: Seed, t: Cofree[Stream, A]) => Cogen[(A, Stream[Cofree[Stream, A]])].perturb(seed, (t.head, t.tail.value)))
 
   implicit def uuidArbitrary: Arbitrary[UUID] = Arbitrary(UUID.randomUUID)
 

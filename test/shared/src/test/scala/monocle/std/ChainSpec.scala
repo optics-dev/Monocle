@@ -1,25 +1,24 @@
 package monocle.std
 
-// import cats.data.Chain
+import cats.data.Chain
 import monocle.MonocleSuite
-// import monocle.function.Plated._
-// import monocle.law.discipline.{/*IsoTests,*/ TraversalTests}
-// import monocle.law.discipline.function._
+import monocle.function.Plated._
+import monocle.law.discipline.{IsoTests, TraversalTests}
+import monocle.law.discipline.function._
 
 class ChainSpec extends MonocleSuite {
-  // import cats.laws.discipline.arbitrary._
+  import cats.laws.discipline.arbitrary._
 
-  // re enable on cats 2.0.x
-  // checkAll("chainToList", IsoTests(chainToList[Int]))
-  // checkAll("chainToVector", IsoTests(chainToVector[Int]))
+  checkAll("chainToList", IsoTests(chainToList[Int]))
+  checkAll("chainToVector", IsoTests(chainToVector[Int]))
 
-  // checkAll("reverse Chain", ReverseTests[Chain[Int]])
-  // checkAll("empty Chain", EmptyTests[Chain[Int]])
-  // checkAll("cons Chain", ConsTests[Chain[Int], Int])
-  // checkAll("snoc Chain", SnocTests[Chain[Int], Int])
-  // checkAll("each Chain", EachTests[Chain[Int], Int])
-  // checkAll("index Chain", IndexTests[Chain[Int], Int, Int])
-  // checkAll("filterIndex Chain", FilterIndexTests[Chain[Int], Int, Int])
+  checkAll("reverse Chain", ReverseTests[Chain[Int]])
+  checkAll("empty Chain", EmptyTests[Chain[Int]])
+  checkAll("cons Chain", ConsTests[Chain[Int], Int])
+  checkAll("snoc Chain", SnocTests[Chain[Int], Int])
+  checkAll("each Chain", EachTests[Chain[Int], Int])
+  checkAll("index Chain", IndexTests[Chain[Int], Int, Int])
+  checkAll("filterIndex Chain", FilterIndexTests[Chain[Int], Int, Int])
 
-  // checkAll("plated Chain", TraversalTests(plate[Chain[Int]]))
+  checkAll("plated Chain", TraversalTests(plate[Chain[Int]]))
 }

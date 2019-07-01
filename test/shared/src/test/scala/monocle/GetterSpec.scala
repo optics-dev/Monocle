@@ -1,8 +1,7 @@
 package monocle
 
-import cats.{Semigroupal => Zip}
+import cats.Semigroupal
 import cats.arrow.{Arrow, Category, Compose, Choice, Profunctor}
-import scala.{Left => -\/}
 
 class GetterSpec extends MonocleSuite {
 
@@ -11,7 +10,6 @@ class GetterSpec extends MonocleSuite {
 
   val bar = Getter[Foo, Bar](_.bar)
   val i   = Getter[Bar, Int](_.i)
-
 
   // test implicit resolution of type classes
 
@@ -24,7 +22,7 @@ class GetterSpec extends MonocleSuite {
   }
 
   test("Getter has a Choice instance") {
-    Choice[Getter].choice(i, Choice[Getter].id[Int]).get(-\/(Bar(3))) shouldEqual 3
+    Choice[Getter].choice(i, Choice[Getter].id[Int]).get(Left(Bar(3))) shouldEqual 3
   }
 
   test("Getter has a Profunctor instance") {
@@ -35,10 +33,10 @@ class GetterSpec extends MonocleSuite {
     Arrow[Getter].lift((_: Int) * 2).get(4) shouldEqual 8
   }
 
-  test("Getter has a Zip instance") {
+  test("Getter has a Semigroupal instance") {
     val length = Getter[String, Int](_.length)
     val upper = Getter[String, String](_.toUpperCase)
-    Zip[Getter[String, ?]].product(length, upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
+    Semigroupal[Getter[String, ?]].product(length, upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
   }
 
   test("get") {

@@ -6,13 +6,12 @@ import eu.timepit.refined.scalacheck.string.{endsWithArbitrary, startsWithArbitr
 import monocle.MonocleSuite
 import monocle.law.discipline.PrismTests
 
-import cats.{Eq => Equal}
-
+import cats.Eq
 
 class StringsSpec extends MonocleSuite {
 
-  implicit val eqStartsWith: Equal[StartsWithString[W.`"hello"`.T]] = Equal.fromUniversalEquals[StartsWithString[W.`"hello"`.T]]
-  implicit val eqEndsWith: Equal[EndsWithString[W.`"world"`.T]] = Equal.fromUniversalEquals[EndsWithString[W.`"world"`.T]]
+  implicit val eqStartsWith: Eq[StartsWithString[W.`"hello"`.T]] = Eq.fromUniversalEquals[StartsWithString[W.`"hello"`.T]]
+  implicit val eqEndsWith: Eq[EndsWithString[W.`"world"`.T]] = Eq.fromUniversalEquals[EndsWithString[W.`"world"`.T]]
 
   checkAll("starts with", PrismTests(startsWith("hello")))
   checkAll("ends with", PrismTests(endsWith("world")))

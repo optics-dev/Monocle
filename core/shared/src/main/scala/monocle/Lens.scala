@@ -3,7 +3,6 @@ package monocle
 import cats.{Applicative, Functor, Monoid}
 import cats.arrow.Choice
 import cats.syntax.either._
-import scala.{Either => \/}
 
 /**
  * A [[PLens]] can be seen as a pair of functions:
@@ -56,8 +55,8 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
     p compose get
 
   /** join two [[PLens]] with the same target */
-  @inline final def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[S \/ S1, T \/ T1, A, B] =
-    PLens[S \/ S1, T \/ T1, A, B](_.fold(self.get, other.get)){
+  @inline final def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[Either[S, S1], Either[T, T1], A, B] =
+    PLens[Either[S, S1], Either[T, T1], A, B](_.fold(self.get, other.get)){
       b => _.bimap(self.set(b), other.set(b))
     }
 
@@ -193,8 +192,8 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /** view a [[PLens]] as an [[POptional]] */
   @inline final def asOptional: POptional[S, T, A, B] =
     new POptional[S, T, A, B] {
-      def getOrModify(s: S): T \/ A =
-        \/.right(get(s))
+      def getOrModify(s: S): Either[T, A] =
+        Either.right(get(s))
 
       def set(b: B): S => T =
         self.set(b)
@@ -215,8 +214,8 @@ object PLens extends LensInstances {
   def id[S, T]: PLens[S, T, S, T] =
     PIso.id[S, T].asLens
 
-  def codiagonal[S, T]: PLens[S \/ S, T \/ T, S, T] =
-    PLens[S \/ S, T \/ T, S, T](
+  def codiagonal[S, T]: PLens[Either[S, S], Either[T, T], S, T] =
+    PLens[Either[S, S], Either[T, T], S, T](
       _.fold(identity, identity)
     )(t => _.bimap(_ => t, _ => t))
 
@@ -245,7 +244,7 @@ object Lens {
   def id[A]: Lens[A, A] =
     Iso.id[A].asLens
 
-  def codiagonal[S]: Lens[S \/ S, S] =
+  def codiagonal[S]: Lens[Either[S, S], S] =
     PLens.codiagonal
 
   /** alias for [[PLens]] apply with a monomorphic set function */
@@ -255,7 +254,7 @@ object Lens {
 
 sealed abstract class LensInstances {
   implicit val lensChoice: Choice[Lens] = new Choice[Lens] {
-    def choice[A, B, C](f: Lens[A, C], g: Lens[B, C]): Lens[A \/ B, C] =
+    def choice[A, B, C](f: Lens[A, C], g: Lens[B, C]): Lens[Either[A, B], C] =
       f choice g
 
     def id[A]: Lens[A, A] =

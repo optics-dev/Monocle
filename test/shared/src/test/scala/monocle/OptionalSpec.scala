@@ -3,7 +3,6 @@ package monocle
 import monocle.law.discipline.{OptionalTests, SetterTests, TraversalTests}
 
 import cats.arrow.{Category, Choice, Compose}
-import scala.{Left => -\/}
 
 class OptionalSpec extends MonocleSuite {
 
@@ -13,7 +12,7 @@ class OptionalSpec extends MonocleSuite {
       case Nil     => Nil
     }
   }
-  
+
   def headOptionI: Optional[List[Int], Int] = headOption[Int]
   def headOption2[A, B]: Optional[List[(A, B)], (A, B)] = headOption[(A, B)]
 
@@ -41,7 +40,7 @@ class OptionalSpec extends MonocleSuite {
   }
 
   test("Optional has a Choice instance") {
-    Choice[Optional].choice(headOptionI, Category[Optional].id[Int]).getOption(-\/(List(1,2,3))) shouldEqual Some(1)
+    Choice[Optional].choice(headOptionI, Category[Optional].id[Int]).getOption(Left(List(1,2,3))) shouldEqual Some(1)
   }
 
 

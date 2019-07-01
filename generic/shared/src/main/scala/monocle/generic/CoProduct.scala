@@ -4,10 +4,8 @@ import monocle.{Iso, Prism}
 import monocle.generic.internal.{CoproductToDisjunction, DisjunctionToCoproduct}
 import shapeless.{Coproduct, Generic}
 import shapeless.ops.coproduct.{CoproductToEither, EitherToCoproduct, Inject, Selector}
-import scala.{Either => \/}
 
 object coproduct extends CoProductInstances
-
 
 trait CoProductInstances {
 
@@ -61,16 +59,16 @@ trait CoProductInstances {
     * {{{
     *   type ISB = Int :+: String :+: Boolean :+: CNil
     *
-    *   val iso: Iso[ISB, Int \/ (String \/ Boolean)] = coProductDisjunctionIso[ISB].apply
+    *   val iso: Iso[ISB, Either[Int, Either[String, Boolean]] = coProductDisjunctionIso[ISB].apply
     * }}}
     */
   def coProductDisjunctionIso[S <: Coproduct]: GenCoProductDisjunctionIso[S] = new GenCoProductDisjunctionIso
 
   class GenCoProductDisjunctionIso[S <: Coproduct] {
     def apply[L, R](implicit
-                    coproductToDisjunction: CoproductToDisjunction.Aux[S, L \/ R],
+                    coproductToDisjunction: CoproductToDisjunction.Aux[S, Either[L, R]],
                     disjunctionToCoproduct: DisjunctionToCoproduct.Aux[L, R, S]
-                   ): Iso[S, L \/ R] =
+                   ): Iso[S, Either[L, R]] =
       Iso(coproductToDisjunction.apply)(disjunctionToCoproduct.apply)
   }
 
@@ -82,7 +80,7 @@ trait CoProductInstances {
     *   case class B(name: String) extends S
     *   case class C(otherName: String) extends S
     *
-    *   val iso: Iso[S, A \/ (B \/ C)] = coProductToDisjunction[S].apply
+    *   val iso: Iso[S, Either[A, Either[B, C])] = coProductToDisjunction[S].apply
     * }}}
     */
   def coProductToDisjunction[S]: GenCoProductToDisjunction[S] = new GenCoProductToDisjunction
@@ -90,9 +88,9 @@ trait CoProductInstances {
   class GenCoProductToDisjunction[S] {
     def apply[C <: Coproduct, L, R](implicit
                                     ev: Generic.Aux[S, C],
-                                    coproductToDisjunction: CoproductToDisjunction.Aux[C, L \/ R],
+                                    coproductToDisjunction: CoproductToDisjunction.Aux[C, Either[L, R]],
                                     disjunctionToCoproduct: DisjunctionToCoproduct.Aux[L, R, C]
-                                   ): Iso[S, L \/ R] =
+                                   ): Iso[S, Either[L, R]] =
       generic.toGeneric[S] composeIso coProductDisjunctionIso.apply
   }
 }

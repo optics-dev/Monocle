@@ -6,13 +6,12 @@ import monocle.macros.GenPrism
 
 import cats.arrow.{Category, Compose}
 import cats.syntax.either._
-import scala.{Either => \/, Right => \/-}
 
 class PrismSpec extends MonocleSuite {
 
-  def _right[E, A]: Prism[E \/ A, A] = Prism[E \/ A, A](_.toOption)(\/.right)
-  def _pright[E, A]: Prism[E \/ A, A] =
-    Prism.partial[E \/ A, A](Function.unlift(_.toOption))(\/.right)
+  def _right[E, A]: Prism[Either[E, A], A] = Prism[Either[E, A], A](_.toOption)(Either.right)
+  def _pright[E, A]: Prism[Either[E, A], A] =
+    Prism.partial[Either[E, A], A](Function.unlift(_.toOption))(Either.right)
 
   val _nullary: Prism[Arities, Unit] =
     Prism[Arities, Unit] {
@@ -53,7 +52,7 @@ class PrismSpec extends MonocleSuite {
   // test implicit resolution of type classes
 
   test("Prism has a Compose instance") {
-    Compose[Prism].compose(_right[String, Int], _right[String, String \/ Int]).getOption(\/-(\/-(3))) shouldEqual Some(3)
+    Compose[Prism].compose(_right[String, Int], _right[String, Either[String, Int]]).getOption(Right(Right(3))) shouldEqual Some(3)
   }
 
   test("Prism has a Category instance") {

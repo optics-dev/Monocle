@@ -12,7 +12,6 @@ trait ChainOptics {
   def chainToList[A]: Iso[Chain[A], List[A]] =
     pChainToList[A, A]
 
-
   def pChainToVector[A, B]: PIso[Chain[A], Chain[B], Vector[A], Vector[B]] =
     PIso[Chain[A], Chain[B], Vector[A], Vector[B]](_.toVector)(Chain.fromSeq)
 

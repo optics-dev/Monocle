@@ -5,12 +5,12 @@ import eu.timepit.refined.scalacheck.refTypeCogen
 import monocle._
 import monocle.law.discipline.PrismTests
 
-import cats.{Eq => Equal}
+import cats.Eq
 
 class CharSpec extends MonocleSuite {
 
-  implicit val eqLowerCase: Equal[LowerCaseChar] = Equal.fromUniversalEquals[LowerCaseChar]
-  implicit val eqUpperCase: Equal[UpperCaseChar] = Equal.fromUniversalEquals[UpperCaseChar]
+  implicit val eqLowerCase: Eq[LowerCaseChar] = Eq.fromUniversalEquals[LowerCaseChar]
+  implicit val eqUpperCase: Eq[UpperCaseChar] = Eq.fromUniversalEquals[UpperCaseChar]
 
   checkAll("lower cases", PrismTests(lowerCase))
   checkAll("upper cases", PrismTests(upperCase))

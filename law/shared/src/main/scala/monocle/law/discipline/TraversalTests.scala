@@ -6,16 +6,16 @@ import org.scalacheck.Prop._
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
-import cats.{Eq => Equal}
+import cats.Eq
 import cats.instances.list._
 import cats.instances.option._
 
 object TraversalTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](traversal: Traversal[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet =
+  def apply[S: Arbitrary : Eq, A: Arbitrary : Eq](traversal: Traversal[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet =
     apply[S, A, Unit](_ => traversal)
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal, I: Arbitrary](f: I => Traversal[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
+  def apply[S: Arbitrary : Eq, A: Arbitrary : Eq, I: Arbitrary](f: I => Traversal[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     def laws(i: I): TraversalLaws[S, A] = new TraversalLaws(f(i))
     new SimpleRuleSet("Traversal",
       "headOption"        -> forAll( (s: S, i: I) => laws(i).headOption(s)),

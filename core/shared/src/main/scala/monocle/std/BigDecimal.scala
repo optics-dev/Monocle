@@ -1,8 +1,6 @@
 package monocle.std
 
-
 import monocle._
-
 
 object bigdecimal extends BigDecimalOptics
 

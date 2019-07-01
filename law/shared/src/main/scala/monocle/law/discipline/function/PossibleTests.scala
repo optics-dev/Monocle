@@ -6,12 +6,11 @@ import monocle.law.discipline.OptionalTests
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
-import cats.{Eq => Equal}
-
+import cats.Eq
 
 object PossibleTests extends Laws {
 
-  def apply[S: Equal : Arbitrary, A: Equal : Arbitrary](implicit evPossible: Possible[S, A], arbAA: Arbitrary[A => A]): RuleSet =
+  def apply[S: Eq: Arbitrary, A: Eq: Arbitrary](implicit evPossible: Possible[S, A], arbAA: Arbitrary[A => A]): RuleSet =
     new SimpleRuleSet("Possible", OptionalTests(possible[S, A]).props: _*)
 
 }

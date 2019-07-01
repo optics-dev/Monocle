@@ -6,11 +6,11 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
-import cats.{Eq => Equal}
+import cats.Eq
 
 object IsoTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](iso: Iso[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
+  def apply[S: Arbitrary : Eq, A: Arbitrary : Eq](iso: Iso[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     val laws = new IsoLaws(iso)
     new SimpleRuleSet("Iso",
       "round trip one way"   -> forAll( (s: S) => laws.roundTripOneWay(s)),

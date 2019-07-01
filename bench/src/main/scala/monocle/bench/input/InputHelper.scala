@@ -2,7 +2,6 @@ package monocle.bench.input
 
 import scala.util.Random
 
-
 abstract class InputHelper {
 
   val r = new Random

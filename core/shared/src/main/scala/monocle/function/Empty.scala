@@ -27,7 +27,7 @@ trait EmptyFunctions {
     ev.empty.reverseGet(())
 }
 
-object Empty extends EmptyFunctions {
+object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
 
   def apply[S](prism: Prism[S, Unit]) : Empty[S] = new Empty[S] {
     override val empty: Prism[S, Unit] = prism
@@ -60,10 +60,6 @@ object Empty extends EmptyFunctions {
 
   implicit def emptySet[A]: Empty[Set[A]] = Empty(
     Prism[Set[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Set.empty[A])
-  )
-
-  implicit def streamEmpty[A]: Empty[Stream[A]] = Empty(
-    Prism[Stream[A], Unit](s => if(s.isEmpty) Some(()) else None)(_ => Stream.empty)
   )
 
   implicit val stringEmpty: Empty[String] = Empty(

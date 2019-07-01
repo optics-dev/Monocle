@@ -6,12 +6,12 @@ import monocle.law.discipline.TraversalTests
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
-import cats.{Eq => Equal}
+import cats.Eq
 
 object FilterIndexTests extends Laws {
 
-  def apply[S: Equal : Arbitrary, I, A: Equal : Arbitrary](implicit evFilterIndex: FilterIndex[S, I, A],
-                                                                    arbAA: Arbitrary[A => A], arbIB: Arbitrary[I => Boolean]): RuleSet =
+  def apply[S: Eq : Arbitrary, I, A: Eq : Arbitrary](implicit evFilterIndex: FilterIndex[S, I, A],
+                                                              arbAA: Arbitrary[A => A], arbIB: Arbitrary[I => Boolean]): RuleSet =
     new SimpleRuleSet("FilterIndex", TraversalTests(filterIndex(_: I => Boolean)(evFilterIndex)).props: _*)
 
 

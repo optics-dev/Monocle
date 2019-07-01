@@ -1,16 +1,15 @@
 package monocle.std
 
 import monocle.{Prism, PPrism}
-import scala.{Left => -\/, Right => \/-}
 
 object either extends EitherOptics
 
 trait EitherOptics {
-  
+
   final def pStdLeft[A, B, C]: PPrism[Either[A, B], Either[C, B], A, C] =
     PPrism[Either[A, B], Either[C, B], A, C]{
-      case Left(a)  => \/-(a)
-      case Right(b) => -\/(Right(b))
+      case Left(a)  => Right(a)
+      case Right(b) => Left(Right(b))
     }(Left.apply)
 
   final def stdLeft[A, B]: Prism[Either[A, B], A] =
@@ -18,8 +17,8 @@ trait EitherOptics {
 
   final def pStdRight[A, B, C]: PPrism[Either[A, B], Either[A, C], B, C] =
     PPrism[Either[A, B], Either[A, C], B, C]{
-      case Left(a)  => -\/(Left(a))
-      case Right(b) => \/-(b)
+      case Left(a)  => Left(Left(a))
+      case Right(b) => Right(b)
     }(Right.apply)
 
   final def stdRight[A, B]: Prism[Either[A, B], B] =

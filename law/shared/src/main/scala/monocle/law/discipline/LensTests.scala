@@ -6,14 +6,14 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
-import cats.{Eq => Equal}
+import cats.Eq
 
 object LensTests extends Laws {
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal](lens: Lens[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet =
+  def apply[S: Arbitrary : Eq, A: Arbitrary : Eq](lens: Lens[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet =
     apply[S, A, Unit](_ => lens)
 
-  def apply[S: Arbitrary : Equal, A: Arbitrary : Equal, I: Arbitrary](f: I => Lens[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
+  def apply[S: Arbitrary : Eq, A: Arbitrary : Eq, I: Arbitrary](f: I => Lens[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {
     def laws(i: I) = LensLaws(f(i))
     new SimpleRuleSet("Lens",
       "set what you get"  -> forAll( (s: S, i: I) => laws(i).getSet(s)),

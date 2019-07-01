@@ -27,7 +27,7 @@ trait FilterIndexFunctions {
     FilterIndex.fromTraverse(zipWithIndex)
 }
 
-object FilterIndex extends FilterIndexFunctions {
+object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVersionSpecific {
   /** lift an instance of [[FilterIndex]] using an [[Iso]] */
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: FilterIndex[A, I, B]): FilterIndex[S, I, B] = new FilterIndex[S, I, B] {
     def filterIndex(predicate: I => Boolean): Traversal[S, B] =
@@ -45,7 +45,6 @@ object FilterIndex extends FilterIndexFunctions {
   /** Std instances                                                                               */
   /************************************************************************************************/
   import cats.instances.list._
-  import cats.instances.stream._
   import cats.instances.vector._
 
   implicit def listFilterIndex[A]: FilterIndex[List[A], Int, A] =
@@ -62,9 +61,6 @@ object FilterIndex extends FilterIndexFunctions {
         }.map(kvs => SortedMap(kvs: _*)(ok.toOrdering))
     }
   }
-
-  implicit def streamFilterIndex[A]: FilterIndex[Stream[A], Int, A] =
-    fromTraverse(_.zipWithIndex)
 
   implicit val stringFilterIndex: FilterIndex[String, Int, Char] = new FilterIndex[String, Int, Char]{
     def filterIndex(predicate: Int => Boolean) =

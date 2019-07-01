@@ -5,8 +5,7 @@ import monocle.law.discipline.OptionalTests
 import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 
-import cats.{Eq => Equal}
-
+import cats.Eq
 
 class UnsafeSelectSpec extends MonocleSuite {
   /*
@@ -32,7 +31,7 @@ class UnsafeSelectSpec extends MonocleSuite {
 
   case class Person(name: String, age: Int)
 
-  implicit val personEq: Equal[Person] = Equal.fromUniversalEquals
+  implicit val personEq: Eq[Person] = Eq.fromUniversalEquals
 
   implicit val personGen: Arbitrary[Person] = Arbitrary(for {
     name <- Arbitrary.arbitrary[String]

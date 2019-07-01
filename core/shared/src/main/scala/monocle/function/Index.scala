@@ -26,7 +26,7 @@ trait IndexFunctions {
   def atIndex[S, I, A](implicit ev: At[S, I, Option[A]]) = Index.fromAt[S, I, A]
 }
 
-object Index extends IndexFunctions{
+object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
 
   def apply[S, I, A](optional : I => Optional[S, A]): Index[S, I, A] = (i: I) => optional(i)
 
@@ -53,15 +53,6 @@ object Index extends IndexFunctions{
   implicit def mapIndex[K, V]: Index[Map[K, V], K, V] = fromAt
 
   implicit def sortedMapIndex[K, V]: Index[SortedMap[K, V], K, V] = fromAt
-
-  implicit def streamIndex[A]: Index[Stream[A], Int, A] = Index(i =>
-    if (i < 0)
-      Optional[Stream[A], A](_ => None)(_ => identity)
-    else
-      Optional[Stream[A], A](_.drop(i).headOption)(a => s =>
-        s.zipWithIndex.map{ case (value, index) => if(i == index) a else value }
-      )
-  )
 
   implicit val stringIndex: Index[String, Int, Char] = Index(
     monocle.std.string.stringToList composeOptional Index.index[List[Char], Int, Char](_)
