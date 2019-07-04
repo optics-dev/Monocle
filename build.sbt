@@ -56,6 +56,7 @@ lazy val buildSettings = Seq(
   scalaVersion       := "2.13.0",
   crossScalaVersions := Seq("2.12.8", "2.13.0"),
   scalatestVersion   := "3.1.0-SNAP13",
+  resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions     ++= Seq(
     "-encoding", "UTF-8",
     "-feature",
@@ -79,7 +80,7 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val catsVersion = "2.0.0-M4"
+lazy val catsVersion = "2.0.0-M4-47-g6d29f7b-SNAPSHOT"
 
 lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"                % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
