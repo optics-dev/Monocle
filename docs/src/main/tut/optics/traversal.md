@@ -15,7 +15,7 @@ To do this we will use the relation between the typeclass `cats.Traverse` and `T
 
 ```tut:silent
 import monocle.Traversal
-import cats.syntax.list._   // to get the Traverse instance for List
+import cats.implicits._   // to get all cats instances including Traverse[List]
 
 val xs = List(1,2,3,4,5)
 ```
@@ -56,16 +56,14 @@ For example, let's write a `Traversal` for `Map` that will focus into all values
 ```tut:silent
 import monocle.Traversal
 import cats.Applicative
-import cats.instances.map._
-import cats.syntax.traverse._
-import cats.syntax.applicative._
+import alleycats.std.map._ // to get Traverse instance for Map (SortedMap does not require this import)
 
 def filterKey[K, V](predicate: K => Boolean): Traversal[Map[K, V], V] =
     new Traversal[Map[K, V], V]{
       def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
         s.map{ case (k, v) =>
           k -> (if(predicate(k)) f(v) else v.pure[F])
-        }.sequenceU
+        }.sequence
     }
 
 val m = Map(1 -> "one", 2 -> "two", 3 -> "three", 4 -> "Four")

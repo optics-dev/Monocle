@@ -23,7 +23,6 @@ We can create a `Lens[Address, Int]` which zooms from an `Address` to its field 
 *   `set: Int => Address => Address`
 
 ```tut:silent:invisible
-// REPL bug: `error: not found: value n` if I rename _streetNumber to streetNumber
 import monocle.Lens
 val _streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
 val streetNumber = _streetNumber
@@ -65,7 +64,7 @@ We can push the idea even further, with `modifyF` we can update the target of a 
 def neighbors(n: Int): List[Int] =
   if(n > 0) List(n - 1, n + 1) else List(n + 1)
 
-import cats.syntax.list._ // to get Functor[List] instance
+import cats.implicits._ // to get all Functor instance
 ```
 
 ```tut
@@ -77,7 +76,6 @@ This would work with any kind of `Functor` and is especially useful in conjuncti
 where one has the task to update a deeply nested structure with the result of an asynchronous computation:
 
 ```tut:silent
-import cats.instances.scalaFuture._
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits._ // to get global ExecutionContext
 
@@ -107,18 +105,15 @@ val address = GenLens[Person](_.address)
 Is possible to compose few `Lenses` together by using `compose`:
 
 ```tut:silent
-GenLens[Person](_.name).set("Mike") compose
-GenLens[Person](_.age).modify(_ + 1)
+GenLens[Person](_.name).set("Mike") compose GenLens[Person](_.age).modify(_ + 1)
 ```
 
 Same but with the simplified macro based syntax:
 
 ```tut:silent
-import monocle.macros.syntax.lens.
+import monocle.macros.syntax.lens._
 
-john
-  .lens(_.name).set("Mike") compose
-  .lens(_.age).modify(_ + 1)
+john.lens(_.name).set("Mike").lens(_.age).modify(_ + 1)
 ```
 
 (All `Setter` like optics offer `set` and `modify` methods that returns an `EndoFunction` (i.e. `S => S`) which means that we can compose modification using basic function composition.)

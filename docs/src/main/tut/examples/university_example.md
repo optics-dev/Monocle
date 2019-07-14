@@ -78,6 +78,7 @@ which zooms into all elements of a container (e.g. `List`, `Vector` `Map`)
 ```tut:silent
 import monocle.function.all._ // to get each and other typeclass based optics such as at or headOption
 import monocle.Traversal
+import monocle.unsafe.MapTraversal._ // to get Each instance for Map (SortedMap does not require this import)
 
 val allLecturers: Traversal[University, Lecturer] = departments composeTraversal each composeLens lecturers composeTraversal each
 ```
