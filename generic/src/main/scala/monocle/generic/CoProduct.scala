@@ -12,7 +12,7 @@ trait CoProductInstances {
   def coProductPrism[C <: Coproduct, A](implicit evInject: Inject[C, A], evSelector: Selector[C, A]): Prism[C, A] =
     Prism[C, A](evSelector.apply(_))(evInject.apply)
 
-  /** An isomorphism between a coproduct [[S]] and the sum of its parts.
+  /** An isomorphism between a coproduct `S` and the sum of its parts.
     *
     * {{{
     *   type ISB = Int :+: String :+: Boolean :+: CNil
@@ -31,7 +31,7 @@ trait CoProductInstances {
   }
 
 
-  /** An isomorphism between a sum type [[S]] (e.g. a sealed trait) and the sum of its parts.
+  /** An isomorphism between a sum type `S` (e.g. a sealed trait) and the sum of its parts.
     *
     * {{{
     *   sealed trait S
@@ -54,7 +54,7 @@ trait CoProductInstances {
   }
 
 
-  /** An isomorphism between a coproduct [[S]] and the sum of its parts.
+  /** An isomorphism between a coproduct `S` and the sum of its parts.
     *
     * {{{
     *   type ISB = Int :+: String :+: Boolean :+: CNil
@@ -72,7 +72,7 @@ trait CoProductInstances {
       Iso(coproductToDisjunction.apply)(disjunctionToCoproduct.apply)
   }
 
-  /** An isomorphism between a sum type [[S]] (e.g. a sealed trait) and the sum of its parts.
+  /** An isomorphism between a sum type `S` (e.g. a sealed trait) and the sum of its parts.
     *
     * {{{
     *   sealed trait S
