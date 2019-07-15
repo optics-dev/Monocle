@@ -7,7 +7,7 @@ position: 5
 
 ## Release Notes
 
-# 1.6.0-cats
+# 1.6.0 (last major release with scalaz)
 
 > 14 July 2019
 
