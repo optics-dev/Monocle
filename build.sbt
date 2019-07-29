@@ -277,6 +277,8 @@ lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
   .settings(scalacOptions in Tut ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
   .settings(
     libraryDependencies ++= Seq(cats.value, shapeless.value),
+    // https://github.com/47deg/sbt-microsites/issues/305
+    libraryDependencies ~= (_.filterNot(m => m.organization == "org.scalameta" && m.name.startsWith("mdoc"))),
     libraryDependencies ++= paradisePlugin.value
   )
   .enablePlugins(GhpagesPlugin)
