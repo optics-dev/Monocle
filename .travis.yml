@@ -24,7 +24,7 @@ stages:
 
 script:
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
-  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
+  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc doc
 
 jobs:
   include:

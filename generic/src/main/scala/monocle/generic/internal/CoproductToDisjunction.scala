@@ -3,9 +3,9 @@ package monocle.generic.internal
 import shapeless._
 
 /**
-  * Typeclass converting a shapeless.Coproduct to an scala.Either.
+  * Typeclass converting a `shapeless.Coproduct` to an `scala.Either`.
   *
-  * Based on [[shapeless.ops.coproduct.CoproductToEither]]:
+  * Based on `shapeless.ops.coproduct.CoproductToEither`:
   * https://github.com/milessabin/shapeless/blob/shapeless-2.3.3-scala-2.13.0-M4/core/src/main/scala/shapeless/ops/coproduct.scala#L1275-L1303
   */
 sealed trait CoproductToDisjunction[C <: Coproduct] extends DepFn1[C] with Serializable
