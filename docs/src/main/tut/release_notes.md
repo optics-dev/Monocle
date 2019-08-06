@@ -7,7 +7,17 @@ position: 5
 
 ## Release Notes
 
-# 1.6.0 (last major release with scalaz)
+# 2.0.0-RC1 (cats only)
+
+> 06 August 2019
+
+-   everything in 1.6.0
+-   add instances for `NonEmptyVector` [#564](https://github.com/julien-truffaut/Monocle/pull/564) (thanks to [valydia](https://github.com/valydia))
+-   add optics for cats `Chain` and `NonEmptyChain` [#609](https://github.com/julien-truffaut/Monocle/pull/609) (thanks to [dcastro](https://github.com/dcastro))
+-   add missing functions (`mod`, `assign` and variants) to State module [#564](https://github.com/julien-truffaut/Monocle/pull/564) (thanks to [valydia](https://github.com/valydia))
+-   depends on cats 2.0.0-RC1
+
+# 1.6.0 (scalaz only, last major release with scalaz)
 
 > 14 July 2019
 
