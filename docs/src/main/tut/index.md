@@ -29,7 +29,7 @@ libraryDependencies ++= Seq(
 If you want to use macro annotations such as `@Lenses`, you will also need to include:
 
 ```scala
-addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full)
+addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.full)
 ```
 
 ## Motivation
