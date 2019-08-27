@@ -3,6 +3,7 @@ package monocle.std
 import monocle.MonocleSuite
 import monocle.law.discipline.function._
 import scala.collection.immutable.SortedMap
+import cats.kernel.instances.sortedMap._
 
 class SortedMapSpec extends MonocleSuite {
   checkAll("at SortedMap", AtTests[SortedMap[Int, String], Int, Option[String]])
