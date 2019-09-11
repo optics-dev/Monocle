@@ -17,7 +17,7 @@ Optics are a group of purely functional abstractions to manipulate (`get`, `set`
 Monocle is published to Maven Central and cross-built for Scala `2.12` and `2.13` so you can just add the following to your build:
 
 ```scala
-val monocleVersion = "2.0.0-RC1" // depends on cats 2.0.0-RC1
+val monocleVersion = "2.0.0" // depends on cats 2.x
 
 libraryDependencies ++= Seq(
   "com.github.julien-truffaut" %%  "monocle-core"  % monocleVersion,
