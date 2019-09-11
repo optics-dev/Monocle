@@ -8,9 +8,9 @@
 
 <h2 id="getting-started">Getting started</h2>
 
-<p>Monocle is published to Maven Central and cross-built for Scala <code class="highlighter-rouge">2.10</code>, <code class="highlighter-rouge">2.11</code>, and <code class="highlighter-rouge">2.12</code> so you can just add the following to your build:</p>
+<p>Monocle is published to Maven Central and cross-built for Scala <code class="highlighter-rouge">2.12</code> and <code class="highlighter-rouge">2.13</code> so you can just add the following to your build:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">monocleVersion</span> <span class="k">=</span> <span class="s">"2.0.0-RC1"</span> <span class="c1">// depends on cats 2.0.0-RC1
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">monocleVersion</span> <span class="k">=</span> <span class="s">"2.0.0"</span> <span class="c1">// depends on cats 2.x
 </span>
 <span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
   <span class="s">"com.github.julien-truffaut"</span> <span class="o">%%</span>  <span class="s">"monocle-core"</span>  <span class="o">%</span> <span class="n">monocleVersion</span><span class="o">,</span>
@@ -21,7 +21,7 @@
 
 <p>If you want to use macro annotations such as <code class="highlighter-rouge">@Lenses</code>, you will also need to include:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">addCompilerPlugin</span><span class="o">(</span><span class="s">"org.scalamacros"</span> <span class="o">%%</span> <span class="s">"paradise"</span> <span class="o">%</span> <span class="s">"2.1.0"</span> <span class="n">cross</span> <span class="nv">CrossVersion</span><span class="o">.</span><span class="py">full</span><span class="o">)</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">addCompilerPlugin</span><span class="o">(</span><span class="s">"org.scalamacros"</span> <span class="o">%%</span> <span class="s">"paradise"</span> <span class="o">%</span> <span class="s">"2.1.1"</span> <span class="n">cross</span> <span class="nv">CrossVersion</span><span class="o">.</span><span class="py">full</span><span class="o">)</span>
 </code></pre></div></div>
 
 <h2 id="motivation">Motivation</h2>

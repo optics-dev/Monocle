@@ -125,10 +125,10 @@ where one has the task to update a deeply nested structure with the result of an
 <span class="c1">// defined class A
 </span>
 <span class="k">val</span> <span class="nv">c</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">c</span><span class="o">)</span>
-<span class="c1">// c: monocle.Lens[B,Int] = $anon$1@680b0ede
+<span class="c1">// c: monocle.Lens[B,Int] = $anon$1@46c56006
 </span>
 <span class="k">val</span> <span class="nv">b</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">b</span><span class="o">)</span>
-<span class="c1">// b: monocle.Lens[A,Option[B]] = $anon$1@61281f1a
+<span class="c1">// b: monocle.Lens[A,Option[B]] = $anon$1@3b58b01f
 </span>
 <span class="o">(</span><span class="n">b</span> <span class="n">composePrism</span> <span class="n">some</span> <span class="n">composeLens</span> <span class="n">c</span><span class="o">).</span><span class="py">getOption</span><span class="o">(</span><span class="nf">A</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="nf">B</span><span class="o">(</span><span class="mi">1</span><span class="o">))))</span>
 <span class="c1">// res11: Option[Int] = Some(1)
