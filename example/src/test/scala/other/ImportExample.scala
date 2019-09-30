@@ -1,11 +1,11 @@
 package other
 
 import monocle.TestInstances
-import org.scalatest.Matchers
 import org.scalatest.funsuite.AnyFunSuite
 import org.typelevel.discipline.scalatest.Discipline
 import shapeless.test.illTyped
 import shapeless.{::, HNil}
+import org.scalatest.matchers.should.Matchers
 
 case class Custom(value: Int)
 
