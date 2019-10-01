@@ -7,6 +7,6 @@ addSbtPlugin("org.scala-js"       % "sbt-scalajs"                   % "0.6.29")
 addSbtPlugin("org.portable-scala" % "sbt-crossproject"              % "0.6.1")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject"      % "0.6.1")
 addSbtPlugin("com.47deg"          % "sbt-microsites"                % "0.9.4")
-addSbtPlugin("org.tpolecat"       % "tut-plugin"                    % "0.6.12")
+addSbtPlugin("org.tpolecat"       % "tut-plugin"                    % "0.6.13")
 
 scalacOptions += "-deprecation"
