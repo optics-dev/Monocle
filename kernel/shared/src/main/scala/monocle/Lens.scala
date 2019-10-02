@@ -3,7 +3,7 @@ package monocle
 trait Lens[A, B] extends Optional[A, B] { self =>
   def get(from: A): B
 
-  def getOption(from: A): Option[B] = Some(get(from))
+  final def getOption(from: A): Option[B] = Some(get(from))
 
   override def modify(f: B => B): A => A = from => set(f(get(from)))(from)
 

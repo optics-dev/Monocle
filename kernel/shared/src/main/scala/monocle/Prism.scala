@@ -3,7 +3,7 @@ package monocle
 trait Prism[A, B] extends Optional[A, B] { self =>
   def reverseGet(to: B): A
 
-  def set(to: B): A => A = _ => reverseGet(to)
+  final def set(to: B): A => A = _ => reverseGet(to)
 
   override def modify(f: B => B): A => A = a => getOption(a).fold(a)(reverseGet)
 

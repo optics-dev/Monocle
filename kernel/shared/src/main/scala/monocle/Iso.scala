@@ -1,9 +1,8 @@
 package monocle
 
 abstract class Iso[A, B] extends Lens[A, B] with Prism[A, B] { self =>
-  override def set(to: B): A => A = _ => reverseGet(to)
-  override def getOption(from: A): Option[B] = Some(get(from))
-  override def modify(f: B => B): A => A = from => reverseGet(get(from))
+  override def modify(f: B => B): A => A =
+    from => reverseGet(get(from))
 
   def compose[C](other: Iso[B, C]): Iso[A, C] = new Iso[A, C] {
     def get(from: A): C = other.get(self.get(from))
