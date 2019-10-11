@@ -21,4 +21,16 @@ object Prism {
 
   def partial[A, B](get: PartialFunction[A, B])(reverseGet: B => A): Prism[A, B] =
     Prism(get.lift)(reverseGet)
+
+  def some[A]: Prism[Option[A], A] =
+    partial[Option[A], A]{ case Some(a) => a }(Some(_))
+
+  def none[A]: Prism[Option[A], Unit] =
+    partial[Option[A], Unit]{ case None => () }(_ => None)
+
+  def left[E, A]: Prism[Either[E, A], E] =
+    partial[Either[E, A], E]{ case Left(e) => e }(Left(_))
+
+  def right[E, A]: Prism[Either[E, A], A] =
+    partial[Either[E, A], A]{ case Right(e) => e }(Right(_))
 }
