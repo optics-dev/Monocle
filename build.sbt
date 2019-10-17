@@ -115,20 +115,16 @@ def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "1.6.0")
 )
 
-lazy val tagName = Def.setting(
- s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}")
-
 lazy val gitRev = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
 lazy val scalajsSettings = Seq(
   scalacOptions += {
-    lazy val tag = tagName.value
+    lazy val tag = (version in ThisBuild).value
     val s = if (isSnapshot.value) gitRev else tag
     val a = (baseDirectory in LocalRootProject).value.toURI.toString
     val g = "https://raw.githubusercontent.com/julien-truffaut/Monocle"
     s"-P:scalajs:mapSourceURI:$a->$g/$s/"
   },
-  jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
 )
 
