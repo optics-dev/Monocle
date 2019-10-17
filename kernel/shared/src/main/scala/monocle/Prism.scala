@@ -1,5 +1,7 @@
 package monocle
 
+import monocle.function.Cons
+
 trait Prism[A, B] extends Optional[A, B] { self =>
   def reverseGet(to: B): A
 
@@ -21,6 +23,9 @@ object Prism {
 
   def partial[A, B](get: PartialFunction[A, B])(reverseGet: B => A): Prism[A, B] =
     Prism(get.lift)(reverseGet)
+
+  def cons[S, A](implicit ev: Cons.Aux[S, A]): Prism[S, (A, S)] =
+    ev.cons
 
   def some[A]: Prism[Option[A], A] =
     partial[Option[A], A]{ case Some(a) => a }(Some(_))
