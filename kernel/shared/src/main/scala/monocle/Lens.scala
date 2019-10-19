@@ -1,5 +1,7 @@
 package monocle
 
+import monocle.function.{Field1, Field2}
+
 trait Lens[A, B] extends Optional[A, B] { self =>
   def get(from: A): B
 
@@ -19,4 +21,7 @@ object Lens {
     def get(from: A): B = _get(from)
     def set(to: B): A => A = _set(_, to)
   }
+
+  def first[S, A](implicit ev: Field1.Aux[S, A]): Lens[S, A] = ev.first
+  def second[S, A](implicit ev: Field2.Aux[S, A]): Lens[S, A] = ev.second
 }
