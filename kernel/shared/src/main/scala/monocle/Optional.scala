@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.function.{Cons, Index}
+import monocle.function.{Cons, Index, Possible}
 
 trait Optional[A, B] { self =>
   def getOption(from: A): Option[B]
@@ -35,4 +35,7 @@ object Optional {
 
   def tailOption[S](implicit ev: Cons[S]): Optional[S, S] =
     ev.tailOption
+
+  def possible[S, A](implicit ev: Possible.Aux[S, A]): Optional[S, A] =
+    ev.possible
 }
