@@ -24,4 +24,7 @@ object Iso {
       def get(from: A): B = _get(from)
       def reverseGet(to: B): A = _reverseGet(to)
     }
+
+  def id[A]: Iso[A, A] =
+    Iso[A, A](identity)(identity)
 }

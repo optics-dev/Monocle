@@ -145,16 +145,16 @@ lazy val monocle = project.in(file("."))
 lazy val monocleJVM = project.in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
   .aggregate(
-    kernel.jvm, core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm,
+    kernel.jvm, dotSyntax.jvm, core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm,
     example, docs, bench)
   .dependsOn(
-    kernel.jvm, core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm % "test-internal -> test",
+    kernel.jvm, dotSyntax.jvm, core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm % "test-internal -> test",
     bench % "compile-internal;test-internal -> test")
 
 lazy val monocleJS = project.in(file(".monocleJS"))
   .settings(monocleJsSettings)
-  .aggregate(kernel.js, core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js)
-  .dependsOn(kernel.js, core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js  % "test-internal -> test")
+  .aggregate(kernel.js, dotSyntax.js, core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js)
+  .dependsOn(kernel.js, dotSyntax.js, core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js  % "test-internal -> test")
 
 lazy val kernel = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-kernel")
@@ -162,6 +162,16 @@ lazy val kernel = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings),
   )
+
+lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(kernel)
+  .settings(moduleName := "monocle-dot-syntax")
+  .configureCross(
+    _.jvmSettings(monocleJvmSettings),
+    _.jsSettings(monocleJsSettings),
+  )
+  .settings(libraryDependencies += scalatest.value)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-core")
