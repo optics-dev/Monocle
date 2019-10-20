@@ -28,4 +28,6 @@ object Index {
       else
         Optional[List[A], A](xs => Try(xs(i)).toOption)((xs, a) => Try(xs.updated(i, a)).getOrElse(xs))
     )
+
+  implicit def map[K, V]: Aux[Map[K, V], K, V] = At.map
 }
