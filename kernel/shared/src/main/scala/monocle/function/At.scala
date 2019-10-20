@@ -25,7 +25,7 @@ object At {
     apply((key: K) =>
       Lens[Map[K, V], Option[V]](_.get(key))((map, optA) =>
         optA match {
-          case None    => map.removed(key)
+          case None    => map - key
           case Some(a) => map + (key -> a)
         }
       )
