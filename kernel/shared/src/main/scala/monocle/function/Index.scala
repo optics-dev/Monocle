@@ -21,7 +21,7 @@ object Index {
       def index(index: I0): Optional[S, A0] = f(index)
     }
 
-  def list[A]: Aux[List[A], Int, A] =
+  implicit def list[A]: Aux[List[A], Int, A] =
     apply((i: Int) =>
       if (i < 0)
         Optional.void

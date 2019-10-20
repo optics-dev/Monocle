@@ -21,7 +21,7 @@ object At {
       def at(index: I0): Lens[S, Option[A0]] = f(index)
     }
 
-  def map[K, V]: Aux[Map[K, V], K, V] =
+  implicit def map[K, V]: Aux[Map[K, V], K, V] =
     apply((key: K) =>
       Lens[Map[K, V], Option[V]](_.get(key))((map, optA) =>
         optA match {
