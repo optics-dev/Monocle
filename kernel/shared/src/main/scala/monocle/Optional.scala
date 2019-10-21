@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.function.Cons
+import monocle.function.{Cons, Index}
 
 trait Optional[A, B] { self =>
   def getOption(from: A): Option[B]
@@ -15,6 +15,7 @@ trait Optional[A, B] { self =>
   }
 
   def composeLens[C](other: Lens[B, C]): Optional[A, C] = compose(other)
+  def composePrism[C](other: Prism[B, C]): Optional[A, C] = compose(other)
 }
 
 object Optional {
@@ -23,8 +24,14 @@ object Optional {
     def set(to: B): A => A = _set(_, to)
   }
 
+  def void[S, A]: Optional[S, A] =
+    Optional[S, A](_ => None)((a, _) => a)
+
   def headOption[S, A](implicit ev: Cons.Aux[S, A]): Optional[S, A] =
     ev.headOption
+
+  def index[S, I, A](index: I)(implicit ev: Index.Aux[S, I, A]): Optional[S, A] =
+    ev.index(index)
 
   def tailOption[S](implicit ev: Cons[S]): Optional[S, S] =
     ev.tailOption
