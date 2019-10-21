@@ -1,7 +1,7 @@
 package monocle.syntax
 
-import monocle.Lens
 import monocle.syntax.all._
+import monocle.{Iso, Lens, Prism}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -15,14 +15,9 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
     tuple = (false, "hello")
   )
 
-  val map: Lens[Foo, Map[Int, String]] =
-    Lens[Foo, Map[Int, String]](_.map)((foo, newV) => foo.copy(map = newV))
-
-  val list: Lens[Foo, List[Int]] =
-    Lens[Foo, List[Int]](_.list)((foo, newV) => foo.copy(list = newV))
-
-  val tuple: Lens[Foo, (Boolean, String)] =
-    Lens[Foo, (Boolean, String)](_.tuple)((foo, newV) => foo.copy(tuple = newV))
+  val map: Lens[Foo, Map[Int, String]] = Lens[Foo, Map[Int, String]](_.map)((foo, newV) => foo.copy(map = newV))
+  val list: Lens[Foo, List[Int]] = Lens[Foo, List[Int]](_.list)((foo, newV) => foo.copy(list = newV))
+  val tuple: Lens[Foo, (Boolean, String)] = Lens[Foo, (Boolean, String)](_.tuple)((foo, newV) => foo.copy(tuple = newV))
 
   test("_1") {
     tuple._1.get(foo) shouldEqual foo.tuple._1
@@ -62,6 +57,11 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
   test("tailOption") {
     list.tailOption.getOption(foo) shouldEqual Some(foo.list.tail)
     foo.optic(list).tailOption.getOption shouldEqual Some(foo.list.tail)
+  }
+
+  test("nested"){
+    Iso.id[List[Map[Int, (Boolean, Char)]]]
+      .cons._2.index(3).at(2).compose(Prism.some)._2.getOption(Nil) shouldEqual None
   }
 
 }

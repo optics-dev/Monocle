@@ -31,6 +31,5 @@ trait LensSyntax {
     def tailOption(implicit ev: Cons[B]): Optional[A, B] =
       optic.compose(ev.tailOption)
   }
-
 }
 
