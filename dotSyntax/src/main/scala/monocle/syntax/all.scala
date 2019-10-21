@@ -1,3 +1,3 @@
 package monocle.syntax
 
-object all extends LensSyntax
+object all extends IsoSyntax with LensSyntax
