@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import monocle.syntax.all._
-import monocle.{Iso, Lens, Prism}
+import monocle.{Iso, Lens}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -60,8 +60,8 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
   }
 
   test("nested"){
-    Iso.id[List[Map[Int, (Boolean, Char)]]]
-      .cons._2.index(3).at(2).compose(Prism.some)._2.getOption(Nil) shouldEqual None
+    Iso.id[List[Map[Int, Either[(Boolean, Char), String]]]]
+      .cons._2.index(3).at(2).some.left._1.getOption(Nil) shouldEqual None
   }
 
 }

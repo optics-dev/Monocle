@@ -9,6 +9,9 @@ trait Prism[A, B] extends Optional[A, B] { self =>
 
   override def modify(f: B => B): A => A = a => getOption(a).fold(a)(reverseGet)
 
+  override def asTarget[C](implicit ev: B =:= C): Prism[A, C] =
+    asInstanceOf
+
   def compose[C](other: Prism[B, C]): Prism[A, C] = new Prism[A, C] {
     def getOption(from: A): Option[C] = self.getOption(from).flatMap(other.getOption)
     def reverseGet(to: C): A = self.reverseGet(other.reverseGet(to))

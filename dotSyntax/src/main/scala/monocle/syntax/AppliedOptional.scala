@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.Optional
+import monocle.{Optional, Prism}
 import monocle.function.{At, Cons, Field1, Field2, Index}
 
 trait AppliedOptional[A, B] {
@@ -37,11 +37,23 @@ trait AppliedOptional[A, B] {
   def index[I, C](i: I)(implicit ev: Index.Aux[B, I, C]): AppliedOptional[A, C] =
     compose(ev.index(i))
 
+  def left[E, C](implicit ev: B =:= Either[E, C]): AppliedOptional[A, E] =
+    asTarget[Either[E, C]].compose(Prism.left[E, C])
+
+  def right[E, C](implicit ev: B =:= Either[E, C]): AppliedOptional[A, C] =
+    asTarget[Either[E, C]].compose(Prism.right[E, C])
+
   def second(implicit ev: Field2[B]): AppliedOptional[A, ev.A] =
     compose(ev.second)
 
+  def some[C](implicit ev: B =:= Option[C]): AppliedOptional[A, C] =
+    asTarget[Option[C]].compose(Prism.some[C])
+
   def tailOption(implicit ev: Cons[B]): AppliedOptional[A, B] =
     compose(ev.tailOption)
+
+  def asTarget[C](implicit ev: B =:= C): AppliedOptional[A, C] =
+    AppliedOptional(value, optic.asTarget)
 }
 
 object AppliedOptional {

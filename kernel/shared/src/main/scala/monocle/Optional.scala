@@ -8,6 +8,9 @@ trait Optional[A, B] { self =>
 
   def modify(f: B => B): A => A = a => getOption(a).fold(a)(set(_)(a))
 
+  def asTarget[C](implicit ev: B =:= C): Optional[A, C] =
+    asInstanceOf
+
   final def compose[C](other: Optional[B, C]): Optional[A, C] = new Optional[A, C] {
     def getOption(from: A): Option[C] = self.getOption(from).flatMap(other.getOption)
     def set(to: C): A => A = self.modify(other.set(to))
