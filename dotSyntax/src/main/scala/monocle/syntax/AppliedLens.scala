@@ -26,7 +26,7 @@ trait AppliedLens[A, B] extends AppliedOptional[A, B]{
     compose(ev.second)
 
   override def asTarget[C](implicit ev: B =:= C): AppliedLens[A, C] =
-    AppliedLens(value, optic.asTarget)
+    AppliedLens(value, optic.asTarget[C])
 }
 
 object AppliedLens {

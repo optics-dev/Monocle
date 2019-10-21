@@ -53,7 +53,7 @@ trait AppliedOptional[A, B] {
     compose(ev.tailOption)
 
   def asTarget[C](implicit ev: B =:= C): AppliedOptional[A, C] =
-    AppliedOptional(value, optic.asTarget)
+    AppliedOptional(value, optic.asTarget[C])
 }
 
 object AppliedOptional {

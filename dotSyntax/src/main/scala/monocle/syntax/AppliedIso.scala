@@ -35,7 +35,7 @@ trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
     asTarget[Option[C]].compose(Prism.some[C])
 
   override def asTarget[C](implicit ev: B =:= C): AppliedIso[A, C] =
-    AppliedIso(value, optic.asTarget)
+    AppliedIso(value, optic.asTarget[C])
 }
 
 object AppliedIso {

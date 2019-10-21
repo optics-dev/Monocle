@@ -5,7 +5,7 @@ abstract class Iso[A, B] extends Lens[A, B] with Prism[A, B] { self =>
     from => reverseGet(get(from))
 
   override def asTarget[C](implicit ev: B =:= C): Iso[A, C] =
-    asInstanceOf
+    asInstanceOf[Iso[A, C]]
 
   def compose[C](other: Iso[B, C]): Iso[A, C] = new Iso[A, C] {
     def get(from: A): C = other.get(self.get(from))

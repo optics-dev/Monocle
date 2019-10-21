@@ -23,7 +23,7 @@ trait AppliedPrism[A, B] extends AppliedOptional[A, B] {
     asTarget[Option[C]].compose(Prism.some[C])
 
   override def asTarget[C](implicit ev: B =:= C): AppliedPrism[A, C] =
-    AppliedPrism(value, optic.asTarget)
+    AppliedPrism(value, optic.asTarget[C])
 }
 
 object AppliedPrism {

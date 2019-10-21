@@ -10,7 +10,7 @@ trait Lens[A, B] extends Optional[A, B] { self =>
   override def modify(f: B => B): A => A = from => set(f(get(from)))(from)
 
   override def asTarget[C](implicit ev: B =:= C): Lens[A, C] =
-    asInstanceOf
+    asInstanceOf[Lens[A, C]]
 
   def compose[C](other: Lens[B, C]): Lens[A, C] = new Lens[A, C] {
     def get(from: A): C = other.get(self.get(from))
