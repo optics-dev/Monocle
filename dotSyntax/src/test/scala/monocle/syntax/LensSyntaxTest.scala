@@ -60,8 +60,12 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
   }
 
   test("nested"){
+    val x: List[Map[Int, Either[(Boolean, Char), String]]] = Nil
+
     Iso.id[List[Map[Int, Either[(Boolean, Char), String]]]]
-      .cons._2.index(3).at(2).some.left._1.getOption(Nil) shouldEqual None
+      .cons._2.index(3).at(2).some.left._1.getOption(x) shouldEqual None
+    
+    x.optic.cons._2.index(3).at(2).some.left._1.getOption shouldEqual None
   }
 
 }
