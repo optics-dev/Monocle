@@ -16,9 +16,6 @@ trait OptionalSyntax {
     def cons(implicit ev: Cons[B]): Optional[A, (ev.A, B)] =
       optic.compose(ev.cons)
 
-    def cons2[C](implicit ev: Cons.Aux[B, C]): Optional[A, (C, B)] =
-      optic.compose(ev.cons)
-
     def first(implicit ev: Field1[B]): Optional[A, ev.A] =
       optic.compose(ev.first)
 
