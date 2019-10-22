@@ -54,7 +54,7 @@ def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scala
 
 lazy val buildSettings = Seq(
   scalaVersion       := "2.13.1",
-  crossScalaVersions := Seq("2.12.10", "2.13.1"),
+  crossScalaVersions := Seq("2.13.1"),
   scalatestVersion   := "3.2.0-M1",
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions     ++= Seq(
@@ -141,16 +141,33 @@ lazy val monocle = project.in(file("."))
 lazy val monocleJVM = project.in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
   .aggregate(
-    core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm,
+    kernel.jvm, dotSyntax.jvm, core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm,
     example, docs, bench)
   .dependsOn(
-    core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm % "test-internal -> test",
+    kernel.jvm, dotSyntax.jvm, core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm % "test-internal -> test",
     bench % "compile-internal;test-internal -> test")
 
 lazy val monocleJS = project.in(file(".monocleJS"))
   .settings(monocleJsSettings)
-  .aggregate(core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js)
-  .dependsOn(core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js  % "test-internal -> test")
+  .aggregate(kernel.js, dotSyntax.js, core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js)
+  .dependsOn(kernel.js, dotSyntax.js, core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js  % "test-internal -> test")
+
+lazy val kernel = crossProject(JVMPlatform, JSPlatform)
+  .settings(moduleName := "monocle-kernel")
+  .configureCross(
+    _.jvmSettings(monocleJvmSettings),
+    _.jsSettings(monocleJsSettings),
+  )
+
+lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(kernel)
+  .settings(moduleName := "monocle-dot-syntax")
+  .configureCross(
+    _.jvmSettings(monocleJvmSettings),
+    _.jsSettings(monocleJsSettings),
+  )
+  .settings(libraryDependencies += scalatest.value)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-core")
