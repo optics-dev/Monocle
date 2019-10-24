@@ -7,17 +7,17 @@ import org.scalatest.matchers.should.Matchers
 
 class LensSyntaxTest extends AnyFunSuite with Matchers {
 
-  case class Foo(map: Map[Int, String], list: List[Int], tuple: (Boolean, String))
+  case class Foo(map: Map[Int, String], list: List[Int], tuple: (Boolean, String, Int))
 
   val foo = Foo(
     map = Map(1 -> "One", 2 -> "Two"),
     list = List(1, 2, 3),
-    tuple = (false, "hello")
+    tuple = (false, "hello", -1)
   )
 
   val map: Lens[Foo, Map[Int, String]] = Lens[Foo, Map[Int, String]](_.map)((foo, newV) => foo.copy(map = newV))
   val list: Lens[Foo, List[Int]] = Lens[Foo, List[Int]](_.list)((foo, newV) => foo.copy(list = newV))
-  val tuple: Lens[Foo, (Boolean, String)] = Lens[Foo, (Boolean, String)](_.tuple)((foo, newV) => foo.copy(tuple = newV))
+  val tuple: Lens[Foo, (Boolean, String, Int)] = Lens[Foo, (Boolean, String, Int)](_.tuple)((foo, newV) => foo.copy(tuple = newV))
 
   test("_1") {
     tuple._1.get(foo) shouldEqual foo.tuple._1
@@ -27,6 +27,11 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
   test("_2") {
     tuple._2.get(foo) shouldEqual foo.tuple._2
     foo.optic(tuple)._2.get shouldEqual foo.tuple._2
+  }
+
+  test("_3") {
+    tuple._3.get(foo) shouldEqual foo.tuple._3
+    foo.optic(tuple)._3.get shouldEqual foo.tuple._3
   }
 
   test("at") {
@@ -54,6 +59,11 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
     foo.optic(tuple).second.get shouldEqual foo.tuple._2
   }
 
+  test("third") {
+    tuple.third.get(foo) shouldEqual foo.tuple._3
+    foo.optic(tuple).third.get shouldEqual foo.tuple._3
+  }
+
   test("tailOption") {
     list.tailOption.getOption(foo) shouldEqual Some(foo.list.tail)
     foo.optic(list).tailOption.getOption shouldEqual Some(foo.list.tail)
@@ -64,7 +74,7 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
 
     Iso.id[List[Map[Int, Either[(Boolean, Char), String]]]]
       .cons._2.index(3).at(2).some.left._1.getOption(x) shouldEqual None
-    
+
     x.optic.cons._2.index(3).at(2).some.left._1.getOption shouldEqual None
   }
 

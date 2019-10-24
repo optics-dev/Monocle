@@ -57,6 +57,12 @@ lazy val buildSettings = Seq(
   crossScalaVersions := Seq("2.13.1"),
   scalatestVersion   := "3.2.0-M1",
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+  // Workaround for mima plugin
+  // https://github.com/lightbend/mima/issues/422
+  resolvers += Resolver.url(
+    "typesafe sbt-plugins",
+    url("https://dl.bintray.com/typesafe/sbt-plugins")
+  )(Resolver.ivyStylePatterns),
   scalacOptions     ++= Seq(
     "-encoding", "UTF-8",
     "-feature",

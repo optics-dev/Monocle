@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.function.{At, Field1, Field2}
+import monocle.function.{At, Field1, Field2, Field3}
 
 trait Lens[A, B] extends Optional[A, B] { self =>
   def get(from: A): B
@@ -33,4 +33,7 @@ object Lens {
 
   def second[S, A](implicit ev: Field2.Aux[S, A]): Lens[S, A] =
     ev.second
+
+  def third[S, A](implicit ev: Field3.Aux[S, A]): Lens[S, A] =
+    ev.third
 }

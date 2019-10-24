@@ -42,4 +42,3 @@ trait PrismSyntax {
   }
 
 }
-
