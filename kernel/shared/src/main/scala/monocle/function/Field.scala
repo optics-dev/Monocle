@@ -17,6 +17,9 @@ object Field1 {
 
   implicit def tuple2[A1, A2]: Aux[(A1, A2), A1] =
     apply(Lens[(A1, A2), A1](_._1){ case ((_, a2), a1) => (a1, a2) })
+
+  implicit def tuple3[A1, A2, A3]: Aux[(A1, A2, A3), A1] =
+    apply(Lens[(A1, A2, A3), A1](_._1){ case ((_, a2, a3), a1) => (a1, a2, a3) })
 }
 
 
@@ -35,4 +38,7 @@ object Field2 {
 
   implicit def tuple2[A1, A2]: Aux[(A1, A2), A2] =
     apply(Lens[(A1, A2), A2](_._2){ case ((a1, _), a2) => (a1, a2) })
+
+  implicit def tuple3[A1, A2, A3]: Aux[(A1, A2, A3), A2] =
+    apply(Lens[(A1, A2, A3), A2](_._2){ case ((a1, _, a3), a2) => (a1, a2, a3) })
 }
