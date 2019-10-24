@@ -10,13 +10,14 @@ trait AppliedPrism[A, B] extends AppliedOptional[A, B] {
   def compose[C](other: Prism[B, C]): AppliedPrism[A, C] =
     AppliedPrism(value, optic.compose(other))
 
-  override def cons(implicit ev: Cons[B]): AppliedPrism[A, (ev.A, B)] =
+  override def cons(implicit ev: Cons[B]): AppliedPrism[A, (ev.B, B)] =
     compose(ev.cons)
 
   override def left[E, C](implicit ev: B =:= Either[E, C]): AppliedPrism[A, E] =
     asTarget[Either[E, C]].compose(Prism.left[E, C])
 
-  override def right[E, C](implicit ev: B =:= Either[E, C]): AppliedPrism[A, C] =
+  override def right[E, C](
+      implicit ev: B =:= Either[E, C]): AppliedPrism[A, C] =
     asTarget[Either[E, C]].compose(Prism.right[E, C])
 
   override def some[C](implicit ev: B =:= Option[C]): AppliedPrism[A, C] =

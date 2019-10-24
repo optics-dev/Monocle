@@ -2,33 +2,33 @@ package monocle.function
 
 import monocle.{Lens, Optional, Prism}
 
+trait Cons[A] {
+  type B
 
-trait Cons[S] {
-  type A
+  def cons: Prism[A, (B, A)]
 
-  def cons: Prism[S, (A, S)]
-
-  def headOption: Optional[S, A] = cons composeLens Lens.first
-  def tailOption: Optional[S, S] = cons composeLens Lens.second
+  def headOption: Optional[A, B] = cons composeLens Lens.first
+  def tailOption: Optional[A, A] = cons composeLens Lens.second
 }
 
 object Cons {
-  type Aux[S, A0] = Cons[S] { type A = A0 }
+  type Aux[A, B0] = Cons[A] { type B = B0 }
 
-  def apply[S, A0](prism: Prism[S, (A0, S)]): Aux[S, A0] =
-    new Cons[S] {
-      type A = A0
-      def cons: Prism[S, (A0, S)] = prism
+  def apply[A, B0](prism: Prism[A, (B0, A)]): Aux[A, B0] =
+    new Cons[A] {
+      type B = B0
+      def cons: Prism[A, (B0, A)] = prism
     }
 
   implicit def list[A]: Cons[List[A]] =
-    apply(Prism[List[A], (A, List[A])]{
+    apply(Prism[List[A], (A, List[A])] {
       case Nil     => None
       case x :: xs => Some((x, xs))
-    }{ case (x, xs) => x :: xs })
+    } { case (x, xs) => x :: xs })
 
   implicit def vector[A]: Cons[Vector[A]] =
-    apply(Prism[Vector[A], (A, Vector[A])](xs =>
-      xs.headOption.map(_ -> xs.tail)
-    ){ case (x, xs) => x +: xs })
+    apply(
+      Prism[Vector[A], (A, Vector[A])](xs => xs.headOption.map(_ -> xs.tail)) {
+        case (x, xs) => x +: xs
+      })
 }

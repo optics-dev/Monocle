@@ -19,22 +19,24 @@ trait AppliedOptional[A, B] {
   def compose[C](other: Optional[B, C]): AppliedOptional[A, C] =
     AppliedOptional(value, optic.compose(other))
 
-  def _1(implicit ev: Field1[B]): AppliedOptional[A, ev.A] = first
-  def _2(implicit ev: Field2[B]): AppliedOptional[A, ev.A] = second
+  def _1(implicit ev: Field1[B]): AppliedOptional[A, ev.B] = first
+  def _2(implicit ev: Field2[B]): AppliedOptional[A, ev.B] = second
 
-  def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedOptional[A, Option[C]] =
+  def at[I, C](i: I)(
+      implicit ev: At.Aux[B, I, C]): AppliedOptional[A, Option[C]] =
     compose(ev.at(i))
 
-  def cons(implicit ev: Cons[B]): AppliedOptional[A, (ev.A, B)] =
+  def cons(implicit ev: Cons[B]): AppliedOptional[A, (ev.B, B)] =
     compose(ev.cons)
 
-  def first(implicit ev: Field1[B]): AppliedOptional[A, ev.A] =
+  def first(implicit ev: Field1[B]): AppliedOptional[A, ev.B] =
     compose(ev.first)
 
-  def headOption(implicit ev: Cons[B]): AppliedOptional[A, ev.A] =
-   compose(ev.headOption)
+  def headOption(implicit ev: Cons[B]): AppliedOptional[A, ev.B] =
+    compose(ev.headOption)
 
-  def index[I, C](i: I)(implicit ev: Index.Aux[B, I, C]): AppliedOptional[A, C] =
+  def index[I, C](i: I)(
+      implicit ev: Index.Aux[B, I, C]): AppliedOptional[A, C] =
     compose(ev.index(i))
 
   def left[E, C](implicit ev: B =:= Either[E, C]): AppliedOptional[A, E] =
@@ -43,7 +45,7 @@ trait AppliedOptional[A, B] {
   def right[E, C](implicit ev: B =:= Either[E, C]): AppliedOptional[A, C] =
     asTarget[Either[E, C]].compose(Prism.right[E, C])
 
-  def second(implicit ev: Field2[B]): AppliedOptional[A, ev.A] =
+  def second(implicit ev: Field2[B]): AppliedOptional[A, ev.B] =
     compose(ev.second)
 
   def some[C](implicit ev: B =:= Option[C]): AppliedOptional[A, C] =

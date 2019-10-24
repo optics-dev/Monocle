@@ -2,43 +2,46 @@ package monocle.function
 
 import monocle.Lens
 
-trait Field1[S] {
-  type A
-  def first: Lens[S, A]
+trait Field1[A] {
+  type B
+  def first: Lens[A, B]
 }
 
 object Field1 {
-  type Aux[S, A0] = Field1[S] { type A = A0 }
+  type Aux[A, B0] = Field1[A] { type B = B0 }
 
-  def apply[S, A0](lens: Lens[S, A0]): Aux[S, A0] = new Field1[S] {
-    type A = A0
-    override val first: Lens[S, A] = lens
+  def apply[A, B0](lens: Lens[A, B0]): Aux[A, B0] = new Field1[A] {
+    type B = B0
+    override val first: Lens[A, B0] = lens
   }
 
   implicit def tuple2[A1, A2]: Aux[(A1, A2), A1] =
-    apply(Lens[(A1, A2), A1](_._1){ case ((_, a2), a1) => (a1, a2) })
+    apply(Lens[(A1, A2), A1](_._1) { case ((_, a2), a1) => (a1, a2) })
 
   implicit def tuple3[A1, A2, A3]: Aux[(A1, A2, A3), A1] =
-    apply(Lens[(A1, A2, A3), A1](_._1){ case ((_, a2, a3), a1) => (a1, a2, a3) })
+    apply(Lens[(A1, A2, A3), A1](_._1) {
+      case ((_, a2, a3), a1) => (a1, a2, a3)
+    })
 }
 
-
-trait Field2[S] {
-  type A
-  def second: Lens[S, A]
+trait Field2[A] {
+  type B
+  def second: Lens[A, B]
 }
 
 object Field2 {
-  type Aux[S, A0] = Field2[S] { type A = A0 }
+  type Aux[A, B0] = Field2[A] { type B = B0 }
 
-  def apply[S, A0](lens: Lens[S, A0]): Aux[S, A0] = new Field2[S] {
-    type A = A0
-    override val second: Lens[S, A] = lens
+  def apply[A, B0](lens: Lens[A, B0]): Aux[A, B0] = new Field2[A] {
+    type B = B0
+    override val second: Lens[A, B0] = lens
   }
 
   implicit def tuple2[A1, A2]: Aux[(A1, A2), A2] =
-    apply(Lens[(A1, A2), A2](_._2){ case ((a1, _), a2) => (a1, a2) })
+    apply(Lens[(A1, A2), A2](_._2) { case ((a1, _), a2) => (a1, a2) })
 
   implicit def tuple3[A1, A2, A3]: Aux[(A1, A2, A3), A2] =
-    apply(Lens[(A1, A2, A3), A2](_._2){ case ((a1, _, a3), a2) => (a1, a2, a3) })
+    apply(Lens[(A1, A2, A3), A2](_._2) {
+      case ((a1, _, a3), a2) => (a1, a2, a3)
+    })
 }
