@@ -30,4 +30,12 @@ object At {
         }
       )
     )
+
+  implicit def set[A]: Aux[Set[A], A, Unit] =
+    apply((key: A) =>
+      Lens[Set[A], Option[Unit]](set => if(set.contains(key)) Some(()) else None){
+        case (set, None) => set - key
+        case (set, Some(_)) => set + key
+      }
+    )
 }
