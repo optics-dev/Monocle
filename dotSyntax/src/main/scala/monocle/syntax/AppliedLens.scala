@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import monocle.Lens
-import monocle.function.{At, Field1, Field2}
+import monocle.function.{At, Field1, Field2, Field3}
 
 trait AppliedLens[A, B] extends AppliedOptional[A, B]{
   def value: A
@@ -15,6 +15,7 @@ trait AppliedLens[A, B] extends AppliedOptional[A, B]{
 
   override def _1(implicit ev: Field1[B]): AppliedLens[A, ev.A] = first
   override def _2(implicit ev: Field2[B]): AppliedLens[A, ev.A] = second
+  override def _3(implicit ev: Field3[B]): AppliedLens[A, ev.A] = third
 
   override def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedLens[A, Option[C]] =
     compose(ev.at(i))
@@ -24,6 +25,9 @@ trait AppliedLens[A, B] extends AppliedOptional[A, B]{
 
   override def second(implicit ev: Field2[B]): AppliedLens[A, ev.A] =
     compose(ev.second)
+
+  override def third(implicit ev: Field3[B]): AppliedLens[A, ev.A] =
+    compose(ev.third)
 
   override def asTarget[C](implicit ev: B =:= C): AppliedLens[A, C] =
     AppliedLens(value, optic.asTarget[C])

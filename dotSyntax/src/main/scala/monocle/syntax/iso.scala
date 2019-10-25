@@ -9,6 +9,7 @@ trait IsoSyntax {
   implicit class IsoOps[A, B](optic: Iso[A, B]) {
     def _1(implicit ev: Field1[B]): Lens[A, ev.A] = first(ev)
     def _2(implicit ev: Field2[B]): Lens[A, ev.A] = second(ev)
+    def _3(implicit ev: Field3[B]): Lens[A, ev.A] = third(ev)
 
     def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): Lens[A, Option[C]] =
       optic.compose(ev.at(i))
@@ -33,6 +34,9 @@ trait IsoSyntax {
 
     def second(implicit ev: Field2[B]): Lens[A, ev.A] =
       optic.compose(ev.second)
+
+    def third(implicit ev: Field3[B]): Lens[A, ev.A] =
+      optic.compose(ev.third)
 
     def some[C](implicit ev: B =:= Option[C]): Prism[A, C] =
       optic.asTarget[Option[C]].compose(Prism.some[C])

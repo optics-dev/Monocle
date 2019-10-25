@@ -34,6 +34,9 @@ trait OptionalSyntax {
     def second(implicit ev: Field2[B]): Optional[A, ev.A] =
       optic.compose(ev.second)
 
+    def third(implicit ev: Field3[B]): Optional[A, ev.A] =
+      optic.compose(ev.third)
+
     def some[C](implicit ev: B =:= Option[C]): Optional[A, C] =
       optic.asTarget[Option[C]].compose(Prism.some[C])
 
@@ -42,4 +45,3 @@ trait OptionalSyntax {
   }
 
 }
-
