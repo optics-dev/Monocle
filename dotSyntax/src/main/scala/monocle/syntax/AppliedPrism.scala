@@ -10,7 +10,7 @@ trait AppliedPrism[A, B] extends AppliedOptional[A, B] {
   def compose[C](other: Prism[B, C]): AppliedPrism[A, C] =
     AppliedPrism(value, optic.compose(other))
 
-  override def cons(implicit ev: Cons[B]): AppliedPrism[A, (ev.A, B)] =
+  override def cons(implicit ev: Cons[B]): AppliedPrism[A, (ev.B, B)] =
     compose(ev.cons)
 
   override def left[E, C](implicit ev: B =:= Either[E, C]): AppliedPrism[A, E] =

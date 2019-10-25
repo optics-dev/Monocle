@@ -7,19 +7,20 @@ object optional extends LensSyntax
 
 trait OptionalSyntax {
   implicit class OptionalOps[A, B](optic: Optional[A, B]) {
-    def _1(implicit ev: Field1[B]): Optional[A, ev.A] = first(ev)
-    def _2(implicit ev: Field2[B]): Optional[A, ev.A] = second(ev)
+    def _1(implicit ev: Field1[B]): Optional[A, ev.B] = first(ev)
+    def _2(implicit ev: Field2[B]): Optional[A, ev.B] = second(ev)
+    def _3(implicit ev: Field3[B]): Optional[A, ev.B] = third(ev)
 
     def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): Optional[A, Option[C]] =
       optic.compose(ev.at(i))
 
-    def cons(implicit ev: Cons[B]): Optional[A, (ev.A, B)] =
+    def cons(implicit ev: Cons[B]): Optional[A, (ev.B, B)] =
       optic.compose(ev.cons)
 
-    def first(implicit ev: Field1[B]): Optional[A, ev.A] =
+    def first(implicit ev: Field1[B]): Optional[A, ev.B] =
       optic.compose(ev.first)
 
-    def headOption(implicit ev: Cons[B]): Optional[A, ev.A] =
+    def headOption(implicit ev: Cons[B]): Optional[A, ev.B] =
       optic.compose(ev.headOption)
 
     def index[I, C](i: I)(implicit ev: Index.Aux[B, I, C]): Optional[A, C] =
@@ -31,10 +32,10 @@ trait OptionalSyntax {
     def right[E, C](implicit ev: B =:= Either[E, C]): Optional[A, C] =
       optic.asTarget[Either[E, C]].compose(Prism.right[E, C])
 
-    def second(implicit ev: Field2[B]): Optional[A, ev.A] =
+    def second(implicit ev: Field2[B]): Optional[A, ev.B] =
       optic.compose(ev.second)
 
-    def third(implicit ev: Field3[B]): Optional[A, ev.A] =
+    def third(implicit ev: Field3[B]): Optional[A, ev.B] =
       optic.compose(ev.third)
 
     def some[C](implicit ev: B =:= Option[C]): Optional[A, C] =
