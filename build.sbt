@@ -1,5 +1,5 @@
-// import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
-// import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
+import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
+import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 import sbt.Keys._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
@@ -111,9 +111,9 @@ lazy val paradisePlugin = Def.setting{
 
 lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.10.3" cross CrossVersion.binary
 
-// def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-//   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "1.6.0")
-// )
+def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
+  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "1.6.0")
+)
 
 lazy val tagName = Def.setting(
  s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}")
@@ -179,7 +179,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings),
   )
-  // .jvmSettings(mimaSettings("core"): _*)
+  .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, catsFree.value))
 
 lazy val generic = crossProject(JVMPlatform, JSPlatform)
@@ -190,7 +190,7 @@ lazy val generic = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  // .jvmSettings(mimaSettings("generic"): _*)
+  .jvmSettings(mimaSettings("generic"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, shapeless.value))
 
 lazy val refined = crossProject(JVMPlatform, JSPlatform)
@@ -250,7 +250,7 @@ lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  // .jvmSettings(mimaSettings("unsafe"): _*)
+  .jvmSettings(mimaSettings("unsafe"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, alleycats.value, shapeless.value))
 
 lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, macros, law, state, refined, unsafe)
