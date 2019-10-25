@@ -55,5 +55,8 @@ trait IsoSyntax {
 
     def tailOption(implicit ev: Cons[B]): Optional[A, B] =
       optic.compose(ev.tailOption)
+
+    def reverse(implicit ev: Reverse[B]): Iso[A, ev.B] =
+      optic.compose(ev.reverse)
   }
 }
