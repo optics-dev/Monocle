@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.function.{At, Cons, Field1, Field2}
+import monocle.function.{At, Cons, Field1, Field2, Field3}
 import monocle.{Iso, Prism}
 
 trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
@@ -10,16 +10,17 @@ trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
   final def compose[C](other: Iso[B, C]): AppliedIso[A, C] =
     AppliedIso(value, optic.compose(other))
 
-  override final def _1(implicit ev: Field1[B]): AppliedLens[A, ev.A] = first
-  override final def _2(implicit ev: Field2[B]): AppliedLens[A, ev.A] = second
+  override final def _1(implicit ev: Field1[B]): AppliedLens[A, ev.B] = first
+  override final def _2(implicit ev: Field2[B]): AppliedLens[A, ev.B] = second
+  override final def _3(implicit ev: Field3[B]): AppliedLens[A, ev.B] = third
 
   override final def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedLens[A, Option[C]] =
     compose(ev.at(i))
 
-  override final def cons(implicit ev: Cons[B]): AppliedPrism[A, (ev.A, B)] =
+  override final def cons(implicit ev: Cons[B]): AppliedPrism[A, (ev.B, B)] =
     compose(ev.cons)
 
-  override final def first(implicit ev: Field1[B]): AppliedLens[A, ev.A] =
+  override final def first(implicit ev: Field1[B]): AppliedLens[A, ev.B] =
     compose(ev.first)
 
   override final def left[E, C](implicit ev: B =:= Either[E, C]): AppliedPrism[A, E] =
@@ -28,8 +29,11 @@ trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
   override final def right[E, C](implicit ev: B =:= Either[E, C]): AppliedPrism[A, C] =
     asTarget[Either[E, C]].compose(Prism.right[E, C])
 
-  override final def second(implicit ev: Field2[B]): AppliedLens[A, ev.A] =
+  override final def second(implicit ev: Field2[B]): AppliedLens[A, ev.B] =
     compose(ev.second)
+
+  override final def third(implicit ev: Field3[B]): AppliedLens[A, ev.B] =
+    compose(ev.third)
 
   override final def some[C](implicit ev: B =:= Option[C]): AppliedPrism[A, C] =
     asTarget[Option[C]].compose(Prism.some[C])

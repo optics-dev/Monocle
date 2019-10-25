@@ -3,22 +3,22 @@ package monocle.function
 import monocle.{Lens, Optional}
 import monocle.Prism.some
 
-trait At[S] extends Index[S] {
+trait At[A] extends Index[A] {
 
-  def at(index: I): Lens[S, Option[A]]
+  def at(index: I): Lens[A, Option[B]]
 
-  def index(index: I): Optional[S, A] =
+  def index(index: I): Optional[A, B] =
     at(index) composePrism some
 }
 
 object At {
-  type Aux[S, I0, A0] = At[S] { type I = I0; type A = A0 }
+  type Aux[A, I0, B0] = At[A] { type I = I0; type B = B0 }
 
-  def apply[S, I0, A0](f : I0 => Lens[S, Option[A0]]): Aux[S, I0, A0] =
-    new At[S] {
+  def apply[A, I0, B0](f: I0 => Lens[A, Option[B0]]): Aux[A, I0, B0] =
+    new At[A] {
       type I = I0
-      type A = A0
-      def at(index: I0): Lens[S, Option[A0]] = f(index)
+      type B = B0
+      def at(index: I0): Lens[A, Option[B0]] = f(index)
     }
 
   implicit def map[K, V]: Aux[Map[K, V], K, V] =
@@ -27,15 +27,13 @@ object At {
         optA match {
           case None    => map - key
           case Some(a) => map + (key -> a)
-        }
-      )
-    )
+      }))
 
   implicit def set[A]: Aux[Set[A], A, Unit] =
     apply((key: A) =>
-      Lens[Set[A], Option[Unit]](set => if(set.contains(key)) Some(()) else None){
-        case (set, None) => set - key
+      Lens[Set[A], Option[Unit]](set =>
+        if (set.contains(key)) Some(()) else None) {
+        case (set, None)    => set - key
         case (set, Some(_)) => set + key
-      }
-    )
+    })
 }
