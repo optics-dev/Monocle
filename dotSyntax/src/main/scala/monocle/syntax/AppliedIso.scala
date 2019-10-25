@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.function.{At, Cons, Field1, Field2, Field3}
+import monocle.function.{At, Cons, Field1, Field2, Field3, Field4, Field5, Field6}
 import monocle.{Iso, Prism}
 
 trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
@@ -13,6 +13,9 @@ trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
   override final def _1(implicit ev: Field1[B]): AppliedLens[A, ev.B] = first
   override final def _2(implicit ev: Field2[B]): AppliedLens[A, ev.B] = second
   override final def _3(implicit ev: Field3[B]): AppliedLens[A, ev.B] = third
+  override final def _4(implicit ev: Field4[B]): AppliedLens[A, ev.B] = fourth
+  override final def _5(implicit ev: Field5[B]): AppliedLens[A, ev.B] = fifth
+  override final def _6(implicit ev: Field6[B]): AppliedLens[A, ev.B] = sixth
 
   override final def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedLens[A, Option[C]] =
     compose(ev.at(i))
@@ -34,6 +37,15 @@ trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
 
   override final def third(implicit ev: Field3[B]): AppliedLens[A, ev.B] =
     compose(ev.third)
+
+  override final def fourth(implicit ev: Field4[B]): AppliedLens[A, ev.B] =
+    compose(ev.fourth)
+
+  override final def fifth(implicit ev: Field5[B]): AppliedLens[A, ev.B] =
+    compose(ev.fifth)
+
+  override final def sixth(implicit ev: Field6[B]): AppliedLens[A, ev.B] =
+    compose(ev.sixth)
 
   override final def some[C](implicit ev: B =:= Option[C]): AppliedPrism[A, C] =
     asTarget[Option[C]].compose(Prism.some[C])
