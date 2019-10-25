@@ -1,11 +1,11 @@
 package monocle.macros.internal
 
-import monocle.{PLens, Lens}
+import monocle.Lens
 
 import scala.reflect.macros.blackbox
 
 object Macro {
-  def mkLens[S, T, A, B](fieldName: String): PLens[S, T, A, B] = macro MacroImpl.mkLens_impl[S, T, A, B]
+  def mkLens[A, B](fieldName: String): Lens[A, B] = macro MacroImpl.mkLens_impl[A, B]
 }
 
 private[macros] class MacroImpl(val c: blackbox.Context) {
@@ -34,7 +34,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
         )
       ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
         val fieldName = fieldNameName.decodedName.toString
-        mkLens_impl[S, S, A, A](c.Expr[String](q"$fieldName"))
+        mkLens_impl[S, A](c.Expr[String](q"$fieldName"))
 
       // _.field1.field2...
       case Expr(
@@ -52,10 +52,10 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
     }
   }
 
-  def mkLens_impl[S: c.WeakTypeTag, T: c.WeakTypeTag, A: c.WeakTypeTag, B: c.WeakTypeTag](fieldName: c.Expr[String]): c.Expr[PLens[S, T, A, B]] = {
+  def mkLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](fieldName: c.Expr[String]): c.Expr[Lens[S, A]] = {
     import c.universe._
 
-    val (sTpe, tTpe, aTpe, bTpe) = (weakTypeOf[S], weakTypeOf[T], weakTypeOf[A], weakTypeOf[B])
+    val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
 
     val strFieldName = c.eval(c.Expr[String](c.untypecheck(fieldName.tree.duplicate)))
 
@@ -73,23 +73,12 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
 
     val F = TypeName(c.freshName("F"))
 
-    c.Expr[PLens[S, T, A, B]](q"""
-      import monocle.PLens
-      import cats.Functor
-      import _root_.scala.language.higherKinds // prevent warning at call site
+    c.Expr[Lens[S, A]](q"""
+      import monocle.Lens
 
-      new PLens[$sTpe, $tTpe, $aTpe, $bTpe]{
-        override def get(s: $sTpe): $aTpe =
-          s.$fieldMethod
-
-        override def set(a: $bTpe): $sTpe => $tTpe =
-          _.copy($field = a)
-
-        override def modifyF[$F[_]: Functor](f: $aTpe => $F[$bTpe])(s: $sTpe): $F[$tTpe] =
-          Functor[$F].map(f(s.$fieldMethod))(a => s.copy($field = a))
-
-        override def modify(f: $aTpe => $bTpe): $sTpe => $tTpe =
-         s => s.copy($field = f(s.$fieldMethod))
+      new Lens[$sTpe, $aTpe] {
+        def get(from: $sTpe): $aTpe = s.$fieldMethod
+        def set(to: $aTpe): $sTpe => $sTpe = _.copy($field = a)
       }
     """)
   }
