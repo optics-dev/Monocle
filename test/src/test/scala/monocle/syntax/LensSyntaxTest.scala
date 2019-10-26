@@ -44,6 +44,10 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
     foo.optic(list).cons.getOption shouldEqual Some((foo.list.head, foo.list.tail))
   }
 
+  test("field") {
+    foo.optic.field(_.list).get shouldEqual foo.list
+  }
+
   test("index") {
     map.index(1).getOption(foo) shouldEqual foo.map.get(1)
     foo.optic(map).index(1).getOption shouldEqual foo.map.get(1)

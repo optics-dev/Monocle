@@ -31,6 +31,8 @@ trait AppliedLens[A, B] extends AppliedOptional[A, B]{
 
   override def asTarget[C](implicit ev: B =:= C): AppliedLens[A, C] =
     AppliedLens(value, optic.asTarget[C])
+
+  def field[C](field: B => C): AppliedLens[A, C] = macro monocle.syntax.macros.GenAppliedLensOpsImpl.lens_impl[A, B, C]
 }
 
 object AppliedLens {

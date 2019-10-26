@@ -58,7 +58,7 @@ lazy val buildSettings = Seq(
   scalacOptions     ++= Seq(
     "-encoding", "UTF-8",
     "-feature",
-    "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
+    "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps", "-language:experimental.macros",
     "-unchecked",
     "-Xfatal-warnings",
     "-deprecation",
@@ -128,15 +128,13 @@ lazy val monocle = project.in(file("."))
 
 lazy val monocleJVM = project.in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
-  .aggregate(
-    kernel.jvm, dotSyntax.jvm, macros.jvm)
-  .dependsOn(
-    kernel.jvm, dotSyntax.jvm, macros.jvm)
+  .aggregate(kernel.jvm, dotSyntax.jvm, macros.jvm, test.jvm)
+  .dependsOn(kernel.jvm, dotSyntax.jvm, macros.jvm, test.jvm)
 
 lazy val monocleJS = project.in(file(".monocleJS"))
   .settings(monocleJsSettings)
-  .aggregate(kernel.js, dotSyntax.js)
-  .dependsOn(kernel.js, dotSyntax.js)
+  .aggregate(kernel.js, dotSyntax.js, macros.js, test.js)
+  .dependsOn(kernel.js, dotSyntax.js, macros.js, test.js)
 
 lazy val kernel = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-kernel")
@@ -147,13 +145,12 @@ lazy val kernel = crossProject(JVMPlatform, JSPlatform)
 
 lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(kernel)
+  .dependsOn(kernel, macros)
   .settings(moduleName := "monocle-dot-syntax")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings),
   )
-  .settings(libraryDependencies += scalatest.value)
 
 lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -173,6 +170,17 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
     libraryDependencies ++= paradisePlugin.value,
     unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
   )
+
+lazy val test = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(dotSyntax)
+  .settings(moduleName := "monocle-test")
+  .configureCross(
+    _.jvmSettings(monocleJvmSettings),
+    _.jsSettings(monocleJsSettings),
+  )
+  .settings(noPublishSettings: _*)
+  .settings(libraryDependencies += scalatest.value)
 
 
 lazy val noPublishSettings = Seq(

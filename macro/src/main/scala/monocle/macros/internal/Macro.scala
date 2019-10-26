@@ -8,7 +8,7 @@ object Macro {
   def mkLens[A, B](fieldName: String): Lens[A, B] = macro MacroImpl.mkLens_impl[A, B]
 }
 
-private[macros] class MacroImpl(val c: blackbox.Context) {
+class MacroImpl(val c: blackbox.Context) {
   def genLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](field: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
     import c.universe._
 
