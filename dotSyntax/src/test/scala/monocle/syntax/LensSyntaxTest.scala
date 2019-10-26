@@ -7,17 +7,17 @@ import org.scalatest.matchers.should.Matchers
 
 class LensSyntaxTest extends AnyFunSuite with Matchers {
 
-  case class Foo(map: Map[Int, String], list: List[Int], tuple: (Boolean, String, Int))
+  case class Foo(map: Map[Int, String], list: List[Int], tuple: (Boolean, String, Int, Long, Double, (Int, String)))
 
   val foo = Foo(
     map = Map(1 -> "One", 2 -> "Two"),
     list = List(1, 2, 3),
-    tuple = (false, "hello", -1)
+    tuple = (false, "hello", -1, 4L, 0.5, (1, "world"))
   )
 
   val map: Lens[Foo, Map[Int, String]] = Lens[Foo, Map[Int, String]](_.map)((foo, newV) => foo.copy(map = newV))
   val list: Lens[Foo, List[Int]] = Lens[Foo, List[Int]](_.list)((foo, newV) => foo.copy(list = newV))
-  val tuple: Lens[Foo, (Boolean, String, Int)] = Lens[Foo, (Boolean, String, Int)](_.tuple)((foo, newV) => foo.copy(tuple = newV))
+  val tuple: Lens[Foo, (Boolean, String, Int, Long, Double, (Int, String))] = Lens[Foo, (Boolean, String, Int, Long, Double, (Int, String))](_.tuple)((foo, newV) => foo.copy(tuple = newV))
 
   test("_1") {
     tuple._1.get(foo) shouldEqual foo.tuple._1
@@ -32,6 +32,26 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
   test("_3") {
     tuple._3.get(foo) shouldEqual foo.tuple._3
     foo.optic(tuple)._3.get shouldEqual foo.tuple._3
+  }
+
+  test("_4") {
+    tuple._4.get(foo) shouldEqual foo.tuple._4
+    foo.optic(tuple)._4.get shouldEqual foo.tuple._4
+  }
+
+  test("_5") {
+    tuple._5.get(foo) shouldEqual foo.tuple._5
+    foo.optic(tuple)._5.get shouldEqual foo.tuple._5
+  }
+
+  test("_6") {
+    tuple._6.get(foo) shouldEqual foo.tuple._6
+    foo.optic(tuple)._6.get shouldEqual foo.tuple._6
+  }
+
+  test("nested tuple") {
+    tuple._6._2.get(foo) shouldEqual foo.tuple._6._2
+    foo.optic(tuple)._6._2.get shouldEqual foo.tuple._6._2
   }
 
   test("at") {
@@ -62,6 +82,21 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
   test("third") {
     tuple.third.get(foo) shouldEqual foo.tuple._3
     foo.optic(tuple).third.get shouldEqual foo.tuple._3
+  }
+
+  test("fourth") {
+    tuple.fourth.get(foo) shouldEqual foo.tuple._4
+    foo.optic(tuple).fourth.get shouldEqual foo.tuple._4
+  }
+
+  test("fifth") {
+    tuple.fifth.get(foo) shouldEqual foo.tuple._5
+    foo.optic(tuple).fifth.get shouldEqual foo.tuple._5
+  }
+
+  test("sixth") {
+    tuple.sixth.get(foo) shouldEqual foo.tuple._6
+    foo.optic(tuple).sixth.get shouldEqual foo.tuple._6
   }
 
   test("tailOption") {

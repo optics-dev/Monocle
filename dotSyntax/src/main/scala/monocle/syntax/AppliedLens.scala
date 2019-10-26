@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import monocle.Lens
-import monocle.function.{At, Field1, Field2, Field3}
+import monocle.function.{At, Field1, Field2, Field3, Field4, Field5, Field6}
 
 trait AppliedLens[A, B] extends AppliedOptional[A, B]{
   def value: A
@@ -16,6 +16,9 @@ trait AppliedLens[A, B] extends AppliedOptional[A, B]{
   override def _1(implicit ev: Field1[B]): AppliedLens[A, ev.B] = first
   override def _2(implicit ev: Field2[B]): AppliedLens[A, ev.B] = second
   override def _3(implicit ev: Field3[B]): AppliedLens[A, ev.B] = third
+  override def _4(implicit ev: Field4[B]): AppliedLens[A, ev.B] = fourth
+  override def _5(implicit ev: Field5[B]): AppliedLens[A, ev.B] = fifth
+  override def _6(implicit ev: Field6[B]): AppliedLens[A, ev.B] = sixth
 
   override def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedLens[A, Option[C]] =
     compose(ev.at(i))
@@ -28,6 +31,15 @@ trait AppliedLens[A, B] extends AppliedOptional[A, B]{
 
   override def third(implicit ev: Field3[B]): AppliedLens[A, ev.B] =
     compose(ev.third)
+
+  override def fourth(implicit ev: Field4[B]): AppliedLens[A, ev.B] =
+    compose(ev.fourth)
+
+  override def fifth(implicit ev: Field5[B]): AppliedLens[A, ev.B] =
+    compose(ev.fifth)
+
+  override def sixth(implicit ev: Field6[B]): AppliedLens[A, ev.B] =
+    compose(ev.sixth)
 
   override def asTarget[C](implicit ev: B =:= C): AppliedLens[A, C] =
     AppliedLens(value, optic.asTarget[C])

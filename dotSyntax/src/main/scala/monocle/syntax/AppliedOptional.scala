@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import monocle.{Optional, Prism}
-import monocle.function.{At, Cons, Field1, Field2, Field3, Index}
+import monocle.function.{At, Cons, Field1, Field2, Field3, Field4, Field5, Field6, Index}
 
 trait AppliedOptional[A, B] {
   def value: A
@@ -22,6 +22,9 @@ trait AppliedOptional[A, B] {
   def _1(implicit ev: Field1[B]): AppliedOptional[A, ev.B] = first
   def _2(implicit ev: Field2[B]): AppliedOptional[A, ev.B] = second
   def _3(implicit ev: Field3[B]): AppliedOptional[A, ev.B] = third
+  def _4(implicit ev: Field4[B]): AppliedOptional[A, ev.B] = fourth
+  def _5(implicit ev: Field5[B]): AppliedOptional[A, ev.B] = fifth
+  def _6(implicit ev: Field6[B]): AppliedOptional[A, ev.B] = sixth
 
   def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedOptional[A, Option[C]] =
     compose(ev.at(i))
@@ -49,6 +52,15 @@ trait AppliedOptional[A, B] {
 
   def third(implicit ev: Field3[B]): AppliedOptional[A, ev.B] =
     compose(ev.third)
+
+  def fourth(implicit ev: Field4[B]): AppliedOptional[A, ev.B] =
+    compose(ev.fourth)
+
+  def fifth(implicit ev: Field5[B]): AppliedOptional[A, ev.B] =
+    compose(ev.fifth)
+
+  def sixth(implicit ev: Field6[B]): AppliedOptional[A, ev.B] =
+    compose(ev.sixth)
 
   def some[C](implicit ev: B =:= Option[C]): AppliedOptional[A, C] =
     asTarget[Option[C]].compose(Prism.some[C])
