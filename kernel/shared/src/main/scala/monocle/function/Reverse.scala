@@ -11,19 +11,21 @@ trait Reverse[A] {
 object Reverse {
   type Aux[A, B0] = Reverse[A] { type B = B0 }
 
+  type AuxId[A] = Reverse[A] { type B = A }
+
   def apply[A, B0](iso: Iso[A, B0]): Aux[A, B0] =
     new Reverse[A] {
       type B = B0
       def reverse: Iso[A, B0] = iso
     }
 
-  implicit def listReverse[A]: Aux[List[A], List[A]] =
+  implicit def listReverse[A]: AuxId[List[A]] =
     apply(Iso[List[A], List[A]](_.reverse)(_.reverse))
 
-  implicit def vectorReverse[A]: Aux[Vector[A], Vector[A]] =
+  implicit def vectorReverse[A]: AuxId[Vector[A]] =
     apply(Iso[Vector[A], Vector[A]](_.reverse)(_.reverse))
 
-  implicit def stringReverse: Aux[String, String] =
+  implicit def stringReverse: AuxId[String] =
     apply(Iso[String, String](_.reverse)(_.reverse))
 
   implicit def tuple2Reverse[A1, A2]: Reverse[(A1, A2)] = Reverse(
