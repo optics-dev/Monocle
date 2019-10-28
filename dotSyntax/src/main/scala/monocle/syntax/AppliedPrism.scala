@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import monocle.Prism
-import monocle.function.Cons
+import monocle.function._
 
 trait AppliedPrism[A, B] extends AppliedOptional[A, B] {
   def value: A
@@ -21,6 +21,9 @@ trait AppliedPrism[A, B] extends AppliedOptional[A, B] {
 
   override def some[C](implicit ev: B =:= Option[C]): AppliedPrism[A, C] =
     asTarget[Option[C]].compose(Prism.some[C])
+
+  override def reverse(implicit ev: Reverse[B]): AppliedPrism[A, ev.B] =
+    compose(ev.reverse)
 
   override def asTarget[C](implicit ev: B =:= C): AppliedPrism[A, C] =
     AppliedPrism(value, optic.asTarget[C])

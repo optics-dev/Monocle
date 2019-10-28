@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.function.{At, Cons, Field1, Field2, Field3, Field4, Field5, Field6}
+import monocle.function._
 import monocle.{Iso, Prism}
 
 trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
@@ -46,6 +46,9 @@ trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
 
   override final def sixth(implicit ev: Field6[B]): AppliedLens[A, ev.B] =
     compose(ev.sixth)
+
+  override final def reverse(implicit ev: Reverse[B]): AppliedIso[A, ev.B] =
+    compose(ev.reverse)
 
   override final def some[C](implicit ev: B =:= Option[C]): AppliedPrism[A, C] =
     asTarget[Option[C]].compose(Prism.some[C])

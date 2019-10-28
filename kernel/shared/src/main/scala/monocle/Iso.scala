@@ -1,5 +1,7 @@
 package monocle
 
+import monocle.function.Reverse
+
 abstract class Iso[A, B] extends Lens[A, B] with Prism[A, B] { self =>
   override def modify(f: B => B): A => A =
     from => reverseGet(get(from))
@@ -27,6 +29,9 @@ object Iso {
       def get(from: A): B = _get(from)
       def reverseGet(to: B): A = _reverseGet(to)
     }
+
+  def reverse[A, B](implicit ev: Reverse.Aux[A, B]): Iso[A, B] =
+    ev.reverse
 
   def id[A]: Iso[A, A] =
     Iso[A, A](identity)(identity)

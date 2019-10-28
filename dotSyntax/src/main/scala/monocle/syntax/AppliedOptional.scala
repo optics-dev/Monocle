@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import monocle.{Optional, Prism}
-import monocle.function.{At, Cons, Field1, Field2, Field3, Field4, Field5, Field6, Index}
+import monocle.function._
 
 trait AppliedOptional[A, B] {
   def value: A
@@ -61,6 +61,9 @@ trait AppliedOptional[A, B] {
 
   def sixth(implicit ev: Field6[B]): AppliedOptional[A, ev.B] =
     compose(ev.sixth)
+
+  def reverse(implicit ev: Reverse[B]): AppliedOptional[A, ev.B] =
+    compose(ev.reverse)
 
   def some[C](implicit ev: B =:= Option[C]): AppliedOptional[A, C] =
     asTarget[Option[C]].compose(Prism.some[C])

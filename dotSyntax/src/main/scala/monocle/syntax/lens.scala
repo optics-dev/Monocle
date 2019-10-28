@@ -50,6 +50,9 @@ trait LensSyntax {
     def sixth(implicit ev: Field6[B]): Lens[A, ev.B] =
       optic.compose(ev.sixth)
 
+    def reverse(implicit ev: Reverse[B]): Lens[A, ev.B] =
+      optic.compose(ev.reverse)
+
     def some[C](implicit ev: B =:= Option[C]): Optional[A, C] =
       optic.asTarget[Option[C]].compose(Prism.some[C])
 
