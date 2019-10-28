@@ -47,7 +47,7 @@ trait AppliedIso[A, B] extends AppliedLens[A, B] with AppliedPrism[A, B] {
   override final def sixth(implicit ev: Field6[B]): AppliedLens[A, ev.B] =
     compose(ev.sixth)
 
-  override final def reverse(implicit ev: Reverse[B]): AppliedLens[A, ev.B] =
+  override final def reverse(implicit ev: Reverse[B]): AppliedIso[A, ev.B] =
     compose(ev.reverse)
 
   override final def some[C](implicit ev: B =:= Option[C]): AppliedPrism[A, C] =
