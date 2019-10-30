@@ -12,6 +12,8 @@ import cats._
 import cats.free.Cofree
 import cats.syntax.eq._
 
+import scala.collection.immutable.ListMap
+
 trait TestInstances extends PlatformSpecificTestInstances with ScalaVersionSpecificTestInstances with cats.instances.AllInstances {
 
   implicit def equality[A](implicit A: Eq[A]): Equality[A] =
@@ -51,6 +53,9 @@ trait TestInstances extends PlatformSpecificTestInstances with ScalaVersionSpeci
 
   implicit def vectorArbitrary[A: Arbitrary]: Arbitrary[Vector[A]] =
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toVector))
+
+  implicit def listMapArbitrary[K: Arbitrary, V: Arbitrary] =
+    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(l => ListMap(l : _*)))
 
   implicit def mapArbitrary[K: Arbitrary, V: Arbitrary] =
     Arbitrary(Arbitrary.arbitrary[List[(K,V)]].map(_.toMap))
