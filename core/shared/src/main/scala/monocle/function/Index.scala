@@ -3,7 +3,7 @@ package monocle.function
 import monocle.{Iso, Optional}
 
 import scala.annotation.{implicitNotFound, tailrec}
-import scala.collection.immutable.SortedMap
+import scala.collection.immutable.{ListMap, SortedMap}
 import scala.util.Try
 
 /**
@@ -49,6 +49,8 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
     else
       Optional[List[A], A](_.drop(i).headOption)(a => s => Try(s.updated(i, a)).getOrElse(s))
   )
+
+  implicit def listMapIndex[K, V]: Index[ListMap[K, V], K, V] = fromAt
 
   implicit def mapIndex[K, V]: Index[Map[K, V], K, V] = fromAt
 
