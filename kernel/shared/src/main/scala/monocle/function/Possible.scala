@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle.Optional
+import monocle.{Optional, Prism}
 
 trait Possible[A] {
   type B
@@ -16,7 +16,7 @@ object Possible {
     override val possible: Optional[A, B0] = optional
   }
 
-  implicit def optionPossible[A](implicit ev: Optional[Option[A], A]): Aux[Option[A], A] =
-    apply(ev)
+  implicit def optionPossible[A]: Aux[Option[A], A] =
+    apply(Prism.some)
 
 }
