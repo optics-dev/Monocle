@@ -73,6 +73,10 @@ trait AppliedOptional[A, B] {
 
   def asTarget[C](implicit ev: B =:= C): AppliedOptional[A, C] =
     AppliedOptional(value, optic.asTarget[C])
+
+  def possible(implicit ev: Possible[B]): AppliedOptional[A, ev.B] =
+    compose(ev.possible)
+
 }
 
 object AppliedOptional {
