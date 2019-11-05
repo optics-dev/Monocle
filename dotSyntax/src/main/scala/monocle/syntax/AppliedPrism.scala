@@ -32,7 +32,7 @@ trait AppliedPrism[A, B] extends AppliedOptional[A, B] {
 object AppliedPrism {
   def apply[A, B](_value: A, _optic: Prism[A, B]): AppliedPrism[A, B] =
     new AppliedPrism[A, B] {
-      def value: A = _value
+      def value: A           = _value
       def optic: Prism[A, B] = _optic
     }
 }

@@ -14,13 +14,13 @@ trait Prism[A, B] extends Optional[A, B] { self =>
 
   def compose[C](other: Prism[B, C]): Prism[A, C] = new Prism[A, C] {
     def getOption(from: A): Option[C] = self.getOption(from).flatMap(other.getOption)
-    def reverseGet(to: C): A = self.reverseGet(other.reverseGet(to))
+    def reverseGet(to: C): A          = self.reverseGet(other.reverseGet(to))
   }
 }
 
 object Prism {
   def apply[A, B](_getOption: A => Option[B])(_reverseGet: B => A): Prism[A, B] = new Prism[A, B] {
-    def reverseGet(to: B): A = _reverseGet(to)
+    def reverseGet(to: B): A          = _reverseGet(to)
     def getOption(from: A): Option[B] = _getOption(from)
   }
 
@@ -31,14 +31,14 @@ object Prism {
     ev.cons
 
   def some[A]: Prism[Option[A], A] =
-    partial[Option[A], A]{ case Some(a) => a }(Some(_))
+    partial[Option[A], A] { case Some(a) => a }(Some(_))
 
   def none[A]: Prism[Option[A], Unit] =
-    partial[Option[A], Unit]{ case None => () }(_ => None)
+    partial[Option[A], Unit] { case None => () }(_ => None)
 
   def left[E, A]: Prism[Either[E, A], E] =
-    partial[Either[E, A], E]{ case Left(e) => e }(Left(_))
+    partial[Either[E, A], E] { case Left(e) => e }(Left(_))
 
   def right[E, A]: Prism[Either[E, A], A] =
-    partial[Either[E, A], A]{ case Right(e) => e }(Right(_))
+    partial[Either[E, A], A] { case Right(e) => e }(Right(_))
 }

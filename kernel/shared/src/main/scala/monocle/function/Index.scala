@@ -27,8 +27,8 @@ object Index {
         if (i < 0)
           Optional.void
         else
-          Optional[List[A], A](xs => Try(xs(i)).toOption)((xs, a) =>
-            Try(xs.updated(i, a)).getOrElse(xs)))
+          Optional[List[A], A](xs => Try(xs(i)).toOption)((xs, a) => Try(xs.updated(i, a)).getOrElse(xs))
+    )
 
   implicit def vector[A]: Aux[Vector[A], Int, A] =
     apply(
@@ -36,8 +36,8 @@ object Index {
         if (i < 0)
           Optional.void
         else
-          Optional[Vector[A], A](xs => Try(xs(i)).toOption)((xs, a) =>
-            Try(xs.updated(i, a)).getOrElse(xs)))
+          Optional[Vector[A], A](xs => Try(xs(i)).toOption)((xs, a) => Try(xs.updated(i, a)).getOrElse(xs))
+    )
 
   implicit def map[K, V]: Aux[Map[K, V], K, V] = At.map
 }

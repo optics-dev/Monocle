@@ -18,5 +18,4 @@ object Possible {
 
   implicit def optionPossible[A]: Aux[Option[A], A] =
     apply(Prism.some)
-
 }

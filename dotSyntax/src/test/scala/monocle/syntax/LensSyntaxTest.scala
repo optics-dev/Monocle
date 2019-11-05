@@ -6,7 +6,6 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
 class LensSyntaxTest extends AnyFunSuite with Matchers {
-
   case class Foo(map: Map[Int, String], list: List[Int], tuple: (Boolean, String, Int, Long, Double, (Int, String)))
 
   val foo = Foo(
@@ -16,8 +15,9 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
   )
 
   val map: Lens[Foo, Map[Int, String]] = Lens[Foo, Map[Int, String]](_.map)((foo, newV) => foo.copy(map = newV))
-  val list: Lens[Foo, List[Int]] = Lens[Foo, List[Int]](_.list)((foo, newV) => foo.copy(list = newV))
-  val tuple: Lens[Foo, (Boolean, String, Int, Long, Double, (Int, String))] = Lens[Foo, (Boolean, String, Int, Long, Double, (Int, String))](_.tuple)((foo, newV) => foo.copy(tuple = newV))
+  val list: Lens[Foo, List[Int]]       = Lens[Foo, List[Int]](_.list)((foo, newV) => foo.copy(list = newV))
+  val tuple: Lens[Foo, (Boolean, String, Int, Long, Double, (Int, String))] =
+    Lens[Foo, (Boolean, String, Int, Long, Double, (Int, String))](_.tuple)((foo, newV) => foo.copy(tuple = newV))
 
   test("_1") {
     tuple._1.get(foo) shouldEqual foo.tuple._1
@@ -104,13 +104,12 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
     foo.optic(list).tailOption.getOption shouldEqual Some(foo.list.tail)
   }
 
-  test("nested"){
+  test("nested") {
     val x: List[Map[Int, Either[(Boolean, Char), String]]] = Nil
 
-    Iso.id[List[Map[Int, Either[(Boolean, Char), String]]]]
-      .cons._2.index(3).at(2).some.left._1.getOption(x) shouldEqual None
+    val root = Iso.id[List[Map[Int, Either[(Boolean, Char), String]]]]
 
+    root.cons._2.index(3).at(2).some.left._1.getOption(x) shouldEqual None
     x.optic.cons._2.index(3).at(2).some.left._1.getOption shouldEqual None
   }
-
 }

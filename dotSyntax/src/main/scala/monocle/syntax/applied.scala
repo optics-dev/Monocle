@@ -5,7 +5,7 @@ import monocle.{Lens, Optional, Prism}
 object applied extends AppliedSyntax
 
 trait AppliedSyntax {
-  implicit class AppliedOps[A](value: A){
+  implicit class AppliedOps[A](value: A) {
     def optic: AppliedIso[A, A] =
       AppliedIso.id(value)
 
