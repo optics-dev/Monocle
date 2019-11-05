@@ -145,7 +145,7 @@ lazy val kernel = crossProject(JVMPlatform, JSPlatform)
 
 lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(kernel, macros)
+  .dependsOn(kernel)
   .settings(moduleName := "monocle-dot-syntax")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -154,7 +154,7 @@ lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
 
 lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(kernel)
+  .dependsOn(kernel, dotSyntax)
   .in(file("macro"))
   .settings(moduleName := "monocle-macro")
   .configureCross(
@@ -173,7 +173,7 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
 
 lazy val test = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(dotSyntax)
+  .dependsOn(kernel, dotSyntax, macros)
   .settings(moduleName := "monocle-test")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),

@@ -1,6 +1,8 @@
 package monocle.syntax
 
 import monocle.syntax.all._
+//import monocle.macros.syntax.fields._
+import monocle.macros.syntax.fields2._
 import monocle.{Iso, Lens}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -44,9 +46,21 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
     foo.optic(list).cons.getOption shouldEqual Some((foo.list.head, foo.list.tail))
   }
 
-  test("field") {
-    foo.optic.field(_.list).get shouldEqual foo.list
+  test("field2") {
+    foo.lens(_.list).get shouldEqual foo.list
   }
+
+//  test("field2") {
+//    val appliedLens: AppliedLens[Foo, Foo] = AppliedIso.id(foo)
+//    val lens = appliedLens.field2(_.list)
+//    val bar = appliedLens.composeLens(lens)
+//    bar.get shouldEqual foo.list
+//  }
+
+//  test("field") {
+//    val appliedLens: AppliedLens[Foo, Foo] = AppliedIso.id(foo)
+//    appliedLens.field(_.list).get shouldEqual foo.list
+//  }
 
   test("index") {
     map.index(1).getOption(foo) shouldEqual foo.map.get(1)

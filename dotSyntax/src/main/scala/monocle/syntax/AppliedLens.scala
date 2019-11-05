@@ -13,6 +13,9 @@ trait AppliedLens[A, B] extends AppliedOptional[A, B]{
   def compose[C](other: Lens[B, C]): AppliedLens[A, C] =
     AppliedLens(value, optic.compose(other))
 
+  def composeLens[C](other: Lens[B, C]): AppliedLens[A, C] =
+    compose(other)
+
   override def _1(implicit ev: Field1[B]): AppliedLens[A, ev.B] = first
   override def _2(implicit ev: Field2[B]): AppliedLens[A, ev.B] = second
   override def _3(implicit ev: Field3[B]): AppliedLens[A, ev.B] = third
@@ -31,8 +34,6 @@ trait AppliedLens[A, B] extends AppliedOptional[A, B]{
 
   override def asTarget[C](implicit ev: B =:= C): AppliedLens[A, C] =
     AppliedLens(value, optic.asTarget[C])
-
-  def field[C](field: B => C): AppliedLens[A, C] = macro monocle.syntax.macros.GenAppliedLensOpsImpl.lens_impl[A, B, C]
 }
 
 object AppliedLens {
