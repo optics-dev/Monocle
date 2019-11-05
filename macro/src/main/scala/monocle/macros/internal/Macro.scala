@@ -1,15 +1,15 @@
 package monocle.macros.internal
 
-import monocle.{PLens, Lens}
+import monocle.Lens
 
 import scala.reflect.macros.blackbox
 
 object Macro {
-  def mkLens[S, T, A, B](fieldName: String): PLens[S, T, A, B] = macro MacroImpl.mkLens_impl[S, T, A, B]
+  def mkLens[A, B](fieldName: String): Lens[A, B] = macro MacroImpl.mkLens_impl[A, B]
 }
 
 private[macros] class MacroImpl(val c: blackbox.Context) {
-  def genLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](field: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
+  def genLens_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](field: c.Expr[A => B]): c.Expr[Lens[A, B]] = {
     import c.universe._
 
     /** Extractor for member select chains.
@@ -34,7 +34,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
         )
       ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
         val fieldName = fieldNameName.decodedName.toString
-        mkLens_impl[S, S, A, A](c.Expr[String](q"$fieldName"))
+        mkLens_impl[A, B](c.Expr[String](q"$fieldName"))
 
       // _.field1.field2...
       case Expr(
@@ -43,7 +43,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
           SelectChain(termUseName, typesFields)
         )
       ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
-        c.Expr[Lens[S, A]](
+        c.Expr[Lens[A, B]](
           typesFields.map{ case (t,f) => q"monocle.macros.GenLens[$t](_.$f)" }
                      .reduce((a,b) => q"$a composeLens $b")
         )
@@ -52,44 +52,36 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
     }
   }
 
-  def mkLens_impl[S: c.WeakTypeTag, T: c.WeakTypeTag, A: c.WeakTypeTag, B: c.WeakTypeTag](fieldName: c.Expr[String]): c.Expr[PLens[S, T, A, B]] = {
+  def mkLens_impl[A: c.WeakTypeTag,  B: c.WeakTypeTag](fieldName: c.Expr[String]): c.Expr[Lens[A, B]] = {
     import c.universe._
 
-    val (sTpe, tTpe, aTpe, bTpe) = (weakTypeOf[S], weakTypeOf[T], weakTypeOf[A], weakTypeOf[B])
+    val (aTpe, bTpe) = (weakTypeOf[A], weakTypeOf[B])
 
     val strFieldName = c.eval(c.Expr[String](c.untypecheck(fieldName.tree.duplicate)))
 
-    val fieldMethod = sTpe.decls.collectFirst {
+    val fieldMethod = aTpe.decls.collectFirst {
       case m: MethodSymbol if m.isCaseAccessor && m.name.decodedName.toString == strFieldName => m
-    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $strFieldName in $sTpe"))
+    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find method $strFieldName in $aTpe"))
 
-    val constructor = sTpe.decls.collectFirst {
+    val constructor = aTpe.decls.collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
-    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in $sTpe"))
+    }.getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor in $aTpe"))
 
     val field = constructor.paramLists.head
       .find(_.name.decodedName.toString == strFieldName)
-      .getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $sTpe"))
+      .getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $aTpe"))
 
     val F = TypeName(c.freshName("F"))
 
-    c.Expr[PLens[S, T, A, B]](q"""
-      import monocle.PLens
-      import cats.Functor
-      import _root_.scala.language.higherKinds // prevent warning at call site
+    c.Expr[Lens[A, B]](q"""
+      import monocle.Lens
 
-      new PLens[$sTpe, $tTpe, $aTpe, $bTpe]{
-        override def get(s: $sTpe): $aTpe =
+      new Lens[$aTpe, $bTpe]{
+        override def get(s: $aTpe): $bTpe =
           s.$fieldMethod
 
-        override def set(a: $bTpe): $sTpe => $tTpe =
+        override def set(a: $bTpe): $aTpe => $aTpe =
           _.copy($field = a)
-
-        override def modifyF[$F[_]: Functor](f: $aTpe => $F[$bTpe])(s: $sTpe): $F[$tTpe] =
-          Functor[$F].map(f(s.$fieldMethod))(a => s.copy($field = a))
-
-        override def modify(f: $aTpe => $bTpe): $sTpe => $tTpe =
-         s => s.copy($field = f(s.$fieldMethod))
       }
     """)
   }
