@@ -51,16 +51,9 @@ lazy val buildSettings = Seq(
     "-deprecation",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
-    "-Ywarn-unused:imports"
+    "-Ywarn-unused:imports",
+    "-Ymacro-annotations"
   ),
-  scalacOptions ++= PartialFunction
-    .condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-      case Some((2, n)) if n <= 12 =>
-        Seq("-Xfuture", "-Yno-adapted-args") // TODO Move fatal-warnings and deprecation back to on
-      case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
-    }
-    .toList
-    .flatten,
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions in (Test, console) -= "-Ywarn-unused:imports",
   addCompilerPlugin(kindProjector),
@@ -104,14 +97,14 @@ lazy val monocle = project
 lazy val monocleJVM = project
   .in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
-  .aggregate(kernel.jvm, dotSyntax.jvm)
-  .dependsOn(kernel.jvm, dotSyntax.jvm)
+  .aggregate(kernel.jvm, dotSyntax.jvm, macros.jvm)
+  .dependsOn(kernel.jvm, dotSyntax.jvm, macros.jvm)
 
 lazy val monocleJS = project
   .in(file(".monocleJS"))
   .settings(monocleJsSettings)
-  .aggregate(kernel.js, dotSyntax.js)
-  .dependsOn(kernel.js, dotSyntax.js)
+  .aggregate(kernel.js, dotSyntax.js, macros.js)
+  .dependsOn(kernel.js, dotSyntax.js, macros.js)
 
 lazy val kernel = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-kernel")
@@ -129,6 +122,24 @@ lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
     _.jsSettings(monocleJsSettings)
   )
   .settings(libraryDependencies += scalatest.value)
+
+lazy val macros = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(kernel, dotSyntax)
+  .in(file("macro"))
+  .settings(moduleName := "monocle-macro")
+  .configureCross(
+    _.jvmSettings(monocleJvmSettings),
+    _.jsSettings(monocleJsSettings)
+  )
+  .settings(
+    scalacOptions += "-language:experimental.macros",
+    libraryDependencies ++= Seq(
+      scalatest.value,
+      scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
+      scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
+    )
+  )
 
 lazy val noPublishSettings = Seq(
   publish := {},
