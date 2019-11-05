@@ -27,8 +27,7 @@ object Cons {
     } { case (x, xs) => x :: xs })
 
   implicit def vector[A]: Cons[Vector[A]] =
-    apply(
-      Prism[Vector[A], (A, Vector[A])](xs => xs.headOption.map(_ -> xs.tail)) {
-        case (x, xs) => x +: xs
-      })
+    apply(Prism[Vector[A], (A, Vector[A])](xs => xs.headOption.map(_ -> xs.tail)) {
+      case (x, xs) => x +: xs
+    })
 }

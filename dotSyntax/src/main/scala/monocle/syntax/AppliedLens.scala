@@ -3,7 +3,7 @@ package monocle.syntax
 import monocle.Lens
 import monocle.function._
 
-trait AppliedLens[A, B] extends AppliedOptional[A, B]{
+trait AppliedLens[A, B] extends AppliedOptional[A, B] {
   def value: A
   def optic: Lens[A, B]
 
@@ -51,7 +51,7 @@ trait AppliedLens[A, B] extends AppliedOptional[A, B]{
 object AppliedLens {
   def apply[A, B](_value: A, _optic: Lens[A, B]): AppliedLens[A, B] =
     new AppliedLens[A, B] {
-      def value: A = _value
+      def value: A          = _value
       def optic: Lens[A, B] = _optic
     }
 }

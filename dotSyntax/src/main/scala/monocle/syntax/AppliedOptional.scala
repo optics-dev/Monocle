@@ -76,13 +76,12 @@ trait AppliedOptional[A, B] {
 
   def possible(implicit ev: Possible[B]): AppliedOptional[A, ev.B] =
     compose(ev.possible)
-
 }
 
 object AppliedOptional {
   def apply[A, B](_value: A, _optic: Optional[A, B]): AppliedOptional[A, B] =
     new AppliedOptional[A, B] {
-      def value: A = _value
+      def value: A              = _value
       def optic: Optional[A, B] = _optic
     }
 }

@@ -41,10 +41,14 @@ object Reverse {
   )
 
   implicit def tuple5Reverse[A1, A2, A3, A4, A5]: Reverse[(A1, A2, A3, A4, A5)] = Reverse(
-    Iso[(A1, A2, A3, A4, A5), (A5, A4, A3, A2, A1)](a => (a._5, a._4, a._3, a._2, a._1))(a => (a._5, a._4, a._3, a._2, a._1))
+    Iso[(A1, A2, A3, A4, A5), (A5, A4, A3, A2, A1)](a => (a._5, a._4, a._3, a._2, a._1))(
+      a => (a._5, a._4, a._3, a._2, a._1)
+    )
   )
 
   implicit def tuple6Reverse[A1, A2, A3, A4, A5, A6]: Reverse[(A1, A2, A3, A4, A5, A6)] = Reverse(
-    Iso[(A1, A2, A3, A4, A5, A6), (A6, A5, A4, A3, A2, A1)](a => (a._6, a._5, a._4, a._3, a._2, a._1))(a => (a._6, a._5, a._4, a._3, a._2, a._1))
+    Iso[(A1, A2, A3, A4, A5, A6), (A6, A5, A4, A3, A2, A1)](a => (a._6, a._5, a._4, a._3, a._2, a._1))(
+      a => (a._6, a._5, a._4, a._3, a._2, a._1)
+    )
   )
 }

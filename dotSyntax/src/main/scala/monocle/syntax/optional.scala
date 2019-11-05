@@ -59,5 +59,4 @@ trait OptionalSyntax {
     def possible(implicit ev: Possible[B]): Optional[A, ev.B] =
       optic.compose(ev.possible)
   }
-
 }
