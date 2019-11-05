@@ -23,7 +23,7 @@ stages:
 
 script:
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
-  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc doc
+  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
 
 jobs:
   include:
@@ -32,8 +32,6 @@ jobs:
       script: sbt ci-release
 
 after_success:
-- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash
-  scripts/publishMicrosite.sh; fi
 - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then echo "Not in master branch, skipping
   deploy and release"; fi
 
