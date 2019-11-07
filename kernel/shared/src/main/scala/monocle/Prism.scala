@@ -2,29 +2,15 @@ package monocle
 
 import monocle.function.Cons
 
-trait Prism[A, B] extends Optional[A, B] { self =>
-  def reverseGet(to: B): A
-
-  final def set(to: B): A => A = _ => reverseGet(to)
-
-  override def modify(f: B => B): A => A = a => getOption(a).fold(a)(reverseGet)
-
-  override def asTarget[C](implicit ev: B =:= C): Prism[A, C] =
-    asInstanceOf[Prism[A, C]]
-
-  def compose[C](other: Prism[B, C]): Prism[A, C] = new Prism[A, C] {
-    def getOption(from: A): Option[C] = self.getOption(from).flatMap(other.getOption)
-    def reverseGet(to: C): A          = self.reverseGet(other.reverseGet(to))
-  }
-}
-
 object Prism {
-  def apply[A, B](_getOption: A => Option[B])(_reverseGet: B => A): Prism[A, B] = new Prism[A, B] {
-    def reverseGet(to: B): A          = _reverseGet(to)
-    def getOption(from: A): Option[B] = _getOption(from)
+  def apply[S, A](_getOption: S => Option[A])(_reverseGet: A => S): Prism[S, A] = new Prism[S, A] {
+    def getOrModify(from: S): Either[S, A] =
+      _getOption(from).fold[Either[S, A]](Left(from))(Right(_))
+    def reverseGet(to: A): S =
+      _reverseGet(to)
   }
 
-  def partial[A, B](get: PartialFunction[A, B])(reverseGet: B => A): Prism[A, B] =
+  def partial[S, A](get: PartialFunction[S, A])(reverseGet: A => S): Prism[S, A] =
     Prism(get.lift)(reverseGet)
 
   def cons[S, A](implicit ev: Cons.Aux[S, A]): Prism[S, (A, S)] =
