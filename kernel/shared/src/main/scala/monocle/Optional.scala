@@ -4,12 +4,7 @@ import monocle.function.{Cons, Index, Possible}
 
 object Optional {
   def apply[S, A](_getOption: S => Option[A])(_set: (S, A) => S): Optional[S, A] =
-    new Optional[S, A] {
-      def getOrModify(from: S): Either[S, A] =
-        _getOption(from).fold[Either[S, A]](Left(from))(Right(_))
-      def set(to: A): S => S =
-        _set(_, to)
-    }
+    POptional[S, S, A, A](s => _getOption(s).fold[Either[S, A]](Left(s))(Right(_)))(_set)
 
   def void[S, A]: Optional[S, A] =
     Optional[S, A](_ => None)((a, _) => a)

@@ -4,6 +4,4 @@ package object monocle {
   type Optional[S, A] = POptional[S, S, A, A]
   type Prism[S, A]    = PPrism[S, S, A, A]
   type Setter[S, A]   = PSetter[S, S, A, A]
-  type Getter[S, A]   = PGetter[S, S, A, A]
-  type Fold[S, A]     = PFold[S, S, A, A]
 }

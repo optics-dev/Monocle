@@ -4,10 +4,7 @@ import monocle.function.{At, Field1, Field2, Field3, Field4, Field5, Field6}
 
 object Lens {
   def apply[S, A](_get: S => A)(_set: (S, A) => S): Lens[S, A] =
-    new Lens[S, A] {
-      def get(from: S): A    = _get(from)
-      def set(to: A): S => S = _set(_, to)
-    }
+    PLens[S, S, A, A](_get)(_set)
 
   def at[S, I, A](index: I)(implicit ev: At.Aux[S, I, A]): Lens[S, Option[A]] =
     ev.at(index)
