@@ -3,12 +3,8 @@ package monocle
 import monocle.function.Reverse
 
 object Iso {
-  
   def apply[S, A](_get: S => A)(_reverseGet: A => S): Iso[S, A] =
-    new Iso[S, A] {
-      def get(from: S): A      = _get(from)
-      def reverseGet(to: A): S = _reverseGet(to)
-    }
+    PIso[S, S, A, A](_get)(_reverseGet)
 
   def reverse[S, A](implicit ev: Reverse.Aux[S, A]): Iso[S, A] =
     ev.reverse

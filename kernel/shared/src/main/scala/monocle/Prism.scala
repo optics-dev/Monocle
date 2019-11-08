@@ -3,12 +3,8 @@ package monocle
 import monocle.function.Cons
 
 object Prism {
-  def apply[S, A](_getOption: S => Option[A])(_reverseGet: A => S): Prism[S, A] = new Prism[S, A] {
-    def getOrModify(from: S): Either[S, A] =
-      _getOption(from).fold[Either[S, A]](Left(from))(Right(_))
-    def reverseGet(to: A): S =
-      _reverseGet(to)
-  }
+  def apply[S, A](_getOption: S => Option[A])(_reverseGet: A => S): Prism[S, A] =
+    PPrism[S, S, A, A](s => _getOption(s).fold[Either[S, A]](Left(s))(Right(_)))(_reverseGet)
 
   def partial[S, A](get: PartialFunction[S, A])(reverseGet: A => S): Prism[S, A] =
     Prism(get.lift)(reverseGet)
