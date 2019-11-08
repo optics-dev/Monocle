@@ -4,16 +4,15 @@ sealed trait Fold[-S, +A] extends Serializable {
   def fold[Z](zero: Z, combine: (Z, Z) => Z)(f: A => Z)(s: S): Z
 }
 
-object Fold {
+sealed trait PFold[+LowerS, -UpperS, +LowerA, -UpperA] extends Serializable {
+  def fold[Z, S >: LowerS <: UpperS, A >: LowerA <: UpperA](zero: Z, combine: (Z, Z) => Z)(f: A => Z)(s: S): Z
+}
 
-  // How do we make it easy for users to create folds while maintaining the
-  // sealed trait given that the fold function is universally quantified over
-  // z?
-  def apply[S, A, Z](fold0: (Z, (Z, Z) => Z, A => Z, S) => Z): Fold[S, A] =
+object Fold {
+  def apply[S, A](fn: FoldFunction[S, A]): Fold[S, A] = 
     new Fold[S, A] {
       def fold[Z](zero: Z, combine: (Z, Z) => Z)(f: A => Z)(s: S): Z =
-        ???//fold0(zero, combine, f, s)
-
+        fn(zero, combine)(f)(s)
     }
 }
 
@@ -190,5 +189,9 @@ sealed trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] { self =>
 }
 
 object PTraversal {
-
+  def apply[S, T, A, B](fn: TraverseFunction[S, T, A, B]): PTraversal[S, T, A, B] =
+    new PTraversal[S, T, A, B] {
+      def traverse[Z](z: Z, f: (Z, A) => Either[Z, (Z, B)]): S => (Z, T) = 
+        fn(z, f)
+    }
 }
