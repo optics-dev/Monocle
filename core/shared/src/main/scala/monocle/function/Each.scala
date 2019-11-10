@@ -55,15 +55,15 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
 
   implicit def listEach[A]: Each[List[A], A] = fromTraverse
 
-  implicit def listMapTraversal[K, V]: Traversal[ListMap[K, V], V] = new Traversal[ListMap[K, V], V] {
-    def modifyF[F[_]: Applicative](f: V => F[V])(s: ListMap[K, V]): F[ListMap[K, V]] =
-      s.foldLeft(Applicative[F].pure(ListMap.empty[K, V])) {
-        case (acc, (k, v)) =>
-          Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
-      }
-  }
-
-  implicit def listMapEach[K, V]: Each[ListMap[K, V], V] = Each(listMapTraversal)
+  implicit def listMapEach[K, V]: Each[ListMap[K, V], V] = Each(
+    new Traversal[ListMap[K, V], V] {
+      def modifyF[F[_]: Applicative](f: V => F[V])(s: ListMap[K, V]): F[ListMap[K, V]] =
+        s.foldLeft(Applicative[F].pure(ListMap.empty[K, V])) {
+          case (acc, (k, v)) =>
+            Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
+        }
+    }
+ )
 
   implicit def mapEach[K: Order, V]: Each[SortedMap[K, V], V] = fromTraverse[SortedMap[K, ?], V]
 
