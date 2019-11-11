@@ -20,13 +20,13 @@ object Cons {
       def cons: Prism[A, (B0, A)] = prism
     }
 
-  implicit def list[A]: Cons[List[A]] =
+  implicit def list[A]: Cons.Aux[List[A], A] =
     apply(Prism[List[A], (A, List[A])] {
       case Nil     => None
       case x :: xs => Some((x, xs))
     } { case (x, xs) => x :: xs })
 
-  implicit def vector[A]: Cons[Vector[A]] =
+  implicit def vector[A]: Cons.Aux[Vector[A], A] =
     apply(Prism[Vector[A], (A, Vector[A])](xs => xs.headOption.map(_ -> xs.tail)) {
       case (x, xs) => x +: xs
     })

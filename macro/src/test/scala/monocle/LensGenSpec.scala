@@ -43,4 +43,16 @@ class LensGenSpec extends AnyFunSuite with Matchers {
     thisOrThat.optic(prism).field(_.bar).field(_.b).getOption shouldEqual Some(x.bar.b)
   }
 
+  test("field syntax (AppliedOptional)") {
+    val bars = List(
+      Bar(true, "a"),
+      Bar(true, "b"),
+      Bar(true, "c")
+    )
+    import monocle.function.Cons
+    implicit val cons: Cons[List[Bar]] = Cons.list[Bar]
+    val optional = Optional.headOption[List[Bar], Bar]
+    bars.optic(optional).field(_.b).getOption shouldEqual Some(bars.head.b)
+  }
+
 }
