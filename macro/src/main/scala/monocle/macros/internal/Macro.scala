@@ -44,8 +44,8 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
         )
       ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
         c.Expr[Lens[A, B]](
-          typesFields.map{ case (t,f) => q"monocle.macros.GenLens[$t](_.$f)" }
-                     .reduce((a,b) => q"$a composeLens $b")
+          typesFields.map{ case (t,f) => q"_root_.monocle.macros.GenLens[$t](_.$f)" }
+                     .reduce((a,b) => q"$a compose $b")
         )
 
       case _ => c.abort(c.enclosingPosition, s"Illegal field reference ${show(field.tree)}; please use _.field1.field2... instead")

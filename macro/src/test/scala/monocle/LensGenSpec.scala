@@ -14,12 +14,12 @@ class LensGenSpec extends AnyFunSuite with Matchers {
 
   test("GenLens") {
     GenLens[Foo](_.i).get(foo) shouldEqual foo.i
-//    GenLens[Foo](_.bar.b).get(foo) shouldEqual foo.bar.b
+    GenLens[Foo](_.bar.b).get(foo) shouldEqual foo.bar.b
   }
 
   test("fields") {
     foo.optic.field(_.i).get shouldEqual foo.i
-//    foo.optic.field(_.bar.b).get shouldEqual foo.bar.b
+    foo.optic.field(_.bar.b).get shouldEqual foo.bar.b
     foo.optic.field(_.bar).field(_.b).get shouldEqual foo.bar.b
   }
 
