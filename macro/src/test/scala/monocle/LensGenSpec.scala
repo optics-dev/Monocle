@@ -12,6 +12,7 @@ class LensGenSpec extends AnyFunSuite with Matchers {
   case class Foo(i: Int, bar: Bar)
   case class Bar(b: Boolean, s: String)
   val foo = Foo(5, Bar(true, "Hello"))
+  val fooBarLens = GenLens[Foo](_.bar)
 
   sealed trait ThisOrThat
   case class This(i: Int, bar: Bar) extends ThisOrThat
@@ -26,13 +27,17 @@ class LensGenSpec extends AnyFunSuite with Matchers {
     GenLens[Foo](_.bar.b).get(foo) shouldEqual foo.bar.b
   }
 
-  test("fields (AppliedIso)") {
+  test("field syntax (AppliedIso)") {
     foo.optic.field(_.i).get shouldEqual foo.i
     foo.optic.field(_.bar.b).get shouldEqual foo.bar.b
     foo.optic.field(_.bar).field(_.b).get shouldEqual foo.bar.b
   }
 
-  test("fields (AppliedPrism)") {
+  test("field syntax (AppliedLens)") {
+    foo.optic(fooBarLens).field(_.b).get shouldEqual foo.bar.b
+  }
+
+  test("field syntax (AppliedPrism)") {
     thisOrThat.optic(prism).field(_.i).getOption shouldEqual Some(x.i)
     thisOrThat.optic(prism).field(_.bar.b).getOption shouldEqual Some(x.bar.b)
     thisOrThat.optic(prism).field(_.bar).field(_.b).getOption shouldEqual Some(x.bar.b)
