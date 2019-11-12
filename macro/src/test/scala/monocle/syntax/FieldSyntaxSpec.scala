@@ -1,13 +1,13 @@
 package monocle
 
-import monocle.macros.GenLens
+import monocle.function.Cons
+import monocle.macros.{GenLens, GenPrism}
 import monocle.syntax.all._
 import monocle.macros.syntax._
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import monocle.macros.GenPrism
 
-class LensGenSpec extends AnyFunSuite with Matchers {
+class FieldSyntaxSpec extends AnyFunSuite with Matchers {
 
   case class Foo(i: Int, bar: Bar)
   case class Bar(b: Boolean, s: String)
@@ -22,9 +22,18 @@ class LensGenSpec extends AnyFunSuite with Matchers {
   val x = This(5, Bar(true, "Hello"))
   val thisOrThat: ThisOrThat = x
 
-  test("GenLens") {
-    GenLens[Foo](_.i).get(foo) shouldEqual foo.i
-    GenLens[Foo](_.bar.b).get(foo) shouldEqual foo.bar.b
+  implicit val cons: Cons[List[Bar]] = Cons.list[Bar]
+  val optional = Optional.headOption[List[Bar], Bar]
+  val bars = List(
+    Bar(true, "a"),
+    Bar(true, "b"),
+    Bar(true, "c")
+  )
+
+  test("field syntax (Iso)") {
+    Iso.id[Foo].field(_.i).get(foo) shouldEqual foo.i
+    Iso.id[Foo].field(_.bar.b).get(foo) shouldEqual foo.bar.b
+    Iso.id[Foo].field(_.bar).field(_.b).get(foo) shouldEqual foo.bar.b
   }
 
   test("field syntax (AppliedIso)") {
@@ -33,8 +42,18 @@ class LensGenSpec extends AnyFunSuite with Matchers {
     foo.optic.field(_.bar).field(_.b).get shouldEqual foo.bar.b
   }
 
+  test("field syntax (Lens)") {
+    fooBarLens.field(_.b).get(foo) shouldEqual foo.bar.b
+  }
+
   test("field syntax (AppliedLens)") {
     foo.optic(fooBarLens).field(_.b).get shouldEqual foo.bar.b
+  }
+
+  test("field syntax (Prism)") {
+    prism.field(_.i).getOption(thisOrThat) shouldEqual Some(x.i)
+    prism.field(_.bar.b).getOption(thisOrThat) shouldEqual Some(x.bar.b)
+    prism.field(_.bar).field(_.b).getOption(thisOrThat) shouldEqual Some(x.bar.b)
   }
 
   test("field syntax (AppliedPrism)") {
@@ -43,15 +62,11 @@ class LensGenSpec extends AnyFunSuite with Matchers {
     thisOrThat.optic(prism).field(_.bar).field(_.b).getOption shouldEqual Some(x.bar.b)
   }
 
+  test("field syntax (Optional)") {
+    optional.field(_.b).getOption(bars) shouldEqual Some(bars.head.b)
+  }
+
   test("field syntax (AppliedOptional)") {
-    val bars = List(
-      Bar(true, "a"),
-      Bar(true, "b"),
-      Bar(true, "c")
-    )
-    import monocle.function.Cons
-    implicit val cons: Cons[List[Bar]] = Cons.list[Bar]
-    val optional = Optional.headOption[List[Bar], Bar]
     bars.optic(optional).field(_.b).getOption shouldEqual Some(bars.head.b)
   }
 
