@@ -21,10 +21,6 @@ private class GenPrismImpl(val c: blackbox.Context) {
       import scala.{Either => \/, Right => \/-, Left => -\/}
 
       new Prism[$sTpe, $aTpe]{
-        override def getOrModify(s: $sTpe): $sTpe \/ $aTpe =
-          if(s.isInstanceOf[$aTpe]) \/-(s.asInstanceOf[$aTpe])
-          else -\/(s)
-
         override def reverseGet(a: $aTpe): $sTpe =
           a.asInstanceOf[$sTpe]
 
