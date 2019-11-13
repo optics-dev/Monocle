@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Functor, Id, Monoid, Traverse}
+import cats.{Applicative, Functor, Id, Monoid, Parallel, Traverse}
 import cats.arrow.Choice
 import cats.data.Const
 import cats.instances.int._
@@ -95,6 +95,14 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
           s1 => Functor[F].map(other.modifyF(f)(s1))(Either.right)
         )
     }
+
+  /**
+   * [[PTraversal.modifyF]] for a `Parallel` applicative functor.
+   */
+  @inline final def parModifyF[F[_]](f: A => F[B])(s: S)(implicit F: Parallel[F]): F[T] =
+    F.sequential(
+      modifyF(a => F.parallel(f(a)))(s)(F.applicative)
+    )
 
   /****************************************************************/
   /** Compose methods between a [[PTraversal]] and another Optics */
