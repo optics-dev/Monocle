@@ -3,12 +3,9 @@ package monocle.syntax
 import monocle.Lens
 import monocle.function._
 
-trait AppliedLens[A, B] extends AppliedOptional[A, B] {
+trait AppliedLens[A, B] extends AppliedOptional[A, B] with AppliedGetter[A, B] {
   def value: A
   def optic: Lens[A, B]
-
-  def get: B =
-    optic.get(value)
 
   def compose[C](other: Lens[B, C]): AppliedLens[A, C] =
     AppliedLens(value, optic.compose(other))

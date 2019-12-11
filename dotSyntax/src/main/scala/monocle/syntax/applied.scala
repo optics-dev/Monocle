@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.{Lens, Optional, Prism}
+import monocle.{Getter, Lens, Optional, Prism}
 
 object applied extends AppliedSyntax
 
@@ -17,5 +17,8 @@ trait AppliedSyntax {
 
     def optic[B](optional: Optional[A, B]): AppliedOptional[A, B] =
       AppliedOptional(value, optional)
+
+    def optic[B](getter: Getter[A, B]): AppliedGetter[A, B] =
+      AppliedGetter(value, getter)
   }
 }
