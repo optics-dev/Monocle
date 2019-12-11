@@ -2,10 +2,9 @@ package monocle
 
 import monocle.function.{At, Field1, Field2, Field3, Field4, Field5, Field6}
 
-trait Lens[A, B] extends Optional[A, B] { self =>
-  def get(from: A): B
+trait Lens[A, B] extends Optional[A, B] with Getter[A, B] { self =>
 
-  final def getOption(from: A): Option[B] = Some(get(from))
+  final override def getOption(from: A): Option[B] = Some(get(from))
 
   override def modify(f: B => B): A => A = from => set(f(get(from)))(from)
 

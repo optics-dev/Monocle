@@ -1,8 +1,8 @@
 package monocle.macros.syntax
 
 import scala.reflect.macros.blackbox
-import monocle.{Lens, Prism, Optional}
-import monocle.syntax.{AppliedLens, AppliedPrism, AppliedOptional}
+import monocle.{Getter, Lens, Optional, Prism}
+import monocle.syntax.{AppliedGetter, AppliedLens, AppliedOptional, AppliedPrism}
 
 trait FieldSyntax_Priority2 {
 
@@ -12,6 +12,14 @@ trait FieldSyntax_Priority2 {
 
   implicit class GenFieldsAppliedOptional[A, B](private val value: AppliedOptional[A, B]) {
     def field[C]( f: B => C ): AppliedOptional[A, C] = macro FieldSyntaxImpl.field_impl[AppliedOptional, A, B, C]
+  }
+
+  implicit class GenFieldsGetter[A, B](private val value: Getter[A, B]) {
+    def field[C]( f: B => C ): Getter[A, C] = macro FieldSyntaxImpl.field_impl[Getter, A, B, C]
+  }
+
+  implicit class GenFieldsAppliedGetter[A, B](private val value: AppliedGetter[A, B]) {
+    def field[C]( f: B => C ): AppliedGetter[A, C] = macro FieldSyntaxImpl.field_impl[AppliedGetter, A, B, C]
   }
 
 }
