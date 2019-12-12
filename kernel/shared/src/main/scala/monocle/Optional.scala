@@ -2,11 +2,14 @@ package monocle
 
 import monocle.function.{Cons, Index, Possible}
 
-trait Optional[A, B] { self =>
+trait Optional[A, B] extends Fold[A, B] { self =>
   def getOption(from: A): Option[B]
   def set(to: B): A => A
 
   def modify(f: B => B): A => A = a => getOption(a).fold(a)(set(_)(a))
+
+  override def toIterator(from: A): Iterator[B] =
+    getOption(from).iterator
 
   def asTarget[C](implicit ev: B =:= C): Optional[A, C] =
     asInstanceOf[Optional[A, C]]
