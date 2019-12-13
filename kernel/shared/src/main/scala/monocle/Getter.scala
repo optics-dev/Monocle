@@ -6,6 +6,12 @@ trait Getter[A, B] extends Fold[A, B] { self =>
   final override def toIterator(from: A): Iterator[B] =
     collection.Iterator.single(get(from))
 
+
+  final override def map[C](f: B => C): Getter[A, C] =
+    new Getter[A, C] {
+      def get(from: A): C = f(self.get(from))
+    }
+
   def compose[C](other: Getter[B, C]): Getter[A, C] =
     new Getter[A, C] {
       def get(from: A): C = other.get(self.get(from))

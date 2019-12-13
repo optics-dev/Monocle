@@ -45,6 +45,12 @@ trait Fold[A, B] { self =>
   final def nonEmpty(from: A): Boolean =
     !isEmpty(from)
 
+  def map[C](f: B => C): Fold[A, C] =
+    new Fold[A, C] {
+      def toIterator(from: A): Iterator[C] =
+        self.toIterator(from).map(f)
+    }
+
   def compose[C](other: Fold[B, C]): Fold[A, C] =
     new Fold[A, C] {
       def toIterator(from: A): Iterator[C] =
