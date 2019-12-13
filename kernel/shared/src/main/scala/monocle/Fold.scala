@@ -3,11 +3,11 @@ package monocle
 trait Fold[A, B] { self =>
   def toIterator(from: A): Iterator[B]
 
-  def fold[Z](f: B => Z)(zero: Z)(append: (Z, Z) => Z): A => Z =
+  def foldLeft[Z](zero: Z)(f: (Z, B) => Z): A => Z =
     from => {
       var acc = zero
       val it = toIterator(from)
-      while(it.hasNext) acc = append(acc, f(it.next()))
+      while(it.hasNext) acc = f(acc, it.next())
       acc
   }
 
