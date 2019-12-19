@@ -17,7 +17,7 @@ trait Getter[A, B] extends Fold[A, B] { self =>
       def get(from: A): C = other.get(self.get(from))
     }
 
-  def asTarget[C](implicit ev: B =:= C): Getter[A, C] =
+  override def asTarget[C](implicit ev: B =:= C): Getter[A, C] =
     asInstanceOf[Getter[A, C]]
 }
 

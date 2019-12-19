@@ -1,10 +1,21 @@
 package monocle.macros.syntax
 
 import scala.reflect.macros.blackbox
-import monocle.{Getter, Lens, Optional, Prism}
-import monocle.syntax.{AppliedGetter, AppliedLens, AppliedOptional, AppliedPrism}
+import monocle.{Fold, Getter, Lens, Optional, Prism}
+import monocle.syntax.{AppliedFold, AppliedGetter, AppliedLens, AppliedOptional, AppliedPrism}
 
-trait FieldSyntax_Priority2 {
+trait FieldSyntax_Priority3 {
+  implicit class GenFieldsFold[A, B](private val value: Fold[A, B]) {
+    def field[C]( f: B => C ): Fold[A, C] = macro FieldSyntaxImpl.field_impl[Fold, A, B, C]
+  }
+
+  implicit class GenFieldsAppliedFold[A, B](private val value: AppliedFold[A, B]) {
+    def field[C]( f: B => C ): AppliedFold[A, C] = macro FieldSyntaxImpl.field_impl[AppliedFold, A, B, C]
+  }
+}
+
+
+trait FieldSyntax_Priority2 extends FieldSyntax_Priority3 {
 
   implicit class GenFieldsOptional[A, B](private val value: Optional[A, B]) {
     def field[C]( f: B => C ): Optional[A, C] = macro FieldSyntaxImpl.field_impl[Optional, A, B, C]

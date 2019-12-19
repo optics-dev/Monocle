@@ -56,6 +56,9 @@ trait Fold[A, B] { self =>
       def toIterator(from: A): Iterator[C] =
         self.toIterator(from).flatMap(other.toIterator)
     }
+
+  def asTarget[C](implicit ev: B =:= C): Fold[A, C] =
+    asInstanceOf[Fold[A, C]]
 }
 
 object Fold {
