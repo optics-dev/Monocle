@@ -14,6 +14,7 @@ class FieldSyntaxSpec extends AnyFunSuite with Matchers {
   val foo = Foo(5, Bar(true, "Hello"))
   val fooBarLens = GenLens[Foo](_.bar)
   val fooBarGetter = Getter[Foo, Bar](_.bar)
+  val fooBarFold: Fold[Foo, Bar] = fooBarGetter
 
   sealed trait ThisOrThat
   case class This(i: Int, bar: Bar) extends ThisOrThat
@@ -77,6 +78,14 @@ class FieldSyntaxSpec extends AnyFunSuite with Matchers {
 
   test("field syntax (AppliedGetter)") {
     foo.optic(fooBarGetter).field(_.b).get shouldEqual foo.bar.b
+  }
+
+  test("field syntax (Fold)") {
+    fooBarFold.field(_.b).toList(foo) shouldEqual List(foo.bar.b)
+  }
+
+  test("field syntax (AppliedFold)") {
+    foo.optic(fooBarFold).field(_.b).toList shouldEqual List(foo.bar.b)
   }
 
 }

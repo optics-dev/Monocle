@@ -11,7 +11,7 @@ trait Optional[A, B] extends Fold[A, B] { self =>
   override def toIterator(from: A): Iterator[B] =
     getOption(from).iterator
 
-  def asTarget[C](implicit ev: B =:= C): Optional[A, C] =
+  override def asTarget[C](implicit ev: B =:= C): Optional[A, C] =
     asInstanceOf[Optional[A, C]]
 
   final def compose[C](other: Optional[B, C]): Optional[A, C] = new Optional[A, C] {
