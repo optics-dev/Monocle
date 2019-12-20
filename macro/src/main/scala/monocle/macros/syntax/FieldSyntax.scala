@@ -1,7 +1,7 @@
 package monocle.macros.syntax
 
 import scala.reflect.macros.blackbox
-import monocle.{Fold, Getter, Lens, Optional, Prism}
+import monocle.{Fold, Getter, Lens, Optional, Prism, Setter}
 import monocle.syntax.{AppliedFold, AppliedGetter, AppliedLens, AppliedOptional, AppliedPrism}
 
 trait FieldSyntax_Priority3 {
@@ -25,6 +25,10 @@ trait FieldSyntax_Priority2 extends FieldSyntax_Priority3 {
 
   implicit class GenFieldsGetter[A, B](private val value: Getter[A, B]) {
     def field[C](f: B => C): Getter[A, C] = macro FieldSyntaxImpl.field_impl[Getter, A, B, C]
+  }
+
+  implicit class GenFieldsSetter[A, B](private val value: Setter[A, B]) {
+    def field[C](f: B => C): Setter[A, C] = macro FieldSyntaxImpl.field_impl[Setter, A, B, C]
   }
 
   implicit class GenFieldsAppliedGetter[A, B](private val value: AppliedGetter[A, B]) {

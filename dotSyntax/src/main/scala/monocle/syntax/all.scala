@@ -8,3 +8,4 @@ object all
     with LensSyntax
     with OptionalSyntax
     with PrismSyntax
+    with SetterSyntax

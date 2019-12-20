@@ -7,7 +7,6 @@ import org.scalatest.matchers.should.Matchers
 
 class IsoSyntaxTest extends AnyFunSuite with Matchers {
   case class Foo(map: Map[Int, String], list: List[Int], tuple: (Boolean, String))
-  //
   val foo = Foo(
     map = Map(1 -> "One", 2 -> "Two"),
     list = List(1, 2, 3),

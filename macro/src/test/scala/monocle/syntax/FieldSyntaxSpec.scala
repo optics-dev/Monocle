@@ -10,9 +10,11 @@ import org.scalatest.matchers.should.Matchers
 class FieldSyntaxSpec extends AnyFunSuite with Matchers {
   case class Foo(i: Int, bar: Bar)
   case class Bar(b: Boolean, s: String)
-  val foo                        = Foo(5, Bar(true, "Hello"))
+  val bar                        = Bar(true, "Hello")
+  val foo                        = Foo(5, bar)
   val fooBarLens                 = GenLens[Foo](_.bar)
   val fooBarGetter               = Getter[Foo, Bar](_.bar)
+  val fooBarSetter               = Setter[Foo, Bar](f => p => p.copy(bar = f(p.bar)))
   val fooBarFold: Fold[Foo, Bar] = fooBarGetter
 
   sealed trait ThisOrThat
@@ -73,6 +75,10 @@ class FieldSyntaxSpec extends AnyFunSuite with Matchers {
 
   test("field syntax (Getter)") {
     fooBarGetter.field(_.b).get(foo) shouldEqual foo.bar.b
+  }
+
+  test("field syntax (Setter)") {
+    fooBarSetter.field(_.b).set(false)(foo) shouldEqual Foo(5, Bar(false, "Hello"))
   }
 
   test("field syntax (AppliedGetter)") {
