@@ -2,85 +2,53 @@ package monocle.function
 
 import monocle.Iso
 
-import scala.annotation.implicitNotFound
+trait Reverse[A] {
+  type B
 
-@implicitNotFound("Could not find an instance of Reverse[${S},${A}], please check Monocle instance location policy to " +
-  "find out which import is necessary")
-abstract class Reverse[S, A] extends Serializable {
-  /** Creates an Iso from S to a reversed S */
-  def reverse: Iso[S, A]
+  def reverse: Iso[A, B]
 }
 
-trait ReverseFunctions {
-  @deprecated("use Reverse.fromReverseFunction", since = "1.4.0")
-  def reverseFromReverseFunction[S](_reverse: S => S): Reverse[S, S] = Reverse.fromReverseFunction(_reverse)
+object Reverse {
+  type Aux[A, B0] = Reverse[A] { type B = B0 }
 
-  def reverse[S, A](implicit ev: Reverse[S, A]): Iso[S, A] = ev.reverse
+  type AuxId[A] = Reverse[A] { type B = A }
 
-  def _reverse[S](s: S)(implicit ev: Reverse[S, S]): S = ev.reverse.get(s)
-}
+  def apply[A, B0](iso: Iso[A, B0]): Aux[A, B0] =
+    new Reverse[A] {
+      type B = B0
+      def reverse: Iso[A, B0] = iso
+    }
 
-object Reverse extends ReverseFunctions with ReverseInstancesScalaVersionSpecific {
+  implicit def listReverse[A]: AuxId[List[A]] =
+    apply(Iso[List[A], List[A]](_.reverse)(_.reverse))
 
-  def apply[S, A](iso: Iso[S, A]): Reverse[S, A] = new Reverse[S, A] {
-    override val reverse: Iso[S, A] = iso
-  }
+  implicit def vectorReverse[A]: AuxId[Vector[A]] =
+    apply(Iso[Vector[A], Vector[A]](_.reverse)(_.reverse))
 
-  def fromReverseFunction[S](_reverse: S => S): Reverse[S, S] = Reverse(
-    Iso(_reverse)(_reverse)
+  implicit def stringReverse: AuxId[String] =
+    apply(Iso[String, String](_.reverse)(_.reverse))
+
+  implicit def tuple2Reverse[A1, A2]: Reverse[(A1, A2)] = Reverse(
+    Iso[(A1, A2), (A2, A1)](_.swap)(_.swap)
   )
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
-
-  implicit def listReverse[A]: Reverse[List[A], List[A]] =
-    fromReverseFunction(_.reverse)
-
-  implicit val stringReverse: Reverse[String, String] =
-    fromReverseFunction(_.reverse)
-
-  implicit def tuple1Reverse[A]: Reverse[Tuple1[A], Tuple1[A]] = Reverse(
-    Iso.id[Tuple1[A]]
+  implicit def tuple3Reverse[A1, A2, A3]: Reverse[(A1, A2, A3)] = Reverse(
+    Iso[(A1, A2, A3), (A3, A2, A1)](a => (a._3, a._2, a._1))(a => (a._3, a._2, a._1))
   )
 
-  implicit def tuple2Reverse[A, B]: Reverse[(A, B), (B, A)] = Reverse(
-    Iso[(A, B), (B, A)](_.swap)(_.swap)
+  implicit def tuple4Reverse[A1, A2, A3, A4]: Reverse[(A1, A2, A3, A4)] = Reverse(
+    Iso[(A1, A2, A3, A4), (A4, A3, A2, A1)](a => (a._4, a._3, a._2, a._1))(a => (a._4, a._3, a._2, a._1))
   )
 
-  implicit def tuple3Reverse[A, B, C]: Reverse[(A, B, C), (C, B, A)] = Reverse(
-    Iso{t: (A, B, C) => (t._3, t._2, t._1)}(t => (t._3, t._2, t._1))
+  implicit def tuple5Reverse[A1, A2, A3, A4, A5]: Reverse[(A1, A2, A3, A4, A5)] = Reverse(
+    Iso[(A1, A2, A3, A4, A5), (A5, A4, A3, A2, A1)](a => (a._5, a._4, a._3, a._2, a._1))(
+      a => (a._5, a._4, a._3, a._2, a._1)
+    )
   )
 
-  implicit def tuple4Reverse[A, B, C, D]: Reverse[(A, B, C, D), (D, C, B, A)] = Reverse(
-    Iso{t: (A, B, C, D) => (t._4, t._3, t._2, t._1)}(t => (t._4, t._3, t._2, t._1))
+  implicit def tuple6Reverse[A1, A2, A3, A4, A5, A6]: Reverse[(A1, A2, A3, A4, A5, A6)] = Reverse(
+    Iso[(A1, A2, A3, A4, A5, A6), (A6, A5, A4, A3, A2, A1)](a => (a._6, a._5, a._4, a._3, a._2, a._1))(
+      a => (a._6, a._5, a._4, a._3, a._2, a._1)
+    )
   )
-
-  implicit def tuple5Reverse[A, B, C, D, E]: Reverse[(A, B, C, D, E), (E, D, C, B, A)] = Reverse(
-    Iso{t: (A, B, C, D, E) => (t._5, t._4, t._3, t._2, t._1)}(t => (t._5, t._4, t._3, t._2, t._1))
-  )
-
-  implicit def tuple6Reverse[A, B, C, D, E, F]: Reverse[(A, B, C, D, E, F), (F, E, D, C, B, A)] = Reverse(
-    Iso{t: (A, B, C, D, E, F) => (t._6, t._5, t._4, t._3, t._2, t._1)}(t => (t._6, t._5, t._4, t._3, t._2, t._1))
-  )
-
-  implicit def vectorReverse[A]: Reverse[Vector[A], Vector[A]] =
-    fromReverseFunction(_.reverse)
-
-  /************************************************************************************************/
-  /** Cats instances                                                                            */
-  /************************************************************************************************/
-  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
-
-  implicit def chainReverse[A]: Reverse[Chain[A], Chain[A]] =
-    fromReverseFunction(_.reverse)
-
-  implicit def necReverse[A]: Reverse[NonEmptyChain[A], NonEmptyChain[A]] =
-    fromReverseFunction(_.reverse)
-
-  implicit def nelReverse[A]: Reverse[NonEmptyList[A], NonEmptyList[A]] =
-    fromReverseFunction(_.reverse)
-
-  implicit def nevReverse[A]: Reverse[NonEmptyVector[A], NonEmptyVector[A]] =
-    fromReverseFunction(_.reverse)
 }

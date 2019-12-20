@@ -14,23 +14,17 @@ inThisBuild(
         url("https://github.com/julien-truffaut")
       ),
       Developer(
-        "NightRa",
-        "Ilan Godik",
-        "",
-        url("https://github.com/NightRa")
-      ),
-      Developer(
-        "aoiroaoino",
-        "Naoki Aoyama",
-        "aoiro.aoino@gmail.com",
-        url("https://github.com/aoiroaoino")
-      ),
-      Developer(
         "xuwei-k",
         "Kenji Yoshida",
         " 6b656e6a69@gmail.com",
         url("https://github.com/xuwei-k")
-      )
+      ),
+      Developer(
+        "cquiroz",
+        "Carlos Quiroz",
+        "",
+        url("https://github.com/cquiroz")
+      ),
     )
   )
 )
@@ -97,17 +91,17 @@ lazy val monocle = project
 lazy val monocleJVM = project
   .in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
-  .aggregate(kernel.jvm, dotSyntax.jvm, macros.jvm)
-  .dependsOn(kernel.jvm, dotSyntax.jvm, macros.jvm)
+  .aggregate(core.jvm, dotSyntax.jvm, macros.jvm)
+  .dependsOn(core.jvm, dotSyntax.jvm, macros.jvm)
 
 lazy val monocleJS = project
   .in(file(".monocleJS"))
   .settings(monocleJsSettings)
-  .aggregate(kernel.js, dotSyntax.js, macros.js)
-  .dependsOn(kernel.js, dotSyntax.js, macros.js)
+  .aggregate(core.js, dotSyntax.js, macros.js)
+  .dependsOn(core.js, dotSyntax.js, macros.js)
 
-lazy val kernel = crossProject(JVMPlatform, JSPlatform)
-  .settings(moduleName := "monocle-kernel")
+lazy val core = crossProject(JVMPlatform, JSPlatform)
+  .settings(moduleName := "monocle-core")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
@@ -115,7 +109,7 @@ lazy val kernel = crossProject(JVMPlatform, JSPlatform)
 
 lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(kernel)
+  .dependsOn(core)
   .settings(moduleName := "monocle-dot-syntax")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -125,7 +119,7 @@ lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
 
 lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(kernel, dotSyntax)
+  .dependsOn(core, dotSyntax)
   .in(file("macro"))
   .settings(moduleName := "monocle-macro")
   .configureCross(
