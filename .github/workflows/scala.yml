@@ -12,10 +12,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      # - name: Checking your code to see if u r naughty or nice
-      #   uses: openlawteam/scalafmt-ci@v2
-      #   with:
-      #     args: "--exclude=third_party --list"
+      - name: Checking code formatting
+        uses: openlawteam/scalafmt-ci@v2
+        with:
+          args: "core dotSyntax macro --exclude=third_party --list"
       - name: Run tests
         run: |
           sbt +monocleJVM/test +monocleJS/test packageSrc

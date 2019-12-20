@@ -105,7 +105,6 @@ trait AppliedFold[A, B] {
     compose(ev.possible)
 }
 
-
 object AppliedFold {
   def apply[A, B](_value: A, _optic: Fold[A, B]): AppliedFold[A, B] =
     new AppliedFold[A, B] {
