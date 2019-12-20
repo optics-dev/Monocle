@@ -6,21 +6,21 @@ trait Fold[A, B] { self =>
   def foldLeft[Z](zero: Z)(f: (Z, B) => Z): A => Z =
     from => {
       var acc = zero
-      val it = toIterator(from)
-      while(it.hasNext) acc = f(acc, it.next())
+      val it  = toIterator(from)
+      while (it.hasNext) acc = f(acc, it.next())
       acc
-  }
+    }
 
-  final def firstOption(from: A): Option[B] =  {
+  final def firstOption(from: A): Option[B] = {
     val it = toIterator(from)
-    if(it.hasNext) Some(it.next())
+    if (it.hasNext) Some(it.next())
     else None
   }
 
-  final def lastOption(from: A): Option[B] =  {
+  final def lastOption(from: A): Option[B] = {
     var acc: Option[B] = None
-    val it = toIterator(from)
-    while(it.hasNext) acc = Some(it.next())
+    val it             = toIterator(from)
+    while (it.hasNext) acc = Some(it.next())
     acc
   }
 
@@ -68,6 +68,6 @@ object Fold {
         _toIterator(from)
     }
 
-  def list[A]: Fold[List[A], A] = apply(_.iterator)
+  def list[A]: Fold[List[A], A]     = apply(_.iterator)
   def vector[A]: Fold[Vector[A], A] = apply(_.iterator)
 }

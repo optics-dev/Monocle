@@ -51,8 +51,7 @@ trait AppliedGetter[A, B] {
 object AppliedGetter {
   def apply[A, B](_value: A, _optic: Getter[A, B]): AppliedGetter[A, B] =
     new AppliedGetter[A, B] {
-      def value: A          = _value
+      def value: A            = _value
       def optic: Getter[A, B] = _optic
     }
 }
-

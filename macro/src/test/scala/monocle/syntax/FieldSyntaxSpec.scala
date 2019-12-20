@@ -8,24 +8,23 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
 class FieldSyntaxSpec extends AnyFunSuite with Matchers {
-
   case class Foo(i: Int, bar: Bar)
   case class Bar(b: Boolean, s: String)
-  val foo = Foo(5, Bar(true, "Hello"))
-  val fooBarLens = GenLens[Foo](_.bar)
-  val fooBarGetter = Getter[Foo, Bar](_.bar)
+  val foo                        = Foo(5, Bar(true, "Hello"))
+  val fooBarLens                 = GenLens[Foo](_.bar)
+  val fooBarGetter               = Getter[Foo, Bar](_.bar)
   val fooBarFold: Fold[Foo, Bar] = fooBarGetter
 
   sealed trait ThisOrThat
   case class This(i: Int, bar: Bar) extends ThisOrThat
-  case class That(d: Double) extends ThisOrThat
+  case class That(d: Double)        extends ThisOrThat
 
-  val prism = GenPrism[ThisOrThat, This]
-  val x = This(5, Bar(true, "Hello"))
+  val prism                  = GenPrism[ThisOrThat, This]
+  val x                      = This(5, Bar(true, "Hello"))
   val thisOrThat: ThisOrThat = x
 
   implicit val cons: Cons[List[Bar]] = Cons.list[Bar]
-  val optional = Optional.headOption[List[Bar], Bar]
+  val optional                       = Optional.headOption[List[Bar], Bar]
   val bars = List(
     Bar(true, "a"),
     Bar(true, "b"),
@@ -87,5 +86,4 @@ class FieldSyntaxSpec extends AnyFunSuite with Matchers {
   test("field syntax (AppliedFold)") {
     foo.optic(fooBarFold).field(_.b).toList shouldEqual List(foo.bar.b)
   }
-
 }
