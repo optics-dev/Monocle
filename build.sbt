@@ -56,7 +56,7 @@ lazy val buildSettings = Seq(
   )
 )
 
-lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.0-M1" % "test")
+lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.0-M2" % "test")
 
 lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
 
