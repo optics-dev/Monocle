@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.{Fold, Getter, Lens, Optional, Prism}
+import monocle.{Fold, Getter, Lens, Optional, Prism, Setter}
 
 object applied extends AppliedSyntax
 
@@ -23,5 +23,8 @@ trait AppliedSyntax {
 
     def optic[B](fold: Fold[A, B]): AppliedFold[A, B] =
       AppliedFold(value, fold)
+
+    def optic[B](setter: Setter[A, B]): AppliedSetter[A, B] =
+      AppliedSetter(value, setter)
   }
 }
