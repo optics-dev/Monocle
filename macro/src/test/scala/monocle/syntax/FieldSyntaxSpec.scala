@@ -77,12 +77,16 @@ class FieldSyntaxSpec extends AnyFunSuite with Matchers {
     fooBarGetter.field(_.b).get(foo) shouldEqual foo.bar.b
   }
 
+  test("field syntax (AppliedGetter)") {
+    foo.optic(fooBarGetter).field(_.b).get shouldEqual foo.bar.b
+  }
+
   test("field syntax (Setter)") {
     fooBarSetter.field(_.b).set(false)(foo) shouldEqual Foo(5, Bar(false, "Hello"))
   }
 
-  test("field syntax (AppliedGetter)") {
-    foo.optic(fooBarGetter).field(_.b).get shouldEqual foo.bar.b
+  test("field syntax (AppliedSetter)") {
+    foo.optic(fooBarSetter).set(Bar(false, "hello")) shouldEqual Foo(5, Bar(false, "hello"))
   }
 
   test("field syntax (Fold)") {

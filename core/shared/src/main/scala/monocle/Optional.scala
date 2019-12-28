@@ -4,7 +4,6 @@ import monocle.function.{Cons, Index, Possible}
 
 trait Optional[A, B] extends Fold[A, B] with Setter[A, B] { self =>
   def getOption(from: A): Option[B]
-  def set(to: B): A => A
 
   def modify(f: B => B): A => A = a => getOption(a).fold(a)(set(_)(a))
 
