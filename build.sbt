@@ -55,7 +55,7 @@ def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scala
 lazy val buildSettings = Seq(
   scalaVersion       := "2.13.1",
   crossScalaVersions := Seq("2.12.10", "2.13.1"),
-  scalatestVersion   := "3.1.0-SNAP13",
+  scalatestVersion   := "3.2.0-M1",
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions     ++= Seq(
     "-encoding", "UTF-8",
@@ -80,19 +80,19 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val catsVersion = "2.0.0"
+lazy val catsVersion = "2.1.0"
 
 lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"                % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel"     %%% "cats-laws"                % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel"     %%% "alleycats-core"           % catsVersion)
-lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.2.28")
+lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.2.30")
 lazy val shapeless         = Def.setting("com.chuusai"       %%% "shapeless"                % "2.3.3")
 lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.10")
 lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.10" % "test")
 
-lazy val discipline        = Def.setting("org.typelevel"     %%% "discipline-scalatest"     % "1.0.0-M1")
-lazy val scalacheck        = Def.setting("org.scalacheck"    %%% "scalacheck"               % "1.14.1")
+lazy val discipline        = Def.setting("org.typelevel"     %%% "discipline-scalatest"     % "1.0.0-RC1")
+lazy val scalacheck        = Def.setting("org.scalacheck"    %%% "scalacheck"               % "1.14.3")
 lazy val scalatestplus     = Def.setting("org.scalatestplus" %%% "scalatestplus-scalacheck" % "1.0.0-SNAP8" % "test")
 lazy val scalatest         = Def.setting("org.scalatest"     %%% "scalatest"                % scalatestVersion.value % "test")
 
@@ -109,26 +109,22 @@ lazy val paradisePlugin = Def.setting{
   }
 }
 
-lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.10.3" cross CrossVersion.binary
+lazy val kindProjector  = "org.typelevel" % "kind-projector" % "0.11.0" cross CrossVersion.full
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "1.6.0")
 )
 
-lazy val tagName = Def.setting(
- s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}")
-
 lazy val gitRev = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
 lazy val scalajsSettings = Seq(
   scalacOptions += {
-    lazy val tag = tagName.value
+    lazy val tag = (version in ThisBuild).value
     val s = if (isSnapshot.value) gitRev else tag
     val a = (baseDirectory in LocalRootProject).value.toURI.toString
     val g = "https://raw.githubusercontent.com/julien-truffaut/Monocle"
     s"-P:scalajs:mapSourceURI:$a->$g/$s/"
   },
-  jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
 )
 
