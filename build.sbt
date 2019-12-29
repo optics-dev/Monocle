@@ -1,6 +1,8 @@
 import sbt.Keys._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
+Global / onChangedBuildSource := IgnoreSourceChanges
+
 inThisBuild(
   List(
     organization := "com.github.julien-truffaut",
@@ -31,26 +33,24 @@ inThisBuild(
 
 lazy val buildSettings = Seq(
   scalaVersion := "2.13.1",
-  crossScalaVersions := Seq("2.13.1"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-  scalacOptions ++= Seq(
-    "-encoding",
-    "UTF-8",
-    "-feature",
-    "-language:implicitConversions",
-    "-language:higherKinds",
-    "-language:postfixOps",
-    "-unchecked",
-    "-Xfatal-warnings",
-    "-deprecation",
-    "-Ywarn-dead-code",
-    "-Ywarn-value-discard",
-    "-Ywarn-unused:imports",
-    "-Ymacro-annotations"
-  ),
+  scalacOptions ++= { if (!isDotty.value) Seq(
+      "-encoding",
+      "UTF-8",
+      "-feature",
+      "-language:implicitConversions",
+      "-language:higherKinds",
+      "-language:postfixOps",
+      "-unchecked",
+      "-Xfatal-warnings",
+      "-deprecation",
+      "-Ywarn-dead-code",
+      "-Ywarn-value-discard",
+      "-Ywarn-unused:imports",
+      "-Ymacro-annotations"
+    ) else Nil},
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions in (Test, console) -= "-Ywarn-unused:imports",
-  addCompilerPlugin(kindProjector),
   scmInfo := Some(
     ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git")
   )
@@ -58,7 +58,9 @@ lazy val buildSettings = Seq(
 
 lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.0-M2" % "test")
 
-lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
+lazy val crossSettings = Seq(
+  crossScalaVersions:= Seq("2.13.1", "0.21.0-RC1")
+)
 
 lazy val tagName =
   Def.setting(s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}")
@@ -106,6 +108,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
+  .jvmSettings(crossSettings)
 
 lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -115,7 +118,8 @@ lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .settings(libraryDependencies += scalatest.value)
+  .jvmSettings(crossSettings)
+  .settings(libraryDependencies ++= {if (isDotty.value) List() else Seq(scalatest.value)}) // scalatest isn't available in dotty
 
 lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -129,10 +133,10 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .settings(
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= Seq(
-      scalatest.value,
       scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
       scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
-    )
+    ),
+    libraryDependencies ++= Seq(scalatest.value)
   )
 
 lazy val noPublishSettings = Seq(
