@@ -2,7 +2,7 @@ package monocle
 
 import monocle.function.Cons
 import monocle.macros.{GenLens, GenPrism}
-import monocle.syntax.all._
+import monocle.implicits._
 import monocle.macros.syntax._
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers

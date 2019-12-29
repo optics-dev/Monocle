@@ -2,7 +2,7 @@ package monocle.macros.syntax
 
 import scala.reflect.macros.blackbox
 import monocle.{Fold, Getter, Lens, Optional, Prism, Setter}
-import monocle.syntax.{AppliedFold, AppliedGetter, AppliedLens, AppliedOptional, AppliedPrism, AppliedSetter}
+import monocle.applied.{AppliedFold, AppliedGetter, AppliedLens, AppliedOptional, AppliedPrism, AppliedSetter}
 
 trait FieldSyntax_Priority3 {
   implicit class GenFieldsFold[A, B](private val value: Fold[A, B]) {

@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.syntax.all._
+import monocle.implicits._
 import monocle.Lens
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -17,8 +17,8 @@ class IsoSyntaxTest extends AnyFunSuite with Matchers {
   val tuple: Lens[Foo, (Boolean, String)] = Lens[Foo, (Boolean, String)](_.tuple)((foo, newV) => foo.copy(tuple = newV))
 
   test("reverse") {
-    list.reverse.get(foo) shouldEqual foo.list.reverse
-    tuple._2.reverse.get(foo) shouldEqual "hello".reverse
-    tuple.reverse.get(foo) shouldEqual ("hello", false)
+    foo.optic(list).reverse.get shouldEqual foo.list.reverse
+    foo.optic(tuple)._2.reverse.get shouldEqual "hello".reverse
+    foo.optic(tuple).reverse.get shouldEqual ("hello", false)
   }
 }
