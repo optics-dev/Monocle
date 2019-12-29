@@ -1,6 +1,7 @@
 package monocle.syntax
 
-import monocle.{Fold, Getter, Lens, Optional, Prism, Setter}
+import monocle.applied._
+import monocle._
 
 object applied extends AppliedSyntax
 

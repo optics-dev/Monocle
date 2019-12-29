@@ -1,4 +1,4 @@
-package monocle.syntax
+package monocle.applied
 
 import monocle.Lens
 import monocle.function._

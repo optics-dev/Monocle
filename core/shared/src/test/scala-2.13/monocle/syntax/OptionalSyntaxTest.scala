@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.syntax.all._
+import monocle.implicits._
 import monocle.Lens
 import monocle.Optional
 import org.scalatest.funsuite.AnyFunSuite
@@ -20,11 +20,10 @@ class OptionalSyntaxTest extends AnyFunSuite with Matchers {
   val optional1: Optional[Foo, String] = opt1.compose(Optional.possible[Option[String], String])
 
   test("basic") {
-    optional1.getOption(foo) shouldEqual foo.map.get(1)
     foo.optic(optional1).getOption shouldEqual foo.map.get(1)
   }
 
   test("possible") {
-    opt1.possible.getOption(foo) shouldEqual foo.map.get(1)
+    foo.optic(opt1).possible.getOption shouldEqual foo.map.get(1)
   }
 }
