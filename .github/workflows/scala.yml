@@ -12,10 +12,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Checking code formatting
-        uses: openlawteam/scalafmt-ci@v2
-        with:
-          args: "core dotSyntax macro --exclude=third_party --list"
+      - name: Checking your code format
+        run: sbt scalafmtCheck
       - name: Run tests
         run: |
           sbt +monocleJVM/test +monocleJS/test packageSrc
