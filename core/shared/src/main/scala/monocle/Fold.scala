@@ -2,7 +2,7 @@ package monocle
 
 import monocle.function._
 
-trait Fold[A, B] { self =>
+trait Fold[-A, +B] { self =>
   def toIterator(from: A): Iterator[B]
 
   def foldLeft[Z](zero: Z)(f: (Z, B) => Z): A => Z =
@@ -59,42 +59,42 @@ trait Fold[A, B] { self =>
         self.toIterator(from).flatMap(other.toIterator)
     }
 
-  def asTarget[C](implicit ev: B =:= C): Fold[A, C] =
+  def asTarget[C](implicit ev: B <:< C): Fold[A, C] =
     asInstanceOf[Fold[A, C]]
 
   ///////////////////////////////////
   // dot syntax for optics typeclass
   ///////////////////////////////////
 
-  def _1(implicit ev: Field1[B]): Fold[A, ev.B] = first(ev)
-  def _2(implicit ev: Field2[B]): Fold[A, ev.B] = second(ev)
-  def _3(implicit ev: Field3[B]): Fold[A, ev.B] = third(ev)
-  def _4(implicit ev: Field4[B]): Fold[A, ev.B] = fourth(ev)
-  def _5(implicit ev: Field5[B]): Fold[A, ev.B] = fifth(ev)
-  def _6(implicit ev: Field6[B]): Fold[A, ev.B] = sixth(ev)
+  def _1[C >: B](implicit ev: Field1[C]): Fold[A, ev.B] = first(ev)
+  def _2[C >: B](implicit ev: Field2[C]): Fold[A, ev.B] = second(ev)
+  def _3[C >: B](implicit ev: Field3[C]): Fold[A, ev.B] = third(ev)
+  def _4[C >: B](implicit ev: Field4[C]): Fold[A, ev.B] = fourth(ev)
+  def _5[C >: B](implicit ev: Field5[C]): Fold[A, ev.B] = fifth(ev)
+  def _6[C >: B](implicit ev: Field6[C]): Fold[A, ev.B] = sixth(ev)
 
-  def first(implicit ev: Field1[B]): Fold[A, ev.B]  = compose(ev.first)
-  def second(implicit ev: Field2[B]): Fold[A, ev.B] = compose(ev.second)
-  def third(implicit ev: Field3[B]): Fold[A, ev.B]  = compose(ev.third)
-  def fourth(implicit ev: Field4[B]): Fold[A, ev.B] = compose(ev.fourth)
-  def fifth(implicit ev: Field5[B]): Fold[A, ev.B]  = compose(ev.fifth)
-  def sixth(implicit ev: Field6[B]): Fold[A, ev.B]  = compose(ev.sixth)
+  def first[C >: B](implicit ev: Field1[C]): Fold[A, ev.B]  = asTarget[C].compose(ev.first)
+  def second[C >: B](implicit ev: Field2[C]): Fold[A, ev.B] = compose(ev.second)
+  def third[C >: B](implicit ev: Field3[C]): Fold[A, ev.B]  = compose(ev.third)
+  def fourth[C >: B](implicit ev: Field4[C]): Fold[A, ev.B] = compose(ev.fourth)
+  def fifth[C >: B](implicit ev: Field5[C]): Fold[A, ev.B]  = compose(ev.fifth)
+  def sixth[C >: B](implicit ev: Field6[C]): Fold[A, ev.B]  = compose(ev.sixth)
 
-  def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): Fold[A, Option[C]] = compose(ev.at(i))
-  def cons(implicit ev: Cons[B]): Fold[A, (ev.B, B)]                   = compose(ev.cons)
-  def headOption(implicit ev: Cons[B]): Fold[A, ev.B]                  = compose(ev.headOption)
-  def tailOption(implicit ev: Cons[B]): Fold[A, B]                     = compose(ev.tailOption)
-  def index[I, C](i: I)(implicit ev: Index.Aux[B, I, C]): Fold[A, C]   = compose(ev.index(i))
-  def possible(implicit ev: Possible[B]): Fold[A, ev.B]                = compose(ev.possible)
-  def reverse(implicit ev: Reverse[B]): Fold[A, ev.B]                  = compose(ev.reverse)
+  def at[I, C >: B, D](i: I)(implicit ev: At.Aux[C, I, D]): Fold[A, Option[D]] = compose(ev.at(i))
+  def cons[C >: B](implicit ev: Cons[C]): Fold[A, (ev.B, C)]                   = compose(ev.cons)
+  def headOption[C >: B](implicit ev: Cons[C]): Fold[A, ev.B]                  = compose(ev.headOption)
+  def tailOption[C >: B](implicit ev: Cons[C]): Fold[A, C]                     = compose(ev.tailOption)
+  def index[I, C >: B, D](i: I)(implicit ev: Index.Aux[C, I, D]): Fold[A, D]   = compose(ev.index(i))
+  def possible[C >: B](implicit ev: Possible[C]): Fold[A, ev.B]                = compose(ev.possible)
+  def reverse[C >: B](implicit ev: Reverse[C]): Fold[A, ev.B]                  = compose(ev.reverse)
 
   ///////////////////////////////////
   // dot syntax for standard types
   ///////////////////////////////////
 
-  def left[E, C](implicit ev: B =:= Either[E, C]): Fold[A, E]  = asTarget[Either[E, C]].compose(Prism.left[E, C])
-  def right[E, C](implicit ev: B =:= Either[E, C]): Fold[A, C] = asTarget[Either[E, C]].compose(Prism.right[E, C])
-  def some[C](implicit ev: B =:= Option[C]): Fold[A, C]        = asTarget[Option[C]].compose(Prism.some[C])
+  def left[E, C](implicit ev: B <:< Either[E, C]): Fold[A, E]  = asTarget[Either[E, C]].compose(Prism.left[E, C])
+  def right[E, C](implicit ev: B <:< Either[E, C]): Fold[A, C] = asTarget[Either[E, C]].compose(Prism.right[E, C])
+  def some[C](implicit ev: B <:< Option[C]): Fold[A, C]        = asTarget[Option[C]].compose(Prism.some[C])
 }
 
 object Fold {
