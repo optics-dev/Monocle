@@ -20,52 +20,57 @@ class LensSyntaxTest extends AnyFunSuite with Matchers {
     Lens[Foo, (Boolean, String, Int, Long, Double, (Int, String))](_.tuple)((foo, newV) => foo.copy(tuple = newV))
 
   test("_1") {
+    tuple._1.get(foo) shouldEqual foo.tuple._1
     foo.optic(tuple)._1.get shouldEqual foo.tuple._1
-    foo.optic(tuple).first.get shouldEqual foo.tuple._1
   }
 
   test("_2") {
+    tuple._2.get(foo) shouldEqual foo.tuple._2
     foo.optic(tuple)._2.get shouldEqual foo.tuple._2
-    foo.optic(tuple).second.get shouldEqual foo.tuple._2
   }
 
   test("_3") {
+    tuple._3.get(foo) shouldEqual foo.tuple._3
     foo.optic(tuple)._3.get shouldEqual foo.tuple._3
-    foo.optic(tuple).third.get shouldEqual foo.tuple._3
   }
 
   test("_4") {
+    tuple._4.get(foo) shouldEqual foo.tuple._4
     foo.optic(tuple)._4.get shouldEqual foo.tuple._4
-    foo.optic(tuple).fourth.get shouldEqual foo.tuple._4
   }
 
   test("_5") {
+    tuple._5.get(foo) shouldEqual foo.tuple._5
     foo.optic(tuple)._5.get shouldEqual foo.tuple._5
-    foo.optic(tuple).fifth.get shouldEqual foo.tuple._5
   }
 
   test("_6") {
+    tuple._6.get(foo) shouldEqual foo.tuple._6
     foo.optic(tuple)._6.get shouldEqual foo.tuple._6
-    foo.optic(tuple).sixth.get shouldEqual foo.tuple._6
   }
 
   test("at") {
+    map.at(1).get(foo) shouldEqual foo.map.get(1)
     foo.optic(map).at(1).get shouldEqual foo.map.get(1)
   }
 
   test("cons") {
+    list.cons.getOption(foo) shouldEqual Some((foo.list.head, foo.list.tail))
     foo.optic(list).cons.getOption shouldEqual Some((foo.list.head, foo.list.tail))
   }
 
   test("index") {
+    map.index(1).getOption(foo) shouldEqual foo.map.get(1)
     foo.optic(map).index(1).getOption shouldEqual foo.map.get(1)
   }
 
   test("headOption") {
+    list.headOption.getOption(foo) shouldEqual foo.list.headOption
     foo.optic(list).headOption.getOption shouldEqual foo.list.headOption
   }
 
   test("tailOption") {
+    list.tailOption.getOption(foo) shouldEqual Some(foo.list.tail)
     foo.optic(list).tailOption.getOption shouldEqual Some(foo.list.tail)
   }
 
