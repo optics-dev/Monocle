@@ -93,17 +93,27 @@ lazy val monocle = project
 lazy val monocleJVM = project
   .in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
-  .aggregate(core.jvm, macros.jvm)
-  .dependsOn(core.jvm, macros.jvm)
+  .aggregate(core.jvm, dotSyntax.jvm, macros.jvm)
+  .dependsOn(core.jvm, dotSyntax.jvm, macros.jvm)
 
 lazy val monocleJS = project
   .in(file(".monocleJS"))
   .settings(monocleJsSettings)
-  .aggregate(core.js, macros.js)
-  .dependsOn(core.js, macros.js)
+  .aggregate(core.js, dotSyntax.js, macros.js)
+  .dependsOn(core.js, dotSyntax.js, macros.js)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(moduleName := "monocle-core")
+  .configureCross(
+    _.jvmSettings(monocleJvmSettings),
+    _.jsSettings(monocleJsSettings)
+  )
+  .jvmSettings(crossSettings)
+
+lazy val dotSyntax = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(core)
+  .settings(moduleName := "monocle-dot-syntax")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
@@ -113,7 +123,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
 
 lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(core)
+  .dependsOn(core, dotSyntax)
   .in(file("macro"))
   .settings(moduleName := "monocle-macro")
   .configureCross(
@@ -124,7 +134,7 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= Seq(
       scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
-      scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided"
+      scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
     ),
     libraryDependencies ++= Seq(scalatest.value)
   )

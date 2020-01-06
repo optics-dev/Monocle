@@ -1,6 +1,6 @@
 package monocle
 
-import monocle.function._
+import monocle.function.Cons
 
 trait Prism[A, B] extends Optional[A, B] { self =>
   def reverseGet(to: B): A
@@ -16,23 +16,6 @@ trait Prism[A, B] extends Optional[A, B] { self =>
     def getOption(from: A): Option[C] = self.getOption(from).flatMap(other.getOption)
     def reverseGet(to: C): A          = self.reverseGet(other.reverseGet(to))
   }
-
-  ///////////////////////////////////
-  // dot syntax for optics typeclass
-  ///////////////////////////////////
-
-  override def cons(implicit ev: Cons[B]): Prism[A, (ev.B, B)]  = compose(ev.cons)
-  override def reverse(implicit ev: Reverse[B]): Prism[A, ev.B] = compose(ev.reverse)
-
-  ///////////////////////////////////
-  // dot syntax for standard types
-  ///////////////////////////////////
-
-  override def left[E, C](implicit ev: B =:= Either[E, C]): Prism[A, E] =
-    asTarget[Either[E, C]].compose(Prism.left[E, C])
-  override def right[E, C](implicit ev: B =:= Either[E, C]): Prism[A, C] =
-    asTarget[Either[E, C]].compose(Prism.right[E, C])
-  override def some[C](implicit ev: B =:= Option[C]): Prism[A, C] = asTarget[Option[C]].compose(Prism.some[C])
 }
 
 object Prism {
