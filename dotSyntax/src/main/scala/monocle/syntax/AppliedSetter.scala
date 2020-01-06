@@ -21,7 +21,6 @@ trait AppliedSetter[A, B] {
 
   def some[C](implicit ev: B =:= Option[C]): AppliedSetter[A, C] =
     asTarget[Option[C]].compose(Prism.some[C])
-
 }
 
 object AppliedSetter {
