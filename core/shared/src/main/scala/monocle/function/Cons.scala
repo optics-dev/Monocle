@@ -2,22 +2,22 @@ package monocle.function
 
 import monocle.{Lens, Optional, Prism}
 
-trait Cons[A] {
-  type B
+trait Cons[From] {
+  type Head
 
-  def cons: Prism[A, (B, A)]
+  def cons: Prism[From, (Head, From)]
 
-  def headOption: Optional[A, B] = cons composeLens Lens.first
-  def tailOption: Optional[A, A] = cons composeLens Lens.second
+  def headOption: Optional[From, Head] = cons composeLens Lens.first
+  def tailOption: Optional[From, From] = cons composeLens Lens.second
 }
 
 object Cons {
-  type Aux[A, B0] = Cons[A] { type B = B0 }
+  type Aux[From, _Head] = Cons[From] { type Head = _Head }
 
-  def apply[A, B0](prism: Prism[A, (B0, A)]): Aux[A, B0] =
-    new Cons[A] {
-      type B = B0
-      def cons: Prism[A, (B0, A)] = prism
+  def apply[From, _Head](prism: Prism[From, (_Head, From)]): Aux[From, _Head] =
+    new Cons[From] {
+      type Head = _Head
+      def cons: Prism[From, (Head, From)] = prism
     }
 
   implicit def list[A]: Cons.Aux[List[A], A] =

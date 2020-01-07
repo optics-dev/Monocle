@@ -3,41 +3,41 @@ package monocle.syntax
 import monocle.function._
 import monocle.{Fold, Prism}
 
-trait AppliedFold[A, B] {
-  def value: A
-  def optic: Fold[A, B]
+trait AppliedFold[From, To] {
+  def value: From
+  def optic: Fold[From, To]
 
-  def map[C](f: B => C): AppliedFold[A, C] =
+  def map[X](f: To => X): AppliedFold[From, X] =
     AppliedFold(value, optic.map(f))
 
-  def compose[C](other: Fold[B, C]): AppliedFold[A, C] =
+  def compose[X](other: Fold[To, X]): AppliedFold[From, X] =
     AppliedFold(value, optic.compose(other))
 
-  def asTarget[C](implicit ev: B =:= C): AppliedFold[A, C] =
-    AppliedFold(value, optic.asTarget[C])
+  def asTarget[X](implicit ev: To =:= X): AppliedFold[From, X] =
+    AppliedFold(value, optic.asTarget[X])
 
-  def toIterator: Iterator[B] =
+  def toIterator: Iterator[To] =
     optic.toIterator(value)
 
-  def foldLeft[Z](zero: Z)(f: (Z, B) => Z): Z =
+  def foldLeft[Z](zero: Z)(f: (Z, To) => Z): Z =
     optic.foldLeft(zero)(f)(value)
 
-  def firstOption: Option[B] =
+  def firstOption: Option[To] =
     optic.firstOption(value)
 
-  def lastOption: Option[B] =
+  def lastOption: Option[To] =
     optic.lastOption(value)
 
-  def toList: List[B] =
+  def toList: List[To] =
     optic.toList(value)
 
-  def find(predicate: B => Boolean): Option[B] =
+  def find(predicate: To => Boolean): Option[To] =
     optic.find(predicate)(value)
 
-  def exist(predicate: B => Boolean): Boolean =
+  def exist(predicate: To => Boolean): Boolean =
     optic.exist(predicate)(value)
 
-  def forAll(predicate: B => Boolean): Boolean =
+  def forAll(predicate: To => Boolean): Boolean =
     optic.forAll(predicate)(value)
 
   def length: Int =
@@ -49,17 +49,17 @@ trait AppliedFold[A, B] {
   def nonEmpty: Boolean =
     optic.nonEmpty(value)
 
-  def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedFold[A, Option[C]] =
+  def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): AppliedFold[From, Option[X]] =
     compose(ev.at(i))
 
-  def some[C](implicit ev: B =:= Option[C]): AppliedFold[A, C] =
-    asTarget[Option[C]].compose(Prism.some[C])
+  def some[X](implicit ev: To =:= Option[X]): AppliedFold[From, X] =
+    asTarget[Option[X]].compose(Prism.some[X])
 }
 
 object AppliedFold {
-  def apply[A, B](_value: A, _optic: Fold[A, B]): AppliedFold[A, B] =
-    new AppliedFold[A, B] {
-      def value: A          = _value
-      def optic: Fold[A, B] = _optic
+  def apply[From, To](_value: From, _optic: Fold[From, To]): AppliedFold[From, To] =
+    new AppliedFold[From, To] {
+      def value: From           = _value
+      def optic: Fold[From, To] = _optic
     }
 }

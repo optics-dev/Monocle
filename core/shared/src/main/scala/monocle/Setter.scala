@@ -1,23 +1,23 @@
 package monocle
 
-trait Setter[A, B] { self =>
-  def set(to: B): A => A
+trait Setter[From, To] { self =>
+  def set(to: To): From => From
 
-  def modify(f: B => B): A => A
+  def modify(f: To => To): From => From
 
-  def compose[C](other: Setter[B, C]): Setter[A, C] =
-    new Setter[A, C] {
-      def set(to: C): A => A        = self.modify(other.set(to))
-      def modify(f: C => C): A => A = self.modify(other.modify(f))
+  def compose[X](other: Setter[To, X]): Setter[From, X] =
+    new Setter[From, X] {
+      def set(to: X): From => From        = self.modify(other.set(to))
+      def modify(f: X => X): From => From = self.modify(other.modify(f))
     }
 
-  def asTarget[C](implicit ev: B =:= C): Setter[A, C] =
-    asInstanceOf[Setter[A, C]]
+  def asTarget[X](implicit ev: To =:= X): Setter[From, X] =
+    asInstanceOf[Setter[From, X]]
 }
 
 object Setter {
-  def apply[A, B](_modify: (B => B) => (A => A)): Setter[A, B] = new Setter[A, B] {
-    def set(to: B): A => A        = modify(_ => to)
-    def modify(f: B => B): A => A = _modify(f)
+  def apply[From, To](_modify: (To => To) => (From => From)): Setter[From, To] = new Setter[From, To] {
+    def set(to: To): From => From         = modify(_ => to)
+    def modify(f: To => To): From => From = _modify(f)
   }
 }

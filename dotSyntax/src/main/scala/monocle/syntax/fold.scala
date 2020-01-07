@@ -6,11 +6,11 @@ import monocle.{Fold, Prism}
 object fold extends FoldSyntax
 
 trait FoldSyntax {
-  implicit class FoldOps[A, B](optic: Fold[A, B]) {
-    def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): Fold[A, Option[C]] =
+  implicit class FoldOps[From, To](optic: Fold[From, To]) {
+    def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): Fold[From, Option[X]] =
       optic.compose(ev.at(i))
 
-    def some[C](implicit ev: B =:= Option[C]): Fold[A, C] =
-      optic.asTarget[Option[C]].compose(Prism.some[C])
+    def some[X](implicit ev: To =:= Option[X]): Fold[From, X] =
+      optic.asTarget[Option[X]].compose(Prism.some[X])
   }
 }

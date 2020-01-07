@@ -2,18 +2,18 @@ package monocle.function
 
 import monocle.{Optional, Prism}
 
-trait Possible[A] {
-  type B
+trait Possible[From] {
+  type To
 
-  def possible: Optional[A, B]
+  def possible: Optional[From, To]
 }
 
 object Possible {
-  type Aux[A, B0] = Possible[A] { type B = B0 }
+  type Aux[From, _To] = Possible[From] { type To = _To }
 
-  def apply[A, B0](optional: Optional[A, B0]): Aux[A, B0] = new Possible[A] {
-    type B = B0
-    override val possible: Optional[A, B0] = optional
+  def apply[From, _To](optional: Optional[From, _To]): Aux[From, _To] = new Possible[From] {
+    type To = _To
+    val possible: Optional[From, _To] = optional
   }
 
   implicit def optionPossible[A]: Aux[Option[A], A] =

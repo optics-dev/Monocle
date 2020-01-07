@@ -2,45 +2,46 @@ package monocle
 
 import monocle.function.{Cons, Index, Possible}
 
-trait Optional[A, B] extends Fold[A, B] with Setter[A, B] { self =>
-  def getOption(from: A): Option[B]
+trait Optional[From, To] extends Fold[From, To] with Setter[From, To] { self =>
+  def getOption(from: From): Option[To]
 
-  def modify(f: B => B): A => A = a => getOption(a).fold(a)(set(_)(a))
+  def modify(f: To => To): From => From = a => getOption(a).fold(a)(set(_)(a))
 
-  override def toIterator(from: A): Iterator[B] =
+  override def toIterator(from: From): Iterator[To] =
     getOption(from).iterator
 
-  override def asTarget[C](implicit ev: B =:= C): Optional[A, C] =
-    asInstanceOf[Optional[A, C]]
-
-  final def compose[C](other: Optional[B, C]): Optional[A, C] = new Optional[A, C] {
-    def getOption(from: A): Option[C]      = self.getOption(from).flatMap(other.getOption)
-    def set(to: C): A => A                 = self.modify(other.set(to))
-    override def modify(f: C => C): A => A = self.modify(other.modify(f))
+  def compose[X](other: Optional[To, X]): Optional[From, X] = new Optional[From, X] {
+    def getOption(from: From): Option[X]         = self.getOption(from).flatMap(other.getOption)
+    def set(to: X): From => From                 = self.modify(other.set(to))
+    override def modify(f: X => X): From => From = self.modify(other.modify(f))
   }
 
-  def composeLens[C](other: Lens[B, C]): Optional[A, C]   = compose(other)
-  def composePrism[C](other: Prism[B, C]): Optional[A, C] = compose(other)
+  def composeLens[X](other: Lens[To, X]): Optional[From, X]   = compose(other)
+  def composePrism[X](other: Prism[To, X]): Optional[From, X] = compose(other)
+
+  override def asTarget[X](implicit ev: To =:= X): Optional[From, X] =
+    asInstanceOf[Optional[From, X]]
 }
 
 object Optional {
-  def apply[A, B](_getOption: A => Option[B])(_set: (A, B) => A): Optional[A, B] = new Optional[A, B] {
-    def getOption(from: A): Option[B] = _getOption(from)
-    def set(to: B): A => A            = _set(_, to)
-  }
+  def apply[From, To](_getOption: From => Option[To])(_set: (From, To) => From): Optional[From, To] =
+    new Optional[From, To] {
+      def getOption(from: From): Option[To] = _getOption(from)
+      def set(to: To): From => From         = _set(_, to)
+    }
 
-  def void[S, A]: Optional[S, A] =
-    Optional[S, A](_ => None)((a, _) => a)
+  def void[From, To]: Optional[From, To] =
+    Optional[From, To](_ => None)((a, _) => a)
 
-  def headOption[S, A](implicit ev: Cons.Aux[S, A]): Optional[S, A] =
+  def headOption[From, To](implicit ev: Cons.Aux[From, To]): Optional[From, To] =
     ev.headOption
 
-  def index[S, I, A](index: I)(implicit ev: Index.Aux[S, I, A]): Optional[S, A] =
-    ev.index(index)
-
-  def tailOption[S](implicit ev: Cons[S]): Optional[S, S] =
+  def tailOption[From](implicit ev: Cons[From]): Optional[From, From] =
     ev.tailOption
 
-  def possible[A, B](implicit ev: Possible.Aux[A, B]): Optional[A, B] =
+  def index[From, Index, To](index: Index)(implicit ev: Index.Aux[From, Index, To]): Optional[From, To] =
+    ev.index(index)
+
+  def possible[From, To](implicit ev: Possible.Aux[From, To]): Optional[From, To] =
     ev.possible
 }

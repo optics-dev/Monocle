@@ -3,21 +3,21 @@ package monocle.function
 import monocle.{Lens, Optional}
 import monocle.Prism.some
 
-trait At[A] extends Index[A] {
-  def at(index: I): Lens[A, Option[B]]
+trait At[From] extends Index[From] {
+  def at(index: Index): Lens[From, Option[To]]
 
-  def index(index: I): Optional[A, B] =
+  def index(index: Index): Optional[From, To] =
     at(index) composePrism some
 }
 
 object At {
-  type Aux[A, I0, B0] = At[A] { type I = I0; type B = B0 }
+  type Aux[From, _Index, _To] = At[From] { type Index = _Index; type To = _To }
 
-  def apply[A, I0, B0](f: I0 => Lens[A, Option[B0]]): Aux[A, I0, B0] =
-    new At[A] {
-      type I = I0
-      type B = B0
-      def at(index: I0): Lens[A, Option[B0]] = f(index)
+  def apply[From, _Index, _To](f: _Index => Lens[From, Option[_To]]): Aux[From, _Index, _To] =
+    new At[From] {
+      type Index = _Index
+      type To    = _To
+      def at(index: Index): Lens[From, Option[To]] = f(index)
     }
 
   implicit def map[K, V]: Aux[Map[K, V], K, V] =
