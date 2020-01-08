@@ -128,7 +128,7 @@ Monocle is available thanks to its maintainers (people who can merge pull reques
 * Kenji Yoshida - [@xuwei-k](https://github.com/xuwei-k)
 * Ken Scambler - [@kenbot](https://github.com/kenbot)
 
-and its [contributors](https://github.com/julien-truffaut/Monocle/graphs/contributors) (people who have pushed commits Monocle).
+and its [contributors](https://github.com/julien-truffaut/Monocle/graphs/contributors) (people who have pushed commits to Monocle).
 
 ## Copyright and license
 
