@@ -36,10 +36,10 @@ trait CoProductInstances {
     * {{{
     *   sealed trait S
     *   case class A(name: String) extends S
-    *   case class B(name: String) extends S
+    *   case class To(name: String) extends S
     *   case class C(otherName: String) extends S
     *
-    *   val iso: Iso[S, Either[A, Either[B, C]]] = coProductToEither[S].apply
+    *   val iso: Iso[S, Either[A, Either[To, C]]] = coProductToEither[S].apply
     * }}}
     */
   def coProductToEither[S]: GenCoProductToEither[S] = new GenCoProductToEither
@@ -77,10 +77,10 @@ trait CoProductInstances {
     * {{{
     *   sealed trait S
     *   case class A(name: String) extends S
-    *   case class B(name: String) extends S
+    *   case class To(name: String) extends S
     *   case class C(otherName: String) extends S
     *
-    *   val iso: Iso[S, Either[A, Either[B, C])] = coProductToDisjunction[S].apply
+    *   val iso: Iso[S, Either[A, Either[To, C])] = coProductToDisjunction[S].apply
     * }}}
     */
   def coProductToDisjunction[S]: GenCoProductToDisjunction[S] = new GenCoProductToDisjunction

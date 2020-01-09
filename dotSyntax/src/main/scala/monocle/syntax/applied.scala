@@ -5,26 +5,26 @@ import monocle.{Fold, Getter, Lens, Optional, Prism, Setter}
 object applied extends AppliedSyntax
 
 trait AppliedSyntax {
-  implicit class AppliedOps[A](value: A) {
-    def optic: AppliedIso[A, A] =
+  implicit class AppliedOps[From](value: From) {
+    def optic: AppliedIso[From, From] =
       AppliedIso.id(value)
 
-    def optic[B](lens: Lens[A, B]): AppliedLens[A, B] =
+    def optic[To](lens: Lens[From, To]): AppliedLens[From, To] =
       AppliedLens(value, lens)
 
-    def optic[B](prism: Prism[A, B]): AppliedPrism[A, B] =
+    def optic[To](prism: Prism[From, To]): AppliedPrism[From, To] =
       AppliedPrism(value, prism)
 
-    def optic[B](optional: Optional[A, B]): AppliedOptional[A, B] =
+    def optic[To](optional: Optional[From, To]): AppliedOptional[From, To] =
       AppliedOptional(value, optional)
 
-    def optic[B](getter: Getter[A, B]): AppliedGetter[A, B] =
+    def optic[To](getter: Getter[From, To]): AppliedGetter[From, To] =
       AppliedGetter(value, getter)
 
-    def optic[B](fold: Fold[A, B]): AppliedFold[A, B] =
+    def optic[To](fold: Fold[From, To]): AppliedFold[From, To] =
       AppliedFold(value, fold)
 
-    def optic[B](setter: Setter[A, B]): AppliedSetter[A, B] =
+    def optic[To](setter: Setter[From, To]): AppliedSetter[From, To] =
       AppliedSetter(value, setter)
   }
 }

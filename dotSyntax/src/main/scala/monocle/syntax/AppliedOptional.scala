@@ -3,36 +3,36 @@ package monocle.syntax
 import monocle.{Optional, Prism}
 import monocle.function._
 
-trait AppliedOptional[A, B] extends AppliedFold[A, B] with AppliedSetter[A, B] {
-  def value: A
-  def optic: Optional[A, B]
+trait AppliedOptional[From, To] extends AppliedFold[From, To] with AppliedSetter[From, To] {
+  def value: From
+  def optic: Optional[From, To]
 
-  def getOption: Option[B] =
+  def getOption: Option[To] =
     optic.getOption(value)
 
-  def set(to: B): A =
+  def set(to: To): From =
     optic.set(to)(value)
 
-  def modify(f: B => B): A =
+  def modify(f: To => To): From =
     optic.modify(f)(value)
 
-  def compose[C](other: Optional[B, C]): AppliedOptional[A, C] =
+  def compose[C](other: Optional[To, C]): AppliedOptional[From, C] =
     AppliedOptional(value, optic.compose(other))
 
-  override def asTarget[C](implicit ev: B =:= C): AppliedOptional[A, C] =
-    AppliedOptional(value, optic.asTarget[C])
+  override def asTarget[X](implicit ev: To =:= X): AppliedOptional[From, X] =
+    AppliedOptional(value, optic.asTarget[X])
 
-  override def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedOptional[A, Option[C]] =
+  override def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): AppliedOptional[From, Option[X]] =
     compose(ev.at(i))
 
-  override def some[C](implicit ev: B =:= Option[C]): AppliedOptional[A, C] =
-    asTarget[Option[C]].compose(Prism.some[C])
+  override def some[X](implicit ev: To =:= Option[X]): AppliedOptional[From, X] =
+    asTarget[Option[X]].compose(Prism.some[X])
 }
 
 object AppliedOptional {
-  def apply[A, B](_value: A, _optic: Optional[A, B]): AppliedOptional[A, B] =
-    new AppliedOptional[A, B] {
-      def value: A              = _value
-      def optic: Optional[A, B] = _optic
+  def apply[From, To](_value: From, _optic: Optional[From, To]): AppliedOptional[From, To] =
+    new AppliedOptional[From, To] {
+      def value: From               = _value
+      def optic: Optional[From, To] = _optic
     }
 }

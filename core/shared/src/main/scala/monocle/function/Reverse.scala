@@ -2,21 +2,21 @@ package monocle.function
 
 import monocle.Iso
 
-trait Reverse[A] {
-  type B
+trait Reverse[From] {
+  type To
 
-  def reverse: Iso[A, B]
+  def reverse: Iso[From, To]
 }
 
 object Reverse {
-  type Aux[A, B0] = Reverse[A] { type B = B0 }
+  type Aux[From, _To] = Reverse[From] { type To = _To }
 
-  type AuxId[A] = Reverse[A] { type B = A }
+  type AuxId[From] = Reverse[From] { type To = From }
 
-  def apply[A, B0](iso: Iso[A, B0]): Aux[A, B0] =
-    new Reverse[A] {
-      type B = B0
-      def reverse: Iso[A, B0] = iso
+  def apply[From, _To](iso: Iso[From, _To]): Aux[From, _To] =
+    new Reverse[From] {
+      type To = _To
+      def reverse: Iso[From, _To] = iso
     }
 
   implicit def listReverse[A]: AuxId[List[A]] =

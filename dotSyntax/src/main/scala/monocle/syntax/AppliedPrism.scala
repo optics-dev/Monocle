@@ -2,24 +2,24 @@ package monocle.syntax
 
 import monocle.Prism
 
-trait AppliedPrism[A, B] extends AppliedOptional[A, B] {
-  def value: A
-  def optic: Prism[A, B]
+trait AppliedPrism[From, To] extends AppliedOptional[From, To] {
+  def value: From
+  def optic: Prism[From, To]
 
-  def compose[C](other: Prism[B, C]): AppliedPrism[A, C] =
+  def compose[X](other: Prism[To, X]): AppliedPrism[From, X] =
     AppliedPrism(value, optic.compose(other))
 
-  override def asTarget[C](implicit ev: B =:= C): AppliedPrism[A, C] =
-    AppliedPrism(value, optic.asTarget[C])
+  override def asTarget[X](implicit ev: To =:= X): AppliedPrism[From, X] =
+    AppliedPrism(value, optic.asTarget[X])
 
-  override def some[C](implicit ev: B =:= Option[C]): AppliedPrism[A, C] =
-    asTarget[Option[C]].compose(Prism.some[C])
+  override def some[X](implicit ev: To =:= Option[X]): AppliedPrism[From, X] =
+    asTarget[Option[X]].compose(Prism.some[X])
 }
 
 object AppliedPrism {
-  def apply[A, B](_value: A, _optic: Prism[A, B]): AppliedPrism[A, B] =
-    new AppliedPrism[A, B] {
-      def value: A           = _value
-      def optic: Prism[A, B] = _optic
+  def apply[From, To](_value: From, _optic: Prism[From, To]): AppliedPrism[From, To] =
+    new AppliedPrism[From, To] {
+      def value: From            = _value
+      def optic: Prism[From, To] = _optic
     }
 }

@@ -6,11 +6,11 @@ import monocle.function._
 object optional extends LensSyntax
 
 trait OptionalSyntax {
-  implicit class OptionalOps[A, B](optic: Optional[A, B]) {
-    def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): Optional[A, Option[C]] =
+  implicit class OptionalOps[From, To](optic: Optional[From, To]) {
+    def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): Optional[From, Option[X]] =
       optic.compose(ev.at(i))
 
-    def some[C](implicit ev: B =:= Option[C]): Optional[A, C] =
-      optic.asTarget[Option[C]].compose(Prism.some[C])
+    def some[X](implicit ev: To =:= Option[X]): Optional[From, X] =
+      optic.asTarget[Option[X]].compose(Prism.some[X])
   }
 }

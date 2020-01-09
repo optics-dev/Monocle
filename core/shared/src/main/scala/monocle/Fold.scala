@@ -1,9 +1,9 @@
 package monocle
 
-trait Fold[A, B] { self =>
-  def toIterator(from: A): Iterator[B]
+trait Fold[From, To] { self =>
+  def toIterator(from: From): Iterator[To]
 
-  def foldLeft[Z](zero: Z)(f: (Z, B) => Z): A => Z =
+  def foldLeft[Z](zero: Z)(f: (Z, To) => Z): From => Z =
     from => {
       var acc = zero
       val it  = toIterator(from)
@@ -11,60 +11,60 @@ trait Fold[A, B] { self =>
       acc
     }
 
-  final def firstOption(from: A): Option[B] = {
+  def firstOption(from: From): Option[To] = {
     val it = toIterator(from)
     if (it.hasNext) Some(it.next())
     else None
   }
 
-  final def lastOption(from: A): Option[B] = {
-    var acc: Option[B] = None
-    val it             = toIterator(from)
+  def lastOption(from: From): Option[To] = {
+    var acc: Option[To] = None
+    val it              = toIterator(from)
     while (it.hasNext) acc = Some(it.next())
     acc
   }
 
-  final def toList(from: A): List[B] =
+  def toList(from: From): List[To] =
     toIterator(from).toList
 
-  final def find(predicate: B => Boolean): A => Option[B] =
+  def find(predicate: To => Boolean): From => Option[To] =
     toIterator(_).find(predicate)
 
-  final def exist(predicate: B => Boolean): A => Boolean =
+  def exist(predicate: To => Boolean): From => Boolean =
     toIterator(_).exists(predicate)
 
-  final def forAll(predicate: B => Boolean): A => Boolean =
+  def forAll(predicate: To => Boolean): From => Boolean =
     toIterator(_).forall(predicate)
 
-  final def length(from: A): Int =
+  def length(from: From): Int =
     toIterator(from).length
 
-  final def isEmpty(from: A): Boolean =
+  def isEmpty(from: From): Boolean =
     toIterator(from).hasNext
 
-  final def nonEmpty(from: A): Boolean =
+  def nonEmpty(from: From): Boolean =
     !isEmpty(from)
 
-  def map[C](f: B => C): Fold[A, C] =
-    new Fold[A, C] {
-      def toIterator(from: A): Iterator[C] =
+  def map[X](f: To => X): Fold[From, X] =
+    new Fold[From, X] {
+      def toIterator(from: From): Iterator[X] =
         self.toIterator(from).map(f)
     }
 
-  def compose[C](other: Fold[B, C]): Fold[A, C] =
-    new Fold[A, C] {
-      def toIterator(from: A): Iterator[C] =
+  def compose[X](other: Fold[To, X]): Fold[From, X] =
+    new Fold[From, X] {
+      def toIterator(from: From): Iterator[X] =
         self.toIterator(from).flatMap(other.toIterator)
     }
 
-  def asTarget[C](implicit ev: B =:= C): Fold[A, C] =
-    asInstanceOf[Fold[A, C]]
+  def asTarget[X](implicit ev: To =:= X): Fold[From, X] =
+    asInstanceOf[Fold[From, X]]
 }
 
 object Fold {
-  def apply[A, B](_toIterator: A => Iterator[B]): Fold[A, B] =
-    new Fold[A, B] {
-      def toIterator(from: A): Iterator[B] =
+  def apply[From, To](_toIterator: From => Iterator[To]): Fold[From, To] =
+    new Fold[From, To] {
+      def toIterator(from: From): Iterator[To] =
         _toIterator(from)
     }
 

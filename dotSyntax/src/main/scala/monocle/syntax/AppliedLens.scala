@@ -3,27 +3,27 @@ package monocle.syntax
 import monocle.{Lens, Prism}
 import monocle.function._
 
-trait AppliedLens[A, B] extends AppliedOptional[A, B] with AppliedGetter[A, B] {
-  def value: A
-  def optic: Lens[A, B]
+trait AppliedLens[From, To] extends AppliedOptional[From, To] with AppliedGetter[From, To] {
+  def value: From
+  def optic: Lens[From, To]
 
-  def compose[C](other: Lens[B, C]): AppliedLens[A, C] =
+  def compose[X](other: Lens[To, X]): AppliedLens[From, X] =
     AppliedLens(value, optic.compose(other))
 
-  override def asTarget[C](implicit ev: B =:= C): AppliedLens[A, C] =
-    AppliedLens(value, optic.asTarget[C])
+  override def asTarget[X](implicit ev: To =:= X): AppliedLens[From, X] =
+    AppliedLens(value, optic.asTarget[X])
 
-  override def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedLens[A, Option[C]] =
+  override def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): AppliedLens[From, Option[X]] =
     compose(ev.at(i))
 
-  override def some[C](implicit ev: B =:= Option[C]): AppliedOptional[A, C] =
-    asTarget[Option[C]].compose(Prism.some[C])
+  override def some[X](implicit ev: To =:= Option[X]): AppliedOptional[From, X] =
+    asTarget[Option[X]].compose(Prism.some[X])
 }
 
 object AppliedLens {
-  def apply[A, B](_value: A, _optic: Lens[A, B]): AppliedLens[A, B] =
-    new AppliedLens[A, B] {
-      def value: A          = _value
-      def optic: Lens[A, B] = _optic
+  def apply[From, To](_value: From, _optic: Lens[From, To]): AppliedLens[From, To] =
+    new AppliedLens[From, To] {
+      def value: From           = _value
+      def optic: Lens[From, To] = _optic
     }
 }

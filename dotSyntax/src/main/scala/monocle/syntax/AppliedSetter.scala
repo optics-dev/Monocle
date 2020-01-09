@@ -3,30 +3,30 @@ package monocle.syntax
 import monocle.{Prism, Setter}
 import monocle.function._
 
-trait AppliedSetter[A, B] {
-  def value: A
-  def optic: Setter[A, B]
+trait AppliedSetter[From, To] {
+  def value: From
+  def optic: Setter[From, To]
 
-  def set: B => A =
+  def set: To => From =
     optic.set(_)(value)
 
-  def compose[C](other: Setter[B, C]): AppliedSetter[A, C] =
+  def compose[X](other: Setter[To, X]): AppliedSetter[From, X] =
     AppliedSetter(value, optic.compose(other))
 
-  def asTarget[C](implicit ev: B =:= C): AppliedSetter[A, C] =
-    AppliedSetter(value, optic.asTarget[C])
+  def asTarget[X](implicit ev: To =:= X): AppliedSetter[From, X] =
+    AppliedSetter(value, optic.asTarget[X])
 
-  def at[I, C](i: I)(implicit ev: At.Aux[B, I, C]): AppliedSetter[A, Option[C]] =
+  def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): AppliedSetter[From, Option[X]] =
     compose(ev.at(i))
 
-  def some[C](implicit ev: B =:= Option[C]): AppliedSetter[A, C] =
-    asTarget[Option[C]].compose(Prism.some[C])
+  def some[X](implicit ev: To =:= Option[X]): AppliedSetter[From, X] =
+    asTarget[Option[X]].compose(Prism.some[X])
 }
 
 object AppliedSetter {
-  def apply[A, B](_value: A, _optic: Setter[A, B]): AppliedSetter[A, B] =
-    new AppliedSetter[A, B] {
-      def value: A            = _value
-      def optic: Setter[A, B] = _optic
+  def apply[From, To](_value: From, _optic: Setter[From, To]): AppliedSetter[From, To] =
+    new AppliedSetter[From, To] {
+      def value: From             = _value
+      def optic: Setter[From, To] = _optic
     }
 }

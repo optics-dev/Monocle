@@ -2,33 +2,30 @@ package monocle
 
 import monocle.function.Cons
 
-trait Prism[A, B] extends Optional[A, B] { self =>
-  def reverseGet(to: B): A
+trait Prism[From, To] extends Optional[From, To] { self =>
+  def reverseGet(to: To): From
 
-  final def set(to: B): A => A = _ => reverseGet(to)
+  def set(to: To): From => From = _ => reverseGet(to)
 
-  override def modify(f: B => B): A => A = a => getOption(a).fold(a)(reverseGet)
+  override def modify(f: To => To): From => From = a => getOption(a).fold(a)(reverseGet)
 
-  override def asTarget[C](implicit ev: B =:= C): Prism[A, C] =
-    asInstanceOf[Prism[A, C]]
+  override def asTarget[C](implicit ev: To =:= C): Prism[From, C] =
+    asInstanceOf[Prism[From, C]]
 
-  def compose[C](other: Prism[B, C]): Prism[A, C] = new Prism[A, C] {
-    def getOption(from: A): Option[C] = self.getOption(from).flatMap(other.getOption)
-    def reverseGet(to: C): A          = self.reverseGet(other.reverseGet(to))
+  def compose[C](other: Prism[To, C]): Prism[From, C] = new Prism[From, C] {
+    def getOption(from: From): Option[C] = self.getOption(from).flatMap(other.getOption)
+    def reverseGet(to: C): From          = self.reverseGet(other.reverseGet(to))
   }
 }
 
 object Prism {
-  def apply[A, B](_getOption: A => Option[B])(_reverseGet: B => A): Prism[A, B] = new Prism[A, B] {
-    def reverseGet(to: B): A          = _reverseGet(to)
-    def getOption(from: A): Option[B] = _getOption(from)
+  def apply[From, To](_getOption: From => Option[To])(_reverseGet: To => From): Prism[From, To] = new Prism[From, To] {
+    def reverseGet(to: To): From          = _reverseGet(to)
+    def getOption(from: From): Option[To] = _getOption(from)
   }
 
-  def partial[A, B](get: PartialFunction[A, B])(reverseGet: B => A): Prism[A, B] =
+  def partial[From, To](get: PartialFunction[From, To])(reverseGet: To => From): Prism[From, To] =
     Prism(get.lift)(reverseGet)
-
-  def cons[S, A](implicit ev: Cons.Aux[S, A]): Prism[S, (A, S)] =
-    ev.cons
 
   def some[A]: Prism[Option[A], A] =
     partial[Option[A], A] { case Some(a) => a }(Some(_))
@@ -41,4 +38,7 @@ object Prism {
 
   def right[E, A]: Prism[Either[E, A], A] =
     partial[Either[E, A], A] { case Right(e) => e }(Right(_))
+
+  def cons[From, To](implicit ev: Cons.Aux[From, To]): Prism[From, (To, From)] =
+    ev.cons
 }
