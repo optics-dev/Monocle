@@ -53,8 +53,8 @@ def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scala
 }
 
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.13.1",
-  crossScalaVersions := Seq("2.12.10", "2.13.1"),
+  scalaVersion       := "2.13.0",
+  crossScalaVersions := Seq("2.12.10", "2.13.0"),
   scalatestVersion   := "3.2.0-M1",
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions     ++= Seq(
@@ -112,7 +112,7 @@ lazy val paradisePlugin = Def.setting{
 lazy val kindProjector  = "org.typelevel" % "kind-projector" % "0.11.0" cross CrossVersion.full
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "1.6.0")
+  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "2.0.0")
 )
 
 lazy val gitRev = sys.process.Process("git rev-parse HEAD").lineStream_!.head
