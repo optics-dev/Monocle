@@ -7,8 +7,8 @@ trait Cons[From] {
 
   def cons: Prism[From, (Head, From)]
 
-  def headOption: Optional[From, Head] = cons composeLens Lens.first
-  def tailOption: Optional[From, From] = cons composeLens Lens.second
+  def headOption: Optional[From, Head] = cons andThenLens  Lens.first
+  def tailOption: Optional[From, From] = cons andThenLens  Lens.second
 }
 
 object Cons {

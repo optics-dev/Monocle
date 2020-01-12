@@ -7,7 +7,7 @@ trait At[From] extends Index[From] {
   def at(index: Index): Lens[From, Option[To]]
 
   def index(index: Index): Optional[From, To] =
-    at(index) composePrism some
+    at(index) andThenPrism  some
 }
 
 object At {
