@@ -43,9 +43,9 @@ class LensMonoExample extends MonocleSuite {
   }
 
   test("compose") {
-    (Manual._address composeLens Manual._streetNumber).get(john) shouldEqual 126
-    (Semi.address composeLens Semi.streetNumber).get(john)       shouldEqual 126
-    (Person.address composeLens Address.streetNumber).get(john)  shouldEqual 126
+    (Manual._address andThenLens Manual._streetNumber).get(john) shouldEqual 126
+    (Semi.address andThenLens Semi.streetNumber).get(john)       shouldEqual 126
+    (Person.address andThenLens Address.streetNumber).get(john)  shouldEqual 126
     john.lens(_.address.streetNumber).get                        shouldEqual 126
   }
 

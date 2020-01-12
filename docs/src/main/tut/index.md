@@ -75,15 +75,15 @@ val address   : Lens[Company , Address] = GenLens[Company](_.address)
 val street    : Lens[Address , Street]  = GenLens[Address](_.street)
 val streetName: Lens[Street  , String]  = GenLens[Street](_.name)
 
-company composeLens address composeLens street composeLens streetName
+company andThenLens address andThenLens street andThenLens streetName
 ```
 
-`composeLens` takes two `Lenses`, one from `A` to `B` and another one from `B` to `C` and creates a third `Lens` from `A` to `C`.
+`andThenLens` takes two `Lenses`, one from `A` to `B` and another one from `B` to `C` and creates a third `Lens` from `A` to `C`.
 Therefore, after composing `company`, `address`, `street` and `name`, we obtain a `Lens` from `Employee` to `String` (the street name).
 Now we can use this `Lens` issued from the composition to `modify` the street name using the function `capitalize`:
 
 ```tut:book
-(company composeLens address composeLens street composeLens streetName).modify(_.capitalize)(employee)
+(company andThenLens address andThenLens street andThenLens streetName).modify(_.capitalize)(employee)
 ```
 
 Here `modify` lifts a function `String => String` to a function `Employee => Employee`.
@@ -97,13 +97,13 @@ import monocle.function.Cons.headOption // to use headOption (an optic from Cons
 ```
 
 ```tut:book
-(company composeLens address
-         composeLens street
-         composeLens streetName
+(company andThenLens address
+         andThenLens street
+         andThenLens streetName
          composeOptional headOption).modify(_.toUpper)(employee)
 ```
 
-Similarly to `composeLens`, `composeOptional` takes two `Optionals`, one from `A` to `B` and another from `B` to `C` and
+Similarly to `andThenLens`, `composeOptional` takes two `Optionals`, one from `A` to `B` and another from `B` to `C` and
 creates a third `Optional` from `A` to `C`. All `Lenses` can be seen as `Optionals` where the optional element to zoom into is always
 present, hence composing an `Optional` and a `Lens` always produces an `Optional` (see class [diagram](optics.html) for full inheritance
 relation between optics).

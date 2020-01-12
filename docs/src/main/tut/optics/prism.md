@@ -87,7 +87,7 @@ import monocle.std.double.doubleToInt // Prism[Double, Int] defined in Monocle
 
 val jNum: Prism[Json, Double] = Prism.partial[Json, Double]{case JNum(v) => v}(JNum)
 
-val jInt: Prism[Json, Int] = jNum composePrism doubleToInt
+val jInt: Prism[Json, Int] = jNum andThenPrism doubleToInt
 ```
 
 ```tut:book

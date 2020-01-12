@@ -45,7 +45,7 @@ import monocle.std.map._      // to get Map instance for At
 ```
 
 ```tut
-(departments composeLens at("History")).set(None)(uni)
+(departments andThenLens at("History")).set(None)(uni)
 ```
 
 if instead we wanted to create a department, we would have used `set` with `Some`:
@@ -58,7 +58,7 @@ val physics = Department(36, List(
 ```
 
 ```tut
-(departments composeLens at("Physics")).set(Some(physics))(uni)
+(departments andThenLens at("Physics")).set(Some(physics))(uni)
 ```
 
 ## How to update a field in a nested case class
@@ -80,13 +80,13 @@ import monocle.function.all._ // to get each and other typeclass based optics su
 import monocle.Traversal
 import monocle.unsafe.MapTraversal._ // to get Each instance for Map (SortedMap does not require this import)
 
-val allLecturers: Traversal[University, Lecturer] = departments composeTraversal each composeLens lecturers composeTraversal each
+val allLecturers: Traversal[University, Lecturer] = departments composeTraversal each andThenLens lecturers composeTraversal each
 ```
 
 Note that we used `each` twice, the first time on `Map` and the second time on `List`.
 
 ```tut:book
-(allLecturers composeLens salary).modify(_ + 2)(uni)
+(allLecturers andThenLens salary).modify(_ + 2)(uni)
 ```
 
 ## How to create your own Traversal
@@ -110,8 +110,8 @@ import monocle.std.string._ // to get String instance for Cons
 ```
 
 ```tut
-val upperCasedFirstName = (allLecturers composeLens firstName composeOptional headOption).modify(_.toUpper)(uni)
-(allLecturers composeLens lastName composeOptional headOption).modify(_.toUpper)(upperCasedFirstName)
+val upperCasedFirstName = (allLecturers andThenLens firstName composeOptional headOption).modify(_.toUpper)(uni)
+(allLecturers andThenLens lastName composeOptional headOption).modify(_.toUpper)(upperCasedFirstName)
 ```
 
 It is annoying that we have to call `modify` on first name and then repeat the same action on last name. Ideally, we

@@ -26,8 +26,8 @@ class MonocleLensBench extends LensBench {
   val _n3_i = Lens[Nested3, Int](_.i)(i => n => n.copy(i = i))
   val _n6_i = Lens[Nested6, Int](_.i)(i => n => n.copy(i = i))
 
-  val _n0Ton3I = _n1 composeLens _n2 composeLens _n3 composeLens _n3_i
-  val _n0Ton6I = _n1 composeLens _n2 composeLens _n3 composeLens _n4 composeLens _n5 composeLens _n6 composeLens _n6_i
+  val _n0Ton3I = _n1 andThenLens _n2 andThenLens _n3 andThenLens _n3_i
+  val _n0Ton6I = _n1 andThenLens _n2 andThenLens _n3 andThenLens _n4 andThenLens _n5 andThenLens _n6 andThenLens _n6_i
 
 
   @Benchmark def lensGet0(in: Nested0Input) = _n0_i.get(in.n0)

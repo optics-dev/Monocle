@@ -2,7 +2,7 @@ package monocle
 
 import shapeless.test.illTyped
 
-// we had to replace compose by non overloaded versions: composeLens, composePrism for the following reason
+// we had to replace compose by non overloaded versions: andThenLens, andThenPrism for the following reason
 class ComposeIssueExample extends MonocleSuite {
 
   class A[S, T] {

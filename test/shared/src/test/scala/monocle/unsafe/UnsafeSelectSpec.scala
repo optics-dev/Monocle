@@ -38,5 +38,5 @@ class UnsafeSelectSpec extends MonocleSuite {
     age <- Arbitrary.arbitrary[Int]
   } yield Person(name, age))
 
-  checkAll("unsafe legal", OptionalTests(UnsafeSelect.unsafeSelect[Person](_.age >= 18) composeLens GenLens[Person](_.name)))
+  checkAll("unsafe legal", OptionalTests(UnsafeSelect.unsafeSelect[Person](_.age >= 18) andThenLens GenLens[Person](_.name)))
 }

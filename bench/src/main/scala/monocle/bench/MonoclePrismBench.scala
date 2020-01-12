@@ -15,8 +15,8 @@ class MonoclePrismBench extends PrismBench {
   val _i = Prism(getIOption)(mkI)
   val _r = Prism(getROption)(mkR)
 
-  val nested3I = _r composePrism _r composePrism _r composePrism _i
-  val nested6I = _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _r composePrism _i
+  val nested3I = _r andThenPrism _r andThenPrism _r andThenPrism _i
+  val nested6I = _r andThenPrism _r andThenPrism _r andThenPrism _r andThenPrism _r andThenPrism _r andThenPrism _i
 
 
   @Benchmark def getOption0(in: ADTInput): Option[Int] =

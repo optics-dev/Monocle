@@ -25,8 +25,8 @@ class MonocleMacroLensBench extends LensBench {
   val _n3_i = GenLens[Nested3](_.i)
   val _n6_i = GenLens[Nested6](_.i)
 
-  val _n0Ton3I = _n1 composeLens _n2 composeLens _n3 composeLens _n3_i
-  val _n0Ton6I = _n1 composeLens _n2 composeLens _n3 composeLens _n4 composeLens _n5 composeLens _n6 composeLens _n6_i
+  val _n0Ton3I = _n1 andThenLens _n2 andThenLens _n3 andThenLens _n3_i
+  val _n0Ton6I = _n1 andThenLens _n2 andThenLens _n3 andThenLens _n4 andThenLens _n5 andThenLens _n6 andThenLens _n6_i
 
   @Benchmark def lensGet0(in: Nested0Input) = _n0_i.get(in.n0)
   @Benchmark def lensGet3(in: Nested0Input) = _n0Ton3I.get(in.n0)

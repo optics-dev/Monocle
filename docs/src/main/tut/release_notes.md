@@ -482,8 +482,8 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
         add and delete elements. Implemented for Map
 -   Alias for Iso, Prism, Lens and Traversal composition:
     -   `<->  == composeIso`
-    -   `?->  == composePrism`
-    -   `|->  == composeLens`
+    -   `?->  == andThenPrism`
+    -   `|->  == andThenLens`
     -   `|->> == composeTraversal`
 -   Add experimental sub project generic, using shapeless to generate Iso between `HList` and case class or tuple
 -   Add documentation in examples
