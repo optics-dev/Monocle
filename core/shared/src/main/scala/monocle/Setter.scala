@@ -5,7 +5,7 @@ trait Setter[From, To] { self =>
 
   def modify(f: To => To): From => From
 
-  def compose[X](other: Setter[To, X]): Setter[From, X] =
+  def andThen[X](other: Setter[To, X]): Setter[From, X] =
     new Setter[From, X] {
       def set(to: X): From => From        = self.modify(other.set(to))
       def modify(f: X => X): From => From = self.modify(other.modify(f))

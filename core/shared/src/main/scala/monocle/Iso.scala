@@ -6,17 +6,17 @@ abstract class Iso[From, To] extends Lens[From, To] with Prism[From, To] { self 
   override def modify(f: To => To): From => From =
     from => reverseGet(get(from))
 
-  def compose[X](other: Iso[To, X]): Iso[From, X] = new Iso[From, X] {
+  def andThen[X](other: Iso[To, X]): Iso[From, X] = new Iso[From, X] {
     def get(from: From): X      = other.get(self.get(from))
     def reverseGet(to: X): From = self.reverseGet(other.reverseGet(to))
   }
 
-  override def compose[X](other: Lens[To, X]): Lens[From, X] = new Lens[From, X] {
+  override def andThen[X](other: Lens[To, X]): Lens[From, X] = new Lens[From, X] {
     def get(from: From): X       = other.get(self.get(from))
     def set(to: X): From => From = from => self.reverseGet(other.set(to)(self.get(from)))
   }
 
-  override def compose[X](other: Prism[To, X]): Prism[From, X] = new Prism[From, X] {
+  override def andThen[X](other: Prism[To, X]): Prism[From, X] = new Prism[From, X] {
     def getOption(from: From): Option[X] = other.getOption(self.get(from))
     def reverseGet(to: X): From          = self.reverseGet(other.reverseGet(to))
   }

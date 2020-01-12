@@ -10,8 +10,8 @@ trait AppliedFold[From, To] {
   def map[X](f: To => X): AppliedFold[From, X] =
     AppliedFold(value, optic.map(f))
 
-  def compose[X](other: Fold[To, X]): AppliedFold[From, X] =
-    AppliedFold(value, optic.compose(other))
+  def andThen[X](other: Fold[To, X]): AppliedFold[From, X] =
+    AppliedFold(value, optic.andThen(other))
 
   def asTarget[X](implicit ev: To =:= X): AppliedFold[From, X] =
     AppliedFold(value, optic.asTarget[X])
@@ -50,10 +50,10 @@ trait AppliedFold[From, To] {
     optic.nonEmpty(value)
 
   def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): AppliedFold[From, Option[X]] =
-    compose(ev.at(i))
+    andThen(ev.at(i))
 
   def some[X](implicit ev: To =:= Option[X]): AppliedFold[From, X] =
-    asTarget[Option[X]].compose(Prism.some[X])
+    asTarget[Option[X]].andThen(Prism.some[X])
 }
 
 object AppliedFold {

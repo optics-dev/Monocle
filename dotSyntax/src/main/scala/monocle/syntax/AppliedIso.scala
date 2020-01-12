@@ -7,17 +7,17 @@ trait AppliedIso[From, To] extends AppliedLens[From, To] with AppliedPrism[From,
   def value: From
   def optic: Iso[From, To]
 
-  def compose[C](other: Iso[To, C]): AppliedIso[From, C] =
-    AppliedIso(value, optic.compose(other))
+  def andThen[C](other: Iso[To, C]): AppliedIso[From, C] =
+    AppliedIso(value, optic.andThen(other))
 
   override def asTarget[X](implicit ev: To =:= X): AppliedIso[From, X] =
     AppliedIso(value, optic.asTarget[X])
 
   override def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): AppliedLens[From, Option[X]] =
-    compose(ev.at(i))
+    andThen(ev.at(i))
 
   override def some[X](implicit ev: To =:= Option[X]): AppliedPrism[From, X] =
-    asTarget[Option[X]].compose(Prism.some[X])
+    asTarget[Option[X]].andThen(Prism.some[X])
 }
 
 object AppliedIso {

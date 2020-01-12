@@ -51,7 +51,7 @@ trait Fold[From, To] { self =>
         self.toIterator(from).map(f)
     }
 
-  def compose[X](other: Fold[To, X]): Fold[From, X] =
+  def andThen[X](other: Fold[To, X]): Fold[From, X] =
     new Fold[From, X] {
       def toIterator(from: From): Iterator[X] =
         self.toIterator(from).flatMap(other.toIterator)

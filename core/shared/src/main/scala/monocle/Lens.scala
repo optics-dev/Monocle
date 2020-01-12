@@ -8,7 +8,7 @@ trait Lens[From, To] extends Optional[From, To] with Getter[From, To] { self =>
 
   override def modify(f: To => To): From => From = from => set(f(get(from)))(from)
 
-  def compose[X](other: Lens[To, X]): Lens[From, X] = new Lens[From, X] {
+  def andThen[X](other: Lens[To, X]): Lens[From, X] = new Lens[From, X] {
     def get(from: From): X                       = other.get(self.get(from))
     def set(to: X): From => From                 = self.modify(other.set(to))
     override def modify(f: X => X): From => From = self.modify(other.modify(f))

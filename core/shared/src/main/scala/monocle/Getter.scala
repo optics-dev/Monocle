@@ -11,7 +11,7 @@ trait Getter[From, To] extends Fold[From, To] { self =>
       def get(from: From): X = f(self.get(from))
     }
 
-  def compose[X](other: Getter[To, X]): Getter[From, X] =
+  def andThen[X](other: Getter[To, X]): Getter[From, X] =
     new Getter[From, X] {
       def get(from: From): X = other.get(self.get(from))
     }

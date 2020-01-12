@@ -16,17 +16,17 @@ trait AppliedOptional[From, To] extends AppliedFold[From, To] with AppliedSetter
   def modify(f: To => To): From =
     optic.modify(f)(value)
 
-  def compose[C](other: Optional[To, C]): AppliedOptional[From, C] =
-    AppliedOptional(value, optic.compose(other))
+  def andThen[C](other: Optional[To, C]): AppliedOptional[From, C] =
+    AppliedOptional(value, optic.andThen(other))
 
   override def asTarget[X](implicit ev: To =:= X): AppliedOptional[From, X] =
     AppliedOptional(value, optic.asTarget[X])
 
   override def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): AppliedOptional[From, Option[X]] =
-    compose(ev.at(i))
+    andThen(ev.at(i))
 
   override def some[X](implicit ev: To =:= Option[X]): AppliedOptional[From, X] =
-    asTarget[Option[X]].compose(Prism.some[X])
+    asTarget[Option[X]].andThen(Prism.some[X])
 }
 
 object AppliedOptional {
