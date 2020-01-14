@@ -83,10 +83,10 @@ are defined in a separate module (see <a href="../modules.html">modules</a>).</p
 <p>Then, <code class="highlighter-rouge">GenIso.unit</code> generates an <code class="highlighter-rouge">Iso</code> for object or case classes with no field:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">GenIso</span><span class="o">.</span><span class="py">unit</span><span class="o">[</span><span class="kt">Foo</span><span class="o">]</span>
-<span class="c1">// res7: monocle.Iso[Foo,Unit] = monocle.PIso$$anon$9@628a7f5
+<span class="c1">// res7: monocle.Iso[Foo,Unit] = monocle.PIso$$anon$9@23e20dd9
 </span>
 <span class="nv">GenIso</span><span class="o">.</span><span class="py">unit</span><span class="o">[</span><span class="kt">Bar.</span><span class="k">type</span><span class="o">]</span>
-<span class="c1">// res8: monocle.Iso[Bar.type,Unit] = monocle.PIso$$anon$9@5717d6a4
+<span class="c1">// res8: monocle.Iso[Bar.type,Unit] = monocle.PIso$$anon$9@572a6ee9
 </span></code></pre></div></div>
 
 <p>Finally, <code class="highlighter-rouge">GenIso.fields</code> is a whitebox macro which generalise <code class="highlighter-rouge">GenIso.apply</code> to all case classes:</p>
