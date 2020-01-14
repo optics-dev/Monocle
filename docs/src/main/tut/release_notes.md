@@ -11,7 +11,7 @@ position: 5
 
 > 09 January 2020
 
--   bug fix: use fully qualified name in `Lens` macro [#793](https://github.com/julien-truffaut/Monocle/pull/793)
+-   bug fix: use fully qualified name in `Lens` macro [#793](https://github.com/julien-truffaut/Monocle/pull/793) (thanks to [enzief](https://github.com/enzief))
 -   add `parModifyF` to `Traversal` leveraging `cats.Parallel` [#751](https://github.com/julien-truffaut/Monocle/pull/751) (thanks to [nigredo-tori](https://github.com/nigredo-tori))
 -   add `At`, `Index` and `Each` instances for ListMap [#740](https://github.com/julien-truffaut/Monocle/pull/740), [#742](https://github.com/julien-truffaut/Monocle/pull/742) [#747](https://github.com/julien-truffaut/Monocle/pull/747) (thanks to [jan0sch](https://github.com/jan0sch))
 
