@@ -8,6 +8,6 @@ object getter extends GetterSyntax
 trait GetterSyntax {
   implicit class GetterOps[From, To](optic: Getter[From, To]) {
     def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): Getter[From, Option[X]] =
-      optic.compose(ev.at(i))
+      optic.andThen(ev.at(i))
   }
 }

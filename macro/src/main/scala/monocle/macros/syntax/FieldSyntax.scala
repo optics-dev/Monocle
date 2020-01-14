@@ -71,7 +71,7 @@ class FieldSyntaxImpl(val c: blackbox.Context) {
     }
 
     c.Expr[R[A, C]](q"""
-      $subj.compose(_root_.monocle.macros.GenLens[${c.weakTypeOf[B]}](${f}))
+      $subj.andThen(_root_.monocle.macros.GenLens[${c.weakTypeOf[B]}](${f}))
     """)
   }
 }

@@ -33,21 +33,21 @@ class HttpRequestExample extends MonocleSuite {
   val post = GenPrism[HttpMethod, POST.type] composeIso GenIso.unit[POST.type]
 
   test("get and post") {
-    (method composePrism get).nonEmpty(r1) shouldBe true
-    (method composePrism post).nonEmpty(r1) shouldBe false
-    (method composePrism post).getOption(r2) shouldBe Some(())
+    (method andThenPrism get).nonEmpty(r1) shouldBe true
+    (method andThenPrism post).nonEmpty(r1) shouldBe false
+    (method andThenPrism post).getOption(r2) shouldBe Some(())
   }
 
   test("host") {
-    (uri composeLens host).set("google.com")(r2) shouldBe
+    (uri andThenLens host).set("google.com")(r2) shouldBe
       r2.copy(uri = r2.uri.copy(host = "google.com"))
   }
 
   test("query using index") {
     val r = (uri
-      composeLens query
+      andThenLens query
       composeOptional index("hop")
-      composePrism stringToInt).modify(_ + 10)(r1)
+      andThenPrism stringToInt).modify(_ + 10)(r1)
 
     r.uri.query.get("hop") shouldBe Some("15")
   }
@@ -58,23 +58,23 @@ class HttpRequestExample extends MonocleSuite {
      *  So that we need the `some: Prism[Option[A], A]` for further investigation
      */
     val r = (uri
-      composeLens query
-      composeLens at("hop")
-      composePrism some
-      composePrism stringToInt).modify(_ + 10)(r1)
+      andThenLens query
+      andThenLens at("hop")
+      andThenPrism some
+      andThenPrism stringToInt).modify(_ + 10)(r1)
 
     r.uri.query.get("hop") shouldBe Some("15")
   }
 
   test("headers") {
-    val r = (headers composeLens at("Content-Type")).set(Some("text/plain; utf-8"))(r2)
+    val r = (headers andThenLens at("Content-Type")).set(Some("text/plain; utf-8"))(r2)
     r.headers.get("Content-Type") shouldBe Some("text/plain; utf-8")
   }
 
   test("headers with filterIndex") {
     val r = (headers
       composeTraversal filterIndex { h: String => h.contains("timeout") }
-      composePrism stringToInt).modify(_ * 2)(r1)
+      andThenPrism stringToInt).modify(_ * 2)(r1)
 
     r.headers.get("socket_timeout") shouldBe Some("40")
     r.headers.get("connection_timeout") shouldBe Some("20")

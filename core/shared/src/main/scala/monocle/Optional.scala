@@ -10,14 +10,14 @@ trait Optional[From, To] extends Fold[From, To] with Setter[From, To] { self =>
   override def toIterator(from: From): Iterator[To] =
     getOption(from).iterator
 
-  def compose[X](other: Optional[To, X]): Optional[From, X] = new Optional[From, X] {
+  def andThen[X](other: Optional[To, X]): Optional[From, X] = new Optional[From, X] {
     def getOption(from: From): Option[X]         = self.getOption(from).flatMap(other.getOption)
     def set(to: X): From => From                 = self.modify(other.set(to))
     override def modify(f: X => X): From => From = self.modify(other.modify(f))
   }
 
-  def composeLens[X](other: Lens[To, X]): Optional[From, X]   = compose(other)
-  def composePrism[X](other: Prism[To, X]): Optional[From, X] = compose(other)
+  def andThenLens[X](other: Lens[To, X]): Optional[From, X]   = andThen(other)
+  def andThenPrism[X](other: Prism[To, X]): Optional[From, X] = andThen(other)
 
   override def asTarget[X](implicit ev: To =:= X): Optional[From, X] =
     asInstanceOf[Optional[From, X]]

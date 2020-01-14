@@ -66,9 +66,9 @@ val root = Iso.id[Map[String, Int]]
 ```tut:book
 (root composeOptional index("two")).set(0)(m)   // update value at index "two"
 (root composeOptional index("three")).set(3)(m) // noop because m doesn't have a value at "three"
-(root composeLens at("three")).set(Some(3))(m)  // insert element at "three"
-(root composeLens at("two")).set(None)(m)       // delete element at "two"
-(root composeLens at("two")).set(Some(0))(m)    // upsert element at "two"
+(root andThenLens at("three")).set(Some(3))(m)  // insert element at "three"
+(root andThenLens at("two")).set(None)(m)       // delete element at "two"
+(root andThenLens at("two")).set(Some(0))(m)    // upsert element at "two"
 ```
 
 In other words, `index` can update any existing values while `at` can also `insert` and `delete`.

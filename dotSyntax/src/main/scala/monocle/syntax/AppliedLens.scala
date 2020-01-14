@@ -7,17 +7,17 @@ trait AppliedLens[From, To] extends AppliedOptional[From, To] with AppliedGetter
   def value: From
   def optic: Lens[From, To]
 
-  def compose[X](other: Lens[To, X]): AppliedLens[From, X] =
-    AppliedLens(value, optic.compose(other))
+  def andThen[X](other: Lens[To, X]): AppliedLens[From, X] =
+    AppliedLens(value, optic.andThen(other))
 
   override def asTarget[X](implicit ev: To =:= X): AppliedLens[From, X] =
     AppliedLens(value, optic.asTarget[X])
 
   override def at[Index, X](i: Index)(implicit ev: At.Aux[To, Index, X]): AppliedLens[From, Option[X]] =
-    compose(ev.at(i))
+    andThen(ev.at(i))
 
   override def some[X](implicit ev: To =:= Option[X]): AppliedOptional[From, X] =
-    asTarget[Option[X]].compose(Prism.some[X])
+    asTarget[Option[X]].andThen(Prism.some[X])
 }
 
 object AppliedLens {

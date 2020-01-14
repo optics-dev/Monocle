@@ -12,7 +12,7 @@ trait Prism[From, To] extends Optional[From, To] { self =>
   override def asTarget[C](implicit ev: To =:= C): Prism[From, C] =
     asInstanceOf[Prism[From, C]]
 
-  def compose[C](other: Prism[To, C]): Prism[From, C] = new Prism[From, C] {
+  def andThen[C](other: Prism[To, C]): Prism[From, C] = new Prism[From, C] {
     def getOption(from: From): Option[C] = self.getOption(from).flatMap(other.getOption)
     def reverseGet(to: C): From          = self.reverseGet(other.reverseGet(to))
   }

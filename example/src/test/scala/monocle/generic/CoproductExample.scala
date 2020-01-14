@@ -92,7 +92,7 @@ class CoproductExample extends MonocleSuite {
     case class C(otherName: String) extends S
 
     val lens: Lens[S, String] =
-      coProductToDisjunction[S].apply composeLens
+      coProductToDisjunction[S].apply andThenLens
         (GenLens[A](_.name) choice (GenLens[B](_.name) choice GenLens[C](_.otherName)))
 
     lens.get(A("a")) shouldEqual "a"
