@@ -318,7 +318,7 @@ sealed abstract class PrismInstances {
   }
 }
 
-final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal {
+final class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal {
 
   /** lift a [[Prism]] such as it only matches if all elements of `F[S]` are getOrModify */
   def below[F[_]](implicit F: Traverse[F]): Prism[F[S], F[A]] =
