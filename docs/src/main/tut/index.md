@@ -26,10 +26,16 @@ libraryDependencies ++= Seq(
 )
 ```
 
-If you want to use macro annotations such as `@Lenses`, you will also need to include:
+If you want to use macro annotations such as `@Lenses`, you will also need to include the following for Scala `2.12`:
 
 ```scala
 addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.full)
+```
+
+On Scala `2.13`, enable the compiler flag `-Ymacro-annotations` instead:
+
+```scala
+scalacOptions in Global += "-Ymacro-annotations"
 ```
 
 ## Motivation
