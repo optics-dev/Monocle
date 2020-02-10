@@ -7,11 +7,13 @@ import monocle.state._
 import monocle.std.StdInstances
 import monocle.syntax.Syntaxes
 import org.scalatest.funsuite.AnyFunSuite
-import org.typelevel.discipline.scalatest.Discipline
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.prop.Configuration
+import org.typelevel.discipline.scalatest.FunSuiteDiscipline
 
 trait MonocleSuite extends AnyFunSuite
-                      with Discipline
+                      with Configuration
+                      with FunSuiteDiscipline
                       with Matchers
                       with TestInstances
                       with StdInstances

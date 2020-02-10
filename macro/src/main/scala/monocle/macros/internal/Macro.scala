@@ -74,19 +74,17 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
     val F = TypeName(c.freshName("F"))
 
     c.Expr[PLens[S, T, A, B]](q"""
-      import monocle.PLens
-      import cats.Functor
       import _root_.scala.language.higherKinds // prevent warning at call site
 
-      new PLens[$sTpe, $tTpe, $aTpe, $bTpe]{
+      new _root_.monocle.PLens[$sTpe, $tTpe, $aTpe, $bTpe]{
         override def get(s: $sTpe): $aTpe =
           s.$fieldMethod
 
         override def set(a: $bTpe): $sTpe => $tTpe =
           _.copy($field = a)
 
-        override def modifyF[$F[_]: Functor](f: $aTpe => $F[$bTpe])(s: $sTpe): $F[$tTpe] =
-          Functor[$F].map(f(s.$fieldMethod))(a => s.copy($field = a))
+        override def modifyF[$F[_]: _root_.cats.Functor](f: $aTpe => $F[$bTpe])(s: $sTpe): $F[$tTpe] =
+          _root_.cats.Functor[$F].map(f(s.$fieldMethod))(a => s.copy($field = a))
 
         override def modify(f: $aTpe => $bTpe): $sTpe => $tTpe =
          s => s.copy($field = f(s.$fieldMethod))

@@ -7,6 +7,7 @@ import org.scalacheck.Arbitrary.arbitrary
 
 import cats.Eq
 import cats.arrow.{Category, Choice, Compose}
+import cats.syntax.either._
 
 class TraversalSpec extends MonocleSuite {
 
@@ -138,4 +139,9 @@ class TraversalSpec extends MonocleSuite {
     eachLi.modify(_ + 1)(List(1,2,3,4)) shouldEqual List(2,3,4,5)
   }
 
+  test("parModifyF") {
+    eachLi.parModifyF[Either[Unit, *]](i => (i + 1).asRight[Unit])(List(1,2,3,4)) shouldEqual Right(List(2,3,4,5))
+    // `Left` values should be accumulated through `Validated`.
+    eachLi.parModifyF[Either[String, *]](_.toString.asLeft[Int])(List(1,2,3,4)) shouldEqual Left("1234")
+  }
 }

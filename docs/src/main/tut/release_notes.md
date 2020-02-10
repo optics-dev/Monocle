@@ -7,6 +7,14 @@ position: 5
 
 ## Release Notes
 
+# 2.0.1
+
+> 09 January 2020
+
+-   bug fix: use fully qualified name in `Lens` macro [#793](https://github.com/julien-truffaut/Monocle/pull/793) (thanks to [enzief](https://github.com/enzief))
+-   add `parModifyF` to `Traversal` leveraging `cats.Parallel` [#751](https://github.com/julien-truffaut/Monocle/pull/751) (thanks to [nigredo-tori](https://github.com/nigredo-tori))
+-   add `At`, `Index` and `Each` instances for ListMap [#740](https://github.com/julien-truffaut/Monocle/pull/740), [#742](https://github.com/julien-truffaut/Monocle/pull/742) [#747](https://github.com/julien-truffaut/Monocle/pull/747) (thanks to [jan0sch](https://github.com/jan0sch))
+
 # 2.0.0 (cats only)
 
 > 11 September 2019
@@ -306,7 +314,7 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 -   `monocle.macros.GenIso` generates `Iso` for case class with a single accessor
 -   `monocle.macros.GenPrism` generates `Prism` for sealed trait
 -   `@Lenses` now supports case classes with type parameters [see](https://github.com/julien-truffaut/Monocle/blob/697bbf0ca3cbb1e8e8b3a63626fc45dfca3cd3cf/example/src/test/scala/monocle/LensExample.scala#L62)
--   `Lenser` is deprecated, use `GenLens` instead (same functionality but more consistant naming)
+-   `Lenser` is deprecated, use `GenLens` instead (same functionality but more consistent naming)
 
 ### Spark friendly
 -   Optics and type classes extends `Serializable`
@@ -404,7 +412,7 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
     See [example](../example/src/test/scala/monocle/LensExample.scala#L43)
 -   New constructors for simple optics with better type inference, see [example](../test/src/test/scala/monocle/LensSpec.scala#L13-L16)
 -   implicit not found annotations have been added to polymorphic optics to help user figuring out which import is missing
--   `monocle.scalaz.Either` has been renamed `monocle.scalaz.Disjunction` to avoid clashes wih `monocle.std.Either`
+-   `monocle.scalaz.Either` has been renamed `monocle.scalaz.Disjunction` to avoid clashes with `monocle.std.Either`
 -   Add `Each`, `Index`, `Field1`, `Head`, `Tail` and `LastOption` instances for `scalaz.OneAnd`
 -   Add `Each`, `HeadOption`, and `LastOption` for `scala.Some`
 
