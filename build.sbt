@@ -35,8 +35,6 @@ inThisBuild(List(
   )
 ))
 
-lazy val scalatestVersion = settingKey[String]("")
-
 // shamelessly copied from cats
 def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scalaVersion: String) = {
   def extraDirs(suffix: String) =
@@ -53,9 +51,8 @@ def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scala
 }
 
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.13.0",
-  crossScalaVersions := Seq("2.12.10", "2.13.0"),
-  scalatestVersion   := "3.2.0-M1",
+  scalaVersion       := "2.13.1",
+  crossScalaVersions := Seq("2.12.10", "2.13.1"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions     ++= Seq(
     "-encoding", "UTF-8",
@@ -91,10 +88,8 @@ lazy val shapeless         = Def.setting("com.chuusai"       %%% "shapeless"    
 lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.12")
 lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.12" % "test")
 
-lazy val discipline        = Def.setting("org.typelevel"     %%% "discipline-scalatest"     % "1.0.0-RC2")
-lazy val scalacheck        = Def.setting("org.scalacheck"    %%% "scalacheck"               % "1.14.3")
-lazy val scalatestplus     = Def.setting("org.scalatestplus" %%% "scalatestplus-scalacheck" % "1.0.0-SNAP8" % "test")
-lazy val scalatest         = Def.setting("org.scalatest"     %%% "scalatest"                % scalatestVersion.value % "test")
+lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-core"          % "1.0.2")
+lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "1.0.0")
 
 lazy val macroVersion = "2.1.1"
 
@@ -190,7 +185,7 @@ lazy val law = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .settings(libraryDependencies ++= Seq(discipline.value, scalacheck.value))
+  .settings(libraryDependencies ++= Seq(discipline.value))
 
 lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -240,7 +235,7 @@ lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, m
   )
   .settings(noPublishSettings: _*)
   .settings(
-    libraryDependencies ++= Seq(cats.value, catsLaws.value, shapeless.value, scalatest.value, refinedScalacheck.value),
+    libraryDependencies ++= Seq(cats.value, catsLaws.value, shapeless.value, discipline_scalatest.value, refinedScalacheck.value),
     libraryDependencies ++= paradisePlugin.value
   )
 
@@ -259,7 +254,7 @@ lazy val example = project.dependsOn(core.jvm, generic.jvm, refined.jvm, macros.
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(cats.value, shapeless.value, scalatest.value),
+    libraryDependencies ++= Seq(cats.value, shapeless.value, discipline_scalatest.value),
     libraryDependencies ++= paradisePlugin.value
   )
 
