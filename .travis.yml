@@ -2,7 +2,7 @@ language: scala
 
 scala:
 - 2.12.10
-- 2.13.0
+- 2.13.1
 
 jdk:
 - openjdk8
@@ -30,7 +30,9 @@ jobs:
   include:
     - stage: release
       name: Release
-      script: sbt ci-release
+      script: 
+        - sbt ci-release
+        - SCALAJS_VERSION=0.6.32 sbt ci-release
 
 after_success:
 - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash

@@ -3,6 +3,8 @@ import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 import sbt.Keys._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
+val scalaJSVersion06 = Option(System.getenv("SCALAJS_VERSION")).exists(_.startsWith("0.6"))
+
 inThisBuild(List(
   organization := "com.github.julien-truffaut",
   homepage := Some(url("https://github.com/julien-truffaut/Monocle")),
@@ -74,10 +76,11 @@ lazy val buildSettings = Seq(
   addCompilerPlugin(kindProjector),
   Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
   Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
-  scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
+  scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git")),
+  skip.in(publish) := scalaJSVersion06
 )
 
-lazy val catsVersion = "2.1.0"
+lazy val catsVersion = "2.1.1"
 
 lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"                % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
@@ -85,8 +88,8 @@ lazy val catsLaws          = Def.setting("org.typelevel"     %%% "cats-laws"    
 lazy val alleycats         = Def.setting("org.typelevel"     %%% "alleycats-core"           % catsVersion)
 lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.2.30")
 lazy val shapeless         = Def.setting("com.chuusai"       %%% "shapeless"                % "2.3.3")
-lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.12")
-lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.12" % "test")
+lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.13")
+lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.13" % "test")
 
 lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-core"          % "1.0.2")
 lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "1.0.1")
