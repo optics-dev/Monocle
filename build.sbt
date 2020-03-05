@@ -77,7 +77,6 @@ lazy val buildSettings = Seq(
   Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
   Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git")),
-  skip.in(publish) := scalaJSVersion06
 )
 
 lazy val catsVersion = "2.1.1"
@@ -127,7 +126,7 @@ lazy val scalajsSettings = Seq(
 )
 
 lazy val monocleSettings    = buildSettings
-lazy val monocleJvmSettings = monocleSettings
+lazy val monocleJvmSettings = monocleSettings ++ Seq(skip.in(publish) := scalaJSVersion06)
 lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
 
 lazy val monocle = project.in(file("."))
