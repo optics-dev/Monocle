@@ -131,12 +131,14 @@ lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
 
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
+  .settings(noPublishSettings)
   .settings(monocleSettings)
   .aggregate(monocleJVM, monocleJS)
   .dependsOn(monocleJVM, monocleJS)
 
 lazy val monocleJVM = project.in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
+  .settings(noPublishSettings)
   .aggregate(
     core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm,
     example, docs, bench)
@@ -146,6 +148,7 @@ lazy val monocleJVM = project.in(file(".monocleJVM"))
 
 lazy val monocleJS = project.in(file(".monocleJS"))
   .settings(monocleJsSettings)
+  .settings(noPublishSettings)
   .aggregate(core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js)
   .dependsOn(core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js  % "test-internal -> test")
 
