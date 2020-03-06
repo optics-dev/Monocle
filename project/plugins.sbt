@@ -8,7 +8,7 @@ val scalaJSVersion =
 
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"                   % scalaJSVersion)
 addSbtPlugin("org.portable-scala" % "sbt-crossproject"              % "1.0.0")
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject"      % "1.0.0")
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject"      % "1.0.1")
 addSbtPlugin("com.47deg"          % "sbt-microsites"                % "0.9.4")
 addSbtPlugin("org.tpolecat"       % "tut-plugin"                    % "0.6.13")
 addSbtPlugin("org.scalameta"      % "sbt-scalafmt"                  % "2.3.2")
