@@ -9,8 +9,6 @@ private[monocle] trait ScalaVersionSpecificTestInstances {
     val samplesCount = 50
 
     override def eqv(f: A => B, g: A => B) =
-      samples.take(samplesCount).forall { a =>
-        B.eqv(f(a), g(a))
-      }
+      samples.take(samplesCount).forall(a => B.eqv(f(a), g(a)))
   }
 }

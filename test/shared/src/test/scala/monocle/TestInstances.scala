@@ -36,19 +36,13 @@ trait TestInstances
   implicit val quintaryEq = Eq.fromUniversalEquals[Quintary]
 
   implicit def optionCofreeEq[A](implicit A: Eq[A]): Eq[Cofree[Option, A]] =
-    Eq.instance { (a, b) =>
-      A.eqv(a.head, b.head) && a.tail === b.tail
-    }
+    Eq.instance((a, b) => A.eqv(a.head, b.head) && a.tail === b.tail)
 
   implicit def pisoEq[S, T, A, B](implicit StoA: Eq[S => A], BtoT: Eq[B => T]): Eq[PIso[S, T, A, B]] =
-    Eq.instance { (a, b) =>
-      StoA.eqv(a.get, b.get) && BtoT.eqv(a.reverseGet, b.reverseGet)
-    }
+    Eq.instance((a, b) => StoA.eqv(a.get, b.get) && BtoT.eqv(a.reverseGet, b.reverseGet))
 
   implicit def pprismEq[S, T, A, B](implicit StoOptA: Eq[S => Option[A]], BtoT: Eq[B => T]): Eq[PPrism[S, T, A, B]] =
-    Eq.instance { (a, b) =>
-      StoOptA.eqv(a.getOption, b.getOption) && BtoT.eqv(a.reverseGet, b.reverseGet)
-    }
+    Eq.instance((a, b) => StoOptA.eqv(a.getOption, b.getOption) && BtoT.eqv(a.reverseGet, b.reverseGet))
 
   // Arbitrary instances
 
@@ -75,8 +69,8 @@ trait TestInstances
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toSet))
 
   implicit def cogenOptionCofree[A](implicit A: Cogen[A]): Cogen[Cofree[Option, A]] =
-    Cogen[Cofree[Option, A]](
-      (seed: Seed, t: Cofree[Option, A]) => Cogen[(A, Option[Cofree[Option, A]])].perturb(seed, (t.head, t.tail.value))
+    Cogen[Cofree[Option, A]]((seed: Seed, t: Cofree[Option, A]) =>
+      Cogen[(A, Option[Cofree[Option, A]])].perturb(seed, (t.head, t.tail.value))
     )
 
   implicit def uuidArbitrary: Arbitrary[UUID] = Arbitrary(UUID.randomUUID)

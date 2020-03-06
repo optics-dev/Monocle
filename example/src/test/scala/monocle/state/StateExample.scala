@@ -70,9 +70,7 @@ class StateExample extends MonocleSuite {
     set20.run(p).value shouldEqual ((Person("John", 20), ()))
   }
 
-  val _oldAge = Optional[Person, Int](p => if (p.age > 50) Some(p.age) else None) { a =>
-    _.copy(age = a)
-  }
+  val _oldAge = Optional[Person, Int](p => if (p.age > 50) Some(p.age) else None)(a => _.copy(age = a))
   val _coolGuy = Optional[Person, String](p => if (p.name.startsWith("C")) Some(p.name) else None) { n =>
     _.copy(name = n)
   }

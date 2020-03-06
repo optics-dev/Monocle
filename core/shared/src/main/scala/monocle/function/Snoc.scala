@@ -52,8 +52,8 @@ object Snoc extends SnocFunctions with SnocInstancesScalaVersionSpecific {
   /** Std instances                                                                               */
   /************************************************************************************************/
   implicit def listSnoc[A]: Snoc[List[A], A] = Snoc(
-    Prism[List[A], (List[A], A)](
-      s => Applicative[Option].map2(Either.catchNonFatal(s.init).toOption, s.lastOption)((_, _))
+    Prism[List[A], (List[A], A)](s =>
+      Applicative[Option].map2(Either.catchNonFatal(s.init).toOption, s.lastOption)((_, _))
     ) {
       case (init, last) => init :+ last
     }

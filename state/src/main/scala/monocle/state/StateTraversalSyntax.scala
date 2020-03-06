@@ -11,6 +11,7 @@ trait StateTraversalSyntax {
 }
 
 final class StateTraversalOps[S, T, A, B](private val traversal: PTraversal[S, T, A, B]) extends AnyVal {
+
   /** transforms a PTraversal into a State */
   def toState: State[S, List[A]] =
     State(s => (s, traversal.getAll(s)))

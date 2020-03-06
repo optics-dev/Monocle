@@ -8,8 +8,8 @@ object nel extends NonEmptyListOptics
 
 trait NonEmptyListOptics {
   final def pNelToOneAnd[A, B]: PIso[NonEmptyList[A], NonEmptyList[B], OneAnd[List, A], OneAnd[List, B]] =
-    PIso((nel: NonEmptyList[A]) => OneAnd[List, A](nel.head, nel.tail))(
-      (oneAnd: OneAnd[List, B]) => NonEmptyList(oneAnd.head, oneAnd.tail)
+    PIso((nel: NonEmptyList[A]) => OneAnd[List, A](nel.head, nel.tail))((oneAnd: OneAnd[List, B]) =>
+      NonEmptyList(oneAnd.head, oneAnd.tail)
     )
 
   final def nelToOneAnd[A]: Iso[NonEmptyList[A], OneAnd[List, A]] =

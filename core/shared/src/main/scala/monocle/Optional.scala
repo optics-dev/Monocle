@@ -81,9 +81,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   @inline final def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[Either[S, S1], Either[T, T1], A, B] =
     POptional[Either[S, S1], Either[T, T1], A, B](
       _.fold(self.getOrModify(_).leftMap(Either.left), other.getOrModify(_).leftMap(Either.right))
-    ) { b =>
-      _.bimap(self.set(b), other.set(b))
-    }
+    )(b => _.bimap(self.set(b), other.set(b)))
 
   @inline final def first[C]: POptional[(S, C), (T, C), (A, C), (B, C)] =
     POptional[(S, C), (T, C), (A, C), (B, C)] {
@@ -258,9 +256,7 @@ object Optional {
         _getOption(s)
 
       def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
-        _getOption(s).fold(Applicative[F].pure(s))(
-          a => Applicative[F].map(f(a))(_set(_)(s))
-        )
+        _getOption(s).fold(Applicative[F].pure(s))(a => Applicative[F].map(f(a))(_set(_)(s)))
 
       def modify(f: A => A): S => S =
         s => _getOption(s).fold(s)(a => _set(f(a))(s))

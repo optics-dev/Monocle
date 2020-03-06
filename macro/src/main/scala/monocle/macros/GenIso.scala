@@ -6,6 +6,7 @@ import scala.reflect.internal.SymbolTable
 import scala.reflect.macros.{blackbox, whitebox}
 
 object GenIso {
+
   /** Generate an [[Iso]] between a case class `S` and its unique field of type `A`. */
   def apply[S, A]: Iso[S, A] = macro GenIsoImpl.genIso_impl[S, A]
 

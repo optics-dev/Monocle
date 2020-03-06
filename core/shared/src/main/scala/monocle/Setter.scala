@@ -36,9 +36,7 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
 
   /** join two [[PSetter]] with the same target */
   @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
-    PSetter[Either[S, S1], Either[T, T1], A, B](
-      b => _.bimap(self.modify(b), other.modify(b))
-    )
+    PSetter[Either[S, S1], Either[T, T1], A, B](b => _.bimap(self.modify(b), other.modify(b)))
 
   /*************************************************************/
   /** Compose methods between a [[PSetter]] and another Optics */

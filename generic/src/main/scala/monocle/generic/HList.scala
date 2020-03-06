@@ -14,11 +14,7 @@ trait HListInstances {
     Lens[S, A](_.at(n))(a => hlist => hlist.updatedAt(n, a))
 
   def toHList[S, A <: HList](implicit gen: Generic.Aux[S, A]): Iso[S, A] =
-    Iso[S, A] { s =>
-      gen.to(s)
-    } { l =>
-      gen.from(l)
-    }
+    Iso[S, A](s => gen.to(s))(l => gen.from(l))
 
   def fromHList[S <: HList, A](implicit gen: Generic.Aux[A, S]): Iso[S, A] =
     toHList.reverse

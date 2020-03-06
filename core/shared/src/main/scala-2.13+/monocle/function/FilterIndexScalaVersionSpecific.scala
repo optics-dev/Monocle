@@ -3,6 +3,7 @@ package monocle.function
 import cats.instances.lazyList._
 
 trait FilterIndexInstancesScalaVersionSpecific {
+
   /************************************************************************************************/
   /** 2.13 std instances                                                                          */
   /************************************************************************************************/

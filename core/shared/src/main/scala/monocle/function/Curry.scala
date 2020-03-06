@@ -7,6 +7,7 @@ import scala.annotation.implicitNotFound
   "Could not find an instance of Curry[${F},${G}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
 abstract class Curry[F, G] extends Serializable {
+
   /** curry: ((A,B,...,Z) => Res) <=> (A => B => ... => Z => Res) */
   def curry: Iso[F, G]
 }

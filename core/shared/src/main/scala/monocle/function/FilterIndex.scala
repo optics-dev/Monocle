@@ -30,6 +30,7 @@ trait FilterIndexFunctions {
 }
 
 object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVersionSpecific {
+
   /** lift an instance of [[FilterIndex]] using an [[Iso]] */
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: FilterIndex[A, I, B]): FilterIndex[S, I, B] =
     new FilterIndex[S, I, B] {

@@ -5,6 +5,7 @@ import cats.instances.lazyList._
 import monocle.Traversal
 
 trait PlatedFunctionsScalaVersionSpecific extends CommonPlatedFunctions {
+
   /************************************************************************************************/
   /** 2.13 std functions                                                                          */
   /************************************************************************************************/
@@ -17,6 +18,7 @@ trait PlatedFunctionsScalaVersionSpecific extends CommonPlatedFunctions {
 }
 
 trait PlatedInstancesScalaVersionSpecific {
+
   /************************************************************************************************/
   /** 2.13 std instances                                                                          */
   /************************************************************************************************/

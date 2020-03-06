@@ -14,12 +14,11 @@ private[monocle] object Bounded extends BoundedInstances {
   def apply[T](implicit ev: Bounded[T]): Bounded[T] = ev
 
   def orderingBoundedSafeCast[S: Order, A: Bounded](unsafeCast: S => A)(reverseCast: A => S): Prism[S, A] =
-    Prism[S, A](
-      from =>
-        if (from > reverseCast(Bounded[A].MaxValue) || from < reverseCast(Bounded[A].MinValue))
-          None
-        else
-          Some(unsafeCast(from))
+    Prism[S, A](from =>
+      if (from > reverseCast(Bounded[A].MaxValue) || from < reverseCast(Bounded[A].MinValue))
+        None
+      else
+        Some(unsafeCast(from))
     )(reverseCast)
 }
 
