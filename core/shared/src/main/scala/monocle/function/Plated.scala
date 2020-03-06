@@ -22,11 +22,13 @@ abstract class Plated[A] extends Serializable { self =>
 }
 
 trait CommonPlatedFunctions {
+
   /** [[Traversal]] of immediate self-similar children */
   def plate[A](implicit P: Plated[A]): Traversal[A, A] = P.plate
 }
 
 trait PlatedFunctions extends CommonPlatedFunctions with PlatedFunctionsScalaVersionSpecific {
+
   /** get the immediate self-similar children of a target */
   @inline def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
 

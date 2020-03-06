@@ -52,13 +52,9 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
         monolenses(tpname, params)
       } else {
         // number of fields in which each tparam is used
-        val tparamsUsages: Map[TypeName, Int] = params.foldLeft(tparams.map { _.name -> 0 }.toMap) { (acc, param) =>
+        val tparamsUsages: Map[TypeName, Int] = params.foldLeft(tparams.map(_.name -> 0).toMap) { (acc, param) =>
           val typeNames = param.collect { case Ident(tn: TypeName) => tn }.toSet
-          typeNames.foldLeft(acc) { (map, key) =>
-            map.get(key).fold(map) { value =>
-              map.updated(key, value + 1)
-            }
-          }
+          typeNames.foldLeft(acc)((map, key) => map.get(key).fold(map)(value => map.updated(key, value + 1)))
         }
 
         val groupedTpnames: Map[Int, Set[TypeName]] =
@@ -71,8 +67,7 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
           val tpnames         = param.collect { case Ident(tn: TypeName) => tn }.toSet
           val tpnamesToChange = tpnames.intersect(singleFieldTpnames) ++ phantomTpnames
           val tpnamesMap = tpnamesToChange.foldLeft((tparams.map(_.name).toSet ++ tpnames).map(x => (x, x)).toMap) {
-            (acc, tpname) =>
-              acc.updated(tpname, c.freshName(tpname))
+            (acc, tpname) => acc.updated(tpname, c.freshName(tpname))
           }
           val defParams = tparams ++ tparams
             .filter(x => tpnamesToChange.contains(x.name))

@@ -10,6 +10,7 @@ trait StateOptionalSyntax {
 }
 
 final class StateOptionalOps[S, T, A, B](private val optional: POptional[S, T, A, B]) extends AnyVal {
+
   /** transforms a POptional into a State */
   def toState: State[S, Option[A]] =
     State(s => (s, optional.getOption(s)))

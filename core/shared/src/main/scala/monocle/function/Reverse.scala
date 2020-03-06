@@ -8,6 +8,7 @@ import scala.annotation.implicitNotFound
   "Could not find an instance of Reverse[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
 abstract class Reverse[S, A] extends Serializable {
+
   /** Creates an Iso from S to a reversed S */
   def reverse: Iso[S, A]
 }
@@ -48,27 +49,19 @@ object Reverse extends ReverseFunctions with ReverseInstancesScalaVersionSpecifi
   )
 
   implicit def tuple3Reverse[A, B, C]: Reverse[(A, B, C), (C, B, A)] = Reverse(
-    Iso { t: (A, B, C) =>
-      (t._3, t._2, t._1)
-    }(t => (t._3, t._2, t._1))
+    Iso { t: (A, B, C) => (t._3, t._2, t._1) }(t => (t._3, t._2, t._1))
   )
 
   implicit def tuple4Reverse[A, B, C, D]: Reverse[(A, B, C, D), (D, C, B, A)] = Reverse(
-    Iso { t: (A, B, C, D) =>
-      (t._4, t._3, t._2, t._1)
-    }(t => (t._4, t._3, t._2, t._1))
+    Iso { t: (A, B, C, D) => (t._4, t._3, t._2, t._1) }(t => (t._4, t._3, t._2, t._1))
   )
 
   implicit def tuple5Reverse[A, B, C, D, E]: Reverse[(A, B, C, D, E), (E, D, C, B, A)] = Reverse(
-    Iso { t: (A, B, C, D, E) =>
-      (t._5, t._4, t._3, t._2, t._1)
-    }(t => (t._5, t._4, t._3, t._2, t._1))
+    Iso { t: (A, B, C, D, E) => (t._5, t._4, t._3, t._2, t._1) }(t => (t._5, t._4, t._3, t._2, t._1))
   )
 
   implicit def tuple6Reverse[A, B, C, D, E, F]: Reverse[(A, B, C, D, E, F), (F, E, D, C, B, A)] = Reverse(
-    Iso { t: (A, B, C, D, E, F) =>
-      (t._6, t._5, t._4, t._3, t._2, t._1)
-    }(t => (t._6, t._5, t._4, t._3, t._2, t._1))
+    Iso { t: (A, B, C, D, E, F) => (t._6, t._5, t._4, t._3, t._2, t._1) }(t => (t._6, t._5, t._4, t._3, t._2, t._1))
   )
 
   implicit def vectorReverse[A]: Reverse[Vector[A], Vector[A]] =

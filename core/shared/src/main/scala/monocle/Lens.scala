@@ -56,9 +56,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
 
   /** join two [[PLens]] with the same target */
   @inline final def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[Either[S, S1], Either[T, T1], A, B] =
-    PLens[Either[S, S1], Either[T, T1], A, B](_.fold(self.get, other.get)) { b =>
-      _.bimap(self.set(b), other.set(b))
-    }
+    PLens[Either[S, S1], Either[T, T1], A, B](_.fold(self.get, other.get))(b => _.bimap(self.set(b), other.set(b)))
 
   /** pair two disjoint [[PLens]] */
   @inline final def split[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =

@@ -43,12 +43,11 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
   /** Std instances                                                                               */
   /************************************************************************************************/
   implicit def listIndex[A]: Index[List[A], Int, A] =
-    Index(
-      i =>
-        if (i < 0)
-          Optional[List[A], A](_ => None)(_ => identity)
-        else
-          Optional[List[A], A](_.drop(i).headOption)(a => s => Try(s.updated(i, a)).getOrElse(s))
+    Index(i =>
+      if (i < 0)
+        Optional[List[A], A](_ => None)(_ => identity)
+      else
+        Optional[List[A], A](_.drop(i).headOption)(a => s => Try(s.updated(i, a)).getOrElse(s))
     )
 
   implicit def listMapIndex[K, V]: Index[ListMap[K, V], K, V] = fromAt
@@ -62,14 +61,12 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
   )
 
   implicit def vectorIndex[A]: Index[Vector[A], Int, A] =
-    Index(
-      i =>
-        Optional[Vector[A], A](v => if (v.isDefinedAt(i)) Some(v(i)) else None)(
-          a =>
-            v =>
-              if (v.isDefinedAt(i)) v.updated(i, a)
-              else v
-        )
+    Index(i =>
+      Optional[Vector[A], A](v => if (v.isDefinedAt(i)) Some(v(i)) else None)(a =>
+        v =>
+          if (v.isDefinedAt(i)) v.updated(i, a)
+          else v
+      )
     )
 
   /************************************************************************************************/
@@ -80,7 +77,7 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
 
   implicit def chainIndex[A]: Index[Chain[A], Int, A] = new Index[Chain[A], Int, A] {
     def index(i: Int) =
-      Optional[Chain[A], A](c => {
+      Optional[Chain[A], A] { c =>
         if (i < 0)
           None
         else {
@@ -88,22 +85,21 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
           if (it.hasNext) Some(it.next)
           else None
         }
-      })(
-        a =>
-          c => {
-            @tailrec
-            def go(cur: Int, oldC: Chain[A], newC: Chain[A]): Chain[A] =
-              oldC.uncons match {
-                case Some((h, t)) =>
-                  if (cur == i)
-                    newC.append(a).concat(t)
-                  else
-                    go(cur + 1, t, newC.append(h))
-                case None => newC
-              }
+      }(a =>
+        c => {
+          @tailrec
+          def go(cur: Int, oldC: Chain[A], newC: Chain[A]): Chain[A] =
+            oldC.uncons match {
+              case Some((h, t)) =>
+                if (cur == i)
+                  newC.append(a).concat(t)
+                else
+                  go(cur + 1, t, newC.append(h))
+              case None => newC
+            }
 
-            if (i >= 0 && i < c.length) go(0, c, Chain.empty) else c
-          }
+          if (i >= 0 && i < c.length) go(0, c, Chain.empty) else c
+        }
       )
   }
 

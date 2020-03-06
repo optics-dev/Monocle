@@ -95,8 +95,8 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
   )
 
   implicit def tuple5Each[A]: Each[(A, A, A, A, A), A] = Each(
-    PTraversal.apply5[(A, A, A, A, A), (A, A, A, A, A), A, A](_._1, _._2, _._3, _._4, _._5)(
-      (b1, b2, b3, b4, b5, _) => (b1, b2, b3, b4, b5)
+    PTraversal.apply5[(A, A, A, A, A), (A, A, A, A, A), A, A](_._1, _._2, _._3, _._4, _._5)((b1, b2, b3, b4, b5, _) =>
+      (b1, b2, b3, b4, b5)
     )
   )
 

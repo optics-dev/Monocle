@@ -40,19 +40,15 @@ object At extends AtFunctions {
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] = At(
-    i => Lens((_: SortedMap[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v)))
-  )
+  implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] =
+    At(i => Lens((_: SortedMap[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v))))
 
-  implicit def atListMap[K, V]: At[ListMap[K, V], K, Option[V]] = At(
-    i => Lens((_: ListMap[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v)))
-  )
+  implicit def atListMap[K, V]: At[ListMap[K, V], K, Option[V]] =
+    At(i => Lens((_: ListMap[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v))))
 
-  implicit def atMap[K, V]: At[Map[K, V], K, Option[V]] = At(
-    i => Lens((_: Map[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v)))
-  )
+  implicit def atMap[K, V]: At[Map[K, V], K, Option[V]] =
+    At(i => Lens((_: Map[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v))))
 
-  implicit def atSet[A]: At[Set[A], A, Boolean] = At(
-    a => Lens((_: Set[A]).contains(a))(b => set => if (b) set + a else set - a)
-  )
+  implicit def atSet[A]: At[Set[A], A, Boolean] =
+    At(a => Lens((_: Set[A]).contains(a))(b => set => if (b) set + a else set - a))
 }

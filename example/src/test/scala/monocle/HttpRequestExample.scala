@@ -50,6 +50,7 @@ class HttpRequestExample extends MonocleSuite {
   }
 
   test("query using at") {
+
     /**
       *  `at` returns Lens[S, Option[A]] while `index` returns Optional[S, A]
       *  So that we need the `some: Prism[Option[A], A]` for further investigation
@@ -70,9 +71,7 @@ class HttpRequestExample extends MonocleSuite {
 
   test("headers with filterIndex") {
     val r = (headers
-      composeTraversal filterIndex { h: String =>
-        h.contains("timeout")
-      }
+      composeTraversal filterIndex { h: String => h.contains("timeout") }
       composePrism stringToInt).modify(_ * 2)(r1)
 
     r.headers.get("socket_timeout") shouldBe Some("40")

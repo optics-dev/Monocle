@@ -54,11 +54,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
 
   /** lift a [[PIso]] to a Functor level */
   def mapping[F[_]: Functor]: PIso[F[S], F[T], F[A], F[B]] =
-    PIso[F[S], F[T], F[A], F[B]] { fs =>
-      Functor[F].map(fs)(self.get)
-    } { fb =>
-      Functor[F].map(fb)(self.reverseGet)
-    }
+    PIso[F[S], F[T], F[A], F[B]](fs => Functor[F].map(fs)(self.get))(fb => Functor[F].map(fb)(self.reverseGet))
 
   /** find if the target satisfies the predicate  */
   @inline final def find(p: A => Boolean): S => Option[A] =
@@ -289,6 +285,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
 }
 
 object PIso extends IsoInstances {
+
   /** create a [[PIso]] using a pair of functions: one to get the target and one to get the source. */
   def apply[S, T, A, B](_get: S => A)(_reverseGet: B => T): PIso[S, T, A, B] =
     new PIso[S, T, A, B] { self =>
@@ -331,6 +328,7 @@ object PIso extends IsoInstances {
 }
 
 object Iso {
+
   /** alias for [[PIso]] apply when S = T and A = B */
   def apply[S, A](get: S => A)(reverseGet: A => S): Iso[S, A] =
     PIso(get)(reverseGet)

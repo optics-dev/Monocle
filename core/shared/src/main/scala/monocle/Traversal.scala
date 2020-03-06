@@ -277,8 +277,8 @@ object Traversal {
   def applyN[S, A](xs: Lens[S, A]*): Traversal[S, A] =
     new PTraversal[S, S, A, A] {
       def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
-        xs.foldLeft(Applicative[F].pure(s))(
-          (fs, lens) => Applicative[F].map2(f(lens.get(s)), fs)((a, s) => lens.set(a)(s))
+        xs.foldLeft(Applicative[F].pure(s))((fs, lens) =>
+          Applicative[F].map2(f(lens.get(s)), fs)((a, s) => lens.set(a)(s))
         )
     }
 }

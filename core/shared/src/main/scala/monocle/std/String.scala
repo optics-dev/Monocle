@@ -17,9 +17,7 @@ trait StringOptics extends PlatformSpecificStringOptics {
     Iso((_: String).toList)(_.mkString)
 
   val stringToBoolean: Prism[String, Boolean] =
-    Prism { s: String =>
-      parseCaseSensitiveBoolean(s)
-    }(_.toString)
+    Prism { s: String => parseCaseSensitiveBoolean(s) }(_.toString)
 
   val stringToLong: Prism[String, Long] =
     Prism(parseLong)(_.toString)
@@ -31,14 +29,10 @@ trait StringOptics extends PlatformSpecificStringOptics {
     stringToLong composePrism long.longToByte
 
   val stringToUUID: Prism[String, UUID] =
-    Prism { s: String =>
-      Try(UUID.fromString(s)).toOption
-    }(_.toString)
+    Prism { s: String => Try(UUID.fromString(s)).toOption }(_.toString)
 
   val stringToURI: Prism[String, URI] =
-    Prism { s: String =>
-      Try(new URI(s)).toOption
-    }(_.toString)
+    Prism { s: String => Try(new URI(s)).toOption }(_.toString)
 
   private def parseLong(s: String): Option[Long] = {
     // we reject cases where String will be an invalid Prism according 2nd Prism law
