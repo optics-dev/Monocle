@@ -10,7 +10,7 @@ trait PlatedFunctionsScalaVersionSpecific extends CommonPlatedFunctions {
   /************************************************************************************************/
   /** get all transitive self-similar elements of a target, including itself */
   def universe[A: Plated](a: A): LazyList[A] = {
-    val fold = plate[A].asFold
+    val fold                  = plate[A].asFold
     def go(b: A): LazyList[A] = b #:: fold.foldMap[LazyList[A]](go)(b)
     go(a)
   }
@@ -24,7 +24,7 @@ trait PlatedInstancesScalaVersionSpecific {
     new Traversal[LazyList[A], LazyList[A]] {
       def modifyF[F[_]: Applicative](f: LazyList[A] => F[LazyList[A]])(s: LazyList[A]): F[LazyList[A]] =
         s match {
-          case x #:: xs => Applicative[F].map(f(xs))(x #:: _)
+          case x #:: xs   => Applicative[F].map(f(xs))(x #:: _)
           case LazyList() => Applicative[F].pure(LazyList.empty)
         }
     }

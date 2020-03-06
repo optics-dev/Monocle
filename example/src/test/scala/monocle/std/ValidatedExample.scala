@@ -7,10 +7,10 @@ import cats.syntax.validated._
 
 class ValidatedExample extends MonocleSuite {
   test("success defines a Prism that can get or set the underlying value of a Success instance") {
-    mValidated.success.getOption(123.valid)     shouldEqual Some(123)
+    mValidated.success.getOption(123.valid) shouldEqual Some(123)
     mValidated.success.getOption("abc".invalid) shouldEqual None
 
-    mValidated.success.set(555)(123.valid)     shouldEqual 555.valid
+    mValidated.success.set(555)(123.valid) shouldEqual 555.valid
     mValidated.success.set(123)("abc".invalid) shouldEqual "abc".invalid
   }
 

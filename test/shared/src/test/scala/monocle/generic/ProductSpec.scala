@@ -8,7 +8,6 @@ import org.scalacheck.Arbitrary
 import cats.Eq
 
 class ProductSpec extends MonocleSuite {
-
   case class Person(name: String, age: Int)
 
   implicit val personEq: Eq[Person] = Eq.fromUniversalEquals

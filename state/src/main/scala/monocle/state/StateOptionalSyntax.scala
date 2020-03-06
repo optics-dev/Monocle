@@ -18,7 +18,7 @@ final class StateOptionalOps[S, T, A, B](private val optional: POptional[S, T, A
   def st: State[S, Option[A]] =
     toState
 
-    /** extracts the value viewed through the optional */
+  /** extracts the value viewed through the optional */
   def extract: State[S, Option[A]] =
     toState
 
@@ -47,6 +47,6 @@ final class StateOptionalOps[S, T, A, B](private val optional: POptional[S, T, A
     modo(_ => b)
 
   /** set the value viewed through the Optional and ignores both values */
-  def assign_(b: B): IndexedStateT[Eval,S, T, Unit] =
+  def assign_(b: B): IndexedStateT[Eval, S, T, Unit] =
     mod_(_ => b)
 }

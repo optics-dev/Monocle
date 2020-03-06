@@ -5,8 +5,8 @@ import monocle._
 object bigdecimal extends BigDecimalOptics
 
 trait BigDecimalOptics {
-  val bigDecimalToLong: Prism[BigDecimal, Long]  =
-    Prism[BigDecimal, Long](bi => if(bi.isValidLong) Some(bi.toLongExact) else None)(BigDecimal(_))
+  val bigDecimalToLong: Prism[BigDecimal, Long] =
+    Prism[BigDecimal, Long](bi => if (bi.isValidLong) Some(bi.toLongExact) else None)(BigDecimal(_))
 
   val bigDecimalToInt: Prism[BigDecimal, Int] = bigDecimalToLong composePrism long.longToInt
 

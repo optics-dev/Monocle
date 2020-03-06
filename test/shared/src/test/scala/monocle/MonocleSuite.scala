@@ -11,19 +11,20 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.prop.Configuration
 import org.typelevel.discipline.scalatest.FunSuiteDiscipline
 
-trait MonocleSuite extends AnyFunSuite
-                      with Configuration
-                      with FunSuiteDiscipline
-                      with Matchers
-                      with TestInstances
-                      with StdInstances
-                      with GenericOptics
-                      with GenericInstances
-                      with RefinedInstances
-                      with Syntaxes
-                      with StateLensSyntax
-                      with StateOptionalSyntax
-                      with StateGetterSyntax
-                      with StateSetterSyntax
-                      with StateTraversalSyntax
-                      with ReaderGetterSyntax
+trait MonocleSuite
+    extends AnyFunSuite
+    with Configuration
+    with FunSuiteDiscipline
+    with Matchers
+    with TestInstances
+    with StdInstances
+    with GenericOptics
+    with GenericInstances
+    with RefinedInstances
+    with Syntaxes
+    with StateLensSyntax
+    with StateOptionalSyntax
+    with StateGetterSyntax
+    with StateSetterSyntax
+    with StateTraversalSyntax
+    with ReaderGetterSyntax

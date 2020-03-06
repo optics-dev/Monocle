@@ -11,14 +11,14 @@ package object refined {
 
   type ByteBits = ZeroTo[W.`7`.T]
   type CharBits = ZeroTo[W.`15`.T]
-  type IntBits = ZeroTo[W.`31`.T]
+  type IntBits  = ZeroTo[W.`31`.T]
   type LongBits = ZeroTo[W.`63`.T]
 
   type LowerCaseChar = Char Refined LowerCase
   type UpperCaseChar = Char Refined UpperCase
 
   type StartsWithString[T <: String] = String Refined StartsWith[T]
-  type EndsWithString[T <: String] = String Refined EndsWith[T]
+  type EndsWithString[T <: String]   = String Refined EndsWith[T]
 
   private[refined] def refinedPrism[T, P](implicit v: Validate[T, P]): Prism[T, T Refined P] =
     Prism.partial[T, T Refined P] {

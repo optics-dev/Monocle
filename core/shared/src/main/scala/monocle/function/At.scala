@@ -6,13 +6,14 @@ import scala.annotation.implicitNotFound
 import scala.collection.immutable.{ListMap, SortedMap}
 
 /**
- * Typeclass that defines a [[Lens]] from an `S` to an `A` at an index `I`
- * @tparam S source of [[Lens]]
- * @tparam I index
- * @tparam A target of [[Lens]], `A` is supposed to be unique for a given pair `(S, I)`
- */
-@implicitNotFound("Could not find an instance of At[${S},${I},${A}], please check Monocle instance location policy to " +
-  "find out which import is necessary")
+  * Typeclass that defines a [[Lens]] from an `S` to an `A` at an index `I`
+  * @tparam S source of [[Lens]]
+  * @tparam I index
+  * @tparam A target of [[Lens]], `A` is supposed to be unique for a given pair `(S, I)`
+  */
+@implicitNotFound(
+  "Could not find an instance of At[${S},${I},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
+)
 abstract class At[S, I, A] extends Serializable {
   def at(i: I): Lens[S, A]
 }
@@ -26,7 +27,6 @@ trait AtFunctions {
 }
 
 object At extends AtFunctions {
-
   def apply[S, I, A](lens: I => Lens[S, A]): At[S, I, A] = (i: I) => lens(i)
 
   def apply[S, I, A](get: I => S => A)(set: I => A => S => S): At[S, I, A] =
@@ -40,7 +40,6 @@ object At extends AtFunctions {
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-
   implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] = At(
     i => Lens((_: SortedMap[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   )
@@ -54,6 +53,6 @@ object At extends AtFunctions {
   )
 
   implicit def atSet[A]: At[Set[A], A, Boolean] = At(
-    a => Lens((_: Set[A]).contains(a))(b => set => if(b) set + a else set - a)
+    a => Lens((_: Set[A]).contains(a))(b => set => if (b) set + a else set - a)
   )
 }

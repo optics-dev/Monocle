@@ -1,14 +1,13 @@
 package monocle.state
 
-import monocle.{MonocleSuite, Getter}
+import monocle.{Getter, MonocleSuite}
 
 class ReaderExample extends MonocleSuite {
-
   case class Person(name: String, age: Int)
   val _age = Getter[Person, Int](_.age)
-  val p = Person("John", 30)
+  val p    = Person("John", 30)
 
-  test("ask"){
+  test("ask") {
     val getAge = for {
       i <- _age ask
     } yield i
@@ -16,7 +15,7 @@ class ReaderExample extends MonocleSuite {
     getAge.run(p) shouldEqual (30)
   }
 
-  test("asks"){
+  test("asks") {
     val getDoubleAge = for {
       i <- _age asks (_ * 2)
     } yield i

@@ -5,33 +5,33 @@ import cats.arrow.Choice
 import cats.syntax.either._
 
 /**
- * A [[PLens]] can be seen as a pair of functions:
- *  - `get: S      => A` i.e. from an `S`, we can extract an `A`
- *  - `set: (B, S) => T` i.e. if we replace an `A` by a `B` in an `S`, we obtain a `T`
- *
- * A [[PLens]] could also be defined as a weaker [[PIso]] where set requires
- * an additional parameter than reverseGet.
- *
- * [[PLens]] stands for Polymorphic Lens as it set and modify methods change
- * a type `A` to `B` and `S` to `T`.
- * [[Lens]] is a type alias for [[PLens]] restricted to monomorphic updates:
- * {{{
- * type Lens[S, A] = PLens[S, S, A, A]
- * }}}
- *
- * A [[PLens]] is also a valid [[Getter]], [[Fold]], [[POptional]],
- * [[PTraversal]] and [[PSetter]]
- *
- * Typically a [[PLens]] or [[Lens]] can be defined between a Product
- * (e.g. case class, tuple, HList) and one of its component.
- *
- * @see [[monocle.law.LensLaws]]
- *
- * @tparam S the source of a [[PLens]]
- * @tparam T the modified source of a [[PLens]]
- * @tparam A the target of a [[PLens]]
- * @tparam B the modified target of a [[PLens]]
- */
+  * A [[PLens]] can be seen as a pair of functions:
+  *  - `get: S      => A` i.e. from an `S`, we can extract an `A`
+  *  - `set: (B, S) => T` i.e. if we replace an `A` by a `B` in an `S`, we obtain a `T`
+  *
+  * A [[PLens]] could also be defined as a weaker [[PIso]] where set requires
+  * an additional parameter than reverseGet.
+  *
+  * [[PLens]] stands for Polymorphic Lens as it set and modify methods change
+  * a type `A` to `B` and `S` to `T`.
+  * [[Lens]] is a type alias for [[PLens]] restricted to monomorphic updates:
+  * {{{
+  * type Lens[S, A] = PLens[S, S, A, A]
+  * }}}
+  *
+  * A [[PLens]] is also a valid [[Getter]], [[Fold]], [[POptional]],
+  * [[PTraversal]] and [[PSetter]]
+  *
+  * Typically a [[PLens]] or [[Lens]] can be defined between a Product
+  * (e.g. case class, tuple, HList) and one of its component.
+  *
+  * @see [[monocle.law.LensLaws]]
+  *
+  * @tparam S the source of a [[PLens]]
+  * @tparam T the modified source of a [[PLens]]
+  * @tparam A the target of a [[PLens]]
+  * @tparam B the modified target of a [[PLens]]
+  */
 abstract class PLens[S, T, A, B] extends Serializable { self =>
 
   /** get the target of a [[PLens]] */
@@ -56,31 +56,34 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
 
   /** join two [[PLens]] with the same target */
   @inline final def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[Either[S, S1], Either[T, T1], A, B] =
-    PLens[Either[S, S1], Either[T, T1], A, B](_.fold(self.get, other.get)){
-      b => _.bimap(self.set(b), other.set(b))
+    PLens[Either[S, S1], Either[T, T1], A, B](_.fold(self.get, other.get)) { b =>
+      _.bimap(self.set(b), other.set(b))
     }
 
   /** pair two disjoint [[PLens]] */
   @inline final def split[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
-    PLens[(S, S1), (T, T1), (A, A1), (B, B1)]{
+    PLens[(S, S1), (T, T1), (A, A1), (B, B1)] {
       case (s, s1) => (self.get(s), other.get(s1))
-    }{ case (b, b1) => {
+    } {
+      case (b, b1) => {
         case (s, s1) => (self.set(b)(s), other.set(b1)(s1))
       }
     }
 
   @inline final def first[C]: PLens[(S, C), (T, C), (A, C), (B, C)] =
-    PLens[(S, C), (T, C), (A, C), (B, C)]{
+    PLens[(S, C), (T, C), (A, C), (B, C)] {
       case (s, c) => (get(s), c)
-    }{ case (b, c) => {
+    } {
+      case (b, c) => {
         case (s, _) => (set(b)(s), c)
       }
     }
 
   @inline final def second[C]: PLens[(C, S), (C, T), (C, A), (C, B)] =
-    PLens[(C, S), (C, T), (C, A), (C, B)]{
+    PLens[(C, S), (C, T), (C, A), (C, B)] {
       case (c, s) => (c, get(s))
-    }{ case (c, b) => {
+    } {
+      case (c, b) => {
         case (_, s) => (c, set(b)(s))
       }
     }
@@ -88,7 +91,6 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /***********************************************************/
   /** Compose methods between a [[PLens]] and another Optics */
   /***********************************************************/
-
   /** compose a [[PLens]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     asFold composeFold other
@@ -115,7 +117,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
 
   /** compose a [[PLens]] with a [[PLens]] */
   @inline final def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
-    new PLens[S, T, C, D]{
+    new PLens[S, T, C, D] {
       def get(s: S): C =
         other.get(self.get(s))
 
@@ -136,7 +138,6 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /********************************************/
   /** Experimental aliases of compose methods */
   /********************************************/
-
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     composeTraversal(other)
@@ -160,7 +161,6 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /************************************************************************************************/
   /** Transformation methods to view a [[PLens]] as another Optics                                */
   /************************************************************************************************/
-
   /** view a [[PLens]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] =
     new Fold[S, A] {
@@ -174,7 +174,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
 
   /** view a [[PLens]] as a [[PSetter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
-    new PSetter[S, T, A, B]{
+    new PSetter[S, T, A, B] {
       def modify(f: A => B): S => T =
         self.modify(f)
 
@@ -207,7 +207,6 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
-
 }
 
 object PLens extends LensInstances {
@@ -220,11 +219,11 @@ object PLens extends LensInstances {
     )(t => _.bimap(_ => t, _ => t))
 
   /**
-   * create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
-   * @see macro module for methods generating [[PLens]] with less boiler plate
-   */
+    * create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
+    * @see macro module for methods generating [[PLens]] with less boiler plate
+    */
   def apply[S, T, A, B](_get: S => A)(_set: B => S => T): PLens[S, T, A, B] =
-    new PLens[S, T, A, B]{
+    new PLens[S, T, A, B] {
       def get(s: S): A =
         _get(s)
 
@@ -235,9 +234,8 @@ object PLens extends LensInstances {
         Functor[F].map(f(_get(s)))(_set(_)(s))
 
       def modify(f: A => B): S => T =
-       s => _set(f(_get(s)))(s)
+        s => _set(f(_get(s)))(s)
     }
-
 }
 
 object Lens {

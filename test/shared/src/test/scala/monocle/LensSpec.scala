@@ -10,7 +10,7 @@ import cats.arrow.{Category, Choice, Compose}
 
 case class Point(x: Int, y: Int)
 @Lenses case class Example(s: String, p: Point)
-@Lenses case class Foo[A,B](q: Map[(A,B),Double], default: Double)
+@Lenses case class Foo[A, B](q: Map[(A, B), Double], default: Double)
 
 // a few more examples that should compile
 @Lenses case class HasCompanion1[A](a: A)
@@ -28,12 +28,11 @@ class annot extends annotation.StaticAnnotation
 @annot object HasCompanion4
 
 class LensSpec extends MonocleSuite {
-
   val s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
   val p = Lens[Example, Point](_.p)(p => ex => ex.copy(p = p))
 
-  val x = Lens[Point, Int](_.x)(x => p => p.copy(x = x))
-  val y = Lens[Point, Int](_.y)(y => p => p.copy(y = y))
+  val x  = Lens[Point, Int](_.x)(x => p => p.copy(x = x))
+  val y  = Lens[Point, Int](_.y)(y => p => p.copy(y = y))
   val xy = Lens[Point, (Int, Int)](p => (p.x, p.y))(xy => p => p.copy(x = xy._1, y = xy._2))
 
   implicit val exampleGen: Arbitrary[Example] = Arbitrary(for {
@@ -47,14 +46,14 @@ class LensSpec extends MonocleSuite {
   checkAll("apply Lens", LensTests(s))
   checkAll("GenLens", LensTests(GenLens[Example](_.s)))
   checkAll("GenLens chain", LensTests(GenLens[Example](_.p.x)))
-  checkAll("Lenses",  LensTests(Example.s))
+  checkAll("Lenses", LensTests(Example.s))
 
-  checkAll("lens.asOptional" , OptionalTests(s.asOptional))
+  checkAll("lens.asOptional", OptionalTests(s.asOptional))
   checkAll("lens.asTraversal", TraversalTests(s.asTraversal))
-  checkAll("lens.asSetter"   , SetterTests(s.asSetter))
+  checkAll("lens.asSetter", SetterTests(s.asSetter))
 
-  checkAll("first" ,  LensTests(s.first[Boolean]))
-  checkAll("second",  LensTests(s.second[Boolean]))
+  checkAll("first", LensTests(s.first[Boolean]))
+  checkAll("second", LensTests(s.second[Boolean]))
 
   // test implicit resolution of type classes
 
@@ -91,5 +90,4 @@ class LensSpec extends MonocleSuite {
   test("modify") {
     x.modify(_ + 1)(Point(9, 2)) shouldEqual Point(10, 2)
   }
-
 }

@@ -8,22 +8,22 @@ import cats.syntax.either._
 import monocle.internal.Monoids
 
 /**
- * A [[Fold]] can be seen as a [[Getter]] with many targets or
- * a weaker [[PTraversal]] which cannot modify its target.
- *
- * [[Fold]] is on the top of the Optic hierarchy which means that
- * [[Getter]], [[PTraversal]], [[POptional]], [[PLens]], [[PPrism]]
- * and [[PIso]] are valid [[Fold]]
- *
- * @tparam S the source of a [[Fold]]
- * @tparam A the target of a [[Fold]]
- */
+  * A [[Fold]] can be seen as a [[Getter]] with many targets or
+  * a weaker [[PTraversal]] which cannot modify its target.
+  *
+  * [[Fold]] is on the top of the Optic hierarchy which means that
+  * [[Getter]], [[PTraversal]], [[POptional]], [[PLens]], [[PPrism]]
+  * and [[PIso]] are valid [[Fold]]
+  *
+  * @tparam S the source of a [[Fold]]
+  * @tparam A the target of a [[Fold]]
+  */
 abstract class Fold[S, A] extends Serializable { self =>
 
   /**
-   * map each target to a Monoid and combine the results
-   * underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap
-   */
+    * map each target to a Monoid and combine the results
+    * underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap
+    */
   def foldMap[M: Monoid](f: A => M)(s: S): M
 
   /** combine all targets using a target's Monoid */
@@ -68,19 +68,19 @@ abstract class Fold[S, A] extends Serializable { self =>
 
   /** join two [[Fold]] with the same target */
   @inline final def choice[S1](other: Fold[S1, A]): Fold[Either[S, S1], A] =
-    new Fold[Either[S, S1], A]{
+    new Fold[Either[S, S1], A] {
       def foldMap[M: Monoid](f: A => M)(s: Either[S, S1]): M =
         s.fold(self.foldMap(f), other.foldMap(f))
     }
 
   @inline final def left[C]: Fold[Either[S, C], Either[A, C]] =
-    new Fold[Either[S, C], Either[A, C]]{
+    new Fold[Either[S, C], Either[A, C]] {
       override def foldMap[M: Monoid](f: Either[A, C] => M)(s: Either[S, C]): M =
         s.fold(self.foldMap(a => f(Either.left(a))), c => f(Either.right(c)))
     }
 
   @inline final def right[C]: Fold[Either[C, S], Either[C, A]] =
-    new Fold[Either[C, S], Either[C, A]]{
+    new Fold[Either[C, S], Either[C, A]] {
       override def foldMap[M: Monoid](f: Either[C, A] => M)(s: Either[C, S]): M =
         s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
     }
@@ -88,7 +88,6 @@ abstract class Fold[S, A] extends Serializable { self =>
   /**********************************************************/
   /** Compose methods between a [[Fold]] and another Optics */
   /**********************************************************/
-
   /** compose a [[Fold]] with a [[Fold]] */
   @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
     new Fold[S, B] {
@@ -123,7 +122,6 @@ abstract class Fold[S, A] extends Serializable { self =>
   /********************************************/
   /** Experimental aliases of compose methods */
   /********************************************/
-
   /** alias to composeTraversal */
   @inline final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     composeTraversal(other)
@@ -143,7 +141,6 @@ abstract class Fold[S, A] extends Serializable { self =>
   /** alias to composeIso */
   @inline final def ^<->[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
     composeIso(other)
-
 }
 
 object Fold extends FoldInstances {
@@ -151,9 +148,9 @@ object Fold extends FoldInstances {
     Iso.id[A].asFold
 
   def codiagonal[A]: Fold[Either[A, A], A] =
-    new Fold[Either[A, A], A]{
+    new Fold[Either[A, A], A] {
       def foldMap[M: Monoid](f: A => M)(s: Either[A, A]): M =
-        s.fold(f,f)
+        s.fold(f, f)
     }
 
   def select[A](p: A => Boolean): Fold[A, A] =
@@ -175,7 +172,7 @@ object Fold extends FoldInstances {
 }
 
 sealed abstract class FoldInstances {
-  implicit val foldChoice: Choice[Fold] = new Choice[Fold]{
+  implicit val foldChoice: Choice[Fold] = new Choice[Fold] {
     def choice[A, B, C](f: Fold[A, C], g: Fold[B, C]): Fold[Either[A, B], C] =
       f choice g
 

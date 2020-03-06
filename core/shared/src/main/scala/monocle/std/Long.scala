@@ -8,8 +8,7 @@ import cats.instances.long._
 object long extends LongOptics
 
 trait LongOptics {
-
-  val longToInt: Prism[Long, Int]  =
+  val longToInt: Prism[Long, Int] =
     Bounded.orderingBoundedSafeCast[Long, Int](_.toInt)(_.toLong)
 
   val longToChar: Prism[Long, Char] =
@@ -20,5 +19,4 @@ trait LongOptics {
 
   val longToBoolean: Prism[Long, Boolean] =
     longToByte composePrism byte.byteToBoolean
-
 }

@@ -3,7 +3,6 @@ package monocle.function
 import monocle.MonocleSuite
 
 class FunctionExample extends MonocleSuite {
-
   test("curry curries a function") {
     def f(a: Int, b: Int): Int = a + b
 
@@ -28,16 +27,15 @@ class FunctionExample extends MonocleSuite {
       2 * a + 3 * b
 
     /**
-     * Note: We can only stay in the same function type, because curry is a SimpleIso.
-     * So we can't for example modify by applying the first argument.
+      * Note: We can only stay in the same function type, because curry is a SimpleIso.
+      * So we can't for example modify by applying the first argument.
      **/
     /**
-     * Here we increase the first argument by one, and then apply the function,
-     * Which is easier to do when the function is curried rather than uncurried,
-     * so we do the modification through the Iso.
+      * Here we increase the first argument by one, and then apply the function,
+      * Which is easier to do when the function is curried rather than uncurried,
+      * so we do the modification through the Iso.
      **/
     (f _ applyIso curry modify (_ compose (_ + 1)))(5, 7) shouldEqual (2 * 6 + 3 * 7)
-
   }
 
   test("flip exchanges the the first 2 parameters of a function") {
@@ -51,9 +49,8 @@ class FunctionExample extends MonocleSuite {
       2 * a + 3 * b
 
     /**
-     * If we wanted to increase the second argument instead, we could use flip.
-     */
+      * If we wanted to increase the second argument instead, we could use flip.
+      */
     (f _ applyIso curry composeIso flip modify (_ compose (_ + 1)))(5, 7) shouldEqual (2 * 5 + 3 * 8)
   }
-
 }

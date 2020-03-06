@@ -9,29 +9,29 @@ import cats.syntax.either._
 import monocle.internal.Monoids
 
 /**
- * A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
- * where n can be infinite.
- *
- * [[PTraversal]] stands for Polymorphic Traversal as it set and modify methods change
- * a type `A` to `B` and `S` to `T`.
- * [[Traversal]] is a type alias for [[PTraversal]] restricted to monomorphic updates:
- * {{{
- * type Traversal[S, A] = PTraversal[S, S, A, A]
- * }}}
- *
- * @see [[monocle.law.TraversalLaws]]
- *
- * @tparam S the source of a [[PTraversal]]
- * @tparam T the modified source of a [[PTraversal]]
- * @tparam A the target of a [[PTraversal]]
- * @tparam B the modified target of a [[PTraversal]]
- */
+  * A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
+  * where n can be infinite.
+  *
+  * [[PTraversal]] stands for Polymorphic Traversal as it set and modify methods change
+  * a type `A` to `B` and `S` to `T`.
+  * [[Traversal]] is a type alias for [[PTraversal]] restricted to monomorphic updates:
+  * {{{
+  * type Traversal[S, A] = PTraversal[S, S, A, A]
+  * }}}
+  *
+  * @see [[monocle.law.TraversalLaws]]
+  *
+  * @tparam S the source of a [[PTraversal]]
+  * @tparam T the modified source of a [[PTraversal]]
+  * @tparam A the target of a [[PTraversal]]
+  * @tparam B the modified target of a [[PTraversal]]
+  */
 abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 
   /**
-   * modify polymorphically the target of a [[PTraversal]] with an Applicative function
-   * all traversal methods are written in terms of modifyF
-   */
+    * modify polymorphically the target of a [[PTraversal]] with an Applicative function
+    * all traversal methods are written in terms of modifyF
+    */
   def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T]
 
   /** map each target to a Monoid and combine the results */
@@ -88,17 +88,17 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 
   /** join two [[PTraversal]] with the same target */
   @inline final def choice[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[Either[S, S1], Either[T, T1], A, B] =
-    new PTraversal[Either[S, S1], Either[T, T1], A, B]{
+    new PTraversal[Either[S, S1], Either[T, T1], A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: Either[S, S1]): F[Either[T, T1]] =
         s.fold(
-          s  => Functor[F].map(self.modifyF(f)(s))(Either.left),
+          s => Functor[F].map(self.modifyF(f)(s))(Either.left),
           s1 => Functor[F].map(other.modifyF(f)(s1))(Either.right)
         )
     }
 
   /**
-   * [[PTraversal.modifyF]] for a `Parallel` applicative functor.
-   */
+    * [[PTraversal.modifyF]] for a `Parallel` applicative functor.
+    */
   @inline final def parModifyF[F[_]](f: A => F[B])(s: S)(implicit F: Parallel[F]): F[T] =
     F.sequential(
       modifyF(a => F.parallel(f(a)))(s)(F.applicative)
@@ -107,7 +107,6 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   /****************************************************************/
   /** Compose methods between a [[PTraversal]] and another Optics */
   /****************************************************************/
-
   /** compose a [[PTraversal]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     asFold composeFold other
@@ -146,7 +145,6 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   /********************************************/
   /** Experimental aliases of compose methods */
   /********************************************/
-
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     composeTraversal(other)
@@ -170,10 +168,9 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   /**********************************************************************/
   /** Transformation methods to view a [[PTraversal]] as another Optics */
   /**********************************************************************/
-
   /** view a [[PTraversal]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] =
-    new Fold[S, A]{
+    new Fold[S, A] {
       def foldMap[M: Monoid](f: A => M)(s: S): M =
         self.foldMap(f)(s)
     }
@@ -181,7 +178,6 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   /** view a [[PTraversal]] as a [[PSetter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
     PSetter(modify)
-
 }
 
 object PTraversal extends TraversalInstances {
@@ -189,7 +185,7 @@ object PTraversal extends TraversalInstances {
     PIso.id[S, T].asTraversal
 
   def codiagonal[S, T]: PTraversal[Either[S, S], Either[T, T], S, T] =
-    new PTraversal[Either[S, S], Either[T, T], S, T]{
+    new PTraversal[Either[S, S], Either[T, T], S, T] {
       def modifyF[F[_]: Applicative](f: S => F[T])(s: Either[S, S]): F[Either[T, T]] =
         s.bimap(f, f).fold(Applicative[F].map(_)(Either.left), Applicative[F].map(_)(Either.right))
     }
@@ -213,22 +209,30 @@ object PTraversal extends TraversalInstances {
         Applicative[F].map3(f(get1(s)), f(get2(s)), f(get3(s)))(_set(_, _, _, s))
     }
 
-  def apply4[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A)(_set: (B, B, B, B, S) => T): PTraversal[S, T, A, B] =
+  def apply4[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A)(
+    _set: (B, B, B, B, S) => T
+  ): PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         Applicative[F].map4(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)))(_set(_, _, _, _, s))
     }
 
-  def apply5[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(_set: (B, B, B, B, B, S) => T): PTraversal[S, T, A, B] =
+  def apply5[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(
+    _set: (B, B, B, B, B, S) => T
+  ): PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         Applicative[F].map5(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)))(_set(_, _, _, _, _, s))
     }
 
-  def apply6[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(_set: (B, B, B, B, B, B, S) => T): PTraversal[S, T, A, B] =
+  def apply6[S, T, A, B](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(
+    _set: (B, B, B, B, B, B, S) => T
+  ): PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        Applicative[F].map6(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)), f(get6(s)))(_set(_, _, _, _, _, _, s))
+        Applicative[F].map6(f(get1(s)), f(get2(s)), f(get3(s)), f(get4(s)), f(get5(s)), f(get6(s)))(
+          _set(_, _, _, _, _, _, s)
+        )
     }
 }
 
@@ -256,25 +260,27 @@ object Traversal {
   def apply4[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A)(set: (A, A, A, A, S) => S): Traversal[S, A] =
     PTraversal.apply4(get1, get2, get3, get4)(set)
 
-  def apply5[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(set: (A, A, A, A, A, S) => S): Traversal[S, A] =
+  def apply5[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A)(
+    set: (A, A, A, A, A, S) => S
+  ): Traversal[S, A] =
     PTraversal.apply5(get1, get2, get3, get4, get5)(set)
 
-  def apply6[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(set: (A, A, A, A, A, A, S) => S): Traversal[S, A] =
+  def apply6[S, A](get1: S => A, get2: S => A, get3: S => A, get4: S => A, get5: S => A, get6: S => A)(
+    set: (A, A, A, A, A, A, S) => S
+  ): Traversal[S, A] =
     PTraversal.apply6(get1, get2, get3, get4, get5, get6)(set)
 
   /**
     * Composes N lenses horizontally.  Note that although it is possible to pass two or more lenses
     * that point to the same `A`, in practice it considered an unsafe usage (see https://github.com/julien-truffaut/Monocle/issues/379#issuecomment-236374838).
     */
-  def applyN[S, A](xs: Lens[S, A]*): Traversal[S, A] = {
+  def applyN[S, A](xs: Lens[S, A]*): Traversal[S, A] =
     new PTraversal[S, S, A, A] {
-      def modifyF[F[_] : Applicative](f: A => F[A])(s: S): F[S] = {
-        xs.foldLeft(Applicative[F].pure(s))((fs, lens) =>
-          Applicative[F].map2(f(lens.get(s)), fs)((a, s) => lens.set(a)(s))
+      def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
+        xs.foldLeft(Applicative[F].pure(s))(
+          (fs, lens) => Applicative[F].map2(f(lens.get(s)), fs)((a, s) => lens.set(a)(s))
         )
-      }
     }
-  }
 }
 
 sealed abstract class TraversalInstances {

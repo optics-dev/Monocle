@@ -1,7 +1,6 @@
 package monocle
 
 class RegressionSpec extends MonocleSuite {
-
   test("#244 - String to Long: '-' to long should not succeed.") {
     stringToLong.getOption("-") shouldEqual None
   }
@@ -16,11 +15,10 @@ class RegressionSpec extends MonocleSuite {
   }
 
   test("#336 - Uppercase booleans not obeying Prism laws") {
-    stringToBoolean.modifyOption(identity)("TRUE") should be (None)
-    stringToBoolean.modifyOption(identity)("False") should be (None)
+    stringToBoolean.modifyOption(identity)("TRUE") should be(None)
+    stringToBoolean.modifyOption(identity)("False") should be(None)
 
-    stringToBoolean.modify(identity)("true") should be ("true")
-    stringToBoolean.modify(identity)("false") should be ("false")
+    stringToBoolean.modify(identity)("true") should be("true")
+    stringToBoolean.modify(identity)("false") should be("false")
   }
-
 }
