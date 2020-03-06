@@ -5,12 +5,13 @@ import monocle.{Iso, Lens}
 import scala.annotation.implicitNotFound
 
 /**
- * Typeclass that defines a [[Lens]] from an `S` to its third element of type `A`
- * @tparam S source of [[Lens]]
- * @tparam A target of [[Lens]], `A` is supposed to be unique for a given `S`
- */
-@implicitNotFound("Could not find an instance of Field3[${S},${A}], please check Monocle instance location policy to " +
-  "find out which import is necessary")
+  * Typeclass that defines a [[Lens]] from an `S` to its third element of type `A`
+  * @tparam S source of [[Lens]]
+  * @tparam A target of [[Lens]], `A` is supposed to be unique for a given `S`
+  */
+@implicitNotFound(
+  "Could not find an instance of Field3[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
+)
 abstract class Field3[S, A] extends Serializable {
   def third: Lens[S, A]
 }
@@ -20,11 +21,10 @@ trait Field3Functions {
 }
 
 object Field3 extends Field3Functions {
-
   def apply[S, A](lens: Lens[S, A]): Field3[S, A] = new Field3[S, A] {
     override val third: Lens[S, A] = lens
   }
-  
+
   /** lift an instance of [[Field3]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field3[A, B]): Field3[S, B] = Field3(
     iso composeLens ev.third
@@ -33,12 +33,11 @@ object Field3 extends Field3Functions {
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-
   implicit def tuple3Field3[A1, A2, A3]: Field3[(A1, A2, A3), A3] = Field3(
     Lens((_: (A1, A2, A3))._3)(a => t => t.copy(_3 = a))
   )
 
-  implicit def tuple4Field3[A1, A2, A3, A4]: Field3[(A1, A2, A3, A4), A3]  = Field3(
+  implicit def tuple4Field3[A1, A2, A3, A4]: Field3[(A1, A2, A3, A4), A3] = Field3(
     Lens((_: (A1, A2, A3, A4))._3)(a => t => t.copy(_3 = a))
   )
 

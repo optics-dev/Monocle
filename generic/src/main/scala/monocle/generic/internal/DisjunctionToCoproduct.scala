@@ -13,7 +13,8 @@ sealed trait DisjunctionToCoproduct[L, R] extends DepFn1[Either[L, R]] with Seri
 object DisjunctionToCoproduct extends DisjunctionToCoproductLowPrio {
   type Aux[L, R, Out0 <: Coproduct] = DisjunctionToCoproduct[L, R] { type Out = Out0 }
 
-  implicit def econsDisjunctionToCoproduct[L, RL, RR, Out0 <: Coproduct](implicit
+  implicit def econsDisjunctionToCoproduct[L, RL, RR, Out0 <: Coproduct](
+    implicit
     evR: DisjunctionToCoproduct.Aux[RL, RR, Out0]
   ): DisjunctionToCoproduct.Aux[L, Either[RL, RR], L :+: Out0] = new DisjunctionToCoproduct[L, Either[RL, RR]] {
     type Out = L :+: Out0
@@ -25,12 +26,13 @@ object DisjunctionToCoproduct extends DisjunctionToCoproductLowPrio {
 }
 
 trait DisjunctionToCoproductLowPrio {
-  implicit def baseDisjunctionToCoproduct[L, R]: DisjunctionToCoproduct.Aux[L, R, L :+: R :+: CNil] = new DisjunctionToCoproduct[L, R] {
-    type Out = L :+: R :+: CNil
+  implicit def baseDisjunctionToCoproduct[L, R]: DisjunctionToCoproduct.Aux[L, R, L :+: R :+: CNil] =
+    new DisjunctionToCoproduct[L, R] {
+      type Out = L :+: R :+: CNil
 
-    def apply(t: Either[L, R]): L :+: R :+: CNil = t match {
-      case Left(l) => Inl(l)
-      case Right(r) => Coproduct[L :+: R :+: CNil](r)
+      def apply(t: Either[L, R]): L :+: R :+: CNil = t match {
+        case Left(l)  => Inl(l)
+        case Right(r) => Coproduct[L :+: R :+: CNil](r)
+      }
     }
-  }
 }

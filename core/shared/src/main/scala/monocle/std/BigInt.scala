@@ -5,10 +5,10 @@ import monocle.Prism
 object bigint extends BigIntOptics
 
 trait BigIntOptics {
-  val bigIntToLong: Prism[BigInt, Long]  =
-    Prism[BigInt, Long](bi => if(bi.isValidLong) Some(bi.longValue) else None)(BigInt(_))
-  
-  val bigIntToInt: Prism[BigInt, Int]  =
+  val bigIntToLong: Prism[BigInt, Long] =
+    Prism[BigInt, Long](bi => if (bi.isValidLong) Some(bi.longValue) else None)(BigInt(_))
+
+  val bigIntToInt: Prism[BigInt, Int] =
     bigIntToLong composePrism long.longToInt
 
   val bigIntToChar: Prism[BigInt, Char] =

@@ -12,7 +12,7 @@ trait OptionOptics {
     pSome[A, A]
 
   final def none[A]: Prism[Option[A], Unit] =
-    Prism[Option[A], Unit]{ case None => Some(()); case Some(_) => None }(_ => None)
+    Prism[Option[A], Unit] { case None => Some(()); case Some(_) => None }(_ => None)
 
   final def pOptionToDisjunction[A, B]: PIso[Option[A], Option[B], Either[Unit, A], Either[Unit, B]] =
     PIso[Option[A], Option[B], Either[Unit, A], Either[Unit, B]](_.map(Right(_)) getOrElse Left(()))(_.toOption)

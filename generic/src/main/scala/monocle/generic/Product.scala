@@ -2,11 +2,11 @@ package monocle.generic
 
 import monocle.PTraversal
 import monocle.function.Each
-import monocle.{ Iso, Traversal }
+import monocle.{Iso, Traversal}
 import monocle.generic.internal.TupleGeneric
 import cats.Applicative
 import cats.syntax.apply._
-import shapeless.{ ::, Generic, HList, HNil }
+import shapeless.{::, Generic, HList, HNil}
 
 object product extends ProductOptics
 
@@ -25,7 +25,10 @@ trait ProductOptics {
     }
   }
 
-  implicit def productEach[S, SGen <: HList, A](implicit gen: Generic.Aux[S, SGen], genEach: Each[SGen, A]): Each[S, A] = new Each[S, A] {
+  implicit def productEach[S, SGen <: HList, A](
+    implicit gen: Generic.Aux[S, SGen],
+    genEach: Each[SGen, A]
+  ): Each[S, A] = new Each[S, A] {
     def each: Traversal[S, A] = new Traversal[S, A] {
       def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
         Applicative[F].map(genEach.each.modifyF(f)(gen.to(s)))(gen.from)

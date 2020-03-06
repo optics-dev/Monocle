@@ -18,6 +18,7 @@ _site/
 ## Metals files to ignore
 .metals/
 .bloop/
+project/metals.sbt
 
 ## CTags files to ignore
 .ctags

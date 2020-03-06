@@ -3,7 +3,6 @@ package monocle.function
 import monocle.MonocleSuite
 
 class FieldsExample extends MonocleSuite {
-
   test("_1 creates a Lens from a 2-6 tuple to its first element") {
     (("Hello", 3) applyLens first get) shouldEqual "Hello"
 
@@ -25,5 +24,4 @@ class FieldsExample extends MonocleSuite {
 
     (("Hello", 3, true, 5.6, 7L, 'c') applyLens sixth set 'a') shouldEqual (("Hello", 3, true, 5.6, 7L, 'a'))
   }
-
 }

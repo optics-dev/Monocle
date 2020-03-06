@@ -1,13 +1,12 @@
 package monocle.std
 
-import monocle.{Prism, PPrism}
+import monocle.{PPrism, Prism}
 
-import scala.util.{Try, Success, Failure}
+import scala.util.{Failure, Success, Try}
 
 object utilTry extends TryOptics
 
 trait TryOptics {
-
   final def pTrySuccess[A, B]: PPrism[Try[A], Try[B], A, B] =
     PPrism[Try[A], Try[B], A, B] {
       case Success(a) => Right(a)

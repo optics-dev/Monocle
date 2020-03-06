@@ -14,8 +14,8 @@ class UnsafeSelectSpec extends MonocleSuite {
    */
 
   test("should fail round trip") {
-    val prism = UnsafeSelect.unsafeSelect((a: Int) => a > 0)
-    val valueOk = 1
+    val prism    = UnsafeSelect.unsafeSelect((a: Int) => a > 0)
+    val valueOk  = 1
     val valueBad = -1
     prism.getOption(prism.reverseGet(valueOk)) shouldEqual Some(valueOk)
     prism.getOption(prism.reverseGet(valueBad)) shouldEqual None
@@ -23,7 +23,7 @@ class UnsafeSelectSpec extends MonocleSuite {
 
   test("Predicate should work") {
     val p: Int => Boolean = _ > 10
-    val prism = UnsafeSelect.unsafeSelect(p)
+    val prism             = UnsafeSelect.unsafeSelect(p)
 
     prism.getOption(12) shouldEqual Some(12)
     prism.getOption(8) shouldEqual None
@@ -35,8 +35,11 @@ class UnsafeSelectSpec extends MonocleSuite {
 
   implicit val personGen: Arbitrary[Person] = Arbitrary(for {
     name <- Arbitrary.arbitrary[String]
-    age <- Arbitrary.arbitrary[Int]
+    age  <- Arbitrary.arbitrary[Int]
   } yield Person(name, age))
 
-  checkAll("unsafe legal", OptionalTests(UnsafeSelect.unsafeSelect[Person](_.age >= 18) composeLens GenLens[Person](_.name)))
+  checkAll(
+    "unsafe legal",
+    OptionalTests(UnsafeSelect.unsafeSelect[Person](_.age >= 18) composeLens GenLens[Person](_.name))
+  )
 }

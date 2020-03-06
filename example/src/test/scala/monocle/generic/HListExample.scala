@@ -4,15 +4,14 @@ import monocle.MonocleSuite
 import shapeless.HNil
 
 class HListExample extends MonocleSuite {
-
-  case class Example(i : Int, s: String, b: Boolean)
+  case class Example(i: Int, s: String, b: Boolean)
 
   test("_1 to _6 creates a Lens from HList to ith element") {
     (1 :: "bla" :: true :: HNil applyLens first get) shouldEqual 1
     (1 :: "bla" :: true :: HNil applyLens second get) shouldEqual "bla"
-    (1 :: "bla" :: true :: 5F :: 'c' :: 7L ::  HNil applyLens sixth get) shouldEqual 7L
+    (1 :: "bla" :: true :: 5f :: 'c' :: 7L :: HNil applyLens sixth get) shouldEqual 7L
 
-    (1 :: "bla" :: true :: HNil  applyLens first modify(_ + 1)) shouldEqual 2 :: "bla" :: true :: HNil
+    (1 :: "bla" :: true :: HNil applyLens first modify (_ + 1)) shouldEqual 2 :: "bla" :: true :: HNil
   }
 
   test("toHList creates an Iso between a Generic (typically a case class) and HList") {
@@ -40,5 +39,4 @@ class HListExample extends MonocleSuite {
   test("init creates a Lens from HList to its init") {
     (1 :: "bla" :: true :: HNil applyLens init get) shouldEqual (1 :: "bla" :: HNil)
   }
-
 }

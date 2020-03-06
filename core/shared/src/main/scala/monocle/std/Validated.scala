@@ -1,6 +1,6 @@
 package monocle.std
 
-import monocle.{Prism, Iso, PIso, PPrism}
+import monocle.{Iso, PIso, PPrism, Prism}
 
 import cats.data.Validated
 import cats.syntax.either._
@@ -25,7 +25,8 @@ trait ValidatedOptics {
   final def failure[E, A]: Prism[Validated[E, A], E] =
     pFailure[E, A, E]
 
-  final def pValidatedToDisjunction[E1, E2, A1, A2]: PIso[Validated[E1, A1], Validated[E2, A2], Either[E1, A1], Either[E2, A2]] =
+  final def pValidatedToDisjunction[E1, E2, A1, A2]
+    : PIso[Validated[E1, A1], Validated[E2, A2], Either[E1, A1], Either[E2, A2]] =
     PIso[Validated[E1, A1], Validated[E2, A2], Either[E1, A1], Either[E2, A2]](_.toEither)(_.toValidated)
 
   final def validationToDisjunction[E, A]: Iso[Validated[E, A], Either[E, A]] =

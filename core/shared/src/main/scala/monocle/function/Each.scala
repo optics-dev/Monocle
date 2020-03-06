@@ -7,16 +7,16 @@ import scala.collection.immutable.ListMap
 import cats.{Applicative, Order, Traverse}
 
 /**
- * Typeclass that defines a [[Traversal]] from a monomorphic container `S` to all of its elements of type `A`
- * @tparam S source of [[Traversal]]
- * @tparam A target of [[Traversal]], `A` is supposed to be unique for a given `S`
- */
-@implicitNotFound("Could not find an instance of Each[${S},${A}], please check Monocle instance location policy to " +
-  "find out which import is necessary")
+  * Typeclass that defines a [[Traversal]] from a monomorphic container `S` to all of its elements of type `A`
+  * @tparam S source of [[Traversal]]
+  * @tparam A target of [[Traversal]], `A` is supposed to be unique for a given `S`
+  */
+@implicitNotFound(
+  "Could not find an instance of Each[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
+)
 abstract class Each[S, A] extends Serializable {
   def each: Traversal[S, A]
 }
-
 
 trait EachFunctions {
   def each[S, A](implicit ev: Each[S, A]): Traversal[S, A] = ev.each
@@ -26,8 +26,7 @@ trait EachFunctions {
 }
 
 object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
-
-  def apply[S, A](traversal: Traversal[S, A]) : Each[S, A] = new Each[S, A] {
+  def apply[S, A](traversal: Traversal[S, A]): Each[S, A] = new Each[S, A] {
     override val each: Traversal[S, A] = traversal
   }
 
@@ -63,7 +62,7 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
             Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
         }
     }
- )
+  )
 
   implicit def mapEach[K: Order, V]: Each[SortedMap[K, V], V] = fromTraverse[SortedMap[K, ?], V]
 
@@ -84,23 +83,27 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
   )
 
   implicit def tuple2Each[A]: Each[(A, A), A] = Each(
-    PTraversal.apply2[(A, A), (A, A), A, A](_._1,_._2)((b1, b2, _) => (b1, b2))
+    PTraversal.apply2[(A, A), (A, A), A, A](_._1, _._2)((b1, b2, _) => (b1, b2))
   )
 
   implicit def tuple3Each[A]: Each[(A, A, A), A] = Each(
-    PTraversal.apply3[(A, A, A), (A, A, A), A, A](_._1,_._2,_._3)((b1, b2, b3, _) => (b1, b2, b3))
+    PTraversal.apply3[(A, A, A), (A, A, A), A, A](_._1, _._2, _._3)((b1, b2, b3, _) => (b1, b2, b3))
   )
 
   implicit def tuple4Each[A]: Each[(A, A, A, A), A] = Each(
-    PTraversal.apply4[(A, A, A, A), (A, A, A, A), A, A](_._1,_._2,_._3,_._4)((b1, b2, b3, b4, _) => (b1, b2, b3, b4))
+    PTraversal.apply4[(A, A, A, A), (A, A, A, A), A, A](_._1, _._2, _._3, _._4)((b1, b2, b3, b4, _) => (b1, b2, b3, b4))
   )
 
   implicit def tuple5Each[A]: Each[(A, A, A, A, A), A] = Each(
-    PTraversal.apply5[(A, A, A, A, A), (A, A, A, A, A), A, A](_._1,_._2,_._3,_._4,_._5)((b1, b2, b3, b4, b5, _) => (b1, b2, b3, b4, b5))
+    PTraversal.apply5[(A, A, A, A, A), (A, A, A, A, A), A, A](_._1, _._2, _._3, _._4, _._5)(
+      (b1, b2, b3, b4, b5, _) => (b1, b2, b3, b4, b5)
+    )
   )
 
   implicit def tuple6Each[A]: Each[(A, A, A, A, A, A), A] = Each(
-    PTraversal.apply6[(A, A, A, A, A, A), (A, A, A, A, A, A), A, A](_._1,_._2,_._3,_._4,_._5, _._6)((b1, b2, b3, b4, b5, b6, _) => (b1, b2, b3, b4, b5, b6))
+    PTraversal.apply6[(A, A, A, A, A, A), (A, A, A, A, A, A), A, A](_._1, _._2, _._3, _._4, _._5, _._6)(
+      (b1, b2, b3, b4, b5, b6, _) => (b1, b2, b3, b4, b5, b6)
+    )
   )
 
   implicit def vectorEach[A]: Each[Vector[A], A] = fromTraverse
@@ -123,7 +126,7 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
 
   implicit def oneAndEach[T[_], A](implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
     Each(
-      new Traversal[OneAnd[T, A], A]{
+      new Traversal[OneAnd[T, A], A] {
         def modifyF[F[_]: Applicative](f: A => F[A])(s: OneAnd[T, A]): F[OneAnd[T, A]] =
           Applicative[F].map2(f(s.head), ev.each.modifyF(f)(s.tail))((head, tail) => new OneAnd(head, tail))
       }

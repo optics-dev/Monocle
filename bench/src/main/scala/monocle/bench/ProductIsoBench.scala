@@ -13,14 +13,12 @@ import monocle.generic.product._
 @Fork(5)
 @State(Scope.Benchmark)
 class ProductIsoBench {
-
   case class Mono2(a: Long, b: String)
   case class Mono4(a: Long, b: String, c: Long, d: String)
   case class Mono8(a: Long, b: String, c: Long, d: String, e: Long, f: String, g: Long, h: String)
   case class Poly2[A](a: A, b: List[A])
   case class Poly4[A](a: A, b: List[A], c: A, d: List[A])
   case class Poly8[A](a: A, b: List[A], c: A, d: List[A], e: A, f: List[A], g: A, h: List[A])
-
 
   trait Isos {
     val mono2: Iso[Mono2, (Long, String)]
@@ -57,8 +55,8 @@ class ProductIsoBench {
   }
   def Test[X, Y](i: Iso[X, Y])(y: Y): Test =
     new Test {
-      override type A  = X
-      override type B  = Y
+      override type A = X
+      override type B = Y
       override val a   = i reverseGet y
       override val b   = y
       override val iso = i
@@ -78,10 +76,10 @@ class ProductIsoBench {
       case "fields"    => GenIsoIsos
       case "shapeless" => ShapelessIsos
     }
-    val a = 7
+    val a  = 7
     val as = List(3, 5, 7)
-    val l = 9L
-    val s = "asd"
+    val l  = 9L
+    val s  = "asd"
     _test = pSubject match {
       case "mono2" => Test(isos.mono2)((l, s))
       case "mono4" => Test(isos.mono4)((l, s, l, s))
@@ -95,6 +93,6 @@ class ProductIsoBench {
   // PDTs require the `test` term to be stable, where as this._test is a var.
   def test[A](f: Test => A): A = f(_test)
 
-  @Benchmark def get        = test(t => t.iso get        t.a)
+  @Benchmark def get        = test(t => t.iso get t.a)
   @Benchmark def reverseGet = test(t => t.iso reverseGet t.b)
 }

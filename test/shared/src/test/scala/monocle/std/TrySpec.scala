@@ -9,11 +9,10 @@ import scala.util.Try
 import cats.Eq
 
 class TrySpec extends MonocleSuite {
-
-  private implicit def tryEqual[A]: Eq[Try[A]] =
+  implicit private def tryEqual[A]: Eq[Try[A]] =
     Eq.fromUniversalEquals[Try[A]]
 
-  private implicit def throwableEqual[A]: Eq[Throwable] =
+  implicit private def throwableEqual[A]: Eq[Throwable] =
     Eq.fromUniversalEquals[Throwable]
 
   checkAll("trySuccess", PrismTests(monocle.std.utilTry.trySuccess[Int]))

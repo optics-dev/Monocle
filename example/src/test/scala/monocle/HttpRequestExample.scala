@@ -1,11 +1,11 @@
 package monocle
 
-import monocle.macros.{GenLens, GenIso, GenPrism}
+import monocle.macros.{GenIso, GenLens, GenPrism}
 import monocle.unsafe.MapTraversal._
 
 /**
- * Show how could we use Monocle to handle custom case classes, objects
- */
+  * Show how could we use Monocle to handle custom case classes, objects
+  */
 class HttpRequestExample extends MonocleSuite {
   import HttpRequestExample._
 
@@ -13,24 +13,21 @@ class HttpRequestExample extends MonocleSuite {
     GET,
     URI("localhost", 8080, "/ping", Map("hop" -> "5")),
     Map("socket_timeout" -> "20", "connection_timeout" -> "10"),
-    "")
+    ""
+  )
 
-  val r2 = HttpRequest(
-    POST,
-    URI("gooogle.com", 443, "/search", Map("keyword" -> "monocle")),
-    Map.empty,
-    "")
+  val r2 = HttpRequest(POST, URI("gooogle.com", 443, "/search", Map("keyword" -> "monocle")), Map.empty, "")
 
-  val method = GenLens[HttpRequest](_.method)
-  val uri = GenLens[HttpRequest](_.uri)
+  val method  = GenLens[HttpRequest](_.method)
+  val uri     = GenLens[HttpRequest](_.uri)
   val headers = GenLens[HttpRequest](_.headers)
-  val body = GenLens[HttpRequest](_.body)
+  val body    = GenLens[HttpRequest](_.body)
 
-  val host = GenLens[URI](_.host)
+  val host  = GenLens[URI](_.host)
   val query = GenLens[URI](_.query)
 
   val get: Prism[HttpMethod, Unit] = GenPrism[HttpMethod, GET.type] composeIso GenIso.unit[GET.type]
-  val post = GenPrism[HttpMethod, POST.type] composeIso GenIso.unit[POST.type]
+  val post                         = GenPrism[HttpMethod, POST.type] composeIso GenIso.unit[POST.type]
 
   test("get and post") {
     (method composePrism get).nonEmpty(r1) shouldBe true
@@ -54,9 +51,9 @@ class HttpRequestExample extends MonocleSuite {
 
   test("query using at") {
     /**
-     *  `at` returns Lens[S, Option[A]] while `index` returns Optional[S, A]
-     *  So that we need the `some: Prism[Option[A], A]` for further investigation
-     */
+      *  `at` returns Lens[S, Option[A]] while `index` returns Optional[S, A]
+      *  So that we need the `some: Prism[Option[A], A]` for further investigation
+      */
     val r = (uri
       composeLens query
       composeLens at("hop")
@@ -73,7 +70,9 @@ class HttpRequestExample extends MonocleSuite {
 
   test("headers with filterIndex") {
     val r = (headers
-      composeTraversal filterIndex { h: String => h.contains("timeout") }
+      composeTraversal filterIndex { h: String =>
+        h.contains("timeout")
+      }
       composePrism stringToInt).modify(_ * 2)(r1)
 
     r.headers.get("socket_timeout") shouldBe Some("40")
@@ -83,8 +82,8 @@ class HttpRequestExample extends MonocleSuite {
 
 object HttpRequestExample {
   sealed trait HttpMethod
-  case object GET   extends HttpMethod
-  case object POST  extends HttpMethod
+  case object GET  extends HttpMethod
+  case object POST extends HttpMethod
 
   case class URI(host: String, port: Int, path: String, query: Map[String, String])
   case class HttpRequest(method: HttpMethod, uri: URI, headers: Map[String, String], body: String)

@@ -1,9 +1,9 @@
 package monocle.internal
 
 /**
- * From cats:
- * Represents two values of the same type that are expected to be equal.
- */
+  * From cats:
+  * Represents two values of the same type that are expected to be equal.
+  */
 final case class IsEq[A](lhs: A, rhs: A)
 
 object IsEq {

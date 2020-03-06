@@ -7,12 +7,12 @@ import cats.data.{NonEmptyList, OneAnd}
 object nel extends NonEmptyListOptics
 
 trait NonEmptyListOptics {
+  final def pNelToOneAnd[A, B]: PIso[NonEmptyList[A], NonEmptyList[B], OneAnd[List, A], OneAnd[List, B]] =
+    PIso((nel: NonEmptyList[A]) => OneAnd[List, A](nel.head, nel.tail))(
+      (oneAnd: OneAnd[List, B]) => NonEmptyList(oneAnd.head, oneAnd.tail)
+    )
 
-  final def pNelToOneAnd[A, B]: PIso[NonEmptyList[A], NonEmptyList[B], OneAnd[List,A], OneAnd[List,B]] =
-    PIso((nel: NonEmptyList[A])    => OneAnd[List,A](nel.head, nel.tail))(
-      (oneAnd: OneAnd[List, B]) => NonEmptyList(oneAnd.head, oneAnd.tail))
-
-  final def nelToOneAnd[A]: Iso[NonEmptyList[A], OneAnd[List,A]] =
+  final def nelToOneAnd[A]: Iso[NonEmptyList[A], OneAnd[List, A]] =
     pNelToOneAnd[A, A]
 
   final def pOptNelToList[A, B]: PIso[Option[NonEmptyList[A]], Option[NonEmptyList[B]], List[A], List[B]] =
@@ -24,10 +24,10 @@ trait NonEmptyListOptics {
     pOptNelToList[A, A]
 
   @deprecated("use pNelToOneAnd", since = "1.2.0")
-  final def pNelAndOneIso[A, B]: PIso[NonEmptyList[A], NonEmptyList[B], OneAnd[List,A], OneAnd[List,B]] =
+  final def pNelAndOneIso[A, B]: PIso[NonEmptyList[A], NonEmptyList[B], OneAnd[List, A], OneAnd[List, B]] =
     pNelToOneAnd[A, B]
 
   @deprecated("use nelToOneAnd", since = "1.2.0")
-  final def nelAndOneIso[A]: Iso[NonEmptyList[A], OneAnd[List,A]] =
+  final def nelAndOneIso[A]: Iso[NonEmptyList[A], OneAnd[List, A]] =
     nelToOneAnd[A]
 }

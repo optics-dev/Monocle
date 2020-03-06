@@ -5,12 +5,13 @@ import monocle.{Iso, Lens}
 import scala.annotation.implicitNotFound
 
 /**
- * Typeclass that defines a [[Lens]] from an `S` to its second element of type `A`
- * @tparam S source of [[Lens]]
- * @tparam A target of [[Lens]], `A` is supposed to be unique for a given `S`
- */
-@implicitNotFound("Could not find an instance of Field2[${S},${A}], please check Monocle instance location policy to " +
-  "find out which import is necessary")
+  * Typeclass that defines a [[Lens]] from an `S` to its second element of type `A`
+  * @tparam S source of [[Lens]]
+  * @tparam A target of [[Lens]], `A` is supposed to be unique for a given `S`
+  */
+@implicitNotFound(
+  "Could not find an instance of Field2[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
+)
 abstract class Field2[S, A] extends Serializable {
   def second: Lens[S, A]
 }
@@ -20,7 +21,6 @@ trait Field2Functions {
 }
 
 object Field2 extends Field2Functions {
-
   def apply[S, A](lens: Lens[S, A]): Field2[S, A] = new Field2[S, A] {
     override val second: Lens[S, A] = lens
   }
@@ -33,8 +33,7 @@ object Field2 extends Field2Functions {
   /************************************************************************************************/
   /** std instances                                                                               */
   /************************************************************************************************/
-
-  implicit def tuple2Field2[A1, A2]: Field2[(A1, A2), A2]  = Field2(
+  implicit def tuple2Field2[A1, A2]: Field2[(A1, A2), A2] = Field2(
     Lens((_: (A1, A2))._2)(a => t => t.copy(_2 = a))
   )
 

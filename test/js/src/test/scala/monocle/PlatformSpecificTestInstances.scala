@@ -1,3 +1,3 @@
 package monocle
 
-private [monocle] trait PlatformSpecificTestInstances
+private[monocle] trait PlatformSpecificTestInstances

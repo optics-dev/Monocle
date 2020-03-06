@@ -10,12 +10,16 @@ import cats.Eq
 import cats.instances.tuple._
 
 object ConsTests extends Laws {
-
-  def apply[S: Eq : Arbitrary, A: Eq : Arbitrary](implicit evCons: Cons[S, A],
-     arbASAS: Arbitrary[((A,S)) => ((A,S))], arbAA: Arbitrary[A => A], arbSS: Arbitrary[S => S]): RuleSet =
-    new SimpleRuleSet("Cons",
+  def apply[S: Eq: Arbitrary, A: Eq: Arbitrary](
+    implicit evCons: Cons[S, A],
+    arbASAS: Arbitrary[((A, S)) => ((A, S))],
+    arbAA: Arbitrary[A => A],
+    arbSS: Arbitrary[S => S]
+  ): RuleSet =
+    new SimpleRuleSet(
+      "Cons",
       PrismTests(cons[S, A]).props ++
-      OptionalTests(headOption[S, A]).props ++
-      OptionalTests(tailOption[S, A]).props: _*)
-
+        OptionalTests(headOption[S, A]).props ++
+        OptionalTests(tailOption[S, A]).props: _*
+    )
 }

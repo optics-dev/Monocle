@@ -27,19 +27,19 @@ sealed abstract class GenIsoImplBase {
   val c: blackbox.Context
   import c.universe._
 
-  protected final def fail(msg: String): Nothing =
+  final protected def fail(msg: String): Nothing =
     c.abort(c.enclosingPosition, msg)
 
-  protected final def caseAccessorsOf[S: c.WeakTypeTag]: List[MethodSymbol] =
+  final protected def caseAccessorsOf[S: c.WeakTypeTag]: List[MethodSymbol] =
     weakTypeOf[S].decls.collect { case m: MethodSymbol if m.isCaseAccessor => m }.toList
 
-  protected final def genIso_unit_tree[S: c.WeakTypeTag]: c.Tree = {
+  final protected def genIso_unit_tree[S: c.WeakTypeTag]: c.Tree = {
     val sTpe = weakTypeOf[S]
 
     if (sTpe.typeSymbol.isModuleClass) {
       val table = c.universe.asInstanceOf[SymbolTable]
-      val tree = table.gen
-      val obj = tree.mkAttributedQualifier(sTpe.asInstanceOf[tree.global.Type]).asInstanceOf[Tree]
+      val tree  = table.gen
+      val obj   = tree.mkAttributedQualifier(sTpe.asInstanceOf[tree.global.Type]).asInstanceOf[Tree]
       q"""
         monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${obj}))
       """
@@ -50,7 +50,7 @@ sealed abstract class GenIsoImplBase {
           q"""
             monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${sTpeSym}()))
           """
-        case _   => fail(s"$sTpe needs to be a case class with no accessor or an object.")
+        case _ => fail(s"$sTpe needs to be a case class with no accessor or an object.")
       }
     }
   }
@@ -64,8 +64,10 @@ class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
 
     val fieldMethod = caseAccessorsOf[S] match {
       case m :: Nil => m
-      case Nil      => fail(s"Cannot find a case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")
-      case _        => fail(s"Found several case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")
+      case Nil =>
+        fail(s"Cannot find a case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")
+      case _ =>
+        fail(s"Found several case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")
     }
 
     val sTpeSym = sTpe.typeSymbol.companion
@@ -102,7 +104,7 @@ class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
 class GenIsoImplW(override val c: whitebox.Context) extends GenIsoImplBase {
   import c.universe._
 
-  protected final def nameAndType(T: Type, s: Symbol): (TermName, Type) = {
+  final protected def nameAndType(T: Type, s: Symbol): (TermName, Type) = {
     def paramType(name: TermName): Type =
       T.decl(name).typeSignatureIn(T) match {
         case NullaryMethodType(t) => t
@@ -124,8 +126,7 @@ class GenIsoImplW(override val c: whitebox.Context) extends GenIsoImplBase {
     if (!sTpeSym.isCaseClass)
       fail(s"$sTpe is not a case class.")
 
-    val paramLists = sTpe
-      .decls
+    val paramLists = sTpe.decls
       .collectFirst { case m: MethodSymbol if m.isPrimaryConstructor => m }
       .getOrElse(fail(s"Unable to discern primary constructor for $sTpe."))
       .paramLists
@@ -143,7 +144,7 @@ class GenIsoImplW(override val c: whitebox.Context) extends GenIsoImplBase {
       case params :: Nil =>
         var readField = List.empty[Tree]
         var readTuple = List.empty[Tree]
-        var types = List.empty[Type]
+        var types     = List.empty[Type]
         for ((param, i) <- params.zipWithIndex.reverse) {
           val (pName, pType) = nameAndType(sTpe, param)
           readField ::= q"s.$pName"

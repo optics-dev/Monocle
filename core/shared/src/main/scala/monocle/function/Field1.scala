@@ -5,12 +5,13 @@ import monocle.{Iso, Lens}
 import scala.annotation.implicitNotFound
 
 /**
- * Typeclass that defines a [[Lens]] from an `S` to its first element of type `A`
- * @tparam S source of [[Lens]]
- * @tparam A target of [[Lens]], `A` is supposed to be unique for a given `S`
- */
-@implicitNotFound("Could not find an instance of Field1[${S},${A}], please check Monocle instance location policy to " +
-  "find out which import is necessary")
+  * Typeclass that defines a [[Lens]] from an `S` to its first element of type `A`
+  * @tparam S source of [[Lens]]
+  * @tparam A target of [[Lens]], `A` is supposed to be unique for a given `S`
+  */
+@implicitNotFound(
+  "Could not find an instance of Field1[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
+)
 abstract class Field1[S, A] extends Serializable {
   def first: Lens[S, A]
 }
@@ -20,7 +21,6 @@ trait Field1Functions {
 }
 
 object Field1 extends Field1Functions {
-
   def apply[S, A](lens: Lens[S, A]): Field1[S, A] = new Field1[S, A] {
     override val first: Lens[S, A] = lens
   }
@@ -33,7 +33,6 @@ object Field1 extends Field1Functions {
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-
   implicit def tuple1Field1[A]: Field1[Tuple1[A], A] = Field1(
     Lens((_: Tuple1[A])._1)(a => _ => Tuple1(a))
   )
