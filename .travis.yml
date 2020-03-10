@@ -1,11 +1,11 @@
 language: scala
 
 scala:
-- 2.13.0
-- 2.12.8
+- 2.13.1
+- 2.12.10
 
 jdk:
-- oraclejdk8
+- openjdk8
 
 before_install:
 - git fetch --tags
@@ -24,7 +24,7 @@ stages:
 
 script:
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
-  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc
+  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test mimaReportBinaryIssues packageSrc
 
 jobs:
   include:

@@ -7,6 +7,8 @@ inThisBuild(List(
   organization := "com.github.julien-truffaut",
   homepage := Some(url("https://github.com/julien-truffaut/Monocle")),
   licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
+  mimaFailOnNoPrevious := false,
+  mimaReportSignatureProblems := true,
   developers := List(
     Developer(
       "julien-truffaut",
@@ -35,12 +37,9 @@ inThisBuild(List(
   )
 ))
 
-lazy val scalatestVersion = settingKey[String]("")
-
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.13.0",
-  crossScalaVersions := Seq("2.12.8", "2.13.0"),
-  scalatestVersion   := "3.0.8",
+  scalaVersion       := "2.13.1",
+  crossScalaVersions := Seq("2.12.10", "2.13.1"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -63,15 +62,14 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.28")
+lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.30")
 lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.3")
 
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.8")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.8" % "test")
+lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.13")
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.13" % "test")
 
-lazy val discipline         = Def.setting("org.typelevel"   %%% "discipline-scalatest" % "0.12.0-M3")
-lazy val scalacheck         = Def.setting("org.scalacheck"  %%% "scalacheck"           % "1.14.0")
-lazy val scalatest          = Def.setting("org.scalatest"   %%% "scalatest"            % scalatestVersion.value % "test")
+lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-core"      % "1.0.2")
+lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest" % "1.0.1")
 
 lazy val macroVersion = "2.1.1"
 
@@ -86,9 +84,9 @@ lazy val paradisePlugin = Def.setting{
   }
 }
 
-lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.10.3" cross CrossVersion.binary
+lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.11.0" cross CrossVersion.full
 
-def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
+def mimaSettings(module: String): Seq[Setting[_]] = Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "1.6.0")
 )
 
@@ -143,6 +141,9 @@ lazy val core       = crossProject(JVMPlatform, JSPlatform)
   )
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies += scalaz.value)
+  .configurePlatform(JVMPlatform)(
+    _.enablePlugins(MimaPlugin)
+  )
 
 lazy val genericJVM = generic.jvm
 lazy val genericJS  = generic.js
@@ -154,6 +155,9 @@ lazy val generic    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   )
   .jvmSettings(mimaSettings("generic"): _*)
   .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
+  .configurePlatform(JVMPlatform)(
+    _.enablePlugins(MimaPlugin)
+  )
 
 lazy val refinedJVM = refined.jvm
 lazy val refinedJS  = refined.js
@@ -173,7 +177,7 @@ lazy val law    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .settings(libraryDependencies ++= Seq(discipline.value, scalacheck.value))
+  .settings(libraryDependencies ++= Seq(discipline.value))
 
 lazy val macrosJVM = macros.jvm
 lazy val macrosJS  = macros.js
@@ -214,6 +218,9 @@ lazy val unsafe    = crossProject(JVMPlatform, JSPlatform).dependsOn(core)
   )
   .jvmSettings(mimaSettings("unsafe"): _*)
   .settings(libraryDependencies ++= Seq(scalaz.value, shapeless.value))
+  .configurePlatform(JVMPlatform)(
+    _.enablePlugins(MimaPlugin)
+  )
 
 lazy val testJVM = test.jvm
 lazy val testJS  = test.js
@@ -225,7 +232,7 @@ lazy val test    = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic
   )
   .settings(noPublishSettings: _*)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value, refinedScalacheck.value),
+    libraryDependencies ++= Seq(scalaz.value, shapeless.value, discipline_scalatest.value, refinedScalacheck.value),
     libraryDependencies ++= paradisePlugin.value
   )
 
@@ -243,7 +250,7 @@ lazy val example = project.dependsOn(coreJVM, genericJVM, refinedJVM, macrosJVM,
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(scalaz.value, shapeless.value, scalatest.value),
+    libraryDependencies ++= Seq(scalaz.value, shapeless.value, discipline_scalatest.value),
     libraryDependencies ++= paradisePlugin.value
   )
 
