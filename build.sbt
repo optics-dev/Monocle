@@ -38,8 +38,8 @@ inThisBuild(List(
 ))
 
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.13.1",
-  crossScalaVersions := Seq("2.12.10", "2.13.1"),
+  scalaVersion       := "2.13.2",
+  crossScalaVersions := Seq("2.12.11", "2.13.2"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -65,8 +65,10 @@ lazy val buildSettings = Seq(
 lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.30")
 lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.3")
 
-lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % "0.9.13")
-lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % "0.9.13" % "test")
+lazy val refinedVersion = "0.9.14"
+
+lazy val refinedDep         = Def.setting("eu.timepit"      %%% "refined"              % refinedVersion)
+lazy val refinedScalacheck  = Def.setting("eu.timepit"      %%% "refined-scalacheck"   % refinedVersion % "test")
 
 lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-core"      % "1.0.2")
 lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest" % "1.0.1")
