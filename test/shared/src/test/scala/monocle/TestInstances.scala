@@ -14,11 +14,19 @@ import scalaz._
 import scalaz.std.list._
 import scalaz.syntax.traverse._
 import scalaz.syntax.equal._
+import scala.reflect.ClassTag
 
 trait TestInstances extends PlatformSpecificTestInstances {
 
-  implicit def equality[A](implicit A: Equal[A]): Equality[A] =
-    (a: A, b: Any) => A.equal(a, b.asInstanceOf[A])
+  implicit def equality[A: ClassTag](implicit A: Equal[A]): Equality[A] = {
+    (a: A, b: Any) =>
+      b match {
+        case b0: A =>
+          A.equal(a, b0)
+        case _ =>
+          false
+      }
+  }
 
   implicit val genApplicative: Applicative[Gen] = new Applicative[Gen] {
     override def ap[A, B](fa: => Gen[A])(f: => Gen[A => B]): Gen[B] = fa.flatMap(a => f.map(_(a)))
@@ -65,7 +73,7 @@ trait TestInstances extends PlatformSpecificTestInstances {
   implicit def optionCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[Option, A]] =
     Equal.equal { (a, b) =>  A.equal(a.head, b.head) && a.tail === b.tail }
 
-  implicit def streamCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[Stream, A]] =
+  implicit def ephemeralStreamCofreeEq[A](implicit A: Equal[A]): Equal[Cofree[EphemeralStream, A]] =
     Equal.equal { (a, b) =>  A.equal(a.head, b.head) && a.tail === b.tail }
 
   implicit def function1Eq[A, B](implicit A: Arbitrary[A], B: Equal[B]) = new Equal[A => B] {
@@ -90,8 +98,8 @@ trait TestInstances extends PlatformSpecificTestInstances {
 
   implicit val intShow = Show.showA[Int]
 
-  implicit def treeShow[A: Show] = new Show[Tree[A]] {
-    override def shows(f: Tree[A]): String = f.drawTree
+  implicit def treeShow[A: Show]: Show[Tree[A]] = {
+    f => Cord(f.drawTree)
   }
 
   implicit def streamShow[A: Show] = scalaz.std.stream.streamShow[A]
@@ -112,15 +120,18 @@ trait TestInstances extends PlatformSpecificTestInstances {
           value      <- Arbitrary.arbitrary[A]
           partitions <- genPartition(size - 1)
           children   <- partitions.traverseU(sizedTree)
-        } yield Node[A](value, children.toStream)
+        } yield Node[A](value, EphemeralStream.fromStream(children.toStream))
 
       Gen.sized(sz => sizedTree(sz))
     }
 
   implicit def treeCoGen[A: Cogen]: Cogen[Tree[A]] =
-    Cogen[Tree[A]]((seed: Seed, t: Tree[A]) => Cogen[(A, Stream[Tree[A]])].perturb(seed, (t.rootLabel, t.subForest)))
+    Cogen[Tree[A]]((seed: Seed, t: Tree[A]) => Cogen[(A, EphemeralStream[Tree[A]])].perturb(seed, (t.rootLabel, t.subForest)))
 
-  implicit def streamCoGen[A: Cogen]: Cogen[Stream[A]] = Cogen[List[A]].contramap[Stream[A]](_.toList)
+  implicit def ephemeralStreamCoGen[A: Cogen]: Cogen[EphemeralStream[A]] = Cogen[List[A]].contramap[EphemeralStream[A]](_.toList)
+
+  implicit def ephemeralStreamArbitrary[A: Arbitrary]: Arbitrary[EphemeralStream[A]] =
+    Arbitrary(implicitly[Arbitrary[List[A]]].arbitrary.map(_.toEphemeralStream))
 
   implicit def optionArbitrary[A: Arbitrary]: Arbitrary[Option[A]] = Arbitrary(Gen.frequency(
     1 -> None,
@@ -143,15 +154,15 @@ trait TestInstances extends PlatformSpecificTestInstances {
     Cogen.cogenEither[E, A].contramap[E \/ A](_.toEither)
 
   implicit def validationArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[Validation[A, B]] =
-    Arbitrary(arbitrary[A \/ B].map(_.validation))
+    Arbitrary(arbitrary[A \/ B].map(_.toValidation))
 
   implicit def coGenValidation[E: Cogen, A: Cogen]: Cogen[Validation[E, A]] =
     Cogen.cogenEither[E, A].contramap[Validation[E, A]](_.toEither)
 
   implicit def theseArbitrary[A: Arbitrary, B: Arbitrary]: Arbitrary[A \&/ B] =
     Arbitrary(Gen.oneOf(
-      arbitrary[A].map(This(_)),
-      arbitrary[B].map(That(_)),
+      arbitrary[A].map(This[A, B](_)),
+      arbitrary[B].map(That[A, B](_)),
       for {
         a <- arbitrary[A]
         b <- arbitrary[B]
@@ -184,31 +195,36 @@ trait TestInstances extends PlatformSpecificTestInstances {
     Arbitrary(Arbitrary.arbitrary[List[A]].map(l => ISet.fromList(l)(Order[A])))
 
   implicit def nelArbitrary[A: Arbitrary]: Arbitrary[NonEmptyList[A]] =
-    Arbitrary(oneAndArbitrary[List,A].arbitrary.map( o => NonEmptyList(o.head, o.tail:_*)))
+    Arbitrary(oneAndArbitrary[List,A].arbitrary.map( o => NonEmptyList.fromSeq(o.head, o.tail)))
 
   implicit def nelCoGen[A: Cogen]: Cogen[NonEmptyList[A]] =
     Cogen[(A, IList[A])].contramap[NonEmptyList[A]](nel => (nel.head, nel.tail))
 
   implicit def either3Arbitrary[A: Arbitrary, B: Arbitrary, C: Arbitrary]: Arbitrary[Either3[A, B, C]] =
     Arbitrary(Gen.oneOf(
-      Arbitrary.arbitrary[A].map(Either3.left3),
-      Arbitrary.arbitrary[B].map(Either3.middle3),
-      Arbitrary.arbitrary[C].map(Either3.right3)
+      Arbitrary.arbitrary[A].map(Either3.left3[A, B, C]),
+      Arbitrary.arbitrary[B].map(Either3.middle3[A, B, C]),
+      Arbitrary.arbitrary[C].map(Either3.right3[A, B, C])
     ))
 
   implicit def optionCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[Option, A]] =
     Arbitrary(Arbitrary.arbitrary[OneAnd[List, A]].map( xs =>
-      monocle.std.cofree.cofreeToStream.reverseGet(xs.copy(tail = xs.tail.toStream))
+      monocle.std.cofree.cofreeToStream.reverseGet(
+        OneAnd(xs.head, xs.tail.toEphemeralStream)
+      )
     ))
 
-  implicit def streamCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[Stream, A]] =
+  implicit def ephemeralStreamCofreeArbitrary[A](implicit A: Arbitrary[A]): Arbitrary[Cofree[EphemeralStream, A]] =
     Arbitrary(Arbitrary.arbitrary[Tree[A]].map( monocle.std.cofree.cofreeToTree.reverseGet))
 
   implicit def cogenOptionCofree[A](implicit A: Cogen[A]): Cogen[Cofree[Option, A]] =
     Cogen[Cofree[Option, A]]((seed: Seed, t: Cofree[Option, A]) => Cogen[(A, Option[Cofree[Option, A]])].perturb(seed, (t.head, t.tail)))
 
-  implicit def cogenStreamCofree[A](implicit A: Cogen[A]): Cogen[Cofree[Stream, A]] =
-    Cogen[Cofree[Stream, A]]((seed: Seed, t: Cofree[Stream, A]) => Cogen[(A, Stream[Cofree[Stream, A]])].perturb(seed, (t.head, t.tail)))
+  implicit def cogenStreamCofree[A](implicit A: Cogen[A]): Cogen[Cofree[EphemeralStream, A]] =
+    Cogen[Cofree[EphemeralStream, A]](
+      (seed: Seed, t: Cofree[EphemeralStream, A]) =>
+        Cogen[(A, EphemeralStream[Cofree[EphemeralStream, A]])].perturb(seed, (t.head, t.tail))
+    )
 
   implicit def uuidArbitrary: Arbitrary[UUID] = Arbitrary(UUID.randomUUID)
 

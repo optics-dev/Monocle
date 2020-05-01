@@ -4,7 +4,8 @@ import monocle.function.fields._
 import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
-import scalaz.{Applicative, \/}
+import scalaz.{Apply, EphemeralStream}
+import EphemeralStream.##::
 
 /**
  * Typeclass that defines a [[Prism]] between an `S` and its init `S` and last `S`
@@ -52,8 +53,12 @@ object Snoc extends SnocFunctions {
   import scalaz.std.option._
 
   implicit def listSnoc[A]: Snoc[List[A], A] = Snoc(
-    Prism[List[A], (List[A], A)](
-      s => Applicative[Option].apply2(\/.fromTryCatchNonFatal(s.init).toOption, s.lastOption)((_,_))){
+    Prism[List[A], (List[A], A)]{
+      case init :+ last =>
+        Some((init, last))
+      case _ =>
+        None
+    }{
       case (init, last) => init :+ last
     }
   )
@@ -89,8 +94,21 @@ object Snoc extends SnocFunctions {
 
   implicit def iListSnoc[A]: Snoc[IList[A], A] = Snoc(
     Prism[IList[A], (IList[A], A)](
-      il => Applicative[Option].apply2(il.initOption, il.lastOption)((_,_))){
+      il => Apply[Option].apply2(il.initMaybe.toOption, il.lastOption)((_,_))){
       case (init, last) => init :+ last
+    }
+  )
+
+  implicit def ephemeralStreamSnoc[A]: Snoc[EphemeralStream[A], A] = Snoc(
+    Prism[EphemeralStream[A], (EphemeralStream[A], A)](s =>
+      if(s.isEmpty) {
+        None
+      } else {
+        val x ##:: xs = s.reverse
+        Some((xs.reverse, x))
+      }
+    ){
+      case (init, last) => init.foldRight(EphemeralStream(last))(EphemeralStream.cons(_, _))
     }
   )
 }

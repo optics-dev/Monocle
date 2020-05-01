@@ -121,7 +121,7 @@ object Each extends EachFunctions {
     Each(
       new Traversal[OneAnd[T, A], A]{
         def modifyF[F[_]: Applicative](f: A => F[A])(s: OneAnd[T, A]): F[OneAnd[T, A]] =
-          Applicative[F].apply2(f(s.head), ev.each.modifyF(f)(s.tail))((head, tail) => new OneAnd(head, tail))
+          Applicative[F].apply2(f(s.head), ev.each.modifyF(f)(s.tail))((head, tail) => OneAnd(head, tail))
       }
     )
 

@@ -55,7 +55,7 @@ object At extends AtFunctions {
   import scalaz.{==>>, ISet, Order}
 
   implicit def atIMap[K: Order, V]: At[K ==>> V, K, Option[V]] = At(
-    i => Lens{m: ==>>[K, V] => m.lookup(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
+    i => Lens{m: ==>>[K, V] => m.lookup(i).toOption}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   )
 
   implicit def atISet[A: Order]: At[ISet[A], A, Boolean] = At(

@@ -26,7 +26,7 @@ trait ValidationOptics {
     pFailure[E, A, E]
 
   final def pValidationToDisjunction[E1, E2, A1, A2]: PIso[Validation[E1, A1], Validation[E2, A2], E1 \/ A1, E2 \/ A2] =
-    PIso[Validation[E1, A1], Validation[E2, A2], E1 \/ A1, E2 \/ A2](_.disjunction)(_.validation)
+    PIso[Validation[E1, A1], Validation[E2, A2], E1 \/ A1, E2 \/ A2](_.toDisjunction)(_.toValidation)
 
   final def validationToDisjunction[E, A]: Iso[Validation[E, A], E \/ A] =
     pValidationToDisjunction[E, E, A, A]

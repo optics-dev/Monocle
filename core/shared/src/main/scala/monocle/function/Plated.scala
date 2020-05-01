@@ -3,10 +3,9 @@ package monocle.function
 import monocle.{Setter, Traversal}
 
 import scala.annotation.implicitNotFound
-import scalaz.std.stream._
 import scalaz.std.anyVal._
 import scalaz.syntax.monad._
-import scalaz.{Applicative, Monad, State, Traverse}
+import scalaz.{Applicative, EphemeralStream, Monad, State, Traverse}
 
 /**
   * [[Plated]] is a type-class for types which can extract their immediate
@@ -29,9 +28,9 @@ trait PlatedFunctions {
   @inline def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
 
   /** get all transitive self-similar elements of a target, including itself */
-  def universe[A: Plated](a: A): Stream[A] = {
+  def universe[A: Plated](a: A): EphemeralStream[A] = {
     val fold = plate[A].asFold
-    def go(b: A): Stream[A] = b #:: fold.foldMap[Stream[A]](go)(b)
+    def go(b: A): EphemeralStream[A] = b ##:: fold.foldMap[EphemeralStream[A]](go)(b)
     go(a)
   }
 
@@ -167,7 +166,7 @@ object Plated extends PlatedFunctions {
   implicit def treePlated[A]: Plated[Tree[A]] = Plated(
     new Traversal[Tree[A], Tree[A]] {
       def modifyF[F[_]: Applicative](f: Tree[A] => F[Tree[A]])(s: Tree[A]): F[Tree[A]] =
-        Applicative[F].map(Traverse[Stream].traverse(s.subForest)(f))(Tree.Node(s.rootLabel, _))
+        Applicative[F].map(Traverse[EphemeralStream].traverse(s.subForest)(f))(Tree.Node(s.rootLabel, _))
     }
   )
 }

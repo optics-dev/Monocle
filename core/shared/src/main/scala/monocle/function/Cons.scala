@@ -4,7 +4,7 @@ import monocle.function.fields._
 import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
-import scalaz.{ICons, INil}
+import scalaz.{EphemeralStream, ICons, INil}
 
 /**
  * Typeclass that defines a [[Prism]] between an `S` and its head `A` and tail `S`
@@ -90,4 +90,12 @@ object Cons extends ConsFunctions {
       case ICons(x, xs) => Some((x, xs))
     }{ case (a, s) => ICons(a, s) }
   )
+
+  implicit def ephemeralStreamCons[A]: Cons[EphemeralStream[A], A] = Cons {
+    import EphemeralStream.##::
+    Prism[EphemeralStream[A], (A, EphemeralStream[A])] {
+      case x ##:: xs => Some((x, xs))
+      case _ => None
+    } { case (x, xs) => EphemeralStream.cons(x, xs) }
+  }
 }

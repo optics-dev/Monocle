@@ -1,6 +1,7 @@
 package monocle
 
 import monocle.function.Plated
+import scalaz.Traverse
 
 /**
  * Show how could we use Optics to manipulate some Json AST
@@ -148,14 +149,15 @@ class JsonExample extends MonocleSuite {
     import scalaz.Applicative
     import scalaz.std.list._
     import scalaz.std.map._
-    import scalaz.syntax.traverse._
+    import scalaz.syntax.traverse0._
+    import scalaz.syntax.functor._
 
     val plate: Traversal[Json, Json] = new Traversal[Json, Json] {
       def modifyF[F[_]: Applicative](f: Json => F[Json])(a: Json): F[Json] =
         a match {
           case j@(JsString(_) | JsNumber(_)) => Applicative[F].pure(j)
           case JsArray(l) => l.traverse(f).map(JsArray)
-          case JsObject(m) => m.traverse(f).map(JsObject)
+          case JsObject(m) => Traverse[Map[String, *]].traverse(m)(f).map(JsObject)
         }
     }
   }

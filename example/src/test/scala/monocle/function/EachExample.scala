@@ -1,10 +1,9 @@
 package monocle.function
 
 import monocle.MonocleSuite
-
 import scalaz.Tree._
 import scalaz.std.string._
-import scalaz.{IList, IMap, OneAnd}
+import scalaz.{EphemeralStream, IList, IMap, OneAnd}
 
 class EachExample extends MonocleSuite {
 
@@ -33,8 +32,8 @@ class EachExample extends MonocleSuite {
   }
 
   test("Each can be used on Tree") {
-    Node(1, Stream(Leaf(2), Leaf(3)))  applyTraversal each modify( _ + 1) shouldEqual Node(2, Stream(Leaf(3), Leaf(4)))
-    (Node(1, Stream(Leaf(2), Leaf(3))) applyTraversal each getAll) shouldEqual List(1,2,3)
+    Node(1, EphemeralStream(Leaf(2), Leaf(3)))  applyTraversal each modify( _ + 1) shouldEqual Node(2, EphemeralStream(Leaf(3), Leaf(4)))
+    (Node(1, EphemeralStream(Leaf(2), Leaf(3))) applyTraversal each getAll) shouldEqual List(1,2,3)
   }
 
 }

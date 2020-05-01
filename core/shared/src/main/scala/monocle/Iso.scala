@@ -1,7 +1,7 @@
 package monocle
 
 import scalaz.Isomorphism.{<=>, <~>}
-import scalaz.Leibniz.===
+import scalaz.===
 import scalaz.Liskov.<~<
 import scalaz.{Applicative, Category, Functor, Monoid, Split, \/}
 

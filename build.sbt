@@ -62,7 +62,7 @@ lazy val buildSettings = Seq(
   scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
 )
 
-lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.2.30")
+lazy val scalaz             = Def.setting("org.scalaz"      %%% "scalaz-core"          % "7.3.0")
 lazy val shapeless          = Def.setting("com.chuusai"     %%% "shapeless"            % "2.3.3")
 
 lazy val refinedVersion = "0.9.14"
@@ -89,7 +89,7 @@ lazy val paradisePlugin = Def.setting{
 lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.11.0" cross CrossVersion.full
 
 def mimaSettings(module: String): Seq[Setting[_]] = Seq(
-  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %%  (s"monocle-${module}") % "1.6.3")
+  mimaPreviousArtifacts := Set.empty // TODO add 1.7.0
 )
 
 lazy val tagName = Def.setting(

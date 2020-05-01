@@ -1,6 +1,6 @@
 package monocle
 
-import scalaz.Leibniz.===
+import scalaz.===
 import scalaz.Liskov.<~<
 import scalaz.{Applicative, Category, Equal, Monoid, Traverse, \/}
 import scalaz.std.option._

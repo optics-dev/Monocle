@@ -64,6 +64,6 @@ object Field1 extends Field1Functions {
   import scalaz.OneAnd
 
   implicit def oneAndField1[T[_], A]: Field1[OneAnd[T, A], A] = Field1(
-    Lens[OneAnd[T, A], A](_.head)(a => oneAnd => oneAnd.copy(head = a))
+    Lens[OneAnd[T, A], A](_.head)(a => oneAnd => OneAnd(a, oneAnd.tail))
   )
 }
