@@ -89,7 +89,7 @@ lazy val paradisePlugin = Def.setting{
 lazy val kindProjector  = "org.typelevel"  % "kind-projector" % "0.11.0" cross CrossVersion.full
 
 def mimaSettings(module: String): Seq[Setting[_]] = Seq(
-  mimaPreviousArtifacts := Set.empty // TODO add 1.7.0
+  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %% s"monocle-${module}" % "1.7.0")
 )
 
 lazy val tagName = Def.setting(
