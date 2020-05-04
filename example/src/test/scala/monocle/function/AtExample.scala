@@ -9,7 +9,7 @@ import scala.collection.immutable.SortedMap
 
 class AtExample extends MonocleSuite {
   test("at creates a Lens from a Map, SortedMap to an optional value") {
-    (Map("One"       -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
+    (Map("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
     (SortedMap("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
 
     (Map("One" -> 1, "Two" -> 2) applyLens at("One") set Some(-1)) shouldEqual Map("One" -> -1, "Two" -> 2)
@@ -19,9 +19,9 @@ class AtExample extends MonocleSuite {
 
     // add a new value
     (Map("One" -> 1, "Two" -> 2) applyLens at("Three") set Some(3)) shouldEqual Map(
-      "One"    -> 1,
-      "Two"    -> 2,
-      "Three"  -> 3
+      "One"   -> 1,
+      "Two"   -> 2,
+      "Three" -> 3
     )
   }
 

@@ -10,8 +10,8 @@ import cats.Eq
 import cats.instances.tuple._
 
 object ConsTests extends Laws {
-  def apply[S: Eq: Arbitrary, A: Eq: Arbitrary](
-    implicit evCons: Cons[S, A],
+  def apply[S: Eq: Arbitrary, A: Eq: Arbitrary](implicit
+    evCons: Cons[S, A],
     arbASAS: Arbitrary[((A, S)) => ((A, S))],
     arbAA: Arbitrary[A => A],
     arbSS: Arbitrary[S => S]

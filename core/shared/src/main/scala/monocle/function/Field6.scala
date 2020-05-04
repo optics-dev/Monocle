@@ -21,19 +21,22 @@ trait Field6Functions {
 }
 
 object Field6 extends Field6Functions {
-  def apply[S, A](lens: Lens[S, A]): Field6[S, A] = new Field6[S, A] {
-    override val sixth: Lens[S, A] = lens
-  }
+  def apply[S, A](lens: Lens[S, A]): Field6[S, A] =
+    new Field6[S, A] {
+      override val sixth: Lens[S, A] = lens
+    }
 
   /** lift an instance of [[Field6]] using an [[Iso]] */
-  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field6[A, B]): Field6[S, B] = Field6(
-    iso composeLens ev.sixth
-  )
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field6[A, B]): Field6[S, B] =
+    Field6(
+      iso composeLens ev.sixth
+    )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  implicit def tuple6Field6[A1, A2, A3, A4, A5, A6]: Field6[(A1, A2, A3, A4, A5, A6), A6] = Field6(
-    Lens((_: (A1, A2, A3, A4, A5, A6))._6)(a => t => t.copy(_6 = a))
-  )
+  implicit def tuple6Field6[A1, A2, A3, A4, A5, A6]: Field6[(A1, A2, A3, A4, A5, A6), A6] =
+    Field6(
+      Lens((_: (A1, A2, A3, A4, A5, A6))._6)(a => t => t.copy(_6 = a))
+    )
 }

@@ -7,10 +7,11 @@ class FoldSpec extends MonocleSuite {
   val eachLi: Fold[List[Int], Int]             = Fold.fromFoldable[List, Int]
   def eachL2[A, B]: Fold[List[(A, B)], (A, B)] = Fold.fromFoldable[List, (A, B)]
 
-  def nestedListFold[A] = new Fold[List[List[A]], List[A]] {
-    def foldMap[M: Monoid](f: (List[A]) => M)(s: List[List[A]]): M =
-      s.foldRight(Monoid[M].empty)((l, acc) => Monoid[M].combine(f(l), acc))
-  }
+  def nestedListFold[A] =
+    new Fold[List[List[A]], List[A]] {
+      def foldMap[M: Monoid](f: (List[A]) => M)(s: List[List[A]]): M =
+        s.foldRight(Monoid[M].empty)((l, acc) => Monoid[M].combine(f(l), acc))
+    }
 
   // test implicit resolution of type classes
 

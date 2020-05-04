@@ -16,8 +16,8 @@ object TupleGeneric {
 
   def apply[C <: Product](implicit tgc: TupleGeneric[C]): Aux[C, tgc.Repr] = tgc
 
-  implicit def mkTG[C <: Product, L <: HList, R <: Product](
-    implicit cGen: Generic.Aux[C, L],
+  implicit def mkTG[C <: Product, L <: HList, R <: Product](implicit
+    cGen: Generic.Aux[C, L],
     tup: Tupler.Aux[L, R],
     tGen: Generic.Aux[R, L]
   ): Aux[C, R] =

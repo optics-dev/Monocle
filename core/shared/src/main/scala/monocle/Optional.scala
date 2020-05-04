@@ -178,10 +178,11 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   /** Transformation methods to view a [[POptional]] as another Optics */
   /*********************************************************************/
   /** view a [[POptional]] as a [[Fold]] */
-  @inline final def asFold: Fold[S, A] = new Fold[S, A] {
-    def foldMap[M: Monoid](f: A => M)(s: S): M =
-      self.getOption(s) map f getOrElse Monoid[M].empty
-  }
+  @inline final def asFold: Fold[S, A] =
+    new Fold[S, A] {
+      def foldMap[M: Monoid](f: A => M)(s: S): M =
+        self.getOption(s) map f getOrElse Monoid[M].empty
+    }
 
   /** view a [[POptional]] as a [[PSetter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =
@@ -194,10 +195,11 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     }
 
   /** view a [[POptional]] as a [[PTraversal]] */
-  @inline final def asTraversal: PTraversal[S, T, A, B] = new PTraversal[S, T, A, B] {
-    def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-      self.modifyF(f)(s)
-  }
+  @inline final def asTraversal: PTraversal[S, T, A, B] =
+    new PTraversal[S, T, A, B] {
+      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+        self.modifyF(f)(s)
+    }
 }
 
 object POptional extends OptionalInstances {

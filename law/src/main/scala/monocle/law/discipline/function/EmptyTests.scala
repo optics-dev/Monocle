@@ -10,11 +10,12 @@ import cats.Eq
 import cats.instances.unit._
 
 object EmptyTests extends Laws {
-  def apply[S: Arbitrary: Eq: Empty]: RuleSet = new RuleSet {
-    override def name: String                  = "Empty"
-    override def bases: Seq[(String, RuleSet)] = Nil
-    override def parents: Seq[RuleSet]         = Nil
-    override def props: Seq[(String, Prop)] =
-      PrismTests(empty[S]).props
-  }
+  def apply[S: Arbitrary: Eq: Empty]: RuleSet =
+    new RuleSet {
+      override def name: String                  = "Empty"
+      override def bases: Seq[(String, RuleSet)] = Nil
+      override def parents: Seq[RuleSet]         = Nil
+      override def props: Seq[(String, Prop)] =
+        PrismTests(empty[S]).props
+    }
 }

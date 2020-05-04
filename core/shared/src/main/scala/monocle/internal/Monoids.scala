@@ -3,15 +3,17 @@ package monocle.internal
 import cats.Monoid
 
 private[monocle] object Monoids {
-  def firstOption[A]: Monoid[Option[A]] = new Monoid[Option[A]] {
-    def empty: Option[A]                               = None
-    def combine(x: Option[A], y: Option[A]): Option[A] = x.orElse(y)
-  }
+  def firstOption[A]: Monoid[Option[A]] =
+    new Monoid[Option[A]] {
+      def empty: Option[A]                               = None
+      def combine(x: Option[A], y: Option[A]): Option[A] = x.orElse(y)
+    }
 
-  def lastOption[A]: Monoid[Option[A]] = new Monoid[Option[A]] {
-    def empty: Option[A]                               = None
-    def combine(x: Option[A], y: Option[A]): Option[A] = y.orElse(x)
-  }
+  def lastOption[A]: Monoid[Option[A]] =
+    new Monoid[Option[A]] {
+      def empty: Option[A]                               = None
+      def combine(x: Option[A], y: Option[A]): Option[A] = y.orElse(x)
+    }
 
   val any: Monoid[Boolean] = new Monoid[Boolean] {
     def empty: Boolean                           = false
