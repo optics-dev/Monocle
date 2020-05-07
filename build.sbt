@@ -5,6 +5,8 @@ import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 val scalaJSVersion06 = Option(System.getenv("SCALAJS_VERSION")).exists(_.startsWith("0.6"))
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 inThisBuild(List(
   organization := "com.github.julien-truffaut",
   homepage := Some(url("https://github.com/julien-truffaut/Monocle")),
@@ -153,13 +155,20 @@ lazy val monocleJS = project.in(file(".monocleJS"))
   .dependsOn(core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js  % "test-internal -> test")
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
-  .settings(moduleName := "monocle-core")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings),
   )
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, catsFree.value))
+  .settings(
+    moduleName := "monocle-core",
+    scalacOptions ~= (_.filterNot(
+      Set(
+        "-Xfatal-warnings" // Workaround for sbt bug
+      )
+    ))
+  )
 
 lazy val generic = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
