@@ -40,5 +40,5 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
       - name: Publish Microsite
-          if: env.REQUIRES_PUBLISH_MICROSITE != null
-          run: sbt ci-microsite
+        if: env.REQUIRES_PUBLISH_MICROSITE != null
+        run: sbt ci-microsite
