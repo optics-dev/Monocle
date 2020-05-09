@@ -39,5 +39,5 @@ jobs:
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-      - name: Publish docs
-        run: scripts/publishMicrosite.sh
+      - name: Publish Microsite
+        run: sbt ci-microsite
