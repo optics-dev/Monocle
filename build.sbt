@@ -333,6 +333,7 @@ lazy val noPublishSettings = Seq(
 )
 
 addCommandAlias("validate", ";compile;test;unidoc;tut")
+addCommandAlias("ci-microsite", "docs/publishMicrosite")
 
 // For Travis CI - see http://www.cakesolutions.net/teamblogs/publishing-artefacts-to-oss-sonatype-nexus-using-sbt-and-travis-ci
 credentials ++= (for {
