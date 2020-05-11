@@ -24,12 +24,6 @@ We can create a `Lens[Address, Int]` which zooms from an `Address` to its field 
 
 ```scala mdoc:silent
 import monocle.Lens
-val _streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
-val streetNumber = _streetNumber
-```
-
-```scala
-import monocle.Lens
 val streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
 ```
 
@@ -43,19 +37,19 @@ val streetNumber = GenLens[Address](_.streetNumber)
 Once we have a `Lens`, we can use the supplied `get` and `set` functions (nothing fancy!):
 
 ```scala mdoc
-val address = Address(10, "High Street")
+val myAddress = Address(10, "High Street")
 
-streetNumber.get(address)
-streetNumber.set(5)(address)
+streetNumber.get(myAddress)
+streetNumber.set(5)(myAddress)
 ```
 
 We can also `modify` the target of `Lens` with a function, this is equivalent to call `get` and then `set`:
 
 ```scala mdoc
-streetNumber.modify(_ + 1)(address)
+streetNumber.modify(_ + 1)(myAddress)
 
-val n = streetNumber.get(address)
-streetNumber.set(n + 1)(address)
+val n = streetNumber.get(myAddress)
+streetNumber.set(n + 1)(myAddress)
 ```
 
 We can push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `cats.Functor`:
@@ -68,7 +62,7 @@ import cats.implicits._ // to get all Functor instance
 ```
 
 ```scala mdoc
-streetNumber.modifyF(neighbors)(address)
+streetNumber.modifyF(neighbors)(myAddress)
 streetNumber.modifyF(neighbors)(Address(135, "High Street"))
 ```
 
@@ -83,7 +77,7 @@ def updateNumber(n: Int): Future[Int] = Future.successful(n + 1)
 ```
 
 ```scala mdoc
-streetNumber.modifyF(updateNumber)(address)
+streetNumber.modifyF(updateNumber)(myAddress)
 ```
 
 Most importantly, `Lenses` compose together allowing to zoom deeper in a data structure
@@ -194,7 +188,7 @@ def getSet[S, A](l: Lens[S, A], s: S): Boolean =
 On the other hand, the `setGet` law states that if you `set` a value, you always `get` the same value back. 
 This law guarantees that `set` is actually updating a value `A` inside of `S`.
 
-```scala mdoc:nest:silent
+```scala mdoc:silent
 def setGet[S, A](l: Lens[S, A], s: S, a: A): Boolean =
   l.get(l.set(a)(s)) == a
 ```

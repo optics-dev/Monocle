@@ -41,7 +41,6 @@ then we zoom into the `Map` at the `History` key using `At` typeclass
 
 ```scala mdoc:silent
 import monocle.function.At.at // to get at Lens
-import monocle.std.map._      // to get Map instance for At
 ```
 
 ```scala mdoc
@@ -104,10 +103,6 @@ val lastName  = GenLens[Lecturer](_.lastName)
 
 Then, we can use `Cons` typeclass which provides both `headOption` and `tailOption` optics. In our case, we want
 to use `headOption` to zoom into the first character of a `String`
-
-```scala mdoc:silent
-import monocle.std.string._ // to get String instance for Cons
-```
 
 ```scala mdoc
 val upperCasedFirstName = (allLecturers composeLens firstName composeOptional headOption).modify(_.toUpper)(uni)
