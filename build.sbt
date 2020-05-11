@@ -275,15 +275,14 @@ lazy val example = project.dependsOn(core.jvm, generic.jvm, refined.jvm, macros.
 lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
   .enablePlugins(MicrositesPlugin)
   .enablePlugins(ScalaUnidocPlugin)
+  .enablePlugins(MdocPlugin)
   .settings(moduleName := "monocle-docs")
   .settings(monocleSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
-  .settings(scalacOptions in Tut ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
+  .settings(scalacOptions ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
   .settings(
     libraryDependencies ++= Seq(cats.value, shapeless.value),
-    // https://github.com/47deg/sbt-microsites/issues/305
-    libraryDependencies ~= (_.filterNot(m => m.organization == "org.scalameta" && m.name.startsWith("mdoc"))),
     libraryDependencies ++= paradisePlugin.value
   )
   .enablePlugins(GhpagesPlugin)
@@ -313,7 +312,9 @@ lazy val docSettings = Seq(
   docsMappingsAPIDir := "api",
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
-  fork in tut := true,
+  micrositeCompilingDocsTool := WithMdoc,
+  mdocIn := (sourceDirectory in Compile).value / "mdoc",
+  fork in mdoc := true,
   fork in (ScalaUnidoc, unidoc) := true,
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
     "-Xfatal-warnings",
@@ -332,7 +333,7 @@ lazy val noPublishSettings = Seq(
   skip in publish := true
 )
 
-addCommandAlias("validate", ";compile;test;unidoc;tut")
+addCommandAlias("validate", ";compile;test;unidoc;docs/mdoc")
 addCommandAlias("ci-microsite", "docs/publishMicrosite")
 
 // For Travis CI - see http://www.cakesolutions.net/teamblogs/publishing-artefacts-to-oss-sonatype-nexus-using-sbt-and-travis-ci

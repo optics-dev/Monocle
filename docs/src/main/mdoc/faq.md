@@ -24,13 +24,13 @@ import monocle.function.Cons.{headOption, tailOption}
 
 or you can import all typeclass based optics with
 
-```tut:silent
+```scala mdoc:silent
 import monocle.function.all._
 ```
 
 Here is a complete example
 
-```tut:silent
+```scala mdoc:silent
 import monocle.function.all._
 import monocle.macros.GenLens
 
@@ -40,13 +40,13 @@ val foo = Foo("Hello", List(1,2,3))
 val is = GenLens[Foo](_.is)
 ```
 
-```tut:book
+```scala mdoc
 (is composeOptional headOption).getOption(foo)
 ```
 
 Note: if you use a version of monocle before 1.4.x, you need another import to get the typeclass instance
 
-```tut:silent
+```scala mdoc:silent
 import monocle.std.list._
 ```
 
@@ -55,7 +55,7 @@ import monocle.std.list._
 Both `at` and `index` define indexed optics. However, `at` is a `Lens` and `index` is an `Optional` which means
 `at` is stronger than `index`. Let's take the example of a `Map`
 
-```tut:silent
+```scala mdoc:silent
 import monocle.Iso
 
 val m = Map("one" -> 1, "two" -> 2)
@@ -63,7 +63,7 @@ val m = Map("one" -> 1, "two" -> 2)
 val root = Iso.id[Map[String, Int]]
 ```
 
-```tut:book
+```scala mdoc
 (root composeOptional index("two")).set(0)(m)   // update value at index "two"
 (root composeOptional index("three")).set(3)(m) // noop because m doesn't have a value at "three"
 (root composeLens at("three")).set(Some(3))(m)  // insert element at "three"
@@ -79,7 +79,7 @@ arbitrary index of a sequence.
 
 Note: `root` is a trick to help type inference. Without it, we would get the following error
 
-```tut:fail
+```scala mdoc:fail
 index("two").set(0)(m)
 ```
 
@@ -87,9 +87,9 @@ The problem is that the compiler does not have enough information to infer the c
 `Iso.id[Map[String, Int]]` as a prefix, we give a hint to the type inference saying we focus on a `Map[String, Int]`.
 Similarly, if the `Map` was in a case class, a `Lens` would provide the same kind of hint than `Iso.id`
 
-```tut:silent
+```scala mdoc:silent
 case class Bar(kv: Map[String, Int])
 ```
-```tut:book
+```scala mdoc
 (GenLens[Bar](_.kv) composeOptional index("two")).set(0)(Bar(m))
 ```

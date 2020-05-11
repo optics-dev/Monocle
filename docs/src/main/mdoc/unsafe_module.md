@@ -17,13 +17,13 @@ The module currently defines one `Optic`, `UnsafeSelect`, but more will be added
 
 `UnsafeSelect` allows to create a `Prism` based on a predicate. Let's have a look at a simple example:
 
-```tut:silent
+```scala mdoc:silent
 case class Person(name: String, age: Int)
 ```
 
 Using an `UnsafeSelect` we can select all `Person` with `age >= 18` and then use a `Lens` to modify their name:
 
-```tut:silent
+```scala mdoc:silent
 import monocle.unsafe.UnsafeSelect
 import monocle.macros.GenLens
 
@@ -32,7 +32,7 @@ import monocle.macros.GenLens
 
 This operator is considered unsafe because it allows for inconsistency if a `Lens` is then used to change one of the values used in the predicates. For example:
 
-```tut:silent
+```scala mdoc:silent
 import monocle.unsafe.UnsafeSelect
 import monocle.macros.GenLens
 

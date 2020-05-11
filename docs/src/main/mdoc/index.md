@@ -43,7 +43,7 @@ scalacOptions in Global += "-Ymacro-annotations"
 Scala already provides getters and setters for case classes but modifying nested objects is verbose which makes code
 difficult to understand and reason about. Let's have a look at some examples:
 
-```tut:silent
+```scala mdoc:silent
 case class Street(number: Int, name: String)
 case class Address(city: String, street: Street)
 case class Company(name: String, address: Address)
@@ -53,11 +53,11 @@ case class Employee(name: String, company: Company)
 Let's say we have an employee and we need to upper case the first character of his company street name.
 Here is how we could write it in vanilla Scala:
 
-```tut:silent
+```scala mdoc:silent
 val employee = Employee("john", Company("awesome inc", Address("london", Street(23, "high street"))))
 ```
 
-```tut:book
+```scala mdoc
 employee.copy(
   company = employee.company.copy(
     address = employee.company.address.copy(
@@ -72,7 +72,7 @@ employee.copy(
 As we can see `copy` is not convenient to update nested objects because we need to repeat ourselves.
 Let's see what could we do with Monocle (type annotations are only added for clarity):
 
-```tut:silent
+```scala mdoc:silent
 import monocle.Lens
 import monocle.macros.GenLens
 
@@ -88,7 +88,7 @@ company composeLens address composeLens street composeLens streetName
 Therefore, after composing `company`, `address`, `street` and `name`, we obtain a `Lens` from `Employee` to `String` (the street name).
 Now we can use this `Lens` issued from the composition to `modify` the street name using the function `capitalize`:
 
-```tut:book
+```scala mdoc
 (company composeLens address composeLens street composeLens streetName).modify(_.capitalize)(employee)
 ```
 
@@ -98,11 +98,11 @@ However, we cannot write such a `Lens` because `Lenses` require the field they a
 In our case the first character of a `String` is optional as a `String` can be empty.
 So we need another abstraction that would be a sort of partial `Lens`, in Monocle it is called an `Optional`.
 
-```tut:silent
+```scala mdoc:silent
 import monocle.function.Cons.headOption // to use headOption (an optic from Cons typeclass)
 ```
 
-```tut:book
+```scala mdoc
 (company composeLens address
          composeLens street
          composeLens streetName
@@ -116,7 +116,7 @@ relation between optics).
 
 Monocle offers various functions and macros to cut the boilerplate even further, here is an example:
 
-```tut:book
+```scala mdoc
 import monocle.macros.syntax.lens._
 
 employee.lens(_.company.address.street.name).composeOptional(headOption).modify(_.toUpper)
