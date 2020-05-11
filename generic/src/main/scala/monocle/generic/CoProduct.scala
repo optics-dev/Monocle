@@ -22,8 +22,7 @@ trait CoProductInstances {
   def coProductEitherIso[S <: Coproduct]: GenCoProductEitherIso[S] = new GenCoProductEitherIso
 
   class GenCoProductEitherIso[S <: Coproduct] {
-    def apply[L, R](
-      implicit
+    def apply[L, R](implicit
       coproductToEither: CoproductToEither.Aux[S, Either[L, R]],
       eitherToCoproduct: EitherToCoproduct.Aux[L, R, S]
     ): Iso[S, Either[L, R]] =
@@ -44,8 +43,7 @@ trait CoProductInstances {
   def coProductToEither[S]: GenCoProductToEither[S] = new GenCoProductToEither
 
   class GenCoProductToEither[S] {
-    def apply[C <: Coproduct, L, R](
-      implicit
+    def apply[C <: Coproduct, L, R](implicit
       ev: Generic.Aux[S, C],
       coproductToEither: CoproductToEither.Aux[C, Either[L, R]],
       eitherToCoproduct: EitherToCoproduct.Aux[L, R, C]
@@ -64,8 +62,7 @@ trait CoProductInstances {
   def coProductDisjunctionIso[S <: Coproduct]: GenCoProductDisjunctionIso[S] = new GenCoProductDisjunctionIso
 
   class GenCoProductDisjunctionIso[S <: Coproduct] {
-    def apply[L, R](
-      implicit
+    def apply[L, R](implicit
       coproductToDisjunction: CoproductToDisjunction.Aux[S, Either[L, R]],
       disjunctionToCoproduct: DisjunctionToCoproduct.Aux[L, R, S]
     ): Iso[S, Either[L, R]] =
@@ -86,8 +83,7 @@ trait CoProductInstances {
   def coProductToDisjunction[S]: GenCoProductToDisjunction[S] = new GenCoProductToDisjunction
 
   class GenCoProductToDisjunction[S] {
-    def apply[C <: Coproduct, L, R](
-      implicit
+    def apply[C <: Coproduct, L, R](implicit
       ev: Generic.Aux[S, C],
       coproductToDisjunction: CoproductToDisjunction.Aux[C, Either[L, R]],
       disjunctionToCoproduct: DisjunctionToCoproduct.Aux[L, R, C]

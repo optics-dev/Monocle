@@ -28,16 +28,17 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
       case _ => ""
     }
 
-    def monolenses(tpname: TypeName, params: List[ValDef]): List[Tree] = params.map { param =>
-      val lensName = TermName(prefix + param.name.decodedName)
-      q"""val $lensName =
+    def monolenses(tpname: TypeName, params: List[ValDef]): List[Tree] =
+      params.map { param =>
+        val lensName = TermName(prefix + param.name.decodedName)
+        q"""val $lensName =
         monocle.macros.internal.Macro.mkLens[$tpname, $tpname, ${param.tpt}, ${param.tpt}](${param.name.toString})"""
-    }
+      }
 
     def lenses(tpname: TypeName, tparams: List[TypeDef], params: List[ValDef]): List[Tree] =
-      if (tparams.isEmpty) {
+      if (tparams.isEmpty)
         monolenses(tpname, params)
-      } else {
+      else
         params.map { param =>
           val lensName = TermName(prefix + param.name.decodedName)
           val q"x: $s" = q"x: $tpname[..${tparams.map(_.name)}]"
@@ -45,12 +46,11 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
           q"""def $lensName[..$tparams] =
             monocle.macros.internal.Macro.mkLens[$s, $s, $a, $a](${param.name.toString})"""
         }
-      }
 
     def plenses(tpname: TypeName, tparams: List[TypeDef], params: List[ValDef]): List[Tree] =
-      if (tparams.isEmpty) {
+      if (tparams.isEmpty)
         monolenses(tpname, params)
-      } else {
+      else {
         // number of fields in which each tparam is used
         val tparamsUsages: Map[TypeName, Int] = params.foldLeft(tparams.map(_.name -> 0).toMap) { (acc, param) =>
           val typeNames = param.collect { case Ident(tn: TypeName) => tn }.toSet
@@ -77,10 +77,11 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
             .toSet
 
           object tptTransformer extends Transformer {
-            override def transform(tree: Tree): Tree = tree match {
-              case Ident(tn: TypeName) => Ident(tpnamesMap(tn))
-              case x                   => super.transform(x)
-            }
+            override def transform(tree: Tree): Tree =
+              tree match {
+                case Ident(tn: TypeName) => Ident(tpnamesMap(tn))
+                case x                   => super.transform(x)
+              }
           }
 
           val q"x: $s" = q"x: $tpname[..${tparams.map(_.name)}]"
@@ -97,7 +98,7 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
 
     val result = annottees map (_.tree) match {
       case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
-            :: Nil if mods.hasFlag(Flag.CASE) =>
+          :: Nil if mods.hasFlag(Flag.CASE) =>
         val name = tpname.toTermName
         q"""
          $classDef
@@ -106,8 +107,8 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
          }
          """
       case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
-            :: q"$objMods object $objName extends { ..$objEarlyDefs } with ..$objParents { $objSelf => ..$objDefs }"
-            :: Nil if mods.hasFlag(Flag.CASE) =>
+          :: q"$objMods object $objName extends { ..$objEarlyDefs } with ..$objParents { $objSelf => ..$objDefs }"
+          :: Nil if mods.hasFlag(Flag.CASE) =>
         q"""
          $classDef
          $objMods object $objName extends { ..$objEarlyDefs} with ..$objParents { $objSelf =>

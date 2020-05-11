@@ -191,10 +191,11 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /** Transformation methods to view a [[PPrism]] as another Optics */
   /******************************************************************/
   /** view a [[PPrism]] as a [[Fold]] */
-  @inline final def asFold: Fold[S, A] = new Fold[S, A] {
-    def foldMap[M: Monoid](f: A => M)(s: S): M =
-      getOption(s) map f getOrElse Monoid[M].empty
-  }
+  @inline final def asFold: Fold[S, A] =
+    new Fold[S, A] {
+      def foldMap[M: Monoid](f: A => M)(s: S): M =
+        getOption(s) map f getOrElse Monoid[M].empty
+    }
 
   /** view a [[PPrism]] as a [[Setter]] */
   @inline final def asSetter: PSetter[S, T, A, B] =

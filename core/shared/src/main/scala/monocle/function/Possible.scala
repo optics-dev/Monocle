@@ -20,9 +20,10 @@ trait PossibleFunctions {
 }
 
 object Possible extends PossibleFunctions {
-  def apply[S, A](optional: Optional[S, A]): Possible[S, A] = new Possible[S, A] {
-    override val possible: Optional[S, A] = optional
-  }
+  def apply[S, A](optional: Optional[S, A]): Possible[S, A] =
+    new Possible[S, A] {
+      override val possible: Optional[S, A] = optional
+    }
 
   /** lift an instance of [[monocle.Optional]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Possible[A, B]): Possible[S, B] =

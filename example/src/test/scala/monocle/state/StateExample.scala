@@ -232,7 +232,7 @@ class StateExample extends MonocleSuite {
   }
 
   test("assign_ for Setter") {
-    val toUpper = _nameSet assign_ ("Juan")
+    val toUpper = _nameSet assign_ "Juan"
 
     toUpper.run(p).value shouldEqual ((Person("Juan", 30), ()))
   }

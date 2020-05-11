@@ -86,8 +86,10 @@ class IsoSpec extends MonocleSuite {
   }
 
   test("unapply") {
-    (Nullary() match { case _nullary(unit)       => unit }) shouldEqual (())
-    (Unary(3) match { case _unary(value)         => value * 2 }) shouldEqual 6
+    // format: off
+    (Nullary() match { case _nullary(unit) => unit }) shouldEqual (())
+    // format: on
+    (Unary(3) match { case _unary(value) => value * 2 }) shouldEqual 6
     (Binary("foo", 7) match { case _binary(s, i) => s + i }) shouldEqual "foo7"
     (Quintary('x', true, "bar", 13, 0.4) match {
       case _quintary(c, b, s, i, f) => "" + c + b + s + i + f

@@ -78,14 +78,15 @@ trait TestInstances
   implicit def uuidCoGen: Cogen[UUID] =
     Cogen[(Long, Long)].contramap[UUID]((u: UUID) => (u.getMostSignificantBits, u.getLeastSignificantBits))
 
-  implicit def uriArbitrary: Arbitrary[URI] = Arbitrary {
-    val idGen = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString)
-    for {
-      scheme   <- idGen
-      ssp      <- idGen
-      fragment <- Gen.option(idGen)
-    } yield new URI(scheme, ssp, fragment.orNull)
-  }
+  implicit def uriArbitrary: Arbitrary[URI] =
+    Arbitrary {
+      val idGen = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString)
+      for {
+        scheme   <- idGen
+        ssp      <- idGen
+        fragment <- Gen.option(idGen)
+      } yield new URI(scheme, ssp, fragment.orNull)
+    }
 
   implicit def uriCoGen: Cogen[URI] =
     Cogen[String].contramap[URI](_.toString)

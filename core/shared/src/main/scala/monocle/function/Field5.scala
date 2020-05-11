@@ -21,23 +21,27 @@ trait Field5Functions {
 }
 
 object Field5 extends Field5Functions {
-  def apply[S, A](lens: Lens[S, A]): Field5[S, A] = new Field5[S, A] {
-    override val fifth: Lens[S, A] = lens
-  }
+  def apply[S, A](lens: Lens[S, A]): Field5[S, A] =
+    new Field5[S, A] {
+      override val fifth: Lens[S, A] = lens
+    }
 
   /** lift an instance of [[Field5]] using an [[Iso]] */
-  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field5[A, B]): Field5[S, B] = Field5(
-    iso composeLens ev.fifth
-  )
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field5[A, B]): Field5[S, B] =
+    Field5(
+      iso composeLens ev.fifth
+    )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  implicit def tuple5Field5[A1, A2, A3, A4, A5]: Field5[(A1, A2, A3, A4, A5), A5] = Field5(
-    Lens((_: (A1, A2, A3, A4, A5))._5)(a => t => t.copy(_5 = a))
-  )
+  implicit def tuple5Field5[A1, A2, A3, A4, A5]: Field5[(A1, A2, A3, A4, A5), A5] =
+    Field5(
+      Lens((_: (A1, A2, A3, A4, A5))._5)(a => t => t.copy(_5 = a))
+    )
 
-  implicit def tuple6Field5[A1, A2, A3, A4, A5, A6]: Field5[(A1, A2, A3, A4, A5, A6), A5] = Field5(
-    Lens((_: (A1, A2, A3, A4, A5, A6))._5)(a => t => t.copy(_5 = a))
-  )
+  implicit def tuple6Field5[A1, A2, A3, A4, A5, A6]: Field5[(A1, A2, A3, A4, A5, A6), A5] =
+    Field5(
+      Lens((_: (A1, A2, A3, A4, A5, A6))._5)(a => t => t.copy(_5 = a))
+    )
 }

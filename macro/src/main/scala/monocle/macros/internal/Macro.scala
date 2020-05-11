@@ -15,34 +15,35 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
     /** Extractor for member select chains.
         e.g.: SelectChain.unapply(a.b.c) == Some("a",Seq(a.type -> "b", a.b.type -> "c")) */
     object SelectChain {
-      def unapply(tree: Tree): Option[(Name, Seq[(Type, TermName)])] = tree match {
-        case Select(tail @ Ident(termUseName), field: TermName) =>
-          Some((termUseName, Seq(tail.tpe.widen -> field)))
-        case Select(tail, field: TermName) =>
-          SelectChain
-            .unapply(tail)
-            .map(t => t.copy(_2 = t._2 :+ (tail.tpe.widen -> field)))
-        case _ => None
-      }
+      def unapply(tree: Tree): Option[(Name, Seq[(Type, TermName)])] =
+        tree match {
+          case Select(tail @ Ident(termUseName), field: TermName) =>
+            Some((termUseName, Seq(tail.tpe.widen -> field)))
+          case Select(tail, field: TermName) =>
+            SelectChain
+              .unapply(tail)
+              .map(t => t.copy(_2 = t._2 :+ (tail.tpe.widen -> field)))
+          case _ => None
+        }
     }
 
     field match {
       // _.field
       case Expr(
-          Function(
-            List(ValDef(_, termDefName, _, EmptyTree)),
-            Select(Ident(termUseName), fieldNameName)
-          )
+            Function(
+              List(ValDef(_, termDefName, _, EmptyTree)),
+              Select(Ident(termUseName), fieldNameName)
+            )
           ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
         val fieldName = fieldNameName.decodedName.toString
         mkLens_impl[S, S, A, A](c.Expr[String](q"$fieldName"))
 
       // _.field1.field2...
       case Expr(
-          Function(
-            List(ValDef(_, termDefName, _, EmptyTree)),
-            SelectChain(termUseName, typesFields)
-          )
+            Function(
+              List(ValDef(_, termDefName, _, EmptyTree)),
+              SelectChain(termUseName, typesFields)
+            )
           ) if termDefName.decodedName.toString == termUseName.decodedName.toString =>
         c.Expr[Lens[S, A]](
           typesFields

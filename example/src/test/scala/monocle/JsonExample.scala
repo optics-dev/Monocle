@@ -15,9 +15,9 @@ class JsonExample extends MonocleSuite {
   case class JsArray(l: List[Json])         extends Json
   case class JsObject(m: Map[String, Json]) extends Json
 
-  val jsString = Prism[Json, String] { case JsString(s)            => Some(s); case _ => None }(JsString.apply)
-  val jsNumber = Prism[Json, Int] { case JsNumber(n)               => Some(n); case _ => None }(JsNumber.apply)
-  val jsArray  = Prism[Json, List[Json]] { case JsArray(a)         => Some(a); case _ => None }(JsArray.apply)
+  val jsString = Prism[Json, String] { case JsString(s) => Some(s); case _ => None }(JsString.apply)
+  val jsNumber = Prism[Json, Int] { case JsNumber(n) => Some(n); case _ => None }(JsNumber.apply)
+  val jsArray  = Prism[Json, List[Json]] { case JsArray(a) => Some(a); case _ => None }(JsArray.apply)
   val jsObject = Prism[Json, Map[String, Json]] { case JsObject(m) => Some(m); case _ => None }(JsObject.apply)
 
   val json: Json = JsObject(
