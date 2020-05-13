@@ -24,12 +24,6 @@ We can create a `Lens[Address, Int]` which zooms from an `Address` to its field 
 
 ```scala mdoc:silent
 import monocle.Lens
-val _streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
-val streetNumber = _streetNumber
-```
-
-```scala
-import monocle.Lens
 val streetNumber = Lens[Address, Int](_.streetNumber)(n => a => a.copy(streetNumber = n))
 ```
 
@@ -194,7 +188,7 @@ def getSet[S, A](l: Lens[S, A], s: S): Boolean =
 On the other hand, the `setGet` law states that if you `set` a value, you always `get` the same value back. 
 This law guarantees that `set` is actually updating a value `A` inside of `S`.
 
-```scala mdoc:nest:silent
+```scala mdoc:silent
 def setGet[S, A](l: Lens[S, A], s: S, a: A): Boolean =
   l.get(l.set(a)(s)) == a
 ```
