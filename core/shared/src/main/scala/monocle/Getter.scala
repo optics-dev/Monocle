@@ -107,10 +107,11 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** Transformation methods to view a [[Getter]] as another Optics */
   /******************************************************************/
   /** view a [[Getter]] with a [[Fold]] */
-  @inline final def asFold: Fold[S, A] = new Fold[S, A] {
-    def foldMap[M: Monoid](f: A => M)(s: S): M =
-      f(get(s))
-  }
+  @inline final def asFold: Fold[S, A] =
+    new Fold[S, A] {
+      def foldMap[M: Monoid](f: A => M)(s: S): M =
+        f(get(s))
+    }
 }
 
 object Getter extends GetterInstances {
@@ -142,9 +143,10 @@ sealed abstract class GetterInstances extends GetterInstances0 {
       g composeGetter f
   }
 
-  implicit def getterSemigroupal[S]: Semigroupal[Getter[S, ?]] = new Semigroupal[Getter[S, ?]] {
-    override def product[A, B](a: Getter[S, A], b: Getter[S, B]) = a zip b
-  }
+  implicit def getterSemigroupal[S]: Semigroupal[Getter[S, ?]] =
+    new Semigroupal[Getter[S, ?]] {
+      override def product[A, B](a: Getter[S, A], b: Getter[S, B]) = a zip b
+    }
 }
 
 sealed abstract class GetterInstances0 {

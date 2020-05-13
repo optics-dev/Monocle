@@ -44,7 +44,7 @@ sealed abstract class GenIsoImplBase {
       q"""
         monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${obj}))
       """
-    } else {
+    } else
       caseAccessorsOf[S] match {
         case Nil =>
           val sTpeSym = sTpe.typeSymbol.companion
@@ -53,7 +53,6 @@ sealed abstract class GenIsoImplBase {
           """
         case _ => fail(s"$sTpe needs to be a case class with no accessor or an object.")
       }
-    }
   }
 }
 

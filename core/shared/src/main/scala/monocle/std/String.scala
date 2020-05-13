@@ -57,9 +57,10 @@ trait StringOptics extends PlatformSpecificStringOptics {
     if (c >= '0' && c <= '9') Some(c - '0')
     else None
 
-  private def parseCaseSensitiveBoolean(stringBoolean: String): Option[Boolean] = stringBoolean match {
-    case "true"  => Some(true)
-    case "false" => Some(false)
-    case _       => None
-  }
+  private def parseCaseSensitiveBoolean(stringBoolean: String): Option[Boolean] =
+    stringBoolean match {
+      case "true"  => Some(true)
+      case "false" => Some(false)
+      case _       => None
+    }
 }

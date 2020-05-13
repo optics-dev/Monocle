@@ -34,7 +34,7 @@ class PlatedSpec extends MonocleSuite {
     forAll { (x: Int, y: Int, z: Int) =>
       rewriteOf(initOption[Stream[Int], Int].asSetter) {
         case Stream(n) if n != z => Some(Stream(z))
-        case _ => None
+        case _                   => None
       }(Stream(x, y, z)) === Stream(z, y, z)
     }
   }
@@ -43,7 +43,7 @@ class PlatedSpec extends MonocleSuite {
     forAll { (i: Int, x: Int, y: Int, xs: Stream[Int]) =>
       transform[Stream[Int]] {
         case Stream(_) => Stream(i)
-        case xs => xs
+        case xs        => xs
       }(xs #::: Stream(y, x)) === xs #::: Stream(y, i)
     }
   }
@@ -52,7 +52,7 @@ class PlatedSpec extends MonocleSuite {
     forAll { (i: Int, x: Int, y: Int, xs: Stream[Int]) =>
       transformOf(initOption[Stream[Int], Int].asSetter) {
         case Stream(_) => Stream(i)
-        case xs => xs
+        case xs        => xs
       }(x #:: y #:: xs) === i #:: y #:: xs
     }
   }

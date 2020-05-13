@@ -108,7 +108,8 @@ class LensPolyExample extends MonocleSuite {
 
   test("@PLenses generates polymorphic lenses") {
     val changedTrade = candyTrade.copy(q = candyTrade.q.map { case (x, y) => (x.swap, y) })
-    Foo.q.modify((_: Map[(Int, Symbol), Double]).map { case (x, y) => (x.swap, y) })(candyTrade) shouldEqual changedTrade
+    Foo.q
+      .modify((_: Map[(Int, Symbol), Double]).map { case (x, y) => (x.swap, y) })(candyTrade) shouldEqual changedTrade
   }
 
   @PLenses("_") case class Cat(age: Int)

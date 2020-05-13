@@ -9,8 +9,8 @@ import org.typelevel.discipline.Laws
 import cats.Eq
 
 object FilterIndexTests extends Laws {
-  def apply[S: Eq: Arbitrary, I, A: Eq: Arbitrary](
-    implicit evFilterIndex: FilterIndex[S, I, A],
+  def apply[S: Eq: Arbitrary, I, A: Eq: Arbitrary](implicit
+    evFilterIndex: FilterIndex[S, I, A],
     arbAA: Arbitrary[A => A],
     arbIB: Arbitrary[I => Boolean]
   ): RuleSet =

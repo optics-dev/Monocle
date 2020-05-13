@@ -5,12 +5,13 @@ import monocle.law.discipline.{OptionalTests, SetterTests, TraversalTests}
 import cats.arrow.{Category, Choice, Compose}
 
 class OptionalSpec extends MonocleSuite {
-  def headOption[A]: Optional[List[A], A] = Optional[List[A], A](_.headOption) { a =>
-    {
-      case x :: xs => a :: xs
-      case Nil     => Nil
+  def headOption[A]: Optional[List[A], A] =
+    Optional[List[A], A](_.headOption) { a =>
+      {
+        case x :: xs => a :: xs
+        case Nil     => Nil
+      }
     }
-  }
 
   def headOptionI: Optional[List[Int], Int]             = headOption[Int]
   def headOption2[A, B]: Optional[List[(A, B)], (A, B)] = headOption[(A, B)]

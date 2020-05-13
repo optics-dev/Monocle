@@ -10,8 +10,8 @@ import cats.Eq
 import cats.instances.tuple._
 
 object Snoc1Tests extends Laws {
-  def apply[S: Eq: Arbitrary, I: Eq: Arbitrary, L: Eq: Arbitrary](
-    implicit evSnoc1: Snoc1[S, I, L],
+  def apply[S: Eq: Arbitrary, I: Eq: Arbitrary, L: Eq: Arbitrary](implicit
+    evSnoc1: Snoc1[S, I, L],
     arbSLSL: Arbitrary[((I, L)) => ((I, L))],
     arbSS: Arbitrary[I => I],
     arbLL: Arbitrary[L => L]

@@ -36,44 +36,49 @@ trait ConsFunctions {
 }
 
 object Cons extends ConsFunctions with ConsInstancesScalaVersionSpecific {
-  def apply[S, A, B](prism: Prism[S, (B, S)]): Cons[S, B] = new Cons[S, B] {
-    val cons: Prism[S, (B, S)] = prism
-  }
+  def apply[S, A, B](prism: Prism[S, (B, S)]): Cons[S, B] =
+    new Cons[S, B] {
+      val cons: Prism[S, (B, S)] = prism
+    }
 
   /** lift an instance of [[Cons]] using an [[Iso]] */
-  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Cons[A, B]): Cons[S, B] = Cons(
-    iso composePrism ev.cons composeIso iso.reverse.second
-  )
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Cons[A, B]): Cons[S, B] =
+    Cons(
+      iso composePrism ev.cons composeIso iso.reverse.second
+    )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  implicit def listCons[A]: Cons[List[A], A] = Cons(
-    Prism[List[A], (A, List[A])] {
-      case Nil     => None
-      case x :: xs => Some((x, xs))
-    } { case (a, s) => a :: s }
-  )
+  implicit def listCons[A]: Cons[List[A], A] =
+    Cons(
+      Prism[List[A], (A, List[A])] {
+        case Nil     => None
+        case x :: xs => Some((x, xs))
+      } { case (a, s) => a :: s }
+    )
 
   implicit val stringCons: Cons[String, Char] = Cons(
     Prism[String, (Char, String)](s => if (s.isEmpty) None else Some((s.head, s.tail))) { case (h, t) => s"$h$t" }
   )
 
-  implicit def vectorCons[A]: Cons[Vector[A], A] = Cons(
-    Prism[Vector[A], (A, Vector[A])] {
-      case Vector() => None
-      case x +: xs  => Some((x, xs))
-    } { case (a, s) => a +: s }
-  )
+  implicit def vectorCons[A]: Cons[Vector[A], A] =
+    Cons(
+      Prism[Vector[A], (A, Vector[A])] {
+        case Vector() => None
+        case x +: xs  => Some((x, xs))
+      } { case (a, s) => a +: s }
+    )
 
   /************************************************************************************************/
   /** Cats instances                                                                              */
   /************************************************************************************************/
   import cats.data.Chain
 
-  implicit def chainCons[A]: Cons[Chain[A], A] = Cons(
-    Prism[Chain[A], (A, Chain[A])](_.uncons) {
-      case (a, s) => s.prepend(a)
-    }
-  )
+  implicit def chainCons[A]: Cons[Chain[A], A] =
+    Cons(
+      Prism[Chain[A], (A, Chain[A])](_.uncons) {
+        case (a, s) => s.prepend(a)
+      }
+    )
 }
