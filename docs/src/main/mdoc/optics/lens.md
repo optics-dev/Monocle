@@ -37,19 +37,19 @@ val streetNumber = GenLens[Address](_.streetNumber)
 Once we have a `Lens`, we can use the supplied `get` and `set` functions (nothing fancy!):
 
 ```scala mdoc
-val myAddress = Address(10, "High Street")
+val address = Address(10, "High Street")
 
-streetNumber.get(myAddress)
-streetNumber.set(5)(myAddress)
+streetNumber.get(address)
+streetNumber.set(5)(address)
 ```
 
 We can also `modify` the target of `Lens` with a function, this is equivalent to call `get` and then `set`:
 
 ```scala mdoc
-streetNumber.modify(_ + 1)(myAddress)
+streetNumber.modify(_ + 1)(address)
 
-val n = streetNumber.get(myAddress)
-streetNumber.set(n + 1)(myAddress)
+val n = streetNumber.get(address)
+streetNumber.set(n + 1)(address)
 ```
 
 We can push the idea even further, with `modifyF` we can update the target of a `Lens` in a context, cf `cats.Functor`:
@@ -62,7 +62,7 @@ import cats.implicits._ // to get all Functor instance
 ```
 
 ```scala mdoc
-streetNumber.modifyF(neighbors)(myAddress)
+streetNumber.modifyF(neighbors)(address)
 streetNumber.modifyF(neighbors)(Address(135, "High Street"))
 ```
 
@@ -77,7 +77,7 @@ def updateNumber(n: Int): Future[Int] = Future.successful(n + 1)
 ```
 
 ```scala mdoc
-streetNumber.modifyF(updateNumber)(myAddress)
+streetNumber.modifyF(updateNumber)(address)
 ```
 
 Most importantly, `Lenses` compose together allowing to zoom deeper in a data structure

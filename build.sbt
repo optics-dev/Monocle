@@ -313,7 +313,7 @@ lazy val docSettings = Seq(
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
   micrositeCompilingDocsTool := WithMdoc,
-  mdocIn := sourceDirectory.value / "main" / "mdoc",
+  mdocIn := (sourceDirectory in Compile).value / "mdoc",
   fork in mdoc := true,
   fork in (ScalaUnidoc, unidoc) := true,
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
