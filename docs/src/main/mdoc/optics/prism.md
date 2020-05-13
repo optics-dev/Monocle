@@ -120,11 +120,11 @@ with `GenIso` (see `Iso` documentation):
 ```scala mdoc:nest:silent
 import monocle.macros.GenIso
 
-val jNum: Prism[Json, Double] = GenPrism[Json, JNum] composeIso GenIso[JNum, Double]
+val jNum : Prism[Json, Double] = GenPrism[Json, JNum] composeIso GenIso[JNum, Double]
 ```
 
 ```scala
-val jNull: Prism[Json, Unit] = GenPrism[Json, JNull.type] composeIso GenIso.unit[JNull.type]
+val jNull: Prism[Json, Unit]   = GenPrism[Json, JNull.type] composeIso GenIso.unit[JNull.type]
 ```
 
 A [ticket](https://github.com/julien-truffaut/Monocle/issues/363) currently exists to add a macro to merge these two steps together.
