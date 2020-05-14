@@ -15,7 +15,6 @@ jobs:
         with:
           ruby-version: 2.6
       - name: Set up jekyll
-        if: env.REQUIRES_JEKYLL_CI != null
         run: |
           gem install jekyll -v 4
       - name: Cache dependencies
