@@ -144,6 +144,6 @@ def partialRoundTripOneWay[S, A](p: Prism[S, A], s: S): Boolean =
     case Some(a) => p.reverseGet(a) == s
   }
   
-def partialRoundTripOneWay2[S, A](p: Prism[S, A], a: A): Boolean =
+def partialRoundTripOtherWay[S, A](p: Prism[S, A], a: A): Boolean =
   p.getOption(p.reverseGet(a)) == Some(a)
 ```

@@ -36,7 +36,7 @@ jobs:
           path: ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/*.scala') }}
           restore-keys: ${{ runner.os }}-sbt-
-      - name: Run tests
+      - name: Run tests and documentation
         run: |
-          csbt +test packageSrc doc
+          csbt +test packageSrc doc mdoc
           SCALAJS_VERSION=0.6.32 csbt clean +monocleJS/test
