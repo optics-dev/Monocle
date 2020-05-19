@@ -313,7 +313,7 @@ lazy val docSettings = Seq(
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
   micrositePushSiteWith := GitHub4s,
-  micrositeGithubToken := getEnvVar("CI_TOKEN"),
+  micrositeGithubToken := Some(System.getenv().get("CI_TOKEN")),
   micrositeCompilingDocsTool := WithMdoc,
   mdocIn := (sourceDirectory in Compile).value / "mdoc",
   fork in mdoc := true,
