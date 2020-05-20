@@ -9,7 +9,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(List(
   organization := "com.github.julien-truffaut",
-  homepage := Some(url("https://github.com/julien-truffaut/Monocle")),
+  homepage := Some(url("https://github.com/optics-dev/Monocle")),
   licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
   developers := List(
     Developer(
@@ -78,7 +78,7 @@ lazy val buildSettings = Seq(
   addCompilerPlugin(kindProjector),
   Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
   Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
-  scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git")),
+  scmInfo := Some(ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")),
 )
 
 lazy val catsVersion = "2.1.1"
@@ -121,7 +121,7 @@ lazy val scalajsSettings = Seq(
     lazy val tag = (version in ThisBuild).value
     val s = if (isSnapshot.value) gitRev else tag
     val a = (baseDirectory in LocalRootProject).value.toURI.toString
-    val g = "https://raw.githubusercontent.com/julien-truffaut/Monocle"
+    val g = "https://raw.githubusercontent.com/optics-dev/Monocle"
     s"-P:scalajs:mapSourceURI:$a->$g/$s/"
   },
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
@@ -324,7 +324,7 @@ lazy val docSettings = Seq(
     "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath,
     "-diagrams"
   ),
-  git.remoteRepo := "git@github.com:julien-truffaut/Monocle.git",
+  git.remoteRepo := "git@github.com:optics-dev/Monocle.git",
   includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md"
 )
 

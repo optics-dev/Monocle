@@ -11,44 +11,44 @@ position: 5
 
 > 09 January 2020
 
--   bug fix: use fully qualified name in `Lens` macro [#793](https://github.com/julien-truffaut/Monocle/pull/793) (thanks to [enzief](https://github.com/enzief))
--   add `parModifyF` to `Traversal` leveraging `cats.Parallel` [#751](https://github.com/julien-truffaut/Monocle/pull/751) (thanks to [nigredo-tori](https://github.com/nigredo-tori))
--   add `At`, `Index` and `Each` instances for ListMap [#740](https://github.com/julien-truffaut/Monocle/pull/740), [#742](https://github.com/julien-truffaut/Monocle/pull/742) [#747](https://github.com/julien-truffaut/Monocle/pull/747) (thanks to [jan0sch](https://github.com/jan0sch))
+-   bug fix: use fully qualified name in `Lens` macro [#793](https://github.com/optics-dev/Monocle/pull/793) (thanks to [enzief](https://github.com/enzief))
+-   add `parModifyF` to `Traversal` leveraging `cats.Parallel` [#751](https://github.com/optics-dev/Monocle/pull/751) (thanks to [nigredo-tori](https://github.com/nigredo-tori))
+-   add `At`, `Index` and `Each` instances for ListMap [#740](https://github.com/optics-dev/Monocle/pull/740), [#742](https://github.com/optics-dev/Monocle/pull/742) [#747](https://github.com/optics-dev/Monocle/pull/747) (thanks to [jan0sch](https://github.com/jan0sch))
 
 # 2.0.0 (cats only)
 
 > 11 September 2019
 
 -   everything in 1.6.0
--   add instances for `NonEmptyVector` [#564](https://github.com/julien-truffaut/Monocle/pull/564) (thanks to [valydia](https://github.com/valydia))
--   add optics for cats `Chain` and `NonEmptyChain` [#609](https://github.com/julien-truffaut/Monocle/pull/609) (thanks to [dcastro](https://github.com/dcastro))
--   add missing functions (`mod`, `assign` and variants) to State module [#564](https://github.com/julien-truffaut/Monocle/pull/564) (thanks to [valydia](https://github.com/valydia))
+-   add instances for `NonEmptyVector` [#564](https://github.com/optics-dev/Monocle/pull/564) (thanks to [valydia](https://github.com/valydia))
+-   add optics for cats `Chain` and `NonEmptyChain` [#609](https://github.com/optics-dev/Monocle/pull/609) (thanks to [dcastro](https://github.com/dcastro))
+-   add missing functions (`mod`, `assign` and variants) to State module [#564](https://github.com/optics-dev/Monocle/pull/564) (thanks to [valydia](https://github.com/valydia))
 -   depends on cats 2.0.0
 
 # 1.6.0 (scalaz only, last major release with scalaz)
 
 > 14 July 2019
 
--   add `apply` helper methods to typeclasses [#560](https://github.com/julien-truffaut/Monocle/pull/560) (thanks to [jbgi](https://github.com/jbgi))
--   add `coProductIso`, `coProductDisjunctionIso` and `toGeneric` [#578](https://github.com/julien-truffaut/Monocle/pull/578) (thanks to [dcastro](https://github.com/dcastro))
--   add override modifiers in macro generated code [#581](https://github.com/julien-truffaut/Monocle/pull/581) (thanks to [omervk](https://github.com/omervk))
--   add FieldsSyntax to global import [#583](https://github.com/julien-truffaut/Monocle/pull/583) (thanks to [kubukoz](https://github.com/kubukoz))
--   fix name collisions in implicit classes [#629](https://github.com/julien-truffaut/Monocle/pull/629) (thanks to [vladimirkl](https://github.com/vladimirkl))
--   release from ci, stop support of scala 2.11 and scala native [#646](https://github.com/julien-truffaut/Monocle/pull/646)
--   support scala 2.13 [#669](https://github.com/julien-truffaut/Monocle/pull/669) (thanks to [xuwei-k](https://github.com/xuwei-k))
+-   add `apply` helper methods to typeclasses [#560](https://github.com/optics-dev/Monocle/pull/560) (thanks to [jbgi](https://github.com/jbgi))
+-   add `coProductIso`, `coProductDisjunctionIso` and `toGeneric` [#578](https://github.com/optics-dev/Monocle/pull/578) (thanks to [dcastro](https://github.com/dcastro))
+-   add override modifiers in macro generated code [#581](https://github.com/optics-dev/Monocle/pull/581) (thanks to [omervk](https://github.com/omervk))
+-   add FieldsSyntax to global import [#583](https://github.com/optics-dev/Monocle/pull/583) (thanks to [kubukoz](https://github.com/kubukoz))
+-   fix name collisions in implicit classes [#629](https://github.com/optics-dev/Monocle/pull/629) (thanks to [vladimirkl](https://github.com/vladimirkl))
+-   release from ci, stop support of scala 2.11 and scala native [#646](https://github.com/optics-dev/Monocle/pull/646)
+-   support scala 2.13 [#669](https://github.com/optics-dev/Monocle/pull/669) (thanks to [xuwei-k](https://github.com/xuwei-k))
 
 # 1.5.0 and 1.5.0-cats
 
 > 3 January 2018
 
--   add coalgebroid-based constructors for `Lens` and `Traversal` [#502](https://github.com/julien-truffaut/Monocle/pull/502) (thanks to [jeslg](https://github.com/jeslg))
--   add state syntax for traversal [#533](https://github.com/julien-truffaut/Monocle/pull/533) (thanks to [jeslg](https://github.com/jeslg))
--   add `modifyF` to `Apply` syntax [#525](https://github.com/julien-truffaut/Monocle/pull/525) (thanks to [colin-passiv](https://github.com/colin-passiv))
--   add optics composition table [#532](https://github.com/julien-truffaut/Monocle/pull/532) (thanks to [jdegoes](https://github.com/jdegoes))
--   support scala native [#508](https://github.com/julien-truffaut/Monocle/pull/508) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
--   bug fix: allow for annotations on companion objects of `@Lenses`-annotated case classes [#524](https://github.com/julien-truffaut/Monocle/pull/524) (thanks to [hrhino](https://github.com/hrhino))
+-   add coalgebroid-based constructors for `Lens` and `Traversal` [#502](https://github.com/optics-dev/Monocle/pull/502) (thanks to [jeslg](https://github.com/jeslg))
+-   add state syntax for traversal [#533](https://github.com/optics-dev/Monocle/pull/533) (thanks to [jeslg](https://github.com/jeslg))
+-   add `modifyF` to `Apply` syntax [#525](https://github.com/optics-dev/Monocle/pull/525) (thanks to [colin-passiv](https://github.com/colin-passiv))
+-   add optics composition table [#532](https://github.com/optics-dev/Monocle/pull/532) (thanks to [jdegoes](https://github.com/jdegoes))
+-   support scala native [#508](https://github.com/optics-dev/Monocle/pull/508) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   bug fix: allow for annotations on companion objects of `@Lenses`-annotated case classes [#524](https://github.com/optics-dev/Monocle/pull/524) (thanks to [hrhino](https://github.com/hrhino))
 
--   create a cats branch where cats replaces scalaz [#528](https://github.com/julien-truffaut/Monocle/pull/528) and [#539](https://github.com/julien-truffaut/Monocle/pull/539) (thanks to [sellout](https://github.com/sellout) and [tpolecat](https://github.com/tpolecat))
+-   create a cats branch where cats replaces scalaz [#528](https://github.com/optics-dev/Monocle/pull/528) and [#539](https://github.com/optics-dev/Monocle/pull/539) (thanks to [sellout](https://github.com/sellout) and [tpolecat](https://github.com/tpolecat))
 
 # 1.4.0
 
@@ -56,26 +56,26 @@ position: 5
 
 ### Addition
 
--   add `Each` instance for `Try`, `Either`, `scalaz.\/`, `scalaz.Validation` [#472](https://github.com/julien-truffaut/Monocle/pull/472) and [#476](https://github.com/julien-truffaut/Monocle/pull/476) (thanks to [n4to4](https://github.com/n4to4))
--   add `Unzip` instance for `Lens`, `Fold`, `Optional`, `Traversal`, `Setter` [#474](https://github.com/julien-truffaut/Monocle/pull/474) (thanks to [n4to4](https://github.com/n4to4))
--   add refined `startsWith` and `endWith` [#480](https://github.com/julien-truffaut/Monocle/pull/480) and [#483](https://github.com/julien-truffaut/Monocle/pull/483) (thanks to [valydia](https://github.com/valydia), [mrcmatuszak](https://github.com/mrcmatuszak) and [fthomas](https://github.com/fthomas))
--   add `uuid`, `url`, `uri` [#487](https://github.com/julien-truffaut/Monocle/pull/487) and [#490](https://github.com/julien-truffaut/Monocle/pull/490) (thanks to [mjjc](https://github.com/mjjc) and [n4to4](https://github.com/n4to4))
+-   add `Each` instance for `Try`, `Either`, `scalaz.\/`, `scalaz.Validation` [#472](https://github.com/optics-dev/Monocle/pull/472) and [#476](https://github.com/optics-dev/Monocle/pull/476) (thanks to [n4to4](https://github.com/n4to4))
+-   add `Unzip` instance for `Lens`, `Fold`, `Optional`, `Traversal`, `Setter` [#474](https://github.com/optics-dev/Monocle/pull/474) (thanks to [n4to4](https://github.com/n4to4))
+-   add refined `startsWith` and `endWith` [#480](https://github.com/optics-dev/Monocle/pull/480) and [#483](https://github.com/optics-dev/Monocle/pull/483) (thanks to [valydia](https://github.com/valydia), [mrcmatuszak](https://github.com/mrcmatuszak) and [fthomas](https://github.com/fthomas))
+-   add `uuid`, `url`, `uri` [#487](https://github.com/optics-dev/Monocle/pull/487) and [#490](https://github.com/optics-dev/Monocle/pull/490) (thanks to [mjjc](https://github.com/mjjc) and [n4to4](https://github.com/n4to4))
 
 ### Other
 
--   deprecate global constructor of typeclasses [#478](https://github.com/julien-truffaut/Monocle/pull/478)
--   remove deprecated methods `sum` and `product` [#479](https://github.com/julien-truffaut/Monocle/pull/479)
--   execute packageSrc in travis-ci to avoid regressing like [#492](https://github.com/julien-truffaut/Monocle/pull/492) [#494](https://github.com/julien-truffaut/Monocle/pull/494) (thanks to [xuwei-k](https://github.com/xuwei-k))
+-   deprecate global constructor of typeclasses [#478](https://github.com/optics-dev/Monocle/pull/478)
+-   remove deprecated methods `sum` and `product` [#479](https://github.com/optics-dev/Monocle/pull/479)
+-   execute packageSrc in travis-ci to avoid regressing like [#492](https://github.com/optics-dev/Monocle/pull/492) [#494](https://github.com/optics-dev/Monocle/pull/494) (thanks to [xuwei-k](https://github.com/xuwei-k))
 
 # 1.4.0-M2
 
 > 23 December 2016
 
--   do not require java 8 for scala 2.11 [#463](https://github.com/julien-truffaut/Monocle/pull/463)
--   add `Possible` typeclass [#450](https://github.com/julien-truffaut/Monocle/issues/450) (thanks to [kenbot](https://github.com/kenbot))
--   add `zip` and `unzip` for `Getter` [#453](https://github.com/julien-truffaut/Monocle/pull/453) and [#458](https://github.com/julien-truffaut/Monocle/pull/458) (thanks to [lunaryorn](https://github.com/lunaryorn))
--   upgrade scala to 2.12.1 and fix doc issue around [SI-7139](https://issues.scala-lang.org/browse/SI-7139) [#435](https://github.com/julien-truffaut/Monocle/pull/435)
--   upgrade scala.js to 0.6.14 [#466](https://github.com/julien-truffaut/Monocle/pull/466)
+-   do not require java 8 for scala 2.11 [#463](https://github.com/optics-dev/Monocle/pull/463)
+-   add `Possible` typeclass [#450](https://github.com/optics-dev/Monocle/issues/450) (thanks to [kenbot](https://github.com/kenbot))
+-   add `zip` and `unzip` for `Getter` [#453](https://github.com/optics-dev/Monocle/pull/453) and [#458](https://github.com/optics-dev/Monocle/pull/458) (thanks to [lunaryorn](https://github.com/lunaryorn))
+-   upgrade scala to 2.12.1 and fix doc issue around [SI-7139](https://issues.scala-lang.org/browse/SI-7139) [#435](https://github.com/optics-dev/Monocle/pull/435)
+-   upgrade scala.js to 0.6.14 [#466](https://github.com/optics-dev/Monocle/pull/466)
 
 # 1.4.0-M1
 
@@ -83,41 +83,41 @@ position: 5
 
 ### Addition
 
--   add macro based syntax for `ApplyLens` [#434](https://github.com/julien-truffaut/Monocle/pull/434) (thanks to [cvogt](https://github.com/cvogt))
--   add lookup methods to various optics [#425](https://github.com/julien-truffaut/Monocle/pull/425) (thanks to [kubum](https://github.com/kubum), [emmedema](https://github.com/emmedema) and [julien-truffaut](https://github.com/julien-truffaut))
--   add state ops for `Getter` and `Setter` [#415](https://github.com/julien-truffaut/Monocle/pull/415) (thanks to [jeslg](https://github.com/jeslg))
--   add `extract`, `extracts`, `assign_` and `mod_` to state ops [#415](https://github.com/julien-truffaut/Monocle/pull/415) (thanks to [jeslg](https://github.com/jeslg))
--   add `select` [#441](https://github.com/julien-truffaut/Monocle/pull/441) (thanks to [sepulkarz](https://github.com/sepulkarz))
--   add `lowerCase` and `upperCase` [#446](https://github.com/julien-truffaut/Monocle/pull/446) (thanks to [sindoudou](https://github.com/sindoudou))
+-   add macro based syntax for `ApplyLens` [#434](https://github.com/optics-dev/Monocle/pull/434) (thanks to [cvogt](https://github.com/cvogt))
+-   add lookup methods to various optics [#425](https://github.com/optics-dev/Monocle/pull/425) (thanks to [kubum](https://github.com/kubum), [emmedema](https://github.com/emmedema) and [julien-truffaut](https://github.com/julien-truffaut))
+-   add state ops for `Getter` and `Setter` [#415](https://github.com/optics-dev/Monocle/pull/415) (thanks to [jeslg](https://github.com/jeslg))
+-   add `extract`, `extracts`, `assign_` and `mod_` to state ops [#415](https://github.com/optics-dev/Monocle/pull/415) (thanks to [jeslg](https://github.com/jeslg))
+-   add `select` [#441](https://github.com/optics-dev/Monocle/pull/441) (thanks to [sepulkarz](https://github.com/sepulkarz))
+-   add `lowerCase` and `upperCase` [#446](https://github.com/optics-dev/Monocle/pull/446) (thanks to [sindoudou](https://github.com/sindoudou))
 
 ### Refactor
 
--   major refactor of typeclasses [#405](https://github.com/julien-truffaut/Monocle/pull/405): 
+-   major refactor of typeclasses [#405](https://github.com/optics-dev/Monocle/pull/405): 
     -   abstract class instead of trait. This would allow to add methods without breaking binary compatibility
     -   move typeclass instances from `monocle.std._` to the typeclass companion object. This change will reduce the number of imports required to use a typeclass
--   curry `find`, `exist` and `all` [#425](https://github.com/julien-truffaut/Monocle/pull/425) 
--   improve performance of `Index` instance for `List` and `Vector` [#413](https://github.com/julien-truffaut/Monocle/pull/413)
--   simplify `Plated` instance for `Free` [#404](https://github.com/julien-truffaut/Monocle/pull/404) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
--   remove `Order` instance for `Char` [#405](https://github.com/julien-truffaut/Monocle/commit/9d036d760d88e438544d150e0bca55523bf454c8)
--   prevent warning for `higherKinds` in `Lens` macro [#434](https://github.com/julien-truffaut/Monocle/pull/434/files#diff-ab3ae99e3b07e5b065b8e9db86af3c48R80) (thanks to [cvogt](https://github.com/cvogt))
+-   curry `find`, `exist` and `all` [#425](https://github.com/optics-dev/Monocle/pull/425) 
+-   improve performance of `Index` instance for `List` and `Vector` [#413](https://github.com/optics-dev/Monocle/pull/413)
+-   simplify `Plated` instance for `Free` [#404](https://github.com/optics-dev/Monocle/pull/404) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   remove `Order` instance for `Char` [#405](https://github.com/optics-dev/Monocle/commit/9d036d760d88e438544d150e0bca55523bf454c8)
+-   prevent warning for `higherKinds` in `Lens` macro [#434](https://github.com/optics-dev/Monocle/pull/434/files#diff-ab3ae99e3b07e5b065b8e9db86af3c48R80) (thanks to [cvogt](https://github.com/cvogt))
 
 ### Doc
--   use `sbt-microsite` [#411](https://github.com/julien-truffaut/Monocle/pull/411) and [#444](https://github.com/julien-truffaut/Monocle/pull/444) (thanks to [VlachJosef](https://github.com/VlachJosef))
--   new icons for website and stickers [#421](https://github.com/julien-truffaut/Monocle/pull/421) (thanks to [mbcltd](https://github.com/mbcltd))
--   add doc for `Optional` [#424](https://github.com/julien-truffaut/Monocle/pull/424) (thanks to [mdulac](https://github.com/mdulac))
--   add doc for `Traversal` [#423](https://github.com/julien-truffaut/Monocle/pull/423)
+-   use `sbt-microsite` [#411](https://github.com/optics-dev/Monocle/pull/411) and [#444](https://github.com/optics-dev/Monocle/pull/444) (thanks to [VlachJosef](https://github.com/VlachJosef))
+-   new icons for website and stickers [#421](https://github.com/optics-dev/Monocle/pull/421) (thanks to [mbcltd](https://github.com/mbcltd))
+-   add doc for `Optional` [#424](https://github.com/optics-dev/Monocle/pull/424) (thanks to [mdulac](https://github.com/mdulac))
+-   add doc for `Traversal` [#423](https://github.com/optics-dev/Monocle/pull/423)
 
 ### Other
 -   `kenji` aka [xuwei-k](https://github.com/xuwei-k) is now a maintainer
--   update build settings for scala.js [#406](https://github.com/julien-truffaut/Monocle/pull/406) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   update build settings for scala.js [#406](https://github.com/optics-dev/Monocle/pull/406) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
 
 # 1.3.2
 
 > 02 November 2016
 
--   add support for scala 2.12.0 [#408](https://github.com/julien-truffaut/Monocle/pull/408)
--   use `Free.roll` in `Plated[Free[S, A]]` instance [#404](https://github.com/julien-truffaut/Monocle/pull/404) (thanks to [aoiroaoino ](https://github.com/aoiroaoino))
--   update build settings for scala.js [#406](https://github.com/julien-truffaut/Monocle/pull/406) (thanks to [aoiroaoino ](https://github.com/aoiroaoino))
+-   add support for scala 2.12.0 [#408](https://github.com/optics-dev/Monocle/pull/408)
+-   use `Free.roll` in `Plated[Free[S, A]]` instance [#404](https://github.com/optics-dev/Monocle/pull/404) (thanks to [aoiroaoino ](https://github.com/aoiroaoino))
+-   update build settings for scala.js [#406](https://github.com/optics-dev/Monocle/pull/406) (thanks to [aoiroaoino ](https://github.com/aoiroaoino))
 
 # 1.3.1
 
@@ -131,17 +131,17 @@ position: 5
 
 ### Addition
 
--   add `unsafe` module with `select` [#394](https://github.com/julien-truffaut/Monocle/pull/394) (thanks to [cesartl](https://github.com/cesartl))
--   refactor optics laws to use random functions [#357](https://github.com/julien-truffaut/Monocle/pull/357)
--   add `Wrapped` typeclass [#365](https://github.com/julien-truffaut/Monocle/pull/394) (thanks to [puffnfresh](https://github.com/puffnfresh))
--   add `State` syntax for `Optional` [#387](https://github.com/julien-truffaut/Monocle/pull/387) (thanks to [cb372](https://github.com/cb372))
--   add `transformM` and `transformCounting` to `Plated` [#391](https://github.com/julien-truffaut/Monocle/pull/391) (thanks to [arkadius](https://github.com/arkadius))
--   add `applyN` for `Traversal` [#379](https://github.com/julien-truffaut/Monocle/pull/379) (thanks to [jule64](https://github.com/jule64))
--   add `mapping` [#396](https://github.com/julien-truffaut/Monocle/pull/396) (thanks to [mdulac](https://github.com/mdulac))
+-   add `unsafe` module with `select` [#394](https://github.com/optics-dev/Monocle/pull/394) (thanks to [cesartl](https://github.com/cesartl))
+-   refactor optics laws to use random functions [#357](https://github.com/optics-dev/Monocle/pull/357)
+-   add `Wrapped` typeclass [#365](https://github.com/optics-dev/Monocle/pull/394) (thanks to [puffnfresh](https://github.com/puffnfresh))
+-   add `State` syntax for `Optional` [#387](https://github.com/optics-dev/Monocle/pull/387) (thanks to [cb372](https://github.com/cb372))
+-   add `transformM` and `transformCounting` to `Plated` [#391](https://github.com/optics-dev/Monocle/pull/391) (thanks to [arkadius](https://github.com/arkadius))
+-   add `applyN` for `Traversal` [#379](https://github.com/optics-dev/Monocle/pull/379) (thanks to [jule64](https://github.com/jule64))
+-   add `mapping` [#396](https://github.com/optics-dev/Monocle/pull/396) (thanks to [mdulac](https://github.com/mdulac))
 
 ### Deprecation
 
--   remove all deprecated elements from 1.1 e.g. (`Lenser`, `headMaybe`, `getMaybe`, `setMaybe`, `modifyMaybe`) ([see](https://github.com/julien-truffaut/Monocle/commit/ff65c967096e7c1243119075ba35e46f12728f71))
+-   remove all deprecated elements from 1.1 e.g. (`Lenser`, `headMaybe`, `getMaybe`, `setMaybe`, `modifyMaybe`) ([see](https://github.com/optics-dev/Monocle/commit/ff65c967096e7c1243119075ba35e46f12728f71))
 
 ### Upgrades
 
@@ -158,9 +158,9 @@ position: 5
 
 ### Addition
 
--   add `apply` methods for `Prism` and `Iso` [#354](https://github.com/julien-truffaut/Monocle/pull/354) (thanks to [sellout](https://github.com/sellout))
--   add `unapply` methods for `Prism` and `Iso` [#361](https://github.com/julien-truffaut/Monocle/pull/361) (thanks to [sellout](https://github.com/sellout))
--   add `partial` constructor for `Prism` [#355](https://github.com/julien-truffaut/Monocle/pull/361) (thanks to [sellout](https://github.com/sellout))
+-   add `apply` methods for `Prism` and `Iso` [#354](https://github.com/optics-dev/Monocle/pull/354) (thanks to [sellout](https://github.com/sellout))
+-   add `unapply` methods for `Prism` and `Iso` [#361](https://github.com/optics-dev/Monocle/pull/361) (thanks to [sellout](https://github.com/sellout))
+-   add `partial` constructor for `Prism` [#355](https://github.com/optics-dev/Monocle/pull/361) (thanks to [sellout](https://github.com/sellout))
 
 ### Documentation
 
@@ -172,19 +172,19 @@ position: 5
 
 ### Addition
 
--   support for scala.js [#335](https://github.com/julien-truffaut/Monocle/pull/335) (thanks to [japgolly](https://github.com/japgolly))
--   `remove`: delete a value associated with a key in a Map-like container [#341](https://github.com/julien-truffaut/Monocle/pull/341) (thanks to [dabd](https://github.com/dabd))
--   `doubleToFloat`, `bigDecimalToLong` and `bigDecimalToInt` [#312](https://github.com/julien-truffaut/Monocle/pull/312) (thanks to [mikaelv](https://github.com/mikaelv))
--   optics for `Tuple1` [#313](https://github.com/julien-truffaut/Monocle/pull/313) (thanks to [exlevan](https://github.com/exlevan))
--   use random index for `AtTests` and `IndexTests` [#343](https://github.com/julien-truffaut/Monocle/pull/343) (thanks to [pvillega](https://github.com/pvillega))
--   `Each` instance for tuples and case classes with fields of the same type [#347](https://github.com/julien-truffaut/Monocle/pull/347) (thanks to [Astrac](https://github.com/Astrac))
+-   support for scala.js [#335](https://github.com/optics-dev/Monocle/pull/335) (thanks to [japgolly](https://github.com/japgolly))
+-   `remove`: delete a value associated with a key in a Map-like container [#341](https://github.com/optics-dev/Monocle/pull/341) (thanks to [dabd](https://github.com/dabd))
+-   `doubleToFloat`, `bigDecimalToLong` and `bigDecimalToInt` [#312](https://github.com/optics-dev/Monocle/pull/312) (thanks to [mikaelv](https://github.com/mikaelv))
+-   optics for `Tuple1` [#313](https://github.com/optics-dev/Monocle/pull/313) (thanks to [exlevan](https://github.com/exlevan))
+-   use random index for `AtTests` and `IndexTests` [#343](https://github.com/optics-dev/Monocle/pull/343) (thanks to [pvillega](https://github.com/pvillega))
+-   `Each` instance for tuples and case classes with fields of the same type [#347](https://github.com/optics-dev/Monocle/pull/347) (thanks to [Astrac](https://github.com/Astrac))
 
 ### Bug Fixes
 
--   fix implicit not found message for `Plated` [#320](https://github.com/julien-truffaut/Monocle/pull/320) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
--   fix `stringToBoolean` such as it satisfies 2nd prism law [#340](https://github.com/julien-truffaut/Monocle/pull/340) (thanks to [hasumedic](https://github.com/hasumedic))
--   fix `stringToLong` such as it satisfies 2nd prism law [#339](https://github.com/julien-truffaut/Monocle/pull/339) (thanks to [pvillega](https://github.com/pvillega))
--   fix bit indexing for `Long` [#343](https://github.com/julien-truffaut/Monocle/pull/343) (thanks to [pvillega](https://github.com/pvillega))
+-   fix implicit not found message for `Plated` [#320](https://github.com/optics-dev/Monocle/pull/320) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   fix `stringToBoolean` such as it satisfies 2nd prism law [#340](https://github.com/optics-dev/Monocle/pull/340) (thanks to [hasumedic](https://github.com/hasumedic))
+-   fix `stringToLong` such as it satisfies 2nd prism law [#339](https://github.com/optics-dev/Monocle/pull/339) (thanks to [pvillega](https://github.com/pvillega))
+-   fix bit indexing for `Long` [#343](https://github.com/optics-dev/Monocle/pull/343) (thanks to [pvillega](https://github.com/pvillega))
 
 ### Upgrades
 
@@ -197,14 +197,14 @@ position: 5
 
 ### Documentation
 
--   add example, typeclass and faq sections to the website [#314](https://github.com/julien-truffaut/Monocle/pull/314), [#316](https://github.com/julien-truffaut/Monocle/pull/316)
--   document [SI-7139](https://issues.scala-lang.org/browse/SI-7139) limitation for optics constructor in REPL and tut [#309](https://github.com/julien-truffaut/Monocle/pull/309)
+-   add example, typeclass and faq sections to the website [#314](https://github.com/optics-dev/Monocle/pull/314), [#316](https://github.com/optics-dev/Monocle/pull/316)
+-   document [SI-7139](https://issues.scala-lang.org/browse/SI-7139) limitation for optics constructor in REPL and tut [#309](https://github.com/optics-dev/Monocle/pull/309)
 
 ### Bug Fixes
 
--   generate fresh type-parameter name for `modifyF` [#300](https://github.com/julien-truffaut/Monocle/pull/300)  (thanks to [puffnfresh](https://github.com/puffnfresh))
--   publish `monocle-refined` with all the other modules [#311](https://github.com/julien-truffaut/Monocle/pull/311)
--   publish snapshot automatically for scala 2.10 and 2.11 [#310](https://github.com/julien-truffaut/Monocle/pull/310)
+-   generate fresh type-parameter name for `modifyF` [#300](https://github.com/optics-dev/Monocle/pull/300)  (thanks to [puffnfresh](https://github.com/puffnfresh))
+-   publish `monocle-refined` with all the other modules [#311](https://github.com/optics-dev/Monocle/pull/311)
+-   publish snapshot automatically for scala 2.10 and 2.11 [#310](https://github.com/optics-dev/Monocle/pull/310)
 
 ### Upgrades
 
@@ -216,48 +216,48 @@ position: 5
 
 > 22 November 2015
 
-Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-truffaut/Monocle/compare/v1.2.0-M1...v1.2.0-M2)
+Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/optics-dev/Monocle/compare/v1.2.0-M1...v1.2.0-M2)
 
 ### Addition
 
--   add `only` `Prism` to match a single value [see](https://github.com/julien-truffaut/Monocle/commit/5f6d414019883045ab5e92ea1a6cc650e1f5e0f5)
--   add `below` `Prism` to lift a `Prism` in a `Traverse` [see](https://github.com/julien-truffaut/Monocle/commit/ed7b067d62891352a2a05e1a570451e3740a2446)
--   add `length` for `Fold` and `Traversal` [#236](https://github.com/julien-truffaut/Monocle/commit/1773e93bfe2a7e229c57fc7915ec3519b8831eee) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
--   add optics for `scalaz.Either3` [#242](https://github.com/julien-truffaut/Monocle/commit/720ff020b08be8d7ffb3f60e3d1377147c1dce50) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
--   add `optNelToList` `Iso` [see](https://github.com/julien-truffaut/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0)
--   add `fromIso` combinator for all optics [#245](https://github.com/julien-truffaut/Monocle/commit/db0c92c7bffcf41e40f5368caafa26b337983a7c)
--   add `left` and `right` methods for `Iso`, `Prism`, `Getter` and `Fold` [#273](https://github.com/julien-truffaut/Monocle/commit/8efd6c85f8a3697abc11feae0a5f1a2ba7fd0a58)
--   add safe down cast from BigInt [#267](https://github.com/julien-truffaut/Monocle/commit/1f3c37be2d3e950b1a84b4f1d05c5468bc80e6da)
--   add `productToTuple` `Iso` between case class and tuple using shapeless [#247](https://github.com/julien-truffaut/Monocle/commit/c82c03c95e33314f1cac442b8e47252d5419af77)
--   add `GenIso.fields` white box that generates the same `Iso` than `productToTuple` with better performances but less IDE support [#297](https://github.com/julien-truffaut/Monocle/pull/297) (thanks to [japgolly](https://github.com/japgolly))
--   add `@PLenses` macro annotation to generate `PLens` for case class with type parameters [#114](https://github.com/julien-truffaut/Monocle/commit/f80ee012971689ec31865b67665e2641429b24fd) (thanks to [exlevan](https://github.com/exlevan))
--   add `Plated` typeclass [#289](https://github.com/julien-truffaut/Monocle/commit/2be8bcf8d51113e6b0230dafd065289767da2f28) (thanks to [puffnfresh](https://github.com/puffnfresh))
--   add optics for `scalaz.Cofree` [#290](https://github.com/julien-truffaut/Monocle/commit/a1b71065b36ddac7a94118b04748628d1dcc260c) (thanks to [LiamGoodacre](https://github.com/LiamGoodacre))
+-   add `only` `Prism` to match a single value [see](https://github.com/optics-dev/Monocle/commit/5f6d414019883045ab5e92ea1a6cc650e1f5e0f5)
+-   add `below` `Prism` to lift a `Prism` in a `Traverse` [see](https://github.com/optics-dev/Monocle/commit/ed7b067d62891352a2a05e1a570451e3740a2446)
+-   add `length` for `Fold` and `Traversal` [#236](https://github.com/optics-dev/Monocle/commit/1773e93bfe2a7e229c57fc7915ec3519b8831eee) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   add optics for `scalaz.Either3` [#242](https://github.com/optics-dev/Monocle/commit/720ff020b08be8d7ffb3f60e3d1377147c1dce50) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   add `optNelToList` `Iso` [see](https://github.com/optics-dev/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0)
+-   add `fromIso` combinator for all optics [#245](https://github.com/optics-dev/Monocle/commit/db0c92c7bffcf41e40f5368caafa26b337983a7c)
+-   add `left` and `right` methods for `Iso`, `Prism`, `Getter` and `Fold` [#273](https://github.com/optics-dev/Monocle/commit/8efd6c85f8a3697abc11feae0a5f1a2ba7fd0a58)
+-   add safe down cast from BigInt [#267](https://github.com/optics-dev/Monocle/commit/1f3c37be2d3e950b1a84b4f1d05c5468bc80e6da)
+-   add `productToTuple` `Iso` between case class and tuple using shapeless [#247](https://github.com/optics-dev/Monocle/commit/c82c03c95e33314f1cac442b8e47252d5419af77)
+-   add `GenIso.fields` white box that generates the same `Iso` than `productToTuple` with better performances but less IDE support [#297](https://github.com/optics-dev/Monocle/pull/297) (thanks to [japgolly](https://github.com/japgolly))
+-   add `@PLenses` macro annotation to generate `PLens` for case class with type parameters [#114](https://github.com/optics-dev/Monocle/commit/f80ee012971689ec31865b67665e2641429b24fd) (thanks to [exlevan](https://github.com/exlevan))
+-   add `Plated` typeclass [#289](https://github.com/optics-dev/Monocle/commit/2be8bcf8d51113e6b0230dafd065289767da2f28) (thanks to [puffnfresh](https://github.com/puffnfresh))
+-   add optics for `scalaz.Cofree` [#290](https://github.com/optics-dev/Monocle/commit/a1b71065b36ddac7a94118b04748628d1dcc260c) (thanks to [LiamGoodacre](https://github.com/LiamGoodacre))
 
 ### Non backward compatible change
--   change mega imports from package object to `all` object, e.g. `import monocle.function._` becomes `import monocle.function.all._` [#243](https://github.com/julien-truffaut/Monocle/pull/243)
+-   change mega imports from package object to `all` object, e.g. `import monocle.function._` becomes `import monocle.function.all._` [#243](https://github.com/optics-dev/Monocle/pull/243)
 -   change `At` definition from `def at(index: I): Lens[S, Option[A]]` to `def at(index: I): Lens[S, A]`
 -   change `At` instance for `Set` and `ISet` from `Lens[S, Option[Unit]]` to `Lens[S, Boolean]`
 -   remove `Index` instances for bit indexing primitive `Long`, `Int`, `Char`, `Bye` from `monocle-core`
--   add `monocle-refined` module with `At` instances for bit indexing primitive `Long`, `Int`, `Char`, `Bye` [#291](https://github.com/julien-truffaut/Monocle/pull/291) (thanks to [fthomas](https://github.com/fthomas) and [julien-truffaut](https://github.com/julien-truffaut))
+-   add `monocle-refined` module with `At` instances for bit indexing primitive `Long`, `Int`, `Char`, `Bye` [#291](https://github.com/optics-dev/Monocle/pull/291) (thanks to [fthomas](https://github.com/fthomas) and [julien-truffaut](https://github.com/julien-truffaut))
 
 ### Deprecation
--   deprecate `theseDisjunction` to `theseToDisjunction` [see](https://github.com/julien-truffaut/Monocle/commit/bde69571074ef6dc08c3d240154feaa40aaaece5)
--   deprecate `nelAndOneIso` to `nelToOneAnd` [see](https://github.com/julien-truffaut/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0)
--   deprecate `sum` to `choice` and `product` to `split` [#239](https://github.com/julien-truffaut/Monocle/commit/f6b163b1702bef046f26576d2e182f32352b88d7)
+-   deprecate `theseDisjunction` to `theseToDisjunction` [see](https://github.com/optics-dev/Monocle/commit/bde69571074ef6dc08c3d240154feaa40aaaece5)
+-   deprecate `nelAndOneIso` to `nelToOneAnd` [see](https://github.com/optics-dev/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0)
+-   deprecate `sum` to `choice` and `product` to `split` [#239](https://github.com/optics-dev/Monocle/commit/f6b163b1702bef046f26576d2e182f32352b88d7)
 
 ### Documentation
--   add tut examples for `Prism` [#228](https://github.com/julien-truffaut/Monocle/commit/c65a0c4617b41b0a9f31674516c674efc5d0feb0)
--   add tut examples for `Iso` [#279](https://github.com/julien-truffaut/Monocle/commit/61a526717417728ab4ad92fa9ba10aa0267a58d6) (thanks to [justjoheinz](https://github.com/justjoheinz))
--   add examples for Http Request optics usage [#262](https://github.com/julien-truffaut/Monocle/commit/234097ce1f8601eab8ab47e6610d56aea59acce4) (thanks to [1ambda](https://github.com/1ambda))
--   add learning resources to the website [#251](https://github.com/julien-truffaut/Monocle/commit/0bc53359e799e1124ad5a8c0f90ae9d85bd690d9)
+-   add tut examples for `Prism` [#228](https://github.com/optics-dev/Monocle/commit/c65a0c4617b41b0a9f31674516c674efc5d0feb0)
+-   add tut examples for `Iso` [#279](https://github.com/optics-dev/Monocle/commit/61a526717417728ab4ad92fa9ba10aa0267a58d6) (thanks to [justjoheinz](https://github.com/justjoheinz))
+-   add examples for Http Request optics usage [#262](https://github.com/optics-dev/Monocle/commit/234097ce1f8601eab8ab47e6610d56aea59acce4) (thanks to [1ambda](https://github.com/1ambda))
+-   add learning resources to the website [#251](https://github.com/optics-dev/Monocle/commit/0bc53359e799e1124ad5a8c0f90ae9d85bd690d9)
 
 ### Bug Fixes
--   fix long parser [#244](https://github.com/julien-truffaut/Monocle/commit/1cdfc0fae44df71700f4d53cfbf23d0f9575ee07) (thanks to [NightRa](https://github.com/NightRa))
--   fix `GenIso` case class with type parameter [#263](https://github.com/julien-truffaut/Monocle/commit/fa6dc7d164142c4fae1ec8014f3eb8c4f9619191)
+-   fix long parser [#244](https://github.com/optics-dev/Monocle/commit/1cdfc0fae44df71700f4d53cfbf23d0f9575ee07) (thanks to [NightRa](https://github.com/NightRa))
+-   fix `GenIso` case class with type parameter [#263](https://github.com/optics-dev/Monocle/commit/fa6dc7d164142c4fae1ec8014f3eb8c4f9619191)
 
 ### Optimisation
--   improve performances of `index` for `Vector` [#258](https://github.com/julien-truffaut/Monocle/commit/d4a29c279ed78c3acd8b253cb525cb71e8656ee4) (thanks to [spebbe](https://github.com/spebbe))
+-   improve performances of `index` for `Vector` [#258](https://github.com/optics-dev/Monocle/commit/d4a29c279ed78c3acd8b253cb525cb71e8656ee4) (thanks to [spebbe](https://github.com/spebbe))
 
 ### Upgrades
 -   scala to 2.10.6
@@ -270,23 +270,23 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 
 > 06 July 2015
 
--   laws definition move to `core` module [see](https://github.com/julien-truffaut/Monocle/tree/master/core/src/main/scala/monocle/law).
+-   laws definition move to `core` module [see](https://github.com/optics-dev/Monocle/tree/master/core/src/main/scala/monocle/law).
     Properties are still defined in `law` module with [discipline](https://github.com/typelevel/discipline)
--   optics defined for `scalaz.Validation` [#211](https://github.com/julien-truffaut/Monocle/pull/211) (thanks to [anakos](https://github.com/anakos))
--   `hListAt` is now public [see](https://github.com/julien-truffaut/Monocle/commit/b8567a677dc70e3db8548c421f487e213f206946)
--   add basic state support for `Lens` in an experimental `state` module [see](https://github.com/julien-truffaut/Monocle/commit/ee2dbd70cc47693615ad539b2dfd5d9c09bcd2be)
--   add `void` for `Optional`, `Traversal`, `Fold` and `Setter` [see](https://github.com/julien-truffaut/Monocle/commit/03f199847a1f572891f48e3e5aef080631f87e2c)
--   add `Setter` constructor using `scalaz.Contravariant` and `scalaz.Profunctor` [see](https://github.com/julien-truffaut/Monocle/commit/d50ec207b0c0b92061e2ad23de4bcaa841874a75)
--   `GenIso` for object and empty case classes [#219](https://github.com/julien-truffaut/Monocle/pull/219) and [#223](https://github.com/julien-truffaut/Monocle/pull/223) (thanks to [adelbertc](https://github.com/adelbertc))
--   add `optionToDisjunction` `Iso` [#226](https://github.com/julien-truffaut/Monocle/pull/226) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
--   add monomorphic optics for `Option`, `Either`, `scalaz.Disjunction`, `scalaz.Validation` [#181](https://github.com/julien-truffaut/Monocle/issues/181)
+-   optics defined for `scalaz.Validation` [#211](https://github.com/optics-dev/Monocle/pull/211) (thanks to [anakos](https://github.com/anakos))
+-   `hListAt` is now public [see](https://github.com/optics-dev/Monocle/commit/b8567a677dc70e3db8548c421f487e213f206946)
+-   add basic state support for `Lens` in an experimental `state` module [see](https://github.com/optics-dev/Monocle/commit/ee2dbd70cc47693615ad539b2dfd5d9c09bcd2be)
+-   add `void` for `Optional`, `Traversal`, `Fold` and `Setter` [see](https://github.com/optics-dev/Monocle/commit/03f199847a1f572891f48e3e5aef080631f87e2c)
+-   add `Setter` constructor using `scalaz.Contravariant` and `scalaz.Profunctor` [see](https://github.com/optics-dev/Monocle/commit/d50ec207b0c0b92061e2ad23de4bcaa841874a75)
+-   `GenIso` for object and empty case classes [#219](https://github.com/optics-dev/Monocle/pull/219) and [#223](https://github.com/optics-dev/Monocle/pull/223) (thanks to [adelbertc](https://github.com/adelbertc))
+-   add `optionToDisjunction` `Iso` [#226](https://github.com/optics-dev/Monocle/pull/226) (thanks to [aoiroaoino](https://github.com/aoiroaoino))
+-   add monomorphic optics for `Option`, `Either`, `scalaz.Disjunction`, `scalaz.Validation` [#181](https://github.com/optics-dev/Monocle/issues/181)
 
 ### Build
-- publish snapshot automatically [#207](https://github.com/julien-truffaut/Monocle/issues/207)
-- create basic web site using compile time verified examples with `tut` [#227](https://github.com/julien-truffaut/Monocle/pull/227)
+- publish snapshot automatically [#207](https://github.com/optics-dev/Monocle/issues/207)
+- create basic web site using compile time verified examples with `tut` [#227](https://github.com/optics-dev/Monocle/pull/227)
 
 ### Bug Fixes
--   [#205](https://github.com/julien-truffaut/Monocle/issues/205)
+-   [#205](https://github.com/optics-dev/Monocle/issues/205)
 
 ### Upgrades
 -   scala to 2.10.5 and 2.11.7
@@ -313,7 +313,7 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 ### Macro
 -   `monocle.macros.GenIso` generates `Iso` for case class with a single accessor
 -   `monocle.macros.GenPrism` generates `Prism` for sealed trait
--   `@Lenses` now supports case classes with type parameters [see](https://github.com/julien-truffaut/Monocle/blob/697bbf0ca3cbb1e8e8b3a63626fc45dfca3cd3cf/example/src/test/scala/monocle/LensExample.scala#L62)
+-   `@Lenses` now supports case classes with type parameters [see](https://github.com/optics-dev/Monocle/blob/697bbf0ca3cbb1e8e8b3a63626fc45dfca3cd3cf/example/src/test/scala/monocle/LensExample.scala#L62)
 -   `Lenser` is deprecated, use `GenLens` instead (same functionality but more consistent naming)
 
 ### Spark friendly
@@ -381,7 +381,7 @@ Thanks to all the 14 contributors since [1.2.0-M1](https://github.com/julien-tru
 
 ### Bug Fix
 
--   [Fix](https://github.com/julien-truffaut/Monocle/commit/a544743ca439b485ac2be178f290a85bbf6c2c80) `SafeCast` between `String` to `Int`
+-   [Fix](https://github.com/optics-dev/Monocle/commit/a544743ca439b485ac2be178f290a85bbf6c2c80) `SafeCast` between `String` to `Int`
 
 # 0.5.0
 
