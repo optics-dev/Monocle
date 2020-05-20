@@ -9,8 +9,8 @@ val scalaJSVersion =
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"                   % scalaJSVersion)
 addSbtPlugin("org.portable-scala" % "sbt-crossproject"              % "1.0.0")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject"      % "1.0.0")
-addSbtPlugin("com.47deg"          % "sbt-microsites"                % "0.9.7")
-addSbtPlugin("org.scalameta"      % "sbt-scalafmt"                  % "2.3.4")
+addSbtPlugin("com.47deg"          % "sbt-microsites"                % "0.9.4")
+addSbtPlugin("org.scalameta"      % "sbt-scalafmt"                  % "2.4.0")
 addSbtPlugin("org.scalameta"      % "sbt-mdoc"                      % "2.2.0")
 
 scalacOptions += "-deprecation"
