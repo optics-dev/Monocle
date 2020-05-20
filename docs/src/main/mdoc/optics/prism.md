@@ -127,7 +127,7 @@ val jNum: Prism[Json, Double] = GenPrism[Json, JNum] composeIso GenIso[JNum, Dou
 val jNull: Prism[Json, Unit] = GenPrism[Json, JNull.type] composeIso GenIso.unit[JNull.type]
 ```
 
-A [ticket](https://github.com/julien-truffaut/Monocle/issues/363) currently exists to add a macro to merge these two steps together.
+A [ticket](https://github.com/optics-dev/Monocle/issues/363) currently exists to add a macro to merge these two steps together.
 
 ## Prism Laws
 
