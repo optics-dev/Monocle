@@ -9,12 +9,13 @@ import cats.instances.option._
 import cats.syntax.either._
 
 /**
- * Typeclass that defines a [[Prism]] between an `S` and its init `S` and last `S`
- * @tparam S source of [[Prism]] and init of [[Prism]] target
- * @tparam A last of [[Prism]] target, `A` is supposed to be unique for a given `S`
- */
-@implicitNotFound("Could not find an instance of Snoc[${S},${A}], please check Monocle instance location policy to " +
-  "find out which import is necessary")
+  * Typeclass that defines a [[Prism]] between an `S` and its init `S` and last `S`
+  * @tparam S source of [[Prism]] and init of [[Prism]] target
+  * @tparam A last of [[Prism]] target, `A` is supposed to be unique for a given `S`
+  */
+@implicitNotFound(
+  "Could not find an instance of Snoc[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
+)
 abstract class Snoc[S, A] extends Serializable {
   def snoc: Prism[S, (S, A)]
 
@@ -38,49 +39,50 @@ trait SnocFunctions {
 }
 
 object Snoc extends SnocFunctions with SnocInstancesScalaVersionSpecific {
-
-  def apply[S, A](prism: Prism[S, (S, A)]): Snoc[S, A] = new Snoc[S, A] {
-    override val snoc: Prism[S, (S, A)] = prism
-  }
+  def apply[S, A](prism: Prism[S, (S, A)]): Snoc[S, A] =
+    new Snoc[S, A] {
+      override val snoc: Prism[S, (S, A)] = prism
+    }
 
   /** lift an instance of [[Snoc]] using an [[Iso]] */
-  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Snoc[A, B]): Snoc[S, B] = Snoc(
-    iso composePrism ev.snoc composeIso iso.reverse.first
-  )
+  def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Snoc[A, B]): Snoc[S, B] =
+    Snoc(
+      iso composePrism ev.snoc composeIso iso.reverse.first
+    )
 
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
+  implicit def listSnoc[A]: Snoc[List[A], A] =
+    Snoc(
+      Prism[List[A], (List[A], A)](s =>
+        Applicative[Option].map2(Either.catchNonFatal(s.init).toOption, s.lastOption)((_, _))
+      ) {
+        case (init, last) => init :+ last
+      }
+    )
 
-  implicit def listSnoc[A]: Snoc[List[A], A] = Snoc(
-    Prism[List[A], (List[A], A)](
-      s => Applicative[Option].map2(Either.catchNonFatal(s.init).toOption, s.lastOption)((_,_))){
+  implicit val stringSnoc: Snoc[String, Char] = Snoc(
+    Prism[String, (String, Char)](s => if (s.isEmpty) None else Some((s.init, s.last))) {
       case (init, last) => init :+ last
     }
   )
 
-  implicit val stringSnoc: Snoc[String, Char] = Snoc(
-    Prism[String, (String, Char)](
-        s => if(s.isEmpty) None else Some((s.init, s.last))){
-        case (init, last) => init :+ last
+  implicit def vectorSnoc[A]: Snoc[Vector[A], A] =
+    Snoc(
+      Prism[Vector[A], (Vector[A], A)](v => if (v.isEmpty) None else Some((v.init, v.last))) {
+        case (xs, x) => xs :+ x
       }
-  )
-
-  implicit def vectorSnoc[A]: Snoc[Vector[A], A] = Snoc(
-    Prism[Vector[A], (Vector[A], A)](
-      v => if(v.isEmpty) None else Some((v.init, v.last))){
-      case (xs, x) => xs :+ x
-    }
-  )
+    )
 
   /************************************************************************************************/
   /** Cats instances                                                                              */
   /************************************************************************************************/
   import cats.data.Chain
 
-  implicit def chainSnoc[A]: Snoc[Chain[A], A] = new Snoc[Chain[A], A] {
-    val snoc = Prism[Chain[A], (Chain[A], A)] {
-      c =>
+  implicit def chainSnoc[A]: Snoc[Chain[A], A] =
+    new Snoc[Chain[A], A] {
+      val snoc = Prism[Chain[A], (Chain[A], A)] { c =>
         @tailrec
         def go(oldC: Chain[A], newC: Chain[A]): Option[(Chain[A], A)] =
           oldC.uncons match {
@@ -90,8 +92,8 @@ object Snoc extends SnocFunctions with SnocInstancesScalaVersionSpecific {
           }
 
         go(c, Chain.empty)
-    } {
-      case (init, last) => init.append(last)
+      } {
+        case (init, last) => init.append(last)
+      }
     }
-  }
 }

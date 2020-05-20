@@ -7,14 +7,13 @@ import cats.data.Const
 import cats.Id
 
 case class IsoLaws[S, A](iso: Iso[S, A]) {
-
   import IsEq.syntax
 
   def roundTripOneWay(s: S): IsEq[S] =
-    (iso.reverseGet _ compose iso.get) (s) <==> s
+    (iso.reverseGet _ compose iso.get)(s) <==> s
 
   def roundTripOtherWay(a: A): IsEq[A] =
-    (iso.get _ compose iso.reverseGet) (a) <==> a
+    (iso.get _ compose iso.reverseGet)(a) <==> a
 
   def modifyIdentity(s: S): IsEq[S] =
     iso.modify(identity)(s) <==> s
@@ -30,5 +29,4 @@ case class IsoLaws[S, A](iso: Iso[S, A]) {
 
   def consistentGetModifyId(s: S): IsEq[A] =
     iso.get(s) <==> iso.modifyF[Const[A, ?]](Const(_))(s).getConst
-
 }

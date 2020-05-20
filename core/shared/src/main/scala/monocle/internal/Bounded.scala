@@ -14,7 +14,7 @@ private[monocle] object Bounded extends BoundedInstances {
   def apply[T](implicit ev: Bounded[T]): Bounded[T] = ev
 
   def orderingBoundedSafeCast[S: Order, A: Bounded](unsafeCast: S => A)(reverseCast: A => S): Prism[S, A] =
-    Prism[S, A]( from =>
+    Prism[S, A](from =>
       if (from > reverseCast(Bounded[A].MaxValue) || from < reverseCast(Bounded[A].MinValue))
         None
       else
@@ -23,13 +23,12 @@ private[monocle] object Bounded extends BoundedInstances {
 }
 
 private[monocle] trait BoundedInstances {
-
-  implicit val booleanBounded = new Bounded[Boolean]{
+  implicit val booleanBounded = new Bounded[Boolean] {
     val MaxValue: Boolean = true
     val MinValue: Boolean = false
   }
 
-  implicit val byteBounded= new Bounded[Byte] {
+  implicit val byteBounded = new Bounded[Byte] {
     val MaxValue: Byte = Byte.MaxValue
     val MinValue: Byte = Byte.MinValue
   }

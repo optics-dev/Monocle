@@ -1,31 +1,31 @@
 package monocle
 
-import cats.{ Contravariant, Functor }
+import cats.{Contravariant, Functor}
 import cats.arrow.Choice
 import cats.arrow.Profunctor
 import cats.syntax.either._
 
 /**
- * A [[PSetter]] is a generalisation of Functor map:
- *  - `map:    (A => B) => F[A] => F[B]`
- *  - `modify: (A => B) => S    => T`
- *
- * [[PSetter]] stands for Polymorphic Setter as it set and modify methods change
- * a type `A` to `B` and `S` to `T`.
- * [[Setter]] is a type alias for [[PSetter]] restricted to monomorphic updates:
- * {{{
- * type Setter[S, A] = PSetter[S, S, A, A]
- * }}}
- *
- * [[PTraversal]], [[POptional]], [[PPrism]], [[PLens]] and [[PIso]] are valid [[PSetter]]
- *
- * @see [[monocle.law.SetterLaws]]
- *
- * @tparam S the source of a [[PSetter]]
- * @tparam T the modified source of a [[PSetter]]
- * @tparam A the target of a [[PSetter]]
- * @tparam B the modified target of a [[PSetter]]
- */
+  * A [[PSetter]] is a generalisation of Functor map:
+  *  - `map:    (A => B) => F[A] => F[B]`
+  *  - `modify: (A => B) => S    => T`
+  *
+  * [[PSetter]] stands for Polymorphic Setter as it set and modify methods change
+  * a type `A` to `B` and `S` to `T`.
+  * [[Setter]] is a type alias for [[PSetter]] restricted to monomorphic updates:
+  * {{{
+  * type Setter[S, A] = PSetter[S, S, A, A]
+  * }}}
+  *
+  * [[PTraversal]], [[POptional]], [[PPrism]], [[PLens]] and [[PIso]] are valid [[PSetter]]
+  *
+  * @see [[monocle.law.SetterLaws]]
+  *
+  * @tparam S the source of a [[PSetter]]
+  * @tparam T the modified source of a [[PSetter]]
+  * @tparam A the target of a [[PSetter]]
+  * @tparam B the modified target of a [[PSetter]]
+  */
 abstract class PSetter[S, T, A, B] extends Serializable { self =>
 
   /** modify polymorphically the target of a [[PSetter]] with a function */
@@ -36,17 +36,14 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
 
   /** join two [[PSetter]] with the same target */
   @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
-    PSetter[Either[S, S1], Either[T, T1], A, B](
-      b => _.bimap(self.modify(b), other.modify(b))
-    )
+    PSetter[Either[S, S1], Either[T, T1], A, B](b => _.bimap(self.modify(b), other.modify(b)))
 
   /*************************************************************/
   /** Compose methods between a [[PSetter]] and another Optics */
   /*************************************************************/
-
   /** compose a [[PSetter]] with a [[PSetter]] */
   @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    new PSetter[S, T, C, D]{
+    new PSetter[S, T, C, D] {
       def modify(f: C => D): S => T =
         self.modify(other.modify(f))
 
@@ -77,7 +74,6 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   /********************************************/
   /** Experimental aliases of compose methods */
   /********************************************/
-
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
     composeTraversal(other)
@@ -97,7 +93,6 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   /** alias to composeIso */
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
     composeIso(other)
-
 }
 
 object PSetter extends SetterInstances {
@@ -105,11 +100,11 @@ object PSetter extends SetterInstances {
     PIso.id[S, T].asSetter
 
   def codiagonal[S, T]: PSetter[Either[S, S], Either[T, T], S, T] =
-    PSetter[Either[S, S], Either[T, T], S, T](f => _.bimap(f,f))
+    PSetter[Either[S, S], Either[T, T], S, T](f => _.bimap(f, f))
 
   /** create a [[PSetter]] using modify function */
   def apply[S, T, A, B](_modify: (A => B) => S => T): PSetter[S, T, A, B] =
-    new PSetter[S, T, A, B]{
+    new PSetter[S, T, A, B] {
       def modify(f: A => B): S => T =
         _modify(f)
 
@@ -128,7 +123,6 @@ object PSetter extends SetterInstances {
   /** create a [[PSetter]] from a Profunctor */
   def fromProfunctor[P[_, _], A, B, C](implicit P: Profunctor[P]): PSetter[P[B, C], P[A, C], A, B] =
     PSetter[P[B, C], P[A, C], A, B](f => P.lmap(_)(f))
-
 }
 
 object Setter {

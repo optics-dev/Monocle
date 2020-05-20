@@ -5,15 +5,16 @@ import cats.arrow.{Arrow, Choice}
 import cats.implicits._
 
 /**
- * A [[Getter]] can be seen as a glorified get method between
- * a type S and a type A.
- *
- * A [[Getter]] is also a valid [[Fold]]
- *
- * @tparam S the source of a [[Getter]]
- * @tparam A the target of a [[Getter]]
- */
+  * A [[Getter]] can be seen as a glorified get method between
+  * a type S and a type A.
+  *
+  * A [[Getter]] is also a valid [[Fold]]
+  *
+  * @tparam S the source of a [[Getter]]
+  * @tparam A the target of a [[Getter]]
+  */
 abstract class Getter[S, A] extends Serializable { self =>
+
   /** get the target of a [[Getter]] */
   def get(s: S): A
 
@@ -31,18 +32,18 @@ abstract class Getter[S, A] extends Serializable { self =>
 
   /** pair two disjoint [[Getter]] */
   @inline final def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
-    Getter[(S, S1), (A, A1)]{case (s, s1) => (self.get(s), other.get(s1))}
+    Getter[(S, S1), (A, A1)] { case (s, s1) => (self.get(s), other.get(s1)) }
 
   @inline final def zip[A1](other: Getter[S, A1]): Getter[S, (A, A1)] =
     Getter[S, (A, A1)](s => (self.get(s), other.get(s)))
 
   @inline final def first[B]: Getter[(S, B), (A, B)] =
-    Getter[(S, B), (A, B)]{case (s, b) => (self.get(s), b)}
+    Getter[(S, B), (A, B)] { case (s, b) => (self.get(s), b) }
 
   @inline final def second[B]: Getter[(B, S), (B, A)] =
-    Getter[(B, S), (B, A)]{case (b, s) => (b, self.get(s))}
+    Getter[(B, S), (B, A)] { case (b, s) => (b, self.get(s)) }
 
-  @inline final def left[C] : Getter[Either[S, C], Either[A, C]] =
+  @inline final def left[C]: Getter[Either[S, C], Either[A, C]] =
     Getter[Either[S, C], Either[A, C]](_.leftMap(get))
 
   @inline final def right[C]: Getter[Either[C, S], Either[C, A]] =
@@ -51,7 +52,6 @@ abstract class Getter[S, A] extends Serializable { self =>
   /*************************************************************/
   /** Compose methods between a [[Getter]] and another Optics  */
   /*************************************************************/
-
   /** compose a [[Getter]] with a [[Fold]] */
   @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
     asFold composeFold other
@@ -83,7 +83,6 @@ abstract class Getter[S, A] extends Serializable { self =>
   /********************************************/
   /** Experimental aliases of compose methods */
   /********************************************/
-
   /** alias to composeTraversal */
   @inline final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     composeTraversal(other)
@@ -107,13 +106,12 @@ abstract class Getter[S, A] extends Serializable { self =>
   /******************************************************************/
   /** Transformation methods to view a [[Getter]] as another Optics */
   /******************************************************************/
-
   /** view a [[Getter]] with a [[Fold]] */
-  @inline final def asFold: Fold[S, A] = new Fold[S, A]{
-    def foldMap[M: Monoid](f: A => M)(s: S): M =
-      f(get(s))
-  }
-
+  @inline final def asFold: Fold[S, A] =
+    new Fold[S, A] {
+      def foldMap[M: Monoid](f: A => M)(s: S): M =
+        f(get(s))
+    }
 }
 
 object Getter extends GetterInstances {
@@ -128,7 +126,7 @@ object Getter extends GetterInstances {
 }
 
 sealed abstract class GetterInstances extends GetterInstances0 {
-  implicit val getterArrow: Arrow[Getter] = new Arrow[Getter]{
+  implicit val getterArrow: Arrow[Getter] = new Arrow[Getter] {
     def lift[A, B](f: (A) => B): Getter[A, B] =
       Getter(f)
 
@@ -145,13 +143,14 @@ sealed abstract class GetterInstances extends GetterInstances0 {
       g composeGetter f
   }
 
-  implicit def getterSemigroupal[S]: Semigroupal[Getter[S, ?]] = new Semigroupal[Getter[S, ?]] {
-    override def product[A, B](a: Getter[S, A], b: Getter[S, B]) = a zip b
-  }
+  implicit def getterSemigroupal[S]: Semigroupal[Getter[S, ?]] =
+    new Semigroupal[Getter[S, ?]] {
+      override def product[A, B](a: Getter[S, A], b: Getter[S, B]) = a zip b
+    }
 }
 
 sealed abstract class GetterInstances0 {
-  implicit val getterChoice: Choice[Getter] = new Choice[Getter]{
+  implicit val getterChoice: Choice[Getter] = new Choice[Getter] {
     def choice[A, B, C](f: Getter[A, C], g: Getter[B, C]): Getter[Either[A, B], C] =
       f choice g
 

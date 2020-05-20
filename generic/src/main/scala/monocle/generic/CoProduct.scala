@@ -8,7 +8,6 @@ import shapeless.ops.coproduct.{CoproductToEither, EitherToCoproduct, Inject, Se
 object coproduct extends CoProductInstances
 
 trait CoProductInstances {
-
   def coProductPrism[C <: Coproduct, A](implicit evInject: Inject[C, A], evSelector: Selector[C, A]): Prism[C, A] =
     Prism[C, A](evSelector.apply(_))(evInject.apply)
 
@@ -24,12 +23,11 @@ trait CoProductInstances {
 
   class GenCoProductEitherIso[S <: Coproduct] {
     def apply[L, R](implicit
-                    coproductToEither: CoproductToEither.Aux[S, Either[L, R]],
-                    eitherToCoproduct: EitherToCoproduct.Aux[L, R, S]
-                   ): Iso[S, Either[L, R]] =
+      coproductToEither: CoproductToEither.Aux[S, Either[L, R]],
+      eitherToCoproduct: EitherToCoproduct.Aux[L, R, S]
+    ): Iso[S, Either[L, R]] =
       Iso(coproductToEither.apply)(eitherToCoproduct.apply)
   }
-
 
   /** An isomorphism between a sum type `S` (e.g. a sealed trait) and the sum of its parts.
     *
@@ -46,13 +44,12 @@ trait CoProductInstances {
 
   class GenCoProductToEither[S] {
     def apply[C <: Coproduct, L, R](implicit
-                                    ev: Generic.Aux[S, C],
-                                    coproductToEither: CoproductToEither.Aux[C, Either[L, R]],
-                                    eitherToCoproduct: EitherToCoproduct.Aux[L, R, C]
-                                   ): Iso[S, Either[L, R]] =
+      ev: Generic.Aux[S, C],
+      coproductToEither: CoproductToEither.Aux[C, Either[L, R]],
+      eitherToCoproduct: EitherToCoproduct.Aux[L, R, C]
+    ): Iso[S, Either[L, R]] =
       generic.toGeneric[S] composeIso coProductEitherIso.apply
   }
-
 
   /** An isomorphism between a coproduct `S` and the sum of its parts.
     *
@@ -66,9 +63,9 @@ trait CoProductInstances {
 
   class GenCoProductDisjunctionIso[S <: Coproduct] {
     def apply[L, R](implicit
-                    coproductToDisjunction: CoproductToDisjunction.Aux[S, Either[L, R]],
-                    disjunctionToCoproduct: DisjunctionToCoproduct.Aux[L, R, S]
-                   ): Iso[S, Either[L, R]] =
+      coproductToDisjunction: CoproductToDisjunction.Aux[S, Either[L, R]],
+      disjunctionToCoproduct: DisjunctionToCoproduct.Aux[L, R, S]
+    ): Iso[S, Either[L, R]] =
       Iso(coproductToDisjunction.apply)(disjunctionToCoproduct.apply)
   }
 
@@ -87,10 +84,10 @@ trait CoProductInstances {
 
   class GenCoProductToDisjunction[S] {
     def apply[C <: Coproduct, L, R](implicit
-                                    ev: Generic.Aux[S, C],
-                                    coproductToDisjunction: CoproductToDisjunction.Aux[C, Either[L, R]],
-                                    disjunctionToCoproduct: DisjunctionToCoproduct.Aux[L, R, C]
-                                   ): Iso[S, Either[L, R]] =
+      ev: Generic.Aux[S, C],
+      coproductToDisjunction: CoproductToDisjunction.Aux[C, Either[L, R]],
+      disjunctionToCoproduct: DisjunctionToCoproduct.Aux[L, R, C]
+    ): Iso[S, Either[L, R]] =
       generic.toGeneric[S] composeIso coProductDisjunctionIso.apply
   }
 }

@@ -6,9 +6,9 @@ import ops.hlist.Tupler
 trait TupleGeneric[C <: Product] extends Serializable {
   type Repr <: Product
 
-  def to(t : C) : Repr
+  def to(t: C): Repr
 
-  def from(r : Repr) : C
+  def from(r: Repr): C
 }
 
 object TupleGeneric {
@@ -16,13 +16,16 @@ object TupleGeneric {
 
   def apply[C <: Product](implicit tgc: TupleGeneric[C]): Aux[C, tgc.Repr] = tgc
 
-  implicit def mkTG[C <: Product, L <: HList, R <: Product]
-  (implicit cGen: Generic.Aux[C, L], tup: Tupler.Aux[L, R], tGen: Generic.Aux[R, L]): Aux[C, R] =
+  implicit def mkTG[C <: Product, L <: HList, R <: Product](implicit
+    cGen: Generic.Aux[C, L],
+    tup: Tupler.Aux[L, R],
+    tGen: Generic.Aux[R, L]
+  ): Aux[C, R] =
     new TupleGeneric[C] {
       type Repr = R
 
-      def to(t : C) : Repr = cGen.to(t).tupled
+      def to(t: C): Repr = cGen.to(t).tupled
 
-      def from(r : Repr) : C = cGen.from(tGen.to(r))
+      def from(r: Repr): C = cGen.from(tGen.to(r))
     }
 }

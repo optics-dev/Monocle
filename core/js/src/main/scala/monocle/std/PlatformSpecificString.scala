@@ -1,3 +1,3 @@
 package monocle.std
 
-private [std] trait PlatformSpecificStringOptics
+private[std] trait PlatformSpecificStringOptics

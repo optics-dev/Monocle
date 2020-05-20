@@ -1,10 +1,9 @@
 package monocle
 
 import cats.Semigroupal
-import cats.arrow.{Arrow, Category, Compose, Choice, Profunctor}
+import cats.arrow.{Arrow, Category, Choice, Compose, Profunctor}
 
 class GetterSpec extends MonocleSuite {
-
   case class Bar(i: Int)
   case class Foo(bar: Bar)
 
@@ -35,8 +34,8 @@ class GetterSpec extends MonocleSuite {
 
   test("Getter has a Semigroupal instance") {
     val length = Getter[String, Int](_.length)
-    val upper = Getter[String, String](_.toUpperCase)
-    Semigroupal[Getter[String, ?]].product(length, upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
+    val upper  = Getter[String, String](_.toUpperCase)
+    Semigroupal[Getter[String, ?]].product(length, upper).get("helloworld") shouldEqual ((10, "HELLOWORLD"))
   }
 
   test("get") {
@@ -55,7 +54,7 @@ class GetterSpec extends MonocleSuite {
 
   test("zip") {
     val length = Getter[String, Int](_.length)
-    val upper = Getter[String, String](_.toUpperCase)
-    length.zip(upper).get("helloworld") shouldEqual((10, "HELLOWORLD"))
+    val upper  = Getter[String, String](_.toUpperCase)
+    length.zip(upper).get("helloworld") shouldEqual ((10, "HELLOWORLD"))
   }
 }

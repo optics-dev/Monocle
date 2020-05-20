@@ -10,11 +10,16 @@ import cats.Eq
 import cats.instances.tuple._
 
 object Cons1Tests extends Laws {
-
-  def apply[S: Eq : Arbitrary, H: Eq : Arbitrary, T: Eq : Arbitrary](implicit evCons1: Cons1[S, H, T],
-      arbHTHT: Arbitrary[((H,T)) => ((H,T))], arbHH: Arbitrary[H => H], arbTT: Arbitrary[T => T]): RuleSet =
-    new SimpleRuleSet("Cons1",
+  def apply[S: Eq: Arbitrary, H: Eq: Arbitrary, T: Eq: Arbitrary](implicit
+    evCons1: Cons1[S, H, T],
+    arbHTHT: Arbitrary[((H, T)) => ((H, T))],
+    arbHH: Arbitrary[H => H],
+    arbTT: Arbitrary[T => T]
+  ): RuleSet =
+    new SimpleRuleSet(
+      "Cons1",
       IsoTests(cons1[S, H, T]).props ++
-      LensTests(head[S, H, T]).props ++
-      LensTests(tail[S, H, T]).props: _*)
+        LensTests(head[S, H, T]).props ++
+        LensTests(tail[S, H, T]).props: _*
+    )
 }

@@ -7,7 +7,6 @@ import shapeless.test.illTyped
 import shapeless.{:+:, CNil, Coproduct}
 
 class CoproductExample extends MonocleSuite {
-
   type ISB = Int :+: String :+: Boolean :+: CNil
 
   test("coProductPrism creates a Prism between a Coproduct and one of its choice") {
@@ -24,7 +23,7 @@ class CoproductExample extends MonocleSuite {
   }
 
   test("coProductPrism can only create Prism to one of the type of the Coproduct") {
-      illTyped("""coProductPrism[ISB, Float]""")
+    illTyped("""coProductPrism[ISB, Float]""")
   }
 
   test("coProductEitherIso creates an Iso between a Coproduct and the sum of its parts") {
@@ -43,8 +42,8 @@ class CoproductExample extends MonocleSuite {
 
   test("coProductToEither creates an Iso between a sealed trait and the sum of its parts") {
     sealed trait S
-    case class A(name: String) extends S
-    case class B(name: String) extends S
+    case class A(name: String)      extends S
+    case class B(name: String)      extends S
     case class C(otherName: String) extends S
 
     coProductToEither[S].apply.get(A("a")) shouldEqual Left(A("a"))
@@ -72,8 +71,8 @@ class CoproductExample extends MonocleSuite {
 
   test("coProductToDisjunction creates an Iso between a sealed trait and the sum of its parts") {
     sealed trait S
-    case class A(name: String) extends S
-    case class B(name: String) extends S
+    case class A(name: String)      extends S
+    case class B(name: String)      extends S
     case class C(otherName: String) extends S
 
     coProductToDisjunction[S].apply.get(A("a")) shouldEqual Left(A("a"))
@@ -87,8 +86,8 @@ class CoproductExample extends MonocleSuite {
 
   test("coProductToDisjunction can be used to zoom in on a sealed trait's classes.") {
     sealed trait S
-    case class A(name: String) extends S
-    case class B(name: String) extends S
+    case class A(name: String)      extends S
+    case class B(name: String)      extends S
     case class C(otherName: String) extends S
 
     val lens: Lens[S, String] =

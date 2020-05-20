@@ -3,7 +3,6 @@ package monocle.bench
 import monocle.bench.BenchModel._
 
 trait IsoBench {
-
   def get0(): Int
   def get3(): Int
   def get6(): Int
@@ -19,6 +18,4 @@ trait IsoBench {
   def modify0(): IntWrapper0
   def modify3(): IntWrapper0
   def modify6(): IntWrapper0
-
-
 }

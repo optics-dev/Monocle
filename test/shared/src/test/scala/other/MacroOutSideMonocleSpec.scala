@@ -4,12 +4,11 @@ import monocle.{Iso, MonocleSuite}
 import monocle.law.discipline.{IsoTests, LensTests, PrismTests}
 import monocle.macros.{GenIso, GenLens, GenPrism}
 import org.scalacheck.Arbitrary.{arbOption => _, _}
-import org.scalacheck.{Cogen, Arbitrary, Gen}
+import org.scalacheck.{Arbitrary, Cogen, Gen}
 
 import cats.Eq
 
 class MacroOutSideMonocleSpec extends MonocleSuite {
-
   case class Example(i: Int)
   case class Example2(l: Long, s: String)
   case object ExampleObject
@@ -20,52 +19,55 @@ class MacroOutSideMonocleSpec extends MonocleSuite {
 
   sealed trait Foo
   case class Bar1(s: String) extends Foo
-  case class Bar2(i: Int) extends Foo
+  case class Bar2(i: Int)    extends Foo
 
   implicit val exampleArb: Arbitrary[Example] = Arbitrary(arbitrary[Int].map(Example.apply))
-  implicit val example2Arb: Arbitrary[Example2] = Arbitrary(for {l <- arbitrary[Long]; s <- arbitrary[String]} yield Example2(l, s))
-  implicit val exampleObjArb: Arbitrary[ExampleObject.type] = Arbitrary(Gen.const(ExampleObject))
-  implicit val emptyCaseArb: Arbitrary[EmptyCase] = Arbitrary(Gen.const(EmptyCase()))
+  implicit val example2Arb: Arbitrary[Example2] = Arbitrary(
+    for { l <- arbitrary[Long]; s <- arbitrary[String] } yield Example2(l, s)
+  )
+  implicit val exampleObjArb: Arbitrary[ExampleObject.type]     = Arbitrary(Gen.const(ExampleObject))
+  implicit val emptyCaseArb: Arbitrary[EmptyCase]               = Arbitrary(Gen.const(EmptyCase()))
   implicit def emptyCaseTypeArb[A]: Arbitrary[EmptyCaseType[A]] = Arbitrary(Gen.const(EmptyCaseType()))
-  implicit val bar1Arb: Arbitrary[Bar1] = Arbitrary(arbitrary[String].map(Bar1.apply))
-  implicit val bar2Arb: Arbitrary[Bar2] = Arbitrary(arbitrary[Int].map(Bar2.apply))
-  implicit val fooArb: Arbitrary[Foo] = Arbitrary(Gen.oneOf(arbitrary[Bar1], arbitrary[Bar2]))
-  implicit val bar1CoGen: Cogen[Bar1] = Cogen[String].contramap[Bar1](_.s)
-  implicit def exampleTypeArb[A: Arbitrary]: Arbitrary[ExampleType[A]] = Arbitrary(Arbitrary.arbOption[A].arbitrary map ExampleType.apply)
+  implicit val bar1Arb: Arbitrary[Bar1]                         = Arbitrary(arbitrary[String].map(Bar1.apply))
+  implicit val bar2Arb: Arbitrary[Bar2]                         = Arbitrary(arbitrary[Int].map(Bar2.apply))
+  implicit val fooArb: Arbitrary[Foo]                           = Arbitrary(Gen.oneOf(arbitrary[Bar1], arbitrary[Bar2]))
+  implicit val bar1CoGen: Cogen[Bar1]                           = Cogen[String].contramap[Bar1](_.s)
+  implicit def exampleTypeArb[A: Arbitrary]: Arbitrary[ExampleType[A]] =
+    Arbitrary(Arbitrary.arbOption[A].arbitrary map ExampleType.apply)
   implicit def example2TypeArb[A: Arbitrary]: Arbitrary[Example2Type[A]] =
-    Arbitrary(for {x <- arbitrary[A]; y <- Arbitrary.arbOption[A].arbitrary} yield Example2Type(x, y))
+    Arbitrary(for { x <- arbitrary[A]; y <- Arbitrary.arbOption[A].arbitrary } yield Example2Type(x, y))
 
-  implicit val exampleEq: Eq[Example] = Eq.fromUniversalEquals[Example]
-  implicit val example2Eq: Eq[Example2] = Eq.fromUniversalEquals[Example2]
+  implicit val exampleEq: Eq[Example]                                           = Eq.fromUniversalEquals[Example]
+  implicit val example2Eq: Eq[Example2]                                         = Eq.fromUniversalEquals[Example2]
   implicit def exampleTypeEq[A](implicit as: Eq[Option[A]]): Eq[ExampleType[A]] = Eq.by(_.as)
-  implicit def example2TypeEq[A](implicit a: Eq[A], as: Eq[Option[A]]): Eq[Example2Type[A]] = Eq.instance((x, y) => a.eqv(x.a, y.a) && as.eqv(x.as, y.as))
-  implicit val exampleObjEq: Eq[ExampleObject.type] = Eq.fromUniversalEquals[ExampleObject.type]
-  implicit val emptyCaseEq: Eq[EmptyCase] = Eq.fromUniversalEquals[EmptyCase]
+  implicit def example2TypeEq[A](implicit a: Eq[A], as: Eq[Option[A]]): Eq[Example2Type[A]] =
+    Eq.instance((x, y) => a.eqv(x.a, y.a) && as.eqv(x.as, y.as))
+  implicit val exampleObjEq: Eq[ExampleObject.type]     = Eq.fromUniversalEquals[ExampleObject.type]
+  implicit val emptyCaseEq: Eq[EmptyCase]               = Eq.fromUniversalEquals[EmptyCase]
   implicit def emptyCaseTypeEq[A]: Eq[EmptyCaseType[A]] = Eq.fromUniversalEquals[EmptyCaseType[A]]
-  implicit val bar1Eq: Eq[Bar1] = Eq.fromUniversalEquals[Bar1]
-  implicit val fooEq: Eq[Foo] = Eq.fromUniversalEquals[Foo]
+  implicit val bar1Eq: Eq[Bar1]                         = Eq.fromUniversalEquals[Bar1]
+  implicit val fooEq: Eq[Foo]                           = Eq.fromUniversalEquals[Foo]
 
-  checkAll("GenIso"                                       , IsoTests(GenIso[Example, Int]))
-  checkAll("GenIso.unit object"                           , IsoTests(GenIso.unit[ExampleObject.type]))
-  checkAll("GenIso.unit empty case class"                 , IsoTests(GenIso.unit[EmptyCase]))
-  checkAll("GenIso.unit empty case class with type param" , IsoTests(GenIso.unit[EmptyCaseType[Int]]))
-  checkAll("GenLens"                                      , LensTests(GenLens[Example](_.i)))
-  checkAll("GenPrism"                                     , PrismTests(GenPrism[Foo, Bar1]))
+  checkAll("GenIso", IsoTests(GenIso[Example, Int]))
+  checkAll("GenIso.unit object", IsoTests(GenIso.unit[ExampleObject.type]))
+  checkAll("GenIso.unit empty case class", IsoTests(GenIso.unit[EmptyCase]))
+  checkAll("GenIso.unit empty case class with type param", IsoTests(GenIso.unit[EmptyCaseType[Int]]))
+  checkAll("GenLens", LensTests(GenLens[Example](_.i)))
+  checkAll("GenPrism", PrismTests(GenPrism[Foo, Bar1]))
 
-
-  def testGenIsoFields[S: Arbitrary : Eq, A: Arbitrary : Eq: Cogen](name: String, iso: Iso[S, A]) =
+  def testGenIsoFields[S: Arbitrary: Eq, A: Arbitrary: Eq: Cogen](name: String, iso: Iso[S, A]) =
     new FieldsTester(name, iso)
 
-  class FieldsTester[S: Arbitrary : Eq, A: Arbitrary : Eq: Cogen](name: String, iso: Iso[S, A]) {
+  class FieldsTester[S: Arbitrary: Eq, A: Arbitrary: Eq: Cogen](name: String, iso: Iso[S, A]) {
     def expect[Expect](implicit ev: A =:= Expect) =
       checkAll("GenIso.fields " + name, IsoTests(iso))
   }
 
   testGenIsoFields("empty case class", GenIso.fields[EmptyCase]).expect[Unit]
-  testGenIsoFields("case class 1",     GenIso.fields[Example]  ).expect[Int]
-  testGenIsoFields("case class 2",     GenIso.fields[Example2] ).expect[(Long, String)]
+  testGenIsoFields("case class 1", GenIso.fields[Example]).expect[Int]
+  testGenIsoFields("case class 2", GenIso.fields[Example2]).expect[(Long, String)]
 
   testGenIsoFields("empty case class with type param", GenIso.fields[EmptyCaseType[Int]]).expect[Unit]
-  testGenIsoFields("case class 1 with type param",     GenIso.fields[ExampleType[Int]]  ).expect[Option[Int]]
-  testGenIsoFields("case class 2 with type param",     GenIso.fields[Example2Type[Int]] ).expect[(Int, Option[Int])]
+  testGenIsoFields("case class 1 with type param", GenIso.fields[ExampleType[Int]]).expect[Option[Int]]
+  testGenIsoFields("case class 2 with type param", GenIso.fields[Example2Type[Int]]).expect[(Int, Option[Int])]
 }

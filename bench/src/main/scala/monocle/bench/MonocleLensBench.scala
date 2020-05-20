@@ -13,8 +13,6 @@ import cats.instances.option._
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
 class MonocleLensBench extends LensBench {
-
-
   val _n1 = Lens[Nested0, Nested1](_.n)(n2 => n1 => n1.copy(n = n2))
   val _n2 = Lens[Nested1, Nested2](_.n)(n3 => n2 => n2.copy(n = n3))
   val _n3 = Lens[Nested2, Nested3](_.n)(n4 => n3 => n3.copy(n = n4))
@@ -26,27 +24,18 @@ class MonocleLensBench extends LensBench {
   val _n3_i = Lens[Nested3, Int](_.i)(i => n => n.copy(i = i))
   val _n6_i = Lens[Nested6, Int](_.i)(i => n => n.copy(i = i))
 
-  val _n0Ton3I = _n1 composeLens _n2 composeLens _n3 composeLens _n3_i
-  val _n0Ton6I = _n1 composeLens _n2 composeLens _n3 composeLens _n4 composeLens _n5 composeLens _n6 composeLens _n6_i
-
-
-  @Benchmark def lensGet0(in: Nested0Input) = _n0_i.get(in.n0)
-  @Benchmark def lensGet3(in: Nested0Input) = _n0Ton3I.get(in.n0)
-  @Benchmark def lensGet6(in: Nested0Input) = _n0Ton6I.get(in.n0)
-
-
-  @Benchmark def lensSet0(in: Nested0Input) = _n0_i.set(43)(in.n0)
-  @Benchmark def lensSet3(in: Nested0Input) = _n0Ton3I.set(43)(in.n0)
-  @Benchmark def lensSet6(in: Nested0Input) = _n0Ton6I.set(43)(in.n0)
-
-
-  @Benchmark def lensModify0(in: Nested0Input) = _n0_i.modify(_ + 1)(in.n0)
-  @Benchmark def lensModify3(in: Nested0Input) = _n0Ton3I.modify(_ + 1)(in.n0)
-  @Benchmark def lensModify6(in: Nested0Input) = _n0Ton6I.modify(_ + 1)(in.n0)
-
-
+  val _n0Ton3I                                  = _n1 composeLens _n2 composeLens _n3 composeLens _n3_i
+  val _n0Ton6I                                  = _n1 composeLens _n2 composeLens _n3 composeLens _n4 composeLens _n5 composeLens _n6 composeLens _n6_i
+  @Benchmark def lensGet0(in: Nested0Input)     = _n0_i.get(in.n0)
+  @Benchmark def lensGet3(in: Nested0Input)     = _n0Ton3I.get(in.n0)
+  @Benchmark def lensGet6(in: Nested0Input)     = _n0Ton6I.get(in.n0)
+  @Benchmark def lensSet0(in: Nested0Input)     = _n0_i.set(43)(in.n0)
+  @Benchmark def lensSet3(in: Nested0Input)     = _n0Ton3I.set(43)(in.n0)
+  @Benchmark def lensSet6(in: Nested0Input)     = _n0Ton6I.set(43)(in.n0)
+  @Benchmark def lensModify0(in: Nested0Input)  = _n0_i.modify(_ + 1)(in.n0)
+  @Benchmark def lensModify3(in: Nested0Input)  = _n0Ton3I.modify(_ + 1)(in.n0)
+  @Benchmark def lensModify6(in: Nested0Input)  = _n0Ton6I.modify(_ + 1)(in.n0)
   @Benchmark def lensModifyF0(in: Nested0Input) = _n0_i.modifyF(safeDivide(_, 2))(in.n0)
   @Benchmark def lensModifyF3(in: Nested0Input) = _n0Ton3I.modifyF(safeDivide(_, 2))(in.n0)
   @Benchmark def lensModifyF6(in: Nested0Input) = _n0Ton6I.modifyF(safeDivide(_, 2))(in.n0)
-
 }

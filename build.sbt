@@ -3,6 +3,10 @@ import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 import sbt.Keys._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
+val scalaJSVersion06 = Option(System.getenv("SCALAJS_VERSION")).exists(_.startsWith("0.6"))
+
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 inThisBuild(List(
   organization := "com.github.julien-truffaut",
   homepage := Some(url("https://github.com/julien-truffaut/Monocle")),
@@ -52,7 +56,7 @@ def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scala
 
 lazy val buildSettings = Seq(
   scalaVersion       := "2.13.1",
-  crossScalaVersions := Seq("2.12.10", "2.13.1"),
+  crossScalaVersions := Seq("2.12.11", "2.13.1"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions     ++= Seq(
     "-encoding", "UTF-8",
@@ -74,22 +78,22 @@ lazy val buildSettings = Seq(
   addCompilerPlugin(kindProjector),
   Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
   Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
-  scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git"))
+  scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git")),
 )
 
-lazy val catsVersion = "2.1.0"
+lazy val catsVersion = "2.1.1"
 
 lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"                % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel"     %%% "cats-laws"                % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel"     %%% "alleycats-core"           % catsVersion)
-lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.2.30")
+lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.3.0")
 lazy val shapeless         = Def.setting("com.chuusai"       %%% "shapeless"                % "2.3.3")
-lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.12")
-lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.12" % "test")
+lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.14")
+lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.14" % "test")
 
 lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-core"          % "1.0.2")
-lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "1.0.0")
+lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "1.0.1")
 
 lazy val macroVersion = "2.1.1"
 
@@ -124,17 +128,19 @@ lazy val scalajsSettings = Seq(
 )
 
 lazy val monocleSettings    = buildSettings
-lazy val monocleJvmSettings = monocleSettings
+lazy val monocleJvmSettings = monocleSettings ++ Seq(skip.in(publish) := scalaJSVersion06)
 lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
 
 lazy val monocle = project.in(file("."))
   .settings(moduleName := "monocle")
+  .settings(noPublishSettings)
   .settings(monocleSettings)
   .aggregate(monocleJVM, monocleJS)
   .dependsOn(monocleJVM, monocleJS)
 
 lazy val monocleJVM = project.in(file(".monocleJVM"))
   .settings(monocleJvmSettings)
+  .settings(noPublishSettings)
   .aggregate(
     core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm,
     example, docs, bench)
@@ -144,17 +150,25 @@ lazy val monocleJVM = project.in(file(".monocleJVM"))
 
 lazy val monocleJS = project.in(file(".monocleJS"))
   .settings(monocleJsSettings)
+  .settings(noPublishSettings)
   .aggregate(core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js)
   .dependsOn(core.js, generic.js, law.js, macros.js, state.js, refined.js, unsafe.js, test.js  % "test-internal -> test")
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
-  .settings(moduleName := "monocle-core")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings),
   )
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, catsFree.value))
+  .settings(
+    moduleName := "monocle-core",
+    scalacOptions ~= (_.filterNot(
+      Set(
+        "-Xfatal-warnings" // Workaround for sbt bug
+      )
+    ))
+  )
 
 lazy val generic = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -261,15 +275,14 @@ lazy val example = project.dependsOn(core.jvm, generic.jvm, refined.jvm, macros.
 lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
   .enablePlugins(MicrositesPlugin)
   .enablePlugins(ScalaUnidocPlugin)
+  .enablePlugins(MdocPlugin)
   .settings(moduleName := "monocle-docs")
   .settings(monocleSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
-  .settings(scalacOptions in Tut ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
+  .settings(scalacOptions ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
   .settings(
     libraryDependencies ++= Seq(cats.value, shapeless.value),
-    // https://github.com/47deg/sbt-microsites/issues/305
-    libraryDependencies ~= (_.filterNot(m => m.organization == "org.scalameta" && m.name.startsWith("mdoc"))),
     libraryDependencies ++= paradisePlugin.value
   )
   .enablePlugins(GhpagesPlugin)
@@ -299,7 +312,11 @@ lazy val docSettings = Seq(
   docsMappingsAPIDir := "api",
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
-  fork in tut := true,
+  micrositePushSiteWith := GitHub4s,
+  micrositeGithubToken := Some(System.getenv().get("CI_TOKEN")),
+  micrositeCompilingDocsTool := WithMdoc,
+  mdocIn := (sourceDirectory in Compile).value / "mdoc",
+  fork in mdoc := true,
   fork in (ScalaUnidoc, unidoc) := true,
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
     "-Xfatal-warnings",
@@ -318,7 +335,8 @@ lazy val noPublishSettings = Seq(
   skip in publish := true
 )
 
-addCommandAlias("validate", ";compile;test;unidoc;tut")
+addCommandAlias("validate", ";compile;test;unidoc;docs/mdoc")
+addCommandAlias("ci-microsite", "docs/publishMicrosite")
 
 // For Travis CI - see http://www.cakesolutions.net/teamblogs/publishing-artefacts-to-oss-sonatype-nexus-using-sbt-and-travis-ci
 credentials ++= (for {

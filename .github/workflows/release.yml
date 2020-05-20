@@ -1,0 +1,42 @@
+name: Release
+on:
+  push:
+    branches: [master]
+    tags: ["*"]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: olafurpg/setup-scala@v7
+      - uses: olafurpg/setup-gpg@v2
+      - name: Set up Ruby 2.6
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Set up jekyll
+        run: |
+          gem install jekyll -v 4
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/coursier/v1
+          key: ${{ runner.os }}-coursier-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/*.scala') }}
+          restore-keys: ${{ runner.os }}-coursier-
+      - name: Cache .sbt
+        uses: actions/cache@v1
+        with:
+          path: ~/.sbt
+          key: ${{ runner.os }}-sbt-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/*.scala') }}
+          restore-keys: ${{ runner.os }}-sbt-
+      - name: Publish
+        run: |
+          csbt ci-release
+          SCALAJS_VERSION=0.6.32 csbt clean ci-release
+        env:
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+          PGP_SECRET: ${{ secrets.PGP_SECRET }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+      - name: Publish Microsite
+        run: sbt ci-microsite

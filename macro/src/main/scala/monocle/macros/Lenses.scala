@@ -11,7 +11,6 @@ class PLenses(prefix: String = "") extends scala.annotation.StaticAnnotation {
 }
 
 private[macros] class LensesImpl(val c: blackbox.Context) {
-
   def lensesAnnotationMacro(annottees: c.Expr[Any]*): c.Expr[Any] = annotationMacro(annottees, poly = false)
 
   def plensesAnnotationMacro(annottees: c.Expr[Any]*): c.Expr[Any] = annotationMacro(annottees, poly = true)
@@ -21,23 +20,25 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
 
     val LensesTpe = TypeName(if (poly) "PLenses" else "Lenses")
     val prefix = c.macroApplication match {
-      case Apply(Select(Apply(Select(New(Ident(LensesTpe)), t), args), _), _) if t == termNames.CONSTRUCTOR => args match {
-        case Literal(Constant(s: String)) :: Nil => s
-        case _ => ""
-      }
+      case Apply(Select(Apply(Select(New(Ident(LensesTpe)), t), args), _), _) if t == termNames.CONSTRUCTOR =>
+        args match {
+          case Literal(Constant(s: String)) :: Nil => s
+          case _                                   => ""
+        }
       case _ => ""
     }
 
-    def monolenses(tpname: TypeName, params: List[ValDef]): List[Tree] = params.map { param =>
-      val lensName = TermName(prefix + param.name.decodedName)
-      q"""val $lensName =
+    def monolenses(tpname: TypeName, params: List[ValDef]): List[Tree] =
+      params.map { param =>
+        val lensName = TermName(prefix + param.name.decodedName)
+        q"""val $lensName =
         monocle.macros.internal.Macro.mkLens[$tpname, $tpname, ${param.tpt}, ${param.tpt}](${param.name.toString})"""
-    }
+      }
 
-    def lenses(tpname: TypeName, tparams: List[TypeDef], params: List[ValDef]): List[Tree] = {
-      if (tparams.isEmpty) {
+    def lenses(tpname: TypeName, tparams: List[TypeDef], params: List[ValDef]): List[Tree] =
+      if (tparams.isEmpty)
         monolenses(tpname, params)
-      } else {
+      else
         params.map { param =>
           val lensName = TermName(prefix + param.name.decodedName)
           val q"x: $s" = q"x: $tpname[..${tparams.map(_.name)}]"
@@ -45,40 +46,42 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
           q"""def $lensName[..$tparams] =
             monocle.macros.internal.Macro.mkLens[$s, $s, $a, $a](${param.name.toString})"""
         }
-      }
-    }
 
-    def plenses(tpname: TypeName, tparams: List[TypeDef], params: List[ValDef]): List[Tree] = {
-      if (tparams.isEmpty) {
+    def plenses(tpname: TypeName, tparams: List[TypeDef], params: List[ValDef]): List[Tree] =
+      if (tparams.isEmpty)
         monolenses(tpname, params)
-      } else {
+      else {
         // number of fields in which each tparam is used
-        val tparamsUsages: Map[TypeName, Int] = params.foldLeft(tparams.map { _.name -> 0 }.toMap){ (acc, param) =>
-          val typeNames = param.collect{ case Ident(tn: TypeName) => tn }.toSet
-          typeNames.foldLeft(acc){ (map, key) => map.get(key).fold(map){ value => map.updated(key, value + 1) }}
+        val tparamsUsages: Map[TypeName, Int] = params.foldLeft(tparams.map(_.name -> 0).toMap) { (acc, param) =>
+          val typeNames = param.collect { case Ident(tn: TypeName) => tn }.toSet
+          typeNames.foldLeft(acc)((map, key) => map.get(key).fold(map)(value => map.updated(key, value + 1)))
         }
 
         val groupedTpnames: Map[Int, Set[TypeName]] =
-          tparamsUsages.toList.groupBy(_._2).map{ case (n, tps) => (n, tps.map(_._1).toSet) }
-        val phantomTpnames = groupedTpnames.getOrElse(0, Set.empty)
+          tparamsUsages.toList.groupBy(_._2).map { case (n, tps) => (n, tps.map(_._1).toSet) }
+        val phantomTpnames     = groupedTpnames.getOrElse(0, Set.empty)
         val singleFieldTpnames = groupedTpnames.getOrElse(1, Set.empty)
 
         params.map { param =>
-          val lensName = TermName(prefix + param.name.decodedName)
-          val tpnames = param.collect{ case Ident(tn: TypeName) => tn }.toSet
+          val lensName        = TermName(prefix + param.name.decodedName)
+          val tpnames         = param.collect { case Ident(tn: TypeName) => tn }.toSet
           val tpnamesToChange = tpnames.intersect(singleFieldTpnames) ++ phantomTpnames
-          val tpnamesMap = tpnamesToChange.foldLeft((tparams.map(_.name).toSet ++ tpnames).map(x => (x, x)).toMap){ (acc, tpname) =>
-            acc.updated(tpname, c.freshName(tpname))
+          val tpnamesMap = tpnamesToChange.foldLeft((tparams.map(_.name).toSet ++ tpnames).map(x => (x, x)).toMap) {
+            (acc, tpname) => acc.updated(tpname, c.freshName(tpname))
           }
-          val defParams = tparams ++ tparams.filter(x => tpnamesToChange.contains(x.name)).map{
-            case TypeDef(mods, name, tps, rhs) => TypeDef(mods, tpnamesMap(name), tps, rhs)
-          }.toSet
+          val defParams = tparams ++ tparams
+            .filter(x => tpnamesToChange.contains(x.name))
+            .map {
+              case TypeDef(mods, name, tps, rhs) => TypeDef(mods, tpnamesMap(name), tps, rhs)
+            }
+            .toSet
 
           object tptTransformer extends Transformer {
-            override def transform(tree: Tree): Tree = tree match {
-              case Ident(tn: TypeName) => Ident(tpnamesMap(tn))
-              case x => super.transform(x)
-            }
+            override def transform(tree: Tree): Tree =
+              tree match {
+                case Ident(tn: TypeName) => Ident(tpnamesMap(tn))
+                case x                   => super.transform(x)
+              }
           }
 
           val q"x: $s" = q"x: $tpname[..${tparams.map(_.name)}]"
@@ -90,13 +93,12 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
                monocle.macros.internal.Macro.mkLens[$s, $t, $a, $b](${param.name.toString})"""
         }
       }
-    }
 
     val lensDefs = if (poly) plenses _ else lenses _
 
     val result = annottees map (_.tree) match {
       case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
-        :: Nil if mods.hasFlag(Flag.CASE) =>
+          :: Nil if mods.hasFlag(Flag.CASE) =>
         val name = tpname.toTermName
         q"""
          $classDef
@@ -105,8 +107,8 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
          }
          """
       case (classDef @ q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends { ..$earlydefns } with ..$parents { $self => ..$stats }")
-        :: q"$objMods object $objName extends { ..$objEarlyDefs } with ..$objParents { $objSelf => ..$objDefs }"
-        :: Nil if mods.hasFlag(Flag.CASE) =>
+          :: q"$objMods object $objName extends { ..$objEarlyDefs } with ..$objParents { $objSelf => ..$objDefs }"
+          :: Nil if mods.hasFlag(Flag.CASE) =>
         q"""
          $classDef
          $objMods object $objName extends { ..$objEarlyDefs} with ..$objParents { $objSelf =>

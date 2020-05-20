@@ -8,7 +8,7 @@ section: "examples_menu"
 Let's take a basic model of a `University` containing a few `Department`s where each `Department` has a budget
 and a few `Lecturer`s.
 
-```tut:silent
+```scala mdoc:silent
 case class Lecturer(firstName: String, lastName: String, salary: Int)
 case class Department(budget: Int, lecturers: List[Lecturer])
 case class University(name: String, departments: Map[String, Department])
@@ -30,7 +30,7 @@ Our university is having some financial issues and it has to close the History d
 
 First, we need to zoom into `University` to the departments field using a `Lens`
 
-```tut:silent
+```scala mdoc:silent
 import monocle.macros.GenLens  // require monocle-macro module
 
 val departments = GenLens[University](_.departments)
@@ -39,25 +39,24 @@ val departments = GenLens[University](_.departments)
 then we zoom into the `Map` at the `History` key using `At` typeclass
 
 
-```tut:silent
+```scala mdoc:silent
 import monocle.function.At.at // to get at Lens
-import monocle.std.map._      // to get Map instance for At
 ```
 
-```tut
+```scala mdoc
 (departments composeLens at("History")).set(None)(uni)
 ```
 
 if instead we wanted to create a department, we would have used `set` with `Some`:
 
-```tut:silent
+```scala mdoc:silent
 val physics = Department(36, List(
   Lecturer("daniel", "jones", 12),
   Lecturer("roger" , "smith", 14)
 ))
 ```
 
-```tut
+```scala mdoc
 (departments composeLens at("Physics")).set(Some(physics))(uni)
 ```
 
@@ -67,7 +66,7 @@ Let's have a look at a more positive scenario where all university lecturers get
 
 First we need to generate a few `Lens`es in order to zoom in the interesting fields of our model.
 
-```tut:silent
+```scala mdoc:silent
 val lecturers = GenLens[Department](_.lecturers)
 val salary = GenLens[Lecturer](_.salary)
 ```
@@ -75,7 +74,7 @@ val salary = GenLens[Lecturer](_.salary)
 We want to focus to all university lecturers, for this we can use `Each` typeclass as it provides a `Traversal`
 which zooms into all elements of a container (e.g. `List`, `Vector` `Map`)
 
-```tut:silent
+```scala mdoc:silent
 import monocle.function.all._ // to get each and other typeclass based optics such as at or headOption
 import monocle.Traversal
 import monocle.unsafe.MapTraversal._ // to get Each instance for Map (SortedMap does not require this import)
@@ -85,7 +84,7 @@ val allLecturers: Traversal[University, Lecturer] = departments composeTraversal
 
 Note that we used `each` twice, the first time on `Map` and the second time on `List`.
 
-```tut:book
+```scala mdoc
 (allLecturers composeLens salary).modify(_ + 2)(uni)
 ```
 
@@ -97,7 +96,7 @@ character of both `firstName` and `lastName`.
 
 You know the drill, first we need to create the `Lens`es we need.
 
-```tut:silent
+```scala mdoc:silent
 val firstName = GenLens[Lecturer](_.firstName)
 val lastName  = GenLens[Lecturer](_.lastName)
 ```
@@ -105,11 +104,7 @@ val lastName  = GenLens[Lecturer](_.lastName)
 Then, we can use `Cons` typeclass which provides both `headOption` and `tailOption` optics. In our case, we want
 to use `headOption` to zoom into the first character of a `String`
 
-```tut:silent
-import monocle.std.string._ // to get String instance for Cons
-```
-
-```tut
+```scala mdoc
 val upperCasedFirstName = (allLecturers composeLens firstName composeOptional headOption).modify(_.toUpper)(uni)
 (allLecturers composeLens lastName composeOptional headOption).modify(_.toUpper)(upperCasedFirstName)
 ```
@@ -118,10 +113,10 @@ It is annoying that we have to call `modify` on first name and then repeat the s
 would like to focus to both first and last name. To do that we need to create our own `Traversal`
 
 
-```tut:silent
+```scala mdoc:silent
 val firstAndLastNames = Traversal.apply2[Lecturer, String](_.firstName, _.lastName){ case (fn, ln, l) => l.copy(firstName = fn, lastName = ln)}
 ```
 
-```tut
+```scala mdoc
 (allLecturers composeTraversal firstAndLastNames composeOptional headOption).modify(_.toUpper)(uni)
 ```

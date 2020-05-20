@@ -2,7 +2,7 @@ package monocle.function
 
 import monocle._
 import org.scalacheck.{Arbitrary, Cogen}
-import cats.{Order, Eq}
+import cats.{Eq, Order}
 import cats.data.{NonEmptyList, NonEmptyVector}
 import cats.syntax.apply._
 
@@ -37,7 +37,9 @@ object CNel extends TestInstances {
     Iso[CNel, NonEmptyList[Char]](c => NonEmptyList(c.head, c.tail))(n => CNel(n.head, n.tail))
 
   implicit val cNelEq: Eq[CNel] = Eq.fromUniversalEquals
-  implicit val cNelArb: Arbitrary[CNel] = Arbitrary((Arbitrary.arbitrary[Char], Arbitrary.arbitrary[List[Char]]).mapN(CNel.apply))
+  implicit val cNelArb: Arbitrary[CNel] = Arbitrary(
+    (Arbitrary.arbitrary[Char], Arbitrary.arbitrary[List[Char]]).mapN(CNel.apply)
+  )
 }
 
 case class CNev(head: Char, tail: Vector[Char])
@@ -47,7 +49,9 @@ object CNev extends TestInstances {
     Iso[CNev, NonEmptyVector[Char]](c => NonEmptyVector(c.head, c.tail))(n => CNev(n.head, n.tail))
 
   implicit val cNevEq: Eq[CNev] = Eq.fromUniversalEquals
-  implicit val cNevArb: Arbitrary[CNev] = Arbitrary((Arbitrary.arbitrary[Char], Arbitrary.arbitrary[Vector[Char]]).mapN(CNev.apply))
+  implicit val cNevArb: Arbitrary[CNev] = Arbitrary(
+    (Arbitrary.arbitrary[Char], Arbitrary.arbitrary[Vector[Char]]).mapN(CNev.apply)
+  )
 }
 
 case class CList(list: List[Char])
@@ -55,23 +59,26 @@ case class CList(list: List[Char])
 object CList {
   val toList: Iso[CList, List[Char]] = Iso[CList, List[Char]](_.list)(CList(_))
 
-  implicit val clistEq: Eq[CList] = Eq.fromUniversalEquals
+  implicit val clistEq: Eq[CList]         = Eq.fromUniversalEquals
   implicit val clistArb: Arbitrary[CList] = Arbitrary(Arbitrary.arbitrary[List[Char]].map(CList(_)))
-  implicit val clistCoGen: Cogen[CList] = Cogen.cogenList[Char].contramap[CList](_.list)
+  implicit val clistCoGen: Cogen[CList]   = Cogen.cogenList[Char].contramap[CList](_.list)
 }
 
 case class Raw(b: Boolean, c: Char, i: Int, l: Long, f: Float, d: Double)
 
 object Raw extends TestInstances {
   val toTuple: Iso[Raw, (Boolean, Char, Int, Long, Float, Double)] =
-    Iso((r: Raw) => (r.b, r.c, r.i, r.l, r.f, r.d))((Raw.apply _)tupled)
+    Iso((r: Raw) => (r.b, r.c, r.i, r.l, r.f, r.d))((Raw.apply _) tupled)
 
   implicit val rawEq: Eq[Raw] = Eq.fromUniversalEquals
-  implicit val rawArb: Arbitrary[Raw] = Arbitrary((
-    Arbitrary.arbitrary[Boolean],
-    Arbitrary.arbitrary[Char],
-    Arbitrary.arbitrary[Int],
-    Arbitrary.arbitrary[Long],
-    Arbitrary.arbitrary[Float],
-    Arbitrary.arbitrary[Double]).mapN(Raw.apply))
+  implicit val rawArb: Arbitrary[Raw] = Arbitrary(
+    (
+      Arbitrary.arbitrary[Boolean],
+      Arbitrary.arbitrary[Char],
+      Arbitrary.arbitrary[Int],
+      Arbitrary.arbitrary[Long],
+      Arbitrary.arbitrary[Float],
+      Arbitrary.arbitrary[Double]
+    ).mapN(Raw.apply)
+  )
 }
