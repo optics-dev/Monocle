@@ -4,9 +4,9 @@ title:  "Home"
 section: "home"
 ---
 
-[![Join the chat at https://gitter.im/julien-truffaut/Monocle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/julien-truffaut/Monocle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/optics-dev/Monocle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/optics-dev/Monocle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.julien-truffaut/monocle_2.12.svg)](http://search.maven.org/#search|ga|1|com.github.julien-truffaut.monocle)
-[![Build Status](https://api.travis-ci.org/julien-truffaut/Monocle.svg?branch=master)](https://travis-ci.org/julien-truffaut/Monocle)
+[![Build Status](https://api.travis-ci.org/optics-dev/Monocle.svg?branch=master)](https://travis-ci.org/optics-dev/Monocle)
 
 Monocle is an optics library for Scala (and [Scala.js](https://www.scala-js.org/)) strongly inspired by Haskell [Lens](https://github.com/ekmett/lens).
 
@@ -134,7 +134,7 @@ Monocle is available thanks to its maintainers (people who can merge pull reques
 * Kenji Yoshida - [@xuwei-k](https://github.com/xuwei-k)
 * Ken Scambler - [@kenbot](https://github.com/kenbot)
 
-and its [contributors](https://github.com/julien-truffaut/Monocle/graphs/contributors) (people who have pushed commits to Monocle).
+and its [contributors](https://github.com/optics-dev/Monocle/graphs/contributors) (people who have pushed commits to Monocle).
 
 ## Copyright and license
 
