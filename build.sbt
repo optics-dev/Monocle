@@ -290,6 +290,7 @@ lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
 
 lazy val docSettings = Seq(
+  organization := "optics.dev",
   micrositeName := "Monocle",
   micrositeDescription := "Optics library for Scala",
   micrositeHighlightTheme := "atom-one-light",
@@ -313,7 +314,7 @@ lazy val docSettings = Seq(
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
   micrositePushSiteWith := GitHub4s,
-  micrositeGithubToken := Some(System.getenv().get("CI_TOKEN")),
+  micrositeGithubToken := Some(System.getenv().get("GITHUB_TOKEN")),
   micrositeCompilingDocsTool := WithMdoc,
   mdocIn := (sourceDirectory in Compile).value / "mdoc",
   fork in mdoc := true,
