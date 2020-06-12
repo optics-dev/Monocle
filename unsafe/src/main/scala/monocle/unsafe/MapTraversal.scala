@@ -15,17 +15,11 @@ import scala.collection.immutable.Map
 object MapTraversal {
   implicit def mapEach[K, V]: Each[Map[K, V], V] = fromTraverse[Map[K, ?], V]
 
-  implicit def mapTraversal[K, V]: Traversal[Map[K, V], (K, V)] =
-    new Traversal[Map[K, V], (K, V)] {
-      def modifyF[F[_]: Applicative](f: ((K, V)) => F[(K, V)])(s: Map[K, V]): F[Map[K, V]] =
-        s.toList.traverse { case (k, v) => f(k, v) }.map(kvs => Map(kvs: _*))
-    }
+  def allKeyValues[K, V]: Iso[Map[K, V], List[(K, V)]] =
+    Iso[Map[K, V], List[(K, V)]](_.toList)(_.toMap)
 
-  implicit def mapListIso[K, V]: Iso[Map[K, V], List[(K, V)]] =
-    Iso[Map[K, V], List[(K, V)]](_.toList)(Map.from)
-
-  implicit def mapKVTraversal[K, V]: Traversal[Map[K, V], (K, V)] =
-    mapListIso.composeTraversal(Traversal.fromTraverse[List, (K, V)])
+  def mapKVTraversal[K, V]: Traversal[Map[K, V], (K, V)] =
+    allKeyValues.composeTraversal(Traversal.fromTraverse[List, (K, V)])
 
   implicit def mapMapFilterIndex[K, V]: FilterIndex[Map[K, V], K, V] =
     new FilterIndex[Map[K, V], K, V] {

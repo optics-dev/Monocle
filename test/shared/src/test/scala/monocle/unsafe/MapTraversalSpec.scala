@@ -6,7 +6,7 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 import cats.Eq
-import monocle.unsafe.MapTraversal.{mapKVTraversal, mapListIso}
+import monocle.unsafe.MapTraversal.{mapKVTraversal, allKeyValues}
 import monocle.law.discipline._
 import cats.instances.option._
 
@@ -52,6 +52,6 @@ object MapKVTraversalTests extends Laws {
 }
 
 class MapTraversalSpec extends MonocleSuite {
-  checkAll("map list Iso", MapListIsoTests(mapListIso[String, Int]))
+  checkAll("map list Iso", MapListIsoTests(allKeyValues[String, Int]))
   checkAll("map KV traversal", MapKVTraversalTests(mapKVTraversal[String, Int]))
 }
