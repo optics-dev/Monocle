@@ -40,3 +40,43 @@ import monocle.macros.GenLens
 ```
 
 In this example the age is reset to `0` which invalidates the original predicate of `age >= 18`. More formally `UnsafeSelect` can invalidate the `roundTripOtherWayLaw` law.
+
+## MapTraversal
+
+`MapTraversal` provides an `Iso` `allKeyValues` between `Map[K,V]` and `List([K, V])` and Traversal `mapKVTraversal` of `Map[K, V]` to `(K, V)`. They are useful for traversing and modifying the entries of a map.
+
+Both of them are unsafe because of key collision and the unorderness of map entries. As a rule of thumb, laws regarding modifying `(K, V)` and then getting back a `List[(K, V)]` could be broken, while laws regarding modifying `(K, V)` and then getting back a `Map[K, V]` could still hold. For example,
+
+```scala mdoc:silent
+import monocle.unsafe.MapTraversal.allKeyValues
+
+val list = List((1, "foo"), (1, "bar"))
+val list2 = (allKeyValues[Int, String].get _ compose allKeyValues[Int, String].reverseGet)(list)
+```
+
+`list` and `list2` does not equal here due to key collision. Even if there is no key collision, the output list is still not guaranteed to be the original list as the order of map entries may be unspecified.
+
+On the other hand, the composition of `reverseGet` and `get` is identity.
+
+```scala mdoc:silent
+import monocle.unsafe.MapTraversal.allKeyValues
+
+val map = Map(1 -> "foo", 1 -> "bar")
+val map2 = (allKeyValues[Int, String].reverseGet _ compose allKeyValues[Int, String].get)(map)
+```
+
+Here is an example of how to modify the keys of a map with Monocle. Keep in mind creating identical keys can result in surprising behaviour.
+
+```scala mdoc:silent
+import cats.implicits._
+import monocle.Traversal
+import monocle.unsafe.MapTraversal.allKeyValues
+
+val eachL = Traversal.fromTraverse[List, (Int, String)]
+def f(x: (Int, String)): (Int, String) = (x._1+1, x._2)
+
+val m = Map(1 -> "foo", 2 -> "bar")
+val l = allKeyValues[Int, String].get(m)
+val l2 = eachL.modify(f)(l)
+val m2 = allKeyValues[Int, String].reverseGet(l2)
+```
