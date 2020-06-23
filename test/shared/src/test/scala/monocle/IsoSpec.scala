@@ -39,6 +39,9 @@ class IsoSpec extends MonocleSuite {
   implicit def emptyCaseTypeEq[A]                               = Eq.fromUniversalEquals[EmptyCaseType[A]]
 
   val iso = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)
+  val involutedListReverse =
+    Iso.involuted[List[Int]](_.reverse) // ∀ {T} -> List(ts: T*).reverse.reverse == List(ts: T*)
+  val involutedTwoMinusN = Iso.involuted[Int](2 - _) //  ∀ {n : Int} -> n == 2 - (2 - n)
 
   checkAll("apply Iso", IsoTests(iso))
   checkAll("GenIso", IsoTests(GenIso[IntWrapper, Int]))
@@ -48,6 +51,9 @@ class IsoSpec extends MonocleSuite {
   checkAll("GenIso.unit empty case class with type param", IsoTests(GenIso.unit[EmptyCaseType[Int]]))
 
   checkAll("Iso id", IsoTests(Iso.id[Int]))
+
+  checkAll("Iso involutedListReverse", IsoTests(involutedListReverse))
+  checkAll("Iso involutedTwoMinusN", IsoTests(involutedTwoMinusN))
 
   checkAll("Iso.asLens", LensTests(iso.asLens))
   checkAll("Iso.asPrism", PrismTests(iso.asPrism))
@@ -120,6 +126,20 @@ class IsoSpec extends MonocleSuite {
 
   test("modify") {
     iso.modify(_ + 1)(IntWrapper(0)) shouldEqual IntWrapper(1)
+  }
+
+  test("involuted") {
+    involutedListReverse.get(List(1, 2, 3)) shouldEqual List(3, 2, 1)
+    involutedListReverse.reverseGet(List(1, 2, 3)) shouldEqual List(3, 2, 1)
+
+    involutedListReverse.reverse.get(List(1, 2, 3)) shouldEqual involutedListReverse.get(List(1, 2, 3))
+    involutedListReverse.reverse.reverseGet(List(1, 2, 3)) shouldEqual involutedListReverse.reverseGet(List(1, 2, 3))
+
+    involutedTwoMinusN.get(5) shouldEqual -3
+    involutedTwoMinusN.reverseGet(5) shouldEqual -3
+
+    involutedTwoMinusN.reverse.get(5) shouldEqual involutedTwoMinusN.get(5)
+    involutedTwoMinusN.reverse.reverseGet(5) shouldEqual involutedTwoMinusN.reverseGet(5)
   }
 
   test("GenIso nullary equality") {
