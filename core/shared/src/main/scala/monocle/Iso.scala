@@ -337,10 +337,7 @@ object Iso {
   def id[S]: Iso[S, S] =
     PIso.id[S, S]
 
-  /**
-    * create a [[PIso]] where S = T and A = B from
-    * a function that is its own inverse
-    */
+  /** create an [[Iso]] from a function that is its own inverse */
   def involuted[A](update: A => A): Iso[A, A] =
     Iso(update)(update)
 }
