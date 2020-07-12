@@ -8,7 +8,7 @@ position: 2
 
 Here is a diagram to visualise how optics relate to each other:
 
-![Class Diagram](https://raw.github.com/julien-truffaut/Monocle/master/image/class-diagram.png)
+![Class Diagram](https://raw.github.com/optics-dev/Monocle/master/image/class-diagram.png)
 
 ## Optic Composition Table
 

@@ -9,7 +9,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(List(
   organization := "com.github.julien-truffaut",
-  homepage := Some(url("https://github.com/julien-truffaut/Monocle")),
+  homepage := Some(url("https://github.com/optics-dev/Monocle")),
   licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
   developers := List(
     Developer(
@@ -78,7 +78,7 @@ lazy val buildSettings = Seq(
   addCompilerPlugin(kindProjector),
   Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
   Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
-  scmInfo := Some(ScmInfo(url("https://github.com/julien-truffaut/Monocle"), "scm:git:git@github.com:julien-truffaut/Monocle.git")),
+  scmInfo := Some(ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")),
 )
 
 lazy val catsVersion = "2.1.1"
@@ -87,7 +87,7 @@ lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"    
 lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel"     %%% "cats-laws"                % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel"     %%% "alleycats-core"           % catsVersion)
-lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.3.0")
+lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.3.2")
 lazy val shapeless         = Def.setting("com.chuusai"       %%% "shapeless"                % "2.3.3")
 lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.14")
 lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.14" % "test")
@@ -121,7 +121,7 @@ lazy val scalajsSettings = Seq(
     lazy val tag = (version in ThisBuild).value
     val s = if (isSnapshot.value) gitRev else tag
     val a = (baseDirectory in LocalRootProject).value.toURI.toString
-    val g = "https://raw.githubusercontent.com/julien-truffaut/Monocle"
+    val g = "https://raw.githubusercontent.com/optics-dev/Monocle"
     s"-P:scalajs:mapSourceURI:$a->$g/$s/"
   },
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
@@ -290,18 +290,19 @@ lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
 
 lazy val docSettings = Seq(
+  organization := "optics.dev",
   micrositeName := "Monocle",
   micrositeDescription := "Optics library for Scala",
   micrositeHighlightTheme := "atom-one-light",
-  micrositeHomepage := "http://julien-truffaut.github.io/Monocle",
+  micrositeHomepage := "https://www.optics.dev/Monocle/",
   micrositeBaseUrl := "/Monocle",
   micrositeDocumentationUrl := "/Monocle/api",
   micrositeGithubOwner := "julien-truffaut",
   micrositeGithubRepo := "Monocle",
   micrositePalette := Map(
-    "brand-primary"   -> "#5B5988",
-    "brand-secondary" -> "#292E53",
-    "brand-tertiary"  -> "#222749",
+    "brand-primary"   -> "#0085E6",
+    "brand-secondary" -> "#004A87",
+    "brand-tertiary"  -> "#004A87",
     "gray-dark"       -> "#49494B",
     "gray"            -> "#7B7B7E",
     "gray-light"      -> "#E5E5E6",
@@ -313,7 +314,7 @@ lazy val docSettings = Seq(
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
   micrositePushSiteWith := GitHub4s,
-  micrositeGithubToken := Some(System.getenv().get("CI_TOKEN")),
+  micrositeGithubToken := Some(System.getenv().get("GITHUB_TOKEN")),
   micrositeCompilingDocsTool := WithMdoc,
   mdocIn := (sourceDirectory in Compile).value / "mdoc",
   fork in mdoc := true,
@@ -324,7 +325,7 @@ lazy val docSettings = Seq(
     "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath,
     "-diagrams"
   ),
-  git.remoteRepo := "git@github.com:julien-truffaut/Monocle.git",
+  git.remoteRepo := "git@github.com:optics-dev/Monocle.git",
   includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md"
 )
 
