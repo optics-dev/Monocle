@@ -336,6 +336,10 @@ object Iso {
   /** alias for [[PIso]] id when S = T and A = B */
   def id[S]: Iso[S, S] =
     PIso.id[S, S]
+
+  /** create an [[Iso]] from a function that is its own inverse */
+  def involuted[A](update: A => A): Iso[A, A] =
+    Iso(update)(update)
 }
 
 sealed abstract class IsoInstances {

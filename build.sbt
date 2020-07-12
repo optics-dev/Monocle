@@ -87,7 +87,7 @@ lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"    
 lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel"     %%% "cats-laws"                % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel"     %%% "alleycats-core"           % catsVersion)
-lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.3.1")
+lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.3.2")
 lazy val shapeless         = Def.setting("com.chuusai"       %%% "shapeless"                % "2.3.3")
 lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.14")
 lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.14" % "test")
@@ -290,6 +290,7 @@ lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
 
 lazy val docSettings = Seq(
+  organization := "optics.dev",
   micrositeName := "Monocle",
   micrositeDescription := "Optics library for Scala",
   micrositeHighlightTheme := "atom-one-light",
@@ -313,7 +314,7 @@ lazy val docSettings = Seq(
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
   micrositePushSiteWith := GitHub4s,
-  micrositeGithubToken := Some(System.getenv().get("CI_TOKEN")),
+  micrositeGithubToken := Some(System.getenv().get("GITHUB_TOKEN")),
   micrositeCompilingDocsTool := WithMdoc,
   mdocIn := (sourceDirectory in Compile).value / "mdoc",
   fork in mdoc := true,
