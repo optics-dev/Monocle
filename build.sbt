@@ -93,7 +93,7 @@ lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"      
 lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.15" % "test")
 
 lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-core"          % "1.0.2")
-lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "1.0.1")
+lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "2.0.0")
 
 lazy val macroVersion = "2.1.1"
 
