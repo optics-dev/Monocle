@@ -29,6 +29,6 @@ case class PrismLaws[S, A](prism: Prism[S, A]) {
 
   def consistentGetOptionModifyId(s: S): IsEq[Option[A]] = {
     implicit val optionMonoid: Monoid[Option[A]] = Monoids.firstOption
-    prism.getOption(s) <==> prism.modifyF[Const[Option[A], ?]](a => Const(Some(a)))(s).getConst
+    prism.getOption(s) <==> prism.modifyF[Const[Option[A], *]](a => Const(Some(a)))(s).getConst
   }
 }

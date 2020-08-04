@@ -35,7 +35,7 @@ class GetterSpec extends MonocleSuite {
   test("Getter has a Semigroupal instance") {
     val length = Getter[String, Int](_.length)
     val upper  = Getter[String, String](_.toUpperCase)
-    Semigroupal[Getter[String, ?]].product(length, upper).get("helloworld") shouldEqual ((10, "HELLOWORLD"))
+    Semigroupal[Getter[String, *]].product(length, upper).get("helloworld") shouldEqual ((10, "HELLOWORLD"))
   }
 
   test("get") {

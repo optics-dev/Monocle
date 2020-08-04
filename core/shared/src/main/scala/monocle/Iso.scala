@@ -263,7 +263,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** Apply methods to treat a [[PIso]] as smart constructors for type T */
   /*************************************************************************/
   def apply()(implicit ev: Is[B, Unit]): T =
-    ev.substitute[PIso[S, T, A, ?]](self).reverseGet(())
+    ev.substitute[PIso[S, T, A, *]](self).reverseGet(())
 
   def apply(b: B): T = reverseGet(b)
 

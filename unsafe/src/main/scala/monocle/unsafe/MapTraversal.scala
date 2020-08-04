@@ -13,7 +13,7 @@ import monocle.function.{Each, FilterIndex}
 import scala.collection.immutable.Map
 
 object MapTraversal {
-  implicit def mapEach[K, V]: Each[Map[K, V], V] = fromTraverse[Map[K, ?], V]
+  implicit def mapEach[K, V]: Each[Map[K, V], V] = fromTraverse[Map[K, *], V]
 
   def allKeyValues[K, V]: Iso[Map[K, V], List[(K, V)]] =
     Iso[Map[K, V], List[(K, V)]](_.toList)(_.toMap)
