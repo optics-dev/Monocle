@@ -31,5 +31,5 @@ case class LensLaws[S, A](lens: Lens[S, A]) {
     lens.modify(f)(s) <==> lens.modifyF[Id](f)(s)
 
   def consistentGetModifyId(s: S): IsEq[A] =
-    lens.get(s) <==> lens.modifyF[Const[A, ?]](Const(_))(s).getConst
+    lens.get(s) <==> lens.modifyF[Const[A, *]](Const(_))(s).getConst
 }

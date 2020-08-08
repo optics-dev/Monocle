@@ -143,8 +143,8 @@ sealed abstract class GetterInstances extends GetterInstances0 {
       g composeGetter f
   }
 
-  implicit def getterSemigroupal[S]: Semigroupal[Getter[S, ?]] =
-    new Semigroupal[Getter[S, ?]] {
+  implicit def getterSemigroupal[S]: Semigroupal[Getter[S, *]] =
+    new Semigroupal[Getter[S, *]] {
       override def product[A, B](a: Getter[S, A], b: Getter[S, B]) = a zip b
     }
 }
