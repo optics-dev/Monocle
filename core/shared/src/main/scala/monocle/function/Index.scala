@@ -85,7 +85,7 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
             None
           else {
             val it = c.iterator.drop(i)
-            if (it.hasNext) Some(it.next)
+            if (it.hasNext) Some(it.next())
             else None
           }
         }(a =>

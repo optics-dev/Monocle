@@ -39,4 +39,3 @@ jobs:
       - name: Run tests and documentation
         run: |
           csbt +test packageSrc doc mdoc
-          SCALAJS_VERSION=0.6.32 csbt clean +monocleJS/test

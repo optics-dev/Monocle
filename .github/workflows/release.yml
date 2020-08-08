@@ -32,7 +32,6 @@ jobs:
       - name: Publish
         run: |
           csbt ci-release
-          SCALAJS_VERSION=0.6.32 csbt clean ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}

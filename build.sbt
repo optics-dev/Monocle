@@ -3,8 +3,6 @@ import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 import sbt.Keys._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
-val scalaJSVersion06 = Option(System.getenv("SCALAJS_VERSION")).exists(_.startsWith("0.6"))
-
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(List(
@@ -55,8 +53,8 @@ def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scala
 }
 
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.13.1",
-  crossScalaVersions := Seq("2.12.11", "2.13.1"),
+  scalaVersion       := "2.13.3",
+  crossScalaVersions := Seq("2.12.12", "2.13.3"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions     ++= Seq(
     "-encoding", "UTF-8",
@@ -92,8 +90,8 @@ lazy val shapeless         = Def.setting("com.chuusai"       %%% "shapeless"    
 lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.15")
 lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.15" % "test")
 
-lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-core"          % "1.0.2")
-lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "1.0.1")
+lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-core"          % "1.0.3")
+lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "2.0.0")
 
 lazy val macroVersion = "2.1.1"
 
@@ -128,7 +126,7 @@ lazy val scalajsSettings = Seq(
 )
 
 lazy val monocleSettings    = buildSettings
-lazy val monocleJvmSettings = monocleSettings ++ Seq(skip.in(publish) := scalaJSVersion06)
+lazy val monocleJvmSettings = monocleSettings
 lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
 
 lazy val monocle = project.in(file("."))

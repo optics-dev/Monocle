@@ -200,7 +200,7 @@ class JsonExample extends MonocleSuite {
         a match {
           case j @ (JsString(_) | JsNumber(_)) => Applicative[F].pure(j)
           case JsArray(l)                      => l.traverse(f).map(JsArray)
-          case JsObject(m)                     => Traverse[Map[String, ?]].traverse(m)(f).map(JsObject)
+          case JsObject(m)                     => Traverse[Map[String, *]].traverse(m)(f).map(JsObject)
         }
     }
   }
