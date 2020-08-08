@@ -237,7 +237,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /** Apply methods to treat a [[PPrism]] as smart constructors for type T */
   /*************************************************************************/
   def apply()(implicit ev: Is[B, Unit]): T =
-    ev.substitute[PPrism[S, T, A, ?]](self).reverseGet(())
+    ev.substitute[PPrism[S, T, A, *]](self).reverseGet(())
 
   def apply(b: B): T = reverseGet(b)
 

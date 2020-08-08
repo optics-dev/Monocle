@@ -62,7 +62,7 @@ trait PlatedFunctions extends CommonPlatedFunctions with PlatedFunctionsScalaVer
 
   /** transforming counting changes */
   def transformCounting[A: Plated](f: A => Option[A])(a: A): (Int, A) =
-    transformM[A, State[Int, ?]] { b =>
+    transformM[A, State[Int, *]] { b =>
       f(b)
         .map(c => State((i: Int) => (i + 1, c)))
         .getOrElse(State.pure(b))

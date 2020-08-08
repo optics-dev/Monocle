@@ -43,7 +43,7 @@ final class StateTraversalOps[S, T, A, B](private val traversal: PTraversal[S, T
 
   /** modify the values viewed through the traversal and returns its *old* values */
   def modo(f: A => B): IndexedState[S, T, List[A]] =
-    Bifunctor[IndexedStateT[Eval, S, ?, ?]].leftMap(st)(traversal.modify(f))
+    Bifunctor[IndexedStateT[Eval, S, *, *]].leftMap(st)(traversal.modify(f))
 
   /** modify the values viewed through the traversal and ignores both values */
   def mod_(f: A => B): IndexedState[S, T, Unit] =
