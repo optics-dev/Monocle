@@ -295,7 +295,7 @@ lazy val docSettings = Seq(
   micrositeHomepage := "https://www.optics.dev/Monocle/",
   micrositeBaseUrl := "/Monocle",
   micrositeDocumentationUrl := "/Monocle/api",
-  micrositeGithubOwner := "julien-truffaut",
+  micrositeGithubOwner := "optics-dev",
   micrositeGithubRepo := "Monocle",
   micrositePalette := Map(
     "brand-primary"   -> "#0085E6",
@@ -312,7 +312,7 @@ lazy val docSettings = Seq(
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
   micrositePushSiteWith := GitHub4s,
-  micrositeGithubToken := Some(System.getenv().get("GITHUB_TOKEN")),
+  micrositeGithubToken := Some(System.getenv().get("CI_TOKEN")),
   micrositeCompilingDocsTool := WithMdoc,
   mdocIn := (sourceDirectory in Compile).value / "mdoc",
   fork in mdoc := true,
