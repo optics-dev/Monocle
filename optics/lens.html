@@ -1,0 +1,218 @@
+<!DOCTYPE html><html><head><title>Monocle: Lens</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="optics.dev" /><meta name="description" content="Optics library for Scala" /><meta name="og:image" content="/Monocle/img/poster.png" /><meta name="image" property="og:image" content="/Monocle/img/poster.png" /><meta name="og:title" content="Monocle: Lens" /><meta name="title" property="og:title" content="Monocle: Lens" /><meta name="og:site_name" content="Monocle" /><meta name="og:url" content="https://www.optics.dev/Monocle/" /><meta name="og:type" content="website" /><meta name="og:description" content="Optics library for Scala" /><link rel="icon" type="image/png" href="/Monocle/img/favicon.png" /><meta name="twitter:title" content="Monocle: Lens" /><meta name="twitter:image" content="/Monocle/img/poster.png" /><meta name="twitter:description" content="Optics library for Scala" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/Monocle/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/Monocle/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/Monocle/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/Monocle/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/Monocle/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/Monocle/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/Monocle/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/Monocle/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/Monocle/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/Monocle/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/Monocle/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/Monocle/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/Monocle/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/Monocle/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/Monocle/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/Monocle/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/Monocle/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/Monocle/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/Monocle/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/Monocle/img/favicon310x150.png" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/Monocle/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/Monocle/css/light-style.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><div id="sidebar-brand"><a href="/Monocle/" class="brand"><div class="brand-wrapper"></div><span>Monocle</span></a><button id="main-toggle" class="sidebar-toggle"><span class="close"></span></button></div><div class="sidebar-nav">  <div class="sidebar-nav-item  "><a href="/Monocle/modules.html" title="Main menu" class="">Main menu</a></div>    <div class="sidebar-nav-item  open"><a href="/Monocle/optics.html" title="Optics" class="drop-nested">Optics</a><i class="fa fa-angle-right"></i><div class="sub-section"> <a href="/Monocle/optics/iso.html" title="Iso" class="">Iso</a> <a href="/Monocle/optics/lens.html" title="Lens" class="active">Lens</a> <a href="/Monocle/optics/prism.html" title="Prism" class="">Prism</a> <a href="/Monocle/optics/optional.html" title="Optional" class="">Optional</a> <a href="/Monocle/optics/traversal.html" title="Traversal" class="">Traversal</a> <a href="/Monocle/optics/setter.html" title="Setter" class="">Setter</a> <a href="/Monocle/optics/getter.html" title="Getter" class="">Getter</a> <a href="/Monocle/optics/fold.html" title="Fold" class="">Fold</a></div></div>         </div></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/optics-dev/Monocle" target="_blank" rel="noopener noreferrer"><i class="fa fa-eye"></i><span>Watchers<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/optics-dev/Monocle" target="_blank" rel="noopener noreferrer"><i class="fa fa-star-o"></i><span>Stars<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="optics-dev" data-github-repo="Monocle"><div class="content-wrapper"><section><h1 id="lens">Lens</h1>
+
+<p>A <code class="highlighter-rouge">Lens</code> is an optic used to zoom inside a <code class="highlighter-rouge">Product</code>, e.g. <code class="highlighter-rouge">case class</code>, <code class="highlighter-rouge">Tuple</code>, <code class="highlighter-rouge">HList</code> or even <code class="highlighter-rouge">Map</code>.</p>
+
+<p><code class="highlighter-rouge">Lenses</code> have two type parameters generally called <code class="highlighter-rouge">S</code> and <code class="highlighter-rouge">A</code>: <code class="highlighter-rouge">Lens[S, A]</code> where <code class="highlighter-rouge">S</code> represents the <code class="highlighter-rouge">Product</code> and <code class="highlighter-rouge">A</code> an element inside of <code class="highlighter-rouge">S</code>.</p>
+
+<p>Let’s take a simple case class with two fields:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Address</span><span class="o">(</span><span class="n">streetNumber</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">streetName</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>We can create a <code class="highlighter-rouge">Lens[Address, Int]</code> which zooms from an <code class="highlighter-rouge">Address</code> to its field <code class="highlighter-rouge">streetNumber</code> by supplying a pair of functions:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">get: Address =&gt; Int</code></li>
+  <li><code class="highlighter-rouge">set: Int =&gt; Address =&gt; Address</code></li>
+</ul>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.Lens</span>
+<span class="k">val</span> <span class="nv">streetNumber</span> <span class="k">=</span> <span class="nc">Lens</span><span class="o">[</span><span class="kt">Address</span>, <span class="kt">Int</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">streetNumber</span><span class="o">)(</span><span class="n">n</span> <span class="k">=&gt;</span> <span class="n">a</span> <span class="k">=&gt;</span> <span class="nv">a</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">streetNumber</span> <span class="k">=</span> <span class="n">n</span><span class="o">))</span>
+</code></pre></div></div>
+
+<p>This case is really straightforward so we automated the generation of <code class="highlighter-rouge">Lenses</code> from case classes using a macro:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
+<span class="k">val</span> <span class="nv">streetNumber</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Address</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">streetNumber</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>Once we have a <code class="highlighter-rouge">Lens</code>, we can use the supplied <code class="highlighter-rouge">get</code> and <code class="highlighter-rouge">set</code> functions (nothing fancy!):</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">address</span> <span class="k">=</span> <span class="nc">Address</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="s">"High Street"</span><span class="o">)</span>
+<span class="c1">// address: Address = Address(streetNumber = 10, streetName = "High Street")
+</span>
+<span class="nv">streetNumber</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="n">address</span><span class="o">)</span>
+<span class="c1">// res0: Int = 10
+</span><span class="nv">streetNumber</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="mi">5</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
+<span class="c1">// res1: Address = Address(streetNumber = 5, streetName = "High Street")
+</span></code></pre></div></div>
+
+<p>We can also <code class="highlighter-rouge">modify</code> the target of <code class="highlighter-rouge">Lens</code> with a function, this is equivalent to call <code class="highlighter-rouge">get</code> and then <code class="highlighter-rouge">set</code>:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">streetNumber</span><span class="o">.</span><span class="py">modify</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
+<span class="c1">// res2: Address = Address(streetNumber = 11, streetName = "High Street")
+</span>
+<span class="k">val</span> <span class="nv">n</span> <span class="k">=</span> <span class="nv">streetNumber</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="n">address</span><span class="o">)</span>
+<span class="c1">// n: Int = 10
+</span><span class="nv">streetNumber</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
+<span class="c1">// res3: Address = Address(streetNumber = 11, streetName = "High Street")
+</span></code></pre></div></div>
+
+<p>We can push the idea even further, with <code class="highlighter-rouge">modifyF</code> we can update the target of a <code class="highlighter-rouge">Lens</code> in a context, cf <code class="highlighter-rouge">cats.Functor</code>:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">neighbors</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
+  <span class="nf">if</span><span class="o">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="nc">List</span><span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="k">else</span> <span class="nc">List</span><span class="o">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+
+<span class="k">import</span> <span class="nn">cats.implicits._</span> <span class="c1">// to get all Functor instance
+</span></code></pre></div></div>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">streetNumber</span><span class="o">.</span><span class="py">modifyF</span><span class="o">(</span><span class="n">neighbors</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
+<span class="c1">// res4: List[Address] = List(
+//   Address(streetNumber = 9, streetName = "High Street"),
+//   Address(streetNumber = 11, streetName = "High Street")
+// )
+</span><span class="nv">streetNumber</span><span class="o">.</span><span class="py">modifyF</span><span class="o">(</span><span class="n">neighbors</span><span class="o">)(</span><span class="nc">Address</span><span class="o">(</span><span class="mi">135</span><span class="o">,</span> <span class="s">"High Street"</span><span class="o">))</span>
+<span class="c1">// res5: List[Address] = List(
+//   Address(streetNumber = 134, streetName = "High Street"),
+//   Address(streetNumber = 136, streetName = "High Street")
+// )
+</span></code></pre></div></div>
+
+<p>This would work with any kind of <code class="highlighter-rouge">Functor</code> and is especially useful in conjunction with asynchronous APIs, 
+where one has the task to update a deeply nested structure with the result of an asynchronous computation:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">scala.concurrent._</span>
+<span class="k">import</span> <span class="nn">scala.concurrent.ExecutionContext.Implicits._</span> <span class="c1">// to get global ExecutionContext
+</span>
+<span class="k">def</span> <span class="nf">updateNumber</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nv">Future</span><span class="o">.</span><span class="py">successful</span><span class="o">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+</code></pre></div></div>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">streetNumber</span><span class="o">.</span><span class="py">modifyF</span><span class="o">(</span><span class="n">updateNumber</span><span class="o">)(</span><span class="n">address</span><span class="o">)</span>
+<span class="c1">// res6: Future[Address] = Future(Success(Address(11,High Street)))
+</span></code></pre></div></div>
+
+<p>Most importantly, <code class="highlighter-rouge">Lenses</code> compose together allowing to zoom deeper in a data structure</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">age</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">address</span><span class="k">:</span> <span class="kt">Address</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">john</span> <span class="k">=</span> <span class="nc">Person</span><span class="o">(</span><span class="s">"John"</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="nc">Address</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="s">"High Street"</span><span class="o">))</span>
+
+<span class="k">val</span> <span class="nv">address</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">address</span><span class="o">)</span>
+</code></pre></div></div>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span><span class="n">address</span> <span class="n">composeLens</span> <span class="n">streetNumber</span><span class="o">).</span><span class="py">get</span><span class="o">(</span><span class="n">john</span><span class="o">)</span>
+<span class="c1">// res7: Int = 10
+</span><span class="o">(</span><span class="n">address</span> <span class="n">composeLens</span> <span class="n">streetNumber</span><span class="o">).</span><span class="py">set</span><span class="o">(</span><span class="mi">2</span><span class="o">)(</span><span class="n">john</span><span class="o">)</span>
+<span class="c1">// res8: Person = Person(
+//   name = "John",
+//   age = 20,
+//   address = Address(streetNumber = 2, streetName = "High Street")
+// )
+</span></code></pre></div></div>
+
+<h2 id="other-ways-of-lens-composition">Other Ways of Lens Composition</h2>
+
+<p>Is possible to compose few <code class="highlighter-rouge">Lenses</code> together by using <code class="highlighter-rouge">compose</code>:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">name</span><span class="o">).</span><span class="py">set</span><span class="o">(</span><span class="s">"Mike"</span><span class="o">)</span> <span class="n">compose</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">age</span><span class="o">).</span><span class="py">modify</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>Same but with the simplified macro based syntax:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.syntax.lens._</span>
+
+<span class="nv">john</span><span class="o">.</span><span class="py">lens</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">name</span><span class="o">).</span><span class="py">set</span><span class="o">(</span><span class="s">"Mike"</span><span class="o">).</span><span class="py">lens</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">age</span><span class="o">).</span><span class="py">modify</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>(All <code class="highlighter-rouge">Setter</code> like optics offer <code class="highlighter-rouge">set</code> and <code class="highlighter-rouge">modify</code> methods that returns an <code class="highlighter-rouge">EndoFunction</code> (i.e. <code class="highlighter-rouge">S =&gt; S</code>) which means that we can compose modification using basic function composition.)</p>
+
+<p>Sometimes you need an easy way to update <code class="highlighter-rouge">Product</code> type inside
+<code class="highlighter-rouge">Sum</code> type - for that case you can compose <code class="highlighter-rouge">Prism</code> with <code class="highlighter-rouge">Lens</code> by using <code class="highlighter-rouge">some</code>:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.std.option.some</span>
+<span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">B</span><span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">A</span><span class="o">(</span><span class="n">b</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+
+<span class="k">val</span> <span class="nv">c</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">c</span><span class="o">)</span>
+<span class="c1">// c: Lens[B, Int] = repl.MdocSession$App$$anon$7@73098f00
+</span><span class="k">val</span> <span class="nv">b</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">b</span><span class="o">)</span>
+<span class="c1">// b: Lens[A, Option[B]] = repl.MdocSession$App$$anon$8@7d1d7de7
+</span>
+<span class="o">(</span><span class="n">b</span> <span class="n">composePrism</span> <span class="n">some</span> <span class="n">composeLens</span> <span class="n">c</span><span class="o">).</span><span class="py">getOption</span><span class="o">(</span><span class="nf">A</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="nf">B</span><span class="o">(</span><span class="mi">1</span><span class="o">))))</span>
+<span class="c1">// res11: Option[Int] = Some(value = 1)
+</span></code></pre></div></div>
+
+<p>For more detailed view of the various optics composition see <a href="../optics.html">Optics</a></p>
+
+<h2 id="lens-generation">Lens Generation</h2>
+
+<p><code class="highlighter-rouge">Lens</code> creation is rather boiler platy but we developed a few macros to generate them automatically. All macros
+are defined in a separate module (see <a href="../modules.html">modules</a>).</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.GenLens</span>
+<span class="k">val</span> <span class="nv">age</span> <span class="k">=</span> <span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">age</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">GenLens</code> can also be used to generate <code class="highlighter-rouge">Lens</code> several level deep:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">GenLens</span><span class="o">[</span><span class="kt">Person</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">address</span><span class="o">.</span><span class="py">streetName</span><span class="o">).</span><span class="py">set</span><span class="o">(</span><span class="s">"Iffley Road"</span><span class="o">)(</span><span class="n">john</span><span class="o">)</span>
+<span class="c1">// res12: Person = Person(
+//   name = "John",
+//   age = 20,
+//   address = Address(streetNumber = 10, streetName = "Iffley Road")
+// )
+</span></code></pre></div></div>
+
+<p>For those who want to push <code class="highlighter-rouge">Lenses</code> generation even further, we created <code class="highlighter-rouge">@Lenses</code> macro annotation which generate
+<code class="highlighter-rouge">Lenses</code> for <em>all</em> fields of a case class. The generated <code class="highlighter-rouge">Lenses</code> are in the companion object of the case class:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">monocle.macros.Lenses</span>
+<span class="nd">@Lenses</span> <span class="k">case</span> <span class="k">class</span> <span class="nc">Point</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">p</span> <span class="k">=</span> <span class="nc">Point</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
+</code></pre></div></div>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">Point</span><span class="o">.</span><span class="py">x</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="n">p</span><span class="o">)</span>
+<span class="c1">// res13: Int = 5
+</span><span class="nv">Point</span><span class="o">.</span><span class="py">y</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="n">p</span><span class="o">)</span>
+<span class="c1">// res14: Point = Point(x = 5, y = 0)
+</span></code></pre></div></div>
+
+<p>You can also add a prefix to <code class="highlighter-rouge">@Lenses</code> in order to prefix the generated <code class="highlighter-rouge">Lenses</code>:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Lenses</span><span class="o">(</span><span class="s">"_"</span><span class="o">)</span> <span class="k">case</span> <span class="k">class</span> <span class="nc">PrefixedPoint</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">p</span> <span class="k">=</span> <span class="nc">PrefixedPoint</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
+</code></pre></div></div>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PrefixedPoint</span><span class="o">.</span><span class="py">_x</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="n">p</span><span class="o">)</span>
+<span class="c1">// res15: Int = 5
+</span></code></pre></div></div>
+
+<h2 id="laws">Laws</h2>
+
+<p>A <code class="highlighter-rouge">Lens</code> must satisfy all properties defined in <code class="highlighter-rouge">LensLaws</code> from the <code class="highlighter-rouge">core</code> module.
+You can check the validity of your own <code class="highlighter-rouge">Lenses</code> using <code class="highlighter-rouge">LensTests</code> from the <code class="highlighter-rouge">law</code> module.</p>
+
+<p>In particular, a <code class="highlighter-rouge">Lens</code> must respect the <code class="highlighter-rouge">getSet</code> law which states that if you <code class="highlighter-rouge">get</code> a value <code class="highlighter-rouge">A</code> from <code class="highlighter-rouge">S</code> and 
+<code class="highlighter-rouge">set</code> it back in, the result is an object identical to the original one. A side effect of this law is that <code class="highlighter-rouge">set</code> 
+must only update the <code class="highlighter-rouge">A</code> it points to, for example it cannot increment a counter or modify another value.</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">getSet</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">l</span><span class="k">:</span> <span class="kt">Lens</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+  <span class="nv">l</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="nv">l</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="n">s</span><span class="o">))(</span><span class="n">s</span><span class="o">)</span> <span class="o">==</span> <span class="n">s</span>
+</code></pre></div></div>
+
+<p>On the other hand, the <code class="highlighter-rouge">setGet</code> law states that if you <code class="highlighter-rouge">set</code> a value, you always <code class="highlighter-rouge">get</code> the same value back. 
+This law guarantees that <code class="highlighter-rouge">set</code> is actually updating a value <code class="highlighter-rouge">A</code> inside of <code class="highlighter-rouge">S</code>.</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">setGet</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">](</span><span class="n">l</span><span class="k">:</span> <span class="kt">Lens</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">],</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+  <span class="nv">l</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="nv">l</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="n">a</span><span class="o">)(</span><span class="n">s</span><span class="o">))</span> <span class="o">==</span> <span class="n">a</span>
+</code></pre></div></div>
+</section></div></div></div></div><script src="/Monocle/highlight/highlight.pack.js"></script><script>
+// For all code blocks, copy the language from the containing div
+// to the inner code tag (where hljs expects it to be)
+const langPrefix = 'language-';
+document.querySelectorAll(`div[class^='${langPrefix}']`).forEach(function(div) {
+  div.classList.forEach(function(cssClass) {
+    if (cssClass.startsWith(langPrefix)) {
+      const lang = cssClass.substring(langPrefix.length);
+      div.querySelectorAll('pre code').forEach(function(code) {
+        code.classList.add(lang);
+      });
+    }
+  });
+});
+
+hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlightingOnLoad();
+      </script><script>console.info('\x57\x65\x62\x73\x69\x74\x65\x20\x62\x75\x69\x6c\x74\x20\x77\x69\x74\x68\x3a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x5f\x5f\x0a\x20\x20\x20\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x5f\x20\x20\x2f\x20\x2f\x5f\x20\x20\x20\x20\x20\x20\x5f\x5f\x5f\x5f\x20\x5f\x5f\x5f\x20\x20\x28\x5f\x29\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x28\x5f\x29\x20\x2f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x0a\x20\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x60\x5f\x5f\x20\x5c\x2f\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x20\x2f\x20\x5f\x5f\x2f\x20\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x0a\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x5f\x2f\x20\x2f\x20\x2f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x5f\x5f\x2f\x20\x2f\x20\x20\x2f\x20\x2f\x5f\x2f\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x20\x2f\x5f\x2f\x20\x20\x5f\x5f\x28\x5f\x5f\x20\x20\x29\x0a\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2e\x5f\x5f\x5f\x2f\x5c\x5f\x5f\x2f\x20\x20\x20\x20\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x2f\x20\x20\x20\x5c\x5f\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x0a\x0a\x68\x74\x74\x70\x73\x3a\x2f\x2f\x34\x37\x64\x65\x67\x2e\x67\x69\x74\x68\x75\x62\x2e\x69\x6f\x2f\x73\x62\x74\x2d\x6d\x69\x63\x72\x6f\x73\x69\x74\x65\x73')</script><script>((window.gitter = {}).chat = {}).options = {
+room: 'optics-dev/Monocle'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/Monocle/js/docs.js"></script></body></html>
