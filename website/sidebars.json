@@ -1,0 +1,14 @@
+{
+  "docs": {
+    "Documentation": [
+      "overview",
+      "quick-example",
+      "consumers",
+      "producers",
+      "transactions",
+      "admin",
+      "modules",
+      "technical-details"
+    ]
+  }
+}

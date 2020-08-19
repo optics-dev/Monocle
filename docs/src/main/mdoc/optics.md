@@ -1,8 +1,6 @@
 ---
-layout: docs
-section: "optics_menu"
-title:  "Optics"
-position: 2
+id: optics
+title: optics
 ---
 ## Optics
 

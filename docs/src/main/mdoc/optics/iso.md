@@ -1,11 +1,7 @@
 ---
-layout: docs
-title:  "Iso"
-section: "optics_menu"
-source: "core/src/main/scala/monocle/PIso.scala"
-scaladoc: "#monocle.Iso"
+id: iso
+title: Iso
 ---
-# Iso
 
 An `Iso` is an optic which converts elements of type `S` into elements of type `A` without loss.
 

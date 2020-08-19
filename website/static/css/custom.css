@@ -1,0 +1,65 @@
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+}
+
+@media only screen and (min-width: 1024px) {
+}
+
+@media only screen and (max-width: 1023px) {
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (min-width: 1500px) {
+}
+
+.nav-footer {
+  background: unset;
+}
+
+.nav-footer .copyright {
+  color: #7c7c7c;
+}
+
+.nav-footer .separator {
+  width: 350px;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  border-top: 0;
+}
+
+.mainContainer {
+  padding-bottom: 0;
+}
+
+.mainContainer .index {
+  margin: 0 auto;
+  max-width: 650px;
+  padding: 0 10px;
+}
+
+.homeSplashFade .wrapper.homeWrapper {
+  padding-bottom: 0;
+  padding-top: 25px;
+}
+
+.projectTitleLogo {
+  width: 45px;
+  vertical-align: top;
+}
+
+.fixedHeaderContainer header img {
+  margin-right: 0;
+}
+
+.buttonWrapper {
+  margin-bottom: 5px;
+}
+
+a {
+  color: #19647e;
+}
+
+.onPageNav a:hover {
+  color: #122932;
+}

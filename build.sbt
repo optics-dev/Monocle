@@ -271,61 +271,109 @@ lazy val example = project.dependsOn(core.jvm, generic.jvm, refined.jvm, macros.
   )
 
 lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
-  .enablePlugins(MicrositesPlugin)
-  .enablePlugins(ScalaUnidocPlugin)
-  .enablePlugins(MdocPlugin)
+  .enablePlugins(BuildInfoPlugin, DocusaurusPlugin, MdocPlugin, ScalaUnidocPlugin)
   .settings(moduleName := "monocle-docs")
   .settings(monocleSettings)
   .settings(noPublishSettings)
-  .settings(docSettings)
+  .settings(mdocSettings)
+  .settings(buildInfoSettings)
   .settings(scalacOptions ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
   .settings(
     libraryDependencies ++= Seq(cats.value, shapeless.value),
     libraryDependencies ++= paradisePlugin.value
   )
-  .enablePlugins(GhpagesPlugin)
 
-lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
-
-lazy val docSettings = Seq(
-  organization := "optics.dev",
-  micrositeName := "Monocle",
-  micrositeDescription := "Optics library for Scala",
-  micrositeHighlightTheme := "atom-one-light",
-  micrositeHomepage := "https://www.optics.dev/Monocle/",
-  micrositeBaseUrl := "/Monocle",
-  micrositeDocumentationUrl := "/Monocle/api",
-  micrositeGithubOwner := "optics-dev",
-  micrositeGithubRepo := "Monocle",
-  micrositePalette := Map(
-    "brand-primary"   -> "#0085E6",
-    "brand-secondary" -> "#004A87",
-    "brand-tertiary"  -> "#004A87",
-    "gray-dark"       -> "#49494B",
-    "gray"            -> "#7B7B7E",
-    "gray-light"      -> "#E5E5E6",
-    "gray-lighter"    -> "#F4F3F4",
-    "white-color"     -> "#FFFFFF"),
-  autoAPIMappings := true,
-  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(core.jvm),
-  docsMappingsAPIDir := "api",
-  addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
-  ghpagesNoJekyll := false,
-  micrositePushSiteWith := GitHub4s,
-  micrositeGithubToken := Some(System.getenv().get("CI_TOKEN")),
-  micrositeCompilingDocsTool := WithMdoc,
-  mdocIn := (sourceDirectory in Compile).value / "mdoc",
-  fork in mdoc := true,
-  fork in (ScalaUnidoc, unidoc) := true,
-  scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
-    "-Xfatal-warnings",
-    "-doc-source-url", scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
-    "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath,
-    "-diagrams"
-  ),
-  git.remoteRepo := "git@github.com:optics-dev/Monocle.git",
-  includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md"
+lazy val buildInfoSettings = Seq(
+  buildInfoPackage := "monocle.build",
+  buildInfoObject := "info",
+  buildInfoKeys := Seq[BuildInfoKey](
+    scalaVersion,
+    scalacOptions,
+    sourceDirectory,
+    latestVersion in ThisBuild,
+    BuildInfoKey.map(version in ThisBuild) {
+      case (_, v) => "latestSnapshotVersion" -> v
+    },
+    BuildInfoKey.map(moduleName in core.jvm) {
+      case (k, v) => "core" ++ k.capitalize -> v
+    },
+    BuildInfoKey.map(crossScalaVersions in core.jvm) {
+      case (k, v) => "core" ++ k.capitalize -> v
+    },
+    organization in LocalRootProject,
+    crossScalaVersions in core.jvm,
+  )
 )
+
+lazy val mdocSettings = Seq(
+  mdoc := run.in(Compile).evaluated,
+  scalacOptions --= Seq("-Xfatal-warnings", "-Ywarn-unused"),
+  crossScalaVersions := Seq(scalaVersion.value),
+  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(core.jvm),
+  target in (ScalaUnidoc, unidoc) := (baseDirectory in LocalRootProject).value / "website" / "static" / "api",
+  cleanFiles += (target in (ScalaUnidoc, unidoc)).value,
+  docusaurusCreateSite := docusaurusCreateSite
+    .dependsOn(unidoc in Compile)
+    .dependsOn(updateSiteVariables in ThisBuild)
+    .value,
+  docusaurusPublishGhpages :=
+    docusaurusPublishGhpages
+      .dependsOn(unidoc in Compile)
+      .dependsOn(updateSiteVariables in ThisBuild)
+      .value,
+  scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
+    "-doc-source-url", s"https://github.com/optics-dev/Monocle/tree/v${(latestVersion in ThisBuild).value}€{FILE_PATH}.scala",
+    "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath,
+    "-doc-title", "FS2 Kafka",
+    "-doc-version", s"v${(latestVersion in ThisBuild).value}"
+  )
+)
+
+def minorVersion(version: String): String = {
+  val (major, minor) =
+    CrossVersion.partialVersion(version).get
+  s"$major.$minor"
+}
+
+val latestVersion = settingKey[String]("Latest stable released version")
+latestVersion in ThisBuild := {
+  val snapshot = (isSnapshot in ThisBuild).value
+  val stable = (isVersionStable in ThisBuild).value
+
+  if (!snapshot && stable) {
+    (version in ThisBuild).value
+  } else {
+    (previousStableVersion in ThisBuild).value.get
+  }
+}
+
+val updateSiteVariables = taskKey[Unit]("Update site variables")
+updateSiteVariables in ThisBuild := {
+  val file = (baseDirectory in LocalRootProject).value / "website" / "variables.js"
+
+  val variables =
+    Map[String, String](
+      "organization" -> (organization in LocalRootProject).value,
+      "coreModuleName" -> (moduleName in core.jvm).value,
+      "latestVersion" -> (latestVersion in ThisBuild).value,
+      "scalaPublishVersions" -> {
+        val minorVersions = (crossScalaVersions in core.jvm).value.map(minorVersion)
+        if (minorVersions.size <= 2) minorVersions.mkString(" and ")
+        else minorVersions.init.mkString(", ") ++ " and " ++ minorVersions.last
+      }
+    )
+
+  val fileHeader =
+    "// Generated by sbt. Do not edit directly."
+
+  val fileContents =
+    variables.toList
+      .sortBy { case (key, _) => key }
+      .map { case (key, value) => s"  $key: '$value'" }
+      .mkString(s"$fileHeader\nmodule.exports = {\n", ",\n", "\n};\n")
+
+  IO.write(file, fileContents)
+}
 
 lazy val noPublishSettings = Seq(
   publish := {},

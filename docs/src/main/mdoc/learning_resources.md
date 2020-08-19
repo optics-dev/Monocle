@@ -1,10 +1,7 @@
 ---
-layout: docs
-title:  "Learning Resources"
-section: "main_menu"
+id: learning_resources
+title: Learning Resources
 ---
-
-## Learning Resources
 
 Here are some various learning resources concerning optics. Feel free to send a PR to add other learning material.
 

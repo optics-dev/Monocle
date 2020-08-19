@@ -1,9 +1,7 @@
 ---
-layout: docs
-title:  "University"
-section: "examples_menu"
+id: university_example
+title: University Example
 ---
-# University Example
 
 Let's take a basic model of a `University` containing a few `Department`s where each `Department` has a budget
 and a few `Lecturer`s.
