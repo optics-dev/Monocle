@@ -1,0 +1,721 @@
+<!DOCTYPE html><html><head><title>Monocle: Release Notes</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="optics.dev" /><meta name="description" content="Optics library for Scala" /><meta name="og:image" content="/Monocle/img/poster.png" /><meta name="image" property="og:image" content="/Monocle/img/poster.png" /><meta name="og:title" content="Monocle: Release Notes" /><meta name="title" property="og:title" content="Monocle: Release Notes" /><meta name="og:site_name" content="Monocle" /><meta name="og:url" content="https://www.optics.dev/Monocle/" /><meta name="og:type" content="website" /><meta name="og:description" content="Optics library for Scala" /><link rel="icon" type="image/png" href="/Monocle/img/favicon.png" /><meta name="twitter:title" content="Monocle: Release Notes" /><meta name="twitter:image" content="/Monocle/img/poster.png" /><meta name="twitter:description" content="Optics library for Scala" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/Monocle/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/Monocle/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/Monocle/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/Monocle/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/Monocle/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/Monocle/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/Monocle/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/Monocle/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/Monocle/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/Monocle/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/Monocle/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/Monocle/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/Monocle/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/Monocle/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/Monocle/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/Monocle/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/Monocle/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/Monocle/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/Monocle/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/Monocle/img/favicon310x150.png" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/Monocle/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/Monocle/css/light-style.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><div id="sidebar-brand"><a href="/Monocle/" class="brand"><div class="brand-wrapper"></div><span>Monocle</span></a><button id="main-toggle" class="sidebar-toggle"><span class="close"></span></button></div><div class="sidebar-nav"> <div class="sidebar-nav-item  "><a href="/Monocle/modules.html" title="Modules" class="">Modules</a></div>    <div class="sidebar-nav-item  "><a href="/Monocle/optics.html" title="Optics ..." class="">Optics ...</a></div>  <div class="sidebar-nav-item  "><a href="/Monocle/typeclasses.html" title="Typeclasses ..." class="">Typeclasses ...</a></div>  <div class="sidebar-nav-item  "><a href="/Monocle/examples.html" title="Examples ..." class="">Examples ...</a></div>  <div class="sidebar-nav-item  "><a href="/Monocle/faq.html" title="FAQ" class="">FAQ</a></div> <div class="sidebar-nav-item active "><a href="/Monocle/release_notes.html" title="Release Notes" class="active">Release Notes</a></div> <div class="sidebar-nav-item  "><a href="/Monocle/learning_resources.html" title="Learning Resources" class="">Learning Resources</a></div> <div class="sidebar-nav-item  "><a href="/Monocle/adopters.html" title="Adopters" class="">Adopters</a></div> <div class="sidebar-nav-item  "><a href="/Monocle/unsafe_module.html" title="Unsafe Module" class="">Unsafe Module</a></div></div></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/optics-dev/Monocle" target="_blank" rel="noopener noreferrer"><i class="fa fa-eye"></i><span>Watchers<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/optics-dev/Monocle" target="_blank" rel="noopener noreferrer"><i class="fa fa-star-o"></i><span>Stars<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="optics-dev" data-github-repo="Monocle"><div class="content-wrapper"><section><h2 id="release-notes">Release Notes</h2>
+
+<h1 id="201">2.0.1</h1>
+
+<blockquote>
+  <p>09 January 2020</p>
+</blockquote>
+
+<ul>
+  <li>bug fix: use fully qualified name in <code class="highlighter-rouge">Lens</code> macro <a href="https://github.com/optics-dev/Monocle/pull/793">#793</a> (thanks to <a href="https://github.com/enzief">enzief</a>)</li>
+  <li>add <code class="highlighter-rouge">parModifyF</code> to <code class="highlighter-rouge">Traversal</code> leveraging <code class="highlighter-rouge">cats.Parallel</code> <a href="https://github.com/optics-dev/Monocle/pull/751">#751</a> (thanks to <a href="https://github.com/nigredo-tori">nigredo-tori</a>)</li>
+  <li>add <code class="highlighter-rouge">At</code>, <code class="highlighter-rouge">Index</code> and <code class="highlighter-rouge">Each</code> instances for ListMap <a href="https://github.com/optics-dev/Monocle/pull/740">#740</a>, <a href="https://github.com/optics-dev/Monocle/pull/742">#742</a> <a href="https://github.com/optics-dev/Monocle/pull/747">#747</a> (thanks to <a href="https://github.com/jan0sch">jan0sch</a>)</li>
+</ul>
+
+<h1 id="200-cats-only">2.0.0 (cats only)</h1>
+
+<blockquote>
+  <p>11 September 2019</p>
+</blockquote>
+
+<ul>
+  <li>everything in 1.6.0</li>
+  <li>add instances for <code class="highlighter-rouge">NonEmptyVector</code> <a href="https://github.com/optics-dev/Monocle/pull/564">#564</a> (thanks to <a href="https://github.com/valydia">valydia</a>)</li>
+  <li>add optics for cats <code class="highlighter-rouge">Chain</code> and <code class="highlighter-rouge">NonEmptyChain</code> <a href="https://github.com/optics-dev/Monocle/pull/609">#609</a> (thanks to <a href="https://github.com/dcastro">dcastro</a>)</li>
+  <li>add missing functions (<code class="highlighter-rouge">mod</code>, <code class="highlighter-rouge">assign</code> and variants) to State module <a href="https://github.com/optics-dev/Monocle/pull/564">#564</a> (thanks to <a href="https://github.com/valydia">valydia</a>)</li>
+  <li>depends on cats 2.0.0</li>
+</ul>
+
+<h1 id="160-scalaz-only-last-major-release-with-scalaz">1.6.0 (scalaz only, last major release with scalaz)</h1>
+
+<blockquote>
+  <p>14 July 2019</p>
+</blockquote>
+
+<ul>
+  <li>add <code class="highlighter-rouge">apply</code> helper methods to typeclasses <a href="https://github.com/optics-dev/Monocle/pull/560">#560</a> (thanks to <a href="https://github.com/jbgi">jbgi</a>)</li>
+  <li>add <code class="highlighter-rouge">coProductIso</code>, <code class="highlighter-rouge">coProductDisjunctionIso</code> and <code class="highlighter-rouge">toGeneric</code> <a href="https://github.com/optics-dev/Monocle/pull/578">#578</a> (thanks to <a href="https://github.com/dcastro">dcastro</a>)</li>
+  <li>add override modifiers in macro generated code <a href="https://github.com/optics-dev/Monocle/pull/581">#581</a> (thanks to <a href="https://github.com/omervk">omervk</a>)</li>
+  <li>add FieldsSyntax to global import <a href="https://github.com/optics-dev/Monocle/pull/583">#583</a> (thanks to <a href="https://github.com/kubukoz">kubukoz</a>)</li>
+  <li>fix name collisions in implicit classes <a href="https://github.com/optics-dev/Monocle/pull/629">#629</a> (thanks to <a href="https://github.com/vladimirkl">vladimirkl</a>)</li>
+  <li>release from ci, stop support of scala 2.11 and scala native <a href="https://github.com/optics-dev/Monocle/pull/646">#646</a></li>
+  <li>support scala 2.13 <a href="https://github.com/optics-dev/Monocle/pull/669">#669</a> (thanks to <a href="https://github.com/xuwei-k">xuwei-k</a>)</li>
+</ul>
+
+<h1 id="150-and-150-cats">1.5.0 and 1.5.0-cats</h1>
+
+<blockquote>
+  <p>3 January 2018</p>
+</blockquote>
+
+<ul>
+  <li>add coalgebroid-based constructors for <code class="highlighter-rouge">Lens</code> and <code class="highlighter-rouge">Traversal</code> <a href="https://github.com/optics-dev/Monocle/pull/502">#502</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</li>
+  <li>add state syntax for traversal <a href="https://github.com/optics-dev/Monocle/pull/533">#533</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</li>
+  <li>add <code class="highlighter-rouge">modifyF</code> to <code class="highlighter-rouge">Apply</code> syntax <a href="https://github.com/optics-dev/Monocle/pull/525">#525</a> (thanks to <a href="https://github.com/colin-passiv">colin-passiv</a>)</li>
+  <li>add optics composition table <a href="https://github.com/optics-dev/Monocle/pull/532">#532</a> (thanks to <a href="https://github.com/jdegoes">jdegoes</a>)</li>
+  <li>support scala native <a href="https://github.com/optics-dev/Monocle/pull/508">#508</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+  <li>
+    <p>bug fix: allow for annotations on companion objects of <code class="highlighter-rouge">@Lenses</code>-annotated case classes <a href="https://github.com/optics-dev/Monocle/pull/524">#524</a> (thanks to <a href="https://github.com/hrhino">hrhino</a>)</p>
+  </li>
+  <li>create a cats branch where cats replaces scalaz <a href="https://github.com/optics-dev/Monocle/pull/528">#528</a> and <a href="https://github.com/optics-dev/Monocle/pull/539">#539</a> (thanks to <a href="https://github.com/sellout">sellout</a> and <a href="https://github.com/tpolecat">tpolecat</a>)</li>
+</ul>
+
+<h1 id="140">1.4.0</h1>
+
+<blockquote>
+  <p>14 January 2017</p>
+</blockquote>
+
+<h3 id="addition">Addition</h3>
+
+<ul>
+  <li>add <code class="highlighter-rouge">Each</code> instance for <code class="highlighter-rouge">Try</code>, <code class="highlighter-rouge">Either</code>, <code class="highlighter-rouge">scalaz.\/</code>, <code class="highlighter-rouge">scalaz.Validation</code> <a href="https://github.com/optics-dev/Monocle/pull/472">#472</a> and <a href="https://github.com/optics-dev/Monocle/pull/476">#476</a> (thanks to <a href="https://github.com/n4to4">n4to4</a>)</li>
+  <li>add <code class="highlighter-rouge">Unzip</code> instance for <code class="highlighter-rouge">Lens</code>, <code class="highlighter-rouge">Fold</code>, <code class="highlighter-rouge">Optional</code>, <code class="highlighter-rouge">Traversal</code>, <code class="highlighter-rouge">Setter</code> <a href="https://github.com/optics-dev/Monocle/pull/474">#474</a> (thanks to <a href="https://github.com/n4to4">n4to4</a>)</li>
+  <li>add refined <code class="highlighter-rouge">startsWith</code> and <code class="highlighter-rouge">endWith</code> <a href="https://github.com/optics-dev/Monocle/pull/480">#480</a> and <a href="https://github.com/optics-dev/Monocle/pull/483">#483</a> (thanks to <a href="https://github.com/valydia">valydia</a>, <a href="https://github.com/mrcmatuszak">mrcmatuszak</a> and <a href="https://github.com/fthomas">fthomas</a>)</li>
+  <li>add <code class="highlighter-rouge">uuid</code>, <code class="highlighter-rouge">url</code>, <code class="highlighter-rouge">uri</code> <a href="https://github.com/optics-dev/Monocle/pull/487">#487</a> and <a href="https://github.com/optics-dev/Monocle/pull/490">#490</a> (thanks to <a href="https://github.com/mjjc">mjjc</a> and <a href="https://github.com/n4to4">n4to4</a>)</li>
+</ul>
+
+<h3 id="other">Other</h3>
+
+<ul>
+  <li>deprecate global constructor of typeclasses <a href="https://github.com/optics-dev/Monocle/pull/478">#478</a></li>
+  <li>remove deprecated methods <code class="highlighter-rouge">sum</code> and <code class="highlighter-rouge">product</code> <a href="https://github.com/optics-dev/Monocle/pull/479">#479</a></li>
+  <li>execute packageSrc in travis-ci to avoid regressing like <a href="https://github.com/optics-dev/Monocle/pull/492">#492</a> <a href="https://github.com/optics-dev/Monocle/pull/494">#494</a> (thanks to <a href="https://github.com/xuwei-k">xuwei-k</a>)</li>
+</ul>
+
+<h1 id="140-m2">1.4.0-M2</h1>
+
+<blockquote>
+  <p>23 December 2016</p>
+</blockquote>
+
+<ul>
+  <li>do not require java 8 for scala 2.11 <a href="https://github.com/optics-dev/Monocle/pull/463">#463</a></li>
+  <li>add <code class="highlighter-rouge">Possible</code> typeclass <a href="https://github.com/optics-dev/Monocle/issues/450">#450</a> (thanks to <a href="https://github.com/kenbot">kenbot</a>)</li>
+  <li>add <code class="highlighter-rouge">zip</code> and <code class="highlighter-rouge">unzip</code> for <code class="highlighter-rouge">Getter</code> <a href="https://github.com/optics-dev/Monocle/pull/453">#453</a> and <a href="https://github.com/optics-dev/Monocle/pull/458">#458</a> (thanks to <a href="https://github.com/lunaryorn">lunaryorn</a>)</li>
+  <li>upgrade scala to 2.12.1 and fix doc issue around <a href="https://issues.scala-lang.org/browse/SI-7139">SI-7139</a> <a href="https://github.com/optics-dev/Monocle/pull/435">#435</a></li>
+  <li>upgrade scala.js to 0.6.14 <a href="https://github.com/optics-dev/Monocle/pull/466">#466</a></li>
+</ul>
+
+<h1 id="140-m1">1.4.0-M1</h1>
+
+<blockquote>
+  <p>16 December 2016</p>
+</blockquote>
+
+<h3 id="addition-1">Addition</h3>
+
+<ul>
+  <li>add macro based syntax for <code class="highlighter-rouge">ApplyLens</code> <a href="https://github.com/optics-dev/Monocle/pull/434">#434</a> (thanks to <a href="https://github.com/cvogt">cvogt</a>)</li>
+  <li>add lookup methods to various optics <a href="https://github.com/optics-dev/Monocle/pull/425">#425</a> (thanks to <a href="https://github.com/kubum">kubum</a>, <a href="https://github.com/emmedema">emmedema</a> and <a href="https://github.com/julien-truffaut">julien-truffaut</a>)</li>
+  <li>add state ops for <code class="highlighter-rouge">Getter</code> and <code class="highlighter-rouge">Setter</code> <a href="https://github.com/optics-dev/Monocle/pull/415">#415</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</li>
+  <li>add <code class="highlighter-rouge">extract</code>, <code class="highlighter-rouge">extracts</code>, <code class="highlighter-rouge">assign_</code> and <code class="highlighter-rouge">mod_</code> to state ops <a href="https://github.com/optics-dev/Monocle/pull/415">#415</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</li>
+  <li>add <code class="highlighter-rouge">select</code> <a href="https://github.com/optics-dev/Monocle/pull/441">#441</a> (thanks to <a href="https://github.com/sepulkarz">sepulkarz</a>)</li>
+  <li>add <code class="highlighter-rouge">lowerCase</code> and <code class="highlighter-rouge">upperCase</code> <a href="https://github.com/optics-dev/Monocle/pull/446">#446</a> (thanks to <a href="https://github.com/sindoudou">sindoudou</a>)</li>
+</ul>
+
+<h3 id="refactor">Refactor</h3>
+
+<ul>
+  <li>major refactor of typeclasses <a href="https://github.com/optics-dev/Monocle/pull/405">#405</a>:
+    <ul>
+      <li>abstract class instead of trait. This would allow to add methods without breaking binary compatibility</li>
+      <li>move typeclass instances from <code class="highlighter-rouge">monocle.std._</code> to the typeclass companion object. This change will reduce the number of imports required to use a typeclass</li>
+    </ul>
+  </li>
+  <li>curry <code class="highlighter-rouge">find</code>, <code class="highlighter-rouge">exist</code> and <code class="highlighter-rouge">all</code> <a href="https://github.com/optics-dev/Monocle/pull/425">#425</a></li>
+  <li>improve performance of <code class="highlighter-rouge">Index</code> instance for <code class="highlighter-rouge">List</code> and <code class="highlighter-rouge">Vector</code> <a href="https://github.com/optics-dev/Monocle/pull/413">#413</a></li>
+  <li>simplify <code class="highlighter-rouge">Plated</code> instance for <code class="highlighter-rouge">Free</code> <a href="https://github.com/optics-dev/Monocle/pull/404">#404</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+  <li>remove <code class="highlighter-rouge">Order</code> instance for <code class="highlighter-rouge">Char</code> <a href="https://github.com/optics-dev/Monocle/commit/9d036d760d88e438544d150e0bca55523bf454c8">#405</a></li>
+  <li>prevent warning for <code class="highlighter-rouge">higherKinds</code> in <code class="highlighter-rouge">Lens</code> macro <a href="https://github.com/optics-dev/Monocle/pull/434/files#diff-ab3ae99e3b07e5b065b8e9db86af3c48R80">#434</a> (thanks to <a href="https://github.com/cvogt">cvogt</a>)</li>
+</ul>
+
+<h3 id="doc">Doc</h3>
+<ul>
+  <li>use <code class="highlighter-rouge">sbt-microsite</code> <a href="https://github.com/optics-dev/Monocle/pull/411">#411</a> and <a href="https://github.com/optics-dev/Monocle/pull/444">#444</a> (thanks to <a href="https://github.com/VlachJosef">VlachJosef</a>)</li>
+  <li>new icons for website and stickers <a href="https://github.com/optics-dev/Monocle/pull/421">#421</a> (thanks to <a href="https://github.com/mbcltd">mbcltd</a>)</li>
+  <li>add doc for <code class="highlighter-rouge">Optional</code> <a href="https://github.com/optics-dev/Monocle/pull/424">#424</a> (thanks to <a href="https://github.com/mdulac">mdulac</a>)</li>
+  <li>add doc for <code class="highlighter-rouge">Traversal</code> <a href="https://github.com/optics-dev/Monocle/pull/423">#423</a></li>
+</ul>
+
+<h3 id="other-1">Other</h3>
+<ul>
+  <li><code class="highlighter-rouge">kenji</code> aka <a href="https://github.com/xuwei-k">xuwei-k</a> is now a maintainer</li>
+  <li>update build settings for scala.js <a href="https://github.com/optics-dev/Monocle/pull/406">#406</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+</ul>
+
+<h1 id="132">1.3.2</h1>
+
+<blockquote>
+  <p>02 November 2016</p>
+</blockquote>
+
+<ul>
+  <li>add support for scala 2.12.0 <a href="https://github.com/optics-dev/Monocle/pull/408">#408</a></li>
+  <li>use <code class="highlighter-rouge">Free.roll</code> in <code class="highlighter-rouge">Plated[Free[S, A]]</code> instance <a href="https://github.com/optics-dev/Monocle/pull/404">#404</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino </a>)</li>
+  <li>update build settings for scala.js <a href="https://github.com/optics-dev/Monocle/pull/406">#406</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino </a>)</li>
+</ul>
+
+<h1 id="131">1.3.1</h1>
+
+<blockquote>
+  <p>21 October 2016</p>
+</blockquote>
+
+<ul>
+  <li>add support for scala 2.12.0-RC2</li>
+</ul>
+
+<h1 id="130">1.3.0</h1>
+
+<blockquote>
+  <p>18 October 2016</p>
+</blockquote>
+
+<h3 id="addition-2">Addition</h3>
+
+<ul>
+  <li>add <code class="highlighter-rouge">unsafe</code> module with <code class="highlighter-rouge">select</code> <a href="https://github.com/optics-dev/Monocle/pull/394">#394</a> (thanks to <a href="https://github.com/cesartl">cesartl</a>)</li>
+  <li>refactor optics laws to use random functions <a href="https://github.com/optics-dev/Monocle/pull/357">#357</a></li>
+  <li>add <code class="highlighter-rouge">Wrapped</code> typeclass <a href="https://github.com/optics-dev/Monocle/pull/394">#365</a> (thanks to <a href="https://github.com/puffnfresh">puffnfresh</a>)</li>
+  <li>add <code class="highlighter-rouge">State</code> syntax for <code class="highlighter-rouge">Optional</code> <a href="https://github.com/optics-dev/Monocle/pull/387">#387</a> (thanks to <a href="https://github.com/cb372">cb372</a>)</li>
+  <li>add <code class="highlighter-rouge">transformM</code> and <code class="highlighter-rouge">transformCounting</code> to <code class="highlighter-rouge">Plated</code> <a href="https://github.com/optics-dev/Monocle/pull/391">#391</a> (thanks to <a href="https://github.com/arkadius">arkadius</a>)</li>
+  <li>add <code class="highlighter-rouge">applyN</code> for <code class="highlighter-rouge">Traversal</code> <a href="https://github.com/optics-dev/Monocle/pull/379">#379</a> (thanks to <a href="https://github.com/jule64">jule64</a>)</li>
+  <li>add <code class="highlighter-rouge">mapping</code> <a href="https://github.com/optics-dev/Monocle/pull/396">#396</a> (thanks to <a href="https://github.com/mdulac">mdulac</a>)</li>
+</ul>
+
+<h3 id="deprecation">Deprecation</h3>
+
+<ul>
+  <li>remove all deprecated elements from 1.1 e.g. (<code class="highlighter-rouge">Lenser</code>, <code class="highlighter-rouge">headMaybe</code>, <code class="highlighter-rouge">getMaybe</code>, <code class="highlighter-rouge">setMaybe</code>, <code class="highlighter-rouge">modifyMaybe</code>) (<a href="https://github.com/optics-dev/Monocle/commit/ff65c967096e7c1243119075ba35e46f12728f71">see</a>)</li>
+</ul>
+
+<h3 id="upgrades">Upgrades</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>dependencies</th>
+      <th style="text-align: right">monocle 1.2.2</th>
+      <th style="text-align: right">monocle 1.3.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>scalaz</td>
+      <td style="text-align: right">7.2.2</td>
+      <td style="text-align: right">7.2.6</td>
+    </tr>
+    <tr>
+      <td>shapeless</td>
+      <td style="text-align: right">2.2.5</td>
+      <td style="text-align: right">2.3.2</td>
+    </tr>
+    <tr>
+      <td>refined</td>
+      <td style="text-align: right">0.3.2</td>
+      <td style="text-align: right">0.5.0</td>
+    </tr>
+    <tr>
+      <td>discipline</td>
+      <td style="text-align: right">0.4</td>
+      <td style="text-align: right">0.7</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="122">1.2.2</h1>
+
+<blockquote>
+  <p>9 June 2016</p>
+</blockquote>
+
+<h3 id="addition-3">Addition</h3>
+
+<ul>
+  <li>add <code class="highlighter-rouge">apply</code> methods for <code class="highlighter-rouge">Prism</code> and <code class="highlighter-rouge">Iso</code> <a href="https://github.com/optics-dev/Monocle/pull/354">#354</a> (thanks to <a href="https://github.com/sellout">sellout</a>)</li>
+  <li>add <code class="highlighter-rouge">unapply</code> methods for <code class="highlighter-rouge">Prism</code> and <code class="highlighter-rouge">Iso</code> <a href="https://github.com/optics-dev/Monocle/pull/361">#361</a> (thanks to <a href="https://github.com/sellout">sellout</a>)</li>
+  <li>add <code class="highlighter-rouge">partial</code> constructor for <code class="highlighter-rouge">Prism</code> <a href="https://github.com/optics-dev/Monocle/pull/361">#355</a> (thanks to <a href="https://github.com/sellout">sellout</a>)</li>
+</ul>
+
+<h3 id="documentation">Documentation</h3>
+
+<ul>
+  <li>various improvements from <a href="https://github.com/Unisay">Unisay</a>, <a href="https://github.com/fthomas">fthomas</a> and <a href="https://github.com/amrhassan">amrhassan</a></li>
+</ul>
+
+<h1 id="121">1.2.1</h1>
+
+<blockquote>
+  <p>13 April 2016</p>
+</blockquote>
+
+<h3 id="addition-4">Addition</h3>
+
+<ul>
+  <li>support for scala.js <a href="https://github.com/optics-dev/Monocle/pull/335">#335</a> (thanks to <a href="https://github.com/japgolly">japgolly</a>)</li>
+  <li><code class="highlighter-rouge">remove</code>: delete a value associated with a key in a Map-like container <a href="https://github.com/optics-dev/Monocle/pull/341">#341</a> (thanks to <a href="https://github.com/dabd">dabd</a>)</li>
+  <li><code class="highlighter-rouge">doubleToFloat</code>, <code class="highlighter-rouge">bigDecimalToLong</code> and <code class="highlighter-rouge">bigDecimalToInt</code> <a href="https://github.com/optics-dev/Monocle/pull/312">#312</a> (thanks to <a href="https://github.com/mikaelv">mikaelv</a>)</li>
+  <li>optics for <code class="highlighter-rouge">Tuple1</code> <a href="https://github.com/optics-dev/Monocle/pull/313">#313</a> (thanks to <a href="https://github.com/exlevan">exlevan</a>)</li>
+  <li>use random index for <code class="highlighter-rouge">AtTests</code> and <code class="highlighter-rouge">IndexTests</code> <a href="https://github.com/optics-dev/Monocle/pull/343">#343</a> (thanks to <a href="https://github.com/pvillega">pvillega</a>)</li>
+  <li><code class="highlighter-rouge">Each</code> instance for tuples and case classes with fields of the same type <a href="https://github.com/optics-dev/Monocle/pull/347">#347</a> (thanks to <a href="https://github.com/Astrac">Astrac</a>)</li>
+</ul>
+
+<h3 id="bug-fixes">Bug Fixes</h3>
+
+<ul>
+  <li>fix implicit not found message for <code class="highlighter-rouge">Plated</code> <a href="https://github.com/optics-dev/Monocle/pull/320">#320</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+  <li>fix <code class="highlighter-rouge">stringToBoolean</code> such as it satisfies 2nd prism law <a href="https://github.com/optics-dev/Monocle/pull/340">#340</a> (thanks to <a href="https://github.com/hasumedic">hasumedic</a>)</li>
+  <li>fix <code class="highlighter-rouge">stringToLong</code> such as it satisfies 2nd prism law <a href="https://github.com/optics-dev/Monocle/pull/339">#339</a> (thanks to <a href="https://github.com/pvillega">pvillega</a>)</li>
+  <li>fix bit indexing for <code class="highlighter-rouge">Long</code> <a href="https://github.com/optics-dev/Monocle/pull/343">#343</a> (thanks to <a href="https://github.com/pvillega">pvillega</a>)</li>
+</ul>
+
+<h3 id="upgrades-1">Upgrades</h3>
+
+<ul>
+  <li>scala 2.11.8</li>
+  <li>scalaz to 7.2.2</li>
+</ul>
+
+<h1 id="120">1.2.0</h1>
+
+<blockquote>
+  <p>17 December 2015</p>
+</blockquote>
+
+<h3 id="documentation-1">Documentation</h3>
+
+<ul>
+  <li>add example, typeclass and faq sections to the website <a href="https://github.com/optics-dev/Monocle/pull/314">#314</a>, <a href="https://github.com/optics-dev/Monocle/pull/316">#316</a></li>
+  <li>document <a href="https://issues.scala-lang.org/browse/SI-7139">SI-7139</a> limitation for optics constructor in REPL and tut <a href="https://github.com/optics-dev/Monocle/pull/309">#309</a></li>
+</ul>
+
+<h3 id="bug-fixes-1">Bug Fixes</h3>
+
+<ul>
+  <li>generate fresh type-parameter name for <code class="highlighter-rouge">modifyF</code> <a href="https://github.com/optics-dev/Monocle/pull/300">#300</a>  (thanks to <a href="https://github.com/puffnfresh">puffnfresh</a>)</li>
+  <li>publish <code class="highlighter-rouge">monocle-refined</code> with all the other modules <a href="https://github.com/optics-dev/Monocle/pull/311">#311</a></li>
+  <li>publish snapshot automatically for scala 2.10 and 2.11 <a href="https://github.com/optics-dev/Monocle/pull/310">#310</a></li>
+</ul>
+
+<h3 id="upgrades-2">Upgrades</h3>
+
+<ul>
+  <li>scalaz to 7.2.0</li>
+  <li>refined to 0.3.2</li>
+  <li>macro paradise to 2.1.0</li>
+</ul>
+
+<h1 id="120-m2">1.2.0-M2</h1>
+
+<blockquote>
+  <p>22 November 2015</p>
+</blockquote>
+
+<p>Thanks to all the 14 contributors since <a href="https://github.com/optics-dev/Monocle/compare/v1.2.0-M1...v1.2.0-M2">1.2.0-M1</a></p>
+
+<h3 id="addition-5">Addition</h3>
+
+<ul>
+  <li>add <code class="highlighter-rouge">only</code> <code class="highlighter-rouge">Prism</code> to match a single value <a href="https://github.com/optics-dev/Monocle/commit/5f6d414019883045ab5e92ea1a6cc650e1f5e0f5">see</a></li>
+  <li>add <code class="highlighter-rouge">below</code> <code class="highlighter-rouge">Prism</code> to lift a <code class="highlighter-rouge">Prism</code> in a <code class="highlighter-rouge">Traverse</code> <a href="https://github.com/optics-dev/Monocle/commit/ed7b067d62891352a2a05e1a570451e3740a2446">see</a></li>
+  <li>add <code class="highlighter-rouge">length</code> for <code class="highlighter-rouge">Fold</code> and <code class="highlighter-rouge">Traversal</code> <a href="https://github.com/optics-dev/Monocle/commit/1773e93bfe2a7e229c57fc7915ec3519b8831eee">#236</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+  <li>add optics for <code class="highlighter-rouge">scalaz.Either3</code> <a href="https://github.com/optics-dev/Monocle/commit/720ff020b08be8d7ffb3f60e3d1377147c1dce50">#242</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+  <li>add <code class="highlighter-rouge">optNelToList</code> <code class="highlighter-rouge">Iso</code> <a href="https://github.com/optics-dev/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0">see</a></li>
+  <li>add <code class="highlighter-rouge">fromIso</code> combinator for all optics <a href="https://github.com/optics-dev/Monocle/commit/db0c92c7bffcf41e40f5368caafa26b337983a7c">#245</a></li>
+  <li>add <code class="highlighter-rouge">left</code> and <code class="highlighter-rouge">right</code> methods for <code class="highlighter-rouge">Iso</code>, <code class="highlighter-rouge">Prism</code>, <code class="highlighter-rouge">Getter</code> and <code class="highlighter-rouge">Fold</code> <a href="https://github.com/optics-dev/Monocle/commit/8efd6c85f8a3697abc11feae0a5f1a2ba7fd0a58">#273</a></li>
+  <li>add safe down cast from BigInt <a href="https://github.com/optics-dev/Monocle/commit/1f3c37be2d3e950b1a84b4f1d05c5468bc80e6da">#267</a></li>
+  <li>add <code class="highlighter-rouge">productToTuple</code> <code class="highlighter-rouge">Iso</code> between case class and tuple using shapeless <a href="https://github.com/optics-dev/Monocle/commit/c82c03c95e33314f1cac442b8e47252d5419af77">#247</a></li>
+  <li>add <code class="highlighter-rouge">GenIso.fields</code> white box that generates the same <code class="highlighter-rouge">Iso</code> than <code class="highlighter-rouge">productToTuple</code> with better performances but less IDE support <a href="https://github.com/optics-dev/Monocle/pull/297">#297</a> (thanks to <a href="https://github.com/japgolly">japgolly</a>)</li>
+  <li>add <code class="highlighter-rouge">@PLenses</code> macro annotation to generate <code class="highlighter-rouge">PLens</code> for case class with type parameters <a href="https://github.com/optics-dev/Monocle/commit/f80ee012971689ec31865b67665e2641429b24fd">#114</a> (thanks to <a href="https://github.com/exlevan">exlevan</a>)</li>
+  <li>add <code class="highlighter-rouge">Plated</code> typeclass <a href="https://github.com/optics-dev/Monocle/commit/2be8bcf8d51113e6b0230dafd065289767da2f28">#289</a> (thanks to <a href="https://github.com/puffnfresh">puffnfresh</a>)</li>
+  <li>add optics for <code class="highlighter-rouge">scalaz.Cofree</code> <a href="https://github.com/optics-dev/Monocle/commit/a1b71065b36ddac7a94118b04748628d1dcc260c">#290</a> (thanks to <a href="https://github.com/LiamGoodacre">LiamGoodacre</a>)</li>
+</ul>
+
+<h3 id="non-backward-compatible-change">Non backward compatible change</h3>
+<ul>
+  <li>change mega imports from package object to <code class="highlighter-rouge">all</code> object, e.g. <code class="highlighter-rouge">import monocle.function._</code> becomes <code class="highlighter-rouge">import monocle.function.all._</code> <a href="https://github.com/optics-dev/Monocle/pull/243">#243</a></li>
+  <li>change <code class="highlighter-rouge">At</code> definition from <code class="highlighter-rouge">def at(index: I): Lens[S, Option[A]]</code> to <code class="highlighter-rouge">def at(index: I): Lens[S, A]</code></li>
+  <li>change <code class="highlighter-rouge">At</code> instance for <code class="highlighter-rouge">Set</code> and <code class="highlighter-rouge">ISet</code> from <code class="highlighter-rouge">Lens[S, Option[Unit]]</code> to <code class="highlighter-rouge">Lens[S, Boolean]</code></li>
+  <li>remove <code class="highlighter-rouge">Index</code> instances for bit indexing primitive <code class="highlighter-rouge">Long</code>, <code class="highlighter-rouge">Int</code>, <code class="highlighter-rouge">Char</code>, <code class="highlighter-rouge">Bye</code> from <code class="highlighter-rouge">monocle-core</code></li>
+  <li>add <code class="highlighter-rouge">monocle-refined</code> module with <code class="highlighter-rouge">At</code> instances for bit indexing primitive <code class="highlighter-rouge">Long</code>, <code class="highlighter-rouge">Int</code>, <code class="highlighter-rouge">Char</code>, <code class="highlighter-rouge">Bye</code> <a href="https://github.com/optics-dev/Monocle/pull/291">#291</a> (thanks to <a href="https://github.com/fthomas">fthomas</a> and <a href="https://github.com/julien-truffaut">julien-truffaut</a>)</li>
+</ul>
+
+<h3 id="deprecation-1">Deprecation</h3>
+<ul>
+  <li>deprecate <code class="highlighter-rouge">theseDisjunction</code> to <code class="highlighter-rouge">theseToDisjunction</code> <a href="https://github.com/optics-dev/Monocle/commit/bde69571074ef6dc08c3d240154feaa40aaaece5">see</a></li>
+  <li>deprecate <code class="highlighter-rouge">nelAndOneIso</code> to <code class="highlighter-rouge">nelToOneAnd</code> <a href="https://github.com/optics-dev/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0">see</a></li>
+  <li>deprecate <code class="highlighter-rouge">sum</code> to <code class="highlighter-rouge">choice</code> and <code class="highlighter-rouge">product</code> to <code class="highlighter-rouge">split</code> <a href="https://github.com/optics-dev/Monocle/commit/f6b163b1702bef046f26576d2e182f32352b88d7">#239</a></li>
+</ul>
+
+<h3 id="documentation-2">Documentation</h3>
+<ul>
+  <li>add tut examples for <code class="highlighter-rouge">Prism</code> <a href="https://github.com/optics-dev/Monocle/commit/c65a0c4617b41b0a9f31674516c674efc5d0feb0">#228</a></li>
+  <li>add tut examples for <code class="highlighter-rouge">Iso</code> <a href="https://github.com/optics-dev/Monocle/commit/61a526717417728ab4ad92fa9ba10aa0267a58d6">#279</a> (thanks to <a href="https://github.com/justjoheinz">justjoheinz</a>)</li>
+  <li>add examples for Http Request optics usage <a href="https://github.com/optics-dev/Monocle/commit/234097ce1f8601eab8ab47e6610d56aea59acce4">#262</a> (thanks to <a href="https://github.com/1ambda">1ambda</a>)</li>
+  <li>add learning resources to the website <a href="https://github.com/optics-dev/Monocle/commit/0bc53359e799e1124ad5a8c0f90ae9d85bd690d9">#251</a></li>
+</ul>
+
+<h3 id="bug-fixes-2">Bug Fixes</h3>
+<ul>
+  <li>fix long parser <a href="https://github.com/optics-dev/Monocle/commit/1cdfc0fae44df71700f4d53cfbf23d0f9575ee07">#244</a> (thanks to <a href="https://github.com/NightRa">NightRa</a>)</li>
+  <li>fix <code class="highlighter-rouge">GenIso</code> case class with type parameter <a href="https://github.com/optics-dev/Monocle/commit/fa6dc7d164142c4fae1ec8014f3eb8c4f9619191">#263</a></li>
+</ul>
+
+<h3 id="optimisation">Optimisation</h3>
+<ul>
+  <li>improve performances of <code class="highlighter-rouge">index</code> for <code class="highlighter-rouge">Vector</code> <a href="https://github.com/optics-dev/Monocle/commit/d4a29c279ed78c3acd8b253cb525cb71e8656ee4">#258</a> (thanks to <a href="https://github.com/spebbe">spebbe</a>)</li>
+</ul>
+
+<h3 id="upgrades-3">Upgrades</h3>
+<ul>
+  <li>scala to 2.10.6</li>
+  <li>scalaz to 7.1.4</li>
+  <li>shapeless to 2.2.5</li>
+  <li>macro-compat to 1.1.0</li>
+  <li>macro paradise to 2.1.0-M5</li>
+</ul>
+
+<h1 id="120-m1">1.2.0-M1</h1>
+
+<blockquote>
+  <p>06 July 2015</p>
+</blockquote>
+
+<ul>
+  <li>laws definition move to <code class="highlighter-rouge">core</code> module <a href="https://github.com/optics-dev/Monocle/tree/master/core/src/main/scala/monocle/law">see</a>.
+Properties are still defined in <code class="highlighter-rouge">law</code> module with <a href="https://github.com/typelevel/discipline">discipline</a></li>
+  <li>optics defined for <code class="highlighter-rouge">scalaz.Validation</code> <a href="https://github.com/optics-dev/Monocle/pull/211">#211</a> (thanks to <a href="https://github.com/anakos">anakos</a>)</li>
+  <li><code class="highlighter-rouge">hListAt</code> is now public <a href="https://github.com/optics-dev/Monocle/commit/b8567a677dc70e3db8548c421f487e213f206946">see</a></li>
+  <li>add basic state support for <code class="highlighter-rouge">Lens</code> in an experimental <code class="highlighter-rouge">state</code> module <a href="https://github.com/optics-dev/Monocle/commit/ee2dbd70cc47693615ad539b2dfd5d9c09bcd2be">see</a></li>
+  <li>add <code class="highlighter-rouge">void</code> for <code class="highlighter-rouge">Optional</code>, <code class="highlighter-rouge">Traversal</code>, <code class="highlighter-rouge">Fold</code> and <code class="highlighter-rouge">Setter</code> <a href="https://github.com/optics-dev/Monocle/commit/03f199847a1f572891f48e3e5aef080631f87e2c">see</a></li>
+  <li>add <code class="highlighter-rouge">Setter</code> constructor using <code class="highlighter-rouge">scalaz.Contravariant</code> and <code class="highlighter-rouge">scalaz.Profunctor</code> <a href="https://github.com/optics-dev/Monocle/commit/d50ec207b0c0b92061e2ad23de4bcaa841874a75">see</a></li>
+  <li><code class="highlighter-rouge">GenIso</code> for object and empty case classes <a href="https://github.com/optics-dev/Monocle/pull/219">#219</a> and <a href="https://github.com/optics-dev/Monocle/pull/223">#223</a> (thanks to <a href="https://github.com/adelbertc">adelbertc</a>)</li>
+  <li>add <code class="highlighter-rouge">optionToDisjunction</code> <code class="highlighter-rouge">Iso</code> <a href="https://github.com/optics-dev/Monocle/pull/226">#226</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+  <li>add monomorphic optics for <code class="highlighter-rouge">Option</code>, <code class="highlighter-rouge">Either</code>, <code class="highlighter-rouge">scalaz.Disjunction</code>, <code class="highlighter-rouge">scalaz.Validation</code> <a href="https://github.com/optics-dev/Monocle/issues/181">#181</a></li>
+</ul>
+
+<h3 id="build">Build</h3>
+<ul>
+  <li>publish snapshot automatically <a href="https://github.com/optics-dev/Monocle/issues/207">#207</a></li>
+  <li>create basic web site using compile time verified examples with <code class="highlighter-rouge">tut</code> <a href="https://github.com/optics-dev/Monocle/pull/227">#227</a></li>
+</ul>
+
+<h3 id="bug-fixes-3">Bug Fixes</h3>
+<ul>
+  <li><a href="https://github.com/optics-dev/Monocle/issues/205">#205</a></li>
+</ul>
+
+<h3 id="upgrades-4">Upgrades</h3>
+<ul>
+  <li>scala to 2.10.5 and 2.11.7</li>
+  <li>scalaz to 7.1.3</li>
+  <li>shapeless to 2.2.3</li>
+  <li>kind projector to 0.6.0</li>
+</ul>
+
+<h1 id="110">1.1.0</h1>
+
+<blockquote>
+  <p>31 Mars 2015</p>
+</blockquote>
+
+<h3 id="all-optics-are-now-abstract-classes">All Optics are now abstract classes</h3>
+<ul>
+  <li>easier to change implementation and maintain backward compatibility</li>
+  <li>offer faster implementation using macros or <code class="highlighter-rouge">new</code> (not recommended)</li>
+</ul>
+
+<h3 id="deprecate-use-of-maybe-and-ilist-in-interface">Deprecate use of <code class="highlighter-rouge">Maybe</code> and <code class="highlighter-rouge">IList</code> in interface</h3>
+<ul>
+  <li>1.0.0 replaced <code class="highlighter-rouge">Option</code> by <code class="highlighter-rouge">scalaz.Maybe</code> but it turns out that <code class="highlighter-rouge">Maybe</code> advantages are not worth the cost of moving away from scala std.</li>
+  <li>same between <code class="highlighter-rouge">List</code> and <code class="highlighter-rouge">scalaz.IList</code></li>
+</ul>
+
+<h3 id="add-category-related-instances-and-methods">Add <code class="highlighter-rouge">Category</code> related instances and methods</h3>
+<ul>
+  <li>type classes e.g. <code class="highlighter-rouge">Compose</code>, <code class="highlighter-rouge">Category</code>, <code class="highlighter-rouge">Arrow</code>, <code class="highlighter-rouge">Choice</code></li>
+  <li>methods e.g. <code class="highlighter-rouge">id</code>, <code class="highlighter-rouge">codiagonal</code>, <code class="highlighter-rouge">first</code>, <code class="highlighter-rouge">second</code>, <code class="highlighter-rouge">sum</code>, <code class="highlighter-rouge">product</code></li>
+</ul>
+
+<h3 id="macro">Macro</h3>
+<ul>
+  <li><code class="highlighter-rouge">monocle.macros.GenIso</code> generates <code class="highlighter-rouge">Iso</code> for case class with a single accessor</li>
+  <li><code class="highlighter-rouge">monocle.macros.GenPrism</code> generates <code class="highlighter-rouge">Prism</code> for sealed trait</li>
+  <li><code class="highlighter-rouge">@Lenses</code> now supports case classes with type parameters <a href="https://github.com/optics-dev/Monocle/blob/697bbf0ca3cbb1e8e8b3a63626fc45dfca3cd3cf/example/src/test/scala/monocle/LensExample.scala#L62">see</a></li>
+  <li><code class="highlighter-rouge">Lenser</code> is deprecated, use <code class="highlighter-rouge">GenLens</code> instead (same functionality but more consistent naming)</li>
+</ul>
+
+<h3 id="spark-friendly">Spark friendly</h3>
+<ul>
+  <li>Optics and type classes extends <code class="highlighter-rouge">Serializable</code></li>
+</ul>
+
+<h3 id="syntax">Syntax</h3>
+<ul>
+  <li>using optics as an infix operator operator requires a single import <code class="highlighter-rouge">monocle.syntax.apply</code> or <code class="highlighter-rouge">monocle.syntax._</code></li>
+</ul>
+
+<h1 id="100">1.0.0</h1>
+
+<blockquote>
+  <p>14 December 2014</p>
+</blockquote>
+
+<h3 id="rename-optics">Rename Optics</h3>
+<ul>
+  <li><code class="highlighter-rouge">Iso</code>, <code class="highlighter-rouge">Lens</code>, <code class="highlighter-rouge">Prism</code>, <code class="highlighter-rouge">Optional</code>, <code class="highlighter-rouge">Traversal</code> and <code class="highlighter-rouge">Setter</code> were prepended by a P for Polymorphic</li>
+  <li><code class="highlighter-rouge">SimpleIso</code>, <code class="highlighter-rouge">SimpleLens</code>, <code class="highlighter-rouge">SimplePrism</code>, <code class="highlighter-rouge">SimpleOptional</code>, <code class="highlighter-rouge">SimpleTraversal</code> and <code class="highlighter-rouge">SimpleSetter</code> lost <code class="highlighter-rouge">Simple</code></li>
+  <li>for example, <code class="highlighter-rouge">Lens</code> was renamed to <code class="highlighter-rouge">PLens</code> and <code class="highlighter-rouge">SimpleLens</code> to <code class="highlighter-rouge">Lens</code></li>
+  <li>benefits: in practice most optics are not polymorphic, so it is more convenient to have a shorter name for the most used optics.</li>
+</ul>
+
+<h3 id="no-inheritance-between-optics">No inheritance between Optics</h3>
+<ul>
+  <li>All Optics use <code class="highlighter-rouge">asX</code> methods to transform Optics, e.g. <code class="highlighter-rouge">Prism[S, T, A, B]</code> has methods <code class="highlighter-rouge">asOptional: Optional[S, T, A, B]</code>, <code class="highlighter-rouge">asTraversal: Traversal[S, T, A, B]</code>, … methods</li>
+</ul>
+
+<h3 id="compose-direction">Compose direction</h3>
+<ul>
+  <li>in 0.5, <code class="highlighter-rouge">composeY</code> meant that the result of the composition is an Optic of type <code class="highlighter-rouge">Y</code></li>
+  <li>in 1.0, <code class="highlighter-rouge">composeY</code> means that you compose with an Optic of type <code class="highlighter-rouge">Y</code></li>
+</ul>
+
+<h3 id="main-method-changes">Main method changes</h3>
+<ul>
+  <li>removed <code class="highlighter-rouge">set</code>, <code class="highlighter-rouge">modify</code>, <code class="highlighter-rouge">setOption</code>, <code class="highlighter-rouge">modifyOption</code></li>
+  <li><code class="highlighter-rouge">setF</code> became <code class="highlighter-rouge">set</code></li>
+  <li><code class="highlighter-rouge">setFOption</code> became <code class="highlighter-rouge">setMaybe</code></li>
+  <li><code class="highlighter-rouge">modifyF</code> became <code class="highlighter-rouge">modify</code></li>
+  <li><code class="highlighter-rouge">modifyFOption</code> became <code class="highlighter-rouge">modifyMaybe</code></li>
+  <li><code class="highlighter-rouge">modifyF</code> became <code class="highlighter-rouge">lift</code> or <code class="highlighter-rouge">multiLift</code> depending on the Optic</li>
+  <li><code class="highlighter-rouge">getOption</code> became <code class="highlighter-rouge">getMaybe</code></li>
+</ul>
+
+<h3 id="simplified-constructors">Simplified Constructors</h3>
+<ul>
+  <li>Curry Optics constructor and merged Simple Optic constructors</li>
+  <li>Shuffle methods and parameters order to be consistent between Optics</li>
+</ul>
+
+<h3 id="use-maybe-and-ilist-from-scalaz-instead-of-option-and-list-from-std">Use Maybe and IList from scalaz instead of Option and List from std</h3>
+<ul>
+  <li><code class="highlighter-rouge">Maybe</code> can be transformed to <code class="highlighter-rouge">Option</code> by calling <code class="highlighter-rouge">toOption</code></li>
+  <li><code class="highlighter-rouge">IList</code> can be transformed to <code class="highlighter-rouge">List</code> by calling <code class="highlighter-rouge">toList</code></li>
+  <li>benefits: no variance, better scalaz support, safer methods</li>
+</ul>
+
+<h3 id="simplified-type-classes">Simplified type classes</h3>
+<ul>
+  <li>merged <code class="highlighter-rouge">HeadOption</code> and <code class="highlighter-rouge">TailOption</code> into <code class="highlighter-rouge">Cons</code></li>
+  <li>merged <code class="highlighter-rouge">Head</code> and <code class="highlighter-rouge">Tail</code> into <code class="highlighter-rouge">Cons1</code></li>
+  <li>merged <code class="highlighter-rouge">InitOption</code> and <code class="highlighter-rouge">LastOption</code> into <code class="highlighter-rouge">Snoc</code></li>
+  <li>merged <code class="highlighter-rouge">Init</code> and <code class="highlighter-rouge">Last</code> into <code class="highlighter-rouge">Snoc1</code></li>
+  <li>removed <code class="highlighter-rouge">SafeCast</code> as it was simply a way to summon <code class="highlighter-rouge">Prism</code> implicitly</li>
+  <li>removed <code class="highlighter-rouge">AtBit</code> and defined <code class="highlighter-rouge">Index[S, Int, Boolean]</code> where <code class="highlighter-rouge">S</code> is a numeric type</li>
+</ul>
+
+<h3 id="macros">Macros</h3>
+<ul>
+  <li>all macros have been moved to <code class="highlighter-rouge">monocle.macros</code> package</li>
+  <li><code class="highlighter-rouge">mkLens</code> has been moved to <code class="highlighter-rouge">monocle.macros.internal</code>, i.e. it is not public anymore. Use <code class="highlighter-rouge">Lenser</code> or <code class="highlighter-rouge">@Lenses</code></li>
+</ul>
+
+<h1 id="051">0.5.1</h1>
+
+<blockquote>
+  <p>29 September 2014</p>
+</blockquote>
+
+<h3 id="macros-1">Macros</h3>
+
+<ul>
+  <li>Add <code class="highlighter-rouge">@Lenses</code> Macro annotation to generate <code class="highlighter-rouge">SimpleLens</code> automatically for case classes</li>
+  <li>Add <code class="highlighter-rouge">Lenser</code> Macro to generate <code class="highlighter-rouge">SimpleLens</code> with a better IDE support than Macro annotation</li>
+  <li>Deprecate <code class="highlighter-rouge">mkLens</code> Macro as <code class="highlighter-rouge">Lenser</code> is strictly more powerful</li>
+</ul>
+
+<h3 id="bug-fix">Bug Fix</h3>
+
+<ul>
+  <li><a href="https://github.com/optics-dev/Monocle/commit/a544743ca439b485ac2be178f290a85bbf6c2c80">Fix</a> <code class="highlighter-rouge">SafeCast</code> between <code class="highlighter-rouge">String</code> to <code class="highlighter-rouge">Int</code></li>
+</ul>
+
+<h1 id="050">0.5.0</h1>
+
+<blockquote>
+  <p>03 August 2014</p>
+</blockquote>
+
+<h3 id="build-and-dependencies">Build and Dependencies</h3>
+
+<ul>
+  <li>Upgrade scalaz dependency from 7.0.6 to 7.1</li>
+  <li>Upgrade specs2 dependency from 2.3.11 to 2.4</li>
+  <li>Build with scala 2.11.2</li>
+  <li>Use sbt-typelevel plugin</li>
+</ul>
+
+<h3 id="breaking-changes">Breaking Changes</h3>
+
+<ul>
+  <li>SimpleOptional apply method takes a setter function from <code class="highlighter-rouge">(S, A) =&gt; A</code> instead of <code class="highlighter-rouge">(S, Option[A]) =&gt; A</code></li>
+  <li>Polymorphic optics instance reorganisation: All instances has been move from the companion objects of the
+polymorphic optics to packages:
+    <ul>
+      <li><code class="highlighter-rouge">monocle.std</code> for standard Scala and scalaz classes</li>
+      <li><code class="highlighter-rouge">monocle.generic</code> for shapeless classes</li>
+    </ul>
+
+    <p>Check out this <a href="../example/src/test/scala/other/ImportExample">example</a> to see how it affects imports</p>
+  </li>
+  <li>reverseModify has been moved from Monocle package object to <code class="highlighter-rouge">Prism</code> syntax</li>
+</ul>
+
+<h3 id="new-features">New Features</h3>
+
+<ul>
+  <li>Add setOption and modifyOption for <code class="highlighter-rouge">Optional</code></li>
+  <li>Flipped curried version of <code class="highlighter-rouge">set =&gt; setF</code>, <code class="highlighter-rouge">modify =&gt; modifyF</code>, <code class="highlighter-rouge">setOption =&gt; setOptionF</code>, <code class="highlighter-rouge">modifyOption =&gt; modifyOptionF</code>
+See <a href="../example/src/test/scala/monocle/LensExample.scala#L43">example</a></li>
+  <li>New constructors for simple optics with better type inference, see <a href="../test/src/test/scala/monocle/LensSpec.scala#L13-L16">example</a></li>
+  <li>implicit not found annotations have been added to polymorphic optics to help user figuring out which import is missing</li>
+  <li><code class="highlighter-rouge">monocle.scalaz.Either</code> has been renamed <code class="highlighter-rouge">monocle.scalaz.Disjunction</code> to avoid clashes with <code class="highlighter-rouge">monocle.std.Either</code></li>
+  <li>Add <code class="highlighter-rouge">Each</code>, <code class="highlighter-rouge">Index</code>, <code class="highlighter-rouge">Field1</code>, <code class="highlighter-rouge">Head</code>, <code class="highlighter-rouge">Tail</code> and <code class="highlighter-rouge">LastOption</code> instances for <code class="highlighter-rouge">scalaz.OneAnd</code></li>
+  <li>Add <code class="highlighter-rouge">Each</code>, <code class="highlighter-rouge">HeadOption</code>, and <code class="highlighter-rouge">LastOption</code> for <code class="highlighter-rouge">scala.Some</code></li>
+</ul>
+
+<h1 id="040">0.4.0</h1>
+
+<blockquote>
+  <p>28 May 2014</p>
+</blockquote>
+
+<h3 id="modularity-and-build">Modularity and build</h3>
+<ul>
+  <li>Cross build for scala 2.10.4 and 2.11.0</li>
+  <li>Move Optic Laws from module core to law module</li>
+  <li>Move <code class="highlighter-rouge">Macro</code> from module core to macro module</li>
+  <li>Update dependencies
+    <ul>
+      <li>Remove scalacheck, scala-reflect and scala-compiler dependencies from core</li>
+      <li>upgrade scalacheck to 1.11.3</li>
+    </ul>
+  </li>
+  <li>Add Mima support on core to check for binary compatibility between minor version for next releases</li>
+</ul>
+
+<h3 id="new-major-concept-optional">New major concept: Optional</h3>
+<ul>
+  <li>Add <code class="highlighter-rouge">Optional</code> a new major concept that represents a 0-1 <code class="highlighter-rouge">Traversal</code>. <code class="highlighter-rouge">Optional</code> is a sub class of <code class="highlighter-rouge">Traversal</code> and
+a super class of <code class="highlighter-rouge">Lens</code> and <code class="highlighter-rouge">Prism</code>. Composing a <code class="highlighter-rouge">Lens</code> and a <code class="highlighter-rouge">Prism</code> creates an <code class="highlighter-rouge">Optional</code> instead of a <code class="highlighter-rouge">Traversal</code>,
+hence we maintain information that the resulting Optic zooms to an optional object and not a list</li>
+  <li>Rename <code class="highlighter-rouge">Head</code> -&gt; <code class="highlighter-rouge">HeadOption</code>, <code class="highlighter-rouge">Last</code> -&gt; <code class="highlighter-rouge">LastOption</code>, <code class="highlighter-rouge">Tail</code> -&gt; <code class="highlighter-rouge">TailOption</code>and <code class="highlighter-rouge">Init</code> -&gt; <code class="highlighter-rouge">InitOption</code></li>
+  <li>Change <code class="highlighter-rouge">HeadOption</code>, <code class="highlighter-rouge">LastOption</code>, <code class="highlighter-rouge">TailOption</code>, <code class="highlighter-rouge">InitOption</code> Optic from <code class="highlighter-rouge">Traversal</code> to <code class="highlighter-rouge">Optional</code></li>
+</ul>
+
+<h3 id="functions">Functions</h3>
+<ul>
+  <li>Generalize <code class="highlighter-rouge">Reverse</code>, <code class="highlighter-rouge">Tail</code> and <code class="highlighter-rouge">Init</code> from 1 to 2 types parameters.</li>
+  <li>Add <code class="highlighter-rouge">Head</code>, <code class="highlighter-rouge">Last</code>, <code class="highlighter-rouge">Tail</code>, <code class="highlighter-rouge">Init</code> functions with the same semantic than the Option (<code class="highlighter-rouge">HeadOption</code>, …) variant except
+that their Optic is a <code class="highlighter-rouge">Lens</code> and not an <code class="highlighter-rouge">Optional</code>. This implies that <code class="highlighter-rouge">Head</code>, <code class="highlighter-rouge">Last</code>, <code class="highlighter-rouge">Tail</code>, <code class="highlighter-rouge">Init</code> can only be defined on
+elements with a mandatory head, last, tail and init. Implemented on 2-6 tuple and <code class="highlighter-rouge">HList</code>.</li>
+  <li>Implemented <code class="highlighter-rouge">Reverse</code> instances on all tuple and <code class="highlighter-rouge">HList</code>.</li>
+  <li>Implemented <code class="highlighter-rouge">Reverse</code>, <code class="highlighter-rouge">Head</code>, <code class="highlighter-rouge">Last</code>, <code class="highlighter-rouge">Tail</code>, <code class="highlighter-rouge">Init</code> instances on all tuple and <code class="highlighter-rouge">HList</code>.</li>
+  <li>Implemented <code class="highlighter-rouge">HeadOption</code>, <code class="highlighter-rouge">LastOption</code>, <code class="highlighter-rouge">TailOption</code>, <code class="highlighter-rouge">InitOption</code>, <code class="highlighter-rouge">Each</code>, <code class="highlighter-rouge">Index</code> and <code class="highlighter-rouge">FilterIndex</code> for scalaz <code class="highlighter-rouge">IList</code>.</li>
+</ul>
+
+<h3 id="miscellaneous">Miscellaneous</h3>
+<ul>
+  <li>Add reverseModify on <code class="highlighter-rouge">SimplePrism</code> as an alias for <code class="highlighter-rouge">getOption map modify</code>.</li>
+  <li>Add syntax for <code class="highlighter-rouge">Getter</code>, <code class="highlighter-rouge">Fold</code> and <code class="highlighter-rouge">Setter</code>.</li>
+  <li>Add non symbolic functions to use Optics as operators, e.g.
+<code class="highlighter-rouge">List(1,2,3) applyTraversal each getAll</code> instead of <code class="highlighter-rouge">List(1,2,3) |-&gt;&gt; each getAll</code></li>
+  <li>Add import for all syntax: <code class="highlighter-rouge">import monocle.syntax._</code></li>
+</ul>
+
+<h1 id="030">0.3.0</h1>
+
+<blockquote>
+  <p>02 May 2014</p>
+</blockquote>
+
+<ul>
+  <li>Update dependencies
+    -    scala to 2.10.4
+    -    shapeless to 2.0.0
+    -    macro paradise to 2.0.0
+    -    quasi quotes to 2.0.0</li>
+  <li>Add apply4 to apply6 methods to Traversal</li>
+  <li>Add <code class="highlighter-rouge">Each</code> instance for 4 to 6 tuple of same type</li>
+  <li>Generic sub module:
+    -    Add <code class="highlighter-rouge">Field1</code> to <code class="highlighter-rouge">Field6</code> instances for <code class="highlighter-rouge">HList</code>
+    -    Add <code class="highlighter-rouge">SafeCast</code> instance for <code class="highlighter-rouge">Coproduct</code>, hence supporting Prism for sealed family
+    -    Remove <code class="highlighter-rouge">_1</code>, <code class="highlighter-rouge">_2</code>, <code class="highlighter-rouge">_3</code> Lens using shapeless <code class="highlighter-rouge">Generic</code>, since composing <code class="highlighter-rouge">toHList</code> Iso and <code class="highlighter-rouge">Fields</code> Lens is equivalent</li>
+</ul>
+
+<h1 id="020">0.2.0</h1>
+
+<blockquote>
+  <p>27 April 2014</p>
+</blockquote>
+
+<ul>
+  <li>Add generic Lens, Traversal, Iso and Prism in monocle.function:
+    <ul>
+      <li><code class="highlighter-rouge">_1</code>, <code class="highlighter-rouge">_2</code>, …, <code class="highlighter-rouge">_6</code>, Lens to focus on the ith element of a tuple. Implemented for tuple of size 6 or less</li>
+      <li><code class="highlighter-rouge">atBit(i: Int)</code>, Lens to focus on ith Bit. Implemented for Boolean, Byte, Char, Int and Long</li>
+      <li><code class="highlighter-rouge">safeCast</code>, Prism defining a safe down casting between two types. Implemented for most primitive type and String</li>
+      <li><code class="highlighter-rouge">curry</code> and <code class="highlighter-rouge">uncurry</code>, Iso for functions with up to 5 parameters</li>
+      <li><code class="highlighter-rouge">head</code> and <code class="highlighter-rouge">last</code>, Traversal to the first and last element respectively. Implemented for std List, Vector, Stream, Option and String</li>
+      <li><code class="highlighter-rouge">tail</code> and <code class="highlighter-rouge">init</code>, Traversal to all elements except first and all elements except last respectively.
+Implemented for std List, Vector, Stream and String</li>
+      <li><code class="highlighter-rouge">reverse</code>, Iso that reverses the order of elements. Implemented for std List, Vector, Stream, String and scalaz Tree</li>
+      <li><code class="highlighter-rouge">index(i: Int)</code>, Traversal to focus on ith element. Implemented for std List, Vector, Stream, Map and String</li>
+      <li><code class="highlighter-rouge">each</code>, Traversal to focus on all elements. Implemented for std List, Vector, Stream, Option, Map, String, pair and triple of same type and scalaz tree</li>
+      <li><code class="highlighter-rouge">filterIndex(predicate: Index =&gt; Boolean)</code>, Traversal to focus on all elements with index verifying predicate.
+Implemented for List, Vector, Stream, Map and String</li>
+      <li><code class="highlighter-rouge">at(key: K)</code>, Lens to focus on an optional element at a key, strictly more powerful than index as it permits to
+add and delete elements. Implemented for Map</li>
+    </ul>
+  </li>
+  <li>Alias for Iso, Prism, Lens and Traversal composition:
+    <ul>
+      <li><code class="highlighter-rouge">&lt;-&gt;  == composeIso</code></li>
+      <li><code class="highlighter-rouge">?-&gt;  == composePrism</code></li>
+      <li><code class="highlighter-rouge">|-&gt;  == composeLens</code></li>
+      <li><code class="highlighter-rouge">|-&gt;&gt; == composeTraversal</code></li>
+    </ul>
+  </li>
+  <li>Add experimental sub project generic, using shapeless to generate Iso between <code class="highlighter-rouge">HList</code> and case class or tuple</li>
+  <li>Add documentation in examples</li>
+</ul>
+
+<h1 id="010">0.1.0</h1>
+
+<blockquote>
+  <p>27 February 2014</p>
+</blockquote>
+
+<ul>
+  <li>First release</li>
+</ul>
+</section></div></div></div></div><script src="/Monocle/highlight/highlight.pack.js"></script><script>
+// For all code blocks, copy the language from the containing div
+// to the inner code tag (where hljs expects it to be)
+const langPrefix = 'language-';
+document.querySelectorAll(`div[class^='${langPrefix}']`).forEach(function(div) {
+  div.classList.forEach(function(cssClass) {
+    if (cssClass.startsWith(langPrefix)) {
+      const lang = cssClass.substring(langPrefix.length);
+      div.querySelectorAll('pre code').forEach(function(code) {
+        code.classList.add(lang);
+      });
+    }
+  });
+});
+
+hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlightingOnLoad();
+      </script><script>console.info('\x57\x65\x62\x73\x69\x74\x65\x20\x62\x75\x69\x6c\x74\x20\x77\x69\x74\x68\x3a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x5f\x5f\x0a\x20\x20\x20\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x5f\x20\x20\x2f\x20\x2f\x5f\x20\x20\x20\x20\x20\x20\x5f\x5f\x5f\x5f\x20\x5f\x5f\x5f\x20\x20\x28\x5f\x29\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x28\x5f\x29\x20\x2f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x0a\x20\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x60\x5f\x5f\x20\x5c\x2f\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x20\x2f\x20\x5f\x5f\x2f\x20\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x0a\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x5f\x2f\x20\x2f\x20\x2f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x5f\x5f\x2f\x20\x2f\x20\x20\x2f\x20\x2f\x5f\x2f\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x20\x2f\x5f\x2f\x20\x20\x5f\x5f\x28\x5f\x5f\x20\x20\x29\x0a\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2e\x5f\x5f\x5f\x2f\x5c\x5f\x5f\x2f\x20\x20\x20\x20\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x2f\x20\x20\x20\x5c\x5f\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x0a\x0a\x68\x74\x74\x70\x73\x3a\x2f\x2f\x34\x37\x64\x65\x67\x2e\x67\x69\x74\x68\x75\x62\x2e\x69\x6f\x2f\x73\x62\x74\x2d\x6d\x69\x63\x72\x6f\x73\x69\x74\x65\x73')</script><script>((window.gitter = {}).chat = {}).options = {
+room: 'optics-dev/Monocle'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/Monocle/js/docs.js"></script></body></html>
