@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Traversal · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="A `Traversal` is the generalisation of an `Optional` to several targets. In other word, a `Traversal` allows"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Traversal · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/monocle/monocle/"/><meta property="og:description" content="A `Traversal` is the generalisation of an `Optional` to several targets. In other word, a `Traversal` allows"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/monocle/css/main.css"/><script src="/monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/monocle/"><img class="logo" src="/monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Traversal</h1></header><article><div><span><p>A <code>Traversal</code> is the generalisation of an <code>Optional</code> to several targets. In other word, a <code>Traversal</code> allows
+to focus from a type <code>S</code> into 0 to n values of type <code>A</code>.</p>
+<p>The most common example of a <code>Traversal</code> would be to focus into all elements inside of a container (e.g. <code>List</code>, <code>Vector</code>, <code>Option</code>).
+To do this we will use the relation between the typeclass <code>cats.Traverse</code> and <code>Traversal</code>:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Traversal</span>
+<span class="hljs-keyword">import</span> cats.implicits._   <span class="hljs-comment">// to get all cats instances including Traverse[List]</span>
+
+<span class="hljs-keyword">val</span> xs = <span class="hljs-type">List</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>)
+</code></pre>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> eachL = <span class="hljs-type">Traversal</span>.fromTraverse[<span class="hljs-type">List</span>, <span class="hljs-type">Int</span>]
+<span class="hljs-comment">// eachL: Traversal[List[Int], Int] = monocle.PTraversal$$anon$5@77d4c498</span>
+eachL.set(<span class="hljs-number">0</span>)(xs)
+<span class="hljs-comment">// res0: List[Int] = List(0, 0, 0, 0, 0)</span>
+eachL.modify(_ + <span class="hljs-number">1</span>)(xs)
+<span class="hljs-comment">// res1: List[Int] = List(2, 3, 4, 5, 6)</span>
+</code></pre>
+<p>A <code>Traversal</code> is also a <code>Fold</code>, so we have access to a few interesting methods to query our data:</p>
+<pre><code class="hljs css language-scala">eachL.getAll(xs)
+<span class="hljs-comment">// res2: List[Int] = List(1, 2, 3, 4, 5)</span>
+eachL.headOption(xs)
+<span class="hljs-comment">// res3: Option[Int] = Some(value = 1)</span>
+eachL.find(_ &gt; <span class="hljs-number">3</span>)(xs)
+<span class="hljs-comment">// res4: Option[Int] = Some(value = 4)</span>
+eachL.all(_ % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>)(xs)
+<span class="hljs-comment">// res5: Boolean = false</span>
+</code></pre>
+<p><code>Traversal</code> also offers smart constructors to build a <code>Traversal</code> for a fixed number of target (currently 2 to 6 targets):</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Point</span>(<span class="hljs-params">id: <span class="hljs-type">String</span>, x: <span class="hljs-type">Int</span>, y: <span class="hljs-type">Int</span></span>)</span>
+
+<span class="hljs-keyword">val</span> points = <span class="hljs-type">Traversal</span>.apply2[<span class="hljs-type">Point</span>, <span class="hljs-type">Int</span>](_.x, _.y)((x, y, p) =&gt; p.copy(x = x, y = y))
+</code></pre>
+<pre><code class="hljs css language-scala">points.set(<span class="hljs-number">5</span>)(<span class="hljs-type">Point</span>(<span class="hljs-string">"bottom-left"</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>))
+<span class="hljs-comment">// res6: Point = Point(id = "bottom-left", x = 5, y = 5)</span>
+</code></pre>
+<p>Finally, if you want to build something more custom you will have to implement a <code>Traversal</code> manually.
+A <code>Traversal</code> is defined by a single method <code>modifyF</code> which corresponds to the Van Laarhoven representation.</p>
+<p>For example, let's write a <code>Traversal</code> for <code>Map</code> that will focus into all values where the key satisfies a certain predicate:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Traversal</span>
+<span class="hljs-keyword">import</span> cats.<span class="hljs-type">Applicative</span>
+<span class="hljs-keyword">import</span> alleycats.std.map._ <span class="hljs-comment">// to get Traverse instance for Map (SortedMap does not require this import)</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">filterKey</span></span>[<span class="hljs-type">K</span>, <span class="hljs-type">V</span>](predicate: <span class="hljs-type">K</span> =&gt; <span class="hljs-type">Boolean</span>): <span class="hljs-type">Traversal</span>[<span class="hljs-type">Map</span>[<span class="hljs-type">K</span>, <span class="hljs-type">V</span>], <span class="hljs-type">V</span>] =
+    <span class="hljs-keyword">new</span> <span class="hljs-type">Traversal</span>[<span class="hljs-type">Map</span>[<span class="hljs-type">K</span>, <span class="hljs-type">V</span>], <span class="hljs-type">V</span>]{
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">modifyF</span></span>[<span class="hljs-type">F</span>[_]: <span class="hljs-type">Applicative</span>](f: <span class="hljs-type">V</span> =&gt; <span class="hljs-type">F</span>[<span class="hljs-type">V</span>])(s: <span class="hljs-type">Map</span>[<span class="hljs-type">K</span>, <span class="hljs-type">V</span>]): <span class="hljs-type">F</span>[<span class="hljs-type">Map</span>[<span class="hljs-type">K</span>, <span class="hljs-type">V</span>]] =
+        s.map{ <span class="hljs-keyword">case</span> (k, v) =&gt;
+          k -&gt; (<span class="hljs-keyword">if</span>(predicate(k)) f(v) <span class="hljs-keyword">else</span> v.pure[<span class="hljs-type">F</span>])
+        }.sequence
+    }
+
+<span class="hljs-keyword">val</span> m = <span class="hljs-type">Map</span>(<span class="hljs-number">1</span> -&gt; <span class="hljs-string">"one"</span>, <span class="hljs-number">2</span> -&gt; <span class="hljs-string">"two"</span>, <span class="hljs-number">3</span> -&gt; <span class="hljs-string">"three"</span>, <span class="hljs-number">4</span> -&gt; <span class="hljs-string">"Four"</span>)
+</code></pre>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> filterEven = filterKey[<span class="hljs-type">Int</span>, <span class="hljs-type">String</span>](_ % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>)
+<span class="hljs-comment">// filterEven: Traversal[Map[Int, String], String] = repl.MdocSession$App$$anon$1@6be324ba</span>
+
+filterEven.modify(_.toUpperCase)(m)
+<span class="hljs-comment">// res7: Map[Int, String] = Map(</span>
+<span class="hljs-comment">//   4 -&gt; "FOUR",</span>
+<span class="hljs-comment">//   3 -&gt; "three",</span>
+<span class="hljs-comment">//   2 -&gt; "TWO",</span>
+<span class="hljs-comment">//   1 -&gt; "one"</span>
+<span class="hljs-comment">// )</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="laws"></a><a href="#laws" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Laws</h2>
+<p>A <code>Traversal</code> must satisfy all properties defined in <code>TraversalLaws</code> from the <code>core</code> module.
+You can check the validity of your own <code>Traversal</code> using <code>TraversalTests</code> from the <code>law</code> module.</p>
+<p>In particular, a <code>Traversal</code> must respect the <code>modifyGetAll</code> law which checks that you can modify all elements targeted by a <code>Traversal</code></p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">modifyGetAll</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](t: <span class="hljs-type">Traversal</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>, f: <span class="hljs-type">A</span> =&gt; <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
+    t.getAll(t.modify(f)(s)) == t.getAll(s).map(f)
+</code></pre>
+<p>Another important law is <code>composeModify</code> also known as <code>fusion</code> law:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">composeModify</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](t: <span class="hljs-type">Traversal</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>, f: <span class="hljs-type">A</span> =&gt; <span class="hljs-type">A</span>, g: <span class="hljs-type">A</span> =&gt; <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
+    t.modify(g)(t.modify(f)(s)) == t.modify(g compose f)(s)
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>

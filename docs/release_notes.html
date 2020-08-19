@@ -1,0 +1,545 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Release Notes · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="# 2.0.1"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Release Notes · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/monocle/monocle/"/><meta property="og:description" content="# 2.0.1"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/monocle/css/main.css"/><script src="/monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/monocle/"><img class="logo" src="/monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/monocle/docs/optics" target="_self">Optics</a></li><li class="siteNavItemActive"><a href="/monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Release Notes</h1></header><article><div><span><h1><a class="anchor" aria-hidden="true" id="201"></a><a href="#201" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2.0.1</h1>
+<blockquote>
+<p>09 January 2020</p>
+</blockquote>
+<ul>
+<li>bug fix: use fully qualified name in <code>Lens</code> macro <a href="https://github.com/optics-dev/Monocle/pull/793">#793</a> (thanks to <a href="https://github.com/enzief">enzief</a>)</li>
+<li>add <code>parModifyF</code> to <code>Traversal</code> leveraging <code>cats.Parallel</code> <a href="https://github.com/optics-dev/Monocle/pull/751">#751</a> (thanks to <a href="https://github.com/nigredo-tori">nigredo-tori</a>)</li>
+<li>add <code>At</code>, <code>Index</code> and <code>Each</code> instances for ListMap <a href="https://github.com/optics-dev/Monocle/pull/740">#740</a>, <a href="https://github.com/optics-dev/Monocle/pull/742">#742</a> <a href="https://github.com/optics-dev/Monocle/pull/747">#747</a> (thanks to <a href="https://github.com/jan0sch">jan0sch</a>)</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="200-cats-only"></a><a href="#200-cats-only" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2.0.0 (cats only)</h1>
+<blockquote>
+<p>11 September 2019</p>
+</blockquote>
+<ul>
+<li>everything in 1.6.0</li>
+<li>add instances for <code>NonEmptyVector</code> <a href="https://github.com/optics-dev/Monocle/pull/564">#564</a> (thanks to <a href="https://github.com/valydia">valydia</a>)</li>
+<li>add optics for cats <code>Chain</code> and <code>NonEmptyChain</code> <a href="https://github.com/optics-dev/Monocle/pull/609">#609</a> (thanks to <a href="https://github.com/dcastro">dcastro</a>)</li>
+<li>add missing functions (<code>mod</code>, <code>assign</code> and variants) to State module <a href="https://github.com/optics-dev/Monocle/pull/564">#564</a> (thanks to <a href="https://github.com/valydia">valydia</a>)</li>
+<li>depends on cats 2.0.0</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="160-scalaz-only-last-major-release-with-scalaz"></a><a href="#160-scalaz-only-last-major-release-with-scalaz" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.6.0 (scalaz only, last major release with scalaz)</h1>
+<blockquote>
+<p>14 July 2019</p>
+</blockquote>
+<ul>
+<li>add <code>apply</code> helper methods to typeclasses <a href="https://github.com/optics-dev/Monocle/pull/560">#560</a> (thanks to <a href="https://github.com/jbgi">jbgi</a>)</li>
+<li>add <code>coProductIso</code>, <code>coProductDisjunctionIso</code> and <code>toGeneric</code> <a href="https://github.com/optics-dev/Monocle/pull/578">#578</a> (thanks to <a href="https://github.com/dcastro">dcastro</a>)</li>
+<li>add override modifiers in macro generated code <a href="https://github.com/optics-dev/Monocle/pull/581">#581</a> (thanks to <a href="https://github.com/omervk">omervk</a>)</li>
+<li>add FieldsSyntax to global import <a href="https://github.com/optics-dev/Monocle/pull/583">#583</a> (thanks to <a href="https://github.com/kubukoz">kubukoz</a>)</li>
+<li>fix name collisions in implicit classes <a href="https://github.com/optics-dev/Monocle/pull/629">#629</a> (thanks to <a href="https://github.com/vladimirkl">vladimirkl</a>)</li>
+<li>release from ci, stop support of scala 2.11 and scala native <a href="https://github.com/optics-dev/Monocle/pull/646">#646</a></li>
+<li>support scala 2.13 <a href="https://github.com/optics-dev/Monocle/pull/669">#669</a> (thanks to <a href="https://github.com/xuwei-k">xuwei-k</a>)</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="150-and-150-cats"></a><a href="#150-and-150-cats" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.5.0 and 1.5.0-cats</h1>
+<blockquote>
+<p>3 January 2018</p>
+</blockquote>
+<ul>
+<li><p>add coalgebroid-based constructors for <code>Lens</code> and <code>Traversal</code> <a href="https://github.com/optics-dev/Monocle/pull/502">#502</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</p></li>
+<li><p>add state syntax for traversal <a href="https://github.com/optics-dev/Monocle/pull/533">#533</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</p></li>
+<li><p>add <code>modifyF</code> to <code>Apply</code> syntax <a href="https://github.com/optics-dev/Monocle/pull/525">#525</a> (thanks to <a href="https://github.com/colin-passiv">colin-passiv</a>)</p></li>
+<li><p>add optics composition table <a href="https://github.com/optics-dev/Monocle/pull/532">#532</a> (thanks to <a href="https://github.com/jdegoes">jdegoes</a>)</p></li>
+<li><p>support scala native <a href="https://github.com/optics-dev/Monocle/pull/508">#508</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</p></li>
+<li><p>bug fix: allow for annotations on companion objects of <code>@Lenses</code>-annotated case classes <a href="https://github.com/optics-dev/Monocle/pull/524">#524</a> (thanks to <a href="https://github.com/hrhino">hrhino</a>)</p></li>
+<li><p>create a cats branch where cats replaces scalaz <a href="https://github.com/optics-dev/Monocle/pull/528">#528</a> and <a href="https://github.com/optics-dev/Monocle/pull/539">#539</a> (thanks to <a href="https://github.com/sellout">sellout</a> and <a href="https://github.com/tpolecat">tpolecat</a>)</p></li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="140"></a><a href="#140" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.4.0</h1>
+<blockquote>
+<p>14 January 2017</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="addition"></a><a href="#addition" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Addition</h3>
+<ul>
+<li>add <code>Each</code> instance for <code>Try</code>, <code>Either</code>, <code>scalaz.\/</code>, <code>scalaz.Validation</code> <a href="https://github.com/optics-dev/Monocle/pull/472">#472</a> and <a href="https://github.com/optics-dev/Monocle/pull/476">#476</a> (thanks to <a href="https://github.com/n4to4">n4to4</a>)</li>
+<li>add <code>Unzip</code> instance for <code>Lens</code>, <code>Fold</code>, <code>Optional</code>, <code>Traversal</code>, <code>Setter</code> <a href="https://github.com/optics-dev/Monocle/pull/474">#474</a> (thanks to <a href="https://github.com/n4to4">n4to4</a>)</li>
+<li>add refined <code>startsWith</code> and <code>endWith</code> <a href="https://github.com/optics-dev/Monocle/pull/480">#480</a> and <a href="https://github.com/optics-dev/Monocle/pull/483">#483</a> (thanks to <a href="https://github.com/valydia">valydia</a>, <a href="https://github.com/mrcmatuszak">mrcmatuszak</a> and <a href="https://github.com/fthomas">fthomas</a>)</li>
+<li>add <code>uuid</code>, <code>url</code>, <code>uri</code> <a href="https://github.com/optics-dev/Monocle/pull/487">#487</a> and <a href="https://github.com/optics-dev/Monocle/pull/490">#490</a> (thanks to <a href="https://github.com/mjjc">mjjc</a> and <a href="https://github.com/n4to4">n4to4</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="other"></a><a href="#other" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Other</h3>
+<ul>
+<li>deprecate global constructor of typeclasses <a href="https://github.com/optics-dev/Monocle/pull/478">#478</a></li>
+<li>remove deprecated methods <code>sum</code> and <code>product</code> <a href="https://github.com/optics-dev/Monocle/pull/479">#479</a></li>
+<li>execute packageSrc in travis-ci to avoid regressing like <a href="https://github.com/optics-dev/Monocle/pull/492">#492</a> <a href="https://github.com/optics-dev/Monocle/pull/494">#494</a> (thanks to <a href="https://github.com/xuwei-k">xuwei-k</a>)</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="140-m2"></a><a href="#140-m2" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.4.0-M2</h1>
+<blockquote>
+<p>23 December 2016</p>
+</blockquote>
+<ul>
+<li>do not require java 8 for scala 2.11 <a href="https://github.com/optics-dev/Monocle/pull/463">#463</a></li>
+<li>add <code>Possible</code> typeclass <a href="https://github.com/optics-dev/Monocle/issues/450">#450</a> (thanks to <a href="https://github.com/kenbot">kenbot</a>)</li>
+<li>add <code>zip</code> and <code>unzip</code> for <code>Getter</code> <a href="https://github.com/optics-dev/Monocle/pull/453">#453</a> and <a href="https://github.com/optics-dev/Monocle/pull/458">#458</a> (thanks to <a href="https://github.com/lunaryorn">lunaryorn</a>)</li>
+<li>upgrade scala to 2.12.1 and fix doc issue around <a href="https://issues.scala-lang.org/browse/SI-7139">SI-7139</a> <a href="https://github.com/optics-dev/Monocle/pull/435">#435</a></li>
+<li>upgrade scala.js to 0.6.14 <a href="https://github.com/optics-dev/Monocle/pull/466">#466</a></li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="140-m1"></a><a href="#140-m1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.4.0-M1</h1>
+<blockquote>
+<p>16 December 2016</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="addition-1"></a><a href="#addition-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Addition</h3>
+<ul>
+<li>add macro based syntax for <code>ApplyLens</code> <a href="https://github.com/optics-dev/Monocle/pull/434">#434</a> (thanks to <a href="https://github.com/cvogt">cvogt</a>)</li>
+<li>add lookup methods to various optics <a href="https://github.com/optics-dev/Monocle/pull/425">#425</a> (thanks to <a href="https://github.com/kubum">kubum</a>, <a href="https://github.com/emmedema">emmedema</a> and <a href="https://github.com/julien-truffaut">julien-truffaut</a>)</li>
+<li>add state ops for <code>Getter</code> and <code>Setter</code> <a href="https://github.com/optics-dev/Monocle/pull/415">#415</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</li>
+<li>add <code>extract</code>, <code>extracts</code>, <code>assign_</code> and <code>mod_</code> to state ops <a href="https://github.com/optics-dev/Monocle/pull/415">#415</a> (thanks to <a href="https://github.com/jeslg">jeslg</a>)</li>
+<li>add <code>select</code> <a href="https://github.com/optics-dev/Monocle/pull/441">#441</a> (thanks to <a href="https://github.com/sepulkarz">sepulkarz</a>)</li>
+<li>add <code>lowerCase</code> and <code>upperCase</code> <a href="https://github.com/optics-dev/Monocle/pull/446">#446</a> (thanks to <a href="https://github.com/sindoudou">sindoudou</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="refactor"></a><a href="#refactor" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Refactor</h3>
+<ul>
+<li>major refactor of typeclasses <a href="https://github.com/optics-dev/Monocle/pull/405">#405</a>:
+<ul>
+<li>abstract class instead of trait. This would allow to add methods without breaking binary compatibility</li>
+<li>move typeclass instances from <code>monocle.std._</code> to the typeclass companion object. This change will reduce the number of imports required to use a typeclass</li>
+</ul></li>
+<li>curry <code>find</code>, <code>exist</code> and <code>all</code> <a href="https://github.com/optics-dev/Monocle/pull/425">#425</a></li>
+<li>improve performance of <code>Index</code> instance for <code>List</code> and <code>Vector</code> <a href="https://github.com/optics-dev/Monocle/pull/413">#413</a></li>
+<li>simplify <code>Plated</code> instance for <code>Free</code> <a href="https://github.com/optics-dev/Monocle/pull/404">#404</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+<li>remove <code>Order</code> instance for <code>Char</code> <a href="https://github.com/optics-dev/Monocle/commit/9d036d760d88e438544d150e0bca55523bf454c8">#405</a></li>
+<li>prevent warning for <code>higherKinds</code> in <code>Lens</code> macro <a href="https://github.com/optics-dev/Monocle/pull/434/files#diff-ab3ae99e3b07e5b065b8e9db86af3c48R80">#434</a> (thanks to <a href="https://github.com/cvogt">cvogt</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="doc"></a><a href="#doc" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Doc</h3>
+<ul>
+<li>use <code>sbt-microsite</code> <a href="https://github.com/optics-dev/Monocle/pull/411">#411</a> and <a href="https://github.com/optics-dev/Monocle/pull/444">#444</a> (thanks to <a href="https://github.com/VlachJosef">VlachJosef</a>)</li>
+<li>new icons for website and stickers <a href="https://github.com/optics-dev/Monocle/pull/421">#421</a> (thanks to <a href="https://github.com/mbcltd">mbcltd</a>)</li>
+<li>add doc for <code>Optional</code> <a href="https://github.com/optics-dev/Monocle/pull/424">#424</a> (thanks to <a href="https://github.com/mdulac">mdulac</a>)</li>
+<li>add doc for <code>Traversal</code> <a href="https://github.com/optics-dev/Monocle/pull/423">#423</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="other-1"></a><a href="#other-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Other</h3>
+<ul>
+<li><code>kenji</code> aka <a href="https://github.com/xuwei-k">xuwei-k</a> is now a maintainer</li>
+<li>update build settings for scala.js <a href="https://github.com/optics-dev/Monocle/pull/406">#406</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="132"></a><a href="#132" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.3.2</h1>
+<blockquote>
+<p>02 November 2016</p>
+</blockquote>
+<ul>
+<li>add support for scala 2.12.0 <a href="https://github.com/optics-dev/Monocle/pull/408">#408</a></li>
+<li>use <code>Free.roll</code> in <code>Plated[Free[S, A]]</code> instance <a href="https://github.com/optics-dev/Monocle/pull/404">#404</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino </a>)</li>
+<li>update build settings for scala.js <a href="https://github.com/optics-dev/Monocle/pull/406">#406</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino </a>)</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="131"></a><a href="#131" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.3.1</h1>
+<blockquote>
+<p>21 October 2016</p>
+</blockquote>
+<ul>
+<li>add support for scala 2.12.0-RC2</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="130"></a><a href="#130" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.3.0</h1>
+<blockquote>
+<p>18 October 2016</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="addition-2"></a><a href="#addition-2" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Addition</h3>
+<ul>
+<li>add <code>unsafe</code> module with <code>select</code> <a href="https://github.com/optics-dev/Monocle/pull/394">#394</a> (thanks to <a href="https://github.com/cesartl">cesartl</a>)</li>
+<li>refactor optics laws to use random functions <a href="https://github.com/optics-dev/Monocle/pull/357">#357</a></li>
+<li>add <code>Wrapped</code> typeclass <a href="https://github.com/optics-dev/Monocle/pull/394">#365</a> (thanks to <a href="https://github.com/puffnfresh">puffnfresh</a>)</li>
+<li>add <code>State</code> syntax for <code>Optional</code> <a href="https://github.com/optics-dev/Monocle/pull/387">#387</a> (thanks to <a href="https://github.com/cb372">cb372</a>)</li>
+<li>add <code>transformM</code> and <code>transformCounting</code> to <code>Plated</code> <a href="https://github.com/optics-dev/Monocle/pull/391">#391</a> (thanks to <a href="https://github.com/arkadius">arkadius</a>)</li>
+<li>add <code>applyN</code> for <code>Traversal</code> <a href="https://github.com/optics-dev/Monocle/pull/379">#379</a> (thanks to <a href="https://github.com/jule64">jule64</a>)</li>
+<li>add <code>mapping</code> <a href="https://github.com/optics-dev/Monocle/pull/396">#396</a> (thanks to <a href="https://github.com/mdulac">mdulac</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="deprecation"></a><a href="#deprecation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Deprecation</h3>
+<ul>
+<li>remove all deprecated elements from 1.1 e.g. (<code>Lenser</code>, <code>headMaybe</code>, <code>getMaybe</code>, <code>setMaybe</code>, <code>modifyMaybe</code>) (<a href="https://github.com/optics-dev/Monocle/commit/ff65c967096e7c1243119075ba35e46f12728f71">see</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="upgrades"></a><a href="#upgrades" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Upgrades</h3>
+<table>
+<thead>
+<tr><th>dependencies</th><th style="text-align:right">monocle 1.2.2</th><th style="text-align:right">monocle 1.3.0</th></tr>
+</thead>
+<tbody>
+<tr><td>scalaz</td><td style="text-align:right">7.2.2</td><td style="text-align:right">7.2.6</td></tr>
+<tr><td>shapeless</td><td style="text-align:right">2.2.5</td><td style="text-align:right">2.3.2</td></tr>
+<tr><td>refined</td><td style="text-align:right">0.3.2</td><td style="text-align:right">0.5.0</td></tr>
+<tr><td>discipline</td><td style="text-align:right">0.4</td><td style="text-align:right">0.7</td></tr>
+</tbody>
+</table>
+<h1><a class="anchor" aria-hidden="true" id="122"></a><a href="#122" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.2.2</h1>
+<blockquote>
+<p>9 June 2016</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="addition-3"></a><a href="#addition-3" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Addition</h3>
+<ul>
+<li>add <code>apply</code> methods for <code>Prism</code> and <code>Iso</code> <a href="https://github.com/optics-dev/Monocle/pull/354">#354</a> (thanks to <a href="https://github.com/sellout">sellout</a>)</li>
+<li>add <code>unapply</code> methods for <code>Prism</code> and <code>Iso</code> <a href="https://github.com/optics-dev/Monocle/pull/361">#361</a> (thanks to <a href="https://github.com/sellout">sellout</a>)</li>
+<li>add <code>partial</code> constructor for <code>Prism</code> <a href="https://github.com/optics-dev/Monocle/pull/361">#355</a> (thanks to <a href="https://github.com/sellout">sellout</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="documentation"></a><a href="#documentation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Documentation</h3>
+<ul>
+<li>various improvements from <a href="https://github.com/Unisay">Unisay</a>, <a href="https://github.com/fthomas">fthomas</a> and <a href="https://github.com/amrhassan">amrhassan</a></li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="121"></a><a href="#121" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.2.1</h1>
+<blockquote>
+<p>13 April 2016</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="addition-4"></a><a href="#addition-4" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Addition</h3>
+<ul>
+<li>support for scala.js <a href="https://github.com/optics-dev/Monocle/pull/335">#335</a> (thanks to <a href="https://github.com/japgolly">japgolly</a>)</li>
+<li><code>remove</code>: delete a value associated with a key in a Map-like container <a href="https://github.com/optics-dev/Monocle/pull/341">#341</a> (thanks to <a href="https://github.com/dabd">dabd</a>)</li>
+<li><code>doubleToFloat</code>, <code>bigDecimalToLong</code> and <code>bigDecimalToInt</code> <a href="https://github.com/optics-dev/Monocle/pull/312">#312</a> (thanks to <a href="https://github.com/mikaelv">mikaelv</a>)</li>
+<li>optics for <code>Tuple1</code> <a href="https://github.com/optics-dev/Monocle/pull/313">#313</a> (thanks to <a href="https://github.com/exlevan">exlevan</a>)</li>
+<li>use random index for <code>AtTests</code> and <code>IndexTests</code> <a href="https://github.com/optics-dev/Monocle/pull/343">#343</a> (thanks to <a href="https://github.com/pvillega">pvillega</a>)</li>
+<li><code>Each</code> instance for tuples and case classes with fields of the same type <a href="https://github.com/optics-dev/Monocle/pull/347">#347</a> (thanks to <a href="https://github.com/Astrac">Astrac</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="bug-fixes"></a><a href="#bug-fixes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Bug Fixes</h3>
+<ul>
+<li>fix implicit not found message for <code>Plated</code> <a href="https://github.com/optics-dev/Monocle/pull/320">#320</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+<li>fix <code>stringToBoolean</code> such as it satisfies 2nd prism law <a href="https://github.com/optics-dev/Monocle/pull/340">#340</a> (thanks to <a href="https://github.com/hasumedic">hasumedic</a>)</li>
+<li>fix <code>stringToLong</code> such as it satisfies 2nd prism law <a href="https://github.com/optics-dev/Monocle/pull/339">#339</a> (thanks to <a href="https://github.com/pvillega">pvillega</a>)</li>
+<li>fix bit indexing for <code>Long</code> <a href="https://github.com/optics-dev/Monocle/pull/343">#343</a> (thanks to <a href="https://github.com/pvillega">pvillega</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="upgrades-1"></a><a href="#upgrades-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Upgrades</h3>
+<ul>
+<li>scala 2.11.8</li>
+<li>scalaz to 7.2.2</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="120"></a><a href="#120" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.2.0</h1>
+<blockquote>
+<p>17 December 2015</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="documentation-1"></a><a href="#documentation-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Documentation</h3>
+<ul>
+<li>add example, typeclass and faq sections to the website <a href="https://github.com/optics-dev/Monocle/pull/314">#314</a>, <a href="https://github.com/optics-dev/Monocle/pull/316">#316</a></li>
+<li>document <a href="https://issues.scala-lang.org/browse/SI-7139">SI-7139</a> limitation for optics constructor in REPL and tut <a href="https://github.com/optics-dev/Monocle/pull/309">#309</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="bug-fixes-1"></a><a href="#bug-fixes-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Bug Fixes</h3>
+<ul>
+<li>generate fresh type-parameter name for <code>modifyF</code> <a href="https://github.com/optics-dev/Monocle/pull/300">#300</a>  (thanks to <a href="https://github.com/puffnfresh">puffnfresh</a>)</li>
+<li>publish <code>monocle-refined</code> with all the other modules <a href="https://github.com/optics-dev/Monocle/pull/311">#311</a></li>
+<li>publish snapshot automatically for scala 2.10 and 2.11 <a href="https://github.com/optics-dev/Monocle/pull/310">#310</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="upgrades-2"></a><a href="#upgrades-2" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Upgrades</h3>
+<ul>
+<li>scalaz to 7.2.0</li>
+<li>refined to 0.3.2</li>
+<li>macro paradise to 2.1.0</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="120-m2"></a><a href="#120-m2" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.2.0-M2</h1>
+<blockquote>
+<p>22 November 2015</p>
+</blockquote>
+<p>Thanks to all the 14 contributors since <a href="https://github.com/optics-dev/Monocle/compare/v1.2.0-M1...v1.2.0-M2">1.2.0-M1</a></p>
+<h3><a class="anchor" aria-hidden="true" id="addition-5"></a><a href="#addition-5" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Addition</h3>
+<ul>
+<li>add <code>only</code> <code>Prism</code> to match a single value <a href="https://github.com/optics-dev/Monocle/commit/5f6d414019883045ab5e92ea1a6cc650e1f5e0f5">see</a></li>
+<li>add <code>below</code> <code>Prism</code> to lift a <code>Prism</code> in a <code>Traverse</code> <a href="https://github.com/optics-dev/Monocle/commit/ed7b067d62891352a2a05e1a570451e3740a2446">see</a></li>
+<li>add <code>length</code> for <code>Fold</code> and <code>Traversal</code> <a href="https://github.com/optics-dev/Monocle/commit/1773e93bfe2a7e229c57fc7915ec3519b8831eee">#236</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+<li>add optics for <code>scalaz.Either3</code> <a href="https://github.com/optics-dev/Monocle/commit/720ff020b08be8d7ffb3f60e3d1377147c1dce50">#242</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+<li>add <code>optNelToList</code> <code>Iso</code> <a href="https://github.com/optics-dev/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0">see</a></li>
+<li>add <code>fromIso</code> combinator for all optics <a href="https://github.com/optics-dev/Monocle/commit/db0c92c7bffcf41e40f5368caafa26b337983a7c">#245</a></li>
+<li>add <code>left</code> and <code>right</code> methods for <code>Iso</code>, <code>Prism</code>, <code>Getter</code> and <code>Fold</code> <a href="https://github.com/optics-dev/Monocle/commit/8efd6c85f8a3697abc11feae0a5f1a2ba7fd0a58">#273</a></li>
+<li>add safe down cast from BigInt <a href="https://github.com/optics-dev/Monocle/commit/1f3c37be2d3e950b1a84b4f1d05c5468bc80e6da">#267</a></li>
+<li>add <code>productToTuple</code> <code>Iso</code> between case class and tuple using shapeless <a href="https://github.com/optics-dev/Monocle/commit/c82c03c95e33314f1cac442b8e47252d5419af77">#247</a></li>
+<li>add <code>GenIso.fields</code> white box that generates the same <code>Iso</code> than <code>productToTuple</code> with better performances but less IDE support <a href="https://github.com/optics-dev/Monocle/pull/297">#297</a> (thanks to <a href="https://github.com/japgolly">japgolly</a>)</li>
+<li>add <code>@PLenses</code> macro annotation to generate <code>PLens</code> for case class with type parameters <a href="https://github.com/optics-dev/Monocle/commit/f80ee012971689ec31865b67665e2641429b24fd">#114</a> (thanks to <a href="https://github.com/exlevan">exlevan</a>)</li>
+<li>add <code>Plated</code> typeclass <a href="https://github.com/optics-dev/Monocle/commit/2be8bcf8d51113e6b0230dafd065289767da2f28">#289</a> (thanks to <a href="https://github.com/puffnfresh">puffnfresh</a>)</li>
+<li>add optics for <code>scalaz.Cofree</code> <a href="https://github.com/optics-dev/Monocle/commit/a1b71065b36ddac7a94118b04748628d1dcc260c">#290</a> (thanks to <a href="https://github.com/LiamGoodacre">LiamGoodacre</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="non-backward-compatible-change"></a><a href="#non-backward-compatible-change" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Non backward compatible change</h3>
+<ul>
+<li>change mega imports from package object to <code>all</code> object, e.g. <code>import monocle.function._</code> becomes <code>import monocle.function.all._</code> <a href="https://github.com/optics-dev/Monocle/pull/243">#243</a></li>
+<li>change <code>At</code> definition from <code>def at(index: I): Lens[S, Option[A]]</code> to <code>def at(index: I): Lens[S, A]</code></li>
+<li>change <code>At</code> instance for <code>Set</code> and <code>ISet</code> from <code>Lens[S, Option[Unit]]</code> to <code>Lens[S, Boolean]</code></li>
+<li>remove <code>Index</code> instances for bit indexing primitive <code>Long</code>, <code>Int</code>, <code>Char</code>, <code>Bye</code> from <code>monocle-core</code></li>
+<li>add <code>monocle-refined</code> module with <code>At</code> instances for bit indexing primitive <code>Long</code>, <code>Int</code>, <code>Char</code>, <code>Bye</code> <a href="https://github.com/optics-dev/Monocle/pull/291">#291</a> (thanks to <a href="https://github.com/fthomas">fthomas</a> and <a href="https://github.com/julien-truffaut">julien-truffaut</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="deprecation-1"></a><a href="#deprecation-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Deprecation</h3>
+<ul>
+<li>deprecate <code>theseDisjunction</code> to <code>theseToDisjunction</code> <a href="https://github.com/optics-dev/Monocle/commit/bde69571074ef6dc08c3d240154feaa40aaaece5">see</a></li>
+<li>deprecate <code>nelAndOneIso</code> to <code>nelToOneAnd</code> <a href="https://github.com/optics-dev/Monocle/commit/f24bc89b23924948b2950ffa5e8c0e4bcc9dcef0">see</a></li>
+<li>deprecate <code>sum</code> to <code>choice</code> and <code>product</code> to <code>split</code> <a href="https://github.com/optics-dev/Monocle/commit/f6b163b1702bef046f26576d2e182f32352b88d7">#239</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="documentation-2"></a><a href="#documentation-2" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Documentation</h3>
+<ul>
+<li>add tut examples for <code>Prism</code> <a href="https://github.com/optics-dev/Monocle/commit/c65a0c4617b41b0a9f31674516c674efc5d0feb0">#228</a></li>
+<li>add tut examples for <code>Iso</code> <a href="https://github.com/optics-dev/Monocle/commit/61a526717417728ab4ad92fa9ba10aa0267a58d6">#279</a> (thanks to <a href="https://github.com/justjoheinz">justjoheinz</a>)</li>
+<li>add examples for Http Request optics usage <a href="https://github.com/optics-dev/Monocle/commit/234097ce1f8601eab8ab47e6610d56aea59acce4">#262</a> (thanks to <a href="https://github.com/1ambda">1ambda</a>)</li>
+<li>add learning resources to the website <a href="https://github.com/optics-dev/Monocle/commit/0bc53359e799e1124ad5a8c0f90ae9d85bd690d9">#251</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="bug-fixes-2"></a><a href="#bug-fixes-2" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Bug Fixes</h3>
+<ul>
+<li>fix long parser <a href="https://github.com/optics-dev/Monocle/commit/1cdfc0fae44df71700f4d53cfbf23d0f9575ee07">#244</a> (thanks to <a href="https://github.com/NightRa">NightRa</a>)</li>
+<li>fix <code>GenIso</code> case class with type parameter <a href="https://github.com/optics-dev/Monocle/commit/fa6dc7d164142c4fae1ec8014f3eb8c4f9619191">#263</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="optimisation"></a><a href="#optimisation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Optimisation</h3>
+<ul>
+<li>improve performances of <code>index</code> for <code>Vector</code> <a href="https://github.com/optics-dev/Monocle/commit/d4a29c279ed78c3acd8b253cb525cb71e8656ee4">#258</a> (thanks to <a href="https://github.com/spebbe">spebbe</a>)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="upgrades-3"></a><a href="#upgrades-3" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Upgrades</h3>
+<ul>
+<li>scala to 2.10.6</li>
+<li>scalaz to 7.1.4</li>
+<li>shapeless to 2.2.5</li>
+<li>macro-compat to 1.1.0</li>
+<li>macro paradise to 2.1.0-M5</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="120-m1"></a><a href="#120-m1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.2.0-M1</h1>
+<blockquote>
+<p>06 July 2015</p>
+</blockquote>
+<ul>
+<li>laws definition move to <code>core</code> module <a href="https://github.com/optics-dev/Monocle/tree/master/core/src/main/scala/monocle/law">see</a>.
+Properties are still defined in <code>law</code> module with <a href="https://github.com/typelevel/discipline">discipline</a></li>
+<li>optics defined for <code>scalaz.Validation</code> <a href="https://github.com/optics-dev/Monocle/pull/211">#211</a> (thanks to <a href="https://github.com/anakos">anakos</a>)</li>
+<li><code>hListAt</code> is now public <a href="https://github.com/optics-dev/Monocle/commit/b8567a677dc70e3db8548c421f487e213f206946">see</a></li>
+<li>add basic state support for <code>Lens</code> in an experimental <code>state</code> module <a href="https://github.com/optics-dev/Monocle/commit/ee2dbd70cc47693615ad539b2dfd5d9c09bcd2be">see</a></li>
+<li>add <code>void</code> for <code>Optional</code>, <code>Traversal</code>, <code>Fold</code> and <code>Setter</code> <a href="https://github.com/optics-dev/Monocle/commit/03f199847a1f572891f48e3e5aef080631f87e2c">see</a></li>
+<li>add <code>Setter</code> constructor using <code>scalaz.Contravariant</code> and <code>scalaz.Profunctor</code> <a href="https://github.com/optics-dev/Monocle/commit/d50ec207b0c0b92061e2ad23de4bcaa841874a75">see</a></li>
+<li><code>GenIso</code> for object and empty case classes <a href="https://github.com/optics-dev/Monocle/pull/219">#219</a> and <a href="https://github.com/optics-dev/Monocle/pull/223">#223</a> (thanks to <a href="https://github.com/adelbertc">adelbertc</a>)</li>
+<li>add <code>optionToDisjunction</code> <code>Iso</code> <a href="https://github.com/optics-dev/Monocle/pull/226">#226</a> (thanks to <a href="https://github.com/aoiroaoino">aoiroaoino</a>)</li>
+<li>add monomorphic optics for <code>Option</code>, <code>Either</code>, <code>scalaz.Disjunction</code>, <code>scalaz.Validation</code> <a href="https://github.com/optics-dev/Monocle/issues/181">#181</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="build"></a><a href="#build" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Build</h3>
+<ul>
+<li>publish snapshot automatically <a href="https://github.com/optics-dev/Monocle/issues/207">#207</a></li>
+<li>create basic web site using compile time verified examples with <code>tut</code> <a href="https://github.com/optics-dev/Monocle/pull/227">#227</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="bug-fixes-3"></a><a href="#bug-fixes-3" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Bug Fixes</h3>
+<ul>
+<li><a href="https://github.com/optics-dev/Monocle/issues/205">#205</a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="upgrades-4"></a><a href="#upgrades-4" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Upgrades</h3>
+<ul>
+<li>scala to 2.10.5 and 2.11.7</li>
+<li>scalaz to 7.1.3</li>
+<li>shapeless to 2.2.3</li>
+<li>kind projector to 0.6.0</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="110"></a><a href="#110" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.1.0</h1>
+<blockquote>
+<p>31 Mars 2015</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="all-optics-are-now-abstract-classes"></a><a href="#all-optics-are-now-abstract-classes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>All Optics are now abstract classes</h3>
+<ul>
+<li>easier to change implementation and maintain backward compatibility</li>
+<li>offer faster implementation using macros or <code>new</code> (not recommended)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="deprecate-use-of-maybe-and-ilist-in-interface"></a><a href="#deprecate-use-of-maybe-and-ilist-in-interface" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Deprecate use of <code>Maybe</code> and <code>IList</code> in interface</h3>
+<ul>
+<li>1.0.0 replaced <code>Option</code> by <code>scalaz.Maybe</code> but it turns out that <code>Maybe</code> advantages are not worth the cost of moving away from scala std.</li>
+<li>same between <code>List</code> and <code>scalaz.IList</code></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="add-category-related-instances-and-methods"></a><a href="#add-category-related-instances-and-methods" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Add <code>Category</code> related instances and methods</h3>
+<ul>
+<li>type classes e.g. <code>Compose</code>, <code>Category</code>, <code>Arrow</code>, <code>Choice</code></li>
+<li>methods e.g. <code>id</code>, <code>codiagonal</code>, <code>first</code>, <code>second</code>, <code>sum</code>, <code>product</code></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="macro"></a><a href="#macro" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Macro</h3>
+<ul>
+<li><code>monocle.macros.GenIso</code> generates <code>Iso</code> for case class with a single accessor</li>
+<li><code>monocle.macros.GenPrism</code> generates <code>Prism</code> for sealed trait</li>
+<li><code>@Lenses</code> now supports case classes with type parameters <a href="https://github.com/optics-dev/Monocle/blob/697bbf0ca3cbb1e8e8b3a63626fc45dfca3cd3cf/example/src/test/scala/monocle/LensExample.scala#L62">see</a></li>
+<li><code>Lenser</code> is deprecated, use <code>GenLens</code> instead (same functionality but more consistent naming)</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="spark-friendly"></a><a href="#spark-friendly" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Spark friendly</h3>
+<ul>
+<li>Optics and type classes extends <code>Serializable</code></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="syntax"></a><a href="#syntax" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Syntax</h3>
+<ul>
+<li>using optics as an infix operator operator requires a single import <code>monocle.syntax.apply</code> or <code>monocle.syntax._</code></li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="100"></a><a href="#100" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.0.0</h1>
+<blockquote>
+<p>14 December 2014</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="rename-optics"></a><a href="#rename-optics" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Rename Optics</h3>
+<ul>
+<li><code>Iso</code>, <code>Lens</code>, <code>Prism</code>, <code>Optional</code>, <code>Traversal</code> and <code>Setter</code> were prepended by a P for Polymorphic</li>
+<li><code>SimpleIso</code>, <code>SimpleLens</code>, <code>SimplePrism</code>, <code>SimpleOptional</code>, <code>SimpleTraversal</code> and <code>SimpleSetter</code> lost <code>Simple</code></li>
+<li>for example, <code>Lens</code> was renamed to <code>PLens</code> and <code>SimpleLens</code> to <code>Lens</code></li>
+<li>benefits: in practice most optics are not polymorphic, so it is more convenient to have a shorter name for the most used optics.</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="no-inheritance-between-optics"></a><a href="#no-inheritance-between-optics" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>No inheritance between Optics</h3>
+<ul>
+<li>All Optics use <code>asX</code> methods to transform Optics, e.g. <code>Prism[S, T, A, B]</code> has methods <code>asOptional: Optional[S, T, A, B]</code>, <code>asTraversal: Traversal[S, T, A, B]</code>, ... methods</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="compose-direction"></a><a href="#compose-direction" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Compose direction</h3>
+<ul>
+<li>in 0.5, <code>composeY</code> meant that the result of the composition is an Optic of type <code>Y</code></li>
+<li>in 1.0, <code>composeY</code> means that you compose with an Optic of type <code>Y</code></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="main-method-changes"></a><a href="#main-method-changes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Main method changes</h3>
+<ul>
+<li>removed <code>set</code>, <code>modify</code>, <code>setOption</code>, <code>modifyOption</code></li>
+<li><code>setF</code> became <code>set</code></li>
+<li><code>setFOption</code> became <code>setMaybe</code></li>
+<li><code>modifyF</code> became <code>modify</code></li>
+<li><code>modifyFOption</code> became <code>modifyMaybe</code></li>
+<li><code>modifyF</code> became <code>lift</code> or <code>multiLift</code> depending on the Optic</li>
+<li><code>getOption</code> became <code>getMaybe</code></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="simplified-constructors"></a><a href="#simplified-constructors" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Simplified Constructors</h3>
+<ul>
+<li>Curry Optics constructor and merged Simple Optic constructors</li>
+<li>Shuffle methods and parameters order to be consistent between Optics</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="use-maybe-and-ilist-from-scalaz-instead-of-option-and-list-from-std"></a><a href="#use-maybe-and-ilist-from-scalaz-instead-of-option-and-list-from-std" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Use Maybe and IList from scalaz instead of Option and List from std</h3>
+<ul>
+<li><code>Maybe</code> can be transformed to <code>Option</code> by calling <code>toOption</code></li>
+<li><code>IList</code> can be transformed to <code>List</code> by calling <code>toList</code></li>
+<li>benefits: no variance, better scalaz support, safer methods</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="simplified-type-classes"></a><a href="#simplified-type-classes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Simplified type classes</h3>
+<ul>
+<li>merged <code>HeadOption</code> and <code>TailOption</code> into <code>Cons</code></li>
+<li>merged <code>Head</code> and <code>Tail</code> into <code>Cons1</code></li>
+<li>merged <code>InitOption</code> and <code>LastOption</code> into <code>Snoc</code></li>
+<li>merged <code>Init</code> and <code>Last</code> into <code>Snoc1</code></li>
+<li>removed <code>SafeCast</code> as it was simply a way to summon <code>Prism</code> implicitly</li>
+<li>removed <code>AtBit</code> and defined <code>Index[S, Int, Boolean]</code> where <code>S</code> is a numeric type</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="macros"></a><a href="#macros" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Macros</h3>
+<ul>
+<li>all macros have been moved to <code>monocle.macros</code> package</li>
+<li><code>mkLens</code> has been moved to <code>monocle.macros.internal</code>, i.e. it is not public anymore. Use <code>Lenser</code> or <code>@Lenses</code></li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="051"></a><a href="#051" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>0.5.1</h1>
+<blockquote>
+<p>29 September 2014</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="macros-1"></a><a href="#macros-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Macros</h3>
+<ul>
+<li>Add <code>@Lenses</code> Macro annotation to generate <code>SimpleLens</code> automatically for case classes</li>
+<li>Add <code>Lenser</code> Macro to generate <code>SimpleLens</code> with a better IDE support than Macro annotation</li>
+<li>Deprecate <code>mkLens</code> Macro as <code>Lenser</code> is strictly more powerful</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="bug-fix"></a><a href="#bug-fix" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Bug Fix</h3>
+<ul>
+<li><a href="https://github.com/optics-dev/Monocle/commit/a544743ca439b485ac2be178f290a85bbf6c2c80">Fix</a> <code>SafeCast</code> between <code>String</code> to <code>Int</code></li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="050"></a><a href="#050" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>0.5.0</h1>
+<blockquote>
+<p>03 August 2014</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="build-and-dependencies"></a><a href="#build-and-dependencies" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Build and Dependencies</h3>
+<ul>
+<li>Upgrade scalaz dependency from 7.0.6 to 7.1</li>
+<li>Upgrade specs2 dependency from 2.3.11 to 2.4</li>
+<li>Build with scala 2.11.2</li>
+<li>Use sbt-typelevel plugin</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="breaking-changes"></a><a href="#breaking-changes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Breaking Changes</h3>
+<ul>
+<li><p>SimpleOptional apply method takes a setter function from <code>(S, A) =&gt; A</code> instead of <code>(S, Option[A]) =&gt; A</code></p></li>
+<li><p>Polymorphic optics instance reorganisation: All instances has been move from the companion objects of the
+polymorphic optics to packages:</p>
+<ul>
+<li><code>monocle.std</code> for standard Scala and scalaz classes</li>
+<li><code>monocle.generic</code> for shapeless classes</li>
+</ul>
+<p>Check out this <a href="../example/src/test/scala/other/ImportExample">example</a> to see how it affects imports</p></li>
+<li><p>reverseModify has been moved from Monocle package object to <code>Prism</code> syntax</p></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="new-features"></a><a href="#new-features" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>New Features</h3>
+<ul>
+<li>Add setOption and modifyOption for <code>Optional</code></li>
+<li>Flipped curried version of <code>set =&gt; setF</code>, <code>modify =&gt; modifyF</code>, <code>setOption =&gt; setOptionF</code>, <code>modifyOption =&gt; modifyOptionF</code>
+See <a href="../example/src/test/scala/monocle/LensExample.scala#L43">example</a></li>
+<li>New constructors for simple optics with better type inference, see <a href="../test/src/test/scala/monocle/LensSpec.scala#L13-L16">example</a></li>
+<li>implicit not found annotations have been added to polymorphic optics to help user figuring out which import is missing</li>
+<li><code>monocle.scalaz.Either</code> has been renamed <code>monocle.scalaz.Disjunction</code> to avoid clashes with <code>monocle.std.Either</code></li>
+<li>Add <code>Each</code>, <code>Index</code>, <code>Field1</code>, <code>Head</code>, <code>Tail</code> and <code>LastOption</code> instances for <code>scalaz.OneAnd</code></li>
+<li>Add <code>Each</code>, <code>HeadOption</code>, and <code>LastOption</code> for <code>scala.Some</code></li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="040"></a><a href="#040" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>0.4.0</h1>
+<blockquote>
+<p>28 May 2014</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="modularity-and-build"></a><a href="#modularity-and-build" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Modularity and build</h3>
+<ul>
+<li>Cross build for scala 2.10.4 and 2.11.0</li>
+<li>Move Optic Laws from module core to law module</li>
+<li>Move <code>Macro</code> from module core to macro module</li>
+<li>Update dependencies
+<ul>
+<li>Remove scalacheck, scala-reflect and scala-compiler dependencies from core</li>
+<li>upgrade scalacheck to 1.11.3</li>
+</ul></li>
+<li>Add Mima support on core to check for binary compatibility between minor version for next releases</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="new-major-concept-optional"></a><a href="#new-major-concept-optional" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>New major concept: Optional</h3>
+<ul>
+<li>Add <code>Optional</code> a new major concept that represents a 0-1 <code>Traversal</code>. <code>Optional</code> is a sub class of <code>Traversal</code> and
+a super class of <code>Lens</code> and <code>Prism</code>. Composing a <code>Lens</code> and a <code>Prism</code> creates an <code>Optional</code> instead of a <code>Traversal</code>,
+hence we maintain information that the resulting Optic zooms to an optional object and not a list</li>
+<li>Rename <code>Head</code> -&gt; <code>HeadOption</code>, <code>Last</code> -&gt; <code>LastOption</code>, <code>Tail</code> -&gt; <code>TailOption</code>and <code>Init</code> -&gt; <code>InitOption</code></li>
+<li>Change <code>HeadOption</code>, <code>LastOption</code>, <code>TailOption</code>, <code>InitOption</code> Optic from <code>Traversal</code> to <code>Optional</code></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="functions"></a><a href="#functions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Functions</h3>
+<ul>
+<li>Generalize <code>Reverse</code>, <code>Tail</code> and <code>Init</code> from 1 to 2 types parameters.</li>
+<li>Add <code>Head</code>, <code>Last</code>, <code>Tail</code>, <code>Init</code> functions with the same semantic than the Option (<code>HeadOption</code>, ...) variant except
+that their Optic is a <code>Lens</code> and not an <code>Optional</code>. This implies that <code>Head</code>, <code>Last</code>, <code>Tail</code>, <code>Init</code> can only be defined on
+elements with a mandatory head, last, tail and init. Implemented on 2-6 tuple and <code>HList</code>.</li>
+<li>Implemented <code>Reverse</code> instances on all tuple and <code>HList</code>.</li>
+<li>Implemented <code>Reverse</code>, <code>Head</code>, <code>Last</code>, <code>Tail</code>, <code>Init</code> instances on all tuple and <code>HList</code>.</li>
+<li>Implemented <code>HeadOption</code>, <code>LastOption</code>, <code>TailOption</code>, <code>InitOption</code>, <code>Each</code>, <code>Index</code> and <code>FilterIndex</code> for scalaz <code>IList</code>.</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="miscellaneous"></a><a href="#miscellaneous" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Miscellaneous</h3>
+<ul>
+<li>Add reverseModify on <code>SimplePrism</code> as an alias for <code>getOption map modify</code>.</li>
+<li>Add syntax for <code>Getter</code>, <code>Fold</code> and <code>Setter</code>.</li>
+<li>Add non symbolic functions to use Optics as operators, e.g.
+<code>List(1,2,3) applyTraversal each getAll</code> instead of <code>List(1,2,3) |-&gt;&gt; each getAll</code></li>
+<li>Add import for all syntax: <code>import monocle.syntax._</code></li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="030"></a><a href="#030" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>0.3.0</h1>
+<blockquote>
+<p>02 May 2014</p>
+</blockquote>
+<ul>
+<li>Update dependencies</li>
+<li>scala to 2.10.4</li>
+<li>shapeless to 2.0.0</li>
+<li>macro paradise to 2.0.0</li>
+<li>quasi quotes to 2.0.0</li>
+<li>Add apply4 to apply6 methods to Traversal</li>
+<li>Add <code>Each</code> instance for 4 to 6 tuple of same type</li>
+<li>Generic sub module:</li>
+<li>Add <code>Field1</code> to <code>Field6</code> instances for <code>HList</code></li>
+<li>Add <code>SafeCast</code> instance for <code>Coproduct</code>, hence supporting Prism for sealed family</li>
+<li>Remove <code>_1</code>, <code>_2</code>, <code>_3</code> Lens using shapeless <code>Generic</code>, since composing <code>toHList</code> Iso and <code>Fields</code> Lens is equivalent</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="020"></a><a href="#020" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>0.2.0</h1>
+<blockquote>
+<p>27 April 2014</p>
+</blockquote>
+<ul>
+<li>Add generic Lens, Traversal, Iso and Prism in monocle.function:
+<ul>
+<li><code>_1</code>, <code>_2</code>, ..., <code>_6</code>, Lens to focus on the ith element of a tuple. Implemented for tuple of size 6 or less</li>
+<li><code>atBit(i: Int)</code>, Lens to focus on ith Bit. Implemented for Boolean, Byte, Char, Int and Long</li>
+<li><code>safeCast</code>, Prism defining a safe down casting between two types. Implemented for most primitive type and String</li>
+<li><code>curry</code> and <code>uncurry</code>, Iso for functions with up to 5 parameters</li>
+<li><code>head</code> and <code>last</code>, Traversal to the first and last element respectively. Implemented for std List, Vector, Stream, Option and String</li>
+<li><code>tail</code> and <code>init</code>, Traversal to all elements except first and all elements except last respectively.
+Implemented for std List, Vector, Stream and String</li>
+<li><code>reverse</code>, Iso that reverses the order of elements. Implemented for std List, Vector, Stream, String and scalaz Tree</li>
+<li><code>index(i: Int)</code>, Traversal to focus on ith element. Implemented for std List, Vector, Stream, Map and String</li>
+<li><code>each</code>, Traversal to focus on all elements. Implemented for std List, Vector, Stream, Option, Map, String, pair and triple of same type and scalaz tree</li>
+<li><code>filterIndex(predicate: Index =&gt; Boolean)</code>, Traversal to focus on all elements with index verifying predicate.
+Implemented for List, Vector, Stream, Map and String</li>
+<li><code>at(key: K)</code>, Lens to focus on an optional element at a key, strictly more powerful than index as it permits to
+add and delete elements. Implemented for Map</li>
+</ul></li>
+<li>Alias for Iso, Prism, Lens and Traversal composition:
+<ul>
+<li><code>&lt;-&gt; == composeIso</code></li>
+<li><code>?-&gt; == composePrism</code></li>
+<li><code>|-&gt; == composeLens</code></li>
+<li><code>|-&gt;&gt; == composeTraversal</code></li>
+</ul></li>
+<li>Add experimental sub project generic, using shapeless to generate Iso between <code>HList</code> and case class or tuple</li>
+<li>Add documentation in examples</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="010"></a><a href="#010" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>0.1.0</h1>
+<blockquote>
+<p>27 February 2014</p>
+</blockquote>
+<ul>
+<li>First release</li>
+</ul>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>

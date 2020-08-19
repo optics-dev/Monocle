@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Modules · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="In an attempt to be modular, Monocle is broken up into several modules:"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Modules · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/monocle/monocle/"/><meta property="og:description" content="In an attempt to be modular, Monocle is broken up into several modules:"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/monocle/css/main.css"/><script src="/monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/monocle/"><img class="logo" src="/monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Documentation</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Documentation</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/monocle/docs/modules">Modules</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Modules</h1></header><article><div><span><p>In an attempt to be modular, Monocle is broken up into several modules:</p>
+<ul>
+<li><em>core</em> - contains optics (e.g. <code>Lens</code>, <code>Prism</code>, <code>Traversal</code>) and type class definitions (e.g. <code>Index</code>, <code>Each</code>, <code>Plated</code>) and
+type class instances for standard library types and cats data types</li>
+<li><em>macro</em> - macros to simplify the generation of optics</li>
+<li><em>laws</em> - laws for the optics and type classes</li>
+<li><em>generic</em> - optics and type class instances for <code>HList</code> and <code>Coproduct</code> from <a href="https://github.com/milessabin/shapeless">shapeless</a></li>
+<li><em>state</em> - conversion between optics and <code>State</code> or <code>Reader</code></li>
+<li><em>refined</em> - optics and type class instances using refinement types from <a href="https://github.com/fthomas/refined">refined</a></li>
+<li><em>unsafe</em> - optics that do not fully satisfy laws but that are very convenient. More details <a href="unsafe_module.html">here</a></li>
+<li><em>tests</em> - tests that check optics and type class instances satisfy laws</li>
+<li><em>bench</em> - benchmarks using jmh to measure optics performances</li>
+<li><em>docs</em> - source for this website</li>
+</ul>
+<p>You can add a module to your build by adding the following line to <code>libraryDependencies</code>:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-${module}"</span> % ${version}
+</code></pre>
+<p>Here is the complete list of published artifacts:</p>
+<pre><code class="hljs css language-scala">libraryDependencies ++= <span class="hljs-type">Seq</span>(
+  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-core"</span>    % ${version},
+  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-generic"</span> % ${version},
+  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-macro"</span>   % ${version},
+  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-state"</span>   % ${version},
+  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-refined"</span> % ${version},
+  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-unsafe"</span>  % ${version},
+  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-law"</span>     % ${version} % <span class="hljs-string">"test"</span>
+)
+</code></pre>
+<p>You need to replace <code>${version}</code> with the version of Monocle you want to use.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/monocle/docs/admin"><span class="arrow-prev">← </span><span>Previous</span></a><a class="docs-next button" href="/monocle/docs/technical-details"><span>Next</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>

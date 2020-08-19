@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>University Example · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Let&#x27;s take a basic model of a `University` containing a few `Department`s where each `Department` has a budget"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="University Example · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/monocle/monocle/"/><meta property="og:description" content="Let&#x27;s take a basic model of a `University` containing a few `Department`s where each `Department` has a budget"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/monocle/css/main.css"/><script src="/monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/monocle/"><img class="logo" src="/monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">University Example</h1></header><article><div><span><p>Let's take a basic model of a <code>University</code> containing a few <code>Department</code>s where each <code>Department</code> has a budget
+and a few <code>Lecturer</code>s.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Lecturer</span>(<span class="hljs-params">firstName: <span class="hljs-type">String</span>, lastName: <span class="hljs-type">String</span>, salary: <span class="hljs-type">Int</span></span>)</span>
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Department</span>(<span class="hljs-params">budget: <span class="hljs-type">Int</span>, lecturers: <span class="hljs-type">List</span>[<span class="hljs-type">Lecturer</span>]</span>)</span>
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">University</span>(<span class="hljs-params">name: <span class="hljs-type">String</span>, departments: <span class="hljs-type">Map</span>[<span class="hljs-type">String</span>, <span class="hljs-type">Department</span>]</span>)</span>
+
+<span class="hljs-keyword">val</span> uni = <span class="hljs-type">University</span>(<span class="hljs-string">"oxford"</span>, <span class="hljs-type">Map</span>(
+  <span class="hljs-string">"Computer Science"</span> -&gt; <span class="hljs-type">Department</span>(<span class="hljs-number">45</span>, <span class="hljs-type">List</span>(
+    <span class="hljs-type">Lecturer</span>(<span class="hljs-string">"john"</span>  , <span class="hljs-string">"doe"</span>, <span class="hljs-number">10</span>),
+    <span class="hljs-type">Lecturer</span>(<span class="hljs-string">"robert"</span>, <span class="hljs-string">"johnson"</span>, <span class="hljs-number">16</span>)
+  )),
+  <span class="hljs-string">"History"</span> -&gt; <span class="hljs-type">Department</span>(<span class="hljs-number">30</span>, <span class="hljs-type">List</span>(
+    <span class="hljs-type">Lecturer</span>(<span class="hljs-string">"arnold"</span>, <span class="hljs-string">"stones"</span>, <span class="hljs-number">20</span>)
+  ))
+))
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="how-to-remove-or-add-elements-in-a-map"></a><a href="#how-to-remove-or-add-elements-in-a-map" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How to remove or add elements in a Map</h2>
+<p>Our university is having some financial issues and it has to close the History department.</p>
+<p>First, we need to zoom into <code>University</code> to the departments field using a <code>Lens</code></p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenLens</span>  <span class="hljs-comment">// require monocle-macro module</span>
+
+<span class="hljs-keyword">val</span> departments = <span class="hljs-type">GenLens</span>[<span class="hljs-type">University</span>](_.departments)
+</code></pre>
+<p>then we zoom into the <code>Map</code> at the <code>History</code> key using <code>At</code> typeclass</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.function.<span class="hljs-type">At</span>.at <span class="hljs-comment">// to get at Lens</span>
+</code></pre>
+<pre><code class="hljs css language-scala">(departments composeLens at(<span class="hljs-string">"History"</span>)).set(<span class="hljs-type">None</span>)(uni)
+<span class="hljs-comment">// res0: University = University(</span>
+<span class="hljs-comment">//   name = "oxford",</span>
+<span class="hljs-comment">//   departments = Map(</span>
+<span class="hljs-comment">//     "Computer Science" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 45,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "john", lastName = "doe", salary = 10),</span>
+<span class="hljs-comment">//         Lecturer(firstName = "robert", lastName = "johnson", salary = 16)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     )</span>
+<span class="hljs-comment">//   )</span>
+<span class="hljs-comment">// )</span>
+</code></pre>
+<p>if instead we wanted to create a department, we would have used <code>set</code> with <code>Some</code>:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> physics = <span class="hljs-type">Department</span>(<span class="hljs-number">36</span>, <span class="hljs-type">List</span>(
+  <span class="hljs-type">Lecturer</span>(<span class="hljs-string">"daniel"</span>, <span class="hljs-string">"jones"</span>, <span class="hljs-number">12</span>),
+  <span class="hljs-type">Lecturer</span>(<span class="hljs-string">"roger"</span> , <span class="hljs-string">"smith"</span>, <span class="hljs-number">14</span>)
+))
+</code></pre>
+<pre><code class="hljs css language-scala">(departments composeLens at(<span class="hljs-string">"Physics"</span>)).set(<span class="hljs-type">Some</span>(physics))(uni)
+<span class="hljs-comment">// res1: University = University(</span>
+<span class="hljs-comment">//   name = "oxford",</span>
+<span class="hljs-comment">//   departments = Map(</span>
+<span class="hljs-comment">//     "Computer Science" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 45,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "john", lastName = "doe", salary = 10),</span>
+<span class="hljs-comment">//         Lecturer(firstName = "robert", lastName = "johnson", salary = 16)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     ),</span>
+<span class="hljs-comment">//     "History" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 30,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "arnold", lastName = "stones", salary = 20)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     ),</span>
+<span class="hljs-comment">//     "Physics" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 36,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "daniel", lastName = "jones", salary = 12),</span>
+<span class="hljs-comment">//         Lecturer(firstName = "roger", lastName = "smith", salary = 14)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     )</span>
+<span class="hljs-comment">//   )</span>
+<span class="hljs-comment">// )</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="how-to-update-a-field-in-a-nested-case-class"></a><a href="#how-to-update-a-field-in-a-nested-case-class" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How to update a field in a nested case class</h2>
+<p>Let's have a look at a more positive scenario where all university lecturers get a salary increase.</p>
+<p>First we need to generate a few <code>Lens</code>es in order to zoom in the interesting fields of our model.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> lecturers = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Department</span>](_.lecturers)
+<span class="hljs-keyword">val</span> salary = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Lecturer</span>](_.salary)
+</code></pre>
+<p>We want to focus to all university lecturers, for this we can use <code>Each</code> typeclass as it provides a <code>Traversal</code>
+which zooms into all elements of a container (e.g. <code>List</code>, <code>Vector</code> <code>Map</code>)</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.function.all._ <span class="hljs-comment">// to get each and other typeclass based optics such as at or headOption</span>
+<span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Traversal</span>
+<span class="hljs-keyword">import</span> monocle.unsafe.<span class="hljs-type">MapTraversal</span>._ <span class="hljs-comment">// to get Each instance for Map (SortedMap does not require this import)</span>
+
+<span class="hljs-keyword">val</span> allLecturers: <span class="hljs-type">Traversal</span>[<span class="hljs-type">University</span>, <span class="hljs-type">Lecturer</span>] = departments composeTraversal each composeLens lecturers composeTraversal each
+</code></pre>
+<p>Note that we used <code>each</code> twice, the first time on <code>Map</code> and the second time on <code>List</code>.</p>
+<pre><code class="hljs css language-scala">(allLecturers composeLens salary).modify(_ + <span class="hljs-number">2</span>)(uni)
+<span class="hljs-comment">// res2: University = University(</span>
+<span class="hljs-comment">//   name = "oxford",</span>
+<span class="hljs-comment">//   departments = Map(</span>
+<span class="hljs-comment">//     "History" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 30,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "arnold", lastName = "stones", salary = 22)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     ),</span>
+<span class="hljs-comment">//     "Computer Science" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 45,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "john", lastName = "doe", salary = 12),</span>
+<span class="hljs-comment">//         Lecturer(firstName = "robert", lastName = "johnson", salary = 18)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     )</span>
+<span class="hljs-comment">//   )</span>
+<span class="hljs-comment">// )</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="how-to-create-your-own-traversal"></a><a href="#how-to-create-your-own-traversal" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How to create your own Traversal</h2>
+<p>We realised that our data is not formatted correctly, in particular first and last name are not upper cased.
+We can reuse the <code>Traversal</code> to all <code>Lecturer</code>s we previously created but this time we need to zoom into the first
+character of both <code>firstName</code> and <code>lastName</code>.</p>
+<p>You know the drill, first we need to create the <code>Lens</code>es we need.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> firstName = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Lecturer</span>](_.firstName)
+<span class="hljs-keyword">val</span> lastName  = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Lecturer</span>](_.lastName)
+</code></pre>
+<p>Then, we can use <code>Cons</code> typeclass which provides both <code>headOption</code> and <code>tailOption</code> optics. In our case, we want
+to use <code>headOption</code> to zoom into the first character of a <code>String</code></p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> upperCasedFirstName = (allLecturers composeLens firstName composeOptional headOption).modify(_.toUpper)(uni)
+<span class="hljs-comment">// upperCasedFirstName: University = University(</span>
+<span class="hljs-comment">//   name = "oxford",</span>
+<span class="hljs-comment">//   departments = Map(</span>
+<span class="hljs-comment">//     "History" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 30,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "Arnold", lastName = "stones", salary = 20)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     ),</span>
+<span class="hljs-comment">//     "Computer Science" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 45,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "John", lastName = "doe", salary = 10),</span>
+<span class="hljs-comment">//         Lecturer(firstName = "Robert", lastName = "johnson", salary = 16)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     )</span>
+<span class="hljs-comment">//   )</span>
+<span class="hljs-comment">// )</span>
+(allLecturers composeLens lastName composeOptional headOption).modify(_.toUpper)(upperCasedFirstName)
+<span class="hljs-comment">// res3: University = University(</span>
+<span class="hljs-comment">//   name = "oxford",</span>
+<span class="hljs-comment">//   departments = Map(</span>
+<span class="hljs-comment">//     "Computer Science" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 45,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "John", lastName = "Doe", salary = 10),</span>
+<span class="hljs-comment">//         Lecturer(firstName = "Robert", lastName = "Johnson", salary = 16)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     ),</span>
+<span class="hljs-comment">//     "History" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 30,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "Arnold", lastName = "Stones", salary = 20)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     )</span>
+<span class="hljs-comment">//   )</span>
+<span class="hljs-comment">// )</span>
+</code></pre>
+<p>It is annoying that we have to call <code>modify</code> on first name and then repeat the same action on last name. Ideally, we
+would like to focus to both first and last name. To do that we need to create our own <code>Traversal</code></p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> firstAndLastNames = <span class="hljs-type">Traversal</span>.apply2[<span class="hljs-type">Lecturer</span>, <span class="hljs-type">String</span>](_.firstName, _.lastName){ <span class="hljs-keyword">case</span> (fn, ln, l) =&gt; l.copy(firstName = fn, lastName = ln)}
+</code></pre>
+<pre><code class="hljs css language-scala">(allLecturers composeTraversal firstAndLastNames composeOptional headOption).modify(_.toUpper)(uni)
+<span class="hljs-comment">// res4: University = University(</span>
+<span class="hljs-comment">//   name = "oxford",</span>
+<span class="hljs-comment">//   departments = Map(</span>
+<span class="hljs-comment">//     "History" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 30,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "Arnold", lastName = "Stones", salary = 20)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     ),</span>
+<span class="hljs-comment">//     "Computer Science" -&gt; Department(</span>
+<span class="hljs-comment">//       budget = 45,</span>
+<span class="hljs-comment">//       lecturers = List(</span>
+<span class="hljs-comment">//         Lecturer(firstName = "John", lastName = "Doe", salary = 10),</span>
+<span class="hljs-comment">//         Lecturer(firstName = "Robert", lastName = "Johnson", salary = 16)</span>
+<span class="hljs-comment">//       )</span>
+<span class="hljs-comment">//     )</span>
+<span class="hljs-comment">//   )</span>
+<span class="hljs-comment">// )</span>
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#how-to-remove-or-add-elements-in-a-map">How to remove or add elements in a Map</a></li><li><a href="#how-to-update-a-field-in-a-nested-case-class">How to update a field in a nested case class</a></li><li><a href="#how-to-create-your-own-traversal">How to create your own Traversal</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>

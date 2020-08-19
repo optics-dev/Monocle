@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Iso · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="An `Iso` is an optic which converts elements of type `S` into elements of type `A` without loss."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Iso · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/monocle/monocle/"/><meta property="og:description" content="An `Iso` is an optic which converts elements of type `S` into elements of type `A` without loss."/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/monocle/css/main.css"/><script src="/monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/monocle/"><img class="logo" src="/monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Iso</h1></header><article><div><span><p>An <code>Iso</code> is an optic which converts elements of type <code>S</code> into elements of type <code>A</code> without loss.</p>
+<p>Consider a case class <code>Person</code> with two fields:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span>(<span class="hljs-params">name: <span class="hljs-type">String</span>, age: <span class="hljs-type">Int</span></span>)</span>
+</code></pre>
+<p><code>Person</code> is equivalent to a tuple <code>(String, Int)</code> and a tuple <code>(String, Int)</code> is equivalent to <code>Person</code>.
+So we can create an <code>Iso</code> between <code>Person</code> and <code>(String, Int)</code> using two total functions:</p>
+<ul>
+<li><code>get: Person =&gt; (String, Int)</code></li>
+<li><code>reverseGet (aka apply): (String, Int) =&gt; Person</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Iso</span>
+<span class="hljs-keyword">val</span> personToTuple = <span class="hljs-type">Iso</span>[<span class="hljs-type">Person</span>, (<span class="hljs-type">String</span>, <span class="hljs-type">Int</span>)](p =&gt; (p.name, p.age)){<span class="hljs-keyword">case</span> (name, age) =&gt; <span class="hljs-type">Person</span>(name, age)}
+</code></pre>
+<pre><code class="hljs css language-scala">personToTuple.get(<span class="hljs-type">Person</span>(<span class="hljs-string">"Zoe"</span>, <span class="hljs-number">25</span>))
+<span class="hljs-comment">// res0: (String, Int) = ("Zoe", 25)</span>
+personToTuple.reverseGet((<span class="hljs-string">"Zoe"</span>, <span class="hljs-number">25</span>))
+<span class="hljs-comment">// res1: Person = Person(name = "Zoe", age = 25)</span>
+</code></pre>
+<p>Or simply:</p>
+<pre><code class="hljs css language-scala">personToTuple((<span class="hljs-string">"Zoe"</span>, <span class="hljs-number">25</span>))
+<span class="hljs-comment">// res2: Person = Person(name = "Zoe", age = 25)</span>
+</code></pre>
+<p>Another common use of <code>Iso</code> is between collection. <code>List</code> and <code>Vector</code> represent the same concept, they are both an
+ordered sequence of elements but they have different performance characteristics. Therefore, we can define an <code>Iso</code> between
+a <code>List[A]</code> and a <code>Vector[A]</code>:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">listToVector</span></span>[<span class="hljs-type">A</span>] = <span class="hljs-type">Iso</span>[<span class="hljs-type">List</span>[<span class="hljs-type">A</span>], <span class="hljs-type">Vector</span>[<span class="hljs-type">A</span>]](_.toVector)(_.toList)
+</code></pre>
+<pre><code class="hljs css language-scala">listToVector.get(<span class="hljs-type">List</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>))
+<span class="hljs-comment">// res3: Vector[Int] = Vector(1, 2, 3)</span>
+</code></pre>
+<p>We can also <code>reverse</code> an <code>Iso</code> since it defines a symmetric transformation:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">vectorToList</span></span>[<span class="hljs-type">A</span>] = listToVector[<span class="hljs-type">A</span>].reverse
+
+vectorToList.get(<span class="hljs-type">Vector</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>))
+<span class="hljs-comment">// res4: List[Int] = List(1, 2, 3)</span>
+</code></pre>
+<p><code>Iso</code> are also convenient to lift methods from one type to another, for example a <code>String</code> can be seen as a <code>List[Char]</code>
+so we should be able to transform all functions <code>List[Char] =&gt; List[Char]</code> into <code>String =&gt; String</code>:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> stringToList = <span class="hljs-type">Iso</span>[<span class="hljs-type">String</span>, <span class="hljs-type">List</span>[<span class="hljs-type">Char</span>]](_.toList)(_.mkString(<span class="hljs-string">""</span>))
+</code></pre>
+<pre><code class="hljs css language-scala">stringToList.modify(_.tail)(<span class="hljs-string">"Hello"</span>)
+<span class="hljs-comment">// res5: String = "ello"</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="iso-generation"></a><a href="#iso-generation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Iso Generation</h2>
+<p>We defined several macros to simplify the generation of <code>Iso</code> between a case class and its <code>Tuple</code> equivalent. All macros
+are defined in a separate module (see <a href="../modules.html">modules</a>).</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyString</span>(<span class="hljs-params">s: <span class="hljs-type">String</span></span>)</span>
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>)</span>
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Bar</span></span>
+
+<span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenIso</span>
+</code></pre>
+<p>First of all, <code>GenIso.apply</code> generates an <code>Iso</code> for <code>newtype</code> i.e. case class with a single type parameter:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-type">GenIso</span>[<span class="hljs-type">MyString</span>, <span class="hljs-type">String</span>].get(<span class="hljs-type">MyString</span>(<span class="hljs-string">"Hello"</span>))
+<span class="hljs-comment">// res6: String = "Hello"</span>
+</code></pre>
+<p>Then, <code>GenIso.unit</code> generates an <code>Iso</code> for object or case classes with no field:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-type">GenIso</span>.unit[<span class="hljs-type">Foo</span>]
+<span class="hljs-comment">// res7: Iso[Foo, Unit] = monocle.PIso$$anon$9@57a806d2</span>
+<span class="hljs-type">GenIso</span>.unit[<span class="hljs-type">Bar</span><span class="hljs-class">.<span class="hljs-keyword">type</span>]</span>
+<span class="hljs-comment">// res8: Iso[Bar.type, Unit] = monocle.PIso$$anon$9@467115e4</span>
+</code></pre>
+<p>Finally, <code>GenIso.fields</code> is a whitebox macro which generalise <code>GenIso.apply</code> to all case classes:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-type">GenIso</span>.fields[<span class="hljs-type">Person</span>].get(<span class="hljs-type">Person</span>(<span class="hljs-string">"John"</span>, <span class="hljs-number">42</span>))
+<span class="hljs-comment">// res9: (String, Int) = ("John", 42)</span>
+</code></pre>
+<p>Be aware that whitebox macros are not supported by all IDEs.</p>
+<h2><a class="anchor" aria-hidden="true" id="laws"></a><a href="#laws" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Laws</h2>
+<p>An <code>Iso</code> must satisfy all properties defined in <code>IsoLaws</code> from the <code>core</code> module.
+You can check the validity of your own <code>Iso</code> using <code>IsoTests</code> from the <code>law</code> module.</p>
+<p>In particular, an <code>Iso</code> must verify that <code>get</code> and <code>reverseGet</code> are inverse. This is done via
+<code>roundTripOneWay</code> and <code>roundTripOtherWay</code> laws:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">roundTripOneWay</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](i: <span class="hljs-type">Iso</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>): <span class="hljs-type">Boolean</span> =
+  i.reverseGet(i.get(s)) == s
+  
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">roundTripOtherWay</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](i: <span class="hljs-type">Iso</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], a: <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
+  i.get(i.reverseGet(a)) == a
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#iso-generation">Iso Generation</a></li><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Prism · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="A `Prism` is an optic used to select part of a `Sum` type (also known as `Coproduct`), e.g. `sealed trait` or `Enum`."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Prism · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/monocle/monocle/"/><meta property="og:description" content="A `Prism` is an optic used to select part of a `Sum` type (also known as `Coproduct`), e.g. `sealed trait` or `Enum`."/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/monocle/css/main.css"/><script src="/monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/monocle/"><img class="logo" src="/monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Prism</h1></header><article><div><span><p>A <code>Prism</code> is an optic used to select part of a <code>Sum</code> type (also known as <code>Coproduct</code>), e.g. <code>sealed trait</code> or <code>Enum</code>.</p>
+<p><code>Prisms</code> have two type parameters generally called <code>S</code> and <code>A</code>: <code>Prism[S, A]</code> where <code>S</code> represents the <code>Sum</code> and <code>A</code> a part of the <code>Sum</code>.</p>
+<p>Let's take a simplified <code>Json</code> encoding:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">sealed</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Json</span></span>
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">JNull</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Json</span></span>
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JStr</span>(<span class="hljs-params">v: <span class="hljs-type">String</span></span>) <span class="hljs-keyword">extends</span> <span class="hljs-title">Json</span></span>
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JNum</span>(<span class="hljs-params">v: <span class="hljs-type">Double</span></span>) <span class="hljs-keyword">extends</span> <span class="hljs-title">Json</span></span>
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JObj</span>(<span class="hljs-params">v: <span class="hljs-type">Map</span>[<span class="hljs-type">String</span>, <span class="hljs-type">Json</span>]</span>) <span class="hljs-keyword">extends</span> <span class="hljs-title">Json</span></span>
+</code></pre>
+<p>We can define a <code>Prism</code> which only selects <code>Json</code> elements built with a <code>JStr</code> constructor by supplying a pair of functions:</p>
+<ul>
+<li><code>getOption: Json =&gt; Option[String]</code></li>
+<li><code>reverseGet (aka apply): String =&gt; Json</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Prism</span>
+
+<span class="hljs-keyword">val</span> jStr = <span class="hljs-type">Prism</span>[<span class="hljs-type">Json</span>, <span class="hljs-type">String</span>]{
+  <span class="hljs-keyword">case</span> <span class="hljs-type">JStr</span>(v) =&gt; <span class="hljs-type">Some</span>(v)
+  <span class="hljs-keyword">case</span> _       =&gt; <span class="hljs-type">None</span>
+}(<span class="hljs-type">JStr</span>)
+</code></pre>
+<p>It is common to create a <code>Prism</code> by pattern matching on constructor, so we also added <code>partial</code> which takes a <code>PartialFunction</code>:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> jStr = <span class="hljs-type">Prism</span>.partial[<span class="hljs-type">Json</span>, <span class="hljs-type">String</span>]{<span class="hljs-keyword">case</span> <span class="hljs-type">JStr</span>(v) =&gt; v}(<span class="hljs-type">JStr</span>)
+</code></pre>
+<p>We can use the supplied <code>getOption</code> and <code>apply</code> methods as constructor and pattern matcher for <code>JStr</code>:</p>
+<pre><code class="hljs css language-scala">jStr(<span class="hljs-string">"hello"</span>)
+<span class="hljs-comment">// res0: Json = JStr(v = "hello")</span>
+
+jStr.getOption(<span class="hljs-type">JStr</span>(<span class="hljs-string">"Hello"</span>))
+<span class="hljs-comment">// res1: Option[String] = Some(value = "Hello")</span>
+jStr.getOption(<span class="hljs-type">JNum</span>(<span class="hljs-number">3.2</span>))
+<span class="hljs-comment">// res2: Option[String] = None</span>
+</code></pre>
+<p>A <code>Prism</code> can be used in a pattern matching position:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">isLongString</span></span>(json: <span class="hljs-type">Json</span>): <span class="hljs-type">Boolean</span> = json <span class="hljs-keyword">match</span> {
+  <span class="hljs-keyword">case</span> jStr(v) =&gt; v.length &gt; <span class="hljs-number">100</span>
+  <span class="hljs-keyword">case</span> _       =&gt; <span class="hljs-literal">false</span>
+}
+</code></pre>
+<p>We can also use <code>set</code> and <code>modify</code> to update a <code>Json</code> only if it is a <code>JStr</code>:</p>
+<pre><code class="hljs css language-scala">jStr.set(<span class="hljs-string">"Bar"</span>)(<span class="hljs-type">JStr</span>(<span class="hljs-string">"Hello"</span>))
+<span class="hljs-comment">// res3: Json = JStr(v = "Bar")</span>
+jStr.modify(_.reverse)(<span class="hljs-type">JStr</span>(<span class="hljs-string">"Hello"</span>))
+<span class="hljs-comment">// res4: Json = JStr(v = "olleH")</span>
+</code></pre>
+<p>If we supply another type of <code>Json</code>, <code>set</code> and <code>modify</code> will be a no operation:</p>
+<pre><code class="hljs css language-scala">jStr.set(<span class="hljs-string">"Bar"</span>)(<span class="hljs-type">JNum</span>(<span class="hljs-number">10</span>))
+<span class="hljs-comment">// res5: Json = JNum(v = 10.0)</span>
+jStr.modify(_.reverse)(<span class="hljs-type">JNum</span>(<span class="hljs-number">10</span>))
+<span class="hljs-comment">// res6: Json = JNum(v = 10.0)</span>
+</code></pre>
+<p>If we care about the success or failure of the update, we can use <code>setOption</code> or <code>modifyOption</code>:</p>
+<pre><code class="hljs css language-scala">jStr.modifyOption(_.reverse)(<span class="hljs-type">JStr</span>(<span class="hljs-string">"Hello"</span>))
+<span class="hljs-comment">// res7: Option[Json] = Some(value = JStr(v = "olleH"))</span>
+jStr.modifyOption(_.reverse)(<span class="hljs-type">JNum</span>(<span class="hljs-number">10</span>))
+<span class="hljs-comment">// res8: Option[Json] = None</span>
+</code></pre>
+<p>As all other optics <code>Prisms</code> compose together:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.std.double.doubleToInt <span class="hljs-comment">// Prism[Double, Int] defined in Monocle</span>
+
+<span class="hljs-keyword">val</span> jNum: <span class="hljs-type">Prism</span>[<span class="hljs-type">Json</span>, <span class="hljs-type">Double</span>] = <span class="hljs-type">Prism</span>.partial[<span class="hljs-type">Json</span>, <span class="hljs-type">Double</span>]{<span class="hljs-keyword">case</span> <span class="hljs-type">JNum</span>(v) =&gt; v}(<span class="hljs-type">JNum</span>)
+
+<span class="hljs-keyword">val</span> jInt: <span class="hljs-type">Prism</span>[<span class="hljs-type">Json</span>, <span class="hljs-type">Int</span>] = jNum composePrism doubleToInt
+</code></pre>
+<pre><code class="hljs css language-scala">jInt(<span class="hljs-number">5</span>)
+<span class="hljs-comment">// res9: Json = JNum(v = 5.0)</span>
+
+jInt.getOption(<span class="hljs-type">JNum</span>(<span class="hljs-number">5.0</span>))
+<span class="hljs-comment">// res10: Option[Int] = Some(value = 5)</span>
+jInt.getOption(<span class="hljs-type">JNum</span>(<span class="hljs-number">5.2</span>))
+<span class="hljs-comment">// res11: Option[Int] = None</span>
+jInt.getOption(<span class="hljs-type">JStr</span>(<span class="hljs-string">"Hello"</span>))
+<span class="hljs-comment">// res12: Option[Int] = None</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="prism-generation"></a><a href="#prism-generation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Prism Generation</h2>
+<p>Generating <code>Prisms</code> for subclasses is fairly common, so we added a macro to simplify the process. All macros
+are defined in a separate module (see <a href="../modules.html">modules</a>).</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenPrism</span>
+
+<span class="hljs-keyword">val</span> rawJNum: <span class="hljs-type">Prism</span>[<span class="hljs-type">Json</span>, <span class="hljs-type">JNum</span>] = <span class="hljs-type">GenPrism</span>[<span class="hljs-type">Json</span>, <span class="hljs-type">JNum</span>]
+</code></pre>
+<pre><code class="hljs css language-scala">rawJNum.getOption(<span class="hljs-type">JNum</span>(<span class="hljs-number">4.5</span>))
+<span class="hljs-comment">// res13: Option[JNum] = Some(value = JNum(v = 4.5))</span>
+rawJNum.getOption(<span class="hljs-type">JStr</span>(<span class="hljs-string">"Hello"</span>))
+<span class="hljs-comment">// res14: Option[JNum] = None</span>
+</code></pre>
+<p>If you want to get a <code>Prism[Json, Double]</code> instead of a <code>Prism[Json, JNum]</code>, you can compose <code>GenPrism</code>
+with <code>GenIso</code> (see <code>Iso</code> documentation):</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenIso</span>
+
+<span class="hljs-keyword">val</span> jNum: <span class="hljs-type">Prism</span>[<span class="hljs-type">Json</span>, <span class="hljs-type">Double</span>] = <span class="hljs-type">GenPrism</span>[<span class="hljs-type">Json</span>, <span class="hljs-type">JNum</span>] composeIso <span class="hljs-type">GenIso</span>[<span class="hljs-type">JNum</span>, <span class="hljs-type">Double</span>]
+</code></pre>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> jNull: <span class="hljs-type">Prism</span>[<span class="hljs-type">Json</span>, <span class="hljs-type">Unit</span>] = <span class="hljs-type">GenPrism</span>[<span class="hljs-type">Json</span>, <span class="hljs-type">JNull</span><span class="hljs-class">.<span class="hljs-keyword">type</span>] <span class="hljs-title">composeIso</span> <span class="hljs-title">GenIso</span>.<span class="hljs-title">unit</span>[<span class="hljs-type">JNull</span>.type]</span>
+</code></pre>
+<p>A <a href="https://github.com/optics-dev/Monocle/issues/363">ticket</a> currently exists to add a macro to merge these two steps together.</p>
+<h2><a class="anchor" aria-hidden="true" id="prism-laws"></a><a href="#prism-laws" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Prism Laws</h2>
+<p>A <code>Prism</code> must satisfy all properties defined in <code>PrismLaws</code> from the <code>core</code> module.
+You can check the validity of your own <code>Prisms</code> using <code>PrismTests</code> from the <code>law</code> module.</p>
+<p>In particular, a <code>Prism</code> must verify that <code>getOption</code> and <code>reverseGet</code> allow a full round trip if the <code>Prism</code> matches
+i.e. if <code>getOption</code> returns a <code>Some</code>.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">partialRoundTripOneWay</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](p: <span class="hljs-type">Prism</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>): <span class="hljs-type">Boolean</span> =
+  p.getOption(s) <span class="hljs-keyword">match</span> {
+    <span class="hljs-keyword">case</span> <span class="hljs-type">None</span>    =&gt; <span class="hljs-literal">true</span> <span class="hljs-comment">// nothing to prove</span>
+    <span class="hljs-keyword">case</span> <span class="hljs-type">Some</span>(a) =&gt; p.reverseGet(a) == s
+  }
+  
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">partialRoundTripOtherWay</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](p: <span class="hljs-type">Prism</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], a: <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
+  p.getOption(p.reverseGet(a)) == <span class="hljs-type">Some</span>(a)
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#prism-generation">Prism Generation</a></li><li><a href="#prism-laws">Prism Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>

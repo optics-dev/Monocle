@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>FAQ · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Which imports are required to use typeclass based optics such as at, each, headOption?"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="FAQ · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/monocle/monocle/"/><meta property="og:description" content="## Which imports are required to use typeclass based optics such as at, each, headOption?"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/monocle/css/main.css"/><script src="/monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/monocle/"><img class="logo" src="/monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/monocle/docs/release_notes" target="_self">Release Notes</a></li><li class="siteNavItemActive"><a href="/monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">FAQ</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="which-imports-are-required-to-use-typeclass-based-optics-such-as-at-each-headoption"></a><a href="#which-imports-are-required-to-use-typeclass-based-optics-such-as-at-each-headoption" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Which imports are required to use typeclass based optics such as at, each, headOption?</h2>
+<p>All typeclasses are defined in <code>monocle.function</code> package, you can import optic individually with</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.function.$<span class="hljs-type">TYPE_CLASS</span>.$<span class="hljs-type">OPTIC</span>
+</code></pre>
+<p>For example</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.function.<span class="hljs-type">At</span>.at
+<span class="hljs-keyword">import</span> monocle.function.<span class="hljs-type">Cons</span>.{headOption, tailOption}
+</code></pre>
+<p>or you can import all typeclass based optics with</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.function.all._
+</code></pre>
+<p>Here is a complete example</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.function.all._
+<span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenLens</span>
+
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span>(<span class="hljs-params">s: <span class="hljs-type">String</span>, is: <span class="hljs-type">List</span>[<span class="hljs-type">Int</span>]</span>)</span>
+<span class="hljs-keyword">val</span> foo = <span class="hljs-type">Foo</span>(<span class="hljs-string">"Hello"</span>, <span class="hljs-type">List</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>))
+
+<span class="hljs-keyword">val</span> is = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Foo</span>](_.is)
+</code></pre>
+<pre><code class="hljs css language-scala">(is composeOptional headOption).getOption(foo)
+<span class="hljs-comment">// res0: Option[Int] = Some(value = 1)</span>
+</code></pre>
+<p>Note: if you use a version of monocle before 1.4.x, you need another import to get the typeclass instance</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.std.list._
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="what-is-the-difference-between-at-and-index-when-should-i-use-one-or-the-other"></a><a href="#what-is-the-difference-between-at-and-index-when-should-i-use-one-or-the-other" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>What is the difference between at and index? When should I use one or the other?</h2>
+<p>Both <code>at</code> and <code>index</code> define indexed optics. However, <code>at</code> is a <code>Lens</code> and <code>index</code> is an <code>Optional</code> which means
+<code>at</code> is stronger than <code>index</code>. Let's take the example of a <code>Map</code></p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Iso</span>
+
+<span class="hljs-keyword">val</span> m = <span class="hljs-type">Map</span>(<span class="hljs-string">"one"</span> -&gt; <span class="hljs-number">1</span>, <span class="hljs-string">"two"</span> -&gt; <span class="hljs-number">2</span>)
+
+<span class="hljs-keyword">val</span> root = <span class="hljs-type">Iso</span>.id[<span class="hljs-type">Map</span>[<span class="hljs-type">String</span>, <span class="hljs-type">Int</span>]]
+</code></pre>
+<pre><code class="hljs css language-scala">(root composeOptional index(<span class="hljs-string">"two"</span>)).set(<span class="hljs-number">0</span>)(m)   <span class="hljs-comment">// update value at index "two"</span>
+<span class="hljs-comment">// res1: Map[String, Int] = Map("one" -&gt; 1, "two" -&gt; 0)   // update value at index "two"</span>
+(root composeOptional index(<span class="hljs-string">"three"</span>)).set(<span class="hljs-number">3</span>)(m) <span class="hljs-comment">// noop because m doesn't have a value at "three"</span>
+<span class="hljs-comment">// res2: Map[String, Int] = Map("one" -&gt; 1, "two" -&gt; 2) // noop because m doesn't have a value at "three"</span>
+(root composeLens at(<span class="hljs-string">"three"</span>)).set(<span class="hljs-type">Some</span>(<span class="hljs-number">3</span>))(m)  <span class="hljs-comment">// insert element at "three"</span>
+<span class="hljs-comment">// res3: Map[String, Int] = Map("one" -&gt; 1, "two" -&gt; 2, "three" -&gt; 3)  // insert element at "three"</span>
+(root composeLens at(<span class="hljs-string">"two"</span>)).set(<span class="hljs-type">None</span>)(m)       <span class="hljs-comment">// delete element at "two"</span>
+<span class="hljs-comment">// res4: Map[String, Int] = Map("one" -&gt; 1)       // delete element at "two"</span>
+(root composeLens at(<span class="hljs-string">"two"</span>)).set(<span class="hljs-type">Some</span>(<span class="hljs-number">0</span>))(m)    <span class="hljs-comment">// upsert element at "two"</span>
+<span class="hljs-comment">// res5: Map[String, Int] = Map("one" -&gt; 1, "two" -&gt; 0)</span>
+</code></pre>
+<p>In other words, <code>index</code> can update any existing values while <code>at</code> can also <code>insert</code> and <code>delete</code>.</p>
+<p>Since <code>index</code> is weaker than <code>at</code>, we can implement an instance of <code>Index</code> on more data structure than <code>At</code>.
+For instance, <code>List</code> or <code>Vector</code> only have an instance of <code>Index</code> because there is no way to insert an element at an
+arbitrary index of a sequence.</p>
+<p>Note: <code>root</code> is a trick to help type inference. Without it, we would get the following error</p>
+<pre><code class="hljs css language-scala">index(<span class="hljs-string">"two"</span>).set(<span class="hljs-number">0</span>)(m)
+<span class="hljs-comment">// error: ambiguous implicit values:</span>
+<span class="hljs-comment">//  both method listMapIndex in object Index of type [K, V]monocle.function.Index[scala.collection.immutable.ListMap[K,V],K,V]</span>
+<span class="hljs-comment">//  and method mapIndex in object Index of type [K, V]monocle.function.Index[Map[K,V],K,V]</span>
+<span class="hljs-comment">//  match expected type monocle.function.Index[S,String,A]</span>
+<span class="hljs-comment">// index("two").set(0)(m)</span>
+<span class="hljs-comment">// ^^^^^^^^^^^^</span>
+</code></pre>
+<p>The problem is that the compiler does not have enough information to infer the correct <code>Index</code> instance. By using
+<code>Iso.id[Map[String, Int]]</code> as a prefix, we give a hint to the type inference saying we focus on a <code>Map[String, Int]</code>.
+Similarly, if the <code>Map</code> was in a case class, a <code>Lens</code> would provide the same kind of hint than <code>Iso.id</code></p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span>(<span class="hljs-params">kv: <span class="hljs-type">Map</span>[<span class="hljs-type">String</span>, <span class="hljs-type">Int</span>]</span>)</span>
+</code></pre>
+<pre><code class="hljs css language-scala">(<span class="hljs-type">GenLens</span>[<span class="hljs-type">Bar</span>](_.kv) composeOptional index(<span class="hljs-string">"two"</span>)).set(<span class="hljs-number">0</span>)(<span class="hljs-type">Bar</span>(m))
+<span class="hljs-comment">// res7: Bar = Bar(kv = Map("one" -&gt; 1, "two" -&gt; 0))</span>
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#which-imports-are-required-to-use-typeclass-based-optics-such-as-at-each-headoption">Which imports are required to use typeclass based optics such as at, each, headOption?</a></li><li><a href="#what-is-the-difference-between-at-and-index-when-should-i-use-one-or-the-other">What is the difference between at and index? When should I use one or the other?</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>

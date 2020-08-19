@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Optional · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="An `Optional` is an Optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Optional · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/monocle/monocle/"/><meta property="og:description" content="An `Optional` is an Optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`."/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/monocle/css/main.css"/><script src="/monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/monocle/"><img class="logo" src="/monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Optional</h1></header><article><div><span><p>An <code>Optional</code> is an Optic used to zoom inside a <code>Product</code>, e.g. <code>case class</code>, <code>Tuple</code>, <code>HList</code> or even <code>Map</code>.
+Unlike the <code>Lens</code>, the element that the <code>Optional</code> focuses on may not exist.</p>
+<p><code>Optionals</code> have two type parameters generally called <code>S</code> and <code>A</code>: <code>Optional[S, A]</code> where <code>S</code> represents the <code>Product</code> and <code>A</code> an optional element inside of <code>S</code>.</p>
+<p>Let's take a simple list with integers.</p>
+<p>We can create an <code>Optional[List[Int], Int]</code> which zooms from a <code>List[Int]</code> to its potential head by supplying a pair of functions:</p>
+<ul>
+<li><code>getOption: List[Int] =&gt; Option[Int]</code></li>
+<li><code>set: Int =&gt; List[Int] =&gt; List[Int]</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Optional</span>
+<span class="hljs-keyword">val</span> head = <span class="hljs-type">Optional</span>[<span class="hljs-type">List</span>[<span class="hljs-type">Int</span>], <span class="hljs-type">Int</span>] {
+  <span class="hljs-keyword">case</span> <span class="hljs-type">Nil</span> =&gt; <span class="hljs-type">None</span>
+  <span class="hljs-keyword">case</span> x :: xs =&gt; <span class="hljs-type">Some</span>(x)
+}{ a =&gt; {
+   <span class="hljs-keyword">case</span> <span class="hljs-type">Nil</span> =&gt; <span class="hljs-type">Nil</span>
+   <span class="hljs-keyword">case</span> x :: xs =&gt; a :: xs
+  }
+}
+</code></pre>
+<p>Once we have an <code>Optional</code>, we can use the supplied <code>nonEmpty</code> function to know if it matches:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> xs = <span class="hljs-type">List</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+<span class="hljs-keyword">val</span> ys = <span class="hljs-type">List</span>.empty[<span class="hljs-type">Int</span>]
+</code></pre>
+<pre><code class="hljs css language-scala">head.nonEmpty(xs)
+<span class="hljs-comment">// res0: Boolean = true</span>
+head.nonEmpty(ys)
+<span class="hljs-comment">// res1: Boolean = false</span>
+</code></pre>
+<p>We can use the supplied <code>getOrModify</code> function to retrieve the target if it matches, or the original value:</p>
+<pre><code class="hljs css language-scala">head.getOrModify(xs)
+<span class="hljs-comment">// res2: Either[List[Int], Int] = Right(value = 1)</span>
+head.getOrModify(ys)
+<span class="hljs-comment">// res3: Either[List[Int], Int] = Left(value = List())</span>
+</code></pre>
+<p>The function <code>getOrModify</code> is mostly used for polymorphic optics.
+If you use monomorphic optics, use function <code>getOption</code></p>
+<p>We can use the supplied <code>getOption</code> and <code>set</code> functions:</p>
+<pre><code class="hljs css language-scala">head.getOption(xs)
+<span class="hljs-comment">// res4: Option[Int] = Some(value = 1)</span>
+head.set(<span class="hljs-number">5</span>)(xs)
+<span class="hljs-comment">// res5: List[Int] = List(5, 2, 3)</span>
+
+head.getOption(ys)
+<span class="hljs-comment">// res6: Option[Int] = None</span>
+head.set(<span class="hljs-number">5</span>)(ys)
+<span class="hljs-comment">// res7: List[Int] = List()</span>
+</code></pre>
+<p>We can also <code>modify</code> the target of <code>Optional</code> with a function:</p>
+<pre><code class="hljs css language-scala">head.modify(_ + <span class="hljs-number">1</span>)(xs)
+<span class="hljs-comment">// res8: List[Int] = List(2, 2, 3)</span>
+head.modify(_ + <span class="hljs-number">1</span>)(ys)
+<span class="hljs-comment">// res9: List[Int] = List()</span>
+</code></pre>
+<p>Or use <code>modifyOption</code> / <code>setOption</code> to know if the update was successful:</p>
+<pre><code class="hljs css language-scala">head.modifyOption(_ + <span class="hljs-number">1</span>)(xs)
+<span class="hljs-comment">// res10: Option[List[Int]] = Some(value = List(2, 2, 3))</span>
+head.modifyOption(_ + <span class="hljs-number">1</span>)(ys)
+<span class="hljs-comment">// res11: Option[List[Int]] = None</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="laws"></a><a href="#laws" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Laws</h2>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OptionalLaws</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](<span class="hljs-params">optional: <span class="hljs-type">Optional</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>]</span>) </span>{
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getOptionSet</span></span>(s: <span class="hljs-type">S</span>): <span class="hljs-type">Boolean</span> =
+    optional.getOrModify(s).fold(identity, optional.set(_)(s)) == s
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">setGetOption</span></span>(s: <span class="hljs-type">S</span>, a: <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
+    optional.getOption(optional.set(a)(s)) == optional.getOption(s).map(_ =&gt; a)
+
+}
+</code></pre>
+<p>An <code>Optional</code> must satisfy all properties defined in <code>OptionalLaws</code> in <code>core</code> module.
+You can check the validity of your own <code>Optional</code> using <code>OptionalTests</code> in <code>law</code> module.</p>
+<p><code>getOptionSet</code> states that if you <code>getOrModify</code> a value <code>A</code> from <code>S</code> and then <code>set</code> it back in, the result is an object identical to the original one.</p>
+<p><code>setGetOption</code> states that if you <code>set</code> a value, you always <code>getOption</code> the same value back.</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>
