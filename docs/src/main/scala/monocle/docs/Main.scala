@@ -31,16 +31,15 @@ object Main {
       .MainSettings()
       .withSiteVariables {
         Map(
-          "ORGANIZATION" -> organization,
-          "CORE_MODULE_NAME" -> coreModuleName,
-          "CORE_CROSS_SCALA_VERSIONS" -> minorVersionsString(
-            coreCrossScalaVersions),
-          "LATEST_VERSION" -> latestVersion,
-          "LATEST_SNAPSHOT_VERSION" -> latestSnapshotVersion,
-          "LATEST_MAJOR_VERSION" -> majorVersion(latestVersion),
-          "DOCS_SCALA_MINOR_VERSION" -> scalaMinorVersion,
-          "SCALA_PUBLISH_VERSIONS" -> minorVersionsString(crossScalaVersions),
-          "API_BASE_URL" -> s"/monocle/api/monocle",
+          "ORGANIZATION"              -> organization,
+          "CORE_MODULE_NAME"          -> coreModuleName,
+          "CORE_CROSS_SCALA_VERSIONS" -> minorVersionsString(coreCrossScalaVersions),
+          "LATEST_VERSION"            -> latestVersion,
+          "LATEST_SNAPSHOT_VERSION"   -> latestSnapshotVersion,
+          "LATEST_MAJOR_VERSION"      -> majorVersion(latestVersion),
+          "DOCS_SCALA_MINOR_VERSION"  -> scalaMinorVersion,
+          "SCALA_PUBLISH_VERSIONS"    -> minorVersionsString(crossScalaVersions),
+          "API_BASE_URL"              -> s"/monocle/api/monocle"
         )
       }
       .withScalacOptions(scalacOptions.mkString(" "))
