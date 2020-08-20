@@ -1,12 +1,13 @@
 ---
 id: optics
-title: optics
+title: Optics
 ---
-## Optics
 
 Here is a diagram to visualise how optics relate to each other:
 
 ![Class Diagram](img/class-diagram.png)
+
+
 
 ## Optic Composition Table
 

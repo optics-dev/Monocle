@@ -34,7 +34,7 @@
 
 .mainContainer .index {
   margin: 0 auto;
-  max-width: 650px;
+  max-width: 1050px;
   padding: 0 10px;
 }
 
@@ -44,7 +44,7 @@
 }
 
 .projectTitleLogo {
-  width: 45px;
+  width: 300px;
   vertical-align: top;
 }
 

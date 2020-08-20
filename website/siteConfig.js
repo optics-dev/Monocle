@@ -23,8 +23,8 @@ siteConfig = {
         {href: repoUrl, label: "GitHub"}
     ],
 
-    headerIcon: "img/monocle-m-white.png",
-    titleIcon: "img/monocle-m.jpg",
+    headerIcon: "img/monocle-full-white.png",
+    titleIcon: "img/monocle-full.png",
     // titleIcon: "img/monocle-full.svg",
     favicon: "img/favicon.png",
 

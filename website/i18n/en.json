@@ -21,7 +21,7 @@
         "title": "Modules"
       },
       "optics": {
-        "title": "optics"
+        "title": "Optics"
       },
       "optics/iso": {
         "title": "Iso"
@@ -53,6 +53,7 @@
       "GitHub": "GitHub"
     },
     "categories": {
+      "Optics": "Optics",
       "Documentation": "Documentation"
     }
   },
