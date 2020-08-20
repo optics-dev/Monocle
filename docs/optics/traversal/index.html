@@ -1,4 +1,60 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Traversal · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="A `Traversal` is the generalisation of an `Optional` to several targets. In other word, a `Traversal` allows"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Traversal · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/Monocle/Monocle/"/><meta property="og:description" content="A `Traversal` is the generalisation of an `Optional` to several targets. In other word, a `Traversal` allows"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/Monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/Monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/Monocle/css/main.css"/><script src="/Monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/Monocle/"><img class="logo" src="/Monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/Monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/Monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/Monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Traversal</h1></header><article><div><span><p>A <code>Traversal</code> is the generalisation of an <code>Optional</code> to several targets. In other word, a <code>Traversal</code> allows
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Traversal · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="A `Traversal` is the generalisation of an `Optional` to several targets. In other word, a `Traversal` allows"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Traversal · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/Monocle/Monocle/"/><meta property="og:description" content="A `Traversal` is the generalisation of an `Optional` to several targets. In other word, a `Traversal` allows"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/Monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/Monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/Monocle/css/main.css"/><script src="/Monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/Monocle/"><img class="logo" src="/Monocle/img/monocle-full-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class="siteNavGroupActive"><a href="/Monocle/docs/optics" target="_self">Optics</a></li><li class="siteNavGroupActive"><a href="/Monocle/docs/release_notes" target="_self">Release Notes</a></li><li class="siteNavGroupActive"><a href="/Monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Optics</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Optics</h3><ul class=""><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics">Optics</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics/iso">Iso</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics/lens">Lens</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics/prism">Prism</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics/optional">Optional</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/Monocle/docs/optics/traversal">Traversal</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Documentation</h3><ul class=""><li class="navListItem"><a class="navItem" href="/Monocle/docs/modules">Modules</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/examples">Examples</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/faq">FAQ</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/release_notes">Release Notes</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Traversal</h1></header><article><div><span><p>A <code>Traversal</code> is the generalisation of an <code>Optional</code> to several targets. In other word, a <code>Traversal</code> allows
 to focus from a type <code>S</code> into 0 to n values of type <code>A</code>.</p>
 <p>The most common example of a <code>Traversal</code> would be to focus into all elements inside of a container (e.g. <code>List</code>, <code>Vector</code>, <code>Option</code>).
 To do this we will use the relation between the typeclass <code>cats.Traverse</code> and <code>Traversal</code>:</p>
@@ -8,7 +64,7 @@ To do this we will use the relation between the typeclass <code>cats.Traverse</c
 <span class="hljs-keyword">val</span> xs = <span class="hljs-type">List</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>)
 </code></pre>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> eachL = <span class="hljs-type">Traversal</span>.fromTraverse[<span class="hljs-type">List</span>, <span class="hljs-type">Int</span>]
-<span class="hljs-comment">// eachL: Traversal[List[Int], Int] = monocle.PTraversal$$anon$5@4b2cb312</span>
+<span class="hljs-comment">// eachL: Traversal[List[Int], Int] = monocle.PTraversal$$anon$5@6b8b37d0</span>
 eachL.set(<span class="hljs-number">0</span>)(xs)
 <span class="hljs-comment">// res0: List[Int] = List(0, 0, 0, 0, 0)</span>
 eachL.modify(_ + <span class="hljs-number">1</span>)(xs)
@@ -50,7 +106,7 @@ A <code>Traversal</code> is defined by a single method <code>modifyF</code> whic
 <span class="hljs-keyword">val</span> m = <span class="hljs-type">Map</span>(<span class="hljs-number">1</span> -&gt; <span class="hljs-string">"one"</span>, <span class="hljs-number">2</span> -&gt; <span class="hljs-string">"two"</span>, <span class="hljs-number">3</span> -&gt; <span class="hljs-string">"three"</span>, <span class="hljs-number">4</span> -&gt; <span class="hljs-string">"Four"</span>)
 </code></pre>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> filterEven = filterKey[<span class="hljs-type">Int</span>, <span class="hljs-type">String</span>](_ % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>)
-<span class="hljs-comment">// filterEven: Traversal[Map[Int, String], String] = repl.MdocSession$App$$anon$1@34fb256d</span>
+<span class="hljs-comment">// filterEven: Traversal[Map[Int, String], String] = repl.MdocSession$App$$anon$1@3855877e</span>
 
 filterEven.modify(_.toUpperCase)(m)
 <span class="hljs-comment">// res7: Map[Int, String] = Map(</span>
@@ -71,4 +127,4 @@ You can check the validity of your own <code>Traversal</code> using <code>Traver
 <pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">composeModify</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](t: <span class="hljs-type">Traversal</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>, f: <span class="hljs-type">A</span> =&gt; <span class="hljs-type">A</span>, g: <span class="hljs-type">A</span> =&gt; <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
     t.modify(g)(t.modify(f)(s)) == t.modify(g compose f)(s)
 </code></pre>
-</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/Monocle/docs/optics/optional"><span class="arrow-prev">← </span><span>Optional</span></a><a class="docs-next button" href="/Monocle/docs/modules"><span>Modules</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>

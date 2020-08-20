@@ -1,4 +1,60 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Lens · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="A `Lens` is an optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Lens · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/Monocle/Monocle/"/><meta property="og:description" content="A `Lens` is an optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`."/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/Monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/Monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/Monocle/css/main.css"/><script src="/Monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/Monocle/"><img class="logo" src="/Monocle/img/monocle-m-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/Monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/Monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/Monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Lens</h1></header><article><div><span><p>A <code>Lens</code> is an optic used to zoom inside a <code>Product</code>, e.g. <code>case class</code>, <code>Tuple</code>, <code>HList</code> or even <code>Map</code>.</p>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Lens · Monocle</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="A `Lens` is an optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Lens · Monocle"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/Monocle/Monocle/"/><meta property="og:description" content="A `Lens` is an optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`."/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/Monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/Monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/Monocle/css/main.css"/><script src="/Monocle/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/Monocle/"><img class="logo" src="/Monocle/img/monocle-full-white.png" alt="Monocle"/><h2 class="headerTitleWithLogo">Monocle</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class="siteNavGroupActive"><a href="/Monocle/docs/optics" target="_self">Optics</a></li><li class="siteNavGroupActive"><a href="/Monocle/docs/release_notes" target="_self">Release Notes</a></li><li class="siteNavGroupActive"><a href="/Monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Optics</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Optics</h3><ul class=""><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics">Optics</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics/iso">Iso</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/Monocle/docs/optics/lens">Lens</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics/prism">Prism</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics/optional">Optional</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/optics/traversal">Traversal</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Documentation</h3><ul class=""><li class="navListItem"><a class="navItem" href="/Monocle/docs/modules">Modules</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/examples">Examples</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/faq">FAQ</a></li><li class="navListItem"><a class="navItem" href="/Monocle/docs/release_notes">Release Notes</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Lens</h1></header><article><div><span><p>A <code>Lens</code> is an optic used to zoom inside a <code>Product</code>, e.g. <code>case class</code>, <code>Tuple</code>, <code>HList</code> or even <code>Map</code>.</p>
 <p><code>Lenses</code> have two type parameters generally called <code>S</code> and <code>A</code>: <code>Lens[S, A]</code> where <code>S</code> represents the <code>Product</code> and <code>A</code> an element inside of <code>S</code>.</p>
 <p>Let's take a simple case class with two fields:</p>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Address</span>(<span class="hljs-params">streetNumber: <span class="hljs-type">Int</span>, streetName: <span class="hljs-type">String</span></span>)</span>
@@ -94,9 +150,9 @@ john.lens(_.name).set(<span class="hljs-string">"Mike"</span>).lens(_.age).modif
 <span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span>(<span class="hljs-params">b: <span class="hljs-type">Option</span>[<span class="hljs-type">B</span>]</span>)</span>
 
 <span class="hljs-keyword">val</span> c = <span class="hljs-type">GenLens</span>[<span class="hljs-type">B</span>](_.c)
-<span class="hljs-comment">// c: Lens[B, Int] = repl.MdocSession$App$$anon$7@5b6ed877</span>
+<span class="hljs-comment">// c: Lens[B, Int] = repl.MdocSession$App$$anon$7@2d878da2</span>
 <span class="hljs-keyword">val</span> b = <span class="hljs-type">GenLens</span>[<span class="hljs-type">A</span>](_.b)
-<span class="hljs-comment">// b: Lens[A, Option[B]] = repl.MdocSession$App$$anon$8@23fa9394</span>
+<span class="hljs-comment">// b: Lens[A, Option[B]] = repl.MdocSession$App$$anon$8@700b1219</span>
 
 (b composePrism some composeLens c).getOption(<span class="hljs-type">A</span>(<span class="hljs-type">Some</span>(<span class="hljs-type">B</span>(<span class="hljs-number">1</span>))))
 <span class="hljs-comment">// res11: Option[Int] = Some(value = 1)</span>
@@ -148,4 +204,4 @@ This law guarantees that <code>set</code> is actually updating a value <code>A</
 <pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">setGet</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](l: <span class="hljs-type">Lens</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>, a: <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
   l.get(l.set(a)(s)) == a
 </code></pre>
-</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#other-ways-of-lens-composition">Other Ways of Lens Composition</a></li><li><a href="#lens-generation">Lens Generation</a></li><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/Monocle/docs/optics/iso"><span class="arrow-prev">← </span><span>Iso</span></a><a class="docs-next button" href="/Monocle/docs/optics/prism"><span>Prism</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#other-ways-of-lens-composition">Other Ways of Lens Composition</a></li><li><a href="#lens-generation">Lens Generation</a></li><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>
