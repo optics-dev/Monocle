@@ -1,6 +1,6 @@
 const repoUrl = "https://github.com/optics-dev/monocle";
 
-const apiUrl = "/monocle/api/monocle/index.html";
+const apiUrl = "/Monocle/api/monocle/index.html";
 
 // See https://docusaurus.io/docs/site-config for available options.
 let siteConfig;
