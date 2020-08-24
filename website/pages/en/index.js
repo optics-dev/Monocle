@@ -90,7 +90,6 @@ class Index extends React.Component {
 
     const index = `[![Join the chat at https://gitter.im/optics-dev/Monocle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/optics-dev/Monocle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.julien-truffaut/monocle_2.12.svg)](http://search.maven.org/#search|ga|1|com.github.julien-truffaut.monocle)
-[![Build Status](https://api.travis-ci.org/optics-dev/Monocle.svg?branch=master)](https://travis-ci.org/optics-dev/Monocle)
 
 Monocle is an optics library for Scala (and [Scala.js](https://www.scala-js.org/)) strongly inspired by Haskell [Lens](https://github.com/ekmett/lens).
 
