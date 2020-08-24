@@ -6,6 +6,7 @@ const apiUrl = "/Monocle/api/monocle/index.html";
 let siteConfig;
 siteConfig = {
     title: "Monocle",
+    disableHeaderTitle : true,
     tagline: "Optics for Scala",
     url: "https://optics.dev/Monocle",
     baseUrl: "/Monocle/",
