@@ -38,4 +38,4 @@ jobs:
           restore-keys: ${{ runner.os }}-sbt-
       - name: Run tests and documentation
         run: |
-          csbt +test packageSrc doc mdoc
+          csbt +test packageSrc mdoc
