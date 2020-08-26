@@ -141,7 +141,7 @@ lazy val monocleJVM = project.in(file(".monocleJVM"))
   .settings(noPublishSettings)
   .aggregate(
     core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm,
-    example, docs, bench)
+    example, bench)
   .dependsOn(
     core.jvm, generic.jvm, law.jvm, macros.jvm, state.jvm, refined.jvm, unsafe.jvm, test.jvm % "test-internal -> test",
     bench % "compile-internal;test-internal -> test")
@@ -381,9 +381,6 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false,
   skip in publish := true
 )
-
-addCommandAlias("validate", ";compile;test;unidoc;docs/mdoc")
-addCommandAlias("ci-microsite", "docs/publishMicrosite")
 
 // For Travis CI - see http://www.cakesolutions.net/teamblogs/publishing-artefacts-to-oss-sonatype-nexus-using-sbt-and-travis-ci
 credentials ++= (for {
