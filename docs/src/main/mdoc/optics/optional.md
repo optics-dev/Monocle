@@ -1,11 +1,7 @@
 ---
-layout: docs
-title:  "Optional"
-section: "optics_menu"
-source: "core/src/main/scala/monocle/POptional.scala"
-scaladoc: "#monocle.Prism"
+id: optional
+title: Optional
 ---
-# Optional
 
 An `Optional` is an Optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`.
 Unlike the `Lens`, the element that the `Optional` focuses on may not exist.

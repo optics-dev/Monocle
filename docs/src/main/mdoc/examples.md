@@ -1,10 +1,7 @@
 ---
-layout: docs
-title:  "Examples"
-section: "examples_menu"
+id: examples
+title: Examples
 ---
-
-## Examples
 
 Here is a list of "Real Life" examples showing how optics integrate with each other:
 

@@ -1,11 +1,7 @@
 ---
-layout: docs
-title:  "Modules"
-section: "main_menu"
-position: 1
+id: modules
+title: Modules
 ---
-
-## Modules
 
 In an attempt to be modular, Monocle is broken up into several modules:
 

@@ -1,10 +1,7 @@
 ---
-layout: docs
-title:  "Unsafe Module"
-section: "main_menu"
+id: unsafe_module
+title: Unsafe module
 ---
-
-## Unsafe module
 
 The `unsafe` module contains `Optics` that do not fully satisfy the set of `Optics` `Laws` of the `core` module.
 
