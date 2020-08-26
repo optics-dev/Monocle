@@ -10,21 +10,17 @@ import scala.collection.immutable.SortedMap
 class AtExample extends MonocleSuite {
   test("at creates a Lens from a Map, SortedMap to an optional value") {
     (Map("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
-    (SortedMap("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(
-      2)
+    (SortedMap("One" -> 2, "Two" -> 2) applyLens at("Two") get) shouldEqual Some(2)
 
-    (Map("One" -> 1, "Two" -> 2) applyLens at("One") set Some(-1)) shouldEqual Map(
-      "One" -> -1,
-      "Two" -> 2)
+    (Map("One" -> 1, "Two" -> 2) applyLens at("One") set Some(-1)) shouldEqual Map("One" -> -1, "Two" -> 2)
 
     // can delete a value
-    (Map("One" -> 1, "Two" -> 2) applyLens at("Two") set None) shouldEqual Map(
-      "One" -> 1)
+    (Map("One" -> 1, "Two" -> 2) applyLens at("Two") set None) shouldEqual Map("One" -> 1)
 
     // add a new value
     (Map("One" -> 1, "Two" -> 2) applyLens at("Three") set Some(3)) shouldEqual Map(
-      "One" -> 1,
-      "Two" -> 2,
+      "One"   -> 1,
+      "Two"   -> 2,
       "Three" -> 3
     )
   }
@@ -38,7 +34,7 @@ class AtExample extends MonocleSuite {
   }
 
   test("at creates a Lens from Int to one of its bit") {
-    (3 applyLens at(0: IntBits) get) shouldEqual true // true  means bit is 1
+    (3 applyLens at(0: IntBits) get) shouldEqual true  // true  means bit is 1
     (4 applyLens at(0: IntBits) get) shouldEqual false // false means bit is 0
 
     (32 applyLens at(0: IntBits) set true) shouldEqual 33
@@ -61,6 +57,7 @@ class AtExample extends MonocleSuite {
     (Map("One" -> 2, "Two" -> 2) applyLens atOrElse("foo")(0) modify (_ + 1)) shouldEqual Map(
       "One" -> 2,
       "Two" -> 2,
-      "foo" -> 1)
+      "foo" -> 1
+    )
   }
 }
