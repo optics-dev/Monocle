@@ -1,6 +1,8 @@
 package monocle.function
 
+import cats.Eq
 import monocle.{Iso, Lens}
+import monocle.std.option.withDefault
 
 import scala.annotation.implicitNotFound
 import scala.collection.immutable.{ListMap, SortedMap}
@@ -21,6 +23,10 @@ abstract class At[S, I, A] extends Serializable {
 trait AtFunctions {
   def at[S, I, A](i: I)(implicit ev: At[S, I, A]): Lens[S, A] = ev.at(i)
 
+  def atOrElse[S, I, A: Eq](i: I)(defaultValue: A)(
+      implicit ev: At[S, I, Option[A]]): Lens[S, A] =
+    ev.at(i) composeIso withDefault(defaultValue)
+
   /** delete a value associated with a key in a Map-like container */
   def remove[S, I, A](i: I)(s: S)(implicit ev: At[S, I, Option[A]]): S =
     ev.at(i).set(None)(s)
@@ -33,7 +39,8 @@ object At extends AtFunctions {
     (i: I) => Lens(get(i))(set(i))
 
   /** lift an instance of [[At]] using an [[Iso]] */
-  def fromIso[S, U, I, A](iso: Iso[S, U])(implicit ev: At[U, I, A]): At[S, I, A] =
+  def fromIso[S, U, I, A](iso: Iso[S, U])(
+      implicit ev: At[U, I, A]): At[S, I, A] =
     At(
       iso composeLens ev.at(_)
     )
@@ -42,14 +49,21 @@ object At extends AtFunctions {
   /** Std instances                                                                               */
   /************************************************************************************************/
   implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] =
-    At(i => Lens((_: SortedMap[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v))))
+    At(i =>
+      Lens((_: SortedMap[K, V]).get(i))(optV =>
+        map => optV.fold(map - i)(v => map + (i -> v))))
 
   implicit def atListMap[K, V]: At[ListMap[K, V], K, Option[V]] =
-    At(i => Lens((_: ListMap[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v))))
+    At(i =>
+      Lens((_: ListMap[K, V]).get(i))(optV =>
+        map => optV.fold(map - i)(v => map + (i -> v))))
 
   implicit def atMap[K, V]: At[Map[K, V], K, Option[V]] =
-    At(i => Lens((_: Map[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v))))
+    At(i =>
+      Lens((_: Map[K, V]).get(i))(optV =>
+        map => optV.fold(map - i)(v => map + (i -> v))))
 
   implicit def atSet[A]: At[Set[A], A, Boolean] =
-    At(a => Lens((_: Set[A]).contains(a))(b => set => if (b) set + a else set - a))
+    At(a =>
+      Lens((_: Set[A]).contains(a))(b => set => if (b) set + a else set - a))
 }
