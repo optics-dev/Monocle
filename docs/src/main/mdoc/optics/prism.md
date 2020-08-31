@@ -1,11 +1,7 @@
 ---
-layout: docs
-title:  "Prism"
-section: "optics_menu"
-source: "core/src/main/scala/monocle/PPrism.scala"
-scaladoc: "#monocle.Prism"
+id: prism
+title: Prism
 ---
-# Prism
 
 A `Prism` is an optic used to select part of a `Sum` type (also known as `Coproduct`), e.g. `sealed trait` or `Enum`.
 

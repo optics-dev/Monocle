@@ -1,11 +1,7 @@
 ---
-layout: docs
-title:  "Lens"
-section: "optics_menu"
-source: "core/src/main/scala/monocle/PLens.scala"
-scaladoc: "#monocle.Lens"
+id: lens
+title: Lens
 ---
-# Lens
 
 A `Lens` is an optic used to zoom inside a `Product`, e.g. `case class`, `Tuple`, `HList` or even `Map`.
 
