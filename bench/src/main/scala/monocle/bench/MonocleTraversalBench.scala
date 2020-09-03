@@ -4,9 +4,6 @@ import monocle.bench.BenchModel._
 import monocle.{PTraversal, Traversal}
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 
-import cats.instances.sortedMap._
-import cats.instances.int._
-
 import scala.collection.immutable.SortedMap
 
 @State(Scope.Benchmark)

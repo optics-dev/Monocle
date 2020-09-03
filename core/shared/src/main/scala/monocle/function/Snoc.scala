@@ -5,7 +5,6 @@ import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.{implicitNotFound, tailrec}
 import cats.Applicative
-import cats.instances.option._
 import cats.syntax.either._
 
 /**

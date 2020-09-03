@@ -45,9 +45,6 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  import cats.instances.list._
-  import cats.instances.sortedMap._
-  import cats.instances.vector._
   import scala.collection.immutable.SortedMap
   import scala.util.Try
 

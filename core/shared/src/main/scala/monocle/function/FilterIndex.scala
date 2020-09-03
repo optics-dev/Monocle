@@ -50,8 +50,6 @@ object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVe
   /************************************************************************************************/
   /** Std instances                                                                               */
   /************************************************************************************************/
-  import cats.instances.list._
-  import cats.instances.vector._
 
   implicit def listFilterIndex[A]: FilterIndex[List[A], Int, A] =
     fromTraverse(_.zipWithIndex)

@@ -7,7 +7,6 @@ import org.scalacheck.{Arbitrary, Prop}
 import org.typelevel.discipline.Laws
 
 import cats.Eq
-import cats.instances.unit._
 
 object EmptyTests extends Laws {
   def apply[S: Arbitrary: Eq: Empty]: RuleSet =

@@ -3,8 +3,6 @@ package monocle.std
 import monocle.Prism
 import monocle.internal.Bounded
 
-import cats.instances.long._
-
 object long extends LongOptics
 
 trait LongOptics {

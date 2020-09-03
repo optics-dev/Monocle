@@ -3,7 +3,7 @@ package monocle.state
 import monocle.PTraversal
 import cats._
 import cats.data._
-import cats.implicits._
+import cats.syntax.all._
 
 trait StateTraversalSyntax {
   implicit def toStateTraversalOps[S, T, A, B](traversal: PTraversal[S, T, A, B]): StateTraversalOps[S, T, A, B] =

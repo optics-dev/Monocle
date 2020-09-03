@@ -3,8 +3,6 @@ package monocle.std
 import monocle.Prism
 import monocle.internal.Bounded
 
-import cats.instances.char._
-
 object char extends CharOptics
 
 trait CharOptics {

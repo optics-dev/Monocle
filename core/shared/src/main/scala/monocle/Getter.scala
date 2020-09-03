@@ -2,7 +2,7 @@ package monocle
 
 import cats.{Monoid, Semigroupal}
 import cats.arrow.{Arrow, Choice}
-import cats.implicits._
+import cats.syntax.all._
 
 /**
   * A [[Getter]] can be seen as a glorified get method between

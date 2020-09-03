@@ -7,7 +7,6 @@ import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
 import cats.Eq
-import cats.instances.tuple._
 
 object ConsTests extends Laws {
   def apply[S: Eq: Arbitrary, A: Eq: Arbitrary](implicit

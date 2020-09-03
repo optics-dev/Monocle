@@ -8,7 +8,6 @@ import org.typelevel.discipline.Laws
 import cats.Eq
 import monocle.unsafe.MapTraversal.{allKeyValues, mapKVTraversal}
 import monocle.law.discipline._
-import cats.instances.option._
 
 object MapListIsoTests extends Laws {
   def apply[S: Arbitrary: Eq, A: Arbitrary: Eq](iso: Iso[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet = {

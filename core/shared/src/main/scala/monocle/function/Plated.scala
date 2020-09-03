@@ -5,7 +5,6 @@ import monocle.{Setter, Traversal}
 import scala.annotation.implicitNotFound
 import cats.{Applicative, Monad, Traverse}
 import cats.data.State
-import cats.instances.int._
 import cats.syntax.flatMap._
 
 /**

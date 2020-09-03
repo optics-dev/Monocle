@@ -3,8 +3,6 @@ package monocle
 import cats.{Applicative, Functor, Id, Monoid, Parallel, Traverse}
 import cats.arrow.Choice
 import cats.data.Const
-import cats.instances.int._
-import cats.instances.list._
 import cats.syntax.either._
 import monocle.internal.Monoids
 

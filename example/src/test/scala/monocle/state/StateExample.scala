@@ -1,7 +1,7 @@
 package monocle.state
 
 import cats.Applicative
-import cats.implicits._
+import cats.syntax.all._
 import monocle.{Getter, MonocleSuite, Optional, PTraversal, Setter}
 import monocle.macros.GenLens
 

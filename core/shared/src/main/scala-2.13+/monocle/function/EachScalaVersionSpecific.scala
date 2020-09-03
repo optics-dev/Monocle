@@ -1,7 +1,5 @@
 package monocle.function
 
-import cats.instances.lazyList._
-
 trait EachInstancesScalaVersionSpecific {
 
   /************************************************************************************************/

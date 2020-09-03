@@ -2,8 +2,6 @@ package monocle
 
 import cats.{Foldable, Monoid}
 import cats.arrow.Choice
-import cats.instances.int._
-import cats.instances.list._
 import cats.syntax.either._
 import monocle.internal.Monoids
 

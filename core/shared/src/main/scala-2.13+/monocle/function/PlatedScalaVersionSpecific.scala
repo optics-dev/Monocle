@@ -1,7 +1,6 @@
 package monocle.function
 
 import cats.Applicative
-import cats.instances.lazyList._
 import monocle.Traversal
 
 trait PlatedFunctionsScalaVersionSpecific extends CommonPlatedFunctions {
