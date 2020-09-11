@@ -170,4 +170,8 @@ class PrismSpec extends MonocleSuite {
   test("GenPrism quintary equality") {
     GenPrism[Arities, Quintary] composeIso GenIso.fields[Quintary] shouldEqual _quintary
   }
+
+  test("to") {
+    i.to(_.toString()).getAll(I(1)) shouldEqual List("1")
+  }
 }
