@@ -96,4 +96,8 @@ class OptionalSpec extends MonocleSuite {
     headOptionI.modifyOption(_ + 1)(List(1, 2, 3, 4)) shouldEqual Some(List(2, 2, 3, 4))
     headOptionI.modifyOption(_ + 1)(Nil) shouldEqual None
   }
+
+  test("to") {
+    headOptionI.to(_.toString()).getAll(List(1, 2, 3)) shouldEqual List("1")
+  }
 }

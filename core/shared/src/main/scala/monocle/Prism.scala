@@ -127,6 +127,9 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     asFold composeFold other
 
+  /** Compose with a function lifted into a Getter */
+  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+
   /** compose a [[PPrism]] with a [[Getter]] */
   @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
     asFold composeGetter other

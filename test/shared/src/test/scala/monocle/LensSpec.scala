@@ -90,4 +90,8 @@ class LensSpec extends MonocleSuite {
   test("modify") {
     x.modify(_ + 1)(Point(9, 2)) shouldEqual Point(10, 2)
   }
+
+  test("to") {
+    x.to(_.toString()).get(Point(1, 2)) shouldEqual "1"
+  }
 }

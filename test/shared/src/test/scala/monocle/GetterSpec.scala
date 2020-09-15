@@ -57,4 +57,8 @@ class GetterSpec extends MonocleSuite {
     val upper  = Getter[String, String](_.toUpperCase)
     length.zip(upper).get("helloworld") shouldEqual ((10, "HELLOWORLD"))
   }
+
+  test("to") {
+    i.to(_.toString()).get(Bar(5)) shouldEqual "5"
+  }
 }

@@ -146,4 +146,8 @@ class TraversalSpec extends MonocleSuite {
     // `Left` values should be accumulated through `Validated`.
     eachLi.parModifyF[Either[String, *]](_.toString.asLeft[Int])(List(1, 2, 3, 4)) shouldEqual Left("1234")
   }
+
+  test("to") {
+    eachLi.to(_.toString()).getAll(List(1, 2, 3)) shouldEqual List("1", "2", "3")
+  }
 }
