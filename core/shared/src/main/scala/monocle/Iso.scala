@@ -56,7 +56,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   def mapping[F[_]: Functor]: PIso[F[S], F[T], F[A], F[B]] =
     PIso[F[S], F[T], F[A], F[B]](fs => Functor[F].map(fs)(self.get))(fb => Functor[F].map(fb)(self.reverseGet))
 
-  /** find if the target satisfies the predicate  */
+  /** find if the target satisfies the predicate */
   @inline final def find(p: A => Boolean): S => Option[A] =
     s => Some(get(s)).filter(p)
 
@@ -78,24 +78,24 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
 
   /** pair two disjoint [[PIso]] */
   @inline final def split[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
-    PIso[(S, S1), (T, T1), (A, A1), (B, B1)] {
-      case (s, s1) => (get(s), other.get(s1))
-    } {
-      case (b, b1) => (reverseGet(b), other.reverseGet(b1))
+    PIso[(S, S1), (T, T1), (A, A1), (B, B1)] { case (s, s1) =>
+      (get(s), other.get(s1))
+    } { case (b, b1) =>
+      (reverseGet(b), other.reverseGet(b1))
     }
 
   @inline final def first[C]: PIso[(S, C), (T, C), (A, C), (B, C)] =
-    PIso[(S, C), (T, C), (A, C), (B, C)] {
-      case (s, c) => (get(s), c)
-    } {
-      case (b, c) => (reverseGet(b), c)
+    PIso[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
+      (get(s), c)
+    } { case (b, c) =>
+      (reverseGet(b), c)
     }
 
   @inline final def second[C]: PIso[(C, S), (C, T), (C, A), (C, B)] =
-    PIso[(C, S), (C, T), (C, A), (C, B)] {
-      case (c, s) => (c, get(s))
-    } {
-      case (c, b) => (c, reverseGet(b))
+    PIso[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
+      (c, get(s))
+    } { case (c, b) =>
+      (c, reverseGet(b))
     }
 
   @inline final def left[C]: PIso[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
@@ -104,9 +104,11 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   @inline final def right[C]: PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](_.map(get))(_.map(reverseGet))
 
-  /**********************************************************/
+  /** *******************************************************
+    */
   /** Compose methods between a [[PIso]] and another Optics */
-  /**********************************************************/
+  /** *******************************************************
+    */
   /** compose a [[PIso]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     asFold composeFold other
@@ -160,9 +162,11 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
         }
     }
 
-  /********************************************/
+  /** *****************************************
+    */
   /** Experimental aliases of compose methods */
-  /********************************************/
+  /** *****************************************
+    */
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     composeTraversal(other)
@@ -183,9 +187,11 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
     composeIso(other)
 
-  /****************************************************************/
+  /** *************************************************************
+    */
   /** Transformation methods to view a [[PIso]] as another Optics */
-  /****************************************************************/
+  /** *************************************************************
+    */
   /** view a [[PIso]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] =
     new Fold[S, A] {
@@ -262,9 +268,11 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
         self.modifyF(f)(s)
     }
 
-  /*************************************************************************/
+  /** **********************************************************************
+    */
   /** Apply methods to treat a [[PIso]] as smart constructors for type T */
-  /*************************************************************************/
+  /** **********************************************************************
+    */
   def apply()(implicit ev: Is[B, Unit]): T =
     ev.substitute[PIso[S, T, A, *]](self).reverseGet(())
 

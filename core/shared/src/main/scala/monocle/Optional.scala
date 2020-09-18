@@ -84,26 +84,28 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     )(b => _.bimap(self.set(b), other.set(b)))
 
   @inline final def first[C]: POptional[(S, C), (T, C), (A, C), (B, C)] =
-    POptional[(S, C), (T, C), (A, C), (B, C)] {
-      case (s, c) => getOrModify(s).bimap(_ -> c, _ -> c)
+    POptional[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
+      getOrModify(s).bimap(_ -> c, _ -> c)
     } {
-      case (b, c) => {
-        case (s, c2) => setOption(b)(s).fold(set(b)(s) -> c2)(_ -> c)
+      case (b, c) => { case (s, c2) =>
+        setOption(b)(s).fold(set(b)(s) -> c2)(_ -> c)
       }
     }
 
   @inline final def second[C]: POptional[(C, S), (C, T), (C, A), (C, B)] =
-    POptional[(C, S), (C, T), (C, A), (C, B)] {
-      case (c, s) => getOrModify(s).bimap(c -> _, c -> _)
+    POptional[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
+      getOrModify(s).bimap(c -> _, c -> _)
     } {
-      case (c, b) => {
-        case (c2, s) => setOption(b)(s).fold(c2 -> set(b)(s))(c -> _)
+      case (c, b) => { case (c2, s) =>
+        setOption(b)(s).fold(c2 -> set(b)(s))(c -> _)
       }
     }
 
-  /***************************************************************/
+  /** ************************************************************
+    */
   /** Compose methods between a [[POptional]] and another Optics */
-  /***************************************************************/
+  /** ************************************************************
+    */
   /** compose a [[POptional]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     asFold composeFold other
@@ -154,9 +156,11 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
     composeOptional(other.asOptional)
 
-  /********************************************/
+  /** *****************************************
+    */
   /** Experimental aliases of compose methods */
-  /********************************************/
+  /** *****************************************
+    */
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     composeTraversal(other)
@@ -177,9 +181,11 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
     composeIso(other)
 
-  /*********************************************************************/
+  /** ******************************************************************
+    */
   /** Transformation methods to view a [[POptional]] as another Optics */
-  /*********************************************************************/
+  /** ******************************************************************
+    */
   /** view a [[POptional]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] =
     new Fold[S, A] {

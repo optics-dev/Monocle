@@ -6,9 +6,11 @@ import monocle.Traversal
 
 trait PlatedFunctionsScalaVersionSpecific extends CommonPlatedFunctions {
 
-  /************************************************************************************************/
-  /** 2.13 std functions                                                                          */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** 2.13 std functions */
+  /** *********************************************************************************************
+    */
   /** get all transitive self-similar elements of a target, including itself */
   def universe[A: Plated](a: A): LazyList[A] = {
     val fold                  = plate[A].asFold
@@ -19,9 +21,11 @@ trait PlatedFunctionsScalaVersionSpecific extends CommonPlatedFunctions {
 
 trait PlatedInstancesScalaVersionSpecific {
 
-  /************************************************************************************************/
-  /** 2.13 std instances                                                                          */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** 2.13 std instances */
+  /** *********************************************************************************************
+    */
   implicit def lazyListPlated[A]: Plated[LazyList[A]] =
     Plated(
       new Traversal[LazyList[A], LazyList[A]] {

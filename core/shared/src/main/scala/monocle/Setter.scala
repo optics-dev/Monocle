@@ -38,9 +38,11 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
     PSetter[Either[S, S1], Either[T, T1], A, B](b => _.bimap(self.modify(b), other.modify(b)))
 
-  /*************************************************************/
+  /** **********************************************************
+    */
   /** Compose methods between a [[PSetter]] and another Optics */
-  /*************************************************************/
+  /** **********************************************************
+    */
   /** compose a [[PSetter]] with a [[PSetter]] */
   @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
     new PSetter[S, T, C, D] {
@@ -71,9 +73,11 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
     composeSetter(other.asSetter)
 
-  /********************************************/
+  /** *****************************************
+    */
   /** Experimental aliases of compose methods */
-  /********************************************/
+  /** *****************************************
+    */
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
     composeTraversal(other)
