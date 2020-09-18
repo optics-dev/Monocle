@@ -157,4 +157,8 @@ class IsoSpec extends MonocleSuite {
   test("GenIso quintary equality") {
     GenIso.fields[Quintary] shouldEqual _quintary
   }
+
+  test("to") {
+    iso.to(_.toString()).get(IntWrapper(5)) shouldEqual "5"
+  }
 }

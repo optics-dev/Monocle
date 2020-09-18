@@ -56,6 +56,9 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
     asFold composeFold other
 
+  /** Compose with a function lifted into a Getter */
+  @inline def to[C](f: A => C): Getter[S, C] = composeGetter(Getter(f))
+
   /** compose a [[Getter]] with a [[Getter]] */
   @inline final def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
     (s: S) => other.get(self.get(s))
