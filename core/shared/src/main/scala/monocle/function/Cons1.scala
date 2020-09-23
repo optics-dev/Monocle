@@ -49,9 +49,11 @@ object Cons1 extends Cons1Functions {
       iso composeIso ev.cons1
     )
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   implicit def tuple2Cons1[A1, A2]: Cons1[(A1, A2), A1, A2] =
     Cons1(
       Iso[(A1, A2), (A1, A2)](identity)(identity)
@@ -64,15 +66,15 @@ object Cons1 extends Cons1Functions {
 
   implicit def tuple4Cons1[A1, A2, A3, A4]: Cons1[(A1, A2, A3, A4), A1, (A2, A3, A4)] =
     Cons1(
-      Iso[(A1, A2, A3, A4), (A1, (A2, A3, A4))](t => (t._1, (t._2, t._3, t._4))) {
-        case (h, t) => (h, t._1, t._2, t._3)
+      Iso[(A1, A2, A3, A4), (A1, (A2, A3, A4))](t => (t._1, (t._2, t._3, t._4))) { case (h, t) =>
+        (h, t._1, t._2, t._3)
       }
     )
 
   implicit def tuple5Cons1[A1, A2, A3, A4, A5]: Cons1[(A1, A2, A3, A4, A5), A1, (A2, A3, A4, A5)] =
     Cons1(
-      Iso[(A1, A2, A3, A4, A5), (A1, (A2, A3, A4, A5))](t => (t._1, (t._2, t._3, t._4, t._5))) {
-        case (h, t) => (h, t._1, t._2, t._3, t._4)
+      Iso[(A1, A2, A3, A4, A5), (A1, (A2, A3, A4, A5))](t => (t._1, (t._2, t._3, t._4, t._5))) { case (h, t) =>
+        (h, t._1, t._2, t._3, t._4)
       }
     )
 
@@ -83,9 +85,11 @@ object Cons1 extends Cons1Functions {
       }
     )
 
-  /************************************************************************************************/
-  /** Cats instances                                                                              */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Cats instances */
+  /** *********************************************************************************************
+    */
   import cats.Now
   import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd}
   import cats.free.Cofree
@@ -97,7 +101,8 @@ object Cons1 extends Cons1Functions {
         Iso((c: Cofree[S, A]) => (c.head, c.tail.value)) { case (h, t) => Cofree(h, Now(t)) }
 
       /** Overridden to prevent forcing evaluation of the `tail` when we're only
-        * interested in using the `head` */
+        * interested in using the `head`
+        */
       override def head: Lens[Cofree[S, A], A] =
         Lens((c: Cofree[S, A]) => c.head)(h => c => Cofree(h, c.tail))
     }

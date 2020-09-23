@@ -50,34 +50,38 @@ object Snoc extends SnocFunctions with SnocInstancesScalaVersionSpecific {
       iso composePrism ev.snoc composeIso iso.reverse.first
     )
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   implicit def listSnoc[A]: Snoc[List[A], A] =
     Snoc(
       Prism[List[A], (List[A], A)](s =>
         Applicative[Option].map2(Either.catchNonFatal(s.init).toOption, s.lastOption)((_, _))
-      ) {
-        case (init, last) => init :+ last
+      ) { case (init, last) =>
+        init :+ last
       }
     )
 
   implicit val stringSnoc: Snoc[String, Char] = Snoc(
-    Prism[String, (String, Char)](s => if (s.isEmpty) None else Some((s.init, s.last))) {
-      case (init, last) => init :+ last
+    Prism[String, (String, Char)](s => if (s.isEmpty) None else Some((s.init, s.last))) { case (init, last) =>
+      init :+ last
     }
   )
 
   implicit def vectorSnoc[A]: Snoc[Vector[A], A] =
     Snoc(
-      Prism[Vector[A], (Vector[A], A)](v => if (v.isEmpty) None else Some((v.init, v.last))) {
-        case (xs, x) => xs :+ x
+      Prism[Vector[A], (Vector[A], A)](v => if (v.isEmpty) None else Some((v.init, v.last))) { case (xs, x) =>
+        xs :+ x
       }
     )
 
-  /************************************************************************************************/
-  /** Cats instances                                                                              */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Cats instances */
+  /** *********************************************************************************************
+    */
   import cats.data.Chain
 
   implicit def chainSnoc[A]: Snoc[Chain[A], A] =
@@ -92,8 +96,8 @@ object Snoc extends SnocFunctions with SnocInstancesScalaVersionSpecific {
           }
 
         go(c, Chain.empty)
-      } {
-        case (init, last) => init.append(last)
+      } { case (init, last) =>
+        init.append(last)
       }
     }
 }

@@ -9,8 +9,8 @@ import cats.Eq
 import cats.arrow.{Category, Compose}
 
 class IsoSpec extends MonocleSuite {
-  val _nullary: Iso[Nullary, Unit] = Iso[Nullary, Unit](n => ()) {
-    case () => Nullary()
+  val _nullary: Iso[Nullary, Unit] = Iso[Nullary, Unit](n => ()) { case () =>
+    Nullary()
   }
   val _unary: Iso[Unary, Int] = Iso[Unary, Int](_.i)(Unary)
   val _binary: Iso[Binary, (String, Int)] =

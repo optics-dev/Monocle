@@ -42,9 +42,11 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
       def each = PTraversal.fromTraverse[S, A, A]
     }
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   import cats.instances.list._
   import cats.instances.sortedMap._
   import cats.instances.vector._
@@ -62,9 +64,8 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
     Each(
       new Traversal[ListMap[K, V], V] {
         def modifyF[F[_]: Applicative](f: V => F[V])(s: ListMap[K, V]): F[ListMap[K, V]] =
-          s.foldLeft(Applicative[F].pure(ListMap.empty[K, V])) {
-            case (acc, (k, v)) =>
-              Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
+          s.foldLeft(Applicative[F].pure(ListMap.empty[K, V])) { case (acc, (k, v)) =>
+            Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
           }
       }
     )
@@ -123,9 +124,11 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
 
   implicit def vectorEach[A]: Each[Vector[A], A] = fromTraverse
 
-  /************************************************************************************************/
-  /** Cats instances                                                                            */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Cats instances */
+  /** *********************************************************************************************
+    */
   import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd, Validated}
   import cats.free.Cofree
 

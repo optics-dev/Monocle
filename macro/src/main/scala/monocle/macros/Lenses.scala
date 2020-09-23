@@ -71,8 +71,8 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
           }
           val defParams = tparams ++ tparams
             .filter(x => tpnamesToChange.contains(x.name))
-            .map {
-              case TypeDef(mods, name, tps, rhs) => TypeDef(mods, tpnamesMap(name), tps, rhs)
+            .map { case TypeDef(mods, name, tps, rhs) =>
+              TypeDef(mods, tpnamesMap(name), tps, rhs)
             }
             .toSet
 
