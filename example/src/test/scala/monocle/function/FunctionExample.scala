@@ -29,12 +29,12 @@ class FunctionExample extends MonocleSuite {
     /**
       * Note: We can only stay in the same function type, because curry is a SimpleIso.
       * So we can't for example modify by applying the first argument.
-     **/
+      */
     /**
       * Here we increase the first argument by one, and then apply the function,
       * Which is easier to do when the function is curried rather than uncurried,
       * so we do the modification through the Iso.
-     **/
+      */
     (f _ applyIso curry modify (_ compose (_ + 1)))(5, 7) shouldEqual (2 * 6 + 3 * 7)
   }
 

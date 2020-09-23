@@ -40,9 +40,11 @@ object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
       iso composePrism ev.empty
     )
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   implicit def listEmpty[A]: Empty[List[A]] =
     Empty(
       Prism[List[A], Unit](l => if (l.isEmpty) Some(()) else None)(_ => List.empty)
@@ -77,9 +79,11 @@ object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
       Prism[Vector[A], Unit](v => if (v.isEmpty) Some(()) else None)(_ => Vector.empty)
     )
 
-  /************************************************************************************************/
-  /** Cats instances                                                                              */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Cats instances */
+  /** *********************************************************************************************
+    */
   import cats.data.Chain
 
   implicit def chainEmpty[A]: Empty[Chain[A]] =

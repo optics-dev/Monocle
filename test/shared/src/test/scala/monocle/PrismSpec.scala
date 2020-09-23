@@ -16,8 +16,8 @@ class PrismSpec extends MonocleSuite {
     Prism[Arities, Unit] {
       case Nullary() => Some(())
       case _         => None
-    } {
-      case () => Nullary()
+    } { case () =>
+      Nullary()
     }
   val _unary: Prism[Arities, Int] =
     Prism[Arities, Int] {

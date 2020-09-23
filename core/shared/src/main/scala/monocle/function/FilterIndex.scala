@@ -47,9 +47,11 @@ object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVe
         }
     }
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   import cats.instances.list._
   import cats.instances.vector._
 
@@ -65,9 +67,8 @@ object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVe
         new Traversal[SortedMap[K, V], V] {
           def modifyF[F[_]: Applicative](f: V => F[V])(s: SortedMap[K, V]): F[SortedMap[K, V]] =
             s.toList
-              .traverse {
-                case (k, v) =>
-                  (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
+              .traverse { case (k, v) =>
+                (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
               }
               .map(kvs => SortedMap(kvs: _*)(ok.toOrdering))
         }
@@ -81,9 +82,11 @@ object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVe
   implicit def vectorFilterIndex[A]: FilterIndex[Vector[A], Int, A] =
     fromTraverse(_.zipWithIndex)
 
-  /************************************************************************************************/
-  /** Cats instances                                                                            */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Cats instances */
+  /** *********************************************************************************************
+    */
   import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
 
   implicit def chainFilterIndex[A]: FilterIndex[Chain[A], Int, A] =
