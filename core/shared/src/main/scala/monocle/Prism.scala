@@ -97,17 +97,17 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
     Getter(reverseGet)
 
   @inline final def first[C]: PPrism[(S, C), (T, C), (A, C), (B, C)] =
-    PPrism[(S, C), (T, C), (A, C), (B, C)] {
-      case (s, c) => getOrModify(s).bimap(_ -> c, _ -> c)
-    } {
-      case (b, c) => (reverseGet(b), c)
+    PPrism[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
+      getOrModify(s).bimap(_ -> c, _ -> c)
+    } { case (b, c) =>
+      (reverseGet(b), c)
     }
 
   @inline final def second[C]: PPrism[(C, S), (C, T), (C, A), (C, B)] =
-    PPrism[(C, S), (C, T), (C, A), (C, B)] {
-      case (c, s) => getOrModify(s).bimap(c -> _, c -> _)
-    } {
-      case (c, b) => (c, reverseGet(b))
+    PPrism[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
+      getOrModify(s).bimap(c -> _, c -> _)
+    } { case (c, b) =>
+      (c, reverseGet(b))
     }
 
   @inline final def left[C]: PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
@@ -120,12 +120,17 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
       _.fold(c => Either.right(Either.left(c)), getOrModify(_).bimap(Either.right, Either.right))
     )(_.map(reverseGet))
 
-  /************************************************************/
+  /** *********************************************************
+    */
   /** Compose methods between a [[PPrism]] and another Optics */
-  /************************************************************/
+  /** *********************************************************
+    */
   /** compose a [[PPrism]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     asFold composeFold other
+
+  /** Compose with a function lifted into a Getter */
+  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
 
   /** compose a [[PPrism]] with a [[Getter]] */
   @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
@@ -164,9 +169,11 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
     composePrism(other.asPrism)
 
-  /********************************************/
+  /** *****************************************
+    */
   /** Experimental aliases of compose methods */
-  /********************************************/
+  /** *****************************************
+    */
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     composeTraversal(other)
@@ -187,9 +194,11 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
     composeIso(other)
 
-  /******************************************************************/
+  /** ***************************************************************
+    */
   /** Transformation methods to view a [[PPrism]] as another Optics */
-  /******************************************************************/
+  /** ***************************************************************
+    */
   /** view a [[PPrism]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] =
     new Fold[S, A] {
@@ -233,9 +242,11 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
         self.modifyF(f)(s)
     }
 
-  /*************************************************************************/
+  /** **********************************************************************
+    */
   /** Apply methods to treat a [[PPrism]] as smart constructors for type T */
-  /*************************************************************************/
+  /** **********************************************************************
+    */
   def apply()(implicit ev: Is[B, Unit]): T =
     ev.substitute[PPrism[S, T, A, *]](self).reverseGet(())
 

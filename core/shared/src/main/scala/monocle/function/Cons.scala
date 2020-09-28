@@ -47,9 +47,11 @@ object Cons extends ConsFunctions with ConsInstancesScalaVersionSpecific {
       iso composePrism ev.cons composeIso iso.reverse.second
     )
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   implicit def listCons[A]: Cons[List[A], A] =
     Cons(
       Prism[List[A], (A, List[A])] {
@@ -70,15 +72,17 @@ object Cons extends ConsFunctions with ConsInstancesScalaVersionSpecific {
       } { case (a, s) => a +: s }
     )
 
-  /************************************************************************************************/
-  /** Cats instances                                                                              */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Cats instances */
+  /** *********************************************************************************************
+    */
   import cats.data.Chain
 
   implicit def chainCons[A]: Cons[Chain[A], A] =
     Cons(
-      Prism[Chain[A], (A, Chain[A])](_.uncons) {
-        case (a, s) => s.prepend(a)
+      Prism[Chain[A], (A, Chain[A])](_.uncons) { case (a, s) =>
+        s.prepend(a)
       }
     )
 }

@@ -60,38 +60,43 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
 
   /** pair two disjoint [[PLens]] */
   @inline final def split[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
-    PLens[(S, S1), (T, T1), (A, A1), (B, B1)] {
-      case (s, s1) => (self.get(s), other.get(s1))
+    PLens[(S, S1), (T, T1), (A, A1), (B, B1)] { case (s, s1) =>
+      (self.get(s), other.get(s1))
     } {
-      case (b, b1) => {
-        case (s, s1) => (self.set(b)(s), other.set(b1)(s1))
+      case (b, b1) => { case (s, s1) =>
+        (self.set(b)(s), other.set(b1)(s1))
       }
     }
 
   @inline final def first[C]: PLens[(S, C), (T, C), (A, C), (B, C)] =
-    PLens[(S, C), (T, C), (A, C), (B, C)] {
-      case (s, c) => (get(s), c)
+    PLens[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
+      (get(s), c)
     } {
-      case (b, c) => {
-        case (s, _) => (set(b)(s), c)
+      case (b, c) => { case (s, _) =>
+        (set(b)(s), c)
       }
     }
 
   @inline final def second[C]: PLens[(C, S), (C, T), (C, A), (C, B)] =
-    PLens[(C, S), (C, T), (C, A), (C, B)] {
-      case (c, s) => (c, get(s))
+    PLens[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
+      (c, get(s))
     } {
-      case (c, b) => {
-        case (_, s) => (c, set(b)(s))
+      case (c, b) => { case (_, s) =>
+        (c, set(b)(s))
       }
     }
 
-  /***********************************************************/
+  /** ********************************************************
+    */
   /** Compose methods between a [[PLens]] and another Optics */
-  /***********************************************************/
+  /** ********************************************************
+    */
   /** compose a [[PLens]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     asFold composeFold other
+
+  /** Compose with a function lifted into a Getter */
+  @inline def to[C](f: A => C): Getter[S, C] = composeGetter(Getter(f))
 
   /** compose a [[PLens]] with a [[Getter]] */
   @inline final def composeGetter[C](other: Getter[A, C]): Getter[S, C] =
@@ -133,9 +138,11 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] =
     composeLens(other.asLens)
 
-  /********************************************/
+  /** *****************************************
+    */
   /** Experimental aliases of compose methods */
-  /********************************************/
+  /** *****************************************
+    */
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     composeTraversal(other)
@@ -156,9 +163,11 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] =
     composeIso(other)
 
-  /************************************************************************************************/
-  /** Transformation methods to view a [[PLens]] as another Optics                                */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Transformation methods to view a [[PLens]] as another Optics */
+  /** *********************************************************************************************
+    */
   /** view a [[PLens]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] =
     new Fold[S, A] {

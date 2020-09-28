@@ -29,9 +29,11 @@ object Possible extends PossibleFunctions {
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Possible[A, B]): Possible[S, B] =
     Possible(iso composeOptional ev.possible)
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   implicit def optionPossible[A]: Possible[Option[A], A] =
     new Possible[Option[A], A] {
       def possible = monocle.std.option.some.asOptional

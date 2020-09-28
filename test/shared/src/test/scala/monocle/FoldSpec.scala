@@ -84,4 +84,8 @@ class FoldSpec extends MonocleSuite {
     val select = Fold.select[List[Int]](_.endsWith(List(2, 3)))
     select.getAll(List(1, 2, 3, 4)) shouldEqual List()
   }
+
+  test("to") {
+    eachLi.to(_.toString()).getAll(List(1, 2, 3)) shouldEqual List("1", "2", "3")
+  }
 }

@@ -13,7 +13,8 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
     import c.universe._
 
     /** Extractor for member select chains.
-        e.g.: SelectChain.unapply(a.b.c) == Some("a",Seq(a.type -> "b", a.b.type -> "c")) */
+      *        e.g.: SelectChain.unapply(a.b.c) == Some("a",Seq(a.type -> "b", a.b.type -> "c"))
+      */
     object SelectChain {
       def unapply(tree: Tree): Option[(Name, Seq[(Type, TermName)])] =
         tree match {

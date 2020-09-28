@@ -18,7 +18,7 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** get the target of a [[Getter]] */
   def get(s: S): A
 
-  /** find if the target satisfies the predicate  */
+  /** find if the target satisfies the predicate */
   @inline final def find(p: A => Boolean): S => Option[A] =
     s => Some(get(s)).filter(p)
 
@@ -49,12 +49,17 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def right[C]: Getter[Either[C, S], Either[C, A]] =
     Getter[Either[C, S], Either[C, A]](_.map(get))
 
-  /*************************************************************/
-  /** Compose methods between a [[Getter]] and another Optics  */
-  /*************************************************************/
+  /** **********************************************************
+    */
+  /** Compose methods between a [[Getter]] and another Optics */
+  /** **********************************************************
+    */
   /** compose a [[Getter]] with a [[Fold]] */
   @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
     asFold composeFold other
+
+  /** Compose with a function lifted into a Getter */
+  @inline def to[C](f: A => C): Getter[S, C] = composeGetter(Getter(f))
 
   /** compose a [[Getter]] with a [[Getter]] */
   @inline final def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
@@ -80,9 +85,11 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     composeGetter(other.asGetter)
 
-  /********************************************/
+  /** *****************************************
+    */
   /** Experimental aliases of compose methods */
-  /********************************************/
+  /** *****************************************
+    */
   /** alias to composeTraversal */
   @inline final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     composeTraversal(other)
@@ -103,9 +110,11 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     composeIso(other)
 
-  /******************************************************************/
+  /** ***************************************************************
+    */
   /** Transformation methods to view a [[Getter]] as another Optics */
-  /******************************************************************/
+  /** ***************************************************************
+    */
   /** view a [[Getter]] with a [[Fold]] */
   @inline final def asFold: Fold[S, A] =
     new Fold[S, A] {

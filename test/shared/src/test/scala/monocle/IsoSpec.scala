@@ -9,8 +9,8 @@ import cats.Eq
 import cats.arrow.{Category, Compose}
 
 class IsoSpec extends MonocleSuite {
-  val _nullary: Iso[Nullary, Unit] = Iso[Nullary, Unit](n => ()) {
-    case () => Nullary()
+  val _nullary: Iso[Nullary, Unit] = Iso[Nullary, Unit](n => ()) { case () =>
+    Nullary()
   }
   val _unary: Iso[Unary, Int] = Iso[Unary, Int](_.i)(Unary)
   val _binary: Iso[Binary, (String, Int)] =
@@ -156,5 +156,9 @@ class IsoSpec extends MonocleSuite {
 
   test("GenIso quintary equality") {
     GenIso.fields[Quintary] shouldEqual _quintary
+  }
+
+  test("to") {
+    iso.to(_.toString()).get(IntWrapper(5)) shouldEqual "5"
   }
 }

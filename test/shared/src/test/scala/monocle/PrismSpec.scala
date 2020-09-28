@@ -16,8 +16,8 @@ class PrismSpec extends MonocleSuite {
     Prism[Arities, Unit] {
       case Nullary() => Some(())
       case _         => None
-    } {
-      case () => Nullary()
+    } { case () =>
+      Nullary()
     }
   val _unary: Prism[Arities, Int] =
     Prism[Arities, Int] {
@@ -169,5 +169,9 @@ class PrismSpec extends MonocleSuite {
 
   test("GenPrism quintary equality") {
     GenPrism[Arities, Quintary] composeIso GenIso.fields[Quintary] shouldEqual _quintary
+  }
+
+  test("to") {
+    i.to(_.toString()).getAll(I(1)) shouldEqual List("1")
   }
 }

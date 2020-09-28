@@ -33,9 +33,11 @@ object Reverse extends ReverseFunctions with ReverseInstancesScalaVersionSpecifi
       Iso(_reverse)(_reverse)
     )
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   implicit def listReverse[A]: Reverse[List[A], List[A]] =
     fromReverseFunction(_.reverse)
 
@@ -75,9 +77,11 @@ object Reverse extends ReverseFunctions with ReverseInstancesScalaVersionSpecifi
   implicit def vectorReverse[A]: Reverse[Vector[A], Vector[A]] =
     fromReverseFunction(_.reverse)
 
-  /************************************************************************************************/
-  /** Cats instances                                                                            */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Cats instances */
+  /** *********************************************************************************************
+    */
   import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
 
   implicit def chainReverse[A]: Reverse[Chain[A], Chain[A]] =

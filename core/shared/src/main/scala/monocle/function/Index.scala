@@ -41,9 +41,11 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
       ev.at(_) composePrism monocle.std.option.some
     )
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   implicit def listIndex[A]: Index[List[A], Int, A] =
     Index(i =>
       if (i < 0)
@@ -71,9 +73,11 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
       )
     )
 
-  /************************************************************************************************/
-  /** Cats instances                                                                            */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Cats instances */
+  /** *********************************************************************************************
+    */
   import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd}
   import monocle.function.Cons1.{necCons1, nelCons1, nevCons1, oneAndCons1}
 
