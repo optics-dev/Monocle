@@ -86,6 +86,12 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       }
     }
 
+  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
+    adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PLens[S, T, A1, B1] =
+    evB.substituteCo[PLens[S, T, A1, *]](evA.substituteCo[PLens[S, T, *, B]](this))
+
   /** ********************************************************
     */
   /** Compose methods between a [[PLens]] and another Optics */

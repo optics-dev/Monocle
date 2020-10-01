@@ -120,6 +120,12 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
       _.fold(c => Either.right(Either.left(c)), getOrModify(_).bimap(Either.right, Either.right))
     )(_.map(reverseGet))
 
+  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
+    adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PPrism[S, T, A1, B1] =
+    evB.substituteCo[PPrism[S, T, A1, *]](evA.substituteCo[PPrism[S, T, *, B]](this))
+
   /** *********************************************************
     */
   /** Compose methods between a [[PPrism]] and another Optics */
@@ -156,7 +162,9 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
     new PPrism[S, T, C, D] {
       def getOrModify(s: S): Either[T, C] =
-        self.getOrModify(s).flatMap(a => other.getOrModify(a).bimap(self.set(_)(s), identity))
+        self
+          .getOrModify(s)
+          .flatMap(a => other.getOrModify(a).bimap(self.set(_)(s), identity))
 
       def reverseGet(d: D): T =
         self.reverseGet(other.reverseGet(d))
