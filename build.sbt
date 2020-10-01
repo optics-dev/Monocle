@@ -54,7 +54,7 @@ def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scala
 
 lazy val buildSettings = Seq(
   scalaVersion       := "2.13.3",
-  crossScalaVersions := Seq("2.12.12", "2.13.3"),
+  crossScalaVersions := Seq("2.13.3"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions     ++= Seq(
     "-encoding", "UTF-8",

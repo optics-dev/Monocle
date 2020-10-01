@@ -95,12 +95,13 @@ class LensSpec extends MonocleSuite {
     x.to(_.toString()).get(Point(1, 2)) shouldEqual "1"
   }
 
-  case class SomeTest(x: Int, y: Option[Int])
-
   test("some") {
+    case class SomeTest(x: Int, y: Option[Int])
     val obj = SomeTest(1, Some(2))
 
-    GenLens[SomeTest](_.y).some.getOption(obj) shouldEqual Some(2)
-    obj.applyLens(GenLens[SomeTest](_.y)).some.getOption shouldEqual Some(2)
+    val lens = GenLens[SomeTest](_.y)
+
+    lens.some.getOption(obj) shouldEqual Some(2)
+    obj.applyLens(lens).some.getOption shouldEqual Some(2)
   }
 }

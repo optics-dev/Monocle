@@ -1,8 +1,8 @@
 package monocle
 
 import monocle.law.discipline.{OptionalTests, SetterTests, TraversalTests}
-
 import cats.arrow.{Category, Choice, Compose}
+import monocle.macros.GenLens
 
 class OptionalSpec extends MonocleSuite {
   def headOption[A]: Optional[List[A], A] =
@@ -42,7 +42,9 @@ class OptionalSpec extends MonocleSuite {
   }
 
   test("Optional has a Choice instance") {
-    Choice[Optional].choice(headOptionI, Category[Optional].id[Int]).getOption(Left(List(1, 2, 3))) shouldEqual Some(1)
+    Choice[Optional]
+      .choice(headOptionI, Category[Optional].id[Int])
+      .getOption(Left(List(1, 2, 3))) shouldEqual Some(1)
   }
 
   test("getOption") {
@@ -99,5 +101,15 @@ class OptionalSpec extends MonocleSuite {
 
   test("to") {
     headOptionI.to(_.toString()).getAll(List(1, 2, 3)) shouldEqual List("1")
+  }
+
+  test("some") {
+    case class SomeTest(x: Int, y: Option[Int])
+    val obj = SomeTest(1, Some(2))
+
+    val optional = GenLens[SomeTest](_.y).asOptional
+
+    optional.some.getOption(obj) shouldEqual Some(2)
+    obj.applyOptional(optional).some.getOption shouldEqual Some(2)
   }
 }
