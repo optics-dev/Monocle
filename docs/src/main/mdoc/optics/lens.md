@@ -167,6 +167,8 @@ val p = PrefixedPoint(5, 3)
 PrefixedPoint._x.get(p)
 ```
 
+Note: before using `@Lenses` remember to activate macro annotations. See [Getting started](../../#getting-started) section for instructions.
+
 ## Laws
 
 A `Lens` must satisfy all properties defined in `LensLaws` from the `core` module.
