@@ -1,14 +1,13 @@
 ---
-layout: docs
-section: "optics_menu"
-title:  "Optics"
-position: 2
+id: optics
+title: Optics
 ---
-## Optics
 
 Here is a diagram to visualise how optics relate to each other:
 
 ![Class Diagram](img/class-diagram.png)
+
+
 
 ## Optic Composition Table
 

@@ -49,9 +49,11 @@ object Snoc1 extends Snoc1Functions {
       iso composeIso ev.snoc1
     )
 
-  /************************************************************************************************/
-  /** Std instances                                                                               */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Std instances */
+  /** *********************************************************************************************
+    */
   implicit def tuple2Snoc1[A1, A2]: Snoc1[(A1, A2), A1, A2] =
     Snoc1(
       Iso[(A1, A2), (A1, A2)](identity)(identity)
@@ -64,15 +66,15 @@ object Snoc1 extends Snoc1Functions {
 
   implicit def tuple4Snoc1[A1, A2, A3, A4]: Snoc1[(A1, A2, A3, A4), (A1, A2, A3), A4] =
     Snoc1(
-      Iso[(A1, A2, A3, A4), ((A1, A2, A3), A4)](t => ((t._1, t._2, t._3), t._4)) {
-        case (i, l) => (i._1, i._2, i._3, l)
+      Iso[(A1, A2, A3, A4), ((A1, A2, A3), A4)](t => ((t._1, t._2, t._3), t._4)) { case (i, l) =>
+        (i._1, i._2, i._3, l)
       }
     )
 
   implicit def tuple5Snoc1[A1, A2, A3, A4, A5]: Snoc1[(A1, A2, A3, A4, A5), (A1, A2, A3, A4), A5] =
     Snoc1(
-      Iso[(A1, A2, A3, A4, A5), ((A1, A2, A3, A4), A5)](t => ((t._1, t._2, t._3, t._4), t._5)) {
-        case (i, l) => (i._1, i._2, i._3, i._4, l)
+      Iso[(A1, A2, A3, A4, A5), ((A1, A2, A3, A4), A5)](t => ((t._1, t._2, t._3, t._4), t._5)) { case (i, l) =>
+        (i._1, i._2, i._3, i._4, l)
       }
     )
 
@@ -83,9 +85,11 @@ object Snoc1 extends Snoc1Functions {
       }
     )
 
-  /************************************************************************************************/
-  /** Cats instances                                                                            */
-  /************************************************************************************************/
+  /** *********************************************************************************************
+    */
+  /** Cats instances */
+  /** *********************************************************************************************
+    */
   import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
   import scala.{List => IList, Vector => IVector}
 
@@ -97,8 +101,8 @@ object Snoc1 extends Snoc1Functions {
             case Some(tuple) => tuple
             case None        => (nec.tail, nec.head)
           }
-        } {
-          case (c, a) => NonEmptyChain.fromChainAppend(c, a)
+        } { case (c, a) =>
+          NonEmptyChain.fromChainAppend(c, a)
         }
     }
 

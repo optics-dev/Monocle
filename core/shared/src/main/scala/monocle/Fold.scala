@@ -34,7 +34,7 @@ abstract class Fold[S, A] extends Serializable { self =>
   @inline final def getAll(s: S): List[A] =
     foldMap(List(_))(s)
 
-  /** find the first target matching the predicate  */
+  /** find the first target matching the predicate */
   @inline final def find(p: A => Boolean): S => Option[A] =
     foldMap(a => Some(a).filter(p))(_)(Monoids.firstOption)
 
@@ -85,15 +85,20 @@ abstract class Fold[S, A] extends Serializable { self =>
         s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
     }
 
-  /**********************************************************/
+  /** *******************************************************
+    */
   /** Compose methods between a [[Fold]] and another Optics */
-  /**********************************************************/
+  /** *******************************************************
+    */
   /** compose a [[Fold]] with a [[Fold]] */
   @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
     new Fold[S, B] {
       def foldMap[M: Monoid](f: B => M)(s: S): M =
         self.foldMap(other.foldMap(f)(_))(s)
     }
+
+  /** Compose with a function lifted into a Getter */
+  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
 
   /** compose a [[Fold]] with a [[Getter]] */
   @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
@@ -119,9 +124,11 @@ abstract class Fold[S, A] extends Serializable { self =>
   @inline final def composeIso[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
     composeFold(other.asFold)
 
-  /********************************************/
+  /** *****************************************
+    */
   /** Experimental aliases of compose methods */
-  /********************************************/
+  /** *****************************************
+    */
   /** alias to composeTraversal */
   @inline final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     composeTraversal(other)

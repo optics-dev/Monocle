@@ -27,9 +27,8 @@ object MapTraversal {
         new Traversal[Map[K, V], V] {
           def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
             s.toList
-              .traverse {
-                case (k, v) =>
-                  (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
+              .traverse { case (k, v) =>
+                (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
               }
               .map(kvs => Map(kvs: _*))
         }

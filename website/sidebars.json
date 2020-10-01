@@ -1,0 +1,18 @@
+{
+  "docs": {
+    "Optics" : [
+      "optics",
+      "optics/iso",
+      "optics/lens",
+      "optics/prism",
+      "optics/optional",
+      "optics/traversal"
+    ],
+    "Documentation": [
+      "modules",
+      "examples",
+      "faq",
+      "release_notes"
+    ]
+  }
+}

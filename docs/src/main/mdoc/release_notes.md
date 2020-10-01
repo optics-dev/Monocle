@@ -1,11 +1,7 @@
 ---
-layout: docs
-title:  "Release Notes"
-section: "main_menu"
-position: 5
+id: release_notes
+title: Release Notes
 ---
-
-## Release Notes
 
 # 2.0.1
 

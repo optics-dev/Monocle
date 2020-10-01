@@ -46,7 +46,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   @inline final def getAll(s: S): List[A] =
     foldMap(List(_))(s)
 
-  /** find the first target matching the predicate  */
+  /** find the first target matching the predicate */
   @inline final def find(p: A => Boolean): S => Option[A] =
     foldMap(a => Some(a).filter(p))(_)(Monoids.firstOption)
 
@@ -104,12 +104,17 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
       modifyF(a => F.parallel(f(a)))(s)(F.applicative)
     )
 
-  /****************************************************************/
+  /** *************************************************************
+    */
   /** Compose methods between a [[PTraversal]] and another Optics */
-  /****************************************************************/
+  /** *************************************************************
+    */
   /** compose a [[PTraversal]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     asFold composeFold other
+
+  /** Compose with a function lifted into a Getter */
+  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
 
   /** compose a [[PTraversal]] with a [[Getter]] */
   @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
@@ -142,9 +147,11 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
     composeTraversal(other.asTraversal)
 
-  /********************************************/
+  /** *****************************************
+    */
   /** Experimental aliases of compose methods */
-  /********************************************/
+  /** *****************************************
+    */
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     composeTraversal(other)
@@ -165,9 +172,11 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
     composeIso(other)
 
-  /**********************************************************************/
+  /** *******************************************************************
+    */
   /** Transformation methods to view a [[PTraversal]] as another Optics */
-  /**********************************************************************/
+  /** *******************************************************************
+    */
   /** view a [[PTraversal]] as a [[Fold]] */
   @inline final def asFold: Fold[S, A] =
     new Fold[S, A] {

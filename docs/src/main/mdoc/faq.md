@@ -1,11 +1,7 @@
 ---
-layout: docs
-title:  "FAQ"
-section: "main_menu"
-position: 4
+id: faq
+title: FAQ
 ---
-
-## FAQ
 
 ## Which imports are required to use typeclass based optics such as at, each, headOption?
 
