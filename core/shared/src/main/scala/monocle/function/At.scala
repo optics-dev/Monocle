@@ -42,8 +42,8 @@ trait AtFunctions {
     * For example, `Map("id" -> 0)` breaks the get-set property of Lens:
     * {{{
     * val counters = Map("id" -> 0)
-    * val fromGet  = mapDefaultTo0("id").get(counters)   // 0
-    * val afterSet = mapDefaultTo0("id").set(0)(fromGet) // Map()
+    * val fromGet  = mapDefaultTo0("id").get(counters)          // 0
+    * val afterSet = mapDefaultTo0("id").set(fromGet)(counters) // Map()
     *
     * counters != afterSet
     * }}}
