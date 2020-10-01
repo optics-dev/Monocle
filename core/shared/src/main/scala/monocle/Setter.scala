@@ -38,6 +38,12 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
     PSetter[Either[S, S1], Either[T, T1], A, B](b => _.bimap(self.modify(b), other.modify(b)))
 
+  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PSetter[S, T, A1, B1] =
+    adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PSetter[S, T, A1, B1] =
+    evB.substituteCo[PSetter[S, T, A1, *]](evA.substituteCo[PSetter[S, T, *, B]](this))
+
   /** **********************************************************
     */
   /** Compose methods between a [[PSetter]] and another Optics */

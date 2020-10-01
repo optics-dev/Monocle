@@ -49,6 +49,12 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def right[C]: Getter[Either[C, S], Either[C, A]] =
     Getter[Either[C, S], Either[C, A]](_.map(get))
 
+  def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
+    adapt[Option[A1]] composePrism (std.option.pSome)
+
+  private def adapt[A1](implicit evA: A =:= A1): Getter[S, A1] =
+    evA.substituteCo[Getter[S, *]](this)
+
   /** **********************************************************
     */
   /** Compose methods between a [[Getter]] and another Optics */

@@ -12,10 +12,10 @@ import cats.syntax.either._
 class TraversalSpec extends MonocleSuite {
   case class Location(latitude: Int, longitude: Int, name: String)
 
-  val coordinates: Traversal[Location, Int] = Traversal.apply2[Location, Int](_.latitude, _.longitude) {
-    case (newLat, newLong, oldLoc) =>
+  val coordinates: Traversal[Location, Int] =
+    Traversal.apply2[Location, Int](_.latitude, _.longitude) { case (newLat, newLong, oldLoc) =>
       oldLoc.copy(latitude = newLat, longitude = newLong)
-  }
+    }
 
   def eachL[A]: Traversal[List[A], A]               = PTraversal.fromTraverse[List, A, A]
   val eachLi: Traversal[List[Int], Int]             = eachL[Int]
@@ -44,7 +44,8 @@ class TraversalSpec extends MonocleSuite {
   val l7: Lens[ManyPropObject, Int] = GenLens[ManyPropObject](_.p8)
 
   // the 7-lenses Traversal generated using applyN
-  val traversalN: Traversal[ManyPropObject, Int] = Traversal.applyN(l1, l2, l3, l4, l5, l6, l7)
+  val traversalN: Traversal[ManyPropObject, Int] =
+    Traversal.applyN(l1, l2, l3, l4, l5, l6, l7)
 
   // the stub for generating random test objects
   implicit val manyPropObjectGen: Arbitrary[ManyPropObject] = Arbitrary(for {
@@ -82,7 +83,9 @@ class TraversalSpec extends MonocleSuite {
   }
 
   test("Traversal has a Choice instance") {
-    Choice[Traversal].choice(eachL[Int], coordinates).modify(_ + 1)(Left(List(1, 2, 3))) shouldEqual Left(List(2, 3, 4))
+    Choice[Traversal]
+      .choice(eachL[Int], coordinates)
+      .modify(_ + 1)(Left(List(1, 2, 3))) shouldEqual Left(List(2, 3, 4))
   }
 
   test("foldMap") {
@@ -149,5 +152,15 @@ class TraversalSpec extends MonocleSuite {
 
   test("to") {
     eachLi.to(_.toString()).getAll(List(1, 2, 3)) shouldEqual List("1", "2", "3")
+  }
+
+  test("some") {
+    case class SomeTest(x: Int, y: Option[Int])
+    val obj = SomeTest(1, Some(2))
+
+    val traversal = GenLens[SomeTest](_.y).asTraversal
+
+    traversal.some.getAll(obj) shouldEqual List(2)
+    obj.applyTraversal(traversal).some.getAll shouldEqual List(2)
   }
 }

@@ -23,8 +23,9 @@ class IsoSpec extends MonocleSuite {
   implicit val intWrapperEq                         = Eq.fromUniversalEquals[IntWrapper]
 
   case class IdWrapper[A](value: A)
-  implicit def idWrapperGen[A: Arbitrary]: Arbitrary[IdWrapper[A]] = Arbitrary(arbitrary[A].map(IdWrapper.apply))
-  implicit def idWrapperEq[A: Eq]: Eq[IdWrapper[A]]                = Eq.fromUniversalEquals
+  implicit def idWrapperGen[A: Arbitrary]: Arbitrary[IdWrapper[A]] =
+    Arbitrary(arbitrary[A].map(IdWrapper.apply))
+  implicit def idWrapperEq[A: Eq]: Eq[IdWrapper[A]] = Eq.fromUniversalEquals
 
   case object AnObject
   implicit val anObjectGen: Arbitrary[AnObject.type] = Arbitrary(Gen.const(AnObject))
@@ -35,8 +36,9 @@ class IsoSpec extends MonocleSuite {
   implicit val emptyCaseEq                        = Eq.fromUniversalEquals[EmptyCase]
 
   case class EmptyCaseType[A]()
-  implicit def emptyCaseTypeGen[A]: Arbitrary[EmptyCaseType[A]] = Arbitrary(Gen.const(EmptyCaseType()))
-  implicit def emptyCaseTypeEq[A]                               = Eq.fromUniversalEquals[EmptyCaseType[A]]
+  implicit def emptyCaseTypeGen[A]: Arbitrary[EmptyCaseType[A]] =
+    Arbitrary(Gen.const(EmptyCaseType()))
+  implicit def emptyCaseTypeEq[A] = Eq.fromUniversalEquals[EmptyCaseType[A]]
 
   val iso = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)
   val involutedListReverse =
@@ -132,14 +134,17 @@ class IsoSpec extends MonocleSuite {
     involutedListReverse.get(List(1, 2, 3)) shouldEqual List(3, 2, 1)
     involutedListReverse.reverseGet(List(1, 2, 3)) shouldEqual List(3, 2, 1)
 
-    involutedListReverse.reverse.get(List(1, 2, 3)) shouldEqual involutedListReverse.get(List(1, 2, 3))
-    involutedListReverse.reverse.reverseGet(List(1, 2, 3)) shouldEqual involutedListReverse.reverseGet(List(1, 2, 3))
+    involutedListReverse.reverse.get(List(1, 2, 3)) shouldEqual involutedListReverse
+      .get(List(1, 2, 3))
+    involutedListReverse.reverse.reverseGet(List(1, 2, 3)) shouldEqual involutedListReverse
+      .reverseGet(List(1, 2, 3))
 
     involutedTwoMinusN.get(5) shouldEqual -3
     involutedTwoMinusN.reverseGet(5) shouldEqual -3
 
     involutedTwoMinusN.reverse.get(5) shouldEqual involutedTwoMinusN.get(5)
-    involutedTwoMinusN.reverse.reverseGet(5) shouldEqual involutedTwoMinusN.reverseGet(5)
+    involutedTwoMinusN.reverse.reverseGet(5) shouldEqual involutedTwoMinusN
+      .reverseGet(5)
   }
 
   test("GenIso nullary equality") {
@@ -160,5 +165,15 @@ class IsoSpec extends MonocleSuite {
 
   test("to") {
     iso.to(_.toString()).get(IntWrapper(5)) shouldEqual "5"
+  }
+
+  test("some") {
+    case class SomeTest(y: Option[Int])
+    val obj = SomeTest(Some(2))
+
+    val iso = Iso[SomeTest, Option[Int]](_.y)(SomeTest)
+
+    iso.some.getOption(obj) shouldEqual Some(2)
+    obj.applyIso(iso).some.getOption shouldEqual Some(2)
   }
 }
