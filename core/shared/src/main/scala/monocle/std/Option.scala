@@ -23,7 +23,7 @@ trait OptionOptics {
     pOptionToDisjunction[A, A]
 
   /**
-    * Creates an Iso that maps `None` to defaultValue` and inversely.
+    * Creates an Iso that maps `None` to `defaultValue` and inversely.
     * {{{
     * val defaultTo0 = withDefault(0)
     * defaultTo0.get(None) == 0
@@ -31,14 +31,15 @@ trait OptionOptics {
     * defaultTo0.reverseGet(0) == None
     * defaultTo0.reverseGet(1) == Some(1)
     * }}}
-    * This is only a valid Iso if we consider the set of A without defaultValue.
+    *
+    * `withDefault` is a valid Iso only if we consider the set of `A` without `defaultValue`.
     * For example, `Some(0)` breaks the round-trip property of Iso:
     * {{{
     * defaultTo0.reverseGet(defaultTo0.get(Some(0))) == None
     * }}}
     *
     * @see This method is called `non` in Haskell Lens.
-    **/
+    */
   final def withDefault[A: Eq](defaultValue: A): Iso[Option[A], A] =
     Iso[Option[A], A](_.getOrElse(defaultValue))(value => if (value === defaultValue) None else Some(value))
 }
