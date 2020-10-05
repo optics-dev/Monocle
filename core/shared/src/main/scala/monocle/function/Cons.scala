@@ -23,8 +23,10 @@ abstract class Cons[S, A] extends Serializable {
 trait ConsFunctions {
   final def cons[S, A](implicit ev: Cons[S, A]): Prism[S, (A, S)] = ev.cons
 
-  final def headOption[S, A](implicit ev: Cons[S, A]): Optional[S, A] = ev.headOption
-  final def tailOption[S, A](implicit ev: Cons[S, A]): Optional[S, S] = ev.tailOption
+  final def headOption[S, A](implicit ev: Cons[S, A]): Optional[S, A] =
+    ev.headOption
+  final def tailOption[S, A](implicit ev: Cons[S, A]): Optional[S, S] =
+    ev.tailOption
 
   /** append an element to the head */
   final def _cons[S, A](head: A, tail: S)(implicit ev: Cons[S, A]): S =
@@ -35,7 +37,7 @@ trait ConsFunctions {
     ev.cons.getOption(s)
 }
 
-object Cons extends ConsFunctions with ConsInstancesScalaVersionSpecific {
+object Cons extends ConsFunctions {
   def apply[S, A, B](prism: Prism[S, (B, S)]): Cons[S, B] =
     new Cons[S, B] {
       val cons: Prism[S, (B, S)] = prism
@@ -61,7 +63,9 @@ object Cons extends ConsFunctions with ConsInstancesScalaVersionSpecific {
     )
 
   implicit val stringCons: Cons[String, Char] = Cons(
-    Prism[String, (Char, String)](s => if (s.isEmpty) None else Some((s.head, s.tail))) { case (h, t) => s"$h$t" }
+    Prism[String, (Char, String)](s => if (s.isEmpty) None else Some((s.head, s.tail))) { case (h, t) =>
+      s"$h$t"
+    }
   )
 
   implicit def vectorCons[A]: Cons[Vector[A], A] =
@@ -70,6 +74,11 @@ object Cons extends ConsFunctions with ConsInstancesScalaVersionSpecific {
         case Vector() => None
         case x +: xs  => Some((x, xs))
       } { case (a, s) => a +: s }
+    )
+
+  implicit def lazyListCons[A]: Cons[LazyList[A], A] =
+    Cons(
+      Prism[LazyList[A], (A, LazyList[A])](xs => xs.headOption.map(_ -> xs.tail)) { case (a, s) => a #:: s }
     )
 
   /** *********************************************************************************************

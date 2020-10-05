@@ -6,6 +6,7 @@ import scala.annotation.implicitNotFound
 import scala.collection.immutable.SortedMap
 import cats.syntax.traverse._
 import cats.{Applicative, Order, Traverse}
+import cats.instances.lazyList._
 
 /**
   * Typeclass that defines a [[Traversal]] from an `S` to all its elements `A` whose index `I` in `S` satisfies the predicate
@@ -29,7 +30,7 @@ trait FilterIndexFunctions {
     FilterIndex.fromTraverse(zipWithIndex)
 }
 
-object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVersionSpecific {
+object FilterIndex extends FilterIndexFunctions {
 
   /** lift an instance of [[FilterIndex]] using an [[Iso]] */
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: FilterIndex[A, I, B]): FilterIndex[S, I, B] =
@@ -43,7 +44,9 @@ object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVe
       def filterIndex(predicate: Int => Boolean) =
         new Traversal[S[A], A] {
           def modifyF[F[_]: Applicative](f: A => F[A])(s: S[A]): F[S[A]] =
-            zipWithIndex(s).traverse { case (a, j) => if (predicate(j)) f(a) else Applicative[F].pure(a) }
+            zipWithIndex(s).traverse { case (a, j) =>
+              if (predicate(j)) f(a) else Applicative[F].pure(a)
+            }
         }
     }
 
@@ -56,6 +59,9 @@ object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVe
   import cats.instances.vector._
 
   implicit def listFilterIndex[A]: FilterIndex[List[A], Int, A] =
+    fromTraverse(_.zipWithIndex)
+
+  implicit def lazyListFilterIndex[A]: FilterIndex[LazyList[A], Int, A] =
     fromTraverse(_.zipWithIndex)
 
   implicit def sortedMapFilterIndex[K, V](implicit ok: Order[K]): FilterIndex[SortedMap[K, V], K, V] =
@@ -74,10 +80,12 @@ object FilterIndex extends FilterIndexFunctions with FilterIndexInstancesScalaVe
         }
     }
 
-  implicit val stringFilterIndex: FilterIndex[String, Int, Char] = new FilterIndex[String, Int, Char] {
-    def filterIndex(predicate: Int => Boolean) =
-      monocle.std.string.stringToList composeTraversal FilterIndex.filterIndex[List[Char], Int, Char](predicate)
-  }
+  implicit val stringFilterIndex: FilterIndex[String, Int, Char] =
+    new FilterIndex[String, Int, Char] {
+      def filterIndex(predicate: Int => Boolean) =
+        monocle.std.string.stringToList composeTraversal FilterIndex
+          .filterIndex[List[Char], Int, Char](predicate)
+    }
 
   implicit def vectorFilterIndex[A]: FilterIndex[Vector[A], Int, A] =
     fromTraverse(_.zipWithIndex)

@@ -14,16 +14,14 @@ import cats.syntax.eq._
 
 import scala.collection.immutable.ListMap
 
-trait TestInstances
-    extends PlatformSpecificTestInstances
-    with ScalaVersionSpecificTestInstances
-    with cats.instances.AllInstances {
+trait TestInstances extends PlatformSpecificTestInstances with cats.instances.AllInstances {
   implicit def equality[A](implicit A: Eq[A]): Equality[A] =
     (a: A, b: Any) => A.eqv(a, b.asInstanceOf[A])
 
   implicit val genApplicative: Applicative[Gen] = new Applicative[Gen] {
-    override def ap[A, B](f: Gen[A => B])(fa: Gen[A]): Gen[B] = fa.flatMap(a => f.map(_(a)))
-    override def pure[A](a: A): Gen[A]                        = Gen.const(a)
+    override def ap[A, B](f: Gen[A => B])(fa: Gen[A]): Gen[B] =
+      fa.flatMap(a => f.map(_(a)))
+    override def pure[A](a: A): Gen[A] = Gen.const(a)
   }
 
   // Equal instances
@@ -34,6 +32,15 @@ trait TestInstances
   implicit val unaryEq    = Eq.fromUniversalEquals[Unary]
   implicit val binaryEq   = Eq.fromUniversalEquals[Binary]
   implicit val quintaryEq = Eq.fromUniversalEquals[Quintary]
+
+  implicit def function1Eq[A, B](implicit A: Arbitrary[A], B: Eq[B]) =
+    new Eq[A => B] {
+      val samples      = LazyList.continually(A.arbitrary.sample).flatten
+      val samplesCount = 50
+
+      override def eqv(f: A => B, g: A => B) =
+        samples.take(samplesCount).forall(a => B.eqv(f(a), g(a)))
+    }
 
   implicit def optionCofreeEq[A](implicit A: Eq[A]): Eq[Cofree[Option, A]] =
     Eq.instance((a, b) => A.eqv(a.head, b.head) && a.tail === b.tail)
@@ -54,7 +61,8 @@ trait TestInstances
       )
     )
 
-  implicit def someArbitrary[A: Arbitrary]: Arbitrary[Some[A]] = Arbitrary(Arbitrary.arbitrary[A].map(Some(_)))
+  implicit def someArbitrary[A: Arbitrary]: Arbitrary[Some[A]] =
+    Arbitrary(Arbitrary.arbitrary[A].map(Some(_)))
 
   implicit def vectorArbitrary[A: Arbitrary]: Arbitrary[Vector[A]] =
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toVector))
@@ -70,7 +78,8 @@ trait TestInstances
 
   implicit def cogenOptionCofree[A](implicit A: Cogen[A]): Cogen[Cofree[Option, A]] =
     Cogen[Cofree[Option, A]]((seed: Seed, t: Cofree[Option, A]) =>
-      Cogen[(A, Option[Cofree[Option, A]])].perturb(seed, (t.head, t.tail.value))
+      Cogen[(A, Option[Cofree[Option, A]])]
+        .perturb(seed, (t.head, t.tail.value))
     )
 
   implicit def uuidArbitrary: Arbitrary[UUID] = Arbitrary(UUID.randomUUID)
@@ -95,7 +104,8 @@ trait TestInstances
   implicit val unaryGen: Arbitrary[Unary]     = Arbitrary(arbitrary[Int].map(Unary.apply))
   implicit val binaryGen: Arbitrary[Binary]   = Arbitrary(arbitrary[(String, Int)].map((Binary.apply _) tupled))
   implicit val quintaryGen: Arbitrary[Quintary] = Arbitrary(
-    arbitrary[(Char, Boolean, String, Int, Double)].map((Quintary.apply _) tupled)
+    arbitrary[(Char, Boolean, String, Int, Double)]
+      .map((Quintary.apply _) tupled)
   )
   implicit val aritiesGen: Arbitrary[Arities] =
     Arbitrary(
