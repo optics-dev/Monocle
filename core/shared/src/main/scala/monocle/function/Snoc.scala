@@ -59,12 +59,10 @@ object Snoc extends SnocFunctions {
     */
   implicit def listSnoc[A]: Snoc[List[A], A] =
     Snoc(
-      Prism[List[A], (List[A], A)](
-        s =>
-          Applicative[Option].map2(Either.catchNonFatal(s.init).toOption,
-                                   s.lastOption)((_, _))) {
-        case (init, last) =>
-          init :+ last
+      Prism[List[A], (List[A], A)](s =>
+        Applicative[Option].map2(Either.catchNonFatal(s.init).toOption, s.lastOption)((_, _))
+      ) { case (init, last) =>
+        init :+ last
       }
     )
 
@@ -74,26 +72,22 @@ object Snoc extends SnocFunctions {
         for {
           init <- if (s.isEmpty) None else Some(s.init)
           last <- s.lastOption
-        } yield (init, last)) {
-        case (init, last) =>
-          init :+ last
+        } yield (init, last)
+      ) { case (init, last) =>
+        init :+ last
       }
     )
 
   implicit val stringSnoc: Snoc[String, Char] = Snoc(
-    Prism[String, (String, Char)](s =>
-      if (s.isEmpty) None else Some((s.init, s.last))) {
-      case (init, last) =>
-        init :+ last
+    Prism[String, (String, Char)](s => if (s.isEmpty) None else Some((s.init, s.last))) { case (init, last) =>
+      init :+ last
     }
   )
 
   implicit def vectorSnoc[A]: Snoc[Vector[A], A] =
     Snoc(
-      Prism[Vector[A], (Vector[A], A)](v =>
-        if (v.isEmpty) None else Some((v.init, v.last))) {
-        case (xs, x) =>
-          xs :+ x
+      Prism[Vector[A], (Vector[A], A)](v => if (v.isEmpty) None else Some((v.init, v.last))) { case (xs, x) =>
+        xs :+ x
       }
     )
 
@@ -116,9 +110,8 @@ object Snoc extends SnocFunctions {
           }
 
         go(c, Chain.empty)
-      } {
-        case (init, last) =>
-          init.append(last)
+      } { case (init, last) =>
+        init.append(last)
       }
     }
 }

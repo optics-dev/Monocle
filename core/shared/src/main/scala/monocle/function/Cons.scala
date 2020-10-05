@@ -63,10 +63,8 @@ object Cons extends ConsFunctions {
     )
 
   implicit val stringCons: Cons[String, Char] = Cons(
-    Prism[String, (Char, String)](s =>
-      if (s.isEmpty) None else Some((s.head, s.tail))) {
-      case (h, t) =>
-        s"$h$t"
+    Prism[String, (Char, String)](s => if (s.isEmpty) None else Some((s.head, s.tail))) { case (h, t) =>
+      s"$h$t"
     }
   )
 
@@ -80,8 +78,7 @@ object Cons extends ConsFunctions {
 
   implicit def lazyListCons[A]: Cons[LazyList[A], A] =
     Cons(
-      Prism[LazyList[A], (A, LazyList[A])](xs =>
-        xs.headOption.map(_ -> xs.tail)) { case (a, s) => a #:: s }
+      Prism[LazyList[A], (A, LazyList[A])](xs => xs.headOption.map(_ -> xs.tail)) { case (a, s) => a #:: s }
     )
 
   /** *********************************************************************************************
@@ -93,9 +90,8 @@ object Cons extends ConsFunctions {
 
   implicit def chainCons[A]: Cons[Chain[A], A] =
     Cons(
-      Prism[Chain[A], (A, Chain[A])](_.uncons) {
-        case (a, s) =>
-          s.prepend(a)
+      Prism[Chain[A], (A, Chain[A])](_.uncons) { case (a, s) =>
+        s.prepend(a)
       }
     )
 }

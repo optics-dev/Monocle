@@ -22,35 +22,30 @@ abstract class FilterIndex[S, I, A] extends Serializable {
 }
 
 trait FilterIndexFunctions {
-  def filterIndex[S, I, A](predicate: I => Boolean)(
-      implicit ev: FilterIndex[S, I, A]): Traversal[S, A] =
+  def filterIndex[S, I, A](predicate: I => Boolean)(implicit ev: FilterIndex[S, I, A]): Traversal[S, A] =
     ev.filterIndex(predicate)
 
   @deprecated("use FilterIndex.fromTraverse", since = "1.4.0")
-  def traverseFilterIndex[S[_]: Traverse, A](
-      zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] =
+  def traverseFilterIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] =
     FilterIndex.fromTraverse(zipWithIndex)
 }
 
 object FilterIndex extends FilterIndexFunctions {
 
   /** lift an instance of [[FilterIndex]] using an [[Iso]] */
-  def fromIso[S, A, I, B](iso: Iso[S, A])(
-      implicit ev: FilterIndex[A, I, B]): FilterIndex[S, I, B] =
+  def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: FilterIndex[A, I, B]): FilterIndex[S, I, B] =
     new FilterIndex[S, I, B] {
       def filterIndex(predicate: I => Boolean): Traversal[S, B] =
         iso composeTraversal ev.filterIndex(predicate)
     }
 
-  def fromTraverse[S[_]: Traverse, A](
-      zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] =
+  def fromTraverse[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] =
     new FilterIndex[S[A], Int, A] {
       def filterIndex(predicate: Int => Boolean) =
         new Traversal[S[A], A] {
           def modifyF[F[_]: Applicative](f: A => F[A])(s: S[A]): F[S[A]] =
-            zipWithIndex(s).traverse {
-              case (a, j) =>
-                if (predicate(j)) f(a) else Applicative[F].pure(a)
+            zipWithIndex(s).traverse { case (a, j) =>
+              if (predicate(j)) f(a) else Applicative[F].pure(a)
             }
         }
     }
@@ -69,20 +64,17 @@ object FilterIndex extends FilterIndexFunctions {
   implicit def lazyListFilterIndex[A]: FilterIndex[LazyList[A], Int, A] =
     fromTraverse(_.zipWithIndex)
 
-  implicit def sortedMapFilterIndex[K, V](
-      implicit ok: Order[K]): FilterIndex[SortedMap[K, V], K, V] =
+  implicit def sortedMapFilterIndex[K, V](implicit ok: Order[K]): FilterIndex[SortedMap[K, V], K, V] =
     new FilterIndex[SortedMap[K, V], K, V] {
       import cats.syntax.applicative._
       import cats.syntax.functor._
 
       def filterIndex(predicate: K => Boolean) =
         new Traversal[SortedMap[K, V], V] {
-          def modifyF[F[_]: Applicative](f: V => F[V])(
-              s: SortedMap[K, V]): F[SortedMap[K, V]] =
+          def modifyF[F[_]: Applicative](f: V => F[V])(s: SortedMap[K, V]): F[SortedMap[K, V]] =
             s.toList
-              .traverse {
-                case (k, v) =>
-                  (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
+              .traverse { case (k, v) =>
+                (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
               }
               .map(kvs => SortedMap(kvs: _*)(ok.toOrdering))
         }

@@ -66,11 +66,9 @@ object Each extends EachFunctions {
   implicit def listMapEach[K, V]: Each[ListMap[K, V], V] =
     Each(
       new Traversal[ListMap[K, V], V] {
-        def modifyF[F[_]: Applicative](f: V => F[V])(
-            s: ListMap[K, V]): F[ListMap[K, V]] =
-          s.foldLeft(Applicative[F].pure(ListMap.empty[K, V])) {
-            case (acc, (k, v)) =>
-              Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
+        def modifyF[F[_]: Applicative](f: V => F[V])(s: ListMap[K, V]): F[ListMap[K, V]] =
+          s.foldLeft(Applicative[F].pure(ListMap.empty[K, V])) { case (acc, (k, v)) =>
+            Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
           }
       }
     )
@@ -99,43 +97,31 @@ object Each extends EachFunctions {
 
   implicit def tuple2Each[A]: Each[(A, A), A] =
     Each(
-      PTraversal.apply2[(A, A), (A, A), A, A](_._1, _._2)((b1, b2, _) =>
-        (b1, b2))
+      PTraversal.apply2[(A, A), (A, A), A, A](_._1, _._2)((b1, b2, _) => (b1, b2))
     )
 
   implicit def tuple3Each[A]: Each[(A, A, A), A] =
     Each(
-      PTraversal.apply3[(A, A, A), (A, A, A), A, A](_._1, _._2, _._3)(
-        (b1, b2, b3, _) => (b1, b2, b3))
+      PTraversal.apply3[(A, A, A), (A, A, A), A, A](_._1, _._2, _._3)((b1, b2, b3, _) => (b1, b2, b3))
     )
 
   implicit def tuple4Each[A]: Each[(A, A, A, A), A] =
     Each(
-      PTraversal.apply4[(A, A, A, A), (A, A, A, A), A, A](
-        _._1,
-        _._2,
-        _._3,
-        _._4)((b1, b2, b3, b4, _) => (b1, b2, b3, b4))
+      PTraversal.apply4[(A, A, A, A), (A, A, A, A), A, A](_._1, _._2, _._3, _._4)((b1, b2, b3, b4, _) =>
+        (b1, b2, b3, b4)
+      )
     )
 
   implicit def tuple5Each[A]: Each[(A, A, A, A, A), A] =
     Each(
-      PTraversal.apply5[(A, A, A, A, A), (A, A, A, A, A), A, A](
-        _._1,
-        _._2,
-        _._3,
-        _._4,
-        _._5)((b1, b2, b3, b4, b5, _) => (b1, b2, b3, b4, b5))
+      PTraversal.apply5[(A, A, A, A, A), (A, A, A, A, A), A, A](_._1, _._2, _._3, _._4, _._5)((b1, b2, b3, b4, b5, _) =>
+        (b1, b2, b3, b4, b5)
+      )
     )
 
   implicit def tuple6Each[A]: Each[(A, A, A, A, A, A), A] =
     Each(
-      PTraversal.apply6[(A, A, A, A, A, A), (A, A, A, A, A, A), A, A](_._1,
-                                                                      _._2,
-                                                                      _._3,
-                                                                      _._4,
-                                                                      _._5,
-                                                                      _._6)(
+      PTraversal.apply6[(A, A, A, A, A, A), (A, A, A, A, A, A), A, A](_._1, _._2, _._3, _._4, _._5, _._6)(
         (b1, b2, b3, b4, b5, b6, _) => (b1, b2, b3, b4, b5, b6)
       )
     )
@@ -147,14 +133,7 @@ object Each extends EachFunctions {
   /** Cats instances */
   /** *********************************************************************************************
     */
-  import cats.data.{
-    Chain,
-    NonEmptyChain,
-    NonEmptyList,
-    NonEmptyVector,
-    OneAnd,
-    Validated
-  }
+  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd, Validated}
   import cats.free.Cofree
 
   implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] =
@@ -168,14 +147,11 @@ object Each extends EachFunctions {
 
   implicit def nevEach[A]: Each[NonEmptyVector[A], A] = fromTraverse
 
-  implicit def oneAndEach[T[_], A](
-      implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
+  implicit def oneAndEach[T[_], A](implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
     Each(
       new Traversal[OneAnd[T, A], A] {
-        def modifyF[F[_]: Applicative](f: A => F[A])(
-            s: OneAnd[T, A]): F[OneAnd[T, A]] =
-          Applicative[F].map2(f(s.head), ev.each.modifyF(f)(s.tail))(
-            (head, tail) => new OneAnd(head, tail))
+        def modifyF[F[_]: Applicative](f: A => F[A])(s: OneAnd[T, A]): F[OneAnd[T, A]] =
+          Applicative[F].map2(f(s.head), ev.each.modifyF(f)(s.tail))((head, tail) => new OneAnd(head, tail))
       }
     )
 

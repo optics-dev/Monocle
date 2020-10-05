@@ -72,16 +72,14 @@ object Reverse extends ReverseFunctions {
       }(t => (t._4, t._3, t._2, t._1))
     )
 
-  implicit def tuple5Reverse[A, B, C, D, E]
-    : Reverse[(A, B, C, D, E), (E, D, C, B, A)] =
+  implicit def tuple5Reverse[A, B, C, D, E]: Reverse[(A, B, C, D, E), (E, D, C, B, A)] =
     Reverse(
       Iso { t: (A, B, C, D, E) =>
         (t._5, t._4, t._3, t._2, t._1)
       }(t => (t._5, t._4, t._3, t._2, t._1))
     )
 
-  implicit def tuple6Reverse[A, B, C, D, E, F]
-    : Reverse[(A, B, C, D, E, F), (F, E, D, C, B, A)] =
+  implicit def tuple6Reverse[A, B, C, D, E, F]: Reverse[(A, B, C, D, E, F), (F, E, D, C, B, A)] =
     Reverse(
       Iso { t: (A, B, C, D, E, F) =>
         (t._6, t._5, t._4, t._3, t._2, t._1)
