@@ -1,8 +1,8 @@
 package monocle.syntax
 
 import monocle._
-
 import cats.{Applicative, Functor, Monoid}
+import monocle.function.Each
 
 object apply extends ApplySyntax
 
@@ -238,8 +238,14 @@ final case class ApplyLens[S, T, A, B](s: S, lens: PLens[S, T, A, B]) {
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyOptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): ApplyTraversal[S, S, C, C] =
+    mono composeTraversal evEach.each
+
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyLens[S, T, A1, B1] =
     evB.substituteCo[ApplyLens[S, T, A1, *]](evA.substituteCo[ApplyLens[S, T, *, B]](this))
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): ApplyLens[S, S, A, A] =
+    evTS.substituteCo[ApplyLens[S, *, A, A]](evBA.substituteCo[ApplyLens[S, T, A, *]](this))
 
   @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] =
     ApplySetter(s, lens composeSetter other)
