@@ -26,8 +26,10 @@ abstract class Snoc[S, A] extends Serializable {
 trait SnocFunctions {
   final def snoc[S, A](implicit ev: Snoc[S, A]): Prism[S, (S, A)] = ev.snoc
 
-  final def initOption[S, A](implicit ev: Snoc[S, A]): Optional[S, S] = ev.initOption
-  final def lastOption[S, A](implicit ev: Snoc[S, A]): Optional[S, A] = ev.lastOption
+  final def initOption[S, A](implicit ev: Snoc[S, A]): Optional[S, S] =
+    ev.initOption
+  final def lastOption[S, A](implicit ev: Snoc[S, A]): Optional[S, A] =
+    ev.lastOption
 
   /** append an element to the end */
   final def _snoc[S, A](init: S, last: A)(implicit ev: Snoc[S, A]): S =
@@ -38,7 +40,7 @@ trait SnocFunctions {
     ev.snoc.getOption(s)
 }
 
-object Snoc extends SnocFunctions with SnocInstancesScalaVersionSpecific {
+object Snoc extends SnocFunctions {
   def apply[S, A](prism: Prism[S, (S, A)]): Snoc[S, A] =
     new Snoc[S, A] {
       override val snoc: Prism[S, (S, A)] = prism
@@ -57,23 +59,41 @@ object Snoc extends SnocFunctions with SnocInstancesScalaVersionSpecific {
     */
   implicit def listSnoc[A]: Snoc[List[A], A] =
     Snoc(
-      Prism[List[A], (List[A], A)](s =>
-        Applicative[Option].map2(Either.catchNonFatal(s.init).toOption, s.lastOption)((_, _))
-      ) { case (init, last) =>
-        init :+ last
+      Prism[List[A], (List[A], A)](
+        s =>
+          Applicative[Option].map2(Either.catchNonFatal(s.init).toOption,
+                                   s.lastOption)((_, _))) {
+        case (init, last) =>
+          init :+ last
+      }
+    )
+
+  implicit def lazyListSnoc[A]: Snoc[LazyList[A], A] =
+    Snoc(
+      Prism[LazyList[A], (LazyList[A], A)](s =>
+        for {
+          init <- if (s.isEmpty) None else Some(s.init)
+          last <- s.lastOption
+        } yield (init, last)) {
+        case (init, last) =>
+          init :+ last
       }
     )
 
   implicit val stringSnoc: Snoc[String, Char] = Snoc(
-    Prism[String, (String, Char)](s => if (s.isEmpty) None else Some((s.init, s.last))) { case (init, last) =>
-      init :+ last
+    Prism[String, (String, Char)](s =>
+      if (s.isEmpty) None else Some((s.init, s.last))) {
+      case (init, last) =>
+        init :+ last
     }
   )
 
   implicit def vectorSnoc[A]: Snoc[Vector[A], A] =
     Snoc(
-      Prism[Vector[A], (Vector[A], A)](v => if (v.isEmpty) None else Some((v.init, v.last))) { case (xs, x) =>
-        xs :+ x
+      Prism[Vector[A], (Vector[A], A)](v =>
+        if (v.isEmpty) None else Some((v.init, v.last))) {
+        case (xs, x) =>
+          xs :+ x
       }
     )
 
@@ -96,8 +116,9 @@ object Snoc extends SnocFunctions with SnocInstancesScalaVersionSpecific {
           }
 
         go(c, Chain.empty)
-      } { case (init, last) =>
-        init.append(last)
+      } {
+        case (init, last) =>
+          init.append(last)
       }
     }
 }

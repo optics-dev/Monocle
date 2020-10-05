@@ -21,17 +21,20 @@ abstract class Index[S, I, A] extends Serializable {
 }
 
 trait IndexFunctions {
-  def index[S, I, A](i: I)(implicit ev: Index[S, I, A]): Optional[S, A] = ev.index(i)
+  def index[S, I, A](i: I)(implicit ev: Index[S, I, A]): Optional[S, A] =
+    ev.index(i)
 
   @deprecated("use Index.fromAt", since = "1.4.0")
   def atIndex[S, I, A](implicit ev: At[S, I, Option[A]]) = Index.fromAt[S, I, A]
 }
 
-object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
-  def apply[S, I, A](optional: I => Optional[S, A]): Index[S, I, A] = (i: I) => optional(i)
+object Index extends IndexFunctions {
+  def apply[S, I, A](optional: I => Optional[S, A]): Index[S, I, A] =
+    (i: I) => optional(i)
 
   /** lift an instance of [[Index]] using an [[Iso]] */
-  def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: Index[A, I, B]): Index[S, I, B] =
+  def fromIso[S, A, I, B](iso: Iso[S, A])(
+      implicit ev: Index[A, I, B]): Index[S, I, B] =
     Index(
       iso composeOptional ev.index(_)
     )
@@ -47,12 +50,25 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
   /** *********************************************************************************************
     */
   implicit def listIndex[A]: Index[List[A], Int, A] =
-    Index(i =>
-      if (i < 0)
-        Optional[List[A], A](_ => None)(_ => identity)
-      else
-        Optional[List[A], A](_.drop(i).headOption)(a => s => Try(s.updated(i, a)).getOrElse(s))
-    )
+    Index(
+      i =>
+        if (i < 0)
+          Optional[List[A], A](_ => None)(_ => identity)
+        else
+          Optional[List[A], A](_.drop(i).headOption)(a =>
+            s => Try(s.updated(i, a)).getOrElse(s)))
+
+  implicit def lazyListIndex[A]: Index[LazyList[A], Int, A] =
+    Index(
+      i =>
+        if (i < 0) Optional.void
+        else
+          Optional[LazyList[A], A](_.drop(i).headOption)(a =>
+            s =>
+              s.zipWithIndex.map {
+                case (value, index) =>
+                  if (i == index) a else value
+          }))
 
   implicit def listMapIndex[K, V]: Index[ListMap[K, V], K, V] = fromAt
 
@@ -61,17 +77,18 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
   implicit def sortedMapIndex[K, V]: Index[SortedMap[K, V], K, V] = fromAt
 
   implicit val stringIndex: Index[String, Int, Char] = Index(
-    monocle.std.string.stringToList composeOptional Index.index[List[Char], Int, Char](_)
+    monocle.std.string.stringToList composeOptional Index
+      .index[List[Char], Int, Char](_)
   )
 
   implicit def vectorIndex[A]: Index[Vector[A], Int, A] =
-    Index(i =>
-      Optional[Vector[A], A](v => if (v.isDefinedAt(i)) Some(v(i)) else None)(a =>
-        v =>
-          if (v.isDefinedAt(i)) v.updated(i, a)
-          else v
-      )
-    )
+    Index(
+      i =>
+        Optional[Vector[A], A](v => if (v.isDefinedAt(i)) Some(v(i)) else None)(
+          a =>
+            v =>
+              if (v.isDefinedAt(i)) v.updated(i, a)
+              else v))
 
   /** *********************************************************************************************
     */
@@ -106,8 +123,7 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
               }
 
             if (i >= 0 && i < c.length) go(0, c, Chain.empty) else c
-          }
-        )
+        })
     }
 
   implicit def necIndex[A]: Index[NonEmptyChain[A], Int, A] =
@@ -137,7 +153,8 @@ object Index extends IndexFunctions with IndexInstancesScalaVersionSpecific {
         }
     }
 
-  implicit def oneAndIndex[T[_], A](implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] =
+  implicit def oneAndIndex[T[_], A](
+      implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] =
     Index {
       case 0 => oneAndCons1[T, A].head.asOptional
       case i => oneAndCons1[T, A].tail composeOptional ev.index(i - 1)

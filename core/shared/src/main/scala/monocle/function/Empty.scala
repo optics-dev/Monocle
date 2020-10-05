@@ -28,7 +28,7 @@ trait EmptyFunctions {
     ev.empty.reverseGet(())
 }
 
-object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
+object Empty extends EmptyFunctions {
   def apply[S](prism: Prism[S, Unit]): Empty[S] =
     new Empty[S] {
       override val empty: Prism[S, Unit] = prism
@@ -47,17 +47,27 @@ object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
     */
   implicit def listEmpty[A]: Empty[List[A]] =
     Empty(
-      Prism[List[A], Unit](l => if (l.isEmpty) Some(()) else None)(_ => List.empty)
+      Prism[List[A], Unit](l => if (l.isEmpty) Some(()) else None)(_ =>
+        List.empty)
+    )
+
+  implicit def lazyListEmpty[A]: Empty[LazyList[A]] =
+    Empty(
+      Prism[LazyList[A], Unit](s => if (s.isEmpty) Some(()) else None)(_ =>
+        LazyList.empty)
     )
 
   implicit def mapEmpty[K, V]: Empty[Map[K, V]] =
     Empty(
-      Prism[Map[K, V], Unit](m => if (m.isEmpty) Some(()) else None)(_ => Map.empty)
+      Prism[Map[K, V], Unit](m => if (m.isEmpty) Some(()) else None)(_ =>
+        Map.empty)
     )
 
-  implicit def sortedMapEmpty[K, V](implicit ok: Order[K]): Empty[SortedMap[K, V]] =
+  implicit def sortedMapEmpty[K, V](
+      implicit ok: Order[K]): Empty[SortedMap[K, V]] =
     Empty(
-      Prism[SortedMap[K, V], Unit](m => if (m.isEmpty) Some(()) else None)(_ => SortedMap.empty(ok.toOrdering))
+      Prism[SortedMap[K, V], Unit](m => if (m.isEmpty) Some(()) else None)(_ =>
+        SortedMap.empty(ok.toOrdering))
     )
 
   implicit def optionEmpty[A]: Empty[Option[A]] =
@@ -67,7 +77,8 @@ object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
 
   implicit def emptySet[A]: Empty[Set[A]] =
     Empty(
-      Prism[Set[A], Unit](s => if (s.isEmpty) Some(()) else None)(_ => Set.empty[A])
+      Prism[Set[A], Unit](s => if (s.isEmpty) Some(()) else None)(_ =>
+        Set.empty[A])
     )
 
   implicit val stringEmpty: Empty[String] = Empty(
@@ -76,7 +87,8 @@ object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
 
   implicit def vectorEmpty[A]: Empty[Vector[A]] =
     Empty(
-      Prism[Vector[A], Unit](v => if (v.isEmpty) Some(()) else None)(_ => Vector.empty)
+      Prism[Vector[A], Unit](v => if (v.isEmpty) Some(()) else None)(_ =>
+        Vector.empty)
     )
 
   /** *********************************************************************************************
@@ -88,6 +100,7 @@ object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
 
   implicit def chainEmpty[A]: Empty[Chain[A]] =
     Empty(
-      Prism[Chain[A], Unit](l => if (l.isEmpty) Some(()) else None)(_ => Chain.empty)
+      Prism[Chain[A], Unit](l => if (l.isEmpty) Some(()) else None)(_ =>
+        Chain.empty)
     )
 }
