@@ -3,6 +3,7 @@ package monocle
 import cats.{Applicative, Monoid}
 import cats.arrow.Choice
 import cats.syntax.either._
+import monocle.function.Each
 
 /**
   * A [[POptional]] can be seen as a pair of functions:
@@ -101,8 +102,14 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       }
     }
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Traversal[S, C] =
+    mono composeTraversal evEach.each
+
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): Optional[S, A] =
+    evTS.substituteCo[POptional[S, *, A, A]](evBA.substituteCo[POptional[S, T, A, *]](this))
 
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): POptional[S, T, A1, B1] =
     evB.substituteCo[POptional[S, T, A1, *]](evA.substituteCo[POptional[S, T, *, B]](this))

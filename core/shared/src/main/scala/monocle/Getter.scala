@@ -3,6 +3,7 @@ package monocle
 import cats.{Monoid, Semigroupal}
 import cats.arrow.{Arrow, Choice}
 import cats.implicits._
+import monocle.function.Each
 
 /**
   * A [[Getter]] can be seen as a glorified get method between
@@ -48,6 +49,9 @@ abstract class Getter[S, A] extends Serializable { self =>
 
   @inline final def right[C]: Getter[Either[C, S], Either[C, A]] =
     Getter[Either[C, S], Either[C, A]](_.map(get))
+
+  def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
+    composeTraversal(evEach.each)
 
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)

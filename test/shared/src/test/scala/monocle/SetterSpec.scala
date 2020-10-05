@@ -51,4 +51,14 @@ class SetterSpec extends MonocleSuite {
     setter.some.set(3)(obj) shouldEqual SomeTest(1, Some(3))
     obj.applySetter(setter).some.set(3) shouldEqual SomeTest(1, Some(3))
   }
+
+  test("each") {
+    case class SomeTest(x: Int, y: List[Int])
+    val obj = SomeTest(1, List(1, 2, 3))
+
+    val setter = GenLens[SomeTest](_.y).asSetter
+
+    setter.each.set(3)(obj) shouldEqual SomeTest(1, List(3, 3, 3))
+    obj.applySetter(setter).each.set(3) shouldEqual SomeTest(1, List(3, 3, 3))
+  }
 }
