@@ -24,7 +24,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sbt-
       - name: Publish
         run: |
-          csbt ci-release
+          sbt ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
