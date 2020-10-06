@@ -112,4 +112,14 @@ class OptionalSpec extends MonocleSuite {
     optional.some.getOption(obj) shouldEqual Some(2)
     obj.applyOptional(optional).some.getOption shouldEqual Some(2)
   }
+
+  test("each") {
+    case class SomeTest(x: Int, y: List[Int])
+    val obj = SomeTest(1, List(1, 2, 3))
+
+    val optional = GenLens[SomeTest](_.y).asOptional
+
+    optional.each.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyOptional(optional).each.getAll shouldEqual List(1, 2, 3)
+  }
 }

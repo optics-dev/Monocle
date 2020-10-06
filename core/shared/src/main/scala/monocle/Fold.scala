@@ -5,6 +5,7 @@ import cats.arrow.Choice
 import cats.instances.int._
 import cats.instances.list._
 import cats.syntax.either._
+import monocle.function.Each
 import monocle.internal.Monoids
 
 /**
@@ -84,6 +85,9 @@ abstract class Fold[S, A] extends Serializable { self =>
       override def foldMap[M: Monoid](f: Either[C, A] => M)(s: Either[C, S]): M =
         s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
     }
+
+  def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
+    composeTraversal(evEach.each)
 
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)

@@ -6,6 +6,7 @@ import cats.data.Const
 import cats.instances.int._
 import cats.instances.list._
 import cats.syntax.either._
+import monocle.function.Each
 import monocle.internal.Monoids
 
 /**
@@ -104,8 +105,14 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
       modifyF(a => F.parallel(f(a)))(s)(F.applicative)
     )
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Traversal[S, C] =
+    mono composeTraversal evEach.each
+
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PTraversal[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): Traversal[S, A] =
+    evTS.substituteCo[PTraversal[S, *, A, A]](evBA.substituteCo[PTraversal[S, T, A, *]](this))
 
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PTraversal[S, T, A1, B1] =
     evB.substituteCo[PTraversal[S, T, A1, *]](evA.substituteCo[PTraversal[S, T, *, B]](this))
