@@ -28,7 +28,7 @@ trait EmptyFunctions {
     ev.empty.reverseGet(())
 }
 
-object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
+object Empty extends EmptyFunctions {
   def apply[S](prism: Prism[S, Unit]): Empty[S] =
     new Empty[S] {
       override val empty: Prism[S, Unit] = prism
@@ -48,6 +48,11 @@ object Empty extends EmptyFunctions with EmptyInstancesScalaVersionSpecific {
   implicit def listEmpty[A]: Empty[List[A]] =
     Empty(
       Prism[List[A], Unit](l => if (l.isEmpty) Some(()) else None)(_ => List.empty)
+    )
+
+  implicit def lazyListEmpty[A]: Empty[LazyList[A]] =
+    Empty(
+      Prism[LazyList[A], Unit](s => if (s.isEmpty) Some(()) else None)(_ => LazyList.empty)
     )
 
   implicit def mapEmpty[K, V]: Empty[Map[K, V]] =

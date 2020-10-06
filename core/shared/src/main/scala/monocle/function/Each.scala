@@ -5,6 +5,7 @@ import monocle.{Iso, PTraversal, Traversal}
 import scala.annotation.implicitNotFound
 import scala.collection.immutable.ListMap
 import cats.{Applicative, Order, Traverse}
+import cats.instances.lazyList._
 
 /**
   * Typeclass that defines a [[Traversal]] from a monomorphic container `S` to all of its elements of type `A`
@@ -25,7 +26,7 @@ trait EachFunctions {
   def traverseEach[S[_]: Traverse, A]: Each[S[A], A] = Each.fromTraverse[S, A]
 }
 
-object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
+object Each extends EachFunctions {
   def apply[S, A](traversal: Traversal[S, A]): Each[S, A] =
     new Each[S, A] {
       override val each: Traversal[S, A] = traversal
@@ -60,6 +61,8 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
 
   implicit def listEach[A]: Each[List[A], A] = fromTraverse
 
+  implicit def lazyListEach[A]: Each[LazyList[A], A] = fromTraverse
+
   implicit def listMapEach[K, V]: Each[ListMap[K, V], V] =
     Each(
       new Traversal[ListMap[K, V], V] {
@@ -70,7 +73,8 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
       }
     )
 
-  implicit def mapEach[K: Order, V]: Each[SortedMap[K, V], V] = fromTraverse[SortedMap[K, *], V]
+  implicit def mapEach[K: Order, V]: Each[SortedMap[K, V], V] =
+    fromTraverse[SortedMap[K, *], V]
 
   implicit def optEach[A]: Each[Option[A], A] =
     new Each[Option[A], A] {
@@ -132,7 +136,8 @@ object Each extends EachFunctions with EachInstancesScalaVersionSpecific {
   import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd, Validated}
   import cats.free.Cofree
 
-  implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] = fromTraverse[Cofree[S, *], A]
+  implicit def cofreeEach[S[_]: Traverse, A]: Each[Cofree[S, A], A] =
+    fromTraverse[Cofree[S, *], A]
 
   implicit def chainEach[A]: Each[Chain[A], A] = fromTraverse
 
