@@ -72,8 +72,8 @@ class GetterSpec extends MonocleSuite {
 
     val getter = Getter((_: SomeTest).y)
 
-    getter.some.getAll(obj) shouldEqual List(2)
-    obj.applyGetter(getter).some.getAll shouldEqual List(2)
+    getter.?.getAll(obj) shouldEqual List(2)
+    obj.applyGetter(getter).?.getAll shouldEqual List(2)
   }
 
   test("each") {
@@ -82,7 +82,7 @@ class GetterSpec extends MonocleSuite {
 
     val getter = Getter((_: SomeTest).y)
 
-    getter.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyGetter(getter).each.getAll shouldEqual List(1, 2, 3)
+    getter.*.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyGetter(getter).*.getAll shouldEqual List(1, 2, 3)
   }
 }

@@ -86,10 +86,10 @@ abstract class Fold[S, A] extends Serializable { self =>
         s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
     }
 
-  def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
+  def *[C](implicit evEach: Each[A, C]): Fold[S, C] =
     composeTraversal(evEach.each)
 
-  def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
+  def ?[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
 
   private def adapt[A1](implicit evA: A =:= A1): Fold[S, A1] =

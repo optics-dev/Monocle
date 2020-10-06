@@ -109,8 +109,8 @@ class OptionalSpec extends MonocleSuite {
 
     val optional = GenLens[SomeTest](_.y).asOptional
 
-    optional.some.getOption(obj) shouldEqual Some(2)
-    obj.applyOptional(optional).some.getOption shouldEqual Some(2)
+    optional.?.getOption(obj) shouldEqual Some(2)
+    obj.applyOptional(optional).?.getOption shouldEqual Some(2)
   }
 
   test("each") {
@@ -119,7 +119,7 @@ class OptionalSpec extends MonocleSuite {
 
     val optional = GenLens[SomeTest](_.y).asOptional
 
-    optional.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyOptional(optional).each.getAll shouldEqual List(1, 2, 3)
+    optional.*.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyOptional(optional).*.getAll shouldEqual List(1, 2, 3)
   }
 }

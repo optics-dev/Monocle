@@ -87,10 +87,10 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Traversal[S, C] =
+  def *[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Traversal[S, C] =
     mono composeTraversal evEach.each
 
-  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
+  def ?[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
 
   def mono(implicit evTS: T =:= S, evBA: B =:= A): Lens[S, A] =

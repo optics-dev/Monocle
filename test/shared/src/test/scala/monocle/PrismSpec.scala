@@ -183,8 +183,8 @@ class PrismSpec extends MonocleSuite {
 
     val prism = Iso[SomeTest, Option[Int]](_.y)(SomeTest).asPrism
 
-    prism.some.getOption(obj) shouldEqual Some(2)
-    obj.applyPrism(prism).some.getOption shouldEqual Some(2)
+    prism.?.getOption(obj) shouldEqual Some(2)
+    obj.applyPrism(prism).?.getOption shouldEqual Some(2)
   }
 
   test("each") {
@@ -193,7 +193,7 @@ class PrismSpec extends MonocleSuite {
 
     val prism = Iso[SomeTest, List[Int]](_.y)(SomeTest).asPrism
 
-    prism.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyPrism(prism).each.getAll shouldEqual List(1, 2, 3)
+    prism.*.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyPrism(prism).*.getAll shouldEqual List(1, 2, 3)
   }
 }

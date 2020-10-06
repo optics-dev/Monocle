@@ -173,8 +173,8 @@ class IsoSpec extends MonocleSuite {
 
     val iso = Iso[SomeTest, Option[Int]](_.y)(SomeTest)
 
-    iso.some.getOption(obj) shouldEqual Some(2)
-    obj.applyIso(iso).some.getOption shouldEqual Some(2)
+    iso.?.getOption(obj) shouldEqual Some(2)
+    obj.applyIso(iso).?.getOption shouldEqual Some(2)
   }
 
   test("each") {
@@ -183,7 +183,7 @@ class IsoSpec extends MonocleSuite {
 
     val iso = Iso[SomeTest, List[Int]](_.y)(SomeTest)
 
-    iso.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyIso(iso).each.getAll shouldEqual List(1, 2, 3)
+    iso.*.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyIso(iso).*.getAll shouldEqual List(1, 2, 3)
   }
 }

@@ -100,8 +100,8 @@ class FoldSpec extends MonocleSuite {
 
     val fold = GenLens[SomeTest](_.y).asFold
 
-    fold.some.getAll(obj) shouldEqual List(2)
-    obj.applyFold(fold).some.getAll shouldEqual List(2)
+    fold.?.getAll(obj) shouldEqual List(2)
+    obj.applyFold(fold).?.getAll shouldEqual List(2)
   }
 
   test("each") {
@@ -110,7 +110,7 @@ class FoldSpec extends MonocleSuite {
 
     val fold = GenLens[SomeTest](_.y).asFold
 
-    fold.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyFold(fold).each.getAll shouldEqual List(1, 2, 3)
+    fold.*.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyFold(fold).*.getAll shouldEqual List(1, 2, 3)
   }
 }

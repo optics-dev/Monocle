@@ -50,10 +50,10 @@ abstract class Getter[S, A] extends Serializable { self =>
   @inline final def right[C]: Getter[Either[C, S], Either[C, A]] =
     Getter[Either[C, S], Either[C, A]](_.map(get))
 
-  def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
+  def *[C](implicit evEach: Each[A, C]): Fold[S, C] =
     composeTraversal(evEach.each)
 
-  def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
+  def ?[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
 
   private def adapt[A1](implicit evA: A =:= A1): Getter[S, A1] =

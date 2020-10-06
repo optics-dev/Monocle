@@ -160,8 +160,8 @@ class TraversalSpec extends MonocleSuite {
 
     val traversal = GenLens[SomeTest](_.y).asTraversal
 
-    traversal.some.getAll(obj) shouldEqual List(2)
-    obj.applyTraversal(traversal).some.getAll shouldEqual List(2)
+    traversal.?.getAll(obj) shouldEqual List(2)
+    obj.applyTraversal(traversal).?.getAll shouldEqual List(2)
   }
 
   test("each") {
@@ -170,7 +170,7 @@ class TraversalSpec extends MonocleSuite {
 
     val traversal = GenLens[SomeTest](_.y).asTraversal
 
-    traversal.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyTraversal(traversal).each.getAll shouldEqual List(1, 2, 3)
+    traversal.*.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyTraversal(traversal).*.getAll shouldEqual List(1, 2, 3)
   }
 }

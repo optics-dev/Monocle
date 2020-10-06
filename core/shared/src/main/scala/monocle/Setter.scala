@@ -39,10 +39,10 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
     PSetter[Either[S, S1], Either[T, T1], A, B](b => _.bimap(self.modify(b), other.modify(b)))
 
-  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Setter[S, C] =
+  def *[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Setter[S, C] =
     mono composeTraversal evEach.each
 
-  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PSetter[S, T, A1, B1] =
+  def ?[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PSetter[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
 
   def mono(implicit evTS: T =:= S, evBA: B =:= A): Setter[S, A] =
