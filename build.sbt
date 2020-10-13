@@ -37,24 +37,9 @@ inThisBuild(List(
   )
 ))
 
-// shamelessly copied from cats
-def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scalaVersion: String) = {
-  def extraDirs(suffix: String) =
-    List(CrossType.Pure, CrossType.Full)
-      .flatMap(_.sharedSrcDir(srcBaseDir, srcName).toList.map(f => file(f.getPath + suffix)))
-
-  CrossVersion.partialVersion(scalaVersion) match {
-    case Some((2, y)) if y <= 12 =>
-      extraDirs("-2.12-")
-    case Some((2, y)) if y >= 13 =>
-      extraDirs("-2.13+")
-    case _ => Nil
-  }
-}
-
 lazy val buildSettings = Seq(
   scalaVersion       := "2.13.3",
-  crossScalaVersions := Seq("2.12.12", "2.13.3"),
+  crossScalaVersions := Seq("2.13.3"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions     ++= Seq(
     "-encoding", "UTF-8",
@@ -63,19 +48,14 @@ lazy val buildSettings = Seq(
     "-unchecked",
     "-Xfatal-warnings",
     "-deprecation",
+    "-Ymacro-annotations",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
     "-Ywarn-unused:imports",
   ),
-  scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-    case Some((2, n)) if n <= 12 => Seq("-Xfuture", "-Yno-adapted-args") // TODO Move fatal-warnings and deprecation back to on
-    case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
-  }.toList.flatten,
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions in (Test   , console) -= "-Ywarn-unused:imports",
   addCompilerPlugin(kindProjector),
-  Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
-  Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
   scmInfo := Some(ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")),
 )
 
@@ -94,17 +74,6 @@ lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-cor
 lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "2.0.1")
 
 lazy val macroVersion = "2.1.1"
-
-lazy val paradisePlugin = Def.setting{
-  CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, v)) if v <= 12 =>
-      Seq(compilerPlugin("org.scalamacros" % "paradise" % macroVersion cross CrossVersion.patch))
-    case _ =>
-      // if scala 2.13.0-M4 or later, macro annotations merged into scala-reflect
-      // https://github.com/scala/scala/pull/6606
-      Nil
-  }
-}
 
 lazy val kindProjector  = "org.typelevel" % "kind-projector" % "0.11.0" cross CrossVersion.full
 
@@ -214,7 +183,6 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
       scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
       scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
     ),
-    libraryDependencies ++= paradisePlugin.value,
     unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
   )
 
@@ -248,7 +216,6 @@ lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, m
   .settings(noPublishSettings: _*)
   .settings(
     libraryDependencies ++= Seq(cats.value, catsLaws.value, shapeless.value, discipline_scalatest.value, refinedScalacheck.value),
-    libraryDependencies ++= paradisePlugin.value
   )
 
 lazy val bench = project.dependsOn(core.jvm, generic.jvm, macros.jvm)
@@ -258,7 +225,6 @@ lazy val bench = project.dependsOn(core.jvm, generic.jvm, macros.jvm)
   .settings(libraryDependencies ++= Seq(
     scalaz.value,
     shapeless.value),
-    libraryDependencies ++= paradisePlugin.value
   ).enablePlugins(JmhPlugin)
 
 lazy val example = project.dependsOn(core.jvm, generic.jvm, refined.jvm, macros.jvm, state.jvm, test.jvm % "test->test")
@@ -267,7 +233,6 @@ lazy val example = project.dependsOn(core.jvm, generic.jvm, refined.jvm, macros.
   .settings(noPublishSettings)
   .settings(
     libraryDependencies ++= Seq(cats.value, shapeless.value, discipline_scalatest.value),
-    libraryDependencies ++= paradisePlugin.value
   )
 
 lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
@@ -280,7 +245,6 @@ lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
   .settings(scalacOptions ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
   .settings(
     libraryDependencies ++= Seq(cats.value, shapeless.value),
-    libraryDependencies ++= paradisePlugin.value
   )
 
 lazy val buildInfoSettings = Seq(

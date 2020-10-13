@@ -1,5 +1,7 @@
 package monocle.std
 
+import cats.implicits._
+import cats.Eq
 import monocle.{Iso, PIso, PPrism, Prism}
 
 object option extends OptionOptics
@@ -19,4 +21,25 @@ trait OptionOptics {
 
   final def optionToDisjunction[A]: Iso[Option[A], Either[Unit, A]] =
     pOptionToDisjunction[A, A]
+
+  /**
+    * Creates an Iso that maps `None` to `defaultValue` and inversely.
+    * {{{
+    * val defaultTo0 = withDefault(0)
+    * defaultTo0.get(None) == 0
+    * defaultTo0.get(Some(1)) == 1
+    * defaultTo0.reverseGet(0) == None
+    * defaultTo0.reverseGet(1) == Some(1)
+    * }}}
+    *
+    * `withDefault` is a valid Iso only if we consider the set of `A` without `defaultValue`.
+    * For example, `Some(0)` breaks the round-trip property of Iso:
+    * {{{
+    * defaultTo0.reverseGet(defaultTo0.get(Some(0))) == None
+    * }}}
+    *
+    * @see This method is called `non` in Haskell Lens.
+    */
+  final def withDefault[A: Eq](defaultValue: A): Iso[Option[A], A] =
+    Iso[Option[A], A](_.getOrElse(defaultValue))(value => if (value === defaultValue) None else Some(value))
 }

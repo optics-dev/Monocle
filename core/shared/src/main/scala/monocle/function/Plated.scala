@@ -6,6 +6,7 @@ import scala.annotation.implicitNotFound
 import cats.{Applicative, Monad, Traverse}
 import cats.data.State
 import cats.instances.int._
+import cats.instances.lazyList._
 import cats.syntax.flatMap._
 
 /**
@@ -27,7 +28,7 @@ trait CommonPlatedFunctions {
   def plate[A](implicit P: Plated[A]): Traversal[A, A] = P.plate
 }
 
-trait PlatedFunctions extends CommonPlatedFunctions with PlatedFunctionsScalaVersionSpecific {
+trait PlatedFunctions extends CommonPlatedFunctions {
 
   /** get the immediate self-similar children of a target */
   @inline def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
@@ -75,9 +76,16 @@ trait PlatedFunctions extends CommonPlatedFunctions with PlatedFunctionsScalaVer
       l.modifyF[M](b => f(b).flatMap(go))(c)
     go(a)
   }
+
+  /** get all transitive self-similar elements of a target, including itself */
+  def universe[A: Plated](a: A): LazyList[A] = {
+    val fold                  = plate[A].asFold
+    def go(b: A): LazyList[A] = b #:: fold.foldMap[LazyList[A]](go)(b)
+    go(a)
+  }
 }
 
-object Plated extends PlatedFunctions with PlatedInstancesScalaVersionSpecific {
+object Plated extends PlatedFunctions {
   def apply[A](traversal: Traversal[A, A]): Plated[A] =
     new Plated[A] {
       override val plate: Traversal[A, A] = traversal
@@ -95,6 +103,17 @@ object Plated extends PlatedFunctions with PlatedInstancesScalaVersionSpecific {
           s match {
             case x :: xs => Applicative[F].map(f(xs))(x :: _)
             case Nil     => Applicative[F].pure(Nil)
+          }
+      }
+    )
+
+  implicit def lazyListPlated[A]: Plated[LazyList[A]] =
+    Plated(
+      new Traversal[LazyList[A], LazyList[A]] {
+        def modifyF[F[_]: Applicative](f: LazyList[A] => F[LazyList[A]])(s: LazyList[A]): F[LazyList[A]] =
+          s match {
+            case x #:: xs   => Applicative[F].map(f(xs))(x #:: _)
+            case LazyList() => Applicative[F].pure(LazyList.empty)
           }
       }
     )
@@ -131,13 +150,14 @@ object Plated extends PlatedFunctions with PlatedInstancesScalaVersionSpecific {
 
   implicit def chainPlated[A]: Plated[Chain[A]] =
     new Plated[Chain[A]] {
-      val plate: Traversal[Chain[A], Chain[A]] = new Traversal[Chain[A], Chain[A]] {
-        def modifyF[F[_]: Applicative](f: Chain[A] => F[Chain[A]])(s: Chain[A]): F[Chain[A]] =
-          s.uncons match {
-            case Some((x, xs)) => Applicative[F].map(f(xs))(_.prepend(x))
-            case None          => Applicative[F].pure(Chain.empty)
-          }
-      }
+      val plate: Traversal[Chain[A], Chain[A]] =
+        new Traversal[Chain[A], Chain[A]] {
+          def modifyF[F[_]: Applicative](f: Chain[A] => F[Chain[A]])(s: Chain[A]): F[Chain[A]] =
+            s.uncons match {
+              case Some((x, xs)) => Applicative[F].map(f(xs))(_.prepend(x))
+              case None          => Applicative[F].pure(Chain.empty)
+            }
+        }
     }
 
   implicit def cofreePlated[S[_]: Traverse, A]: Plated[Cofree[S, A]] =

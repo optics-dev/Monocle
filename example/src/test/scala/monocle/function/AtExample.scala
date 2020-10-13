@@ -52,4 +52,12 @@ class AtExample extends MonocleSuite {
   test("remove deletes an element of a Map") {
     remove("Foo")(Map("Foo" -> 1, "Bar" -> 2)) shouldEqual Map("Bar" -> 2)
   }
+
+  test("atOrElse") {
+    (Map("One" -> 2, "Two" -> 2) applyLens atOrElse("foo")(0) modify (_ + 1)) shouldEqual Map(
+      "One" -> 2,
+      "Two" -> 2,
+      "foo" -> 1
+    )
+  }
 }

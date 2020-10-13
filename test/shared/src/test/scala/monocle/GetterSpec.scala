@@ -21,7 +21,9 @@ class GetterSpec extends MonocleSuite {
   }
 
   test("Getter has a Choice instance") {
-    Choice[Getter].choice(i, Choice[Getter].id[Int]).get(Left(Bar(3))) shouldEqual 3
+    Choice[Getter]
+      .choice(i, Choice[Getter].id[Int])
+      .get(Left(Bar(3))) shouldEqual 3
   }
 
   test("Getter has a Profunctor instance") {
@@ -35,7 +37,9 @@ class GetterSpec extends MonocleSuite {
   test("Getter has a Semigroupal instance") {
     val length = Getter[String, Int](_.length)
     val upper  = Getter[String, String](_.toUpperCase)
-    Semigroupal[Getter[String, *]].product(length, upper).get("helloworld") shouldEqual ((10, "HELLOWORLD"))
+    Semigroupal[Getter[String, *]]
+      .product(length, upper)
+      .get("helloworld") shouldEqual ((10, "HELLOWORLD"))
   }
 
   test("get") {
@@ -60,5 +64,25 @@ class GetterSpec extends MonocleSuite {
 
   test("to") {
     i.to(_.toString()).get(Bar(5)) shouldEqual "5"
+  }
+
+  test("some") {
+    case class SomeTest(x: Int, y: Option[Int])
+    val obj = SomeTest(1, Some(2))
+
+    val getter = Getter((_: SomeTest).y)
+
+    getter.some.getAll(obj) shouldEqual List(2)
+    obj.applyGetter(getter).some.getAll shouldEqual List(2)
+  }
+
+  test("each") {
+    case class SomeTest(x: Int, y: List[Int])
+    val obj = SomeTest(1, List(1, 2, 3))
+
+    val getter = Getter((_: SomeTest).y)
+
+    getter.each.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyGetter(getter).each.getAll shouldEqual List(1, 2, 3)
   }
 }

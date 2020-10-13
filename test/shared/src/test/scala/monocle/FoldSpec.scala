@@ -2,6 +2,7 @@ package monocle
 
 import cats.Monoid
 import cats.arrow.{Category, Choice, Compose}
+import monocle.macros.GenLens
 
 class FoldSpec extends MonocleSuite {
   val eachLi: Fold[List[Int], Int]             = Fold.fromFoldable[List, Int]
@@ -16,7 +17,9 @@ class FoldSpec extends MonocleSuite {
   // test implicit resolution of type classes
 
   test("Fold has a Compose instance") {
-    Compose[Fold].compose(eachLi, nestedListFold[Int]).fold(List(List(1, 2, 3), List(4, 5), List(6))) shouldEqual 21
+    Compose[Fold]
+      .compose(eachLi, nestedListFold[Int])
+      .fold(List(List(1, 2, 3), List(4, 5), List(6))) shouldEqual 21
   }
 
   test("Fold has a Category instance") {
@@ -24,7 +27,9 @@ class FoldSpec extends MonocleSuite {
   }
 
   test("Fold has a Choice instance") {
-    Choice[Fold].choice(eachLi, Choice[Fold].id[Int]).fold(Left(List(1, 2, 3))) shouldEqual 6
+    Choice[Fold]
+      .choice(eachLi, Choice[Fold].id[Int])
+      .fold(Left(List(1, 2, 3))) shouldEqual 6
   }
 
   test("foldMap") {
@@ -87,5 +92,25 @@ class FoldSpec extends MonocleSuite {
 
   test("to") {
     eachLi.to(_.toString()).getAll(List(1, 2, 3)) shouldEqual List("1", "2", "3")
+  }
+
+  test("some") {
+    case class SomeTest(x: Int, y: Option[Int])
+    val obj = SomeTest(1, Some(2))
+
+    val fold = GenLens[SomeTest](_.y).asFold
+
+    fold.some.getAll(obj) shouldEqual List(2)
+    obj.applyFold(fold).some.getAll shouldEqual List(2)
+  }
+
+  test("each") {
+    case class SomeTest(x: Int, y: List[Int])
+    val obj = SomeTest(1, List(1, 2, 3))
+
+    val fold = GenLens[SomeTest](_.y).asFold
+
+    fold.each.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyFold(fold).each.getAll shouldEqual List(1, 2, 3)
   }
 }
