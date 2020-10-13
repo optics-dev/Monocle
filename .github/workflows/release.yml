@@ -24,6 +24,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sbt-
       - name: Publish
         run: |
+          git fetch --unshallow
           sbt ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
