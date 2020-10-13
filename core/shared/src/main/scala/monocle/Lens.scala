@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Functor, Monoid}
+import cats.{Applicative, Eq, Functor, Monoid}
 import cats.arrow.Choice
 import cats.syntax.either._
 import monocle.function.Each
@@ -92,6 +92,9 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit evTS: T =:= S, evBA: B =:= A, evOpt: A =:= Option[A1]): Lens[S, A1] =
+    mono.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 
   def mono(implicit evTS: T =:= S, evBA: B =:= A): Lens[S, A] =
     evTS.substituteCo[PLens[S, *, A, A]](evBA.substituteCo[PLens[S, T, A, *]](this))

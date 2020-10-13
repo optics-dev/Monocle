@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Functor, Monoid}
+import cats.{Applicative, Eq, Functor, Monoid}
 import cats.arrow.Category
 import cats.evidence.{<~<, Is}
 import cats.syntax.either._
@@ -110,6 +110,9 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit evTS: T =:= S, evBA: B =:= A, evOpt: A =:= Option[A1]): Iso[S, A1] =
+    mono.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 
   def mono(implicit evTS: T =:= S, evBA: B =:= A): Iso[S, A] =
     evTS.substituteCo[PIso[S, *, A, A]](evBA.substituteCo[PIso[S, T, A, *]](this))
