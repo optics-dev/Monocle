@@ -1,7 +1,7 @@
 package monocle.function
 
 import cats.kernel.Eq
-import monocle.{Lens, MonocleSuite}
+import monocle.MonocleSuite
 import monocle.law.discipline.function.AtTests
 
 import scala.collection.immutable.ListMap
