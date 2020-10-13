@@ -103,4 +103,14 @@ class FoldSpec extends MonocleSuite {
     fold.some.getAll(obj) shouldEqual List(2)
     obj.applyFold(fold).some.getAll shouldEqual List(2)
   }
+
+  test("each") {
+    case class SomeTest(x: Int, y: List[Int])
+    val obj = SomeTest(1, List(1, 2, 3))
+
+    val fold = GenLens[SomeTest](_.y).asFold
+
+    fold.each.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyFold(fold).each.getAll shouldEqual List(1, 2, 3)
+  }
 }

@@ -176,4 +176,14 @@ class IsoSpec extends MonocleSuite {
     iso.some.getOption(obj) shouldEqual Some(2)
     obj.applyIso(iso).some.getOption shouldEqual Some(2)
   }
+
+  test("each") {
+    case class SomeTest(y: List[Int])
+    val obj = SomeTest(List(1, 2, 3))
+
+    val iso = Iso[SomeTest, List[Int]](_.y)(SomeTest)
+
+    iso.each.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyIso(iso).each.getAll shouldEqual List(1, 2, 3)
+  }
 }

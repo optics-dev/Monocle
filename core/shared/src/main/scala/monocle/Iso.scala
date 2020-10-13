@@ -4,6 +4,7 @@ import cats.{Applicative, Functor, Monoid}
 import cats.arrow.Category
 import cats.evidence.{<~<, Is}
 import cats.syntax.either._
+import monocle.function.Each
 
 /**
   * [[Iso]] is a type alias for [[PIso]] where `S` = `A` and `T` = `B`:
@@ -104,8 +105,14 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   @inline final def right[C]: PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](_.map(get))(_.map(reverseGet))
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Traversal[S, C] =
+    mono composeTraversal evEach.each
+
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): Iso[S, A] =
+    evTS.substituteCo[PIso[S, *, A, A]](evBA.substituteCo[PIso[S, T, A, *]](this))
 
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PIso[S, T, A1, B1] =
     evB.substituteCo[PIso[S, T, A1, *]](evA.substituteCo[PIso[S, T, *, B]](this))

@@ -104,4 +104,15 @@ class LensSpec extends MonocleSuite {
     lens.some.getOption(obj) shouldEqual Some(2)
     obj.applyLens(lens).some.getOption shouldEqual Some(2)
   }
+
+  test("each") {
+    case class SomeTest(x: Int, y: List[Int])
+    val obj = SomeTest(1, List(1, 2, 3))
+
+    val lens = GenLens[SomeTest](_.y)
+
+    lens.each.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyLens(lens).each.getAll shouldEqual List(1, 2, 3)
+  }
+
 }

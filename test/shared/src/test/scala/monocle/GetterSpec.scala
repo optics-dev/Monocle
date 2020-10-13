@@ -75,4 +75,14 @@ class GetterSpec extends MonocleSuite {
     getter.some.getAll(obj) shouldEqual List(2)
     obj.applyGetter(getter).some.getAll shouldEqual List(2)
   }
+
+  test("each") {
+    case class SomeTest(x: Int, y: List[Int])
+    val obj = SomeTest(1, List(1, 2, 3))
+
+    val getter = Getter((_: SomeTest).y)
+
+    getter.each.getAll(obj) shouldEqual List(1, 2, 3)
+    obj.applyGetter(getter).each.getAll shouldEqual List(1, 2, 3)
+  }
 }

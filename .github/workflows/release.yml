@@ -10,13 +10,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: olafurpg/setup-scala@v7
       - uses: olafurpg/setup-gpg@v2
-      - name: Set up Ruby 2.6
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-      - name: Set up jekyll
-        run: |
-          gem install jekyll -v 4
       - name: Cache dependencies
         uses: actions/cache@v1
         with:
@@ -31,11 +24,15 @@ jobs:
           restore-keys: ${{ runner.os }}-sbt-
       - name: Publish
         run: |
-          csbt ci-release
-          sbt docs/docusaurusPublishGhpages
+          git fetch --unshallow
+          sbt ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          GITHUB_DEPLOY_KEY: ${{ secrets.GITHUB_DEPLOY_KEY }}
+      - name: Publish website
+        run: |
+          sbt docs/docusaurusPublishGhpages
+        env:
+          GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}

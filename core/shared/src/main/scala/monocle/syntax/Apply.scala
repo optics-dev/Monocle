@@ -1,8 +1,8 @@
 package monocle.syntax
 
 import monocle._
-
 import cats.{Applicative, Functor, Monoid}
+import monocle.function.Each
 
 object apply extends ApplySyntax
 
@@ -98,6 +98,9 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   @inline def isEmpty: Boolean                      = _fold.isEmpty(s)
   @inline def nonEmpty: Boolean                     = _fold.nonEmpty(s)
 
+  def each[C](implicit evEach: Each[A, C]): ApplyFold[S, C] =
+    composeTraversal(evEach.each)
+
   def some[A1](implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
 
@@ -145,6 +148,9 @@ final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]) {
   @inline def exist(p: A => Boolean): S => Boolean  = getter.exist(p)
   @inline def find(p: A => Boolean): S => Option[A] = getter.find(p)
 
+  def each[C](implicit evEach: Each[A, C]): ApplyFold[S, C] =
+    composeTraversal(evEach.each)
+
   def some[A1](implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
 
@@ -183,8 +189,14 @@ final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
   @inline def exist(p: A => Boolean): S => Boolean       = iso.exist(p)
   @inline def find(p: A => Boolean): S => Option[A]      = iso.find(p)
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): ApplyTraversal[S, S, C, C] =
+    mono composeTraversal evEach.each
+
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): ApplyIso[S, S, A, A] =
+    evTS.substituteCo[ApplyIso[S, *, A, A]](evBA.substituteCo[ApplyIso[S, T, A, *]](this))
 
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyIso[S, T, A1, B1] =
     evB.substituteCo[ApplyIso[S, T, A1, *]](evA.substituteCo[ApplyIso[S, T, *, B]](this))
@@ -235,8 +247,14 @@ final case class ApplyLens[S, T, A, B](s: S, lens: PLens[S, T, A, B]) {
   @inline def exist(p: A => Boolean): S => Boolean       = lens.exist(p)
   @inline def find(p: A => Boolean): S => Option[A]      = lens.find(p)
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): ApplyTraversal[S, S, C, C] =
+    mono composeTraversal evEach.each
+
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyOptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): ApplyLens[S, S, A, A] =
+    evTS.substituteCo[ApplyLens[S, *, A, A]](evBA.substituteCo[ApplyLens[S, T, A, *]](this))
 
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyLens[S, T, A1, B1] =
     evB.substituteCo[ApplyLens[S, T, A1, *]](evA.substituteCo[ApplyLens[S, T, *, B]](this))
@@ -297,8 +315,14 @@ final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]
   @inline def set(b: B): T               = optional.set(b)(s)
   @inline def setOption(b: B): Option[T] = optional.setOption(b)(s)
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): ApplyTraversal[S, S, C, C] =
+    mono composeTraversal evEach.each
+
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyOptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): ApplyOptional[S, S, A, A] =
+    evTS.substituteCo[ApplyOptional[S, *, A, A]](evBA.substituteCo[ApplyOptional[S, T, A, *]](this))
 
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyOptional[S, T, A1, B1] =
     evB.substituteCo[ApplyOptional[S, T, A1, *]](evA.substituteCo[ApplyOptional[S, T, *, B]](this))
@@ -358,6 +382,12 @@ final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]) {
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): ApplyTraversal[S, S, C, C] =
+    mono composeTraversal evEach.each
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): ApplyPrism[S, S, A, A] =
+    evTS.substituteCo[ApplyPrism[S, *, A, A]](evBA.substituteCo[ApplyPrism[S, T, A, *]](this))
+
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyPrism[S, T, A1, B1] =
     evB.substituteCo[ApplyPrism[S, T, A1, *]](evA.substituteCo[ApplyPrism[S, T, *, B]](this))
 
@@ -401,8 +431,14 @@ final case class ApplySetter[S, T, A, B](s: S, setter: PSetter[S, T, A, B]) {
   @inline def set(b: B): T         = setter.set(b)(s)
   @inline def modify(f: A => B): T = setter.modify(f)(s)
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): ApplySetter[S, S, C, C] =
+    mono composeTraversal evEach.each
+
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplySetter[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): ApplySetter[S, S, A, A] =
+    evTS.substituteCo[ApplySetter[S, *, A, A]](evBA.substituteCo[ApplySetter[S, T, A, *]](this))
 
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplySetter[S, T, A1, B1] =
     evB.substituteCo[ApplySetter[S, T, A1, *]](evA.substituteCo[ApplySetter[S, T, *, B]](this))
@@ -457,8 +493,14 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
   @inline def isEmpty(s: S): Boolean                = traversal.isEmpty(s)
   @inline def nonEmpty(s: S): Boolean               = traversal.nonEmpty(s)
 
+  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): ApplyTraversal[S, S, C, C] =
+    mono composeTraversal evEach.each
+
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyTraversal[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+
+  def mono(implicit evTS: T =:= S, evBA: B =:= A): ApplyTraversal[S, S, A, A] =
+    evTS.substituteCo[ApplyTraversal[S, *, A, A]](evBA.substituteCo[ApplyTraversal[S, T, A, *]](this))
 
   private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyTraversal[S, T, A1, B1] =
     evB.substituteCo[ApplyTraversal[S, T, A1, *]](evA.substituteCo[ApplyTraversal[S, T, *, B]](this))
