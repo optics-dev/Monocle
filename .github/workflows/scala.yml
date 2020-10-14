@@ -15,7 +15,7 @@ jobs:
       - name: Setup Scala
         uses: olafurpg/setup-scala@v7
       - name: Checking your code format
-        run: csbt scalafmtCheck
+        run: sbt scalafmtCheck
       - name: Set up Ruby 2.6
         uses: actions/setup-ruby@v1
         with:
