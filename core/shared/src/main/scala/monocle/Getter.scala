@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Monoid, Semigroupal}
+import cats.{Eq, Monoid, Semigroupal}
 import cats.arrow.{Arrow, Choice}
 import cats.implicits._
 import monocle.function.Each
@@ -55,6 +55,9 @@ abstract class Getter[S, A] extends Serializable { self =>
 
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): Getter[S, A1] =
+    adapt[Option[A1]] composeIso (std.option.withDefault(defaultValue))
 
   private def adapt[A1](implicit evA: A =:= A1): Getter[S, A1] =
     evA.substituteCo[Getter[S, *]](this)

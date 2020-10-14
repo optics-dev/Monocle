@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Functor, Id, Monoid, Parallel, Traverse}
+import cats.{Applicative, Eq, Functor, Id, Monoid, Parallel, Traverse}
 import cats.arrow.Choice
 import cats.data.Const
 import cats.instances.int._
@@ -105,16 +105,10 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
       modifyF(a => F.parallel(f(a)))(s)(F.applicative)
     )
 
-  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Traversal[S, C] =
-    mono composeTraversal evEach.each
-
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PTraversal[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
 
-  def mono(implicit evTS: T =:= S, evBA: B =:= A): Traversal[S, A] =
-    evTS.substituteCo[PTraversal[S, *, A, A]](evBA.substituteCo[PTraversal[S, T, A, *]](this))
-
-  private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PTraversal[S, T, A1, B1] =
+  private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PTraversal[S, T, A1, B1] =
     evB.substituteCo[PTraversal[S, T, A1, *]](evA.substituteCo[PTraversal[S, T, *, B]](this))
 
   /** *************************************************************
@@ -257,6 +251,9 @@ object PTraversal extends TraversalInstances {
           _set(_, _, _, _, _, _, s)
         )
     }
+
+  implicit def traversalSyntax[S, A](self: Traversal[S, A]): TraversalSyntax[S, A] =
+    new TraversalSyntax(self)
 }
 
 object Traversal {
@@ -317,4 +314,15 @@ sealed abstract class TraversalInstances {
     def choice[A, B, C](f1: Traversal[A, C], f2: Traversal[B, C]): Traversal[Either[A, B], C] =
       f1 choice f2
   }
+}
+
+/**
+  * Extension methods for monomorphic Traversal
+  */
+final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extends AnyVal {
+  def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
+    self composeTraversal evEach.each
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Traversal[S, A1] =
+    self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 }

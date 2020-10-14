@@ -76,6 +76,20 @@ class GetterSpec extends MonocleSuite {
     obj.applyGetter(getter).some.getAll shouldEqual List(2)
   }
 
+  test("withDefault") {
+    case class SomeTest(x: Int, y: Option[Int])
+    val objSome = SomeTest(1, Some(2))
+    val objNone = SomeTest(1, None)
+
+    val getter = Getter((_: SomeTest).y)
+
+    getter.withDefault(0).get(objSome) shouldEqual 2
+    getter.withDefault(0).get(objNone) shouldEqual 0
+
+    objSome.applyGetter(getter).withDefault(0).get shouldEqual 2
+    objNone.applyGetter(getter).withDefault(0).get shouldEqual 0
+  }
+
   test("each") {
     case class SomeTest(x: Int, y: List[Int])
     val obj = SomeTest(1, List(1, 2, 3))

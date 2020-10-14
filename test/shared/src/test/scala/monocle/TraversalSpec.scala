@@ -155,22 +155,27 @@ class TraversalSpec extends MonocleSuite {
   }
 
   test("some") {
-    case class SomeTest(x: Int, y: Option[Int])
-    val obj = SomeTest(1, Some(2))
+    val numbers   = List(Some(1), None, Some(2), None)
+    val traversal = Traversal.fromTraverse[List, Option[Int]]
 
-    val traversal = GenLens[SomeTest](_.y).asTraversal
+    traversal.some.set(5)(numbers) shouldEqual List(Some(5), None, Some(5), None)
+    numbers.applyTraversal(traversal).some.set(5) shouldEqual List(Some(5), None, Some(5), None)
+  }
 
-    traversal.some.getAll(obj) shouldEqual List(2)
-    obj.applyTraversal(traversal).some.getAll shouldEqual List(2)
+  test("withDefault") {
+    val numbers   = List(Some(1), None, Some(2), None)
+    val traversal = Traversal.fromTraverse[List, Option[Int]]
+
+    traversal.withDefault(0).modify(_ + 1)(numbers) shouldEqual List(Some(2), Some(1), Some(3), Some(1))
+
+    // TODO add applyTraversal test
   }
 
   test("each") {
-    case class SomeTest(x: Int, y: List[Int])
-    val obj = SomeTest(1, List(1, 2, 3))
+    val numbers   = List(List(1, 2, 3), Nil, List(4), Nil)
+    val traversal = Traversal.fromTraverse[List, List[Int]]
 
-    val traversal = GenLens[SomeTest](_.y).asTraversal
-
-    traversal.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyTraversal(traversal).each.getAll shouldEqual List(1, 2, 3)
+    traversal.each.getAll(numbers) shouldEqual List(1, 2, 3, 4)
+    numbers.applyTraversal(traversal).each.getAll shouldEqual List(1, 2, 3, 4)
   }
 }
