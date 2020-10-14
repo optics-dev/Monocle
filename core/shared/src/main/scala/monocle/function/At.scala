@@ -7,8 +7,7 @@ import monocle.std.option.withDefault
 import scala.annotation.implicitNotFound
 import scala.collection.immutable.{ListMap, SortedMap}
 
-/**
-  * Typeclass that defines a [[Lens]] from an `S` to an `A` at an index `I`
+/** Typeclass that defines a [[Lens]] from an `S` to an `A` at an index `I`
   * @tparam S source of [[Lens]]
   * @tparam I index
   * @tparam A target of [[Lens]], `A` is supposed to be unique for a given pair `(S, I)`
@@ -23,8 +22,7 @@ abstract class At[S, I, A] extends Serializable {
 trait AtFunctions {
   def at[S, I, A](i: I)(implicit ev: At[S, I, A]): Lens[S, A] = ev.at(i)
 
-  /**
-    * Creates a Lens that zooms into an index `i` inside `S`.
+  /** Creates a Lens that zooms into an index `i` inside `S`.
     * If `S` doesn't have any data at this index, `atOrElse` insert `defaultValue`.
     * {{{
     * val counters = Map("id1" -> 4, "id2" -> 2)

@@ -22,8 +22,7 @@ trait OptionOptics {
   final def optionToDisjunction[A]: Iso[Option[A], Either[Unit, A]] =
     pOptionToDisjunction[A, A]
 
-  /**
-    * Creates an Iso that maps `None` to `defaultValue` and inversely.
+  /** Creates an Iso that maps `None` to `defaultValue` and inversely.
     * {{{
     * val defaultTo0 = withDefault(0)
     * defaultTo0.get(None) == 0

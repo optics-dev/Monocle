@@ -6,8 +6,7 @@ import cats.arrow.Profunctor
 import cats.syntax.either._
 import monocle.function.Each
 
-/**
-  * A [[PSetter]] is a generalisation of Functor map:
+/** A [[PSetter]] is a generalisation of Functor map:
   *  - `map:    (A => B) => F[A] => F[B]`
   *  - `modify: (A => B) => S    => T`
   *

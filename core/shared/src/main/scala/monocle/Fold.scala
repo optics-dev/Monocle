@@ -8,8 +8,7 @@ import cats.syntax.either._
 import monocle.function.Each
 import monocle.internal.Monoids
 
-/**
-  * A [[Fold]] can be seen as a [[Getter]] with many targets or
+/** A [[Fold]] can be seen as a [[Getter]] with many targets or
   * a weaker [[PTraversal]] which cannot modify its target.
   *
   * [[Fold]] is on the top of the Optic hierarchy which means that
@@ -21,8 +20,7 @@ import monocle.internal.Monoids
   */
 abstract class Fold[S, A] extends Serializable { self =>
 
-  /**
-    * map each target to a Monoid and combine the results
+  /** map each target to a Monoid and combine the results
     * underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap
     */
   def foldMap[M: Monoid](f: A => M)(s: S): M

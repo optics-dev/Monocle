@@ -5,8 +5,7 @@ import cats.arrow.{Arrow, Choice}
 import cats.implicits._
 import monocle.function.Each
 
-/**
-  * A [[Getter]] can be seen as a glorified get method between
+/** A [[Getter]] can be seen as a glorified get method between
   * a type S and a type A.
   *
   * A [[Getter]] is also a valid [[Fold]]

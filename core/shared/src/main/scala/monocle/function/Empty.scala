@@ -6,8 +6,7 @@ import monocle.{Iso, Prism}
 import scala.annotation.implicitNotFound
 import scala.collection.immutable.SortedMap
 
-/**
-  * Typeclass that defines a [[Prism]] from an `S` and its empty value
+/** Typeclass that defines a [[Prism]] from an `S` and its empty value
   * @tparam S source of [[Prism]]
   */
 @implicitNotFound(

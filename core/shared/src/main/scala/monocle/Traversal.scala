@@ -9,8 +9,7 @@ import cats.syntax.either._
 import monocle.function.Each
 import monocle.internal.Monoids
 
-/**
-  * A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
+/** A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
   * where n can be infinite.
   *
   * [[PTraversal]] stands for Polymorphic Traversal as it set and modify methods change
@@ -29,8 +28,7 @@ import monocle.internal.Monoids
   */
 abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 
-  /**
-    * modify polymorphically the target of a [[PTraversal]] with an Applicative function
+  /** modify polymorphically the target of a [[PTraversal]] with an Applicative function
     * all traversal methods are written in terms of modifyF
     */
   def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T]
@@ -97,8 +95,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
         )
     }
 
-  /**
-    * [[PTraversal.modifyF]] for a `Parallel` applicative functor.
+  /** [[PTraversal.modifyF]] for a `Parallel` applicative functor.
     */
   @inline final def parModifyF[F[_]](f: A => F[B])(s: S)(implicit F: Parallel[F]): F[T] =
     F.sequential(
@@ -293,8 +290,7 @@ object Traversal {
   ): Traversal[S, A] =
     PTraversal.apply6(get1, get2, get3, get4, get5, get6)(set)
 
-  /**
-    * Composes N lenses horizontally.  Note that although it is possible to pass two or more lenses
+  /** Composes N lenses horizontally.  Note that although it is possible to pass two or more lenses
     * that point to the same `A`, in practice it considered an unsafe usage (see https://github.com/julien-truffaut/Monocle/issues/379#issuecomment-236374838).
     */
   def applyN[S, A](xs: Lens[S, A]*): Traversal[S, A] =

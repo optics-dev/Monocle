@@ -7,8 +7,7 @@ import scala.collection.immutable.ListMap
 import cats.{Applicative, Order, Traverse}
 import cats.instances.lazyList._
 
-/**
-  * Typeclass that defines a [[Traversal]] from a monomorphic container `S` to all of its elements of type `A`
+/** Typeclass that defines a [[Traversal]] from a monomorphic container `S` to all of its elements of type `A`
   * @tparam S source of [[Traversal]]
   * @tparam A target of [[Traversal]], `A` is supposed to be unique for a given `S`
   */

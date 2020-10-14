@@ -8,8 +8,7 @@ import cats.Applicative
 import cats.instances.option._
 import cats.syntax.either._
 
-/**
-  * Typeclass that defines a [[Prism]] between an `S` and its init `S` and last `S`
+/** Typeclass that defines a [[Prism]] between an `S` and its init `S` and last `S`
   * @tparam S source of [[Prism]] and init of [[Prism]] target
   * @tparam A last of [[Prism]] target, `A` is supposed to be unique for a given `S`
   */
