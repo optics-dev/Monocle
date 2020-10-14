@@ -11,6 +11,6 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion)
 addSbtPlugin("org.portable-scala" % "sbt-crossproject" % "1.0.0")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.0.0")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.2")
-addSbtPlugin("org.scalameta" % "sbt-mdoc" % "2.2.8")
+addSbtPlugin("org.scalameta" % "sbt-mdoc" % "2.2.9")
 
 scalacOptions += "-deprecation"
