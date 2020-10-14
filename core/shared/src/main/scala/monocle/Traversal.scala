@@ -317,8 +317,8 @@ sealed abstract class TraversalInstances {
 }
 
 /**
- * Extension methods for monomorphic Optional
- */
+  * Extension methods for monomorphic Traversal
+  */
 final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self composeTraversal evEach.each

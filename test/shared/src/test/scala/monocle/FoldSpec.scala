@@ -95,25 +95,25 @@ class FoldSpec extends MonocleSuite {
 
   test("some") {
     val numbers = List(Some(1), None, Some(2), None)
-    val fold = Fold.fromFoldable[List, Option[Int]]
+    val fold    = Fold.fromFoldable[List, Option[Int]]
 
-    fold.some.getAll(numbers) shouldEqual List(1,2)
-    numbers.applyFold(fold).some.getAll shouldEqual List(1,2)
+    fold.some.getAll(numbers) shouldEqual List(1, 2)
+    numbers.applyFold(fold).some.getAll shouldEqual List(1, 2)
   }
 
   test("withDefault") {
     val numbers = List(Some(1), None, Some(2), None)
-    val fold = Fold.fromFoldable[List, Option[Int]]
+    val fold    = Fold.fromFoldable[List, Option[Int]]
 
-    fold.withDefault(0).getAll(numbers) shouldEqual List(1,0,2,0)
-    numbers.applyFold(fold).withDefault(0).getAll shouldEqual List(1,0,2,0)
+    fold.withDefault(0).getAll(numbers) shouldEqual List(1, 0, 2, 0)
+    numbers.applyFold(fold).withDefault(0).getAll shouldEqual List(1, 0, 2, 0)
   }
 
   test("each") {
-    val numbers = List(List(1,2,3), Nil, List(4), Nil)
-    val fold = Fold.fromFoldable[List, List[Int]]
+    val numbers = List(List(1, 2, 3), Nil, List(4), Nil)
+    val fold    = Fold.fromFoldable[List, List[Int]]
 
-    fold.each.getAll(numbers) shouldEqual List(1, 2, 3,4)
+    fold.each.getAll(numbers) shouldEqual List(1, 2, 3, 4)
     numbers.applyFold(fold).each.getAll shouldEqual List(1, 2, 3, 4)
   }
 }

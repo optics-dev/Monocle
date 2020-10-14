@@ -155,7 +155,7 @@ class TraversalSpec extends MonocleSuite {
   }
 
   test("some") {
-    val numbers = List(Some(1), None, Some(2), None)
+    val numbers   = List(Some(1), None, Some(2), None)
     val traversal = Traversal.fromTraverse[List, Option[Int]]
 
     traversal.some.set(5)(numbers) shouldEqual List(Some(5), None, Some(5), None)
@@ -163,7 +163,7 @@ class TraversalSpec extends MonocleSuite {
   }
 
   test("withDefault") {
-    val numbers = List(Some(1), None, Some(2), None)
+    val numbers   = List(Some(1), None, Some(2), None)
     val traversal = Traversal.fromTraverse[List, Option[Int]]
 
     traversal.withDefault(0).modify(_ + 1)(numbers) shouldEqual List(Some(2), Some(1), Some(3), Some(1))
@@ -172,7 +172,7 @@ class TraversalSpec extends MonocleSuite {
   }
 
   test("each") {
-    val numbers = List(List(1,2,3), Nil, List(4), Nil)
+    val numbers   = List(List(1, 2, 3), Nil, List(4), Nil)
     val traversal = Traversal.fromTraverse[List, List[Int]]
 
     traversal.each.getAll(numbers) shouldEqual List(1, 2, 3, 4)

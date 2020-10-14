@@ -281,8 +281,8 @@ sealed abstract class LensInstances {
 }
 
 /**
- * Extension methods for monomorphic Lens
- */
+  * Extension methods for monomorphic Lens
+  */
 final case class LensSyntax[S, A](private val self: Lens[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self composeTraversal evEach.each
