@@ -2,7 +2,6 @@ package monocle
 
 import cats.Monoid
 import cats.arrow.{Category, Choice, Compose}
-import monocle.macros.GenLens
 
 class FoldSpec extends MonocleSuite {
   val eachLi: Fold[List[Int], Int]             = Fold.fromFoldable[List, Int]
@@ -95,22 +94,26 @@ class FoldSpec extends MonocleSuite {
   }
 
   test("some") {
-    case class SomeTest(x: Int, y: Option[Int])
-    val obj = SomeTest(1, Some(2))
+    val numbers = List(Some(1), None, Some(2), None)
+    val fold = Fold.fromFoldable[List, Option[Int]]
 
-    val fold = GenLens[SomeTest](_.y).asFold
+    fold.some.getAll(numbers) shouldEqual List(1,2)
+    numbers.applyFold(fold).some.getAll shouldEqual List(1,2)
+  }
 
-    fold.some.getAll(obj) shouldEqual List(2)
-    obj.applyFold(fold).some.getAll shouldEqual List(2)
+  test("withDefault") {
+    val numbers = List(Some(1), None, Some(2), None)
+    val fold = Fold.fromFoldable[List, Option[Int]]
+
+    fold.withDefault(0).getAll(numbers) shouldEqual List(1,0,2,0)
+    numbers.applyFold(fold).withDefault(0).getAll shouldEqual List(1,0,2,0)
   }
 
   test("each") {
-    case class SomeTest(x: Int, y: List[Int])
-    val obj = SomeTest(1, List(1, 2, 3))
+    val numbers = List(List(1,2,3), Nil, List(4), Nil)
+    val fold = Fold.fromFoldable[List, List[Int]]
 
-    val fold = GenLens[SomeTest](_.y).asFold
-
-    fold.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyFold(fold).each.getAll shouldEqual List(1, 2, 3)
+    fold.each.getAll(numbers) shouldEqual List(1, 2, 3,4)
+    numbers.applyFold(fold).each.getAll shouldEqual List(1, 2, 3, 4)
   }
 }

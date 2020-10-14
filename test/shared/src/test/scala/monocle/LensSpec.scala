@@ -114,6 +114,8 @@ class LensSpec extends MonocleSuite {
 
     lens.withDefault(0).get(objSome) shouldEqual 2
     lens.withDefault(0).get(objNone) shouldEqual 0
+
+    // TODO add applyLens test
   }
 
   test("each") {

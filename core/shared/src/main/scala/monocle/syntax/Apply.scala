@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import monocle._
-import cats.{Applicative, Functor, Monoid}
+import cats.{Applicative, Eq, Functor, Monoid}
 import monocle.function.Each
 
 object apply extends ApplySyntax
@@ -104,6 +104,9 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   def some[A1](implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
 
+  def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
+    adapt[Option[A1]] composeIso (std.option.withDefault(defaultValue))
+
   private def adapt[A1](implicit evA: A =:= A1): ApplyFold[S, A1] =
     evA.substituteCo[ApplyFold[S, *]](this)
 
@@ -153,6 +156,9 @@ final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]) {
 
   def some[A1](implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): ApplyGetter[S, A1] =
+    adapt[Option[A1]] composeIso (std.option.withDefault(defaultValue))
 
   private def adapt[A1](implicit evA: A =:= A1): ApplyGetter[S, A1] =
     evA.substituteCo[ApplyGetter[S, *]](this)

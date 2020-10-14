@@ -105,21 +105,10 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   @inline final def right[C]: PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](_.map(get))(_.map(reverseGet))
 
-  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Traversal[S, C] =
-    mono composeTraversal evEach.each
-
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
 
-  def withDefault[A1: Eq](
-    defaultValue: A1
-  )(implicit evTS: T =:= S, evBA: B =:= A, evOpt: A =:= Option[A1]): Iso[S, A1] =
-    mono.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
-
-  def mono(implicit evTS: T =:= S, evBA: B =:= A): Iso[S, A] =
-    evTS.substituteCo[PIso[S, *, A, A]](evBA.substituteCo[PIso[S, T, A, *]](this))
-
-  private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PIso[S, T, A1, B1] =
+  private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PIso[S, T, A1, B1] =
     evB.substituteCo[PIso[S, T, A1, *]](evA.substituteCo[PIso[S, T, *, B]](this))
 
   /** *******************************************************
@@ -354,6 +343,9 @@ object PIso extends IsoInstances {
           def reverse: PIso[S, T, S, T] = self
         }
     }
+
+  implicit def isoSyntax[S, A](self: Iso[S, A]): IsoSyntax[S, A] =
+    new IsoSyntax(self)
 }
 
 object Iso {
@@ -379,4 +371,15 @@ sealed abstract class IsoInstances {
     def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
       g composeIso f
   }
+}
+
+/**
+ * Extension methods for monomorphic Iso
+ */
+final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
+  def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
+    self composeTraversal evEach.each
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Iso[S, A1] =
+    self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 }
