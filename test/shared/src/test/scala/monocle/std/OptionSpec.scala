@@ -1,7 +1,7 @@
 package monocle.std
 
 import cats.Eq
-import monocle.MonocleSuite
+import monocle.{Lens, MonocleSuite}
 import monocle.law.discipline.{IsoTests, PrismTests}
 import monocle.law.discipline.function.{EachTests, EmptyTests, PossibleTests}
 import org.scalacheck.{Arbitrary, Cogen}
@@ -26,4 +26,14 @@ class OptionSpec extends MonocleSuite {
   }
 
   checkAll("withDefault Int 0", IsoTests(withDefault(IntNoZero(0))))
+
+  test("withDefault can break get-set property") {
+    def mapAt(index: String): Lens[Map[String, Int], Option[Int]] =
+      at(index)
+
+    def mapDefaultTo0(index: String): Lens[Map[String, Int], Int] =
+      mapAt(index) composeIso withDefault(0)
+
+    assert(mapDefaultTo0("id").set(0)(Map("id" -> 0)) == Map.empty)
+  }
 }

@@ -187,6 +187,19 @@ class PrismSpec extends MonocleSuite {
     obj.applyPrism(prism).some.getOption shouldEqual Some(2)
   }
 
+  test("withDefault") {
+    case class SomeTest(y: Option[Int])
+    val objSome = SomeTest(Some(2))
+    val objNone = SomeTest(None)
+
+    val prism = Iso[SomeTest, Option[Int]](_.y)(SomeTest).asPrism
+
+    prism.withDefault(0).getOption(objSome) shouldEqual Some(2)
+    prism.withDefault(0).getOption(objNone) shouldEqual Some(0)
+
+    // TODO add applyPrism test
+  }
+
   test("each") {
     case class SomeTest(y: List[Int])
     val obj = SomeTest(List(1, 2, 3))

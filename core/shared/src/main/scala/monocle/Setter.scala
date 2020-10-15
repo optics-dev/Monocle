@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Contravariant, Functor}
+import cats.{Contravariant, Eq, Functor}
 import cats.arrow.Choice
 import cats.arrow.Profunctor
 import cats.syntax.either._
@@ -38,16 +38,10 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
     PSetter[Either[S, S1], Either[T, T1], A, B](b => _.bimap(self.modify(b), other.modify(b)))
 
-  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Setter[S, C] =
-    mono composeTraversal evEach.each
-
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PSetter[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
 
-  def mono(implicit evTS: T =:= S, evBA: B =:= A): Setter[S, A] =
-    evTS.substituteCo[PSetter[S, *, A, A]](evBA.substituteCo[PSetter[S, T, A, *]](this))
-
-  private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PSetter[S, T, A1, B1] =
+  private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PSetter[S, T, A1, B1] =
     evB.substituteCo[PSetter[S, T, A1, *]](evA.substituteCo[PSetter[S, T, *, B]](this))
 
   /** **********************************************************
@@ -139,6 +133,9 @@ object PSetter extends SetterInstances {
   /** create a [[PSetter]] from a Profunctor */
   def fromProfunctor[P[_, _], A, B, C](implicit P: Profunctor[P]): PSetter[P[B, C], P[A, C], A, B] =
     PSetter[P[B, C], P[A, C], A, B](f => P.lmap(_)(f))
+
+  implicit def setterSyntax[S, A](self: Setter[S, A]): SetterSyntax[S, A] =
+    new SetterSyntax(self)
 }
 
 object Setter {
@@ -168,4 +165,15 @@ sealed abstract class SetterInstances {
     def choice[A, B, C](f1: Setter[A, C], f2: Setter[B, C]): Setter[Either[A, B], C] =
       f1 choice f2
   }
+}
+
+/**
+  * Extension methods for monomorphic Setter
+  */
+final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyVal {
+  def each[C](implicit evEach: Each[A, C]): Setter[S, C] =
+    self composeTraversal evEach.each
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Setter[S, A1] =
+    self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 }

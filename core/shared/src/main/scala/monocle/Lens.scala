@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Functor, Monoid}
+import cats.{Applicative, Eq, Functor, Monoid}
 import cats.arrow.Choice
 import cats.syntax.either._
 import monocle.function.Each
@@ -86,16 +86,10 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  def each[C](implicit evTS: T =:= S, evBA: B =:= A, evEach: Each[A, C]): Traversal[S, C] =
-    mono composeTraversal evEach.each
-
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
 
-  def mono(implicit evTS: T =:= S, evBA: B =:= A): Lens[S, A] =
-    evTS.substituteCo[PLens[S, *, A, A]](evBA.substituteCo[PLens[S, T, A, *]](this))
-
-  private def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PLens[S, T, A1, B1] =
+  private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PLens[S, T, A1, B1] =
     evB.substituteCo[PLens[S, T, A1, *]](evA.substituteCo[PLens[S, T, *, B]](this))
 
   /** ********************************************************
@@ -254,6 +248,9 @@ object PLens extends LensInstances {
       def modify(f: A => B): S => T =
         s => _set(f(_get(s)))(s)
     }
+
+  implicit def lensSyntax[S, A](self: Lens[S, A]): LensSyntax[S, A] =
+    new LensSyntax(self)
 }
 
 object Lens {
@@ -279,4 +276,15 @@ sealed abstract class LensInstances {
     def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
       g composeLens f
   }
+}
+
+/**
+  * Extension methods for monomorphic Lens
+  */
+final case class LensSyntax[S, A](private val self: Lens[S, A]) extends AnyVal {
+  def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
+    self composeTraversal evEach.each
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Lens[S, A1] =
+    self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 }

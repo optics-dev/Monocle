@@ -1,8 +1,6 @@
 package monocle.function
 
-import cats.Eq
 import monocle.{Iso, Lens}
-import monocle.std.option.withDefault
 
 import scala.annotation.implicitNotFound
 import scala.collection.immutable.{ListMap, SortedMap}
@@ -21,35 +19,6 @@ abstract class At[S, I, A] extends Serializable {
 
 trait AtFunctions {
   def at[S, I, A](i: I)(implicit ev: At[S, I, A]): Lens[S, A] = ev.at(i)
-
-  /** Creates a Lens that zooms into an index `i` inside `S`.
-    * If `S` doesn't have any data at this index, `atOrElse` insert `defaultValue`.
-    * {{{
-    * val counters = Map("id1" -> 4, "id2" -> 2)
-    * def mapDefaultTo0(index: String): Lens[Map[String, Int], Int] =
-    *   atOrElse(index)(0)
-    *
-    * mapDefaultTo0("id1").get(counters) == 4
-    * mapDefaultTo0("id3").get(counters) == 0
-    *
-    * mapDefaultTo0("id1").modify(_ + 1)(counters) == Map("id1" -> 5, "id2" -> 2)
-    * mapDefaultTo0("id3").modify(_ + 1)(counters) == Map("id1" -> 4, "id2" -> 2, "id3" -> 1)
-    * }}}
-    *
-    * `atOrElse`` is a valid Lens only if `defaultValue` is not part of `S`.
-    * For example, `Map("id" -> 0)` breaks the get-set property of Lens:
-    * {{{
-    * val counters = Map("id" -> 0)
-    * val fromGet  = mapDefaultTo0("id").get(counters)          // 0
-    * val afterSet = mapDefaultTo0("id").set(fromGet)(counters) // Map()
-    *
-    * counters != afterSet
-    * }}}
-    *
-    * @see monocle.std.option.withDefault
-    */
-  def atOrElse[S, I, A: Eq](i: I)(defaultValue: A)(implicit ev: At[S, I, Option[A]]): Lens[S, A] =
-    ev.at(i) composeIso withDefault(defaultValue)
 
   /** delete a value associated with a key in a Map-like container */
   def remove[S, I, A](i: I)(s: S)(implicit ev: At[S, I, Option[A]]): S =

@@ -177,6 +177,19 @@ class IsoSpec extends MonocleSuite {
     obj.applyIso(iso).some.getOption shouldEqual Some(2)
   }
 
+  test("withDefault") {
+    case class SomeTest(y: Option[Int])
+    val objSome = SomeTest(Some(2))
+    val objNone = SomeTest(None)
+
+    val iso = Iso[SomeTest, Option[Int]](_.y)(SomeTest)
+
+    iso.withDefault(0).get(objSome) shouldEqual 2
+    iso.withDefault(0).get(objNone) shouldEqual 0
+
+    // TODO add applyIso test
+  }
+
   test("each") {
     case class SomeTest(y: List[Int])
     val obj = SomeTest(List(1, 2, 3))

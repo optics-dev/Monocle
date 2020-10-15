@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Foldable, Monoid}
+import cats.{Eq, Foldable, Monoid}
 import cats.arrow.Choice
 import cats.instances.int._
 import cats.instances.list._
@@ -89,6 +89,9 @@ abstract class Fold[S, A] extends Serializable { self =>
 
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): Fold[S, A1] =
+    adapt[Option[A1]] composeIso (std.option.withDefault(defaultValue))
 
   private def adapt[A1](implicit evA: A =:= A1): Fold[S, A1] =
     evA.substituteCo[Fold[S, *]](this)
