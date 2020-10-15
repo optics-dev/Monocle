@@ -2,16 +2,14 @@ package monocle.macros
 
 import scala.reflect.macros.blackbox
 
-/**
-  * Note: before using `@Lenses` remember to activate macro annotations.
+/** Note: before using `@Lenses` remember to activate macro annotations.
   * See "Getting started" section in the library documentation.
   */
 class Lenses(prefix: String = "") extends scala.annotation.StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro LensesImpl.lensesAnnotationMacro
 }
 
-/**
-  * Note: before using `@PLenses` remember to activate macro annotations.
+/** Note: before using `@PLenses` remember to activate macro annotations.
   * See "Getting started" section in the library documentation.
   */
 class PLenses(prefix: String = "") extends scala.annotation.StaticAnnotation {

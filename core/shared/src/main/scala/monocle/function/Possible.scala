@@ -5,8 +5,7 @@ import monocle.{Iso, Optional}
 import scala.util.Try
 import cats.data.Validated
 
-/**
-  * Typeclass that defines an [[Optional]] from a monomorphic container `S` to a possible value `A`.
+/** Typeclass that defines an [[Optional]] from a monomorphic container `S` to a possible value `A`.
   * There must be at most one `A` in `S`.
   * @tparam S source of the [[Optional]]
   * @tparam A target of the [[Optional]], `A` is supposed to be unique for a given `S`

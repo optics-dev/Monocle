@@ -2,8 +2,7 @@ package monocle.generic.internal
 
 import shapeless._
 
-/**
-  * Typeclass converting an `Either` to a `Coproduct`.
+/** Typeclass converting an `Either` to a `Coproduct`.
   *
   * Based on `shapeless.ops.coproduct.EitherToCoproduct`:
   * https://github.com/milessabin/shapeless/blob/shapeless-2.3.3-scala-2.13.0-M4/core/src/main/scala/shapeless/ops/coproduct.scala#L1305-L1335

@@ -5,8 +5,7 @@ import cats.arrow.Choice
 import cats.syntax.either._
 import monocle.function.Each
 
-/**
-  * A [[PLens]] can be seen as a pair of functions:
+/** A [[PLens]] can be seen as a pair of functions:
   *  - `get: S      => A` i.e. from an `S`, we can extract an `A`
   *  - `set: (B, S) => T` i.e. if we replace an `A` by a `B` in an `S`, we obtain a `T`
   *
@@ -232,8 +231,7 @@ object PLens extends LensInstances {
       _.fold(identity, identity)
     )(t => _.bimap(_ => t, _ => t))
 
-  /**
-    * create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
+  /** create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
     * @see macro module for methods generating [[PLens]] with less boiler plate
     */
   def apply[S, T, A, B](_get: S => A)(_set: B => S => T): PLens[S, T, A, B] =
@@ -280,8 +278,7 @@ sealed abstract class LensInstances {
   }
 }
 
-/**
-  * Extension methods for monomorphic Lens
+/** Extension methods for monomorphic Lens
   */
 final case class LensSyntax[S, A](private val self: Lens[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =

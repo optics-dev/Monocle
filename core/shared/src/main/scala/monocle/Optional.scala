@@ -5,8 +5,7 @@ import cats.arrow.Choice
 import cats.syntax.either._
 import monocle.function.Each
 
-/**
-  * A [[POptional]] can be seen as a pair of functions:
+/** A [[POptional]] can be seen as a pair of functions:
   *  - `getOrModify: S      => Either[T, A]`
   *  - `set        : (B, S) => T`
   *
@@ -44,15 +43,13 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   /** modify polymorphically the target of a [[POptional]] with a function */
   def modify(f: A => B): S => T
 
-  /**
-    * modify polymorphically the target of a [[POptional]] with a function.
+  /** modify polymorphically the target of a [[POptional]] with a function.
     * return empty if the [[POptional]] is not matching
     */
   @inline final def modifyOption(f: A => B): S => Option[T] =
     s => getOption(s).map(a => set(f(a))(s))
 
-  /**
-    * set polymorphically the target of a [[POptional]] with a value.
+  /** set polymorphically the target of a [[POptional]] with a value.
     * return empty if the [[POptional]] is not matching
     */
   @inline final def setOption(b: B): S => Option[T] =
@@ -299,8 +296,7 @@ sealed abstract class OptionalInstances {
   }
 }
 
-/**
-  * Extension methods for monomorphic Optional
+/** Extension methods for monomorphic Optional
   */
 final case class OptionalSyntax[S, A](private val self: Optional[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =

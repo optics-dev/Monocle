@@ -7,8 +7,7 @@ import cats.instances.option._
 import cats.syntax.either._
 import monocle.function.Each
 
-/**
-  * A [[PPrism]] can be seen as a pair of functions:
+/** A [[PPrism]] can be seen as a pair of functions:
   *  - `getOrModify: S => Either[T, A]`
   *  - `reverseGet : B => T`
   *
@@ -55,8 +54,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   @inline final def modify(f: A => B): S => T =
     getOrModify(_).fold(identity, a => reverseGet(f(a)))
 
-  /**
-    * modify polymorphically the target of a [[PPrism]] with a function.
+  /** modify polymorphically the target of a [[PPrism]] with a function.
     * return empty if the [[PPrism]] is not matching
     */
   @inline final def modifyOption(f: A => B): S => Option[T] =
@@ -66,8 +64,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   @inline final def set(b: B): S => T =
     modify(_ => b)
 
-  /**
-    * set polymorphically the target of a [[PPrism]] with a value.
+  /** set polymorphically the target of a [[PPrism]] with a value.
     * return empty if the [[PPrism]] is not matching
     */
   @inline final def setOption(b: B): S => Option[T] =

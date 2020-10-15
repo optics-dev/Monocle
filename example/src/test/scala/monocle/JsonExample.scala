@@ -4,8 +4,7 @@ import alleycats.std.all._
 import monocle.function.Plated
 import monocle.unsafe.MapTraversal._
 
-/**
-  * Show how could we use Optics to manipulate some Json AST
+/** Show how could we use Optics to manipulate some Json AST
   */
 class JsonExample extends MonocleSuite {
   sealed trait Json

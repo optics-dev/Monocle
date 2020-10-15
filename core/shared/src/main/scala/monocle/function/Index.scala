@@ -6,8 +6,7 @@ import scala.annotation.{implicitNotFound, tailrec}
 import scala.collection.immutable.{ListMap, SortedMap}
 import scala.util.Try
 
-/**
-  * Typeclass that defines an [[Optional]] from an `S` to an `A` at an index `I`
+/** Typeclass that defines an [[Optional]] from an `S` to an `A` at an index `I`
   * [[Index]] is less powerful than [[At]] as it cannot create or delete value
   * @tparam S source of [[Optional]]
   * @tparam I index

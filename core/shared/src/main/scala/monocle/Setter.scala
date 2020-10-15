@@ -6,8 +6,7 @@ import cats.arrow.Profunctor
 import cats.syntax.either._
 import monocle.function.Each
 
-/**
-  * A [[PSetter]] is a generalisation of Functor map:
+/** A [[PSetter]] is a generalisation of Functor map:
   *  - `map:    (A => B) => F[A] => F[B]`
   *  - `modify: (A => B) => S    => T`
   *
@@ -168,8 +167,7 @@ sealed abstract class SetterInstances {
   }
 }
 
-/**
-  * Extension methods for monomorphic Setter
+/** Extension methods for monomorphic Setter
   */
 final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Setter[S, C] =

@@ -4,8 +4,7 @@ import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
 
-/**
-  * Typeclass that defines a [[Lens]] from an `S` to its first element of type `A`
+/** Typeclass that defines a [[Lens]] from an `S` to its first element of type `A`
   * @tparam S source of [[Lens]]
   * @tparam A target of [[Lens]], `A` is supposed to be unique for a given `S`
   */

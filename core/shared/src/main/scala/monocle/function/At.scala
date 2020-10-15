@@ -5,8 +5,7 @@ import monocle.{Iso, Lens}
 import scala.annotation.implicitNotFound
 import scala.collection.immutable.{ListMap, SortedMap}
 
-/**
-  * Typeclass that defines a [[Lens]] from an `S` to an `A` at an index `I`
+/** Typeclass that defines a [[Lens]] from an `S` to an `A` at an index `I`
   * @tparam S source of [[Lens]]
   * @tparam I index
   * @tparam A target of [[Lens]], `A` is supposed to be unique for a given pair `(S, I)`

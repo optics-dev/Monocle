@@ -5,8 +5,7 @@ import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
 
-/**
-  * Typeclass that defines a [[Prism]] between an `S` and its head `A` and tail `S`
+/** Typeclass that defines a [[Prism]] between an `S` and its head `A` and tail `S`
   * @tparam S source of [[Prism]] and tail of [[Prism]] target
   * @tparam A head of [[Prism]] target, `A` is supposed to be unique for a given `S`
   */

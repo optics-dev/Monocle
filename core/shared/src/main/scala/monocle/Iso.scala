@@ -6,8 +6,7 @@ import cats.evidence.{<~<, Is}
 import cats.syntax.either._
 import monocle.function.Each
 
-/**
-  * [[Iso]] is a type alias for [[PIso]] where `S` = `A` and `T` = `B`:
+/** [[Iso]] is a type alias for [[PIso]] where `S` = `A` and `T` = `B`:
   * {{{
   * type Iso[S, A] = PIso[S, S, A, A]
   * }}}
@@ -326,8 +325,7 @@ object PIso extends IsoInstances {
         }
     }
 
-  /**
-    * create a [[PIso]] between any type and itself. id is the zero element of optics composition,
+  /** create a [[PIso]] between any type and itself. id is the zero element of optics composition,
     * for all optics o of type O (e.g. Lens, Iso, Prism, ...):
     * o      composeIso Iso.id == o
     * Iso.id composeO   o        == o (replace composeO by composeLens, composeIso, composePrism, ...)
@@ -373,8 +371,7 @@ sealed abstract class IsoInstances {
   }
 }
 
-/**
-  * Extension methods for monomorphic Iso
+/** Extension methods for monomorphic Iso
   */
 final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =

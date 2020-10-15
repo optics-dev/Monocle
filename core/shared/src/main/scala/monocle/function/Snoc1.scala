@@ -5,8 +5,7 @@ import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
 
-/**
-  * Typeclass that defines an [[Iso]] between an `S` and its init `H` and last `T`
+/** Typeclass that defines an [[Iso]] between an `S` and its init `H` and last `T`
   * [[Snoc1]] is like [[Snoc]] but for types that have *always* an init and a last element, e.g. a non empty list
   * @tparam S source of [[Iso]]
   * @tparam I init of [[Iso]] target, `I` is supposed to be unique for a given `S`
