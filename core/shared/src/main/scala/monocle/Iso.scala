@@ -371,8 +371,7 @@ sealed abstract class IsoInstances {
   }
 }
 
-/**
-  * Extension methods for monomorphic Iso
+/** Extension methods for monomorphic Iso
   */
 final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =

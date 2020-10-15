@@ -167,8 +167,7 @@ sealed abstract class SetterInstances {
   }
 }
 
-/**
-  * Extension methods for monomorphic Setter
+/** Extension methods for monomorphic Setter
   */
 final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Setter[S, C] =

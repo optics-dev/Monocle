@@ -296,8 +296,7 @@ sealed abstract class OptionalInstances {
   }
 }
 
-/**
-  * Extension methods for monomorphic Optional
+/** Extension methods for monomorphic Optional
   */
 final case class OptionalSyntax[S, A](private val self: Optional[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
