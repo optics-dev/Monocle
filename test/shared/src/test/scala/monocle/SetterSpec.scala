@@ -59,10 +59,10 @@ class SetterSpec extends MonocleSuite {
 
     val setter = GenLens[SomeTest](_.y).asSetter
 
-    setter.withDefault(0).set(3)(objSome) shouldEqual SomeTest(1, Some(3))
-    setter.withDefault(0).set(3)(objNone) shouldEqual SomeTest(1, Some(3))
+    setter.withDefault(0).modify(_ + 1)(objSome) shouldEqual SomeTest(1, Some(3))
+    setter.withDefault(0).modify(_ + 1)(objNone) shouldEqual SomeTest(1, Some(1))
 
-    // TODO add applySetter test
+    objNone.applySetter(setter).withDefault(0).modify(_ + 1) shouldEqual SomeTest(1, Some(1))
   }
 
   test("each") {

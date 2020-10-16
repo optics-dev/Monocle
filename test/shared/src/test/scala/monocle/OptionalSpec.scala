@@ -123,7 +123,7 @@ class OptionalSpec extends MonocleSuite {
     optional.withDefault(0).getOption(objSome) shouldEqual Some(2)
     optional.withDefault(0).getOption(objNone) shouldEqual Some(0)
 
-    // TODO add applyOptional test
+    objNone.applyOptional(optional).withDefault(0).getOption shouldEqual Some(0)
   }
 
   test("each") {
