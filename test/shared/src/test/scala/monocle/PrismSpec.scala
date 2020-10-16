@@ -197,7 +197,7 @@ class PrismSpec extends MonocleSuite {
     prism.withDefault(0).getOption(objSome) shouldEqual Some(2)
     prism.withDefault(0).getOption(objNone) shouldEqual Some(0)
 
-    // TODO add applyPrism test
+    objNone.applyPrism(prism).withDefault(0).getOption shouldEqual Some(0)
   }
 
   test("each") {
