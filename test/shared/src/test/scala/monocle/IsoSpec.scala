@@ -187,7 +187,7 @@ class IsoSpec extends MonocleSuite {
     iso.withDefault(0).get(objSome) shouldEqual 2
     iso.withDefault(0).get(objNone) shouldEqual 0
 
-    // TODO add applyIso test
+    objNone.applyIso(iso).withDefault(0).get shouldEqual 0
   }
 
   test("each") {

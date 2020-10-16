@@ -167,8 +167,7 @@ class TraversalSpec extends MonocleSuite {
     val traversal = Traversal.fromTraverse[List, Option[Int]]
 
     traversal.withDefault(0).modify(_ + 1)(numbers) shouldEqual List(Some(2), Some(1), Some(3), Some(1))
-
-    // TODO add applyTraversal test
+    numbers.applyTraversal(traversal).withDefault(0).modify(_ + 1) shouldEqual List(Some(2), Some(1), Some(3), Some(1))
   }
 
   test("each") {
