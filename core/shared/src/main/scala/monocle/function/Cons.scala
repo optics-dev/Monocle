@@ -70,8 +70,9 @@ object Cons extends ConsFunctions {
   implicit def vectorCons[A]: Cons[Vector[A], A] =
     Cons(
       Prism[Vector[A], (A, Vector[A])] {
-        case Vector() => None
-        case x +: xs  => Some((x, xs))
+        case x if x.isEmpty => None
+        case x +: xs        => Some((x, xs))
+        case _              => None
       } { case (a, s) => a +: s }
     )
 

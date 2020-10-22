@@ -23,22 +23,22 @@ private[monocle] object Bounded extends BoundedInstances {
 }
 
 private[monocle] trait BoundedInstances {
-  implicit val booleanBounded = new Bounded[Boolean] {
+  implicit val booleanBounded: Bounded[Boolean] = new Bounded[Boolean] {
     val MaxValue: Boolean = true
     val MinValue: Boolean = false
   }
 
-  implicit val byteBounded = new Bounded[Byte] {
+  implicit val byteBounded: Bounded[Byte] = new Bounded[Byte] {
     val MaxValue: Byte = Byte.MaxValue
     val MinValue: Byte = Byte.MinValue
   }
 
-  implicit val charBounded = new Bounded[Char] {
+  implicit val charBounded: Bounded[Char] = new Bounded[Char] {
     val MaxValue: Char = Char.MaxValue
     val MinValue: Char = Char.MinValue
   }
 
-  implicit val intBounded = new Bounded[Int] {
+  implicit val intBounded: Bounded[Int] = new Bounded[Int] {
     val MaxValue: Int = Int.MaxValue
     val MinValue: Int = Int.MinValue
   }

@@ -95,7 +95,7 @@ object Snoc1 extends Snoc1Functions {
   implicit def necSnoc1[A]: Snoc1[NonEmptyChain[A], Chain[A], A] =
     new Snoc1[NonEmptyChain[A], Chain[A], A] {
       val snoc1: Iso[NonEmptyChain[A], (Chain[A], A)] =
-        Iso { nec: NonEmptyChain[A] =>
+        Iso { (nec: NonEmptyChain[A]) =>
           Snoc.chainSnoc.snoc.getOption(nec.toChain) match {
             case Some(tuple) => tuple
             case None        => (nec.tail, nec.head)

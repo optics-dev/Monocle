@@ -2,7 +2,7 @@ package monocle.syntax
 
 import cats.{Eq, Functor}
 import monocle.function.Each
-import monocle.{std, Fold, Getter, Iso, PIso, PLens, POptional, PPrism, PSetter, PTraversal, Traversal}
+import monocle.{std, Fold, Getter, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
   @inline def get: A                                     = iso.get(s)

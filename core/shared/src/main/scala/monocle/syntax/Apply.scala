@@ -1,8 +1,6 @@
 package monocle.syntax
 
 import monocle._
-import cats.{Applicative, Eq, Functor, Monoid}
-import monocle.function.Each
 
 object apply extends ApplySyntax
 
