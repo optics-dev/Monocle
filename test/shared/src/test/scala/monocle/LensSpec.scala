@@ -2,6 +2,7 @@ package monocle
 
 import monocle.law.discipline.{LensTests, OptionalTests, SetterTests, TraversalTests}
 import monocle.macros.{GenLens, Lenses}
+import monocle.macros.syntax.lens._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 
@@ -47,6 +48,8 @@ class LensSpec extends MonocleSuite {
   checkAll("GenLens", LensTests(GenLens[Example](_.s)))
   checkAll("GenLens chain", LensTests(GenLens[Example](_.p.x)))
   checkAll("Lenses", LensTests(Example.s))
+
+  checkAll("lens extension method", LensTests(p.lens(_.x)))
 
   checkAll("lens.asOptional", OptionalTests(s.asOptional))
   checkAll("lens.asTraversal", TraversalTests(s.asTraversal))

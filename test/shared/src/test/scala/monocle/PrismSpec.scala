@@ -2,6 +2,7 @@ package monocle
 
 import monocle.law.discipline.{OptionalTests, PrismTests, SetterTests, TraversalTests}
 import monocle.macros.{GenIso, GenPrism}
+import monocle.macros.syntax.all._
 import cats.arrow.{Category, Compose}
 import cats.syntax.either._
 
@@ -36,6 +37,8 @@ class PrismSpec extends MonocleSuite {
 
   checkAll("apply Prism", PrismTests(_right[String, Int]))
   checkAll("apply partial Prism", PrismTests(_pright[String, Int]))
+
+  checkAll("lens extension method", OptionalTests(_right[String, (Int, String)].lens(_._1)))
 
   checkAll("prism.asTraversal", OptionalTests(_right[String, Int].asOptional))
   checkAll("prism.asTraversal", TraversalTests(_right[String, Int].asTraversal))
