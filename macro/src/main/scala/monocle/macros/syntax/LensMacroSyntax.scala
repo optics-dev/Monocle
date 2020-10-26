@@ -11,7 +11,7 @@ trait LensMacroSyntax {
 
 class LensMacroOps[S, A](private val value: Lens[S, A]) extends AnyVal {
   def lens[C](field: A => C): Lens[S, C] =
-     macro GenLensLensOpsImpl.lens_impl[S, A, C]
+    macro GenLensLensOpsImpl.lens_impl[S, A, C]
 }
 
 class GenLensLensOpsImpl(val c: blackbox.Context) {

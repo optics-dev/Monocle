@@ -11,7 +11,7 @@ trait PrismMacroSyntax {
 
 class PrismMacroOps[S, A](private val value: Prism[S, A]) extends AnyVal {
   def lens[C](field: A => C): Optional[S, C] =
-  macro GenLensPrismOpsImpl.lens_impl[S, A, C]
+    macro GenLensPrismOpsImpl.lens_impl[S, A, C]
 }
 
 class GenLensPrismOpsImpl(val c: blackbox.Context) {
