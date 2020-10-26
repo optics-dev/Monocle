@@ -263,6 +263,31 @@ object Optional {
   def void[S, A]: Optional[S, A] =
     Optional[S, A](_ => None)(_ => identity)
 
+  /**
+    * Selects elements that matches a predicate function.
+    *
+    * {{{
+    *   val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional filter[Int](_ >= 0)
+    *
+    *   positiveNumbers.getAll(List(1,2,-3,4,-5)) == List(1,2,4)
+    *   positiveNumbers.modify(_ * 10)(List(1,2,-3,4,-5)) == List(10,20,-3,40,-5)
+    * }}}
+    *
+    * `filter` can break the fusion property, if `set` or `modify` do not preserve the predicate.
+    * For example, here the first `modify` (`x - 3`) transform the positive number 1 into the
+    * negative number -2.
+    * {{{
+    *   val list = List(1,4,-3)
+    *   positiveNumbers.modify(_ * 2)(positiveNumbers.modify(_ - 3)(list)) == List(-2,2,-3)
+    *   positiveNumbers.modify(x => (x - 3) * 2)(list)                     == List(-4,2,-3)
+    * }}}
+    *
+    * @see This method is called `filtered` in Haskell Lens.
+    */
+  def filter[A](predicate: A => Boolean): Optional[A, A] =
+    Optional[A, A](value => if(predicate(value)) Some(value) else None)(
+      current => newValue => if(predicate(current)) newValue else current)
+
   /** alias for [[POptional]] apply restricted to monomorphic update */
   def apply[S, A](_getOption: S => Option[A])(_set: A => S => S): Optional[S, A] =
     new Optional[S, A] {

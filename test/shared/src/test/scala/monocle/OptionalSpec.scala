@@ -135,4 +135,18 @@ class OptionalSpec extends MonocleSuite {
     optional.each.getAll(obj) shouldEqual List(1, 2, 3)
     obj.applyOptional(optional).each.getAll shouldEqual List(1, 2, 3)
   }
+
+  test("filter") {
+    val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional Optional.filter[Int](_ >= 0)
+
+    positiveNumbers.getAll(List(1,2,-3,4,-5)) == List(1,2,4)
+    positiveNumbers.modify(_ * 10)(List(1,2,-3,4,-5)) == List(10,20,-3,40,-5)
+  }
+
+  test("filter can break the fusion property"){
+    val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional Optional.filter[Int](_ >= 0)
+    val list = List(1,5,-3)
+    positiveNumbers.modify(_ * 2)(positiveNumbers.modify(_ - 3)(list)) shouldEqual List(-2,4,-3)
+    positiveNumbers.modify(x => (x - 3) * 2)(list)                     shouldEqual List(-4,4,-3)
+  }
 }

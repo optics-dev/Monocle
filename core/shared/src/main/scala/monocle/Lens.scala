@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Eq, Functor, Monoid}
+import cats.{Applicative, Eq, Functor, Monoid, Traverse}
 import cats.arrow.Choice
 import cats.syntax.either._
 import monocle.function.Each
@@ -283,6 +283,9 @@ sealed abstract class LensInstances {
 final case class LensSyntax[S, A](private val self: Lens[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self composeTraversal evEach.each
+
+  def filter(predicate: A => Boolean): Optional[S, A] =
+   self composeOptional Optional.filter(predicate)
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Lens[S, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
