@@ -47,9 +47,6 @@ lazy val buildSettings = Seq(
     "-encoding",
     "UTF-8",
     "-feature",
-    "-language:implicitConversions",
-    "-language:higherKinds",
-    "-language:postfixOps",
     "-unchecked",
     "-Xfatal-warnings",
     "-deprecation"
@@ -57,8 +54,8 @@ lazy val buildSettings = Seq(
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions ++= {
     if (isDotty.value)
-      Seq("-source:3.0-migration", "-Ykind-projector", "-language:implicitConversions")
-    else Seq("-Ymacro-annotations", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused:imports")
+      Seq("-source:3.0-migration", "-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
+    else Seq("-Ymacro-annotations", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused:imports", "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps")
   },
   libraryDependencies ++= {
     if (isDotty.value) Seq.empty
@@ -73,6 +70,7 @@ lazy val buildSettings = Seq(
 )
 
 lazy val catsVersion = "2.2.0"
+lazy val dottyVersion = "0.27.0-RC1"
 
 lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"                % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
@@ -144,7 +142,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
   .jvmSettings(mimaSettings("core"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, catsFree.value).map(_.withDottyCompat(scalaVersion.value)))
   .settings(
-    crossScalaVersions += "0.27.0-RC1",
+    crossScalaVersions += dottyVersion,
     moduleName := "monocle-core",
     scalacOptions ~= (_.filterNot(
       Set(
@@ -177,12 +175,15 @@ lazy val refined = crossProject(JVMPlatform, JSPlatform)
 lazy val law = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core)
-  .settings(moduleName := "monocle-law")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .settings(libraryDependencies ++= Seq(discipline.value))
+  .settings(
+    moduleName := "monocle-law",
+    crossScalaVersions += dottyVersion
+  )
+  .settings(libraryDependencies ++= Seq(discipline.value).map(_.withDottyCompat(scalaVersion.value)))
 
 lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -205,23 +206,29 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
 lazy val state = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core)
-  .settings(moduleName := "monocle-state")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .settings(libraryDependencies ++= Seq(cats.value))
+  .settings(
+    moduleName := "monocle-state",
+    crossScalaVersions += dottyVersion
+  )
+  .settings(libraryDependencies ++= Seq(cats.value).map(_.withDottyCompat(scalaVersion.value)))
 
 lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core)
-  .settings(moduleName := "monocle-unsafe")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
+  .settings(
+    moduleName := "monocle-unsafe",
+    crossScalaVersions += dottyVersion
+  )
   .jvmSettings(mimaSettings("unsafe"): _*)
-  .settings(libraryDependencies ++= Seq(cats.value, alleycats.value, shapeless.value))
+  .settings(libraryDependencies ++= Seq(cats.value, alleycats.value, shapeless.value).map(_.withDottyCompat(scalaVersion.value)))
 
 lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, macros, law, state, refined, unsafe)
   .settings(moduleName := "monocle-test")
@@ -260,6 +267,7 @@ lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
   .settings(buildInfoSettings)
   .settings(scalacOptions ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
   .settings(
+    skip in doc := isDotty.value,
     libraryDependencies ++= Seq(cats.value, shapeless.value),
   )
 

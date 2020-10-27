@@ -32,7 +32,7 @@ final class StateTraversalOps[S, T, A, B](private val traversal: PTraversal[S, T
   def mod[F](f: A => B): IndexedState[S, T, List[B]] =
     IndexedState[S, T, List[B]] { s =>
       val as = traversal.getAll(s)
-      traversal.modifyF(f: A => Id[B])(s).tupleRight(as.map(f))
+      (traversal.modifyF(f: A => Id[B])(s), as.map(f))
     }
 
   def modF[F[_]: Applicative](f: A => F[B]): IndexedStateT[F, S, T, List[B]] =
