@@ -31,7 +31,7 @@ object Reverse extends ReverseFunctions {
 
   def fromReverseFunction[S](_reverse: S => S): Reverse[S, S] =
     Reverse(
-      Iso(_reverse)(_reverse)
+      Iso.involuted(_reverse)
     )
 
   /** *********************************************************************************************
