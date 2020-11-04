@@ -66,11 +66,12 @@ lazy val buildSettings = Seq(
   },
   scmInfo := Some(
     ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")
-  )
+  ),
+  publishArtifact in (Compile, doc) := !isDotty.value
 )
 
 lazy val catsVersion = "2.2.0"
-lazy val dottyVersion = "0.27.0-RC1"
+lazy val dottyVersion = "3.0.0-M1"
 
 lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"                % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
@@ -267,7 +268,6 @@ lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)
   .settings(buildInfoSettings)
   .settings(scalacOptions ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
   .settings(
-    skip in doc := isDotty.value,
     libraryDependencies ++= Seq(cats.value, shapeless.value),
   )
 
@@ -331,7 +331,7 @@ latestVersion in ThisBuild := {
   if (!snapshot && stable) {
     (version in ThisBuild).value
   } else {
-    (previousStableVersion in ThisBuild).value.getOrElse("UNKNOWN")
+    (previousStableVersion in ThisBuild).value.getOrElse("0.0.0")
   }
 }
 
