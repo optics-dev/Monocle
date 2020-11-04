@@ -8,20 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: coursier/cache-action@v3
       - uses: olafurpg/setup-scala@v7
       - uses: olafurpg/setup-gpg@v2
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.cache/coursier/v1
-          key: ${{ runner.os }}-coursier-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/*.scala') }}
-          restore-keys: ${{ runner.os }}-coursier-
-      - name: Cache .sbt
-        uses: actions/cache@v1
-        with:
-          path: ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/*.scala') }}
-          restore-keys: ${{ runner.os }}-sbt-
       - name: Publish
         run: |
           git fetch --unshallow

@@ -12,6 +12,7 @@ jobs:
           fetch-depth: 100
       - name: Fetch tags
         run: git fetch --depth=100 origin +refs/tags/*:refs/tags/*
+      - uses: coursier/cache-action@v3
       - name: Setup Scala
         uses: olafurpg/setup-scala@v7
       - name: Checking your code format
@@ -24,18 +25,6 @@ jobs:
         if: env.REQUIRES_JEKYLL_CI != null
         run: |
           gem install jekyll -v 4
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.cache/coursier/v1
-          key: ${{ runner.os }}-coursier-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/*.scala') }}
-          restore-keys: ${{ runner.os }}-coursier-
-      - name: Cache .sbt
-        uses: actions/cache@v1
-        with:
-          path: ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/*.scala') }}
-          restore-keys: ${{ runner.os }}-sbt-
       - name: Run tests and documentation
         run: |
           csbt +test packageSrc docs/mdoc
