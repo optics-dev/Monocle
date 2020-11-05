@@ -67,7 +67,8 @@ lazy val buildSettings = Seq(
   scmInfo := Some(
     ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")
   ),
-  publishArtifact in (Compile, doc) := !isDotty.value
+  useScala3doc := true,
+  Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc/ sources).value }
 )
 
 lazy val catsVersion = "2.2.0"
