@@ -65,7 +65,10 @@ class HomeSplash extends React.Component {
 class Index extends React.Component {
   render() {
     const { config: siteConfig, language = "" } = this.props;
-    const { baseUrl } = siteConfig;
+    const { baseUrl, docsUrl } = siteConfig;
+    const docsPart = `${docsUrl ? `${docsUrl}/` : ""}`;
+    const langPart = `${language ? `${language}/` : ""}`;
+    const docUrl = doc => `${baseUrl}${docsPart}${langPart}${doc}`;
 
     const organization = "com.github.julien-truffaut";
     const latestVersion = "2.0.3"
@@ -191,7 +194,7 @@ import monocle.function.Cons.headOption // to use headOption (an optic from Cons
 
 Similarly to \`composeLens\`, \`composeOptional\` takes two \`Optionals\`, one from \`A\` to \`B\` and another from \`B\` to \`C\` and
 creates a third \`Optional\` from \`A\` to \`C\`. All \`Lenses\` can be seen as \`Optionals\` where the optional element to zoom into is always
-present, hence composing an \`Optional\` and a \`Lens\` always produces an \`Optional\` (see class [diagram](optics.html) for full inheritance
+present, hence composing an \`Optional\` and a \`Lens\` always produces an \`Optional\` (see class [diagram](${docUrl("optics.html")}) for full inheritance
 relation between optics).
 
 Monocle offers various functions and macros to cut the boilerplate even further, here is an example:
@@ -202,7 +205,7 @@ import monocle.macros.syntax.lens._
 employee.lens(_.company.address.street.name).composeOptional(headOption).modify(_.toUpper)
 \`\`\`
 
-Please consult the [documentation](modules.html) or the [scaladoc](/Monocle/api) for more details and examples.
+Please consult the [documentation](${docUrl("modules.html")}) or the [scaladoc](/Monocle/api) for more details and examples.
 
 ## Copyright and license
 
