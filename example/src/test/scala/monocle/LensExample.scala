@@ -26,26 +26,26 @@ class LensMonoExample extends MonocleSuite {
   val john = Person("John", 30, Address(126, "High Street"))
 
   test("get") {
-    Manual._name.get(john) shouldEqual "John"
-    Semi.name.get(john) shouldEqual "John"
-    Person.name.get(john) shouldEqual "John"
-    john.lens(_.name).get shouldEqual "John"
+    assertEquals(Manual._name.get(john), "John")
+    assertEquals(Semi.name.get(john), "John")
+    assertEquals(Person.name.get(john), "John")
+    assertEquals(john.lens(_.name).get, "John")
   }
 
   test("set") {
     val changedJohn = john.copy(age = 45)
 
-    Manual._age.set(45)(john) shouldEqual changedJohn
-    Semi.age.set(45)(john) shouldEqual changedJohn
-    Person.age.set(45)(john) shouldEqual changedJohn
-    john.lens(_.age).set(45) shouldEqual changedJohn
+    assertEquals(Manual._age.set(45)(john), changedJohn)
+    assertEquals(Semi.age.set(45)(john), changedJohn)
+    assertEquals(Person.age.set(45)(john), changedJohn)
+    assertEquals(john.lens(_.age).set(45), changedJohn)
   }
 
   test("compose") {
-    (Manual._address composeLens Manual._streetNumber).get(john) shouldEqual 126
-    (Semi.address composeLens Semi.streetNumber).get(john) shouldEqual 126
-    (Person.address composeLens Address.streetNumber).get(john) shouldEqual 126
-    john.lens(_.address.streetNumber).get shouldEqual 126
+    assertEquals((Manual._address composeLens Manual._streetNumber).get(john), 126)
+    assertEquals((Semi.address composeLens Semi.streetNumber).get(john), 126)
+    assertEquals((Person.address composeLens Address.streetNumber).get(john), 126)
+    assertEquals(john.lens(_.address.streetNumber).get, 126)
   }
 
   @Lenses("_") // this generates lenses prefixed with _ in the Cat companion object
@@ -54,7 +54,7 @@ class LensMonoExample extends MonocleSuite {
   val alpha = Cat(2)
 
   test("@Lenses takes an optional prefix string") {
-    Cat._age.get(alpha) shouldEqual 2
+    assertEquals(Cat._age.get(alpha), 2)
   }
 
   test("Modifications through lenses are chainable") {
@@ -62,7 +62,7 @@ class LensMonoExample extends MonocleSuite {
     import Point._
 
     val update = x.modify(_ + 100) compose y.set(7)
-    update(Point(1, 2)) shouldEqual Point(101, 7)
+    assertEquals(update(Point(1, 2)), Point(101, 7))
   }
 
   test("@Lenses is for case classes only") {
@@ -76,7 +76,7 @@ class LensMonoExample extends MonocleSuite {
         val value: String = self.s
       }
     }
-    MyString("a").value shouldEqual "a"
+    assertEquals(MyString("a").value, "a")
   }
 }
 
@@ -96,20 +96,26 @@ class LensPolyExample extends MonocleSuite {
   val candyTrade = Foo(Map[(Int, Symbol), Double]((0, Symbol("Buy")) -> -3.0, (12, Symbol("Sell")) -> 7), 0.0)
 
   test("get") {
-    Manual.default.get(candyTrade) shouldEqual 0.0
-    Semi.default.get(candyTrade) shouldEqual 0.0
-    Foo.default.get(candyTrade) shouldEqual 0.0
+    assertEquals(Manual.default.get(candyTrade), 0.0)
+    assertEquals(Semi.default.get(candyTrade), 0.0)
+    assertEquals(Foo.default.get(candyTrade), 0.0)
   }
 
   test("set") {
     val changedTrade = candyTrade.copy(q = candyTrade.q.updated((0, Symbol("Buy")), -2.0))
-    Foo.q.modify((_: Map[(Int, Symbol), Double]).updated((0, Symbol("Buy")), -2.0))(candyTrade) shouldEqual changedTrade
+    assertEquals(
+      Foo.q.modify((_: Map[(Int, Symbol), Double]).updated((0, Symbol("Buy")), -2.0))(candyTrade),
+      changedTrade
+    )
   }
 
   test("@PLenses generates polymorphic lenses") {
     val changedTrade = candyTrade.copy(q = candyTrade.q.map { case (x, y) => (x.swap, y) })
-    Foo.q
-      .modify((_: Map[(Int, Symbol), Double]).map { case (x, y) => (x.swap, y) })(candyTrade) shouldEqual changedTrade
+    assertEquals(
+      Foo.q
+        .modify((_: Map[(Int, Symbol), Double]).map { case (x, y) => (x.swap, y) })(candyTrade),
+      changedTrade
+    )
   }
 
   @PLenses("_") case class Cat(age: Int)
@@ -117,6 +123,6 @@ class LensPolyExample extends MonocleSuite {
   val alpha = Cat(2)
 
   test("@PLenses takes an optional prefix string") {
-    Cat._age.get(alpha) shouldEqual 2
+    assertEquals(Cat._age.get(alpha), 2)
   }
 }

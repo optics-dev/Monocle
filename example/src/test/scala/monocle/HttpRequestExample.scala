@@ -29,14 +29,13 @@ class HttpRequestExample extends MonocleSuite {
   val post                         = GenPrism[HttpMethod, POST.type] composeIso GenIso.unit[POST.type]
 
   test("get and post") {
-    (method composePrism get).nonEmpty(r1) shouldBe true
-    (method composePrism post).nonEmpty(r1) shouldBe false
-    (method composePrism post).getOption(r2) shouldBe Some(())
+    assertEquals((method composePrism get).nonEmpty(r1), true)
+    assertEquals((method composePrism post).nonEmpty(r1), false)
+    assertEquals((method composePrism post).getOption(r2), Some(()))
   }
 
   test("host") {
-    (uri composeLens host).set("google.com")(r2) shouldBe
-      r2.copy(uri = r2.uri.copy(host = "google.com"))
+    assertEquals((uri composeLens host).set("google.com")(r2), r2.copy(uri = r2.uri.copy(host = "google.com")))
   }
 
   test("query using index") {
@@ -45,7 +44,7 @@ class HttpRequestExample extends MonocleSuite {
       composeOptional index("hop")
       composePrism stringToInt).modify(_ + 10)(r1)
 
-    r.uri.query.get("hop") shouldBe Some("15")
+    assertEquals(r.uri.query.get("hop"), Some("15"))
   }
 
   test("query using at") {
@@ -59,12 +58,12 @@ class HttpRequestExample extends MonocleSuite {
       composePrism some
       composePrism stringToInt).modify(_ + 10)(r1)
 
-    r.uri.query.get("hop") shouldBe Some("15")
+    assertEquals(r.uri.query.get("hop"), Some("15"))
   }
 
   test("headers") {
     val r = (headers composeLens at("Content-Type")).set(Some("text/plain; utf-8"))(r2)
-    r.headers.get("Content-Type") shouldBe Some("text/plain; utf-8")
+    assertEquals(r.headers.get("Content-Type"), Some("text/plain; utf-8"))
   }
 
   test("headers with filterIndex") {
@@ -72,8 +71,8 @@ class HttpRequestExample extends MonocleSuite {
       composeTraversal filterIndex { h: String => h.contains("timeout") }
       composePrism stringToInt).modify(_ * 2)(r1)
 
-    r.headers.get("socket_timeout") shouldBe Some("40")
-    r.headers.get("connection_timeout") shouldBe Some("20")
+    assertEquals(r.headers.get("socket_timeout"), Some("40"))
+    assertEquals(r.headers.get("connection_timeout"), Some("20"))
   }
 }
 

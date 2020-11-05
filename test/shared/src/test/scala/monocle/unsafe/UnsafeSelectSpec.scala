@@ -17,16 +17,16 @@ class UnsafeSelectSpec extends MonocleSuite {
     val prism    = UnsafeSelect.unsafeSelect((a: Int) => a > 0)
     val valueOk  = 1
     val valueBad = -1
-    prism.getOption(prism.reverseGet(valueOk)) shouldEqual Some(valueOk)
-    prism.getOption(prism.reverseGet(valueBad)) shouldEqual None
+    assertEquals(prism.getOption(prism.reverseGet(valueOk)), Some(valueOk))
+    assertEquals(prism.getOption(prism.reverseGet(valueBad)), None)
   }
 
   test("Predicate should work") {
     val p: Int => Boolean = _ > 10
     val prism             = UnsafeSelect.unsafeSelect(p)
 
-    prism.getOption(12) shouldEqual Some(12)
-    prism.getOption(8) shouldEqual None
+    assertEquals(prism.getOption(12), Some(12))
+    assertEquals(prism.getOption(8), None)
   }
 
   case class Person(name: String, age: Int)

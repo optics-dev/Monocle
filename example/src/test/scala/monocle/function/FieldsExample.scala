@@ -4,24 +4,24 @@ import monocle.MonocleSuite
 
 class FieldsExample extends MonocleSuite {
   test("_1 creates a Lens from a 2-6 tuple to its first element") {
-    (("Hello", 3) applyLens first get) shouldEqual "Hello"
+    assertEquals((("Hello", 3) applyLens first get), "Hello")
 
-    (("Hello", 3, true) applyLens first set "World") shouldEqual (("World", 3, true))
+    assertEquals((("Hello", 3, true) applyLens first set "World"), (("World", 3, true)))
 
-    (("Hello", 3, true, 5.6, 7L, 'c') applyLens first get) shouldEqual "Hello"
+    assertEquals((("Hello", 3, true, 5.6, 7L, 'c') applyLens first get), "Hello")
   }
 
   test("_2 creates a Lens from a 2-6 tuple to its second element") {
-    (("Hello", 3) applyLens second get) shouldEqual 3
+    assertEquals((("Hello", 3) applyLens second get), 3)
 
-    (("Hello", 3, true, 5.6, 7L, 'c') applyLens second set 4) shouldEqual (("Hello", 4, true, 5.6, 7L, 'c'))
+    assertEquals((("Hello", 3, true, 5.6, 7L, 'c') applyLens second set 4), (("Hello", 4, true, 5.6, 7L, 'c')))
   }
 
   // ...
 
   test("_6 creates a Lens from a 6-tuple to its sixth element") {
-    (("Hello", 3, true, 5.6, 7L, 'c') applyLens sixth get) shouldEqual 'c'
+    assertEquals((("Hello", 3, true, 5.6, 7L, 'c') applyLens sixth get), 'c')
 
-    (("Hello", 3, true, 5.6, 7L, 'c') applyLens sixth set 'a') shouldEqual (("Hello", 3, true, 5.6, 7L, 'a'))
+    assertEquals((("Hello", 3, true, 5.6, 7L, 'c') applyLens sixth set 'a'), (("Hello", 3, true, 5.6, 7L, 'a')))
   }
 }
