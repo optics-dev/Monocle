@@ -8,6 +8,7 @@ import shapeless.ops.hlist.{Init => HListInit, IsHCons}
 import shapeless.{::, HNil}
 
 import cats.Eq
+import cats.implicits._
 
 class HListSpec extends MonocleSuite {
   case class Example(i: Int, b: Boolean, c: Char, f: Float, l: Long, d: Double)

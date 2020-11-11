@@ -58,41 +58,41 @@ class LensSpec extends MonocleSuite {
   // test implicit resolution of type classes
 
   test("Lens has a Compose instance") {
-    Compose[Lens].compose(x, p).get(Example("plop", Point(3, 4))) shouldEqual 3
+    assertEquals(Compose[Lens].compose(x, p).get(Example("plop", Point(3, 4))), 3)
   }
 
   test("Lens has a Category instance") {
-    Category[Lens].id[Int].get(3) shouldEqual 3
+    assertEquals(Category[Lens].id[Int].get(3), 3)
   }
 
   test("Lens has a Choice instance") {
-    Choice[Lens].choice(x, y).get(Right(Point(5, 6))) shouldEqual 6
+    assertEquals(Choice[Lens].choice(x, y).get(Right(Point(5, 6))), 6)
   }
 
   test("get") {
-    x.get(Point(5, 2)) shouldEqual 5
+    assertEquals(x.get(Point(5, 2)), 5)
   }
 
   test("find") {
-    x.find(_ > 5)(Point(9, 2)) shouldEqual Some(9)
-    x.find(_ > 5)(Point(3, 2)) shouldEqual None
+    assertEquals(x.find(_ > 5)(Point(9, 2)), Some(9))
+    assertEquals(x.find(_ > 5)(Point(3, 2)), None)
   }
 
   test("exist") {
-    x.exist(_ > 5)(Point(9, 2)) shouldEqual true
-    x.exist(_ > 5)(Point(3, 2)) shouldEqual false
+    assert(x.exist(_ > 5)(Point(9, 2)))
+    assert(!x.exist(_ > 5)(Point(3, 2)))
   }
 
   test("set") {
-    x.set(5)(Point(9, 2)) shouldEqual Point(5, 2)
+    assertEquals(x.set(5)(Point(9, 2)), Point(5, 2))
   }
 
   test("modify") {
-    x.modify(_ + 1)(Point(9, 2)) shouldEqual Point(10, 2)
+    assertEquals(x.modify(_ + 1)(Point(9, 2)), Point(10, 2))
   }
 
   test("to") {
-    x.to(_.toString()).get(Point(1, 2)) shouldEqual "1"
+    assertEquals(x.to(_.toString()).get(Point(1, 2)), "1")
   }
 
   test("some") {
@@ -101,8 +101,8 @@ class LensSpec extends MonocleSuite {
 
     val lens = GenLens[SomeTest](_.y)
 
-    lens.some.getOption(obj) shouldEqual Some(2)
-    obj.applyLens(lens).some.getOption shouldEqual Some(2)
+    assertEquals(lens.some.getOption(obj), Some(2))
+    assertEquals(obj.applyLens(lens).some.getOption, Some(2))
   }
 
   test("withDefault") {
@@ -112,10 +112,10 @@ class LensSpec extends MonocleSuite {
 
     val lens = GenLens[SomeTest](_.y)
 
-    lens.withDefault(0).get(objSome) shouldEqual 2
-    lens.withDefault(0).get(objNone) shouldEqual 0
+    assertEquals(lens.withDefault(0).get(objSome), 2)
+    assertEquals(lens.withDefault(0).get(objNone), 0)
 
-    objNone.applyLens(lens).withDefault(0).get shouldEqual 0
+    assertEquals(objNone.applyLens(lens).withDefault(0).get, 0)
   }
 
   test("each") {
@@ -124,8 +124,8 @@ class LensSpec extends MonocleSuite {
 
     val lens = GenLens[SomeTest](_.y)
 
-    lens.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyLens(lens).each.getAll shouldEqual List(1, 2, 3)
+    assertEquals(lens.each.getAll(obj), List(1, 2, 3))
+    assertEquals(obj.applyLens(lens).each.getAll, List(1, 2, 3))
   }
 
 }

@@ -70,111 +70,120 @@ class TraversalSpec extends MonocleSuite {
   // test implicit resolution of type classes
 
   test("Traversal has a Compose instance") {
-    Compose[Traversal]
-      .compose(coordinates, eachL[Location])
-      .modify(_ + 1)(List(Location(1, 2, ""), Location(3, 4, ""))) shouldEqual List(
-      Location(2, 3, ""),
-      Location(4, 5, "")
+    assertEquals(
+      Compose[Traversal]
+        .compose(coordinates, eachL[Location])
+        .modify(_ + 1)(List(Location(1, 2, ""), Location(3, 4, ""))),
+      List(Location(2, 3, ""), Location(4, 5, ""))
     )
   }
 
   test("Traversal has a Category instance") {
-    Category[Traversal].id[Int].getAll(3) shouldEqual List(3)
+    assertEquals(Category[Traversal].id[Int].getAll(3), List(3))
   }
 
   test("Traversal has a Choice instance") {
-    Choice[Traversal]
-      .choice(eachL[Int], coordinates)
-      .modify(_ + 1)(Left(List(1, 2, 3))) shouldEqual Left(List(2, 3, 4))
+    assertEquals(
+      Choice[Traversal]
+        .choice(eachL[Int], coordinates)
+        .modify(_ + 1)(Left(List(1, 2, 3))),
+      Left(List(2, 3, 4))
+    )
   }
 
   test("foldMap") {
-    eachLi.foldMap(_.toString)(List(1, 2, 3, 4, 5)) shouldEqual "12345"
+    assertEquals(eachLi.foldMap(_.toString)(List(1, 2, 3, 4, 5)), "12345")
   }
 
   test("getAll") {
-    eachLi.getAll(List(1, 2, 3, 4)) shouldEqual List(1, 2, 3, 4)
+    assertEquals(eachLi.getAll(List(1, 2, 3, 4)), List(1, 2, 3, 4))
   }
 
   test("headOption") {
-    eachLi.headOption(List(1, 2, 3, 4)) shouldEqual Some(1)
+    assertEquals(eachLi.headOption(List(1, 2, 3, 4)), Some(1))
   }
 
   test("lastOption") {
-    eachLi.lastOption(List(1, 2, 3, 4)) shouldEqual Some(4)
+    assertEquals(eachLi.lastOption(List(1, 2, 3, 4)), Some(4))
   }
 
   test("length") {
-    eachLi.length(List(1, 2, 3, 4)) shouldEqual 4
-    eachLi.length(Nil) shouldEqual 0
+    assertEquals(eachLi.length(List(1, 2, 3, 4)), 4)
+    assertEquals(eachLi.length(Nil), 0)
   }
 
   test("isEmpty") {
-    eachLi.isEmpty(List(1, 2, 3, 4)) shouldEqual false
-    eachLi.isEmpty(Nil) shouldEqual true
+    assertEquals(eachLi.isEmpty(List(1, 2, 3, 4)), false)
+    assertEquals(eachLi.isEmpty(Nil), true)
   }
 
   test("nonEmpty") {
-    eachLi.nonEmpty(List(1, 2, 3, 4)) shouldEqual true
-    eachLi.nonEmpty(Nil) shouldEqual false
+    assertEquals(eachLi.nonEmpty(List(1, 2, 3, 4)), true)
+    assertEquals(eachLi.nonEmpty(Nil), false)
   }
 
   test("find") {
-    eachLi.find(_ > 2)(List(1, 2, 3, 4)) shouldEqual Some(3)
-    eachLi.find(_ > 9)(List(1, 2, 3, 4)) shouldEqual None
+    assertEquals(eachLi.find(_ > 2)(List(1, 2, 3, 4)), Some(3))
+    assertEquals(eachLi.find(_ > 9)(List(1, 2, 3, 4)), None)
   }
 
   test("exist") {
-    eachLi.exist(_ > 2)(List(1, 2, 3, 4)) shouldEqual true
-    eachLi.exist(_ > 9)(List(1, 2, 3, 4)) shouldEqual false
-    eachLi.exist(_ > 9)(Nil) shouldEqual false
+    assertEquals(eachLi.exist(_ > 2)(List(1, 2, 3, 4)), true)
+    assertEquals(eachLi.exist(_ > 9)(List(1, 2, 3, 4)), false)
+    assertEquals(eachLi.exist(_ > 9)(Nil), false)
   }
 
   test("all") {
-    eachLi.all(_ > 2)(List(1, 2, 3, 4)) shouldEqual false
-    eachLi.all(_ > 0)(List(1, 2, 3, 4)) shouldEqual true
-    eachLi.all(_ > 0)(Nil) shouldEqual true
+    assertEquals(eachLi.all(_ > 2)(List(1, 2, 3, 4)), false)
+    assertEquals(eachLi.all(_ > 0)(List(1, 2, 3, 4)), true)
+    assertEquals(eachLi.all(_ > 0)(Nil), true)
   }
 
   test("set") {
-    eachLi.set(0)(List(1, 2, 3, 4)) shouldEqual List(0, 0, 0, 0)
+    assertEquals(eachLi.set(0)(List(1, 2, 3, 4)), List(0, 0, 0, 0))
   }
 
   test("modify") {
-    eachLi.modify(_ + 1)(List(1, 2, 3, 4)) shouldEqual List(2, 3, 4, 5)
+    assertEquals(eachLi.modify(_ + 1)(List(1, 2, 3, 4)), List(2, 3, 4, 5))
   }
 
   test("parModifyF") {
-    eachLi.parModifyF[Either[Unit, *]](i => (i + 1).asRight[Unit])(List(1, 2, 3, 4)) shouldEqual Right(List(2, 3, 4, 5))
+    assertEquals(
+      eachLi.parModifyF[Either[Unit, *]](i => (i + 1).asRight[Unit])(List(1, 2, 3, 4)),
+      Right(List(2, 3, 4, 5))
+    )
     // `Left` values should be accumulated through `Validated`.
-    eachLi.parModifyF[Either[String, *]](_.toString.asLeft[Int])(List(1, 2, 3, 4)) shouldEqual Left("1234")
+    assertEquals(eachLi.parModifyF[Either[String, *]](_.toString.asLeft[Int])(List(1, 2, 3, 4)), Left("1234"))
   }
 
   test("to") {
-    eachLi.to(_.toString()).getAll(List(1, 2, 3)) shouldEqual List("1", "2", "3")
+    assertEquals(eachLi.to(_.toString()).getAll(List(1, 2, 3)), List("1", "2", "3"))
   }
 
   test("some") {
     val numbers   = List(Some(1), None, Some(2), None)
     val traversal = Traversal.fromTraverse[List, Option[Int]]
 
-    traversal.some.set(5)(numbers) shouldEqual List(Some(5), None, Some(5), None)
-    numbers.applyTraversal(traversal).some.set(5) shouldEqual List(Some(5), None, Some(5), None)
+    assertEquals(traversal.some.set(5)(numbers), List(Some(5), None, Some(5), None))
+    assertEquals(numbers.applyTraversal(traversal).some.set(5), List(Some(5), None, Some(5), None))
   }
 
   test("withDefault") {
     val numbers   = List(Some(1), None, Some(2), None)
     val traversal = Traversal.fromTraverse[List, Option[Int]]
 
-    traversal.withDefault(0).modify(_ + 1)(numbers) shouldEqual List(Some(2), Some(1), Some(3), Some(1))
-    numbers.applyTraversal(traversal).withDefault(0).modify(_ + 1) shouldEqual List(Some(2), Some(1), Some(3), Some(1))
+    assertEquals(traversal.withDefault(0).modify(_ + 1)(numbers), List(Some(2), Some(1), Some(3), Some(1)))
+    assertEquals(
+      numbers.applyTraversal(traversal).withDefault(0).modify(_ + 1),
+      List(Some(2), Some(1), Some(3), Some(1))
+    )
   }
 
   test("each") {
     val numbers   = List(List(1, 2, 3), Nil, List(4), Nil)
     val traversal = Traversal.fromTraverse[List, List[Int]]
 
-    traversal.each.getAll(numbers) shouldEqual List(1, 2, 3, 4)
-    numbers.applyTraversal(traversal).each.getAll shouldEqual List(1, 2, 3, 4)
+    assertEquals(traversal.each.getAll(numbers), List(1, 2, 3, 4))
+    assertEquals(numbers.applyTraversal(traversal).each.getAll, List(1, 2, 3, 4))
   }
 }

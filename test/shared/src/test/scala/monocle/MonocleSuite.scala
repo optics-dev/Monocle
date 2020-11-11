@@ -6,16 +6,10 @@ import monocle.refined.RefinedInstances
 import monocle.state._
 import monocle.std.StdInstances
 import monocle.syntax.Syntaxes
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.prop.Configuration
-import org.typelevel.discipline.scalatest.FunSuiteDiscipline
+import munit.DisciplineSuite
 
 trait MonocleSuite
-    extends AnyFunSuite
-    with Configuration
-    with FunSuiteDiscipline
-    with Matchers
+    extends DisciplineSuite
     with TestInstances
     with StdInstances
     with GenericOptics

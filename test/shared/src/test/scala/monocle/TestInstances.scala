@@ -6,7 +6,6 @@ import java.util.UUID
 import org.scalacheck.Arbitrary._
 import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Cogen, Gen}
-import org.scalactic.Equality
 
 import cats._
 import cats.free.Cofree
@@ -15,9 +14,6 @@ import cats.syntax.eq._
 import scala.collection.immutable.ListMap
 
 trait TestInstances extends PlatformSpecificTestInstances with cats.instances.AllInstances {
-  implicit def equality[A](implicit A: Eq[A]): Equality[A] =
-    (a: A, b: Any) => A.eqv(a, b.asInstanceOf[A])
-
   implicit val genApplicative: Applicative[Gen] = new Applicative[Gen] {
     override def ap[A, B](f: Gen[A => B])(fa: Gen[A]): Gen[B] =
       fa.flatMap(a => f.map(_(a)))

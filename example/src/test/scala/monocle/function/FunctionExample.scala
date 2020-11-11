@@ -6,20 +6,20 @@ class FunctionExample extends MonocleSuite {
   test("curry curries a function") {
     def f(a: Int, b: Int): Int = a + b
 
-    (f _ applyIso curry get)(1)(2) shouldEqual 3
+    assertEquals((f _ applyIso curry get)(1)(2), 3)
   }
 
   test("uncurry uncurries a function") {
     def f(a: Int)(b: Int): Int = a + b
 
-    (f _ applyIso uncurry get)(1, 2) shouldEqual 3
+    assertEquals((f _ applyIso uncurry get)(1, 2), 3)
   }
 
   test("curry and uncurry should work with functions up to 5 arguments") {
     def f(a: Int)(b: Int)(c: Int)(d: Int)(e: Int): Int =
       a + b + c + d + e
 
-    (f _ applyIso uncurry get)(1, 2, 3, 4, 5) shouldEqual 15
+    assertEquals((f _ applyIso uncurry get)(1, 2, 3, 4, 5), 15)
   }
 
   test("If we compose with the curried function, it should also compose in the uncurried version") {
@@ -33,13 +33,13 @@ class FunctionExample extends MonocleSuite {
       * Which is easier to do when the function is curried rather than uncurried,
       * so we do the modification through the Iso.
       */
-    (f _ applyIso curry modify (_ compose (_ + 1)))(5, 7) shouldEqual (2 * 6 + 3 * 7)
+    assertEquals((f _ applyIso curry modify (_ compose (_ + 1)))(5, 7), (2 * 6 + 3 * 7))
   }
 
   test("flip exchanges the the first 2 parameters of a function") {
     def f(a: Int, b: Double): Double = a + b
 
-    (f _ applyIso curry composeIso flip composeIso uncurry get)(3.2, 1) shouldEqual 4.2
+    assertEquals((f _ applyIso curry composeIso flip composeIso uncurry get)(3.2, 1), 4.2)
   }
 
   test("Increase the second argument of a 2 argument function") {
@@ -48,6 +48,6 @@ class FunctionExample extends MonocleSuite {
 
     /** If we wanted to increase the second argument instead, we could use flip.
       */
-    (f _ applyIso curry composeIso flip modify (_ compose (_ + 1)))(5, 7) shouldEqual (2 * 5 + 3 * 8)
+    assertEquals((f _ applyIso curry composeIso flip modify (_ compose (_ + 1)))(5, 7), (2 * 5 + 3 * 8))
   }
 }

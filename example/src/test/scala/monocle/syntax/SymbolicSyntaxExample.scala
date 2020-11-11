@@ -19,12 +19,16 @@ class SymbolicSyntaxExample extends MonocleSuite {
   test("Symbols can replace composeX and applyX methods") {
     val myStore = Store(List(Sofa("Red", 10), Table("oak"), Sofa("Blue", 26)))
 
-    (_articles ^|-? headOption ^<-? _sofa ^|-> _color).getOption(myStore) shouldEqual
+    assertEquals(
+      (_articles ^|-? headOption ^<-? _sofa ^|-> _color).getOption(myStore),
       (myStore &|-> _articles ^|-? headOption ^<-? _sofa ^|-> _color getOption)
+    )
 
-    (_articles ^<-> reverse ^|->> each ^<-? _sofa ^|-> _price).modify(_ / 2)(myStore) ===
+    assertEquals(
+      (_articles ^<-> reverse ^|->> each ^<-? _sofa ^|-> _price).modify(_ / 2)(myStore),
       (myStore &|-> _articles ^<-> reverse ^|->> each ^<-? _sofa ^|-> _price modify (_ / 2))
+    )
 
-    (myStore.articles &|-? index(1) ^<-? _sofa getOption) shouldEqual None
+    assertEquals((myStore.articles &|-? index(1) ^<-? _sofa getOption), None)
   }
 }

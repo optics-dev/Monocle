@@ -16,104 +16,110 @@ class FoldSpec extends MonocleSuite {
   // test implicit resolution of type classes
 
   test("Fold has a Compose instance") {
-    Compose[Fold]
-      .compose(eachLi, nestedListFold[Int])
-      .fold(List(List(1, 2, 3), List(4, 5), List(6))) shouldEqual 21
+    assertEquals(
+      Compose[Fold]
+        .compose(eachLi, nestedListFold[Int])
+        .fold(List(List(1, 2, 3), List(4, 5), List(6))),
+      21
+    )
   }
 
   test("Fold has a Category instance") {
-    Category[Fold].id[Int].fold(3) shouldEqual 3
+    assertEquals(Category[Fold].id[Int].fold(3), 3)
   }
 
   test("Fold has a Choice instance") {
-    Choice[Fold]
-      .choice(eachLi, Choice[Fold].id[Int])
-      .fold(Left(List(1, 2, 3))) shouldEqual 6
+    assertEquals(
+      Choice[Fold]
+        .choice(eachLi, Choice[Fold].id[Int])
+        .fold(Left(List(1, 2, 3))),
+      6
+    )
   }
 
   test("foldMap") {
-    eachLi.foldMap(_.toString)(List(1, 2, 3, 4, 5)) shouldEqual "12345"
+    assertEquals(eachLi.foldMap(_.toString)(List(1, 2, 3, 4, 5)), "12345")
   }
 
   test("getAll") {
-    eachLi.getAll(List(1, 2, 3, 4)) shouldEqual List(1, 2, 3, 4)
+    assertEquals(eachLi.getAll(List(1, 2, 3, 4)), List(1, 2, 3, 4))
   }
 
   test("headOption") {
-    eachLi.headOption(List(1, 2, 3, 4)) shouldEqual Some(1)
+    assertEquals(eachLi.headOption(List(1, 2, 3, 4)), Some(1))
   }
 
   test("lastOption") {
-    eachLi.lastOption(List(1, 2, 3, 4)) shouldEqual Some(4)
+    assertEquals(eachLi.lastOption(List(1, 2, 3, 4)), Some(4))
   }
 
   test("length") {
-    eachLi.length(List(1, 2, 3, 4)) shouldEqual 4
-    eachLi.length(Nil) shouldEqual 0
+    assertEquals(eachLi.length(List(1, 2, 3, 4)), 4)
+    assertEquals(eachLi.length(Nil), 0)
   }
 
   test("isEmpty") {
-    eachLi.isEmpty(List(1, 2, 3, 4)) shouldEqual false
-    eachLi.isEmpty(Nil) shouldEqual true
+    assertEquals(eachLi.isEmpty(List(1, 2, 3, 4)), false)
+    assertEquals(eachLi.isEmpty(Nil), true)
   }
 
   test("nonEmpty") {
-    eachLi.nonEmpty(List(1, 2, 3, 4)) shouldEqual true
-    eachLi.nonEmpty(Nil) shouldEqual false
+    assertEquals(eachLi.nonEmpty(List(1, 2, 3, 4)), true)
+    assertEquals(eachLi.nonEmpty(Nil), false)
   }
 
   test("find") {
-    eachLi.find(_ > 2)(List(1, 2, 3, 4)) shouldEqual Some(3)
-    eachLi.find(_ > 9)(List(1, 2, 3, 4)) shouldEqual None
+    assertEquals(eachLi.find(_ > 2)(List(1, 2, 3, 4)), Some(3))
+    assertEquals(eachLi.find(_ > 9)(List(1, 2, 3, 4)), None)
   }
 
   test("exist") {
-    eachLi.exist(_ > 2)(List(1, 2, 3, 4)) shouldEqual true
-    eachLi.exist(_ > 9)(List(1, 2, 3, 4)) shouldEqual false
-    eachLi.exist(_ > 9)(Nil) shouldEqual false
+    assertEquals(eachLi.exist(_ > 2)(List(1, 2, 3, 4)), true)
+    assertEquals(eachLi.exist(_ > 9)(List(1, 2, 3, 4)), false)
+    assertEquals(eachLi.exist(_ > 9)(Nil), false)
   }
 
   test("all") {
-    eachLi.all(_ > 2)(List(1, 2, 3, 4)) shouldEqual false
-    eachLi.all(_ > 0)(List(1, 2, 3, 4)) shouldEqual true
-    eachLi.all(_ > 0)(Nil) shouldEqual true
+    assertEquals(eachLi.all(_ > 2)(List(1, 2, 3, 4)), false)
+    assertEquals(eachLi.all(_ > 0)(List(1, 2, 3, 4)), true)
+    assertEquals(eachLi.all(_ > 0)(Nil), true)
   }
 
   test("select (satisfied predicate)") {
     val select = Fold.select[List[Int]](_.endsWith(List(2, 3)))
-    select.getAll(List(1, 2, 3)) shouldEqual List(List(1, 2, 3))
+    assertEquals(select.getAll(List(1, 2, 3)), List(List(1, 2, 3)))
   }
 
   test("select (unsatisfied predicate)") {
     val select = Fold.select[List[Int]](_.endsWith(List(2, 3)))
-    select.getAll(List(1, 2, 3, 4)) shouldEqual List()
+    assertEquals(select.getAll(List(1, 2, 3, 4)), List())
   }
 
   test("to") {
-    eachLi.to(_.toString()).getAll(List(1, 2, 3)) shouldEqual List("1", "2", "3")
+    assertEquals(eachLi.to(_.toString()).getAll(List(1, 2, 3)), List("1", "2", "3"))
   }
 
   test("some") {
     val numbers = List(Some(1), None, Some(2), None)
     val fold    = Fold.fromFoldable[List, Option[Int]]
 
-    fold.some.getAll(numbers) shouldEqual List(1, 2)
-    numbers.applyFold(fold).some.getAll shouldEqual List(1, 2)
+    assertEquals(fold.some.getAll(numbers), List(1, 2))
+    assertEquals(numbers.applyFold(fold).some.getAll, List(1, 2))
   }
 
   test("withDefault") {
     val numbers = List(Some(1), None, Some(2), None)
     val fold    = Fold.fromFoldable[List, Option[Int]]
 
-    fold.withDefault(0).getAll(numbers) shouldEqual List(1, 0, 2, 0)
-    numbers.applyFold(fold).withDefault(0).getAll shouldEqual List(1, 0, 2, 0)
+    assertEquals(fold.withDefault(0).getAll(numbers), List(1, 0, 2, 0))
+    assertEquals(numbers.applyFold(fold).withDefault(0).getAll, List(1, 0, 2, 0))
   }
 
   test("each") {
     val numbers = List(List(1, 2, 3), Nil, List(4), Nil)
     val fold    = Fold.fromFoldable[List, List[Int]]
 
-    fold.each.getAll(numbers) shouldEqual List(1, 2, 3, 4)
-    numbers.applyFold(fold).each.getAll shouldEqual List(1, 2, 3, 4)
+    assertEquals(fold.each.getAll(numbers), List(1, 2, 3, 4))
+    assertEquals(numbers.applyFold(fold).each.getAll, List(1, 2, 3, 4))
   }
 }

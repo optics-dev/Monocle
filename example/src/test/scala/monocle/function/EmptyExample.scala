@@ -5,24 +5,24 @@ import monocle.function.all.{empty => mempty}
 
 class EmptyExample extends MonocleSuite {
   test("empty is a Prism that is successful only when S is empty") {
-    (List(1, 2, 3) applyPrism mempty getOption) shouldEqual None
+    assertEquals((List(1, 2, 3) applyPrism mempty getOption), None)
 
-    (List.empty[Int] applyPrism mempty getOption) shouldEqual Some(())
-    (Vector.empty[Int] applyPrism mempty getOption) shouldEqual Some(())
-    ("" applyPrism mempty getOption) shouldEqual Some(())
+    assertEquals((List.empty[Int] applyPrism mempty getOption), Some(()))
+    assertEquals((Vector.empty[Int] applyPrism mempty getOption), Some(()))
+    assertEquals(("" applyPrism mempty getOption), Some(()))
   }
 
   test("_empty return the empty value of a given type") {
-    _empty[List[Int]] shouldEqual List.empty[Int]
-    _empty[Map[Int, String]] shouldEqual Map.empty[Int, String]
-    _empty[String] shouldEqual ""
+    assertEquals(_empty[List[Int]], List.empty[Int])
+    assertEquals(_empty[Map[Int, String]], Map.empty[Int, String])
+    assertEquals(_empty[String], "")
   }
 
   test("_isEmpty is a function that takes an S and return true is S is empty, false otherwise") {
-    _isEmpty(List(1, 2, 3)) shouldEqual false
-    _isEmpty("hello") shouldEqual false
+    assertEquals(_isEmpty(List(1, 2, 3)), false)
+    assertEquals(_isEmpty("hello"), false)
 
-    _isEmpty(List.empty) shouldEqual true
-    _isEmpty("") shouldEqual true
+    assertEquals(_isEmpty(List.empty), true)
+    assertEquals(_isEmpty(""), true)
   }
 }
