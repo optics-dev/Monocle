@@ -68,23 +68,25 @@ lazy val buildSettings = Seq(
     ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")
   ),
   useScala3doc := true,
-  Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc/ sources).value }
+  testFrameworks += new TestFramework("munit.Framework"),
+  Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc / sources).value }
 )
 
-lazy val catsVersion = "2.2.0"
+lazy val catsVersion  = "2.2.0"
 lazy val dottyVersion = "3.0.0-M1"
 
-lazy val cats              = Def.setting("org.typelevel"     %%% "cats-core"                % catsVersion)
-lazy val catsFree          = Def.setting("org.typelevel"     %%% "cats-free"                % catsVersion)
-lazy val catsLaws          = Def.setting("org.typelevel"     %%% "cats-laws"                % catsVersion)
-lazy val alleycats         = Def.setting("org.typelevel"     %%% "alleycats-core"           % catsVersion)
-lazy val scalaz            = Def.setting("org.scalaz"        %%% "scalaz-core"              % "7.3.2")
-lazy val shapeless         = Def.setting("com.chuusai"       %%% "shapeless"                % "2.3.3")
-lazy val refinedDep        = Def.setting("eu.timepit"        %%% "refined"                  % "0.9.17")
-lazy val refinedScalacheck = Def.setting("eu.timepit"        %%% "refined-scalacheck"       % "0.9.17" % "test")
+lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
+lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
+lazy val catsLaws          = Def.setting("org.typelevel" %%% "cats-laws" % catsVersion)
+lazy val alleycats         = Def.setting("org.typelevel" %%% "alleycats-core" % catsVersion)
+lazy val scalaz            = Def.setting("org.scalaz" %%% "scalaz-core" % "7.3.2")
+lazy val shapeless         = Def.setting("com.chuusai" %%% "shapeless" % "2.3.3")
+lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.9.17")
+lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.9.17" % "test")
 
-lazy val discipline           = Def.setting("org.typelevel"  %%% "discipline-core"          % "1.1.2")
-lazy val discipline_scalatest = Def.setting("org.typelevel"  %%% "discipline-scalatest"     % "2.0.1")
+lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "1.1.2")
+lazy val munit           = Def.setting("org.scalameta" %% "munit" % "0.7.16" % Test)
+lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "1.0.1" % Test)
 
 lazy val macroVersion = "2.1.1"
 
@@ -185,7 +187,7 @@ lazy val law = crossProject(JVMPlatform, JSPlatform)
     moduleName := "monocle-law",
     crossScalaVersions += dottyVersion
   )
-  .settings(libraryDependencies ++= Seq(discipline.value).map(_.withDottyCompat(scalaVersion.value)))
+  .settings(libraryDependencies += discipline.value.withDottyCompat(scalaVersion.value))
 
 lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -240,7 +242,13 @@ lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, m
   )
   .settings(noPublishSettings: _*)
   .settings(
-    libraryDependencies ++= Seq(cats.value, catsLaws.value, shapeless.value, discipline_scalatest.value, refinedScalacheck.value),
+    libraryDependencies ++= Seq(
+      cats.value,
+      catsLaws.value,
+      shapeless.value,
+      munitDiscipline.value,
+      refinedScalacheck.value
+    )
   )
 
 lazy val bench = project.dependsOn(core.jvm, generic.jvm, macros.jvm)
@@ -257,7 +265,7 @@ lazy val example = project.dependsOn(core.jvm, generic.jvm, refined.jvm, macros.
   .settings(monocleJvmSettings)
   .settings(noPublishSettings)
   .settings(
-    libraryDependencies ++= Seq(cats.value, shapeless.value, discipline_scalatest.value),
+    libraryDependencies ++= Seq(cats.value, shapeless.value, munitDiscipline.value)
   )
 
 lazy val docs = project.dependsOn(core.jvm, unsafe.jvm, macros.jvm, example)

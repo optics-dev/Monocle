@@ -4,22 +4,22 @@ import monocle.MonocleSuite
 
 class HeadOptionExample extends MonocleSuite {
   test("headOption creates a Traversal from a List, Stream or Vector to its optional first element") {
-    (List(1, 2, 3) applyOptional headOption getOption) shouldEqual Some(1)
-    (Vector(1, 2, 3) applyOptional headOption getOption) shouldEqual Some(1)
+    assertEquals((List(1, 2, 3) applyOptional headOption getOption), Some(1))
+    assertEquals((Vector(1, 2, 3) applyOptional headOption getOption), Some(1))
 
-    (List.empty[Int] applyOptional headOption getOption) shouldEqual None
-    (List.empty[Int] applyOptional headOption modify (_ + 1)) shouldEqual Nil
+    assertEquals((List.empty[Int] applyOptional headOption getOption), None)
+    assertEquals((List.empty[Int] applyOptional headOption modify (_ + 1)), Nil)
 
-    (List(1, 2, 3) applyOptional headOption set 0) shouldEqual List(0, 2, 3)
-    (List(1, 2, 3) applyOptional headOption setOption 0) shouldEqual Some(List(0, 2, 3))
+    assertEquals((List(1, 2, 3) applyOptional headOption set 0), List(0, 2, 3))
+    assertEquals((List(1, 2, 3) applyOptional headOption setOption 0), Some(List(0, 2, 3)))
 
-    (List.empty[Int] applyOptional headOption set 0) shouldEqual Nil
-    (List.empty[Int] applyOptional headOption setOption 0) shouldEqual None
+    assertEquals((List.empty[Int] applyOptional headOption set 0), Nil)
+    assertEquals((List.empty[Int] applyOptional headOption setOption 0), None)
   }
 
   test("headOption creates a Traversal from a String to its optional head Char") {
-    ("Hello" applyOptional headOption getOption) shouldEqual Some('H')
+    assertEquals(("Hello" applyOptional headOption getOption), Some('H'))
 
-    ("Hello" applyOptional headOption set 'M') shouldEqual "Mello"
+    assertEquals(("Hello" applyOptional headOption set 'M'), "Mello")
   }
 }

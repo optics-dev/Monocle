@@ -25,82 +25,88 @@ class OptionalSpec extends MonocleSuite {
   checkAll("second", OptionalTests(headOptionI.second[Boolean]))
 
   test("void") {
-    Optional.void.getOption("hello") shouldEqual None
-    Optional.void.set(5)("hello") shouldEqual "hello"
+    assertEquals(Optional.void.getOption("hello"), None)
+    assertEquals(Optional.void.set(5)("hello"), "hello")
   }
 
   // test implicit resolution of type classes
 
   test("Optional has a Compose instance") {
-    Compose[Optional]
-      .compose(headOptionI, headOption[List[Int]])
-      .getOption(List(List(1, 2, 3), List(4))) shouldEqual Some(1)
+    assertEquals(
+      Compose[Optional]
+        .compose(headOptionI, headOption[List[Int]])
+        .getOption(List(List(1, 2, 3), List(4))),
+      Some(1)
+    )
   }
 
   test("Optional has a Category instance") {
-    Category[Optional].id[Int].getOption(3) shouldEqual Some(3)
+    assertEquals(Category[Optional].id[Int].getOption(3), Some(3))
   }
 
   test("Optional has a Choice instance") {
-    Choice[Optional]
-      .choice(headOptionI, Category[Optional].id[Int])
-      .getOption(Left(List(1, 2, 3))) shouldEqual Some(1)
+    assertEquals(
+      Choice[Optional]
+        .choice(headOptionI, Category[Optional].id[Int])
+        .getOption(Left(List(1, 2, 3))),
+      Some(1)
+    )
   }
 
   test("getOption") {
-    headOptionI.getOption(List(1, 2, 3, 4)) shouldEqual Some(1)
-    headOptionI.getOption(Nil) shouldEqual None
+    assertEquals(headOptionI.getOption(List(1, 2, 3, 4)), Some(1))
+    assertEquals(headOptionI.getOption(Nil), None)
   }
 
   test("isEmpty") {
-    headOptionI.isEmpty(List(1, 2, 3, 4)) shouldEqual false
-    headOptionI.isEmpty(Nil) shouldEqual true
+    assertEquals(headOptionI.isEmpty(List(1, 2, 3, 4)), false)
+    assertEquals(headOptionI.isEmpty(Nil), true)
   }
 
   test("nonEmpty") {
-    headOptionI.nonEmpty(List(1, 2, 3, 4)) shouldEqual true
-    headOptionI.nonEmpty(Nil) shouldEqual false
+    assertEquals(headOptionI.nonEmpty(List(1, 2, 3, 4)), true)
+    assertEquals(headOptionI.nonEmpty(Nil), false)
   }
 
   test("find") {
-    headOptionI.find(_ > 0)(List(1, 2, 3, 4)) shouldEqual Some(1)
-    headOptionI.find(_ > 9)(List(1, 2, 3, 4)) shouldEqual None
+    assertEquals(headOptionI.find(_ > 0)(List(1, 2, 3, 4)), Some(1))
+    assertEquals(headOptionI.find(_ > 9)(List(1, 2, 3, 4)), None)
   }
 
   test("exist") {
-    headOptionI.exist(_ > 0)(List(1, 2, 3, 4)) shouldEqual true
-    headOptionI.exist(_ > 9)(List(1, 2, 3, 4)) shouldEqual false
-    headOptionI.exist(_ > 9)(Nil) shouldEqual false
+    assertEquals(headOptionI.exist(_ > 0)(List(1, 2, 3, 4)), true)
+    assertEquals(headOptionI.exist(_ > 9)(List(1, 2, 3, 4)), false)
+    assertEquals(headOptionI.exist(_ > 9)(Nil), false)
   }
 
   test("all") {
-    headOptionI.all(_ > 2)(List(1, 2, 3, 4)) shouldEqual false
-    headOptionI.all(_ > 0)(List(1, 2, 3, 4)) shouldEqual true
-    headOptionI.all(_ > 0)(Nil) shouldEqual true
+    assertEquals(headOptionI.all(_ > 2)(List(1, 2, 3, 4)), false)
+    assertEquals(headOptionI.all(_ > 0)(List(1, 2, 3, 4)), true)
+    assertEquals(headOptionI.all(_ > 0)(Nil), true)
   }
 
   test("set") {
-    headOptionI.set(0)(List(1, 2, 3, 4)) shouldEqual List(0, 2, 3, 4)
-    headOptionI.set(0)(Nil) shouldEqual Nil
+    assertEquals(headOptionI.set(0)(List(1, 2, 3, 4)), List(0, 2, 3, 4))
+    assertEquals(headOptionI.set(0)(Nil), Nil)
   }
 
   test("setOption") {
-    headOptionI.setOption(0)(List(1, 2, 3, 4)) shouldEqual Some(List(0, 2, 3, 4))
-    headOptionI.setOption(0)(Nil) shouldEqual None
+    assertEquals(headOptionI.setOption(0)(List(1, 2, 3, 4)), Some(List(0, 2, 3, 4)))
+    assertEquals(headOptionI.setOption(0)(Nil), None)
   }
 
   test("modify") {
-    headOptionI.modify(_ + 1)(List(1, 2, 3, 4)) shouldEqual List(2, 2, 3, 4)
-    headOptionI.modify(_ + 1)(Nil) shouldEqual Nil
+    assertEquals(headOptionI.modify(_ + 1)(List(1, 2, 3, 4)), List(2, 2, 3, 4))
+    assertEquals(headOptionI.modify(_ + 1)(Nil), Nil)
   }
 
   test("modifyOption") {
-    headOptionI.modifyOption(_ + 1)(List(1, 2, 3, 4)) shouldEqual Some(List(2, 2, 3, 4))
-    headOptionI.modifyOption(_ + 1)(Nil) shouldEqual None
+    assertEquals(headOptionI.modifyOption(_ + 1)(List(1, 2, 3, 4)), Some(List(2, 2, 3, 4)))
+    assertEquals(headOptionI.modifyOption(_ + 1)(Nil), None)
   }
 
   test("to") {
-    headOptionI.to(_.toString()).getAll(List(1, 2, 3)) shouldEqual List("1")
+    assertEquals(headOptionI.to(_.toString()).getAll(List(1, 2, 3)), List("1"))
   }
 
   test("some") {
@@ -109,8 +115,8 @@ class OptionalSpec extends MonocleSuite {
 
     val optional = GenLens[SomeTest](_.y).asOptional
 
-    optional.some.getOption(obj) shouldEqual Some(2)
-    obj.applyOptional(optional).some.getOption shouldEqual Some(2)
+    assertEquals(optional.some.getOption(obj), Some(2))
+    assertEquals(obj.applyOptional(optional).some.getOption, Some(2))
   }
 
   test("withDefault") {
@@ -120,10 +126,10 @@ class OptionalSpec extends MonocleSuite {
 
     val optional = GenLens[SomeTest](_.y).asOptional
 
-    optional.withDefault(0).getOption(objSome) shouldEqual Some(2)
-    optional.withDefault(0).getOption(objNone) shouldEqual Some(0)
+    assertEquals(optional.withDefault(0).getOption(objSome), Some(2))
+    assertEquals(optional.withDefault(0).getOption(objNone), Some(0))
 
-    objNone.applyOptional(optional).withDefault(0).getOption shouldEqual Some(0)
+    assertEquals(objNone.applyOptional(optional).withDefault(0).getOption, Some(0))
   }
 
   test("each") {
@@ -132,7 +138,7 @@ class OptionalSpec extends MonocleSuite {
 
     val optional = GenLens[SomeTest](_.y).asOptional
 
-    optional.each.getAll(obj) shouldEqual List(1, 2, 3)
-    obj.applyOptional(optional).each.getAll shouldEqual List(1, 2, 3)
+    assertEquals(optional.each.getAll(obj), List(1, 2, 3))
+    assertEquals(obj.applyOptional(optional).each.getAll, List(1, 2, 3))
   }
 }

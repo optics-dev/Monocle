@@ -4,15 +4,15 @@ import monocle.MonocleSuite
 
 class TailOptionExample extends MonocleSuite {
   test("tailOption creates an Optional from a List, Vector or Stream to its tail") {
-    (List(1, 2, 3) applyOptional tailOption getOption) shouldEqual Some(List(2, 3))
-    (List(1) applyOptional tailOption getOption) shouldEqual Some(Nil)
-    ((Nil: List[Int]) applyOptional tailOption getOption) shouldEqual None
+    assertEquals((List(1, 2, 3) applyOptional tailOption getOption), Some(List(2, 3)))
+    assertEquals((List(1) applyOptional tailOption getOption), Some(Nil))
+    assertEquals(((Nil: List[Int]) applyOptional tailOption getOption), None)
 
-    (List(1, 2, 3) applyOptional tailOption set List(4, 5, 6)) shouldEqual List(1, 4, 5, 6)
-    (Vector(1, 2, 3) applyOptional tailOption set Vector(4, 5, 6)) shouldEqual Vector(1, 4, 5, 6)
+    assertEquals((List(1, 2, 3) applyOptional tailOption set List(4, 5, 6)), List(1, 4, 5, 6))
+    assertEquals((Vector(1, 2, 3) applyOptional tailOption set Vector(4, 5, 6)), Vector(1, 4, 5, 6))
   }
 
   test("tailOption creates an Optional from a String to its tail") {
-    ("hello" applyOptional tailOption modify (_.toUpperCase)) shouldEqual "hELLO"
+    assertEquals(("hello" applyOptional tailOption modify (_.toUpperCase)), "hELLO")
   }
 }

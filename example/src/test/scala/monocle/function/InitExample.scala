@@ -4,9 +4,9 @@ import monocle.MonocleSuite
 
 class InitExample extends MonocleSuite {
   test("init creates a Lens from a 2-6 tuple to its tail") {
-    ((2, false) applyLens init get) shouldEqual 2
-    (('r', false, "lala", 5.6, 7, 4) applyLens init get) shouldEqual (('r', false, "lala", 5.6, 7))
+    assertEquals(((2, false) applyLens init get), 2)
+    assertEquals((('r', false, "lala", 5.6, 7, 4) applyLens init get), (('r', false, "lala", 5.6, 7)))
 
-    ((2, false, "hello") applyLens init set ((4, true))) shouldEqual ((4, true, "hello"))
+    assertEquals(((2, false, "hello") applyLens init set ((4, true))), ((4, true, "hello")))
   }
 }

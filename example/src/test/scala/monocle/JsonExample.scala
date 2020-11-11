@@ -44,35 +44,38 @@ class JsonExample extends MonocleSuite {
   )
 
   test("Json Prism") {
-    jsNumber.getOption(JsString("plop")) shouldEqual None
-    jsNumber.getOption(JsNumber(2)) shouldEqual Some(2)
+    assertEquals(jsNumber.getOption(JsString("plop")), None)
+    assertEquals(jsNumber.getOption(JsNumber(2)), Some(2))
   }
 
   test("Use index to go into an JsObject or JsArray") {
-    (jsObject composeOptional index("age") composePrism jsNumber).getOption(json) shouldEqual Some(28)
+    assertEquals((jsObject composeOptional index("age") composePrism jsNumber).getOption(json), Some(28))
 
-    (jsObject composeOptional index("siblings")
-      composePrism jsArray
-      composeOptional index(1)
-      composePrism jsObject
-      composeOptional index("first_name")
-      composePrism jsString).set("Robert Jr.")(json) shouldEqual JsObject(
-      Map(
-        "first_name" -> JsString("John"),
-        "last_name"  -> JsString("Doe"),
-        "age"        -> JsNumber(28),
-        "siblings" -> JsArray(
-          List(
-            JsObject(
-              Map(
-                "first_name" -> JsString("Elia"),
-                "age"        -> JsNumber(23)
-              )
-            ),
-            JsObject(
-              Map(
-                "first_name" -> JsString("Robert Jr."), // name is updated
-                "age"        -> JsNumber(25)
+    assertEquals(
+      (jsObject composeOptional index("siblings")
+        composePrism jsArray
+        composeOptional index(1)
+        composePrism jsObject
+        composeOptional index("first_name")
+        composePrism jsString).set("Robert Jr.")(json),
+      JsObject(
+        Map(
+          "first_name" -> JsString("John"),
+          "last_name"  -> JsString("Doe"),
+          "age"        -> JsNumber(28),
+          "siblings" -> JsArray(
+            List(
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Elia"),
+                  "age"        -> JsNumber(23)
+                )
+              ),
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Robert Jr."), // name is updated
+                  "age"        -> JsNumber(25)
+                )
               )
             )
           )
@@ -82,24 +85,27 @@ class JsonExample extends MonocleSuite {
   }
 
   test("Use at to add delete fields") {
-    (jsObject composeLens at("nick_name")).set(Some(JsString("Jojo")))(json) shouldEqual JsObject(
-      Map(
-        "first_name" -> JsString("John"),
-        "nick_name"  -> JsString("Jojo"), // new field
-        "last_name"  -> JsString("Doe"),
-        "age"        -> JsNumber(28),
-        "siblings" -> JsArray(
-          List(
-            JsObject(
-              Map(
-                "first_name" -> JsString("Elia"),
-                "age"        -> JsNumber(23)
-              )
-            ),
-            JsObject(
-              Map(
-                "first_name" -> JsString("Robert"),
-                "age"        -> JsNumber(25)
+    assertEquals(
+      (jsObject composeLens at("nick_name")).set(Some(JsString("Jojo")))(json),
+      JsObject(
+        Map(
+          "first_name" -> JsString("John"),
+          "nick_name"  -> JsString("Jojo"), // new field
+          "last_name"  -> JsString("Doe"),
+          "age"        -> JsNumber(28),
+          "siblings" -> JsArray(
+            List(
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Elia"),
+                  "age"        -> JsNumber(23)
+                )
+              ),
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Robert"),
+                  "age"        -> JsNumber(25)
+                )
               )
             )
           )
@@ -107,22 +113,25 @@ class JsonExample extends MonocleSuite {
       )
     )
 
-    (jsObject composeLens at("age")).set(None)(json) shouldEqual JsObject(
-      Map(
-        "first_name" -> JsString("John"),
-        "last_name"  -> JsString("Doe"), // John is ageless now
-        "siblings" -> JsArray(
-          List(
-            JsObject(
-              Map(
-                "first_name" -> JsString("Elia"),
-                "age"        -> JsNumber(23)
-              )
-            ),
-            JsObject(
-              Map(
-                "first_name" -> JsString("Robert"),
-                "age"        -> JsNumber(25)
+    assertEquals(
+      (jsObject composeLens at("age")).set(None)(json),
+      JsObject(
+        Map(
+          "first_name" -> JsString("John"),
+          "last_name"  -> JsString("Doe"), // John is ageless now
+          "siblings" -> JsArray(
+            List(
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Elia"),
+                  "age"        -> JsNumber(23)
+                )
+              ),
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Robert"),
+                  "age"        -> JsNumber(25)
+                )
               )
             )
           )
@@ -132,25 +141,28 @@ class JsonExample extends MonocleSuite {
   }
 
   test("Use each and filterIndex to modify several fields at a time") {
-    (jsObject composeTraversal filterIndex((_: String).contains("name"))
-      composePrism jsString
-      composeOptional headOption).modify(_.toLower)(json) shouldEqual JsObject(
-      Map(
-        "first_name" -> JsString("john"), // starts with lower case
-        "last_name"  -> JsString("doe"), // starts with lower case
-        "age"        -> JsNumber(28),
-        "siblings" -> JsArray(
-          List(
-            JsObject(
-              Map(
-                "first_name" -> JsString("Elia"),
-                "age"        -> JsNumber(23)
-              )
-            ),
-            JsObject(
-              Map(
-                "first_name" -> JsString("Robert"),
-                "age"        -> JsNumber(25)
+    assertEquals(
+      (jsObject composeTraversal filterIndex((_: String).contains("name"))
+        composePrism jsString
+        composeOptional headOption).modify(_.toLower)(json),
+      JsObject(
+        Map(
+          "first_name" -> JsString("john"), // starts with lower case
+          "last_name"  -> JsString("doe"), // starts with lower case
+          "age"        -> JsNumber(28),
+          "siblings" -> JsArray(
+            List(
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Elia"),
+                  "age"        -> JsNumber(23)
+                )
+              ),
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Robert"),
+                  "age"        -> JsNumber(25)
+                )
               )
             )
           )
@@ -158,28 +170,31 @@ class JsonExample extends MonocleSuite {
       )
     )
 
-    (jsObject composeOptional index("siblings")
-      composePrism jsArray
-      composeTraversal each
-      composePrism jsObject
-      composeOptional index("age")
-      composePrism jsNumber).modify(_ + 1)(json) shouldEqual JsObject(
-      Map(
-        "first_name" -> JsString("John"),
-        "last_name"  -> JsString("Doe"),
-        "age"        -> JsNumber(28),
-        "siblings" -> JsArray(
-          List(
-            JsObject(
-              Map(
-                "first_name" -> JsString("Elia"),
-                "age"        -> JsNumber(24) // Elia is older
-              )
-            ),
-            JsObject(
-              Map(
-                "first_name" -> JsString("Robert"),
-                "age"        -> JsNumber(26) // Robert is older
+    assertEquals(
+      (jsObject composeOptional index("siblings")
+        composePrism jsArray
+        composeTraversal each
+        composePrism jsObject
+        composeOptional index("age")
+        composePrism jsNumber).modify(_ + 1)(json),
+      JsObject(
+        Map(
+          "first_name" -> JsString("John"),
+          "last_name"  -> JsString("Doe"),
+          "age"        -> JsNumber(28),
+          "siblings" -> JsArray(
+            List(
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Elia"),
+                  "age"        -> JsNumber(24) // Elia is older
+                )
+              ),
+              JsObject(
+                Map(
+                  "first_name" -> JsString("Robert"),
+                  "age"        -> JsNumber(26) // Robert is older
+                )
               )
             )
           )
@@ -205,28 +220,31 @@ class JsonExample extends MonocleSuite {
   }
 
   test("Plated instance to rewrite any matching elements") {
-    Plated.rewrite[Json] {
-      case JsString(s) =>
-        val u = s.toUpperCase
-        if (s != u) Some(JsString(u)) else None
-      case _ => None
-    }(json) shouldEqual JsObject(
-      Map(
-        "first_name" -> JsString("JOHN"),
-        "last_name"  -> JsString("DOE"),
-        "age"        -> JsNumber(28),
-        "siblings" -> JsArray(
-          List(
-            JsObject(
-              Map(
-                "first_name" -> JsString("ELIA"),
-                "age"        -> JsNumber(23)
-              )
-            ),
-            JsObject(
-              Map(
-                "first_name" -> JsString("ROBERT"),
-                "age"        -> JsNumber(25)
+    assertEquals(
+      Plated.rewrite[Json] {
+        case JsString(s) =>
+          val u = s.toUpperCase
+          if (s != u) Some(JsString(u)) else None
+        case _ => None
+      }(json),
+      JsObject(
+        Map(
+          "first_name" -> JsString("JOHN"),
+          "last_name"  -> JsString("DOE"),
+          "age"        -> JsNumber(28),
+          "siblings" -> JsArray(
+            List(
+              JsObject(
+                Map(
+                  "first_name" -> JsString("ELIA"),
+                  "age"        -> JsNumber(23)
+                )
+              ),
+              JsObject(
+                Map(
+                  "first_name" -> JsString("ROBERT"),
+                  "age"        -> JsNumber(25)
+                )
               )
             )
           )

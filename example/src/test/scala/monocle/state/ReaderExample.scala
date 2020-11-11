@@ -12,7 +12,7 @@ class ReaderExample extends MonocleSuite {
       i <- _age ask
     } yield i
 
-    getAge.run(p) shouldEqual 30
+    assertEquals(getAge.run(p), 30)
   }
 
   test("asks") {
@@ -20,6 +20,6 @@ class ReaderExample extends MonocleSuite {
       i <- _age asks (_ * 2)
     } yield i
 
-    getDoubleAge.run(p) shouldEqual 60
+    assertEquals(getDoubleAge.run(p), 60)
   }
 }
