@@ -12,6 +12,6 @@ addSbtPlugin("org.portable-scala" % "sbt-crossproject"         % "1.0.0")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.0.0")
 addSbtPlugin("org.scalameta"      % "sbt-scalafmt"             % "2.4.2")
 addSbtPlugin("org.scalameta"      % "sbt-mdoc"                 % "2.2.12")
-addSbtPlugin("ch.epfl.lamp"       % "sbt-dotty"                % "0.4.5")
+addSbtPlugin("ch.epfl.lamp"       % "sbt-dotty"                % "0.4.6")
 
 scalacOptions += "-deprecation"
