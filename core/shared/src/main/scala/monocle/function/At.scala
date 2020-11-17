@@ -20,6 +20,9 @@ abstract class At[S, I, A] extends Serializable {
 trait AtFunctions {
   def at[S, I, A](i: I)(implicit ev: At[S, I, A]): Lens[S, A] = ev.at(i)
 
+  def at_[S, I <: Singleton, A](i: I)(implicit ev: At[S, I, A]): Lens[S, A] =
+    ev.at(i)
+
   /** delete a value associated with a key in a Map-like container */
   def remove[S, I, A](i: I)(s: S)(implicit ev: At[S, I, Option[A]]): S =
     ev.at(i).set(None)(s)
@@ -53,4 +56,20 @@ object At extends AtFunctions {
 
   implicit def atSet[A]: At[Set[A], A, Boolean] =
     At(a => Lens((_: Set[A]).contains(a))(b => set => if (b) set + a else set - a))
+
+
+  implicit def at1_tuple2[A1, A2]: At[(A1, A2), 1, A1] =
+    At(_ => Lens[(A1, A2), A1](_._1)(x => _.copy(_1 = x)))
+
+  implicit def at2_tuple2[A1, A2]: At[(A1, A2), 2, A2] =
+    At(_ => Lens[(A1, A2), A2](_._2)(x => _.copy(_2 = x)))
+
+  implicit def at1_tuple3[A1, A2, A3]: At[(A1, A2, A3), 1, A1] =
+    At(_ => Lens[(A1, A2, A3), A1](_._1)(x => _.copy(_1 = x)))
+
+  implicit def at2_tuple3[A1, A2, A3]: At[(A1, A2, A3), 2, A2] =
+    At(_ => Lens[(A1, A2, A3), A2](_._2)(x => _.copy(_2 = x)))
+
+  implicit def at3_tuple3[A1, A2, A3]: At[(A1, A2, A3), 3, A3] =
+    At(_ => Lens[(A1, A2, A3), A3](_._3)(x => _.copy(_3 = x)))
 }
