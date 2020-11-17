@@ -16,6 +16,12 @@ class AtSpec extends MonocleSuite {
 
   checkAll("ListMap", AtTests[ListMap[Int, String], Int, Option[String]])
 
+  test("at creates a Lens from a Map, SortedMap to an optional value") {
+    val map = Map("One" -> 1, "Two" -> 2)
+    assertEquals((map applyLens at("One")).set(Some(-1)), Map("One" -> -1, "Two" -> 2))
+    assertEquals((map applyLens at("Two") .get), Some(2))
+  }
+
   test("at for tuples") {
     val tuple2 = (true, "hello")
     val tuple3 = (true, "hello", 5)
