@@ -57,7 +57,6 @@ object At extends AtFunctions {
   implicit def atSet[A]: At[Set[A], A, Boolean] =
     At(a => Lens((_: Set[A]).contains(a))(b => set => if (b) set + a else set - a))
 
-
   implicit def at1_tuple2[A1, A2]: At[(A1, A2), 1, A1] =
     At(_ => Lens[(A1, A2), A1](_._1)(x => _.copy(_1 = x)))
 
