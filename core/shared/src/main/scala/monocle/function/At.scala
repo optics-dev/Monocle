@@ -17,7 +17,7 @@ abstract class At[S, I, A] extends Serializable {
   def at(i: I): Lens[S, A]
 }
 
-abstract class AtSingleton[S, I <: Singleton, A] extends At[S, I, A]  {
+abstract class AtSingleton[S, I <: Singleton, A] extends At[S, I, A] {
   def at(i: I): Lens[S, A]
 }
 
@@ -46,9 +46,11 @@ object At extends AtFunctions {
       iso composeLens ev.at(_)
     )
 
-  /** ***************/
+  /** **************
+    */
   /** Std instances */
-  /** ***************/
+  /** **************
+    */
 
   implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] =
     At(i => Lens((_: SortedMap[K, V]).get(i))(optV => map => optV.fold(map - i)(v => map + (i -> v))))
