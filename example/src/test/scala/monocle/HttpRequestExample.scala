@@ -62,7 +62,8 @@ class HttpRequestExample extends MonocleSuite {
   test("headers with filterIndex") {
     val r = headers
       .composeTraversal(filterIndex { h: String => h.contains("timeout") })
-      .andThen(stringToInt).modify(_ * 2)(r1)
+      .andThen(stringToInt)
+      .modify(_ * 2)(r1)
 
     assertEquals(r.headers.get("socket_timeout"), Some("40"))
     assertEquals(r.headers.get("connection_timeout"), Some("20"))

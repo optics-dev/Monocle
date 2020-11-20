@@ -167,7 +167,6 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   final def andThen[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
     andThen(other.asPrism)
 
-
   /** compose a [[PPrism]] with a [[Fold]] */
   @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     andThen(other)

@@ -52,12 +52,14 @@ class JsonExample extends MonocleSuite {
     assertEquals(jsObject.composeOptional(index("age")).andThen(jsNumber).getOption(json), Some(28))
 
     assertEquals(
-      jsObject.composeOptional(index("siblings"))
+      jsObject
+        .composeOptional(index("siblings"))
         .andThen(jsArray)
         .composeOptional(index(1))
         .andThen(jsObject)
         .composeOptional(index("first_name"))
-        .andThen(jsString).set("Robert Jr.")(json),
+        .andThen(jsString)
+        .set("Robert Jr.")(json),
       JsObject(
         Map(
           "first_name" -> JsString("John"),
@@ -142,7 +144,8 @@ class JsonExample extends MonocleSuite {
 
   test("Use each and filterIndex to modify several fields at a time") {
     assertEquals(
-      jsObject.composeTraversal(filterIndex((_: String).contains("name")))
+      jsObject
+        .composeTraversal(filterIndex((_: String).contains("name")))
         .andThen(jsString)
         .composeOptional(headOption)
         .modify(_.toLower)(json),
@@ -172,7 +175,8 @@ class JsonExample extends MonocleSuite {
     )
 
     assertEquals(
-      jsObject.composeOptional(index("siblings"))
+      jsObject
+        .composeOptional(index("siblings"))
         .andThen(jsArray)
         .composeTraversal(each)
         .andThen(jsObject)
