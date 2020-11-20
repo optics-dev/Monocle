@@ -26,40 +26,39 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyTraversal[S, T, A1, B1] =
     evB.substituteCo[ApplyTraversal[S, T, A1, *]](evA.substituteCo[ApplyTraversal[S, T, *, B]](this))
 
-  @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] =
-    ApplySetter(s, traversal composeSetter other)
-  @inline def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] =
-    ApplyFold(s, traversal composeFold other)
-  @inline def composeTraversal[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    ApplyTraversal(s, traversal composeTraversal other)
-  @inline def composeOptional[C, D](other: POptional[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    ApplyTraversal(s, traversal composeOptional other)
-  @inline def composePrism[C, D](other: PPrism[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    ApplyTraversal(s, traversal composePrism other)
-  @inline def composeLens[C, D](other: PLens[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    ApplyTraversal(s, traversal composeLens other)
-  @inline def composeIso[C, D](other: PIso[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    ApplyTraversal(s, traversal composeIso other)
+  def andThen[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] =
+    ApplySetter(s, traversal.andThen(other))
+  def andThen[C](other: Fold[A, C]): ApplyFold[S, C] =
+    ApplyFold(s, traversal.andThen(other))
+  def andThen[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] =
+    ApplyTraversal(s, traversal.andThen(other))
+  def andThen[C, D](other: POptional[A, B, C, D]): ApplyTraversal[S, T, C, D] =
+    ApplyTraversal(s, traversal.andThen(other))
+  def andThen[C, D](other: PPrism[A, B, C, D]): ApplyTraversal[S, T, C, D] =
+    ApplyTraversal(s, traversal.andThen(other))
+  def andThen[C, D](other: PLens[A, B, C, D]): ApplyTraversal[S, T, C, D] =
+    ApplyTraversal(s, traversal.andThen(other))
+  def andThen[C, D](other: PIso[A, B, C, D]): ApplyTraversal[S, T, C, D] =
+    ApplyTraversal(s, traversal.andThen(other))
+
+  @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] = andThen(other)
+  @inline def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = andThen(other)
+  @inline def composeTraversal[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
+  @inline def composeOptional[C, D](other: POptional[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
+  @inline def composePrism[C, D](other: PPrism[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
+  @inline def composeLens[C, D](other: PLens[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
+  @inline def composeIso[C, D](other: PIso[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
 
   /** alias to composeTraversal */
-  @inline def ^|->>[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    composeTraversal(other)
-
+  @inline def ^|->>[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
   /** alias to composeOptional */
-  @inline def ^|-?[C, D](other: POptional[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    composeOptional(other)
-
+  @inline def ^|-?[C, D](other: POptional[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
   /** alias to composePrism */
-  @inline def ^<-?[C, D](other: PPrism[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    composePrism(other)
-
+  @inline def ^<-?[C, D](other: PPrism[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
   /** alias to composeLens */
-  @inline def ^|->[C, D](other: PLens[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    composeLens(other)
-
+  @inline def ^|->[C, D](other: PLens[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
   /** alias to composeIso */
-  @inline def ^<->[C, D](other: PIso[A, B, C, D]): ApplyTraversal[S, T, C, D] =
-    composeIso(other)
+  @inline def ^<->[C, D](other: PIso[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
 }
 
 object ApplyTraversal {
