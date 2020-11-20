@@ -37,7 +37,7 @@ val is = GenLens[Foo](_.is)
 ```
 
 ```scala mdoc
-(is composeOptional headOption).getOption(foo)
+is.composeOptional(headOption).getOption(foo)
 ```
 
 Note: if you use a version of monocle before 1.4.x, you need another import to get the typeclass instance
@@ -60,11 +60,11 @@ val root = Iso.id[Map[String, Int]]
 ```
 
 ```scala mdoc
-(root composeOptional index("two")).set(0)(m)   // update value at index "two"
-(root composeOptional index("three")).set(3)(m) // noop because m doesn't have a value at "three"
-(root composeLens at("three")).set(Some(3))(m)  // insert element at "three"
-(root composeLens at("two")).set(None)(m)       // delete element at "two"
-(root composeLens at("two")).set(Some(0))(m)    // upsert element at "two"
+root.composeOptional(index("two")).set(0)(m)   // update value at index "two"
+root.composeOptional(index("three")).set(3)(m) // noop because m doesn't have a value at "three"
+root.composeLens(at("three")).set(Some(3))(m)  // insert element at "three"
+root.composeLens(at("two")).set(None)(m)       // delete element at "two"
+root.composeLens(at("two")).set(Some(0))(m)    // upsert element at "two"
 ```
 
 In other words, `index` can update any existing values while `at` can also `insert` and `delete`.
@@ -87,5 +87,5 @@ Similarly, if the `Map` was in a case class, a `Lens` would provide the same kin
 case class Bar(kv: Map[String, Int])
 ```
 ```scala mdoc
-(GenLens[Bar](_.kv) composeOptional index("two")).set(0)(Bar(m))
+GenLens[Bar](_.kv).composeOptional(index("two")).set(0)(Bar(m))
 ```

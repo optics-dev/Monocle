@@ -86,8 +86,8 @@ val address = GenLens[Person](_.address)
 ```
 
 ```scala mdoc
-(address composeLens streetNumber).get(john)
-(address composeLens streetNumber).set(2)(john)
+address.andThen(streetNumber).get(john)
+address.andThen(streetNumber).set(2)(john)
 ```
 
 ## Other Ways of Lens Composition
@@ -121,7 +121,7 @@ case class A(b: Option[B])
 val c = GenLens[B](_.c)
 val b = GenLens[A](_.b)
 
-(b composePrism some composeLens c).getOption(A(Some(B(1))))
+b.some.andThen(c).getOption(A(Some(B(1))))
 ```
 
 For more detailed view of the various optics composition see [Optics](../optics.html)
