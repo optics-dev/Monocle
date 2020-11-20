@@ -112,7 +112,6 @@ Sometimes you need an easy way to update `Product` type inside
 `Sum` type - for that case you can compose `Prism` with `Lens` by using `some`:
 
 ```scala mdoc
-import monocle.std.option.some
 import monocle.macros.GenLens
 
 case class B(c: Int)
