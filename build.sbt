@@ -73,7 +73,7 @@ lazy val buildSettings = Seq(
   Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc / sources).value }
 )
 
-lazy val catsVersion  = "2.2.0"
+lazy val catsVersion  = "2.3.0"
 lazy val dottyVersions = Seq("3.0.0-M1", "3.0.0-M2")
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
@@ -145,7 +145,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("core"): _*)
-  .settings(libraryDependencies ++= Seq(cats.value, catsFree.value).map(_.withDottyCompat(scalaVersion.value)))
+  .settings(libraryDependencies ++= Seq(cats.value, catsFree.value))
   .settings(
     crossScalaVersions ++= dottyVersions,
     moduleName := "monocle-core",
@@ -219,7 +219,7 @@ lazy val state = crossProject(JVMPlatform, JSPlatform)
     moduleName := "monocle-state",
     crossScalaVersions ++= dottyVersions
   )
-  .settings(libraryDependencies ++= Seq(cats.value).map(_.withDottyCompat(scalaVersion.value)))
+  .settings(libraryDependencies ++= Seq(cats.value))
 
 lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -233,7 +233,7 @@ lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
     crossScalaVersions ++= dottyVersions
   )
   .jvmSettings(mimaSettings("unsafe"): _*)
-  .settings(libraryDependencies ++= Seq(cats.value, alleycats.value, shapeless.value).map(_.withDottyCompat(scalaVersion.value)))
+  .settings(libraryDependencies ++= Seq(cats.value, alleycats.value) ++ Seq(shapeless.value).map(_.withDottyCompat(scalaVersion.value)))
 
 lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, macros, law, state, refined, unsafe)
   .settings(moduleName := "monocle-test")
