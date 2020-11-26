@@ -122,9 +122,9 @@ where one has the task to update a deeply nested structure with the result of an
 
 <span class="hljs-keyword">val</span> address = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Person</span>](_.address)
 </code></pre>
-<pre><code class="hljs css language-scala">(address composeLens streetNumber).get(john)
+<pre><code class="hljs css language-scala">address.andThen(streetNumber).get(john)
 <span class="hljs-comment">// res7: Int = 10</span>
-(address composeLens streetNumber).set(<span class="hljs-number">2</span>)(john)
+address.andThen(streetNumber).set(<span class="hljs-number">2</span>)(john)
 <span class="hljs-comment">// res8: Person = Person(</span>
 <span class="hljs-comment">//   name = "John",</span>
 <span class="hljs-comment">//   age = 20,</span>
@@ -143,18 +143,17 @@ john.lens(_.name).set(<span class="hljs-string">"Mike"</span>).lens(_.age).modif
 <p>(All <code>Setter</code> like optics offer <code>set</code> and <code>modify</code> methods that returns an <code>EndoFunction</code> (i.e. <code>S =&gt; S</code>) which means that we can compose modification using basic function composition.)</p>
 <p>Sometimes you need an easy way to update <code>Product</code> type inside
 <code>Sum</code> type - for that case you can compose <code>Prism</code> with <code>Lens</code> by using <code>some</code>:</p>
-<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.std.option.some
-<span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenLens</span>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenLens</span>
 
 <span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span>(<span class="hljs-params">c: <span class="hljs-type">Int</span></span>)</span>
 <span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span>(<span class="hljs-params">b: <span class="hljs-type">Option</span>[<span class="hljs-type">B</span>]</span>)</span>
 
 <span class="hljs-keyword">val</span> c = <span class="hljs-type">GenLens</span>[<span class="hljs-type">B</span>](_.c)
-<span class="hljs-comment">// c: Lens[B, Int] = repl.MdocSession$App$$anon$7@18b888eb</span>
+<span class="hljs-comment">// c: Lens[B, Int] = repl.MdocSession$App$$anon$7@10a51f5d</span>
 <span class="hljs-keyword">val</span> b = <span class="hljs-type">GenLens</span>[<span class="hljs-type">A</span>](_.b)
-<span class="hljs-comment">// b: Lens[A, Option[B]] = repl.MdocSession$App$$anon$8@6dc0614c</span>
+<span class="hljs-comment">// b: Lens[A, Option[B]] = repl.MdocSession$App$$anon$8@2580c574</span>
 
-(b composePrism some composeLens c).getOption(<span class="hljs-type">A</span>(<span class="hljs-type">Some</span>(<span class="hljs-type">B</span>(<span class="hljs-number">1</span>))))
+b.some.andThen(c).getOption(<span class="hljs-type">A</span>(<span class="hljs-type">Some</span>(<span class="hljs-type">B</span>(<span class="hljs-number">1</span>))))
 <span class="hljs-comment">// res11: Option[Int] = Some(value = 1)</span>
 </code></pre>
 <p>For more detailed view of the various optics composition see <a href="../optics.html">Optics</a></p>
