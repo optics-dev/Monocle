@@ -29,38 +29,41 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   private def adapt[A1](implicit evA: A =:= A1): ApplyFold[S, A1] =
     evA.substituteCo[ApplyFold[S, *]](this)
 
-  @inline def composeFold[B](other: Fold[A, B]): ApplyFold[S, B] =
-    ApplyFold(s, _fold composeFold other)
-  @inline def composeGetter[B](other: Getter[A, B]): ApplyFold[S, B] =
-    ApplyFold(s, _fold composeGetter other)
-  @inline def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): ApplyFold[S, C] =
-    ApplyFold(s, _fold composeTraversal other)
-  @inline def composeOptional[B, C, D](other: POptional[A, B, C, D]): ApplyFold[S, C] =
-    ApplyFold(s, _fold composeOptional other)
-  @inline def composePrism[B, C, D](other: PPrism[A, B, C, D]): ApplyFold[S, C] =
-    ApplyFold(s, _fold composePrism other)
-  @inline def composeLens[B, C, D](other: PLens[A, B, C, D]): ApplyFold[S, C] =
-    ApplyFold(s, _fold composeLens other)
-  @inline def composeIso[B, C, D](other: PIso[A, B, C, D]): ApplyFold[S, C] =
-    ApplyFold(s, _fold composeIso other)
+  def andThen[B](other: Fold[A, B]): ApplyFold[S, B] =
+    ApplyFold(s, _fold.andThen(other))
+  def andThen[B](other: Getter[A, B]): ApplyFold[S, B] =
+    ApplyFold(s, _fold.andThen(other))
+  def andThen[B, C, D](other: PTraversal[A, B, C, D]): ApplyFold[S, C] =
+    ApplyFold(s, _fold.andThen(other))
+  def andThen[B, C, D](other: POptional[A, B, C, D]): ApplyFold[S, C] =
+    ApplyFold(s, _fold.andThen(other))
+  def andThen[B, C, D](other: PPrism[A, B, C, D]): ApplyFold[S, C] =
+    ApplyFold(s, _fold.andThen(other))
+  def andThen[B, C, D](other: PLens[A, B, C, D]): ApplyFold[S, C] =
+    ApplyFold(s, _fold.andThen(other))
+  def andThen[B, C, D](other: PIso[A, B, C, D]): ApplyFold[S, C] =
+    ApplyFold(s, _fold.andThen(other))
+
+  @inline def composeFold[B](other: Fold[A, B]): ApplyFold[S, B]                        = andThen(other)
+  @inline def composeGetter[B](other: Getter[A, B]): ApplyFold[S, B]                    = andThen(other)
+  @inline def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): ApplyFold[S, C] = andThen(other)
+  @inline def composeOptional[B, C, D](other: POptional[A, B, C, D]): ApplyFold[S, C]   = andThen(other)
+  @inline def composePrism[B, C, D](other: PPrism[A, B, C, D]): ApplyFold[S, C]         = andThen(other)
+  @inline def composeLens[B, C, D](other: PLens[A, B, C, D]): ApplyFold[S, C]           = andThen(other)
+  @inline def composeIso[B, C, D](other: PIso[A, B, C, D]): ApplyFold[S, C]             = andThen(other)
 
   /** alias to composeTraversal */
-  @inline def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): ApplyFold[S, C] =
-    composeTraversal(other)
+  @inline def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): ApplyFold[S, C] = andThen(other)
 
   /** alias to composeOptional */
-  @inline def ^|-?[B, C, D](other: POptional[A, B, C, D]): ApplyFold[S, C] =
-    composeOptional(other)
+  @inline def ^|-?[B, C, D](other: POptional[A, B, C, D]): ApplyFold[S, C] = andThen(other)
 
   /** alias to composePrism */
-  @inline def ^<-?[B, C, D](other: PPrism[A, B, C, D]): ApplyFold[S, C] =
-    composePrism(other)
+  @inline def ^<-?[B, C, D](other: PPrism[A, B, C, D]): ApplyFold[S, C] = andThen(other)
 
   /** alias to composeLens */
-  @inline def ^|->[B, C, D](other: PLens[A, B, C, D]): ApplyFold[S, C] =
-    composeLens(other)
+  @inline def ^|->[B, C, D](other: PLens[A, B, C, D]): ApplyFold[S, C] = andThen(other)
 
   /** alias to composeIso */
-  @inline def ^<->[B, C, D](other: PIso[A, B, C, D]): ApplyFold[S, C] =
-    composeIso(other)
+  @inline def ^<->[B, C, D](other: PIso[A, B, C, D]): ApplyFold[S, C] = andThen(other)
 }

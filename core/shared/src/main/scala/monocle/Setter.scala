@@ -44,13 +44,8 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PSetter[S, T, A1, B1] =
     evB.substituteCo[PSetter[S, T, A1, *]](evA.substituteCo[PSetter[S, T, *, B]](this))
 
-  /** **********************************************************
-    */
-  /** Compose methods between a [[PSetter]] and another Optics */
-  /** **********************************************************
-    */
-  /** compose a [[PSetter]] with a [[PSetter]] */
-  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+  /** compose a [[PSetter]] with another [[PSetter]] */
+  final def andThen[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
     new PSetter[S, T, C, D] {
       def modify(f: C => D): S => T =
         self.modify(other.modify(f))
@@ -60,24 +55,48 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
     }
 
   /** compose a [[PSetter]] with a [[PTraversal]] */
+  final def andThen[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
+    andThen(other.asSetter)
+
+  /** compose a [[PSetter]] with a [[POptional]] */
+  final def andThen[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
+    andThen(other.asSetter)
+
+  /** compose a [[PSetter]] with a [[PPrism]] */
+  final def andThen[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
+    andThen(other.asSetter)
+
+  /** compose a [[PSetter]] with a [[PLens]] */
+  final def andThen[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
+    andThen(other.asSetter)
+
+  /** compose a [[PSetter]] with a [[PIso]] */
+  final def andThen[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
+    andThen(other.asSetter)
+
+  /** compose a [[PSetter]] with a [[PSetter]] */
+  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    andThen(other)
+
+  /** compose a [[PSetter]] with a [[PTraversal]] */
   @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
-    composeSetter(other.asSetter)
+    andThen(other)
 
   /** compose a [[PSetter]] with a [[POptional]] */
   @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
-    composeSetter(other.asSetter)
+    andThen(other)
 
   /** compose a [[PSetter]] with a [[PPrism]] */
   @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
-    composeSetter(other.asSetter)
+    andThen(other)
 
   /** compose a [[PSetter]] with a [[PLens]] */
   @inline final def composeLens[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
-    composeSetter(other.asSetter)
+    andThen(other)
 
   /** compose a [[PSetter]] with a [[PIso]] */
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
-    composeSetter(other.asSetter)
+    andThen(other)
 
   /** *****************************************
     */
@@ -86,23 +105,23 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
     */
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
-    composeTraversal(other)
+    andThen(other)
 
   /** alias to composeOptional */
   @inline final def ^|-?[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
-    composeOptional(other)
+    andThen(other)
 
   /** alias to composePrism */
   @inline final def ^<-?[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
-    composePrism(other)
+    andThen(other)
 
   /** alias to composeLens */
   @inline final def ^|->[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
-    composeLens(other)
+    andThen(other)
 
   /** alias to composeIso */
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
-    composeIso(other)
+    andThen(other)
 }
 
 object PSetter extends SetterInstances {

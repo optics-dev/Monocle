@@ -105,32 +105,24 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): POptional[S, T, A1, B1] =
     evB.substituteCo[POptional[S, T, A1, *]](evA.substituteCo[POptional[S, T, *, B]](this))
 
-  /** ************************************************************
-    */
-  /** Compose methods between a [[POptional]] and another Optics */
-  /** ************************************************************
-    */
   /** compose a [[POptional]] with a [[Fold]] */
-  @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
-    asFold composeFold other
-
-  /** Compose with a function lifted into a Getter */
-  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+  final def andThen[C](other: Fold[A, C]): Fold[S, C] =
+    asFold.andThen(other)
 
   /** compose a [[POptional]] with a [[Getter]] */
-  @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
-    asFold composeGetter other
+  final def andThen[C](other: Getter[A, C]): Fold[S, C] =
+    asFold.andThen(other)
 
   /** compose a [[POptional]] with a [[PSetter]] */
-  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    asSetter composeSetter other
+  final def andThen[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    asSetter.andThen(other)
 
   /** compose a [[POptional]] with a [[PTraversal]] */
-  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    asTraversal composeTraversal other
+  final def andThen[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    asTraversal.andThen(other)
 
   /** compose a [[POptional]] with a [[POptional]] */
-  @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+  final def andThen[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     new POptional[S, T, C, D] {
       def getOrModify(s: S): Either[T, C] =
         self
@@ -151,16 +143,51 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     }
 
   /** compose a [[POptional]] with a [[PPrism]] */
+  final def andThen[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
+    andThen(other.asOptional)
+
+  /** compose a [[POptional]] with a [[PLens]] */
+  @inline final def andThen[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
+    andThen(other.asOptional)
+
+  /** compose a [[POptional]] with a [[PIso]] */
+  @inline final def andThen[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
+    andThen(other.asOptional)
+
+  /** compose a [[POptional]] with a [[Fold]] */
+  @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+    andThen(other)
+
+  /** Compose with a function lifted into a Getter */
+  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+
+  /** compose a [[POptional]] with a [[Getter]] */
+  @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+    andThen(other)
+
+  /** compose a [[POptional]] with a [[PSetter]] */
+  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    andThen(other)
+
+  /** compose a [[POptional]] with a [[PTraversal]] */
+  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    andThen(other)
+
+  /** compose a [[POptional]] with a [[POptional]] */
+  @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+    andThen(other)
+
+  /** compose a [[POptional]] with a [[PPrism]] */
   @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
-    composeOptional(other.asOptional)
+    andThen(other)
 
   /** compose a [[POptional]] with a [[PLens]] */
   @inline final def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    composeOptional(other.asOptional)
+    andThen(other)
 
   /** compose a [[POptional]] with a [[PIso]] */
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
-    composeOptional(other.asOptional)
+    andThen(other)
 
   /** *****************************************
     */
@@ -169,23 +196,23 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     */
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    composeTraversal(other)
+    andThen(other)
 
   /** alias to composeOptional */
   @inline final def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    composeOptional(other)
+    andThen(other)
 
   /** alias to composePrism */
   @inline final def ^<-?[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
-    composePrism(other)
+    andThen(other)
 
   /** alias to composeLens */
   @inline final def ^|->[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    composeLens(other)
+    andThen(other)
 
   /** alias to composeIso */
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
-    composeIso(other)
+    andThen(other)
 
   /** ******************************************************************
     */

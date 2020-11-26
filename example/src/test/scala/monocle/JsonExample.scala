@@ -49,15 +49,17 @@ class JsonExample extends MonocleSuite {
   }
 
   test("Use index to go into an JsObject or JsArray") {
-    assertEquals((jsObject composeOptional index("age") composePrism jsNumber).getOption(json), Some(28))
+    assertEquals(jsObject.composeOptional(index("age")).andThen(jsNumber).getOption(json), Some(28))
 
     assertEquals(
-      (jsObject composeOptional index("siblings")
-        composePrism jsArray
-        composeOptional index(1)
-        composePrism jsObject
-        composeOptional index("first_name")
-        composePrism jsString).set("Robert Jr.")(json),
+      jsObject
+        .composeOptional(index("siblings"))
+        .andThen(jsArray)
+        .composeOptional(index(1))
+        .andThen(jsObject)
+        .composeOptional(index("first_name"))
+        .andThen(jsString)
+        .set("Robert Jr.")(json),
       JsObject(
         Map(
           "first_name" -> JsString("John"),
@@ -86,7 +88,7 @@ class JsonExample extends MonocleSuite {
 
   test("Use at to add delete fields") {
     assertEquals(
-      (jsObject composeLens at("nick_name")).set(Some(JsString("Jojo")))(json),
+      jsObject.composeLens(at("nick_name")).set(Some(JsString("Jojo")))(json),
       JsObject(
         Map(
           "first_name" -> JsString("John"),
@@ -114,7 +116,7 @@ class JsonExample extends MonocleSuite {
     )
 
     assertEquals(
-      (jsObject composeLens at("age")).set(None)(json),
+      jsObject.composeLens(at("age")).set(None)(json),
       JsObject(
         Map(
           "first_name" -> JsString("John"),
@@ -142,9 +144,11 @@ class JsonExample extends MonocleSuite {
 
   test("Use each and filterIndex to modify several fields at a time") {
     assertEquals(
-      (jsObject composeTraversal filterIndex((_: String).contains("name"))
-        composePrism jsString
-        composeOptional headOption).modify(_.toLower)(json),
+      jsObject
+        .composeTraversal(filterIndex((_: String).contains("name")))
+        .andThen(jsString)
+        .composeOptional(headOption)
+        .modify(_.toLower)(json),
       JsObject(
         Map(
           "first_name" -> JsString("john"), // starts with lower case
@@ -171,12 +175,14 @@ class JsonExample extends MonocleSuite {
     )
 
     assertEquals(
-      (jsObject composeOptional index("siblings")
-        composePrism jsArray
-        composeTraversal each
-        composePrism jsObject
-        composeOptional index("age")
-        composePrism jsNumber).modify(_ + 1)(json),
+      jsObject
+        .composeOptional(index("siblings"))
+        .andThen(jsArray)
+        .composeTraversal(each)
+        .andThen(jsObject)
+        .composeOptional(index("age"))
+        .andThen(jsNumber)
+        .modify(_ + 1)(json),
       JsObject(
         Map(
           "first_name" -> JsString("John"),
