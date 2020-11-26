@@ -32,7 +32,7 @@ class OptionSpec extends MonocleSuite {
       at(index)
 
     def mapDefaultTo0(index: String): Lens[Map[String, Int], Int] =
-      mapAt(index) composeIso withDefault(0)
+      mapAt(index).andThen(withDefault(0))
 
     assert(mapDefaultTo0("id").set(0)(Map("id" -> 0)) == Map.empty)
   }

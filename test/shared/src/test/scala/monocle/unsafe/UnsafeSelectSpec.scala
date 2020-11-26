@@ -40,6 +40,6 @@ class UnsafeSelectSpec extends MonocleSuite {
 
   checkAll(
     "unsafe legal",
-    OptionalTests(UnsafeSelect.unsafeSelect[Person](_.age >= 18) composeLens GenLens[Person](_.name))
+    OptionalTests(UnsafeSelect.unsafeSelect[Person](_.age >= 18).andThen(GenLens[Person](_.name)))
   )
 }

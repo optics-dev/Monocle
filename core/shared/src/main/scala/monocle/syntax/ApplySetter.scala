@@ -14,38 +14,40 @@ final case class ApplySetter[S, T, A, B](s: S, setter: PSetter[S, T, A, B]) {
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplySetter[S, T, A1, B1] =
     evB.substituteCo[ApplySetter[S, T, A1, *]](evA.substituteCo[ApplySetter[S, T, *, B]](this))
 
-  @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] =
-    ApplySetter(s, setter composeSetter other)
-  @inline def composeTraversal[C, D](other: PTraversal[A, B, C, D]): ApplySetter[S, T, C, D] =
-    ApplySetter(s, setter composeTraversal other)
-  @inline def composeOptional[C, D](other: POptional[A, B, C, D]): ApplySetter[S, T, C, D] =
-    ApplySetter(s, setter composeOptional other)
-  @inline def composePrism[C, D](other: PPrism[A, B, C, D]): ApplySetter[S, T, C, D] =
-    ApplySetter(s, setter composePrism other)
-  @inline def composeLens[C, D](other: PLens[A, B, C, D]): ApplySetter[S, T, C, D] =
-    ApplySetter(s, setter composeLens other)
-  @inline def composeIso[C, D](other: PIso[A, B, C, D]): ApplySetter[S, T, C, D] =
-    ApplySetter(s, setter composeIso other)
+  def andThen[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] =
+    ApplySetter(s, setter.andThen(other))
+  def andThen[C, D](other: PTraversal[A, B, C, D]): ApplySetter[S, T, C, D] =
+    ApplySetter(s, setter.andThen(other))
+  def andThen[C, D](other: POptional[A, B, C, D]): ApplySetter[S, T, C, D] =
+    ApplySetter(s, setter.andThen(other))
+  def andThen[C, D](other: PPrism[A, B, C, D]): ApplySetter[S, T, C, D] =
+    ApplySetter(s, setter.andThen(other))
+  def andThen[C, D](other: PLens[A, B, C, D]): ApplySetter[S, T, C, D] =
+    ApplySetter(s, setter.andThen(other))
+  def andThen[C, D](other: PIso[A, B, C, D]): ApplySetter[S, T, C, D] =
+    ApplySetter(s, setter.andThen(other))
+
+  @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D]       = andThen(other)
+  @inline def composeTraversal[C, D](other: PTraversal[A, B, C, D]): ApplySetter[S, T, C, D] = andThen(other)
+  @inline def composeOptional[C, D](other: POptional[A, B, C, D]): ApplySetter[S, T, C, D]   = andThen(other)
+  @inline def composePrism[C, D](other: PPrism[A, B, C, D]): ApplySetter[S, T, C, D]         = andThen(other)
+  @inline def composeLens[C, D](other: PLens[A, B, C, D]): ApplySetter[S, T, C, D]           = andThen(other)
+  @inline def composeIso[C, D](other: PIso[A, B, C, D]): ApplySetter[S, T, C, D]             = andThen(other)
 
   /** alias to composeTraversal */
-  @inline def ^|->>[C, D](other: PTraversal[A, B, C, D]): ApplySetter[S, T, C, D] =
-    composeTraversal(other)
+  @inline def ^|->>[C, D](other: PTraversal[A, B, C, D]): ApplySetter[S, T, C, D] = andThen(other)
 
   /** alias to composeOptional */
-  @inline def ^|-?[C, D](other: POptional[A, B, C, D]): ApplySetter[S, T, C, D] =
-    composeOptional(other)
+  @inline def ^|-?[C, D](other: POptional[A, B, C, D]): ApplySetter[S, T, C, D] = andThen(other)
 
   /** alias to composePrism */
-  @inline def ^<-?[C, D](other: PPrism[A, B, C, D]): ApplySetter[S, T, C, D] =
-    composePrism(other)
+  @inline def ^<-?[C, D](other: PPrism[A, B, C, D]): ApplySetter[S, T, C, D] = andThen(other)
 
   /** alias to composeLens */
-  @inline def ^|->[C, D](other: PLens[A, B, C, D]): ApplySetter[S, T, C, D] =
-    composeLens(other)
+  @inline def ^|->[C, D](other: PLens[A, B, C, D]): ApplySetter[S, T, C, D] = andThen(other)
 
   /** alias to composeIso */
-  @inline def ^<->[C, D](other: PIso[A, B, C, D]): ApplySetter[S, T, C, D] =
-    composeIso(other)
+  @inline def ^<->[C, D](other: PIso[A, B, C, D]): ApplySetter[S, T, C, D] = andThen(other)
 }
 
 object ApplySetter {

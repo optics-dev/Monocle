@@ -83,7 +83,7 @@ import monocle.std.double.doubleToInt // Prism[Double, Int] defined in Monocle
 
 val jNum: Prism[Json, Double] = Prism.partial[Json, Double]{case JNum(v) => v}(JNum)
 
-val jInt: Prism[Json, Int] = jNum composePrism doubleToInt
+val jInt: Prism[Json, Int] = jNum.andThen(doubleToInt)
 ```
 
 ```scala mdoc
@@ -116,11 +116,11 @@ with `GenIso` (see `Iso` documentation):
 ```scala mdoc:nest:silent
 import monocle.macros.GenIso
 
-val jNum: Prism[Json, Double] = GenPrism[Json, JNum] composeIso GenIso[JNum, Double]
+val jNum: Prism[Json, Double] = GenPrism[Json, JNum].andThen(GenIso[JNum, Double])
 ```
 
 ```scala
-val jNull: Prism[Json, Unit] = GenPrism[Json, JNull.type] composeIso GenIso.unit[JNull.type]
+val jNull: Prism[Json, Unit] = GenPrism[Json, JNull.type].andThen(GenIso.unit[JNull.type])
 ```
 
 A [ticket](https://github.com/optics-dev/Monocle/issues/363) currently exists to add a macro to merge these two steps together.
