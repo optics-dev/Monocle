@@ -49,7 +49,13 @@ lazy val buildSettings = Seq(
     "-feature",
     "-unchecked",
     "-Xfatal-warnings",
-    "-deprecation"
+    "-deprecation",
+    "-Wconf:msg=class Field1 in package function is deprecated:i",
+    "-Wconf:msg=class Field2 in package function is deprecated:i",
+    "-Wconf:msg=class Field3 in package function is deprecated:i",
+    "-Wconf:msg=class Field4 in package function is deprecated:i",
+    "-Wconf:msg=class Field5 in package function is deprecated:i",
+    "-Wconf:msg=class Field6 in package function is deprecated:i",
   ),
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions ++= {

@@ -11,11 +11,13 @@ import scala.annotation.implicitNotFound
 @implicitNotFound(
   "Could not find an instance of Field3[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
+@deprecated("use monocle.function.At.at(3)", since = "3.0.0-M1")
 abstract class Field3[S, A] extends Serializable {
   def third: Lens[S, A]
 }
 
 trait Field3Functions {
+  @deprecated("use monocle.function.At.at(3)", since = "3.0.0-M1")
   def third[S, A](implicit ev: Field3[S, A]): Lens[S, A] = ev.third
 }
 
