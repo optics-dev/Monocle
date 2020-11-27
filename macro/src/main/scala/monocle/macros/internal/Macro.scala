@@ -49,7 +49,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
         c.Expr[Lens[S, A]](
           typesFields
             .map { case (t, f) => q"monocle.macros.GenLens[$t](_.$f)" }
-            .reduce((a, b) => q"$a composeLens $b")
+            .reduce((a, b) => q"$a.andThen($b)")
         )
 
       case _ =>

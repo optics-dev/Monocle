@@ -42,9 +42,9 @@ class LensMonoExample extends MonocleSuite {
   }
 
   test("compose") {
-    assertEquals((Manual._address composeLens Manual._streetNumber).get(john), 126)
-    assertEquals((Semi.address composeLens Semi.streetNumber).get(john), 126)
-    assertEquals((Person.address composeLens Address.streetNumber).get(john), 126)
+    assertEquals((Manual._address andThen Manual._streetNumber).get(john), 126)
+    assertEquals((Semi.address andThen Semi.streetNumber).get(john), 126)
+    assertEquals((Person.address andThen Address.streetNumber).get(john), 126)
     assertEquals(john.lens(_.address.streetNumber).get, 126)
   }
 

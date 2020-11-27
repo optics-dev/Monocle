@@ -12,7 +12,7 @@ jobs:
           fetch-depth: 100
       - name: Fetch tags
         run: git fetch --depth=100 origin +refs/tags/*:refs/tags/*
-      - uses: coursier/cache-action@v3
+      - uses: coursier/cache-action@v5
       - name: Setup Scala
         uses: olafurpg/setup-scala@v10
       - name: Checking your code format

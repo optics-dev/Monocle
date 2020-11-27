@@ -96,7 +96,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
   case class I(i: Int)    extends IntOrString
   case class S(s: String) extends IntOrString
 
-  val i = GenPrism[IntOrString, I] composeIso GenIso[I, Int]
+  val i = GenPrism[IntOrString, I].andThen(GenIso[I, Int])
   val s = Prism[IntOrString, String] { case S(s) => Some(s); case _ => None }(S.apply)
 
   test("getOption") {
@@ -161,30 +161,21 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
 
   test("GenPrism nullary equality".ignore) {
     assertEquals(
-      GenPrism[Arities, Nullary] composeIso GenIso
-        .unit[Nullary],
+      GenPrism[Arities, Nullary].andThen(GenIso.unit[Nullary]),
       _nullary
     )
   }
 
   test("GenPrism unary equality".ignore) {
-    assertEquals(GenPrism[Arities, Unary] composeIso GenIso[Unary, Int], _unary)
+    assertEquals(GenPrism[Arities, Unary].andThen(GenIso[Unary, Int]), _unary)
   }
 
   test("GenPrism binary equality".ignore) {
-    assertEquals(
-      GenPrism[Arities, Binary] composeIso GenIso
-        .fields[Binary],
-      _binary
-    )
+    assertEquals(GenPrism[Arities, Binary].andThen(GenIso.fields[Binary]), _binary)
   }
 
   test("GenPrism quintary equality".ignore) {
-    assertEquals(
-      GenPrism[Arities, Quintary] composeIso GenIso
-        .fields[Quintary],
-      _quintary
-    )
+    assertEquals(GenPrism[Arities, Quintary].andThen(GenIso.fields[Quintary]), _quintary)
   }
 
   test("to") {

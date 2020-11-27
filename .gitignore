@@ -20,6 +20,8 @@ _site/
 .bloop/
 project/metals.sbt
 
+.bsp/
+
 ## CTags files to ignore
 .ctags
 

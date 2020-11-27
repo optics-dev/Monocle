@@ -108,73 +108,95 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PTraversal[S, T, A1, B1] =
     evB.substituteCo[PTraversal[S, T, A1, *]](evA.substituteCo[PTraversal[S, T, *, B]](this))
 
-  /** *************************************************************
-    */
-  /** Compose methods between a [[PTraversal]] and another Optics */
-  /** *************************************************************
-    */
   /** compose a [[PTraversal]] with a [[Fold]] */
-  @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
-    asFold composeFold other
-
-  /** Compose with a function lifted into a Getter */
-  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+  final def andThen[C](other: Fold[A, C]): Fold[S, C] =
+    asFold.andThen(other)
 
   /** compose a [[PTraversal]] with a [[Getter]] */
-  @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
-    asFold composeGetter other
+  final def andThen[C](other: Getter[A, C]): Fold[S, C] =
+    asFold.andThen(other)
 
   /** compose a [[PTraversal]] with a [[PSetter]] */
-  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    asSetter composeSetter other
+  final def andThen[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    asSetter.andThen(other)
 
-  /** compose a [[PTraversal]] with a [[PTraversal]] */
-  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+  /** compose a [[PTraversal]] with another [[PTraversal]] */
+  final def andThen[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     new PTraversal[S, T, C, D] {
       def modifyF[F[_]: Applicative](f: C => F[D])(s: S): F[T] =
         self.modifyF(other.modifyF(f)(_))(s)
     }
 
   /** compose a [[PTraversal]] with a [[POptional]] */
+  final def andThen[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
+    andThen(other.asTraversal)
+
+  /** compose a [[PTraversal]] with a [[PPrism]] */
+  final def andThen[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
+    andThen(other.asTraversal)
+
+  /** compose a [[PTraversal]] with a [[PLens]] */
+  final def andThen[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
+    andThen(other.asTraversal)
+
+  /** compose a [[PTraversal]] with a [[PIso]] */
+  final def andThen[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
+    andThen(other.asTraversal)
+
+  /** compose a [[PTraversal]] with a [[Fold]] */
+  final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+    andThen(other)
+
+  /** Compose with a function lifted into a Getter */
+  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+
+  /** compose a [[PTraversal]] with a [[Getter]] */
+  @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+    andThen(other)
+
+  /** compose a [[PTraversal]] with a [[PSetter]] */
+  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    andThen(other)
+
+  /** compose a [[PTraversal]] with a [[PTraversal]] */
+  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    andThen(other)
+
+  /** compose a [[PTraversal]] with a [[POptional]] */
   @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
-    composeTraversal(other.asTraversal)
+    andThen(other)
 
   /** compose a [[PTraversal]] with a [[PPrism]] */
   @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
-    composeTraversal(other.asTraversal)
+    andThen(other)
 
   /** compose a [[PTraversal]] with a [[PLens]] */
   @inline final def composeLens[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
-    composeTraversal(other.asTraversal)
+    andThen(other)
 
   /** compose a [[PTraversal]] with a [[PIso]] */
   @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
-    composeTraversal(other.asTraversal)
+    andThen(other)
 
-  /** *****************************************
-    */
-  /** Experimental aliases of compose methods */
-  /** *****************************************
-    */
   /** alias to composeTraversal */
   @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    composeTraversal(other)
+    andThen(other)
 
   /** alias to composeOptional */
   @inline final def ^|-?[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
-    composeOptional(other)
+    andThen(other)
 
   /** alias to composePrism */
   @inline final def ^<-?[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
-    composePrism(other)
+    andThen(other)
 
   /** alias to composeLens */
   @inline final def ^|->[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
-    composeLens(other)
+    andThen(other)
 
   /** alias to composeIso */
   @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
-    composeIso(other)
+    andThen(other)
 
   /** *******************************************************************
     */

@@ -84,6 +84,10 @@ abstract class Fold[S, A] extends Serializable { self =>
         s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
     }
 
+  /** Compose with a function lifted into a Getter */
+  def to[C](f: A => C): Fold[S, C] =
+    andThen(Getter(f))
+
   def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
     composeTraversal(evEach.each)
 
@@ -96,44 +100,64 @@ abstract class Fold[S, A] extends Serializable { self =>
   private def adapt[A1](implicit evA: A =:= A1): Fold[S, A1] =
     evA.substituteCo[Fold[S, *]](this)
 
-  /** *******************************************************
-    */
-  /** Compose methods between a [[Fold]] and another Optics */
-  /** *******************************************************
-    */
-  /** compose a [[Fold]] with a [[Fold]] */
-  @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
+  /** compose a [[Fold]] with another [[Fold]] */
+  final def andThen[B](other: Fold[A, B]): Fold[S, B] =
     new Fold[S, B] {
       def foldMap[M: Monoid](f: B => M)(s: S): M =
         self.foldMap(other.foldMap(f)(_))(s)
     }
 
-  /** Compose with a function lifted into a Getter */
-  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+  /** compose a [[Fold]] with a [[Getter]] */
+  final def andThen[C](other: Getter[A, C]): Fold[S, C] =
+    andThen(other.asFold)
+
+  /** compose a [[Fold]] with a [[PTraversal]] */
+  final def andThen[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+    andThen(other.asFold)
+
+  /** compose a [[Fold]] with a [[POptional]] */
+  final def andThen[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+    andThen(other.asFold)
+
+  /** compose a [[Fold]] with a [[PPrism]] */
+  final def andThen[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+    andThen(other.asFold)
+
+  /** compose a [[Fold]] with a [[PLens]] */
+  final def andThen[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
+    andThen(other.asFold)
+
+  /** compose a [[Fold]] with a [[PIso]] */
+  final def andThen[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
+    andThen(other.asFold)
+
+  /** compose a [[Fold]] with a [[Fold]] */
+  @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
+    andThen(other)
 
   /** compose a [[Fold]] with a [[Getter]] */
   @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
-    composeFold(other.asFold)
+    andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[PTraversal]] */
   @inline final def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
-    composeFold(other.asFold)
+    andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[POptional]] */
   @inline final def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
-    composeFold(other.asFold)
+    andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[PPrism]] */
   @inline final def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
-    composeFold(other.asFold)
+    andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[PLens]] */
   @inline final def composeLens[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
-    composeFold(other.asFold)
+    andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[PIso]] */
   @inline final def composeIso[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
-    composeFold(other.asFold)
+    andThen(other.asFold)
 
   /** *****************************************
     */
@@ -142,23 +166,23 @@ abstract class Fold[S, A] extends Serializable { self =>
     */
   /** alias to composeTraversal */
   @inline final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
-    composeTraversal(other)
+    andThen(other)
 
   /** alias to composeOptional */
   @inline final def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
-    composeOptional(other)
+    andThen(other)
 
   /** alias to composePrism */
   @inline final def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
-    composePrism(other)
+    andThen(other)
 
   /** alias to composeLens */
   @inline final def ^|->[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
-    composeLens(other)
+    andThen(other)
 
   /** alias to composeIso */
   @inline final def ^<->[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
-    composeIso(other)
+    andThen(other)
 }
 
 object Fold extends FoldInstances {

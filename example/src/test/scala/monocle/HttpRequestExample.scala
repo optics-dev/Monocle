@@ -35,14 +35,11 @@ class HttpRequestExample extends MonocleSuite {
   }
 
   test("host") {
-    assertEquals((uri composeLens host).set("google.com")(r2), r2.copy(uri = r2.uri.copy(host = "google.com")))
+    assertEquals(uri.andThen(host).set("google.com")(r2), r2.copy(uri = r2.uri.copy(host = "google.com")))
   }
 
   test("query using index") {
-    val r = (uri
-      composeLens query
-      composeOptional index("hop")
-      composePrism stringToInt).modify(_ + 10)(r1)
+    val r = uri.andThen(query).composeOptional(index("hop")).andThen(stringToInt).modify(_ + 10)(r1)
 
     assertEquals(r.uri.query.get("hop"), Some("15"))
   }
@@ -52,24 +49,21 @@ class HttpRequestExample extends MonocleSuite {
     /**  `at` returns Lens[S, Option[A]] while `index` returns Optional[S, A]
       *  So that we need the `some: Prism[Option[A], A]` for further investigation
       */
-    val r = (uri
-      composeLens query
-      composeLens at("hop")
-      composePrism some
-      composePrism stringToInt).modify(_ + 10)(r1)
+    val r = uri.andThen(query).composeLens(at("hop")).some.andThen(stringToInt).modify(_ + 10)(r1)
 
     assertEquals(r.uri.query.get("hop"), Some("15"))
   }
 
   test("headers") {
-    val r = (headers composeLens at("Content-Type")).set(Some("text/plain; utf-8"))(r2)
+    val r = headers.composeLens(at("Content-Type")).set(Some("text/plain; utf-8"))(r2)
     assertEquals(r.headers.get("Content-Type"), Some("text/plain; utf-8"))
   }
 
   test("headers with filterIndex") {
-    val r = (headers
-      composeTraversal filterIndex { h: String => h.contains("timeout") }
-      composePrism stringToInt).modify(_ * 2)(r1)
+    val r = headers
+      .composeTraversal(filterIndex { h: String => h.contains("timeout") })
+      .andThen(stringToInt)
+      .modify(_ * 2)(r1)
 
     assertEquals(r.headers.get("socket_timeout"), Some("40"))
     assertEquals(r.headers.get("connection_timeout"), Some("20"))
