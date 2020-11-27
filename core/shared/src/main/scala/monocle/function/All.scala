@@ -4,7 +4,6 @@ object all extends GenericOptics
 
 trait GenericOptics
     extends AtFunctions
-    with AtSingletonFunctions
     with ConsFunctions
     with Cons1Functions
     with CurryFunctions
