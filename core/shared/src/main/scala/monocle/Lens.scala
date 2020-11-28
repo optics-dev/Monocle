@@ -9,10 +9,10 @@ import monocle.function.Each
   *  - `get: S      => A` i.e. from an `S`, we can extract an `A`
   *  - `set: (B, S) => T` i.e. if we replace an `A` by a `B` in an `S`, we obtain a `T`
   *
-  * A [[PLens]] could also be defined as a weaker [[PIso]] where set requires
+  * A [[PLens]] could also be defined as a weaker [[PIso]] where replace requires
   * an additional parameter than reverseGet.
   *
-  * [[PLens]] stands for Polymorphic Lens as it set and modify methods change
+  * [[PLens]] stands for Polymorphic Lens as it replace and modify methods change
   * a type `A` to `B` and `S` to `T`.
   * [[Lens]] is a type alias for [[PLens]] restricted to monomorphic updates:
   * {{{
@@ -37,8 +37,12 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /** get the target of a [[PLens]] */
   def get(s: S): A
 
-  /** set polymorphically the target of a [[PLens]] using a function */
-  def set(b: B): S => T
+  /** replace polymorphically the target of a [[PLens]] using a function */
+  def replace(b: B): S => T
+
+  /** alias to replace */
+  @deprecated("use PLens.replace instead", since = "2.2.0")
+  def set(b: B): S => T = replace(b)
 
   /** modify polymorphically the target of a [[PLens]] using Functor function */
   def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T]
@@ -56,7 +60,9 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
 
   /** join two [[PLens]] with the same target */
   @inline final def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[Either[S, S1], Either[T, T1], A, B] =
-    PLens[Either[S, S1], Either[T, T1], A, B](_.fold(self.get, other.get))(b => _.bimap(self.set(b), other.set(b)))
+    PLens[Either[S, S1], Either[T, T1], A, B](_.fold(self.get, other.get))(b =>
+      _.bimap(self.replace(b), other.replace(b))
+    )
 
   /** pair two disjoint [[PLens]] */
   @inline final def split[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
@@ -64,7 +70,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       (self.get(s), other.get(s1))
     } {
       case (b, b1) => { case (s, s1) =>
-        (self.set(b)(s), other.set(b1)(s1))
+        (self.replace(b)(s), other.replace(b1)(s1))
       }
     }
 
@@ -73,7 +79,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       (get(s), c)
     } {
       case (b, c) => { case (s, _) =>
-        (set(b)(s), c)
+        (replace(b)(s), c)
       }
     }
 
@@ -82,7 +88,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       (c, get(s))
     } {
       case (c, b) => { case (_, s) =>
-        (c, set(b)(s))
+        (c, replace(b)(s))
       }
     }
 
@@ -122,8 +128,8 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       def get(s: S): C =
         other.get(self.get(s))
 
-      def set(d: D): S => T =
-        self.modify(other.set(d))
+      def replace(d: D): S => T =
+        self.modify(other.replace(d))
 
       def modifyF[F[_]: Functor](f: C => F[D])(s: S): F[T] =
         self.modifyF(other.modifyF(f))(s)
@@ -218,8 +224,8 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       def modify(f: A => B): S => T =
         self.modify(f)
 
-      def set(b: B): S => T =
-        self.set(b)
+      def replace(b: B): S => T =
+        self.replace(b)
     }
 
   /** view a [[PLens]] as a [[PTraversal]] */
@@ -235,8 +241,8 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       def getOrModify(s: S): Either[T, A] =
         Either.right(get(s))
 
-      def set(b: B): S => T =
-        self.set(b)
+      def replace(b: B): S => T =
+        self.replace(b)
 
       def getOption(s: S): Option[A] =
         Some(self.get(s))
@@ -258,7 +264,7 @@ object PLens extends LensInstances {
       _.fold(identity, identity)
     )(t => _.bimap(_ => t, _ => t))
 
-  /** create a [[PLens]] using a pair of functions: one to get the target, one to set the target.
+  /** create a [[PLens]] using a pair of functions: one to get the target, one to replace the target.
     * @see macro module for methods generating [[PLens]] with less boiler plate
     */
   def apply[S, T, A, B](_get: S => A)(_set: B => S => T): PLens[S, T, A, B] =
@@ -266,7 +272,7 @@ object PLens extends LensInstances {
       def get(s: S): A =
         _get(s)
 
-      def set(b: B): S => T =
+      def replace(b: B): S => T =
         _set(b)
 
       def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
@@ -287,9 +293,9 @@ object Lens {
   def codiagonal[S]: Lens[Either[S, S], S] =
     PLens.codiagonal
 
-  /** alias for [[PLens]] apply with a monomorphic set function */
-  def apply[S, A](get: S => A)(set: A => S => S): Lens[S, A] =
-    PLens(get)(set)
+  /** alias for [[PLens]] apply with a monomorphic replace function */
+  def apply[S, A](get: S => A)(replace: A => S => S): Lens[S, A] =
+    PLens(get)(replace)
 }
 
 sealed abstract class LensInstances {

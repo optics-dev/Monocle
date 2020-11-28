@@ -10,7 +10,7 @@ import monocle.function.Each
   *  - `map:    (A => B) => F[A] => F[B]`
   *  - `modify: (A => B) => S    => T`
   *
-  * [[PSetter]] stands for Polymorphic Setter as it set and modify methods change
+  * [[PSetter]] stands for Polymorphic Setter as it replace and modify methods change
   * a type `A` to `B` and `S` to `T`.
   * [[Setter]] is a type alias for [[PSetter]] restricted to monomorphic updates:
   * {{{
@@ -31,8 +31,12 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   /** modify polymorphically the target of a [[PSetter]] with a function */
   def modify(f: A => B): S => T
 
-  /** set polymorphically the target of a [[PSetter]] with a value */
-  def set(b: B): S => T
+  /** replace polymorphically the target of a [[PSetter]] with a value */
+  def replace(b: B): S => T
+
+  /** alias to replace */
+  @deprecated("use PSetter.replace instead", since = "2.2.0")
+  def set(b: B): S => T = replace(b)
 
   /** join two [[PSetter]] with the same target */
   @inline final def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
@@ -50,8 +54,8 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
       def modify(f: C => D): S => T =
         self.modify(other.modify(f))
 
-      def set(d: D): S => T =
-        self.modify(other.set(d))
+      def replace(d: D): S => T =
+        self.modify(other.replace(d))
     }
 
   /** compose a [[PSetter]] with a [[PTraversal]] */
@@ -137,7 +141,7 @@ object PSetter extends SetterInstances {
       def modify(f: A => B): S => T =
         _modify(f)
 
-      def set(b: B): S => T =
+      def replace(b: B): S => T =
         _modify(_ => b)
     }
 

@@ -26,7 +26,7 @@ class OptionalSpec extends MonocleSuite {
 
   test("void") {
     assertEquals(Optional.void.getOption("hello"), None)
-    assertEquals(Optional.void.set(5)("hello"), "hello")
+    assertEquals(Optional.void.replace(5)("hello"), "hello")
   }
 
   // test implicit resolution of type classes
@@ -86,8 +86,8 @@ class OptionalSpec extends MonocleSuite {
   }
 
   test("set") {
-    assertEquals(headOptionI.set(0)(List(1, 2, 3, 4)), List(0, 2, 3, 4))
-    assertEquals(headOptionI.set(0)(Nil), Nil)
+    assertEquals(headOptionI.replace(0)(List(1, 2, 3, 4)), List(0, 2, 3, 4))
+    assertEquals(headOptionI.replace(0)(Nil), Nil)
   }
 
   test("setOption") {

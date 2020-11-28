@@ -10,12 +10,12 @@ class LastOptionExample extends MonocleSuite {
     assertEquals((List.empty[Int] applyOptional lastOption getOption), None)
     assertEquals((List.empty[Int] applyOptional lastOption modify (_ + 1)), Nil)
 
-    assertEquals((List(1, 2, 3) applyOptional lastOption set 0), List(1, 2, 0))
+    assertEquals((List(1, 2, 3) applyOptional lastOption replace 0), List(1, 2, 0))
   }
 
   test("lastOption creates a Traversal from a String to its optional last Char") {
     assertEquals(("Hello" applyOptional lastOption getOption), Some('o'))
 
-    assertEquals(("Hello" applyOptional lastOption set 'a'), "Hella")
+    assertEquals(("Hello" applyOptional lastOption replace 'a'), "Hella")
   }
 }

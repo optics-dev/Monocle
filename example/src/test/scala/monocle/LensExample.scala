@@ -35,10 +35,10 @@ class LensMonoExample extends MonocleSuite {
   test("set") {
     val changedJohn = john.copy(age = 45)
 
-    assertEquals(Manual._age.set(45)(john), changedJohn)
-    assertEquals(Semi.age.set(45)(john), changedJohn)
-    assertEquals(Person.age.set(45)(john), changedJohn)
-    assertEquals(john.lens(_.age).set(45), changedJohn)
+    assertEquals(Manual._age.replace(45)(john), changedJohn)
+    assertEquals(Semi.age.replace(45)(john), changedJohn)
+    assertEquals(Person.age.replace(45)(john), changedJohn)
+    assertEquals(john.lens(_.age).replace(45), changedJohn)
   }
 
   test("compose") {
@@ -61,7 +61,7 @@ class LensMonoExample extends MonocleSuite {
     @Lenses case class Point(x: Int, y: Int)
     import Point._
 
-    val update = x.modify(_ + 100) compose y.set(7)
+    val update = x.modify(_ + 100) compose y.replace(7)
     assertEquals(update(Point(1, 2)), Point(101, 7))
   }
 

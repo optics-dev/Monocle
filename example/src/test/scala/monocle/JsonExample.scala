@@ -59,7 +59,7 @@ class JsonExample extends MonocleSuite {
         .andThen(jsObject)
         .composeOptional(index("first_name"))
         .andThen(jsString)
-        .set("Robert Jr.")(json),
+        .replace("Robert Jr.")(json),
       JsObject(
         Map(
           "first_name" -> JsString("John"),
@@ -88,7 +88,7 @@ class JsonExample extends MonocleSuite {
 
   test("Use at to add delete fields") {
     assertEquals(
-      jsObject.composeLens(at("nick_name")).set(Some(JsString("Jojo")))(json),
+      jsObject.composeLens(at("nick_name")).replace(Some(JsString("Jojo")))(json),
       JsObject(
         Map(
           "first_name" -> JsString("John"),
@@ -116,7 +116,7 @@ class JsonExample extends MonocleSuite {
     )
 
     assertEquals(
-      jsObject.composeLens(at("age")).set(None)(json),
+      jsObject.composeLens(at("age")).replace(None)(json),
       JsObject(
         Map(
           "first_name" -> JsString("John"),

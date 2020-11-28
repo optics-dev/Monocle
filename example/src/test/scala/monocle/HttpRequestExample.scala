@@ -35,7 +35,7 @@ class HttpRequestExample extends MonocleSuite {
   }
 
   test("host") {
-    assertEquals(uri.andThen(host).set("google.com")(r2), r2.copy(uri = r2.uri.copy(host = "google.com")))
+    assertEquals(uri.andThen(host).replace("google.com")(r2), r2.copy(uri = r2.uri.copy(host = "google.com")))
   }
 
   test("query using index") {
@@ -55,7 +55,7 @@ class HttpRequestExample extends MonocleSuite {
   }
 
   test("headers") {
-    val r = headers.composeLens(at("Content-Type")).set(Some("text/plain; utf-8"))(r2)
+    val r = headers.composeLens(at("Content-Type")).replace(Some("text/plain; utf-8"))(r2)
     assertEquals(r.headers.get("Content-Type"), Some("text/plain; utf-8"))
   }
 

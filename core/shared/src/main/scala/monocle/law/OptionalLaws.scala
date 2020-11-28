@@ -9,14 +9,14 @@ import cats.kernel.Monoid
 case class OptionalLaws[S, A](optional: Optional[S, A]) {
   import IsEq.syntax
 
-  def getOptionSet(s: S): IsEq[S] =
-    optional.getOrModify(s).fold(identity, optional.set(_)(s)) <==> s
+  def getOptionReplace(s: S): IsEq[S] =
+    optional.getOrModify(s).fold(identity, optional.replace(_)(s)) <==> s
 
-  def setGetOption(s: S, a: A): IsEq[Option[A]] =
-    optional.getOption(optional.set(a)(s)) <==> optional.getOption(s).map(_ => a)
+  def replaceGetOption(s: S, a: A): IsEq[Option[A]] =
+    optional.getOption(optional.replace(a)(s)) <==> optional.getOption(s).map(_ => a)
 
-  def setIdempotent(s: S, a: A): IsEq[S] =
-    optional.set(a)(optional.set(a)(s)) <==> optional.set(a)(s)
+  def replaceIdempotent(s: S, a: A): IsEq[S] =
+    optional.replace(a)(optional.replace(a)(s)) <==> optional.replace(a)(s)
 
   def modifyIdentity(s: S): IsEq[S] =
     optional.modify(identity)(s) <==> s
@@ -24,8 +24,8 @@ case class OptionalLaws[S, A](optional: Optional[S, A]) {
   def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
     optional.modify(g)(optional.modify(f)(s)) <==> optional.modify(g compose f)(s)
 
-  def consistentSetModify(s: S, a: A): IsEq[S] =
-    optional.set(a)(s) <==> optional.modify(_ => a)(s)
+  def consistentReplaceModify(s: S, a: A): IsEq[S] =
+    optional.replace(a)(s) <==> optional.modify(_ => a)(s)
 
   def consistentModifyModifyId(s: S, f: A => A): IsEq[S] =
     optional.modify(f)(s) <==> optional.modifyF[Id](f)(s)

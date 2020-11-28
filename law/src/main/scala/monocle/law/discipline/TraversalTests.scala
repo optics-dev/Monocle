@@ -22,11 +22,11 @@ object TraversalTests extends Laws {
     def laws(i: I): TraversalLaws[S, A] = new TraversalLaws(f(i))
     new SimpleRuleSet(
       "Traversal",
-      "headOption"       -> forAll((s: S, i: I) => laws(i).headOption(s)),
-      "get what you set" -> forAll((s: S, f: A => A, i: I) => laws(i).modifyGetAll(s, f)),
-      "set idempotent"   -> forAll((s: S, a: A, i: I) => laws(i).setIdempotent(s, a)),
-      "modify id = id"   -> forAll((s: S, i: I) => laws(i).modifyIdentity(s)),
-      "compose modify"   -> forAll((s: S, f: A => A, g: A => A, i: I) => laws(i).composeModify(s, f, g))
+      "headOption"         -> forAll((s: S, i: I) => laws(i).headOption(s)),
+      "get what you set"   -> forAll((s: S, f: A => A, i: I) => laws(i).modifyGetAll(s, f)),
+      "replace idempotent" -> forAll((s: S, a: A, i: I) => laws(i).replaceIdempotent(s, a)),
+      "modify id = id"     -> forAll((s: S, i: I) => laws(i).modifyIdentity(s)),
+      "compose modify"     -> forAll((s: S, f: A => A, g: A => A, i: I) => laws(i).composeModify(s, f, g))
     )
   }
 }

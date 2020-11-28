@@ -94,7 +94,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
         override def get(s: $sTpe): $aTpe =
           s.$fieldMethod
 
-        override def set(a: $bTpe): $sTpe => $tTpe =
+        override def replace(a: $bTpe): $sTpe => $tTpe =
           _.copy($field = a)
 
         override def modifyF[$F[_]: _root_.cats.Functor](f: $aTpe => $F[$bTpe])(s: $sTpe): $F[$tTpe] =

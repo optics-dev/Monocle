@@ -7,12 +7,12 @@ import monocle.function.Each
 
 /** A [[POptional]] can be seen as a pair of functions:
   *  - `getOrModify: S      => Either[T, A]`
-  *  - `set        : (B, S) => T`
+  *  - `replace    : (B, S) => T`
   *
   * A [[POptional]] could also be defined as a weaker [[PLens]] and
   * weaker [[PPrism]]
   *
-  * [[POptional]] stands for Polymorphic Optional as it set and modify methods change
+  * [[POptional]] stands for Polymorphic Optional as it replace and modify methods change
   * a type `A` to `B` and `S` to `T`.
   * [[Optional]] is a type alias for [[POptional]] restricted to monomorphic updates:
   * {{{
@@ -32,7 +32,11 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   def getOrModify(s: S): Either[T, A]
 
   /** get the modified source of a [[POptional]] */
-  def set(b: B): S => T
+  def replace(b: B): S => T
+
+  /** alias to replace */
+  @deprecated("use POptional.replace instead", since = "2.2.0")
+  def set(b: B): S => T = replace(b)
 
   /** get the target of a [[POptional]] or nothing if there is no target */
   def getOption(s: S): Option[A]
@@ -47,9 +51,9 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     * return empty if the [[POptional]] is not matching
     */
   @inline final def modifyOption(f: A => B): S => Option[T] =
-    s => getOption(s).map(a => set(f(a))(s))
+    s => getOption(s).map(a => replace(f(a))(s))
 
-  /** set polymorphically the target of a [[POptional]] with a value.
+  /** replace polymorphically the target of a [[POptional]] with a value.
     * return empty if the [[POptional]] is not matching
     */
   @inline final def setOption(b: B): S => Option[T] =
@@ -79,14 +83,14 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   @inline final def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[Either[S, S1], Either[T, T1], A, B] =
     POptional[Either[S, S1], Either[T, T1], A, B](
       _.fold(self.getOrModify(_).leftMap(Either.left), other.getOrModify(_).leftMap(Either.right))
-    )(b => _.bimap(self.set(b), other.set(b)))
+    )(b => _.bimap(self.replace(b), other.replace(b)))
 
   @inline final def first[C]: POptional[(S, C), (T, C), (A, C), (B, C)] =
     POptional[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       getOrModify(s).bimap(_ -> c, _ -> c)
     } {
       case (b, c) => { case (s, c2) =>
-        setOption(b)(s).fold(set(b)(s) -> c2)(_ -> c)
+        setOption(b)(s).fold(replace(b)(s) -> c2)(_ -> c)
       }
     }
 
@@ -95,7 +99,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       getOrModify(s).bimap(c -> _, c -> _)
     } {
       case (c, b) => { case (c2, s) =>
-        setOption(b)(s).fold(c2 -> set(b)(s))(c -> _)
+        setOption(b)(s).fold(c2 -> replace(b)(s))(c -> _)
       }
     }
 
@@ -127,10 +131,10 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       def getOrModify(s: S): Either[T, C] =
         self
           .getOrModify(s)
-          .flatMap(a => other.getOrModify(a).bimap(self.set(_)(s), identity))
+          .flatMap(a => other.getOrModify(a).bimap(self.replace(_)(s), identity))
 
-      def set(d: D): S => T =
-        self.modify(other.set(d))
+      def replace(d: D): S => T =
+        self.modify(other.replace(d))
 
       def getOption(s: S): Option[C] =
         self.getOption(s) flatMap other.getOption
@@ -232,8 +236,8 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       def modify(f: A => B): S => T =
         self.modify(f)
 
-      def set(b: B): S => T =
-        self.set(b)
+      def replace(b: B): S => T =
+        self.replace(b)
     }
 
   /** view a [[POptional]] as a [[PTraversal]] */
@@ -253,13 +257,13 @@ object POptional extends OptionalInstances {
       _.fold(Either.right, Either.right)
     )(t => _.bimap(_ => t, _ => t))
 
-  /** create a [[POptional]] using the canonical functions: getOrModify and set */
+  /** create a [[POptional]] using the canonical functions: getOrModify and replace */
   def apply[S, T, A, B](_getOrModify: S => Either[T, A])(_set: B => S => T): POptional[S, T, A, B] =
     new POptional[S, T, A, B] {
       def getOrModify(s: S): Either[T, A] =
         _getOrModify(s)
 
-      def set(b: B): S => T =
+      def replace(b: B): S => T =
         _set(b)
 
       def getOption(s: S): Option[A] =
@@ -296,7 +300,7 @@ object Optional {
       def getOrModify(s: S): Either[S, A] =
         _getOption(s).fold[Either[S, A]](Either.left(s))(Either.right)
 
-      def set(a: A): S => S =
+      def replace(a: A): S => S =
         _set(a)
 
       def getOption(s: S): Option[A] =

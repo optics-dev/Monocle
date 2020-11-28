@@ -18,7 +18,7 @@ class FilterIndexExample extends MonocleSuite {
     assertEquals(
       (SortedMap("One" -> 1, "Two" -> 2) applyTraversal filterIndex { k: String =>
         k.startsWith("T")
-      } set 3),
+      } replace 3),
       SortedMap(
         "One" -> 1,
         "Two" -> 3

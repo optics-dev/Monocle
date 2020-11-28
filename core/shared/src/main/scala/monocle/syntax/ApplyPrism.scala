@@ -12,13 +12,17 @@ final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]) {
     prism.modifyF(f)(s)
   @inline def modifyOption(f: A => B): Option[T] = prism.modifyOption(f)(s)
 
-  @inline def set(b: B): T                     = prism.set(b)(s)
+  @inline def replace(b: B): T                 = prism.replace(b)(s)
   @inline def setOption(b: B): Option[T]       = prism.setOption(b)(s)
   @inline def isEmpty: Boolean                 = prism.isEmpty(s)
   @inline def nonEmpty: Boolean                = prism.nonEmpty(s)
   @inline def find(p: A => Boolean): Option[A] = prism.find(p)(s)
   @inline def exist(p: A => Boolean): Boolean  = prism.exist(p)(s)
   @inline def all(p: A => Boolean): Boolean    = prism.all(p)(s)
+
+  /** alias to replace */
+  @deprecated("use ApplyPrism.replace instead", since = "2.2.0")
+  @inline def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
