@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle.function.fields._
+import monocle.function.At.at
 import monocle.{Iso, Optional, Prism}
 
 import scala.annotation.implicitNotFound
@@ -15,8 +15,8 @@ import scala.annotation.implicitNotFound
 abstract class Cons[S, A] extends Serializable {
   def cons: Prism[S, (A, S)]
 
-  def headOption: Optional[S, A] = cons composeLens first
-  def tailOption: Optional[S, S] = cons composeLens second
+  def headOption: Optional[S, A] = cons composeLens at(1)
+  def tailOption: Optional[S, S] = cons composeLens at(2)
 }
 
 trait ConsFunctions {

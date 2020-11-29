@@ -1,6 +1,6 @@
 package monocle.function
 
-import monocle.function.fields._
+import monocle.function.At.at
 import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
@@ -17,8 +17,8 @@ import scala.annotation.implicitNotFound
 abstract class Snoc1[S, I, L] extends Serializable {
   def snoc1: Iso[S, (I, L)]
 
-  def init: Lens[S, I] = snoc1 composeLens first
-  def last: Lens[S, L] = snoc1 composeLens second
+  def init: Lens[S, I] = snoc1 composeLens at(1)
+  def last: Lens[S, L] = snoc1 composeLens at(2)
 }
 
 trait Snoc1Functions {
@@ -90,6 +90,7 @@ object Snoc1 extends Snoc1Functions {
   /** *********************************************************************************************
     */
   import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
+
   import scala.{List => IList, Vector => IVector}
 
   implicit def necSnoc1[A]: Snoc1[NonEmptyChain[A], Chain[A], A] =
