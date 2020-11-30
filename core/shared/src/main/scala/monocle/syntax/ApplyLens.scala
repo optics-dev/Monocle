@@ -13,7 +13,7 @@ final case class ApplyLens[S, T, A, B](s: S, lens: PLens[S, T, A, B]) {
   @inline def find(p: A => Boolean): S => Option[A]      = lens.find(p)
 
   /** alias to replace */
-  @deprecated("use ApplyLens.replace instead", since = "2.2.0")
+  @deprecated("use replace instead", since = "3.0.0-M1")
   @inline def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyOptional[S, T, A1, B1] =

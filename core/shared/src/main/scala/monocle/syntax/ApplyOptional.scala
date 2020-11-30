@@ -23,7 +23,7 @@ final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]
   @inline def setOption(b: B): Option[T] = optional.setOption(b)(s)
 
   /** alias to replace */
-  @deprecated("use ApplyOptional.replace instead", since = "2.2.0")
+  @deprecated("use replace instead", since = "3.0.0-M1")
   @inline def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyOptional[S, T, A1, B1] =

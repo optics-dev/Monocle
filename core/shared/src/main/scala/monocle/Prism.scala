@@ -65,7 +65,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
     modify(_ => b)
 
   /** alias to replace */
-  @deprecated("use Prism.replace instead", since = "2.2.0")
+  @deprecated("use replace instead", since = "3.0.0-M1")
   @inline final def set(b: B): S => T = replace(b)
 
   /** replace polymorphically the target of a [[PPrism]] with a value.

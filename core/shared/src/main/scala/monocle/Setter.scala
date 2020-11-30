@@ -35,7 +35,7 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
   def replace(b: B): S => T
 
   /** alias to replace */
-  @deprecated("use PSetter.replace instead", since = "2.2.0")
+  @deprecated("use replace instead", since = "3.0.0-M1")
   def set(b: B): S => T = replace(b)
 
   /** join two [[PSetter]] with the same target */

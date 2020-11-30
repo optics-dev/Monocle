@@ -21,7 +21,7 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
   @inline def nonEmpty(s: S): Boolean               = traversal.nonEmpty(s)
 
   /** alias to replace */
-  @deprecated("use ApplyTraversal.replace instead", since = "2.2.0")
+  @deprecated("use replace instead", since = "3.0.0-M1")
   @inline def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyTraversal[S, T, A1, B1] =

@@ -85,7 +85,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   @inline final def replace(b: B): S => T = modify(_ => b)
 
   /** alias to replace */
-  @deprecated("use PTraversal.replace instead", since = "2.2.0")
+  @deprecated("use replace instead", since = "3.0.0-M1")
   @inline final def set(b: B): S => T = replace(b)
 
   /** join two [[PTraversal]] with the same target */
