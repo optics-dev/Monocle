@@ -49,13 +49,27 @@ lazy val buildSettings = Seq(
     "-feature",
     "-unchecked",
     "-Xfatal-warnings",
-    "-deprecation"
+    "-deprecation",
   ),
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions ++= {
     if (isDotty.value)
       Seq("-source:3.0-migration", "-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
-    else Seq("-Ymacro-annotations", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused:imports", "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps")
+    else Seq(
+      "-Ymacro-annotations",
+      "-Ywarn-dead-code",
+      "-Ywarn-value-discard",
+      "-Ywarn-unused:imports",
+      "-language:implicitConversions",
+      "-language:higherKinds",
+      "-language:postfixOps",
+      "-Wconf:msg=class Field1 in package function is deprecated:i",
+      "-Wconf:msg=class Field2 in package function is deprecated:i",
+      "-Wconf:msg=class Field3 in package function is deprecated:i",
+      "-Wconf:msg=class Field4 in package function is deprecated:i",
+      "-Wconf:msg=class Field5 in package function is deprecated:i",
+      "-Wconf:msg=class Field6 in package function is deprecated:i",
+    )
   },
   libraryDependencies ++= {
     if (isDotty.value) Seq.empty

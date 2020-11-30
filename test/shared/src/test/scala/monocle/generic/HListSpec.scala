@@ -1,14 +1,13 @@
 package monocle.generic
 
-import monocle.MonocleSuite
-import monocle.law.discipline.{IsoTests, LensTests}
-import org.scalacheck.{Arbitrary, Cogen}
-import shapeless.HList._
-import shapeless.ops.hlist.{Init => HListInit, IsHCons}
-import shapeless.{::, HNil}
-
 import cats.Eq
 import cats.implicits._
+import monocle.MonocleSuite
+import monocle.law.discipline.IsoTests
+import org.scalacheck.{Arbitrary, Cogen}
+import shapeless.HList._
+import shapeless.ops.hlist.{IsHCons, Init => HListInit}
+import shapeless.{::, HNil}
 
 class HListSpec extends MonocleSuite {
   case class Example(i: Int, b: Boolean, c: Char, f: Float, l: Long, d: Double)
@@ -49,13 +48,6 @@ class HListSpec extends MonocleSuite {
   implicit val hInitCoGen    = Cogen.tuple5[Int, Boolean, Char, Float, Long].contramap[HInit](_.tupled)
 
   checkAll("toHList", IsoTests(toHList[Example, H]))
-
-  checkAll("first from HList", LensTests(first[H, Int]))
-  checkAll("second from HList", LensTests(second[H, Boolean]))
-  checkAll("third from HList", LensTests(third[H, Char]))
-  checkAll("fourth from HList", LensTests(fourth[H, Float]))
-  checkAll("fifth from HList", LensTests(fifth[H, Long]))
-  checkAll("sixth from HList", LensTests(sixth[H, Double]))
 
   checkAll("reverse HList", IsoTests(reverse[H, ReverseH]))
   checkAll("hcons HList", IsoTests(cons1[H, Int, HTail]))

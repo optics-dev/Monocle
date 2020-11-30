@@ -1,6 +1,6 @@
 package other
 
-import monocle.TestInstances
+import monocle.{TestInstances, Traversal}
 import shapeless.test.illTyped
 import shapeless.{::, HNil}
 
@@ -8,10 +8,10 @@ case class Custom(value: Int)
 
 object Custom {
   import monocle.Lens
-  import monocle.function.Field1
+  import monocle.function.Each
 
-  implicit val customHead = new Field1[Custom, Int] {
-    def first = Lens((_: Custom).value)(v => c => c.copy(value = v))
+  implicit val customHead = new Each[Custom, Int] {
+    def each: Traversal[Custom, Int] = Lens((_: Custom).value)(v => c => c.copy(value = v)).asTraversal
   }
 }
 
@@ -25,8 +25,8 @@ class ImportExample extends munit.FunSuite with TestInstances {
 
     assertEquals(each[List[Int], Int].modify(_ + 1)(List(1, 2, 3)), List(2, 3, 4))
 
-    // also compile because Head instance for Custom is in the companion of Custom
-    assertEquals(first[Custom, Int].modify(_ + 1)(Custom(1)), Custom(2))
+    // also compile because Each instance for Custom is in the companion of Custom
+    assertEquals(each[Custom, Int].modify(_ + 1)(Custom(1)), Custom(2))
   }
 
   test("monocle.syntax.all._ permits to use optics as operator which improves type inference") {
@@ -54,7 +54,7 @@ class ImportExample extends munit.FunSuite with TestInstances {
     // do not compile because Each instance for List is not in scope
     illTyped("""each[List[Int], Int].modify(List(1,2,3), _ + 1)""")
 
-    assertEquals(first[Int :: HNil, Int].modify(_ + 1)(1 :: HNil), (2 :: HNil))
+    assertEquals(head[Int :: HNil, Int, HNil].modify(_ + 1)(1 :: HNil), (2 :: HNil))
   }
 
   test("monocle._, Monocle._ makes all Monocle core features available (no generic)") {

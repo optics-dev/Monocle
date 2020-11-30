@@ -6,14 +6,6 @@ import shapeless.HNil
 class HListExample extends MonocleSuite {
   case class Example(i: Int, s: String, b: Boolean)
 
-  test("_1 to _6 creates a Lens from HList to ith element") {
-    assertEquals((1 :: "bla" :: true :: HNil applyLens first get), 1)
-    assertEquals((1 :: "bla" :: true :: HNil applyLens second get), "bla")
-    assertEquals((1 :: "bla" :: true :: 5f :: 'c' :: 7L :: HNil applyLens sixth get), 7L)
-
-    assertEquals((1 :: "bla" :: true :: HNil applyLens first modify (_ + 1)), 2 :: "bla" :: true :: HNil)
-  }
-
   test("toHList creates an Iso between a Generic (typically a case class) and HList") {
     assertEquals((Example(1, "bla", true) applyIso toHList get), (1 :: "bla" :: true :: HNil))
 
