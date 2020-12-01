@@ -12,7 +12,7 @@ import monocle.internal.Monoids
 /** A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
   * where n can be infinite.
   *
-  * [[PTraversal]] stands for Polymorphic Traversal as it set and modify methods change
+  * [[PTraversal]] stands for Polymorphic Traversal as it replace and modify methods change
   * a type `A` to `B` and `S` to `T`.
   * [[Traversal]] is a type alias for [[PTraversal]] restricted to monomorphic updates:
   * {{{
@@ -81,9 +81,12 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   @inline final def modify(f: A => B): S => T =
     modifyF[Id](f)
 
-  /** set polymorphically the target of a [[PTraversal]] with a value */
-  @inline final def set(b: B): S => T =
-    modify(_ => b)
+  /** replace polymorphically the target of a [[PTraversal]] with a value */
+  @inline final def replace(b: B): S => T = modify(_ => b)
+
+  /** alias to replace */
+  @deprecated("use replace instead", since = "3.0.0-M1")
+  @inline final def set(b: B): S => T = replace(b)
 
   /** join two [[PTraversal]] with the same target */
   @inline final def choice[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[Either[S, S1], Either[T, T1], A, B] =
@@ -316,7 +319,7 @@ object Traversal {
     new PTraversal[S, S, A, A] {
       def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
         xs.foldLeft(Applicative[F].pure(s))((fs, lens) =>
-          Applicative[F].map2(f(lens.get(s)), fs)((a, s) => lens.set(a)(s))
+          Applicative[F].map2(f(lens.get(s)), fs)((a, s) => lens.replace(a)(s))
         )
     }
 }

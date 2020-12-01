@@ -9,7 +9,7 @@ class TailExample extends MonocleSuite {
     assertEquals(((2, false) applyLens tail get), false)
     assertEquals((('r', false, "lala", 5.6, 7, 4) applyLens tail get), ((false, "lala", 5.6, 7, 4)))
 
-    assertEquals(((2, false, "hello") applyLens tail set ((true, "plop"))), ((2, true, "plop")))
+    assertEquals(((2, false, "hello") applyLens tail replace ((true, "plop"))), ((2, true, "plop")))
   }
 
   test("tail creates a Lens from a OneAnd its first element") {

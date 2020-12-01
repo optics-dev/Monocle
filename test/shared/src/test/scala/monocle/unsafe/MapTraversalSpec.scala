@@ -19,7 +19,7 @@ object MapListIsoTests extends Laws {
       // "round trip other way does not work because of key collision and unorderness"
       "modify id = id" -> forAll((s: S) => laws.modifyIdentity(s)),
       // "compose modify does not work because of key collision and unorderness"
-      "consistent set with modify"      -> forAll((s: S, a: A) => laws.consistentSetModify(s, a)),
+      "consistent replace with modify"  -> forAll((s: S, a: A) => laws.consistentReplaceModify(s, a)),
       "consistent modify with modifyId" -> forAll((s: S, f: A => A) => laws.consistentModifyModifyId(s, f)),
       "consistent get with modifyId"    -> forAll((s: S) => laws.consistentGetModifyId(s))
     )
@@ -39,9 +39,9 @@ object MapKVTraversalTests extends Laws {
     new SimpleRuleSet(
       "MapKVTraversal",
       "headOption" -> forAll((s: S, i: I) => laws(i).headOption(s)),
-      // "get what you set does not work because of key collision unorderness"
-      "set idempotent" -> forAll((s: S, a: A, i: I) => laws(i).setIdempotent(s, a)),
-      "modify id = id" -> forAll((s: S, i: I) => laws(i).modifyIdentity(s))
+      // "get what you replace does not work because of key collision unorderness"
+      "replace idempotent" -> forAll((s: S, a: A, i: I) => laws(i).replaceIdempotent(s, a)),
+      "modify id = id"     -> forAll((s: S, i: I) => laws(i).modifyIdentity(s))
       // "compose modify does not work because of key collision and unorderness"
     )
   }

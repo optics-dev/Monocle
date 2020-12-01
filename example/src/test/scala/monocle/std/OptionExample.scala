@@ -9,9 +9,9 @@ class OptionExample extends MonocleSuite {
     assertEquals(mSome.getOption(Some(1)), Some(1))
     assertEquals(mSome.reverseGet(1), Some(1))
 
-    // type can be changed with set and modify
-    assertEquals(mSome.set('a')(Some(1)), Some('a'))
-    assertEquals(mSome.set(2)(None), None)
+    // type can be changed with replace and modify
+    assertEquals(mSome.replace('a')(Some(1)), Some('a'))
+    assertEquals(mSome.replace(2)(None), None)
 
     assertEquals(pSome.modify((_: Int) + 2.0)(Some(1)), Some(3.0))
   }
@@ -23,7 +23,7 @@ class OptionExample extends MonocleSuite {
     assertEquals(mNone.reverseGet(()), None)
 
     // none setter does nothing
-    assertEquals(mNone.set(())(Some(1)), Some(1))
-    assertEquals(mNone.set(())(None), None)
+    assertEquals(mNone.replace(())(Some(1)), Some(1))
+    assertEquals(mNone.replace(())(None), None)
   }
 }

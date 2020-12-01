@@ -150,8 +150,8 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
   }
 
   test("set") {
-    assertEquals(i.set(1)(I(3)), I(1))
-    assertEquals(i.set(1)(S("")), S(""))
+    assertEquals(i.replace(1)(I(3)), I(1))
+    assertEquals(i.replace(1)(S("")), S(""))
   }
 
   test("setOption") {

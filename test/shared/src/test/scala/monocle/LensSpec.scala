@@ -84,7 +84,7 @@ class LensSpec extends MonocleSuite {
   }
 
   test("set") {
-    assertEquals(x.set(5)(Point(9, 2)), Point(5, 2))
+    assertEquals(x.replace(5)(Point(9, 2)), Point(5, 2))
   }
 
   test("modify") {

@@ -320,6 +320,7 @@ lazy val buildInfoSettings = Seq(
 lazy val mdocSettings = Seq(
   mdoc := run.in(Compile).evaluated,
   scalacOptions --= Seq("-Xfatal-warnings", "-Ywarn-unused"),
+  scalacOptions ~= (_.filterNot(_.startsWith("-Wconf"))),
   crossScalaVersions := Seq(scalaVersion.value),
   unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(core.jvm),
   target in (ScalaUnidoc, unidoc) := (baseDirectory in LocalRootProject).value / "website" / "static" / "api",

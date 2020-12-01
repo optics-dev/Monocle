@@ -32,7 +32,7 @@ final class StateLensOps[S, T, A, B](private val lens: PLens[S, T, A, B]) extend
     IndexedStateT { s =>
       val a = lens.get(s)
       val b = f(a)
-      Now((lens.set(b)(s), b))
+      Now((lens.replace(b)(s), b))
     }
 
   /** modify the value viewed through the lens and returns its *old* value */

@@ -18,12 +18,12 @@ object LensTests extends Laws {
     def laws(i: I) = LensLaws(f(i))
     new SimpleRuleSet(
       "Lens",
-      "set what you get"                -> forAll((s: S, i: I) => laws(i).getSet(s)),
-      "get what you set"                -> forAll((s: S, a: A, i: I) => laws(i).setGet(s, a)),
-      "set idempotent"                  -> forAll((s: S, a: A, i: I) => laws(i).setIdempotent(s, a)),
+      "replace what you get"            -> forAll((s: S, i: I) => laws(i).getReplace(s)),
+      "get what you replace"            -> forAll((s: S, a: A, i: I) => laws(i).replaceGet(s, a)),
+      "replace idempotent"              -> forAll((s: S, a: A, i: I) => laws(i).replaceIdempotent(s, a)),
       "modify id = id"                  -> forAll((s: S, i: I) => laws(i).modifyIdentity(s)),
       "compose modify"                  -> forAll((s: S, g: A => A, h: A => A, i: I) => laws(i).composeModify(s, g, h)),
-      "consistent set with modify"      -> forAll((s: S, a: A, i: I) => laws(i).consistentSetModify(s, a)),
+      "consistent replace with modify"  -> forAll((s: S, a: A, i: I) => laws(i).consistentReplaceModify(s, a)),
       "consistent modify with modifyId" -> forAll((s: S, g: A => A, i: I) => laws(i).consistentModifyModifyId(s, g)),
       "consistent get with modifyId"    -> forAll((s: S, i: I) => laws(i).consistentGetModifyId(s))
     )

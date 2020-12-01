@@ -27,13 +27,13 @@ class OptionSpec extends MonocleSuite {
 
   checkAll("withDefault Int 0", IsoTests(withDefault(IntNoZero(0))))
 
-  test("withDefault can break get-set property") {
+  test("withDefault can break get-replace property") {
     def mapAt(index: String): Lens[Map[String, Int], Option[Int]] =
       at(index)
 
     def mapDefaultTo0(index: String): Lens[Map[String, Int], Int] =
       mapAt(index).andThen(withDefault(0))
 
-    assert(mapDefaultTo0("id").set(0)(Map("id" -> 0)) == Map.empty)
+    assert(mapDefaultTo0("id").replace(0)(Map("id" -> 0)) == Map.empty)
   }
 }
