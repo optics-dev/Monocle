@@ -16,7 +16,7 @@ import monocle.function.Each
   * Typically a [[PPrism]] or [[Prism]] encodes the relation between a Sum or
   * CoProduct type (e.g. sealed trait) and one of its element.
   *
-  * [[PPrism]] stands for Polymorphic Prism as it set and modify methods change
+  * [[PPrism]] stands for Polymorphic Prism as it replace and modify methods change
   * a type `A` to `B` and `S` to `T`.
   * [[Prism]] is a type alias for [[PPrism]] where the type of target cannot be modified:
   * {{{
@@ -60,11 +60,15 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   @inline final def modifyOption(f: A => B): S => Option[T] =
     s => getOption(s).map(a => reverseGet(f(a)))
 
-  /** set polymorphically the target of a [[PPrism]] with a value */
-  @inline final def set(b: B): S => T =
+  /** replace polymorphically the target of a [[PPrism]] with a value */
+  @inline final def replace(b: B): S => T =
     modify(_ => b)
 
-  /** set polymorphically the target of a [[PPrism]] with a value.
+  /** alias to replace */
+  @deprecated("use replace instead", since = "3.0.0-M1")
+  @inline final def set(b: B): S => T = replace(b)
+
+  /** replace polymorphically the target of a [[PPrism]] with a value.
     * return empty if the [[PPrism]] is not matching
     */
   @inline final def setOption(b: B): S => Option[T] =
@@ -154,7 +158,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
       def getOrModify(s: S): Either[T, C] =
         self
           .getOrModify(s)
-          .flatMap(a => other.getOrModify(a).bimap(self.set(_)(s), identity))
+          .flatMap(a => other.getOrModify(a).bimap(self.replace(_)(s), identity))
 
       def reverseGet(d: D): T =
         self.reverseGet(other.reverseGet(d))
@@ -245,8 +249,8 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
       def modify(f: A => B): S => T =
         self.modify(f)
 
-      def set(b: B): S => T =
-        self.set(b)
+      def replace(b: B): S => T =
+        self.replace(b)
     }
 
   /** view a [[PPrism]] as a [[PTraversal]] */
@@ -262,8 +266,8 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
       def getOrModify(s: S): Either[T, A] =
         self.getOrModify(s)
 
-      def set(b: B): S => T =
-        self.set(b)
+      def replace(b: B): S => T =
+        self.replace(b)
 
       def getOption(s: S): Option[A] =
         self.getOption(s)

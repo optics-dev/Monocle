@@ -7,6 +7,6 @@ class LastExample extends MonocleSuite {
     assertEquals(((2, false) applyLens last get), false)
     assertEquals((('r', false, "lala", 5.6, 7, 4) applyLens last get), 4)
 
-    assertEquals(((2, false) applyLens last set true), ((2, true)))
+    assertEquals(((2, false) applyLens last replace true), ((2, true)))
   }
 }

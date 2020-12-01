@@ -72,8 +72,11 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   @inline final def modify(f: A => B): S => T =
     s => reverseGet(f(get(s)))
 
-  /** set polymorphically the target of a [[PIso]] with a value */
-  @inline final def set(b: B): S => T =
+  @deprecated("use replace instead", since = "3.0.0-M1")
+  @inline final def set(b: B): S => T = replace(b)
+
+  /** replace polymorphically the target of a [[PIso]] with a value */
+  @inline final def replace(b: B): S => T =
     _ => reverseGet(b)
 
   /** pair two disjoint [[PIso]] */
@@ -242,8 +245,8 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       def modify(f: A => B): S => T =
         self.modify(f)
 
-      def set(b: B): S => T =
-        self.set(b)
+      def replace(b: B): S => T =
+        self.replace(b)
     }
 
   /** view a [[PIso]] as a [[PTraversal]] */
@@ -259,8 +262,8 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       def getOrModify(s: S): Either[T, A] =
         Either.right(get(s))
 
-      def set(b: B): S => T =
-        self.set(b)
+      def replace(b: B): S => T =
+        self.replace(b)
 
       def getOption(s: S): Option[A] =
         Some(self.get(s))
@@ -291,8 +294,8 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
       def get(s: S): A =
         self.get(s)
 
-      def set(b: B): S => T =
-        self.set(b)
+      def replace(b: B): S => T =
+        self.replace(b)
 
       def modify(f: A => B): S => T =
         self.modify(f)

@@ -125,7 +125,7 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
   }
 
   test("set") {
-    assertEquals(iso.set(5)(IntWrapper(0)), IntWrapper(5))
+    assertEquals(iso.replace(5)(IntWrapper(0)), IntWrapper(5))
   }
 
   test("modify") {

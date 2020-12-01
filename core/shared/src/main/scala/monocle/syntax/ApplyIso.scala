@@ -6,11 +6,14 @@ import monocle.{std, Fold, Getter, PIso, PLens, POptional, PPrism, PSetter, PTra
 
 final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
   @inline def get: A                                     = iso.get(s)
-  @inline def set(b: B): T                               = iso.set(b)(s)
+  @inline def replace(b: B): T                           = iso.replace(b)(s)
   @inline def modify(f: A => B): T                       = iso.modify(f)(s)
   @inline def modifyF[F[_]: Functor](f: A => F[B]): F[T] = iso.modifyF(f)(s)
   @inline def exist(p: A => Boolean): S => Boolean       = iso.exist(p)
   @inline def find(p: A => Boolean): S => Option[A]      = iso.find(p)
+
+  @deprecated("use replace instead", since = "3.0.0-M1")
+  @inline def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)

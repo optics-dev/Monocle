@@ -9,7 +9,7 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
   @inline def headOption: Option[A] = traversal.headOption(s)
   @inline def lastOption: Option[A] = traversal.lastOption(s)
 
-  @inline def set(b: B): T         = traversal.set(b)(s)
+  @inline def replace(b: B): T     = traversal.replace(b)(s)
   @inline def modify(f: A => B): T = traversal.modify(f)(s)
   @inline def modifyF[F[_]: Applicative](f: A => F[B]): F[T] =
     traversal.modifyF(f)(s)
@@ -19,6 +19,10 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
   @inline def all(p: A => Boolean): S => Boolean    = traversal.all(p)
   @inline def isEmpty(s: S): Boolean                = traversal.isEmpty(s)
   @inline def nonEmpty(s: S): Boolean               = traversal.nonEmpty(s)
+
+  /** alias to replace */
+  @deprecated("use replace instead", since = "3.0.0-M1")
+  @inline def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyTraversal[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)

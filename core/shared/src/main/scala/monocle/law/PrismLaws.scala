@@ -21,8 +21,8 @@ case class PrismLaws[S, A](prism: Prism[S, A]) {
   def composeModify(s: S, f: A => A, g: A => A): IsEq[S] =
     prism.modify(g)(prism.modify(f)(s)) <==> prism.modify(g compose f)(s)
 
-  def consistentSetModify(s: S, a: A): IsEq[S] =
-    prism.set(a)(s) <==> prism.modify(_ => a)(s)
+  def consistentReplaceModify(s: S, a: A): IsEq[S] =
+    prism.replace(a)(s) <==> prism.modify(_ => a)(s)
 
   def consistentModifyModifyId(s: S, f: A => A): IsEq[S] =
     prism.modify(f)(s) <==> prism.modifyF[Id](f)(s)

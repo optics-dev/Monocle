@@ -9,7 +9,7 @@ class IndexExample extends MonocleSuite {
   test("index creates an Optional from a Map, IMap to a value at the index") {
     assertEquals((Map("One" -> 1, "Two" -> 2) applyOptional index("One") getOption), Some(1))
 
-    assertEquals((Map("One" -> 1, "Two" -> 2) applyOptional index("One") set 2), Map("One" -> 2, "Two" -> 2))
+    assertEquals((Map("One" -> 1, "Two" -> 2) applyOptional index("One") replace 2), Map("One" -> 2, "Two" -> 2))
   }
 
   test("index creates an Optional from a List, Vector or Stream to a value at the index") {

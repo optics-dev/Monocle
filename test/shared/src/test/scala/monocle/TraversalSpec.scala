@@ -140,7 +140,7 @@ class TraversalSpec extends MonocleSuite {
   }
 
   test("set") {
-    assertEquals(eachLi.set(0)(List(1, 2, 3, 4)), List(0, 0, 0, 0))
+    assertEquals(eachLi.replace(0)(List(1, 2, 3, 4)), List(0, 0, 0, 0))
   }
 
   test("modify") {
@@ -164,8 +164,8 @@ class TraversalSpec extends MonocleSuite {
     val numbers   = List(Some(1), None, Some(2), None)
     val traversal = Traversal.fromTraverse[List, Option[Int]]
 
-    assertEquals(traversal.some.set(5)(numbers), List(Some(5), None, Some(5), None))
-    assertEquals(numbers.applyTraversal(traversal).some.set(5), List(Some(5), None, Some(5), None))
+    assertEquals(traversal.some.replace(5)(numbers), List(Some(5), None, Some(5), None))
+    assertEquals(numbers.applyTraversal(traversal).some.replace(5), List(Some(5), None, Some(5), None))
   }
 
   test("withDefault") {

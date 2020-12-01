@@ -12,8 +12,8 @@ case class TraversalLaws[S, A](traversal: Traversal[S, A]) {
   def modifyGetAll(s: S, f: A => A): IsEq[List[A]] =
     traversal.getAll(traversal.modify(f)(s)) <==> traversal.getAll(s).map(f)
 
-  def setIdempotent(s: S, a: A): IsEq[S] =
-    traversal.set(a)(traversal.set(a)(s)) <==> traversal.set(a)(s)
+  def replaceIdempotent(s: S, a: A): IsEq[S] =
+    traversal.replace(a)(traversal.replace(a)(s)) <==> traversal.replace(a)(s)
 
   def modifyIdentity(s: S): IsEq[S] =
     traversal.modify(identity)(s) <==> s

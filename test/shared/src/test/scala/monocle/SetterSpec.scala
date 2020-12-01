@@ -17,7 +17,7 @@ class SetterSpec extends MonocleSuite {
     assertEquals(
       Compose[Setter]
         .compose(eachL[Int], eachL[List[Int]])
-        .set(3)(List(List(1, 2, 3), List(4))),
+        .replace(3)(List(List(1, 2, 3), List(4))),
       List(List(3, 3, 3), List(3))
     )
   }
@@ -36,7 +36,7 @@ class SetterSpec extends MonocleSuite {
   }
 
   test("set") {
-    assertEquals(eachLi.set(0)(List(1, 2, 3, 4)), List(0, 0, 0, 0))
+    assertEquals(eachLi.replace(0)(List(1, 2, 3, 4)), List(0, 0, 0, 0))
   }
 
   test("modify") {
@@ -49,8 +49,8 @@ class SetterSpec extends MonocleSuite {
 
     val setter = GenLens[SomeTest](_.y).asSetter
 
-    assertEquals(setter.some.set(3)(obj), SomeTest(1, Some(3)))
-    assertEquals(obj.applySetter(setter).some.set(3), SomeTest(1, Some(3)))
+    assertEquals(setter.some.replace(3)(obj), SomeTest(1, Some(3)))
+    assertEquals(obj.applySetter(setter).some.replace(3), SomeTest(1, Some(3)))
   }
 
   test("withDefault") {
@@ -72,7 +72,7 @@ class SetterSpec extends MonocleSuite {
 
     val setter = GenLens[SomeTest](_.y).asSetter
 
-    assertEquals(setter.each.set(3)(obj), SomeTest(1, List(3, 3, 3)))
-    assertEquals(obj.applySetter(setter).each.set(3), SomeTest(1, List(3, 3, 3)))
+    assertEquals(setter.each.replace(3)(obj), SomeTest(1, List(3, 3, 3)))
+    assertEquals(obj.applySetter(setter).each.replace(3), SomeTest(1, List(3, 3, 3)))
   }
 }

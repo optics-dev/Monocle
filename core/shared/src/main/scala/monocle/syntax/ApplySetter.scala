@@ -5,8 +5,12 @@ import monocle.function.Each
 import monocle.{std, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplySetter[S, T, A, B](s: S, setter: PSetter[S, T, A, B]) {
-  @inline def set(b: B): T         = setter.set(b)(s)
+  @inline def replace(b: B): T     = setter.replace(b)(s)
   @inline def modify(f: A => B): T = setter.modify(f)(s)
+
+  /** alias to replace */
+  @deprecated("use replace instead", since = "3.0.0-M1")
+  @inline def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplySetter[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)

@@ -19,8 +19,12 @@ final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]
     optional.modifyF(f)(s)
   @inline def modifyOption(f: A => B): Option[T] = optional.modifyOption(f)(s)
 
-  @inline def set(b: B): T               = optional.set(b)(s)
+  @inline def replace(b: B): T           = optional.replace(b)(s)
   @inline def setOption(b: B): Option[T] = optional.setOption(b)(s)
+
+  /** alias to replace */
+  @deprecated("use replace instead", since = "3.0.0-M1")
+  @inline def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyOptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
