@@ -17,22 +17,10 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   @inline def isEmpty: Boolean                      = _fold.isEmpty(s)
   @inline def nonEmpty: Boolean                     = _fold.nonEmpty(s)
 
-  def each[C](implicit evEach: Each[A, C]): ApplyFold[S, C] =
-    composeTraversal(evEach.each)
-
   def some[A1](implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
-    adapt[Option[A1]] composeIso (std.option.withDefault(defaultValue))
-
-  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyFold[S, A1] =
-    composeLens(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): ApplyFold[S, A1] =
-    composeOptional(evIndex.index(i))
-
-  private def adapt[A1](implicit evA: A =:= A1): ApplyFold[S, A1] =
+  private[monocle] def adapt[A1](implicit evA: A =:= A1): ApplyFold[S, A1] =
     evA.substituteCo[ApplyFold[S, *]](this)
 
   def andThen[B](other: Fold[A, B]): ApplyFold[S, B] =
@@ -72,4 +60,23 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
 
   /** alias to composeIso */
   @inline def ^<->[B, C, D](other: PIso[A, B, C, D]): ApplyFold[S, C] = andThen(other)
+}
+
+object ApplyFold {
+  implicit def applyFoldSyntax[S, A](self: ApplyFold[S, A]): ApplyFoldSyntax[S, A] =
+    new ApplyFoldSyntax(self)
+}
+
+final case class ApplyFoldSyntax[S, A](self: ApplyFold[S, A]) extends AnyVal {
+  def each[C](implicit evEach: Each[A, C]): ApplyFold[S, C] =
+    self composeTraversal evEach.each
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
+    self.adapt[Option[A1]] composeIso std.option.withDefault(defaultValue)
+
+  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyFold[S, A1] =
+    self composeLens evAt.at(i)
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): ApplyFold[S, A1] =
+    self composeOptional evIndex.index(i)
 }
