@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import cats.{Eq, Functor}
-import monocle.function.Each
+import monocle.function.{At, Each}
 import monocle.{std, Fold, Getter, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
@@ -75,4 +75,7 @@ final case class ApplyIsoSyntax[S, A](private val self: ApplyIso[S, S, A, A]) ex
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyIso[S, S, A1, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
+
+  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyLens[S, S, A1, A1] =
+    self composeLens evAt.at(i)
 }

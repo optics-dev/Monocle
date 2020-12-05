@@ -3,7 +3,7 @@ package monocle
 import cats.{Applicative, Eq, Monoid}
 import cats.arrow.Choice
 import cats.syntax.either._
-import monocle.function.Each
+import monocle.function.{At, Each}
 
 /** A [[POptional]] can be seen as a pair of functions:
   *  - `getOrModify: S      => Either[T, A]`
@@ -335,4 +335,7 @@ final case class OptionalSyntax[S, A](private val self: Optional[S, A]) extends 
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Optional[S, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
+
+  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Optional[S, A1] =
+    self composeLens evAt.at(i)
 }

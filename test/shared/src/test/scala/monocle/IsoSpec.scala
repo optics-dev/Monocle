@@ -198,4 +198,14 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     assertEquals(iso.each.getAll(obj), List(1, 2, 3))
     assertEquals(obj.applyIso(iso).each.getAll, List(1, 2, 3))
   }
+
+  test("at") {
+    case class SomeTest(y: (Int, String))
+    val obj = SomeTest((1, "one"))
+
+    val iso = Iso[SomeTest, (Int, String)](_.y)(SomeTest)
+
+    assertEquals(iso.at(1).get(obj), 1)
+    assertEquals(obj.applyIso(iso).at(1).get, 1)
+  }
 }

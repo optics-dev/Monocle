@@ -1,5 +1,6 @@
 package monocle
 
+import alleycats.std.all.alleyCatsSetTraverse
 import cats.Monoid
 import cats.arrow.{Category, Choice, Compose}
 
@@ -121,5 +122,13 @@ class FoldSpec extends MonocleSuite {
 
     assertEquals(fold.each.getAll(numbers), List(1, 2, 3, 4))
     assertEquals(numbers.applyFold(fold).each.getAll, List(1, 2, 3, 4))
+  }
+
+  test("at") {
+    val numbers = Set(Set(1, 2), Set.empty[Int], Set(2, 3))
+    val fold    = Fold.fromFoldable[Set, Set[Int]]
+
+    assertEquals(fold.at(1).getAll(numbers), List(true, false, false))
+    assertEquals(numbers.applyFold(fold).at(1).getAll, List(true, false, false))
   }
 }

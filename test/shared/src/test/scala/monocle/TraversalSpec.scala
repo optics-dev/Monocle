@@ -1,10 +1,10 @@
 package monocle
 
+import alleycats.std.all.alleyCatsSetTraverse
 import monocle.law.discipline.{SetterTests, TraversalTests}
 import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
-
 import cats.Eq
 import cats.arrow.{Category, Choice, Compose}
 import cats.syntax.either._
@@ -185,5 +185,13 @@ class TraversalSpec extends MonocleSuite {
 
     assertEquals(traversal.each.getAll(numbers), List(1, 2, 3, 4))
     assertEquals(numbers.applyTraversal(traversal).each.getAll, List(1, 2, 3, 4))
+  }
+
+  test("at") {
+    val numbers   = Set(Set(1, 2), Set.empty[Int], Set(1, 2, 3, 4))
+    val traversal = Traversal.fromTraverse[Set, Set[Int]]
+
+    assertEquals(traversal.at(3).getAll(numbers), List(false, false, true))
+    assertEquals(numbers.applyTraversal(traversal).at(3).getAll, List(false, false, true))
   }
 }

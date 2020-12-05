@@ -214,4 +214,15 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     assertEquals(prism.each.getAll(obj), List(1, 2, 3))
     assertEquals(obj.applyPrism(prism).each.getAll, List(1, 2, 3))
   }
+
+  test("at") {
+    case class SomeTest(y: (Int, String))
+    val obj = SomeTest((1, "one"))
+
+    val prism = Iso[SomeTest, (Int, String)](_.y)(SomeTest).asPrism
+
+    assertEquals(prism.at(1).getOption(obj), Some(1))
+    assertEquals(prism.at(1).getOption(obj), Some(1))
+    assertEquals(obj.applyPrism(prism).at(1).getOption, Some(1))
+  }
 }
