@@ -5,7 +5,7 @@ import cats.arrow.Category
 import cats.evidence.{<~<, Is}
 import cats.instances.option._
 import cats.syntax.either._
-import monocle.function.{At, Each}
+import monocle.function.{At, Each, Index}
 
 /** A [[PPrism]] can be seen as a pair of functions:
   *  - `getOrModify: S => Either[T, A]`
@@ -377,4 +377,7 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Optional[S, A1] =
     self composeLens evAt.at(i)
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Optional[S, A1] =
+    self composeOptional evIndex.index(i)
 }

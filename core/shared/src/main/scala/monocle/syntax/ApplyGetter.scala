@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import cats.Eq
-import monocle.function.{At, Each}
+import monocle.function.{At, Each, Index}
 import monocle.{std, Fold, Getter, PIso, PLens, POptional, PPrism, PTraversal}
 
 final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]) {
@@ -20,6 +20,9 @@ final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]) {
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyGetter[S, A1] =
     composeLens(evAt.at(i))
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): ApplyFold[S, A1] =
+    composeOptional(evIndex.index(i))
 
   private def adapt[A1](implicit evA: A =:= A1): ApplyGetter[S, A1] =
     evA.substituteCo[ApplyGetter[S, *]](this)

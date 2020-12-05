@@ -131,4 +131,12 @@ class FoldSpec extends MonocleSuite {
     assertEquals(fold.at(1).getAll(numbers), List(true, false, false))
     assertEquals(numbers.applyFold(fold).at(1).getAll, List(true, false, false))
   }
+
+  test("index") {
+    val numbers = List(List(1, 2), List.empty[Int], List(2, 3))
+    val fold    = Fold.fromFoldable[List, List[Int]]
+
+    assertEquals(fold.index(1).getAll(numbers), List(2, 3))
+    assertEquals(numbers.applyFold(fold).index(1).getAll, List(2, 3))
+  }
 }

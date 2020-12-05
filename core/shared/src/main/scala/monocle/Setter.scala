@@ -4,7 +4,7 @@ import cats.{Contravariant, Eq, Functor}
 import cats.arrow.Choice
 import cats.arrow.Profunctor
 import cats.syntax.either._
-import monocle.function.{At, Each}
+import monocle.function.{At, Each, Index}
 
 /** A [[PSetter]] is a generalisation of Functor map:
   *  - `map:    (A => B) => F[A] => F[B]`
@@ -201,4 +201,7 @@ final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyV
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Setter[S, A1] =
     self composeLens evAt.at(i)
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Setter[S, A1] =
+    self composeOptional evIndex.index(i)
 }

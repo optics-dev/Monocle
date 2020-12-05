@@ -3,7 +3,7 @@ package monocle
 import cats.{Eq, Monoid, Semigroupal}
 import cats.arrow.{Arrow, Choice}
 import cats.implicits._
-import monocle.function.{At, Each}
+import monocle.function.{At, Each, Index}
 
 /** A [[Getter]] can be seen as a glorified get method between
   * a type S and a type A.
@@ -66,7 +66,10 @@ abstract class Getter[S, A] extends Serializable { self =>
     evA.substituteCo[Getter[S, *]](this)
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Getter[S, A1] =
-    self composeLens evAt.at(i)
+    composeLens(evAt.at(i))
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
+    composeOptional(evIndex.index(i))
 
   /** compose a [[Getter]] with a [[Fold]] */
   final def andThen[B](other: Fold[A, B]): Fold[S, B] =

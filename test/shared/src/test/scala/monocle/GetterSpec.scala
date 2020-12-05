@@ -115,4 +115,14 @@ class GetterSpec extends MonocleSuite {
     assertEquals(getter.at(1).get(obj), 1)
     assertEquals(obj.applyGetter(getter).at(1).get, 1)
   }
+
+  test("index") {
+    case class SomeTest(t: List[Int])
+    val obj = SomeTest(List(1, 2))
+
+    val getter = Getter((_: SomeTest).t)
+
+    assertEquals(getter.index(1).getAll(obj), List(2))
+    assertEquals(obj.applyGetter(getter).index(1).getAll, List(2))
+  }
 }

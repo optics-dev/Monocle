@@ -208,4 +208,14 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     assertEquals(iso.at(1).get(obj), 1)
     assertEquals(obj.applyIso(iso).at(1).get, 1)
   }
+
+  test("index") {
+    case class SomeTest(y: List[Int])
+    val obj = SomeTest(List(1, 2))
+
+    val iso = Iso[SomeTest, List[Int]](_.y)(SomeTest)
+
+    assertEquals(iso.index(1).getOption(obj), Some(2))
+    assertEquals(obj.applyIso(iso).index(1).getOption, Some(2))
+  }
 }

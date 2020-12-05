@@ -194,4 +194,13 @@ class TraversalSpec extends MonocleSuite {
     assertEquals(traversal.at(3).getAll(numbers), List(false, false, true))
     assertEquals(numbers.applyTraversal(traversal).at(3).getAll, List(false, false, true))
   }
+
+  test("index") {
+    val numbers   = List(List(1, 2), List.empty[Int], List(1, 2, 3, 4))
+    val traversal = Traversal.fromTraverse[List, List[Int]]
+
+    assertEquals(traversal.index(0).getAll(numbers), List(1, 1))
+    assertEquals(traversal.index(2).getAll(numbers), List(3))
+    assertEquals(numbers.applyTraversal(traversal).index(2).getAll, List(3))
+  }
 }

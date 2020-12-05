@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import cats.{Eq, Functor}
-import monocle.function.{At, Each}
+import monocle.function.{At, Each, Index}
 import monocle.{std, Fold, Getter, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplyLens[S, T, A, B](s: S, lens: PLens[S, T, A, B]) {
@@ -79,4 +79,7 @@ final case class ApplyLensSyntax[S, A](private val self: ApplyLens[S, S, A, A]) 
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyLens[S, S, A1, A1] =
     self composeLens evAt.at(i)
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): ApplyOptional[S, S, A1, A1] =
+    self composeOptional evIndex.index(i)
 }

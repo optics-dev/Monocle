@@ -4,7 +4,7 @@ import cats.{Applicative, Eq, Functor, Monoid}
 import cats.arrow.Category
 import cats.evidence.{<~<, Is}
 import cats.syntax.either._
-import monocle.function.{At, Each}
+import monocle.function.{At, Each, Index}
 
 /** [[Iso]] is a type alias for [[PIso]] where `S` = `A` and `T` = `B`:
   * {{{
@@ -411,4 +411,7 @@ final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Lens[S, A1] =
     self composeLens evAt.at(i)
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Optional[S, A1] =
+    self composeOptional evIndex.index(i)
 }

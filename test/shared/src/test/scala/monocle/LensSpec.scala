@@ -135,7 +135,16 @@ class LensSpec extends MonocleSuite {
     val lens = GenLens[SomeTest](_.t)
 
     assertEquals(lens.at(2).get(obj), "two")
-    assertEquals(obj.applyLens(lens).at[2, String](2).get, "two")
+    assertEquals(obj.applyLens(lens).at(2).get, "two")
   }
 
+  test("at") {
+    case class SomeTest(y: List[Int])
+    val obj: SomeTest = SomeTest(List(1, 2))
+
+    val lens = GenLens[SomeTest](_.y)
+
+    assertEquals(lens.index(2).getOption(obj), None)
+    assertEquals(obj.applyLens(lens).index(1).getOption, Some(2))
+  }
 }

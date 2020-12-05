@@ -85,4 +85,14 @@ class SetterSpec extends MonocleSuite {
     assertEquals(setter.at(1).replace(3)(obj), SomeTest(1, (3, "one")))
     assertEquals(obj.applySetter(setter).at(1).replace(3), SomeTest(1, (3, "one")))
   }
+
+  test("index") {
+    case class SomeTest(y: List[Int])
+    val obj = SomeTest(List(1, 2))
+
+    val setter = GenLens[SomeTest](_.y).asSetter
+
+    assertEquals(setter.index(0).replace(3)(obj), SomeTest(List(3, 2)))
+    assertEquals(obj.applySetter(setter).index(1).replace(3), SomeTest(List(1, 3)))
+  }
 }

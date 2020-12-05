@@ -3,7 +3,7 @@ package monocle
 import cats.{Applicative, Eq, Monoid}
 import cats.arrow.Choice
 import cats.syntax.either._
-import monocle.function.{At, Each}
+import monocle.function.{At, Each, Index}
 
 /** A [[POptional]] can be seen as a pair of functions:
   *  - `getOrModify: S      => Either[T, A]`
@@ -338,4 +338,7 @@ final case class OptionalSyntax[S, A](private val self: Optional[S, A]) extends 
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Optional[S, A1] =
     self composeLens evAt.at(i)
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Optional[S, A1] =
+    self composeOptional evIndex.index(i)
 }

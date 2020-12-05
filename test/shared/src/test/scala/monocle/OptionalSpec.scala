@@ -151,4 +151,14 @@ class OptionalSpec extends MonocleSuite {
     assertEquals(optional.at(1).getOption(obj), Some("one"))
     assertEquals(obj.applyOptional(optional).at(1).getOption, Some("one"))
   }
+
+  test("index") {
+    case class SomeTest(y: List[Int])
+    val obj = SomeTest(List(1, 2))
+
+    val optional = GenLens[SomeTest](_.y).asOptional
+
+    assertEquals(optional.index(1).getOption(obj), Some(2))
+    assertEquals(obj.applyOptional(optional).index(2).getOption, None)
+  }
 }
