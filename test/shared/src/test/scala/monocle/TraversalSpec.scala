@@ -4,10 +4,12 @@ import monocle.law.discipline.{SetterTests, TraversalTests}
 import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
-
 import cats.Eq
 import cats.arrow.{Category, Choice, Compose}
+import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
 import cats.syntax.either._
+
+import scala.collection.immutable
 
 class TraversalSpec extends MonocleSuite {
   case class Location(latitude: Int, longitude: Int, name: String)
@@ -185,5 +187,162 @@ class TraversalSpec extends MonocleSuite {
 
     assertEquals(traversal.each.getAll(numbers), List(1, 2, 3, 4))
     assertEquals(numbers.applyTraversal(traversal).each.getAll, List(1, 2, 3, 4))
+  }
+
+  test("at") {
+    val tuple2          = (1, 2)
+    val tuple2Traversal = Traversal.id[(Int, Int)]
+    assertEquals(tuple2Traversal.at(1).getAll(tuple2), List(1))
+    assertEquals(tuple2Traversal.at(2).getAll(tuple2), List(2))
+    assertEquals(tuple2.applyTraversal(tuple2Traversal).at(1).getAll, List(1))
+    assertEquals(tuple2.applyTraversal(tuple2Traversal).at(2).getAll, List(2))
+
+    val tuple3          = (1, 2, 3)
+    val tuple3Traversal = Traversal.id[(Int, Int, Int)]
+    assertEquals(tuple3Traversal.at(1).getAll(tuple3), List(1))
+    assertEquals(tuple3Traversal.at(2).getAll(tuple3), List(2))
+    assertEquals(tuple3Traversal.at(3).getAll(tuple3), List(3))
+    assertEquals(tuple3.applyTraversal(tuple3Traversal).at(1).getAll, List(1))
+    assertEquals(tuple3.applyTraversal(tuple3Traversal).at(2).getAll, List(2))
+    assertEquals(tuple3.applyTraversal(tuple3Traversal).at(3).getAll, List(3))
+
+    val tuple4          = (1, 2, 3, 4)
+    val tuple4Traversal = Traversal.id[(Int, Int, Int, Int)]
+    assertEquals(tuple4Traversal.at(1).getAll(tuple4), List(1))
+    assertEquals(tuple4Traversal.at(2).getAll(tuple4), List(2))
+    assertEquals(tuple4Traversal.at(3).getAll(tuple4), List(3))
+    assertEquals(tuple4Traversal.at(4).getAll(tuple4), List(4))
+    assertEquals(tuple4.applyTraversal(tuple4Traversal).at(1).getAll, List(1))
+    assertEquals(tuple4.applyTraversal(tuple4Traversal).at(2).getAll, List(2))
+    assertEquals(tuple4.applyTraversal(tuple4Traversal).at(3).getAll, List(3))
+    assertEquals(tuple4.applyTraversal(tuple4Traversal).at(4).getAll, List(4))
+
+    val tuple5          = (1, 2, 3, 4, 5)
+    val tuple5Traversal = Traversal.id[(Int, Int, Int, Int, Int)]
+    assertEquals(tuple5Traversal.at(1).getAll(tuple5), List(1))
+    assertEquals(tuple5Traversal.at(2).getAll(tuple5), List(2))
+    assertEquals(tuple5Traversal.at(3).getAll(tuple5), List(3))
+    assertEquals(tuple5Traversal.at(4).getAll(tuple5), List(4))
+    assertEquals(tuple5Traversal.at(5).getAll(tuple5), List(5))
+    assertEquals(tuple5.applyTraversal(tuple5Traversal).at(1).getAll, List(1))
+    assertEquals(tuple5.applyTraversal(tuple5Traversal).at(2).getAll, List(2))
+    assertEquals(tuple5.applyTraversal(tuple5Traversal).at(3).getAll, List(3))
+    assertEquals(tuple5.applyTraversal(tuple5Traversal).at(4).getAll, List(4))
+    assertEquals(tuple5.applyTraversal(tuple5Traversal).at(5).getAll, List(5))
+
+    val tuple6          = (1, 2, 3, 4, 5, 6)
+    val tuple6Traversal = Traversal.id[(Int, Int, Int, Int, Int, Int)]
+    assertEquals(tuple6Traversal.at(1).getAll(tuple6), List(1))
+    assertEquals(tuple6Traversal.at(2).getAll(tuple6), List(2))
+    assertEquals(tuple6Traversal.at(3).getAll(tuple6), List(3))
+    assertEquals(tuple6Traversal.at(4).getAll(tuple6), List(4))
+    assertEquals(tuple6Traversal.at(5).getAll(tuple6), List(5))
+    assertEquals(tuple6Traversal.at(6).getAll(tuple6), List(6))
+    assertEquals(tuple6.applyTraversal(tuple6Traversal).at(1).getAll, List(1))
+    assertEquals(tuple6.applyTraversal(tuple6Traversal).at(2).getAll, List(2))
+    assertEquals(tuple6.applyTraversal(tuple6Traversal).at(3).getAll, List(3))
+    assertEquals(tuple6.applyTraversal(tuple6Traversal).at(4).getAll, List(4))
+    assertEquals(tuple6.applyTraversal(tuple6Traversal).at(5).getAll, List(5))
+    assertEquals(tuple6.applyTraversal(tuple6Traversal).at(6).getAll, List(6))
+
+    val sortedMap          = immutable.SortedMap(1 -> "one")
+    val sortedMapTraversal = Traversal.id[immutable.SortedMap[Int, String]]
+    assertEquals(sortedMapTraversal.at(1).getAll(sortedMap), List(Some("one")))
+    assertEquals(sortedMapTraversal.at(0).getAll(sortedMap), List(None))
+    assertEquals(sortedMap.applyTraversal(sortedMapTraversal).at(1).getAll, List(Some("one")))
+    assertEquals(sortedMap.applyTraversal(sortedMapTraversal).at(0).getAll, List(None))
+
+    val listMap          = immutable.ListMap(1 -> "one")
+    val listMapTraversal = Traversal.id[immutable.ListMap[Int, String]]
+    assertEquals(listMapTraversal.at(1).getAll(listMap), List(Some("one")))
+    assertEquals(listMapTraversal.at(0).getAll(listMap), List(None))
+    assertEquals(listMap.applyTraversal(listMapTraversal).at(1).getAll, List(Some("one")))
+    assertEquals(listMap.applyTraversal(listMapTraversal).at(0).getAll, List(None))
+
+    val map          = immutable.Map(1 -> "one")
+    val mapTraversal = Traversal.id[Map[Int, String]]
+    assertEquals(mapTraversal.at(1).getAll(map), List(Some("one")))
+    assertEquals(mapTraversal.at(0).getAll(map), List(None))
+    assertEquals(map.applyTraversal(mapTraversal).at(1).getAll, List(Some("one")))
+    assertEquals(map.applyTraversal(mapTraversal).at(0).getAll, List(None))
+
+    val set          = Set(1)
+    val setTraversal = Traversal.id[Set[Int]]
+    assertEquals(setTraversal.at(1).getAll(set), List(true))
+    assertEquals(setTraversal.at(0).getAll(set), List(false))
+    assertEquals(set.applyTraversal(setTraversal).at(1).getAll, List(true))
+    assertEquals(set.applyTraversal(setTraversal).at(0).getAll, List(false))
+  }
+
+  test("index") {
+    val list          = List(1)
+    val listTraversal = Traversal.id[List[Int]]
+    assertEquals(listTraversal.index(0).getAll(list), List(1))
+    assertEquals(listTraversal.index(1).getAll(list), Nil)
+    assertEquals(list.applyTraversal(listTraversal).index(0).getAll, List(1))
+    assertEquals(list.applyTraversal(listTraversal).index(1).getAll, Nil)
+
+    val lazyList          = LazyList(1)
+    val lazyListTraversal = Traversal.id[LazyList[Int]]
+    assertEquals(lazyListTraversal.index(0).getAll(lazyList), List(1))
+    assertEquals(lazyListTraversal.index(1).getAll(lazyList), Nil)
+    assertEquals(lazyList.applyTraversal(lazyListTraversal).index(0).getAll, List(1))
+    assertEquals(lazyList.applyTraversal(lazyListTraversal).index(1).getAll, Nil)
+
+    val listMap          = immutable.ListMap(1 -> "one")
+    val listMapTraversal = Traversal.id[immutable.ListMap[Int, String]]
+    assertEquals(listMapTraversal.index(0).getAll(listMap), Nil)
+    assertEquals(listMapTraversal.index(1).getAll(listMap), List("one"))
+    assertEquals(listMap.applyTraversal(listMapTraversal).index(0).getAll, Nil)
+    assertEquals(listMap.applyTraversal(listMapTraversal).index(1).getAll, List("one"))
+
+    val map          = Map(1 -> "one")
+    val mapTraversal = Traversal.id[Map[Int, String]]
+    assertEquals(mapTraversal.index(0).getAll(map), Nil)
+    assertEquals(mapTraversal.index(1).getAll(map), List("one"))
+    assertEquals(map.applyTraversal(mapTraversal).index(0).getAll, Nil)
+    assertEquals(map.applyTraversal(mapTraversal).index(1).getAll, List("one"))
+
+    val sortedMap          = immutable.SortedMap(1 -> "one")
+    val sortedMapTraversal = Traversal.id[immutable.SortedMap[Int, String]]
+    assertEquals(sortedMapTraversal.index(0).getAll(sortedMap), Nil)
+    assertEquals(sortedMapTraversal.index(1).getAll(sortedMap), List("one"))
+    assertEquals(sortedMap.applyTraversal(sortedMapTraversal).index(0).getAll, Nil)
+    assertEquals(sortedMap.applyTraversal(sortedMapTraversal).index(1).getAll, List("one"))
+
+    val vector          = Vector(1)
+    val vectorTraversal = Traversal.id[Vector[Int]]
+    assertEquals(vectorTraversal.index(0).getAll(vector), List(1))
+    assertEquals(vectorTraversal.index(1).getAll(vector), Nil)
+    assertEquals(vector.applyTraversal(vectorTraversal).index(0).getAll, List(1))
+    assertEquals(vector.applyTraversal(vectorTraversal).index(1).getAll, Nil)
+
+    val chain          = Chain.one(1)
+    val chainTraversal = Traversal.id[Chain[Int]]
+    assertEquals(chainTraversal.index(0).getAll(chain), List(1))
+    assertEquals(chainTraversal.index(1).getAll(chain), Nil)
+    assertEquals(chain.applyTraversal(chainTraversal).index(0).getAll, List(1))
+    assertEquals(chain.applyTraversal(chainTraversal).index(1).getAll, Nil)
+
+    val nec          = NonEmptyChain.one(1)
+    val necTraversal = Traversal.id[NonEmptyChain[Int]]
+    assertEquals(necTraversal.index(0).getAll(nec), List(1))
+    assertEquals(necTraversal.index(1).getAll(nec), Nil)
+    assertEquals(nec.applyTraversal(necTraversal).index(0).getAll, List(1))
+    assertEquals(nec.applyTraversal(necTraversal).index(1).getAll, Nil)
+
+    val nev          = NonEmptyVector.one(1)
+    val nevTraversal = Traversal.id[NonEmptyVector[Int]]
+    assertEquals(nevTraversal.index(0).getAll(nev), List(1))
+    assertEquals(nevTraversal.index(1).getAll(nev), Nil)
+    assertEquals(nev.applyTraversal(nevTraversal).index(0).getAll, List(1))
+    assertEquals(nev.applyTraversal(nevTraversal).index(1).getAll, Nil)
+
+    val nel          = NonEmptyList.one(1)
+    val nelTraversal = Traversal.id[NonEmptyList[Int]]
+    assertEquals(nelTraversal.index(0).getAll(nel), List(1))
+    assertEquals(nelTraversal.index(1).getAll(nel), Nil)
+    assertEquals(nel.applyTraversal(nelTraversal).index(0).getAll, List(1))
+    assertEquals(nel.applyTraversal(nelTraversal).index(1).getAll, Nil)
   }
 }

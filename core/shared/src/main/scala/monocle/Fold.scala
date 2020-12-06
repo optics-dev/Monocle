@@ -5,7 +5,7 @@ import cats.arrow.Choice
 import cats.instances.int._
 import cats.instances.list._
 import cats.syntax.either._
-import monocle.function.Each
+import monocle.function.{At, Each, Index}
 import monocle.internal.Monoids
 
 /** A [[Fold]] can be seen as a [[Getter]] with many targets or
@@ -99,6 +99,12 @@ abstract class Fold[S, A] extends Serializable { self =>
 
   private def adapt[A1](implicit evA: A =:= A1): Fold[S, A1] =
     evA.substituteCo[Fold[S, *]](this)
+
+  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Fold[S, A1] =
+    composeLens(evAt.at(i))
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
+    composeOptional(evIndex.index(i))
 
   /** compose a [[Fold]] with another [[Fold]] */
   final def andThen[B](other: Fold[A, B]): Fold[S, B] =

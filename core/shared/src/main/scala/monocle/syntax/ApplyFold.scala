@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import cats.{Eq, Monoid}
-import monocle.function.Each
+import monocle.function.{At, Each, Index}
 import monocle.{std, Fold, Getter, PIso, PLens, POptional, PPrism, PTraversal}
 
 case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
@@ -25,6 +25,12 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
     adapt[Option[A1]] composeIso (std.option.withDefault(defaultValue))
+
+  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyFold[S, A1] =
+    composeLens(evAt.at(i))
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): ApplyFold[S, A1] =
+    composeOptional(evIndex.index(i))
 
   private def adapt[A1](implicit evA: A =:= A1): ApplyFold[S, A1] =
     evA.substituteCo[ApplyFold[S, *]](this)

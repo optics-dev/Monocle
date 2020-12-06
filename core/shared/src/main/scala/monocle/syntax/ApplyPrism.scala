@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import cats.{Applicative, Eq}
-import monocle.function.Each
+import monocle.function.{At, Each, Index}
 import monocle.{std, Fold, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]) {
@@ -81,4 +81,10 @@ final case class ApplyPrismSyntax[S, A](private val self: ApplyPrism[S, S, A, A]
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyPrism[S, S, A1, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
+
+  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyOptional[S, S, A1, A1] =
+    self composeLens evAt.at(i)
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): ApplyOptional[S, S, A1, A1] =
+    self composeOptional evIndex.index(i)
 }
