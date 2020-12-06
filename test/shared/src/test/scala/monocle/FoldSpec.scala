@@ -1,8 +1,10 @@
 package monocle
 
-import alleycats.std.all.alleyCatsSetTraverse
 import cats.Monoid
 import cats.arrow.{Category, Choice, Compose}
+import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
+
+import scala.collection.immutable
 
 class FoldSpec extends MonocleSuite {
   val eachLi: Fold[List[Int], Int]             = Fold.fromFoldable[List, Int]
@@ -125,18 +127,159 @@ class FoldSpec extends MonocleSuite {
   }
 
   test("at") {
-    val numbers = Set(Set(1, 2), Set.empty[Int], Set(2, 3))
-    val fold    = Fold.fromFoldable[Set, Set[Int]]
+    val tuple2     = (1, 2)
+    val tuple2Fold = Fold.id[(Int, Int)]
+    assertEquals(tuple2Fold.at(1).getAll(tuple2), List(1))
+    assertEquals(tuple2Fold.at(2).getAll(tuple2), List(2))
+    assertEquals(tuple2.applyFold(tuple2Fold).at(1).getAll, List(1))
+    assertEquals(tuple2.applyFold(tuple2Fold).at(2).getAll, List(2))
 
-    assertEquals(fold.at(1).getAll(numbers), List(true, false, false))
-    assertEquals(numbers.applyFold(fold).at(1).getAll, List(true, false, false))
+    val tuple3     = (1, 2, 3)
+    val tuple3Fold = Fold.id[(Int, Int, Int)]
+    assertEquals(tuple3Fold.at(1).getAll(tuple3), List(1))
+    assertEquals(tuple3Fold.at(2).getAll(tuple3), List(2))
+    assertEquals(tuple3Fold.at(3).getAll(tuple3), List(3))
+    assertEquals(tuple3.applyFold(tuple3Fold).at(1).getAll, List(1))
+    assertEquals(tuple3.applyFold(tuple3Fold).at(2).getAll, List(2))
+    assertEquals(tuple3.applyFold(tuple3Fold).at(3).getAll, List(3))
+
+    val tuple4     = (1, 2, 3, 4)
+    val tuple4Fold = Fold.id[(Int, Int, Int, Int)]
+    assertEquals(tuple4Fold.at(1).getAll(tuple4), List(1))
+    assertEquals(tuple4Fold.at(2).getAll(tuple4), List(2))
+    assertEquals(tuple4Fold.at(3).getAll(tuple4), List(3))
+    assertEquals(tuple4Fold.at(4).getAll(tuple4), List(4))
+    assertEquals(tuple4.applyFold(tuple4Fold).at(1).getAll, List(1))
+    assertEquals(tuple4.applyFold(tuple4Fold).at(2).getAll, List(2))
+    assertEquals(tuple4.applyFold(tuple4Fold).at(3).getAll, List(3))
+    assertEquals(tuple4.applyFold(tuple4Fold).at(4).getAll, List(4))
+
+    val tuple5     = (1, 2, 3, 4, 5)
+    val tuple5Fold = Fold.id[(Int, Int, Int, Int, Int)]
+    assertEquals(tuple5Fold.at(1).getAll(tuple5), List(1))
+    assertEquals(tuple5Fold.at(2).getAll(tuple5), List(2))
+    assertEquals(tuple5Fold.at(3).getAll(tuple5), List(3))
+    assertEquals(tuple5Fold.at(4).getAll(tuple5), List(4))
+    assertEquals(tuple5Fold.at(5).getAll(tuple5), List(5))
+    assertEquals(tuple5.applyFold(tuple5Fold).at(1).getAll, List(1))
+    assertEquals(tuple5.applyFold(tuple5Fold).at(2).getAll, List(2))
+    assertEquals(tuple5.applyFold(tuple5Fold).at(3).getAll, List(3))
+    assertEquals(tuple5.applyFold(tuple5Fold).at(4).getAll, List(4))
+    assertEquals(tuple5.applyFold(tuple5Fold).at(5).getAll, List(5))
+
+    val tuple6     = (1, 2, 3, 4, 5, 6)
+    val tuple6Fold = Fold.id[(Int, Int, Int, Int, Int, Int)]
+    assertEquals(tuple6Fold.at(1).getAll(tuple6), List(1))
+    assertEquals(tuple6Fold.at(2).getAll(tuple6), List(2))
+    assertEquals(tuple6Fold.at(3).getAll(tuple6), List(3))
+    assertEquals(tuple6Fold.at(4).getAll(tuple6), List(4))
+    assertEquals(tuple6Fold.at(5).getAll(tuple6), List(5))
+    assertEquals(tuple6Fold.at(6).getAll(tuple6), List(6))
+    assertEquals(tuple6.applyFold(tuple6Fold).at(1).getAll, List(1))
+    assertEquals(tuple6.applyFold(tuple6Fold).at(2).getAll, List(2))
+    assertEquals(tuple6.applyFold(tuple6Fold).at(3).getAll, List(3))
+    assertEquals(tuple6.applyFold(tuple6Fold).at(4).getAll, List(4))
+    assertEquals(tuple6.applyFold(tuple6Fold).at(5).getAll, List(5))
+    assertEquals(tuple6.applyFold(tuple6Fold).at(6).getAll, List(6))
+
+    val sortedMap     = immutable.SortedMap(1 -> "one")
+    val sortedMapFold = Fold.id[immutable.SortedMap[Int, String]]
+    assertEquals(sortedMapFold.at(1).getAll(sortedMap), List(Some("one")))
+    assertEquals(sortedMapFold.at(0).getAll(sortedMap), List(None))
+    assertEquals(sortedMap.applyFold(sortedMapFold).at(1).getAll, List(Some("one")))
+    assertEquals(sortedMap.applyFold(sortedMapFold).at(0).getAll, List(None))
+
+    val listMap     = immutable.ListMap(1 -> "one")
+    val listMapFold = Fold.id[immutable.ListMap[Int, String]]
+    assertEquals(listMapFold.at(1).getAll(listMap), List(Some("one")))
+    assertEquals(listMapFold.at(0).getAll(listMap), List(None))
+    assertEquals(listMap.applyFold(listMapFold).at(1).getAll, List(Some("one")))
+    assertEquals(listMap.applyFold(listMapFold).at(0).getAll, List(None))
+
+    val map     = immutable.Map(1 -> "one")
+    val mapFold = Fold.id[Map[Int, String]]
+    assertEquals(mapFold.at(1).getAll(map), List(Some("one")))
+    assertEquals(mapFold.at(0).getAll(map), List(None))
+    assertEquals(map.applyFold(mapFold).at(1).getAll, List(Some("one")))
+    assertEquals(map.applyFold(mapFold).at(0).getAll, List(None))
+
+    val set     = Set(1)
+    val setFold = Fold.id[Set[Int]]
+    assertEquals(setFold.at(1).getAll(set), List(true))
+    assertEquals(setFold.at(0).getAll(set), List(false))
+    assertEquals(set.applyFold(setFold).at(1).getAll, List(true))
+    assertEquals(set.applyFold(setFold).at(0).getAll, List(false))
   }
 
   test("index") {
-    val numbers = List(List(1, 2), List.empty[Int], List(2, 3))
-    val fold    = Fold.fromFoldable[List, List[Int]]
+    val list     = List(1)
+    val listFold = Fold.id[List[Int]]
+    assertEquals(listFold.index(0).getAll(list), List(1))
+    assertEquals(listFold.index(1).getAll(list), Nil)
+    assertEquals(list.applyFold(listFold).index(0).getAll, List(1))
+    assertEquals(list.applyFold(listFold).index(1).getAll, Nil)
 
-    assertEquals(fold.index(1).getAll(numbers), List(2, 3))
-    assertEquals(numbers.applyFold(fold).index(1).getAll, List(2, 3))
+    val lazyList     = LazyList(1)
+    val lazyListFold = Fold.id[LazyList[Int]]
+    assertEquals(lazyListFold.index(0).getAll(lazyList), List(1))
+    assertEquals(lazyListFold.index(1).getAll(lazyList), Nil)
+    assertEquals(lazyList.applyFold(lazyListFold).index(0).getAll, List(1))
+    assertEquals(lazyList.applyFold(lazyListFold).index(1).getAll, Nil)
+
+    val listMap     = immutable.ListMap(1 -> "one")
+    val listMapFold = Fold.id[immutable.ListMap[Int, String]]
+    assertEquals(listMapFold.index(0).getAll(listMap), Nil)
+    assertEquals(listMapFold.index(1).getAll(listMap), List("one"))
+    assertEquals(listMap.applyFold(listMapFold).index(0).getAll, Nil)
+    assertEquals(listMap.applyFold(listMapFold).index(1).getAll, List("one"))
+
+    val map     = Map(1 -> "one")
+    val mapFold = Fold.id[Map[Int, String]]
+    assertEquals(mapFold.index(0).getAll(map), Nil)
+    assertEquals(mapFold.index(1).getAll(map), List("one"))
+    assertEquals(map.applyFold(mapFold).index(0).getAll, Nil)
+    assertEquals(map.applyFold(mapFold).index(1).getAll, List("one"))
+
+    val sortedMap     = immutable.SortedMap(1 -> "one")
+    val sortedMapFold = Fold.id[immutable.SortedMap[Int, String]]
+    assertEquals(sortedMapFold.index(0).getAll(sortedMap), Nil)
+    assertEquals(sortedMapFold.index(1).getAll(sortedMap), List("one"))
+    assertEquals(sortedMap.applyFold(sortedMapFold).index(0).getAll, Nil)
+    assertEquals(sortedMap.applyFold(sortedMapFold).index(1).getAll, List("one"))
+
+    val vector     = Vector(1)
+    val vectorFold = Fold.id[Vector[Int]]
+    assertEquals(vectorFold.index(0).getAll(vector), List(1))
+    assertEquals(vectorFold.index(1).getAll(vector), Nil)
+    assertEquals(vector.applyFold(vectorFold).index(0).getAll, List(1))
+    assertEquals(vector.applyFold(vectorFold).index(1).getAll, Nil)
+
+    val chain     = Chain.one(1)
+    val chainFold = Fold.id[Chain[Int]]
+    assertEquals(chainFold.index(0).getAll(chain), List(1))
+    assertEquals(chainFold.index(1).getAll(chain), Nil)
+    assertEquals(chain.applyFold(chainFold).index(0).getAll, List(1))
+    assertEquals(chain.applyFold(chainFold).index(1).getAll, Nil)
+
+    val nec     = NonEmptyChain.one(1)
+    val necFold = Fold.id[NonEmptyChain[Int]]
+    assertEquals(necFold.index(0).getAll(nec), List(1))
+    assertEquals(necFold.index(1).getAll(nec), Nil)
+    assertEquals(nec.applyFold(necFold).index(0).getAll, List(1))
+    assertEquals(nec.applyFold(necFold).index(1).getAll, Nil)
+
+    val nev     = NonEmptyVector.one(1)
+    val nevFold = Fold.id[NonEmptyVector[Int]]
+    assertEquals(nevFold.index(0).getAll(nev), List(1))
+    assertEquals(nevFold.index(1).getAll(nev), Nil)
+    assertEquals(nev.applyFold(nevFold).index(0).getAll, List(1))
+    assertEquals(nev.applyFold(nevFold).index(1).getAll, Nil)
+
+    val nel     = NonEmptyList.one(1)
+    val nelFold = Fold.id[NonEmptyList[Int]]
+    assertEquals(nelFold.index(0).getAll(nel), List(1))
+    assertEquals(nelFold.index(1).getAll(nel), Nil)
+    assertEquals(nel.applyFold(nelFold).index(0).getAll, List(1))
+    assertEquals(nel.applyFold(nelFold).index(1).getAll, Nil)
   }
 }

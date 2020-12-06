@@ -49,8 +49,7 @@ object Index extends IndexFunctions {
     */
   implicit def listIndex[A]: Index[List[A], Int, A] =
     Index(i =>
-      if (i < 0)
-        Optional[List[A], A](_ => None)(_ => identity)
+      if (i < 0) Optional.void
       else
         Optional[List[A], A](_.drop(i).headOption)(a => s => Try(s.updated(i, a)).getOrElse(s))
     )
