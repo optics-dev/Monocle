@@ -3,6 +3,9 @@ package monocle.function
 import monocle.MonocleSuite
 import monocle.law.discipline.function.Snoc1Tests
 
+import scala.annotation.nowarn
+
+@nowarn
 class Snoc1Spec extends MonocleSuite {
   implicit val clistSnoc1: Snoc1[CNel, List[Char], Char] = Snoc1.fromIso(CNel.toNel)
 

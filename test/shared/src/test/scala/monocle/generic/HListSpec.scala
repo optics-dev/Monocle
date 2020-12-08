@@ -52,6 +52,6 @@ class HListSpec extends MonocleSuite {
   checkAll("toHList", IsoTests(toHList[Example, H]))
 
   checkAll("reverse HList", IsoTests(reverse[H, ReverseH])): @nowarn
-  checkAll("hcons HList", IsoTests(cons1[H, Int, HTail]))
-  checkAll("hsnoc HList", IsoTests(snoc1[H, HInit, Double]))
+  checkAll("hcons HList", IsoTests(cons1[H, Int, HTail])): @nowarn
+  checkAll("hsnoc HList", IsoTests(snoc1[H, HInit, Double])): @nowarn
 }

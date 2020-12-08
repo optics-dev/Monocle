@@ -14,6 +14,7 @@ import scala.annotation.implicitNotFound
 @implicitNotFound(
   "Could not find an instance of Snoc1[${S}, ${I}, ${L}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
+@deprecated("no replacement", since = "3.0.0-M1")
 abstract class Snoc1[S, I, L] extends Serializable {
   def snoc1: Iso[S, (I, L)]
 
@@ -22,16 +23,22 @@ abstract class Snoc1[S, I, L] extends Serializable {
 }
 
 trait Snoc1Functions {
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def snoc1[S, I, L](implicit ev: Snoc1[S, I, L]): Iso[S, (I, L)] = ev.snoc1
 
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def init[S, I, L](implicit ev: Snoc1[S, I, L]): Lens[S, I] = ev.init
+
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def last[S, I, L](implicit ev: Snoc1[S, I, L]): Lens[S, L] = ev.last
 
   /** append an element to the end */
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def _snoc1[S, I, L](init: I, last: L)(implicit ev: Snoc1[S, I, L]): S =
     ev.snoc1.reverseGet((init, last))
 
   /** deconstruct an S between its init and last */
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def _unsnoc1[S, I, L](s: S)(implicit ev: Snoc1[S, I, L]): (I, L) =
     ev.snoc1.get(s)
 }

@@ -15,6 +15,7 @@ import cats.syntax.either._
 @implicitNotFound(
   "Could not find an instance of Snoc[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
+@deprecated("no replacement", since = "3.0.0-M1")
 abstract class Snoc[S, A] extends Serializable {
   def snoc: Prism[S, (S, A)]
 
@@ -23,18 +24,24 @@ abstract class Snoc[S, A] extends Serializable {
 }
 
 trait SnocFunctions {
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def snoc[S, A](implicit ev: Snoc[S, A]): Prism[S, (S, A)] = ev.snoc
 
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def initOption[S, A](implicit ev: Snoc[S, A]): Optional[S, S] =
     ev.initOption
+
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def lastOption[S, A](implicit ev: Snoc[S, A]): Optional[S, A] =
     ev.lastOption
 
   /** append an element to the end */
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def _snoc[S, A](init: S, last: A)(implicit ev: Snoc[S, A]): S =
     ev.snoc.reverseGet((init, last))
 
   /** deconstruct an S between its init and last */
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def _unsnoc[S, A](s: S)(implicit ev: Snoc[S, A]): Option[(S, A)] =
     ev.snoc.getOption(s)
 }

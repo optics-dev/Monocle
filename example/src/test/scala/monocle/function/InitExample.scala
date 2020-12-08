@@ -2,6 +2,9 @@ package monocle.function
 
 import monocle.MonocleSuite
 
+import scala.annotation.nowarn
+
+@nowarn
 class InitExample extends MonocleSuite {
   test("init creates a Lens from a 2-6 tuple to its tail") {
     assertEquals(((2, false) applyLens init get), 2)

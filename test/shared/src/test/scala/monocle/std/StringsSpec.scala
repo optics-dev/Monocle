@@ -11,8 +11,8 @@ class StringsSpec extends MonocleSuite {
   checkAll("stringToList", IsoTests(stringToList))
   checkAll("reverse String", ReverseTests[String]): @nowarn
   checkAll("empty String", EmptyTests[String]): @nowarn
-  checkAll("cons String", ConsTests[String, Char])
-  checkAll("snoc String", SnocTests[String, Char])
+  checkAll("cons String", ConsTests[String, Char]): @nowarn
+  checkAll("snoc String", SnocTests[String, Char]): @nowarn
   checkAll("each String", EachTests[String, Char])
   checkAll("index String", IndexTests[String, Int, Char])
   checkAll("filterIndex String", FilterIndexTests[String, Int, Char])

@@ -19,18 +19,18 @@ class HListExample extends MonocleSuite {
   }
 
   test("head creates a Lens from HList to the first element") {
-    assertEquals((1 :: "bla" :: true :: HNil applyLens head get), 1)
+    assertEquals((1 :: "bla" :: true :: HNil applyLens head get), 1): @nowarn
   }
 
   test("last creates a Lens from HList to the last element") {
-    assertEquals((1 :: "bla" :: true :: HNil applyLens last get), true)
+    assertEquals((1 :: "bla" :: true :: HNil applyLens last get), true): @nowarn
   }
 
   test("tail creates a Lens from HList to its tail") {
-    assertEquals((1 :: "bla" :: true :: HNil applyLens tail get), ("bla" :: true :: HNil))
+    assertEquals((1 :: "bla" :: true :: HNil applyLens tail get), ("bla" :: true :: HNil)): @nowarn
   }
 
   test("init creates a Lens from HList to its init") {
-    assertEquals((1 :: "bla" :: true :: HNil applyLens init get), (1 :: "bla" :: HNil))
+    assertEquals((1 :: "bla" :: true :: HNil applyLens init get), (1 :: "bla" :: HNil)): @nowarn
   }
 }

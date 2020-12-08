@@ -14,6 +14,7 @@ import scala.annotation.implicitNotFound
 @implicitNotFound(
   "Could not find an instance of Cons1[${S}, ${H}, ${T}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
+@deprecated("no replacement", since = "3.0.0-M1")
 abstract class Cons1[S, H, T] extends Serializable {
   def cons1: Iso[S, (H, T)]
 
@@ -22,16 +23,22 @@ abstract class Cons1[S, H, T] extends Serializable {
 }
 
 trait Cons1Functions {
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def cons1[S, H, T](implicit ev: Cons1[S, H, T]): Iso[S, (H, T)] = ev.cons1
 
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def head[S, H, T](implicit ev: Cons1[S, H, T]): Lens[S, H] = ev.head
+
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def tail[S, H, T](implicit ev: Cons1[S, H, T]): Lens[S, T] = ev.tail
 
   /** append an element to the head */
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def _cons1[S, H, T](head: H, tail: T)(implicit ev: Cons1[S, H, T]): S =
     ev.cons1.reverseGet((head, tail))
 
   /** deconstruct an S between its head and tail */
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def _uncons1[S, H, T](s: S)(implicit ev: Cons1[S, H, T]): (H, T) =
     ev.cons1.get(s)
 }

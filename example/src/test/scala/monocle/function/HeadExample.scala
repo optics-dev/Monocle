@@ -1,9 +1,11 @@
 package monocle.function
 
 import monocle.MonocleSuite
-
 import cats.data.OneAnd
 
+import scala.annotation.nowarn
+
+@nowarn
 class HeadExample extends MonocleSuite {
   test("head creates a Lens from a 2-6 tuple to its first element") {
     assertEquals(((2, false) applyLens head get), 2)

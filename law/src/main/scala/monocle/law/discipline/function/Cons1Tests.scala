@@ -9,6 +9,7 @@ import org.typelevel.discipline.Laws
 import cats.Eq
 import cats.instances.tuple._
 
+@deprecated("no replacement", since = "3.0.0-M1")
 object Cons1Tests extends Laws {
   def apply[S: Eq: Arbitrary, H: Eq: Arbitrary, T: Eq: Arbitrary](implicit
     evCons1: Cons1[S, H, T],
