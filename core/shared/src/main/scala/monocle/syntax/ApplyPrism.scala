@@ -5,24 +5,24 @@ import monocle.function.{At, Each, Index}
 import monocle.{std, Fold, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]) {
-  @inline def getOption: Option[A] = prism.getOption(s)
+  def getOption: Option[A] = prism.getOption(s)
 
-  @inline def modify(f: A => B): T = prism.modify(f)(s)
-  @inline def modifyF[F[_]: Applicative](f: A => F[B]): F[T] =
+  def modify(f: A => B): T = prism.modify(f)(s)
+  def modifyF[F[_]: Applicative](f: A => F[B]): F[T] =
     prism.modifyF(f)(s)
-  @inline def modifyOption(f: A => B): Option[T] = prism.modifyOption(f)(s)
+  def modifyOption(f: A => B): Option[T] = prism.modifyOption(f)(s)
 
-  @inline def replace(b: B): T                 = prism.replace(b)(s)
-  @inline def setOption(b: B): Option[T]       = prism.setOption(b)(s)
-  @inline def isEmpty: Boolean                 = prism.isEmpty(s)
-  @inline def nonEmpty: Boolean                = prism.nonEmpty(s)
-  @inline def find(p: A => Boolean): Option[A] = prism.find(p)(s)
-  @inline def exist(p: A => Boolean): Boolean  = prism.exist(p)(s)
-  @inline def all(p: A => Boolean): Boolean    = prism.all(p)(s)
+  def replace(b: B): T                 = prism.replace(b)(s)
+  def setOption(b: B): Option[T]       = prism.setOption(b)(s)
+  def isEmpty: Boolean                 = prism.isEmpty(s)
+  def nonEmpty: Boolean                = prism.nonEmpty(s)
+  def find(p: A => Boolean): Option[A] = prism.find(p)(s)
+  def exist(p: A => Boolean): Boolean  = prism.exist(p)(s)
+  def all(p: A => Boolean): Boolean    = prism.all(p)(s)
 
   /** alias to replace */
   @deprecated("use replace instead", since = "3.0.0-M1")
-  @inline def set(b: B): T = replace(b)
+  def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
@@ -45,28 +45,28 @@ final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]) {
   def andThen[C, D](other: PIso[A, B, C, D]): ApplyPrism[S, T, C, D] =
     ApplyPrism(s, prism.andThen(other))
 
-  @inline def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D]          = andThen(other)
-  @inline def composeFold[C](other: Fold[A, C]): ApplyFold[S, C]                                = andThen(other)
-  @inline def composeTraversal[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
-  @inline def composeOptional[C, D](other: POptional[A, B, C, D]): ApplyOptional[S, T, C, D]    = andThen(other)
-  @inline def composeLens[C, D](other: PLens[A, B, C, D]): ApplyOptional[S, T, C, D]            = andThen(other)
-  @inline def composePrism[C, D](other: PPrism[A, B, C, D]): ApplyPrism[S, T, C, D]             = andThen(other)
-  @inline def composeIso[C, D](other: PIso[A, B, C, D]): ApplyPrism[S, T, C, D]                 = andThen(other)
+  def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D]          = andThen(other)
+  def composeFold[C](other: Fold[A, C]): ApplyFold[S, C]                                = andThen(other)
+  def composeTraversal[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
+  def composeOptional[C, D](other: POptional[A, B, C, D]): ApplyOptional[S, T, C, D]    = andThen(other)
+  def composeLens[C, D](other: PLens[A, B, C, D]): ApplyOptional[S, T, C, D]            = andThen(other)
+  def composePrism[C, D](other: PPrism[A, B, C, D]): ApplyPrism[S, T, C, D]             = andThen(other)
+  def composeIso[C, D](other: PIso[A, B, C, D]): ApplyPrism[S, T, C, D]                 = andThen(other)
 
   /** alias to composeTraversal */
-  @inline def ^|->>[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
+  def ^|->>[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
 
   /** alias to composeOptional */
-  @inline def ^|-?[C, D](other: POptional[A, B, C, D]): ApplyOptional[S, T, C, D] = andThen(other)
+  def ^|-?[C, D](other: POptional[A, B, C, D]): ApplyOptional[S, T, C, D] = andThen(other)
 
   /** alias to composePrism */
-  @inline def ^<-?[C, D](other: PPrism[A, B, C, D]): ApplyPrism[S, T, C, D] = andThen(other)
+  def ^<-?[C, D](other: PPrism[A, B, C, D]): ApplyPrism[S, T, C, D] = andThen(other)
 
   /** alias to composeLens */
-  @inline def ^|->[C, D](other: PLens[A, B, C, D]): ApplyOptional[S, T, C, D] = andThen(other)
+  def ^|->[C, D](other: PLens[A, B, C, D]): ApplyOptional[S, T, C, D] = andThen(other)
 
   /** alias to composeIso */
-  @inline def ^<->[C, D](other: PIso[A, B, C, D]): ApplyPrism[S, T, C, D] = andThen(other)
+  def ^<->[C, D](other: PIso[A, B, C, D]): ApplyPrism[S, T, C, D] = andThen(other)
 }
 
 object ApplyPrism {
