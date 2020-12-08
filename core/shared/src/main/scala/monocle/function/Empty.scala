@@ -12,17 +12,21 @@ import scala.collection.immutable.SortedMap
 @implicitNotFound(
   "Could not find an instance of Empty[${S}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
+@deprecated("no replacement", since = "3.0.0-M1")
 abstract class Empty[S] extends Serializable {
   def empty: Prism[S, Unit]
 }
 
 trait EmptyFunctions {
+  @deprecated("no replacement", since = "3.0.0-M1")
   def empty[S](implicit ev: Empty[S]): Prism[S, Unit] =
     ev.empty
 
+  @deprecated("no replacement", since = "3.0.0-M1")
   def _isEmpty[S](s: S)(implicit ev: Empty[S]): Boolean =
     ev.empty.getOption(s).isDefined
 
+  @deprecated("no replacement", since = "3.0.0-M1")
   def _empty[S](implicit ev: Empty[S]): S =
     ev.empty.reverseGet(())
 }

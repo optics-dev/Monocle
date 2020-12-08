@@ -6,6 +6,8 @@ import monocle.function.Plated._
 import monocle.law.discipline.{IsoTests, TraversalTests}
 import monocle.law.discipline.function._
 
+import scala.annotation.nowarn
+
 class ChainSpec extends MonocleSuite {
   import cats.laws.discipline.arbitrary._
 
@@ -13,7 +15,7 @@ class ChainSpec extends MonocleSuite {
   checkAll("chainToVector", IsoTests(chainToVector[Int]))
 
   checkAll("reverse Chain", ReverseTests[Chain[Int]])
-  checkAll("empty Chain", EmptyTests[Chain[Int]])
+  checkAll("empty Chain", EmptyTests[Chain[Int]]): @nowarn
   checkAll("cons Chain", ConsTests[Chain[Int], Int])
   checkAll("snoc Chain", SnocTests[Chain[Int], Int])
   checkAll("each Chain", EachTests[Chain[Int], Int])

@@ -5,10 +5,12 @@ import monocle.function.Plated._
 import monocle.law.discipline.function._
 import monocle.law.discipline.{IsoTests, PrismTests, TraversalTests}
 
+import scala.annotation.nowarn
+
 class StringsSpec extends MonocleSuite {
   checkAll("stringToList", IsoTests(stringToList))
   checkAll("reverse String", ReverseTests[String])
-  checkAll("empty String", EmptyTests[String])
+  checkAll("empty String", EmptyTests[String]): @nowarn
   checkAll("cons String", ConsTests[String, Char])
   checkAll("snoc String", SnocTests[String, Char])
   checkAll("each String", EachTests[String, Char])
