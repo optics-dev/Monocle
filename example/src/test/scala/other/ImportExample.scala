@@ -4,6 +4,8 @@ import monocle.{TestInstances, Traversal}
 import shapeless.test.illTyped
 import shapeless.{::, HNil}
 
+import scala.annotation.nowarn
+
 case class Custom(value: Int)
 
 object Custom {
@@ -54,7 +56,7 @@ class ImportExample extends munit.FunSuite with TestInstances {
     // do not compile because Each instance for List is not in scope
     illTyped("""each[List[Int], Int].modify(List(1,2,3), _ + 1)""")
 
-    assertEquals(head[Int :: HNil, Int, HNil].modify(_ + 1)(1 :: HNil), (2 :: HNil))
+    assertEquals(head[Int :: HNil, Int, HNil].modify(_ + 1)(1 :: HNil), (2 :: HNil)): @nowarn
   }
 
   test("monocle._, Monocle._ makes all Monocle core features available (no generic)") {

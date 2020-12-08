@@ -16,9 +16,9 @@ class ChainSpec extends MonocleSuite {
 
   checkAll("reverse Chain", ReverseTests[Chain[Int]]): @nowarn
   checkAll("empty Chain", EmptyTests[Chain[Int]]): @nowarn
-  checkAll("cons Chain", ConsTests[Chain[Int], Int])
-  checkAll("snoc Chain", SnocTests[Chain[Int], Int])
-  checkAll("each Chain", EachTests[Chain[Int], Int])
+  checkAll("cons Chain", ConsTests[Chain[Int], Int]): @nowarn
+  checkAll("snoc Chain", SnocTests[Chain[Int], Int]): @nowarn
+  checkAll("each Chain", EachTests[Chain[Int], Int]): @nowarn
   checkAll("index Chain", IndexTests[Chain[Int], Int, Int])
   checkAll("filterIndex Chain", FilterIndexTests[Chain[Int], Int, Int])
 

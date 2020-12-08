@@ -63,6 +63,8 @@ lazy val buildSettings = Seq(
       "-language:implicitConversions",
       "-language:higherKinds",
       "-language:postfixOps",
+      "-Wconf:msg=class Cons in package function is deprecated:i",
+      "-Wconf:msg=class Cons1 in package function is deprecated:i",
       "-Wconf:msg=class Curry in package function is deprecated:i",
       "-Wconf:msg=class Empty in package function is deprecated:i",
       "-Wconf:msg=class Field1 in package function is deprecated:i",
@@ -72,6 +74,8 @@ lazy val buildSettings = Seq(
       "-Wconf:msg=class Field5 in package function is deprecated:i",
       "-Wconf:msg=class Field6 in package function is deprecated:i",
       "-Wconf:msg=class Reverse in package function is deprecated:i",
+      "-Wconf:msg=class Snoc in package function is deprecated:i",
+      "-Wconf:msg=class Snoc1 in package function is deprecated:i",
     )
   },
   libraryDependencies ++= {

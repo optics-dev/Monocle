@@ -1,9 +1,11 @@
 package monocle.function
 
 import monocle.MonocleSuite
-
 import cats.data.OneAnd
 
+import scala.annotation.nowarn
+
+@nowarn
 class TailExample extends MonocleSuite {
   test("tail creates a Lens from a 2-6 tuple to its tail") {
     assertEquals(((2, false) applyLens tail get), false)

@@ -12,6 +12,7 @@ import scala.annotation.implicitNotFound
 @implicitNotFound(
   "Could not find an instance of Cons[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
+@deprecated("no replacement", since = "3.0.0-M1")
 abstract class Cons[S, A] extends Serializable {
   def cons: Prism[S, (A, S)]
 
@@ -20,18 +21,24 @@ abstract class Cons[S, A] extends Serializable {
 }
 
 trait ConsFunctions {
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def cons[S, A](implicit ev: Cons[S, A]): Prism[S, (A, S)] = ev.cons
 
+  @deprecated("use index(0)", since = "3.0.0-M1")
   final def headOption[S, A](implicit ev: Cons[S, A]): Optional[S, A] =
     ev.headOption
+
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def tailOption[S, A](implicit ev: Cons[S, A]): Optional[S, S] =
     ev.tailOption
 
   /** append an element to the head */
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def _cons[S, A](head: A, tail: S)(implicit ev: Cons[S, A]): S =
     ev.cons.reverseGet((head, tail))
 
   /** deconstruct an S between its head and tail */
+  @deprecated("no replacement", since = "3.0.0-M1")
   final def _uncons[S, A](s: S)(implicit ev: Cons[S, A]): Option[(A, S)] =
     ev.cons.getOption(s)
 }

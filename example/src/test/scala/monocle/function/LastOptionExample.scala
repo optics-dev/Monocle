@@ -2,6 +2,9 @@ package monocle.function
 
 import monocle.MonocleSuite
 
+import scala.annotation.nowarn
+
+@nowarn
 class LastOptionExample extends MonocleSuite {
   test("lastOption creates a Traversal from a List, Stream or Vector to its optional last element") {
     assertEquals((List(1, 2, 3) applyOptional lastOption getOption), Some(3))

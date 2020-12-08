@@ -2,6 +2,9 @@ package monocle.function
 
 import monocle.MonocleSuite
 
+import scala.annotation.nowarn
+
+@nowarn
 class TailOptionExample extends MonocleSuite {
   test("tailOption creates an Optional from a List, Vector or Stream to its tail") {
     assertEquals((List(1, 2, 3) applyOptional tailOption getOption), Some(List(2, 3)))

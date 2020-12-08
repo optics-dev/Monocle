@@ -2,6 +2,9 @@ package monocle.function
 
 import monocle.MonocleSuite
 
+import scala.annotation.nowarn
+
+@nowarn
 class HeadOptionExample extends MonocleSuite {
   test("headOption creates a Traversal from a List, Stream or Vector to its optional first element") {
     assertEquals((List(1, 2, 3) applyOptional headOption getOption), Some(1))

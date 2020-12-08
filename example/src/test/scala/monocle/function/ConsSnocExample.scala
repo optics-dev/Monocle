@@ -2,6 +2,9 @@ package monocle.function
 
 import monocle.MonocleSuite
 
+import scala.annotation.nowarn
+
+@nowarn
 class ConsSnocExample extends MonocleSuite {
   test("cons add an element to the head") {
     assertEquals(_cons(1, List(2, 3)), List(1, 2, 3))

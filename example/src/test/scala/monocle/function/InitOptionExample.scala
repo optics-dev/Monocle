@@ -2,6 +2,9 @@ package monocle.function
 
 import monocle.MonocleSuite
 
+import scala.annotation.nowarn
+
+@nowarn
 class InitOptionExample extends MonocleSuite {
   test("tail creates a Traversal from a List, IList, Vector or Stream to its tail") {
     assertEquals((List(1, 2, 3) applyOptional initOption getOption), Some(List(1, 2)))
