@@ -9,7 +9,7 @@ import scala.annotation.nowarn
 
 class StringsSpec extends MonocleSuite {
   checkAll("stringToList", IsoTests(stringToList))
-  checkAll("reverse String", ReverseTests[String])
+  checkAll("reverse String", ReverseTests[String]): @nowarn
   checkAll("empty String", EmptyTests[String]): @nowarn
   checkAll("cons String", ConsTests[String, Char])
   checkAll("snoc String", SnocTests[String, Char])

@@ -7,7 +7,7 @@ import monocle.law.discipline.function._
 import scala.annotation.nowarn
 
 class LazyListSpec extends MonocleSuite {
-  checkAll("reverse LazyList", ReverseTests[LazyList[Int]])
+  checkAll("reverse LazyList", ReverseTests[LazyList[Int]]): @nowarn
   checkAll("empty LazyList", EmptyTests[LazyList[Int]]): @nowarn
   checkAll("cons LazyList", ConsTests[LazyList[Int], Int])
   checkAll("snoc LazyList", SnocTests[LazyList[Int], Int])

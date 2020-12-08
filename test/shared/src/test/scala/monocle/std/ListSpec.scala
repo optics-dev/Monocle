@@ -10,7 +10,7 @@ import scala.annotation.nowarn
 class ListSpec extends MonocleSuite {
   checkAll("listToVector", IsoTests(listToVector[Int]))
 
-  checkAll("reverse List", ReverseTests[List[Int]])
+  checkAll("reverse List", ReverseTests[List[Int]]): @nowarn
   checkAll("empty List", EmptyTests[List[Int]]): @nowarn
   checkAll("cons List", ConsTests[List[Int], Int])
   checkAll("snoc List", SnocTests[List[Int], Int])

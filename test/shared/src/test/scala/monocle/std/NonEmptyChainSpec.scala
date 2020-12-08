@@ -5,6 +5,8 @@ import monocle.MonocleSuite
 import monocle.law.discipline.{IsoTests, PrismTests}
 import monocle.law.discipline.function._
 
+import scala.annotation.nowarn
+
 class NonEmptyChainSpec extends MonocleSuite {
   import cats.laws.discipline.arbitrary._
 
@@ -15,7 +17,7 @@ class NonEmptyChainSpec extends MonocleSuite {
   checkAll("each NonEmptyChain", EachTests[NonEmptyChain[Int], Int])
   checkAll("index NonEmptyChain", IndexTests[NonEmptyChain[Int], Int, Int])
   checkAll("filterIndex NonEmptyChain", FilterIndexTests[NonEmptyChain[Int], Int, Int])
-  checkAll("reverse NonEmptyChain", ReverseTests[NonEmptyChain[Int]])
+  checkAll("reverse NonEmptyChain", ReverseTests[NonEmptyChain[Int]]): @nowarn
   checkAll("cons1 NonEmptyChain", Cons1Tests[NonEmptyChain[Int], Int, Chain[Int]])
   checkAll("snoc1 NonEmptyChain", Snoc1Tests[NonEmptyChain[Int], Chain[Int], Int])
 }

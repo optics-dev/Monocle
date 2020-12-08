@@ -3,6 +3,9 @@ package monocle.syntax
 import monocle.macros.GenLens
 import monocle.{Lens, MonocleSuite, Prism}
 
+import scala.annotation.nowarn
+
+@nowarn
 class SymbolicSyntaxExample extends MonocleSuite {
   case class Store(articles: List[Article])
 
