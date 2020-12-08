@@ -27,7 +27,7 @@ private[monocle] trait Bits[A] {
 private[monocle] object Bits extends BitsInstances
 
 private[monocle] trait BitsInstances {
-  implicit val booleanBits = new Bits[Boolean] {
+  implicit val booleanBits: Bits[Boolean] = new Bits[Boolean] {
     def bitwiseOr(a1: Boolean, a2: Boolean): Boolean  = a1 | a2
     def bitwiseAnd(a1: Boolean, a2: Boolean): Boolean = a1 & a2
     def bitwiseXor(a1: Boolean, a2: Boolean): Boolean = a1 ^ a2
@@ -44,7 +44,7 @@ private[monocle] trait BitsInstances {
     def negate(a: Boolean): Boolean = !a
   }
 
-  implicit val byteBits = new Bits[Byte] {
+  implicit val byteBits: Bits[Byte] = new Bits[Byte] {
     def bitwiseOr(a1: Byte, a2: Byte): Byte  = (a1 | a2).toByte
     def bitwiseAnd(a1: Byte, a2: Byte): Byte = (a1 & a2).toByte
     def bitwiseXor(a1: Byte, a2: Byte): Byte = (a1 ^ a2).toByte
@@ -61,7 +61,7 @@ private[monocle] trait BitsInstances {
     def negate(a: Byte): Byte = (~a).toByte
   }
 
-  implicit val charBits = new Bits[Char] {
+  implicit val charBits: Bits[Char] = new Bits[Char] {
     def bitwiseOr(a1: Char, a2: Char): Char  = (a1 | a2).toChar
     def bitwiseAnd(a1: Char, a2: Char): Char = (a1 & a2).toChar
     def bitwiseXor(a1: Char, a2: Char): Char = (a1 ^ a2).toChar
@@ -77,7 +77,7 @@ private[monocle] trait BitsInstances {
     def signed(a: Char): Boolean = signum(a) > 0
   }
 
-  implicit val intBits = new Bits[Int] {
+  implicit val intBits: Bits[Int] = new Bits[Int] {
     def bitwiseOr(a1: Int, a2: Int): Int  = a1 | a2
     def bitwiseAnd(a1: Int, a2: Int): Int = a1 & a2
     def bitwiseXor(a1: Int, a2: Int): Int = a1 ^ a2
@@ -94,7 +94,7 @@ private[monocle] trait BitsInstances {
     def negate(a: Int): Int = ~a
   }
 
-  implicit val longBits = new Bits[Long] {
+  implicit val longBits: Bits[Long] = new Bits[Long] {
     def signed(a: Long): Boolean          = signum(a) > 0
     def negate(a: Long): Long             = ~a
     def testBit(a: Long, n: Int): Boolean = bitwiseAnd(a, singleBit(n)) != 0

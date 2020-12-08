@@ -84,7 +84,6 @@ lazy val buildSettings = Seq(
   scmInfo := Some(
     ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")
   ),
-  skip.in(publish) := isDotty.value,
   useScala3doc := false,
   testFrameworks += new TestFramework("munit.Framework"),
   Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc / sources).value }
@@ -192,7 +191,10 @@ lazy val refined = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .settings(libraryDependencies ++= Seq(cats.value, refinedDep.value))
+  .settings(
+    crossScalaVersions ++= dottyVersions,
+    libraryDependencies ++= Seq(cats.value, refinedDep.value)
+  )
 
 lazy val law = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -250,7 +252,7 @@ lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
     crossScalaVersions ++= dottyVersions
   )
   .jvmSettings(mimaSettings("unsafe"): _*)
-  .settings(libraryDependencies ++= Seq(cats.value, alleycats.value) ++ Seq(shapeless.value).map(_.withDottyCompat(scalaVersion.value)))
+  .settings(libraryDependencies ++= Seq(cats.value, alleycats.value))
 
 lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, macros, law, state, refined, unsafe)
   .settings(moduleName := "monocle-test")
@@ -397,9 +399,3 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false,
   skip in publish := true
 )
-
-// For Travis CI - see http://www.cakesolutions.net/teamblogs/publishing-artefacts-to-oss-sonatype-nexus-using-sbt-and-travis-ci
-credentials ++= (for {
-  username <- Option(System.getenv().get("SONATYPE_USERNAME"))
-  password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
-} yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", username, password)).toSeq
