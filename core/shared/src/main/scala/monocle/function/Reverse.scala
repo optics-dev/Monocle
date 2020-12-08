@@ -14,10 +14,6 @@ abstract class Reverse[S, A] extends Serializable {
 }
 
 trait ReverseFunctions {
-  @deprecated("use Reverse.fromReverseFunction", since = "1.4.0")
-  def reverseFromReverseFunction[S](_reverse: S => S): Reverse[S, S] =
-    Reverse.fromReverseFunction(_reverse)
-
   def reverse[S, A](implicit ev: Reverse[S, A]): Iso[S, A] = ev.reverse
 
   def _reverse[S](s: S)(implicit ev: Reverse[S, S]): S = ev.reverse.get(s)

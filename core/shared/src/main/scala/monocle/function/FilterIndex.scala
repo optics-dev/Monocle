@@ -23,10 +23,6 @@ abstract class FilterIndex[S, I, A] extends Serializable {
 trait FilterIndexFunctions {
   def filterIndex[S, I, A](predicate: I => Boolean)(implicit ev: FilterIndex[S, I, A]): Traversal[S, A] =
     ev.filterIndex(predicate)
-
-  @deprecated("use FilterIndex.fromTraverse", since = "1.4.0")
-  def traverseFilterIndex[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] =
-    FilterIndex.fromTraverse(zipWithIndex)
 }
 
 object FilterIndex extends FilterIndexFunctions {

@@ -22,12 +22,4 @@ trait NonEmptyListOptics {
 
   final def optNelToList[A]: Iso[Option[NonEmptyList[A]], List[A]] =
     pOptNelToList[A, A]
-
-  @deprecated("use pNelToOneAnd", since = "1.2.0")
-  final def pNelAndOneIso[A, B]: PIso[NonEmptyList[A], NonEmptyList[B], OneAnd[List, A], OneAnd[List, B]] =
-    pNelToOneAnd[A, B]
-
-  @deprecated("use nelToOneAnd", since = "1.2.0")
-  final def nelAndOneIso[A]: Iso[NonEmptyList[A], OneAnd[List, A]] =
-    nelToOneAnd[A]
 }
