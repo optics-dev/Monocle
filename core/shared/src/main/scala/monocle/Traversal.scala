@@ -182,22 +182,27 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
     andThen(other)
 
   /** alias to composeTraversal */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composeOptional */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^|-?[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composePrism */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^<-?[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^|->[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^<->[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 

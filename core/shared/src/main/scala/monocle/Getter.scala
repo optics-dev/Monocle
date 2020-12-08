@@ -133,22 +133,27 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** *****************************************
     */
   /** alias to composeTraversal */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composeOptional */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composePrism */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
     andThen(other)
 
   /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     andThen(other)
 
