@@ -9,6 +9,7 @@ import org.typelevel.discipline.Laws
 import cats.Eq
 import cats.instances.unit._
 
+@deprecated("no replacement", since = "3.0.0-M1")
 object EmptyTests extends Laws {
   def apply[S: Arbitrary: Eq: Empty]: RuleSet =
     new RuleSet {

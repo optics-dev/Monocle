@@ -9,6 +9,8 @@ import shapeless.HList._
 import shapeless.ops.hlist.{IsHCons, Init => HListInit}
 import shapeless.{::, HNil}
 
+import scala.annotation.nowarn
+
 class HListSpec extends MonocleSuite {
   case class Example(i: Int, b: Boolean, c: Char, f: Float, l: Long, d: Double)
 
@@ -49,7 +51,7 @@ class HListSpec extends MonocleSuite {
 
   checkAll("toHList", IsoTests(toHList[Example, H]))
 
-  checkAll("reverse HList", IsoTests(reverse[H, ReverseH]))
+  checkAll("reverse HList", IsoTests(reverse[H, ReverseH])): @nowarn
   checkAll("hcons HList", IsoTests(cons1[H, Int, HTail]))
   checkAll("hsnoc HList", IsoTests(snoc1[H, HInit, Double]))
 }

@@ -17,14 +17,9 @@ jobs:
         uses: olafurpg/setup-scala@v10
       - name: Checking your code format
         run: sbt scalafmtCheck
-      - name: Set up Ruby 2.6
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-      - name: Set up jekyll
-        if: env.REQUIRES_JEKYLL_CI != null
+      - name: Run tests
         run: |
-          gem install jekyll -v 4
-      - name: Run tests and documentation
+          sbt +test
+      - name: Run documentation
         run: |
-          csbt +test packageSrc docs/mdoc
+          sbt packageSrc docs/mdoc

@@ -22,9 +22,6 @@ abstract class Index[S, I, A] extends Serializable {
 trait IndexFunctions {
   def index[S, I, A](i: I)(implicit ev: Index[S, I, A]): Optional[S, A] =
     ev.index(i)
-
-  @deprecated("use Index.fromAt", since = "1.4.0")
-  def atIndex[S, I, A](implicit ev: At[S, I, Option[A]]) = Index.fromAt[S, I, A]
 }
 
 object Index extends IndexFunctions {

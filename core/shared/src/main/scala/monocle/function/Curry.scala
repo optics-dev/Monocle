@@ -1,11 +1,13 @@
 package monocle.function
 
 import monocle.Iso
+
 import scala.annotation.implicitNotFound
 
 @implicitNotFound(
   "Could not find an instance of Curry[${F},${G}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
+@deprecated("no replacement", since = "3.0.0-M1")
 abstract class Curry[F, G] extends Serializable {
 
   /** curry: ((A,B,...,Z) => Res) <=> (A => B => ... => Z => Res) */
@@ -13,7 +15,9 @@ abstract class Curry[F, G] extends Serializable {
 }
 
 trait CurryFunctions {
-  def curry[F, G](implicit ev: Curry[F, G]): Iso[F, G]   = ev.curry
+  @deprecated("no replacement", since = "3.0.0-M1")
+  def curry[F, G](implicit ev: Curry[F, G]): Iso[F, G] = ev.curry
+  @deprecated("no replacement", since = "3.0.0-M1")
   def uncurry[F, G](implicit ev: Curry[F, G]): Iso[G, F] = curry.reverse
 }
 

@@ -2,6 +2,9 @@ package monocle.function
 
 import monocle._
 
+import scala.annotation.nowarn
+
+@nowarn
 class ReverseExample extends MonocleSuite {
   test("reverse creates an Iso from a List to its reversed version") {
     assertEquals((List(1, 2, 3) applyIso reverse get), List(3, 2, 1))

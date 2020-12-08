@@ -6,6 +6,8 @@ import monocle.law.discipline.{IsoTests, PrismTests}
 import monocle.law.discipline.function.{EachTests, EmptyTests, PossibleTests}
 import org.scalacheck.{Arbitrary, Cogen}
 
+import scala.annotation.nowarn
+
 class OptionSpec extends MonocleSuite {
   checkAll("some", PrismTests(some[Int]))
   checkAll("none", PrismTests(none[Long]))
@@ -14,7 +16,7 @@ class OptionSpec extends MonocleSuite {
 
   checkAll("each Option", EachTests[Option[Int], Int])
   checkAll("possible Option", PossibleTests[Option[Int], Int])
-  checkAll("empty Option", EmptyTests[Option[Int]])
+  checkAll("empty Option", EmptyTests[Option[Int]]): @nowarn
 
   case class IntNoZero(value: Int)
   object IntNoZero {

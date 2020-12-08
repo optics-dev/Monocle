@@ -8,6 +8,7 @@ import org.typelevel.discipline.Laws
 
 import cats.Eq
 
+@deprecated("no replacement", since = "3.0.0-M1")
 object ReverseTests extends Laws {
   def apply[S: Eq: Arbitrary](implicit evReverse: Reverse[S, S], arbSS: Arbitrary[S => S]): RuleSet =
     apply[S, S]

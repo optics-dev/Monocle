@@ -20,9 +20,6 @@ abstract class Each[S, A] extends Serializable {
 
 trait EachFunctions {
   def each[S, A](implicit ev: Each[S, A]): Traversal[S, A] = ev.each
-
-  @deprecated("use Each.fromTraverse", since = "1.4.0")
-  def traverseEach[S[_]: Traverse, A]: Each[S[A], A] = Each.fromTraverse[S, A]
 }
 
 object Each extends EachFunctions {

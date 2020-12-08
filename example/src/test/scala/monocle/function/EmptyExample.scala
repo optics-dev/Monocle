@@ -3,6 +3,9 @@ package monocle.function
 import monocle.MonocleSuite
 import monocle.function.all.{empty => mempty}
 
+import scala.annotation.nowarn
+
+@nowarn
 class EmptyExample extends MonocleSuite {
   test("empty is a Prism that is successful only when S is empty") {
     assertEquals((List(1, 2, 3) applyPrism mempty getOption), None)

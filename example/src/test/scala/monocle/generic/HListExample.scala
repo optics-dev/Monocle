@@ -3,6 +3,8 @@ package monocle.generic
 import monocle.MonocleSuite
 import shapeless.HNil
 
+import scala.annotation.nowarn
+
 class HListExample extends MonocleSuite {
   case class Example(i: Int, s: String, b: Boolean)
 
@@ -13,7 +15,7 @@ class HListExample extends MonocleSuite {
   }
 
   test("reverse creates an Iso between an HList and its reverse version") {
-    assertEquals((1 :: "bla" :: true :: HNil applyIso reverse get), (true :: "bla" :: 1 :: HNil))
+    assertEquals((1 :: "bla" :: true :: HNil applyIso reverse get), (true :: "bla" :: 1 :: HNil)): @nowarn
   }
 
   test("head creates a Lens from HList to the first element") {

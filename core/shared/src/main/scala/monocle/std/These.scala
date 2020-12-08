@@ -34,8 +34,4 @@ trait TheseOptics {
     )
 
   def theseRight[A, B]: Optional[Ior[A, B], B] = pTheseRight[A, B, B]
-
-  @deprecated("use theseToDisjunction", since = "1.2.0")
-  def theseDisjunction[A, B]: Prism[Ior[A, B], Either[A, B]] =
-    theseToDisjunction[A, B]
 }

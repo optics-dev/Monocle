@@ -2,7 +2,9 @@ package monocle.function
 
 import monocle.MonocleSuite
 
-class FunctionExample extends MonocleSuite {
+import scala.annotation.nowarn
+
+@nowarn class FunctionExample extends MonocleSuite {
   test("curry curries a function") {
     def f(a: Int, b: Int): Int = a + b
 

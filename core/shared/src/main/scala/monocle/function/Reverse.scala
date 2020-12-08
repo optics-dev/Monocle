@@ -7,6 +7,7 @@ import scala.annotation.implicitNotFound
 @implicitNotFound(
   "Could not find an instance of Reverse[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
+@deprecated("no replacement", since = "3.0.0-M1")
 abstract class Reverse[S, A] extends Serializable {
 
   /** Creates an Iso from S to a reversed S */
@@ -14,12 +15,10 @@ abstract class Reverse[S, A] extends Serializable {
 }
 
 trait ReverseFunctions {
-  @deprecated("use Reverse.fromReverseFunction", since = "1.4.0")
-  def reverseFromReverseFunction[S](_reverse: S => S): Reverse[S, S] =
-    Reverse.fromReverseFunction(_reverse)
-
+  @deprecated("no replacement", since = "3.0.0-M1")
   def reverse[S, A](implicit ev: Reverse[S, A]): Iso[S, A] = ev.reverse
 
+  @deprecated("no replacement", since = "3.0.0-M1")
   def _reverse[S](s: S)(implicit ev: Reverse[S, S]): S = ev.reverse.get(s)
 }
 
