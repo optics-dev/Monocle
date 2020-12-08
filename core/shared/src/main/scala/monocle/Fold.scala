@@ -26,59 +26,59 @@ abstract class Fold[S, A] extends Serializable { self =>
   def foldMap[M: Monoid](f: A => M)(s: S): M
 
   /** combine all targets using a target's Monoid */
-  @inline final def fold(s: S)(implicit ev: Monoid[A]): A =
+  final def fold(s: S)(implicit ev: Monoid[A]): A =
     foldMap(identity)(s)
 
   /** get all the targets of a [[Fold]] */
-  @inline final def getAll(s: S): List[A] =
+  final def getAll(s: S): List[A] =
     foldMap(List(_))(s)
 
   /** find the first target matching the predicate */
-  @inline final def find(p: A => Boolean): S => Option[A] =
+  final def find(p: A => Boolean): S => Option[A] =
     foldMap(a => Some(a).filter(p))(_)(Monoids.firstOption)
 
   /** get the first target */
-  @inline final def headOption(s: S): Option[A] =
+  final def headOption(s: S): Option[A] =
     foldMap(Option(_))(s)(Monoids.firstOption)
 
   /** get the last target */
-  @inline final def lastOption(s: S): Option[A] =
+  final def lastOption(s: S): Option[A] =
     foldMap(Option(_))(s)(Monoids.lastOption)
 
   /** check if at least one target satisfies the predicate */
-  @inline final def exist(p: A => Boolean): S => Boolean =
+  final def exist(p: A => Boolean): S => Boolean =
     foldMap(p(_))(_)(Monoids.any)
 
   /** check if all targets satisfy the predicate */
-  @inline final def all(p: A => Boolean): S => Boolean =
+  final def all(p: A => Boolean): S => Boolean =
     foldMap(p(_))(_)(Monoids.all)
 
   /** calculate the number of targets */
-  @inline final def length(s: S): Int =
+  final def length(s: S): Int =
     foldMap(_ => 1)(s)
 
   /** check if there is no target */
-  @inline final def isEmpty(s: S): Boolean =
+  final def isEmpty(s: S): Boolean =
     foldMap(_ => false)(s)(Monoids.all)
 
   /** check if there is at least one target */
-  @inline final def nonEmpty(s: S): Boolean =
+  final def nonEmpty(s: S): Boolean =
     !isEmpty(s)
 
   /** join two [[Fold]] with the same target */
-  @inline final def choice[S1](other: Fold[S1, A]): Fold[Either[S, S1], A] =
+  final def choice[S1](other: Fold[S1, A]): Fold[Either[S, S1], A] =
     new Fold[Either[S, S1], A] {
       def foldMap[M: Monoid](f: A => M)(s: Either[S, S1]): M =
         s.fold(self.foldMap(f), other.foldMap(f))
     }
 
-  @inline final def left[C]: Fold[Either[S, C], Either[A, C]] =
+  final def left[C]: Fold[Either[S, C], Either[A, C]] =
     new Fold[Either[S, C], Either[A, C]] {
       override def foldMap[M: Monoid](f: Either[A, C] => M)(s: Either[S, C]): M =
         s.fold(self.foldMap(a => f(Either.left(a))), c => f(Either.right(c)))
     }
 
-  @inline final def right[C]: Fold[Either[C, S], Either[C, A]] =
+  final def right[C]: Fold[Either[C, S], Either[C, A]] =
     new Fold[Either[C, S], Either[C, A]] {
       override def foldMap[M: Monoid](f: Either[C, A] => M)(s: Either[C, S]): M =
         s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
@@ -138,31 +138,31 @@ abstract class Fold[S, A] extends Serializable { self =>
     andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[Fold]] */
-  @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
+  final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
     andThen(other)
 
   /** compose a [[Fold]] with a [[Getter]] */
-  @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+  final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
     andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[PTraversal]] */
-  @inline final def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+  final def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[POptional]] */
-  @inline final def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+  final def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
     andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[PPrism]] */
-  @inline final def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+  final def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
     andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[PLens]] */
-  @inline final def composeLens[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
+  final def composeLens[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
     andThen(other.asFold)
 
   /** compose a [[Fold]] with a [[PIso]] */
-  @inline final def composeIso[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
+  final def composeIso[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
     andThen(other.asFold)
 
   /** *****************************************
@@ -171,23 +171,23 @@ abstract class Fold[S, A] extends Serializable { self =>
   /** *****************************************
     */
   /** alias to composeTraversal */
-  @inline final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+  final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composeOptional */
-  @inline final def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+  final def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composePrism */
-  @inline final def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+  final def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composeLens */
-  @inline final def ^|->[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
+  final def ^|->[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composeIso */
-  @inline final def ^<->[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
+  final def ^<->[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
     andThen(other)
 }
 

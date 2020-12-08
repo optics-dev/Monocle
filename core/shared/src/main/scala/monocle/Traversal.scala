@@ -34,62 +34,62 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T]
 
   /** map each target to a Monoid and combine the results */
-  @inline final def foldMap[M: Monoid](f: A => M)(s: S): M =
+  final def foldMap[M: Monoid](f: A => M)(s: S): M =
     modifyF[Const[M, *]](a => Const(f(a)))(s).getConst
 
   /** combine all targets using a target's Monoid */
-  @inline final def fold(s: S)(implicit ev: Monoid[A]): A =
+  final def fold(s: S)(implicit ev: Monoid[A]): A =
     foldMap(identity)(s)
 
   /** get all the targets of a [[PTraversal]] */
-  @inline final def getAll(s: S): List[A] =
+  final def getAll(s: S): List[A] =
     foldMap(List(_))(s)
 
   /** find the first target matching the predicate */
-  @inline final def find(p: A => Boolean): S => Option[A] =
+  final def find(p: A => Boolean): S => Option[A] =
     foldMap(a => Some(a).filter(p))(_)(Monoids.firstOption)
 
   /** get the first target */
-  @inline final def headOption(s: S): Option[A] =
+  final def headOption(s: S): Option[A] =
     foldMap(Option(_))(s)(Monoids.firstOption)
 
   /** get the last target */
-  @inline final def lastOption(s: S): Option[A] =
+  final def lastOption(s: S): Option[A] =
     foldMap(Option(_))(s)(Monoids.lastOption)
 
   /** check if at least one target satisfies the predicate */
-  @inline final def exist(p: A => Boolean): S => Boolean =
+  final def exist(p: A => Boolean): S => Boolean =
     foldMap(p(_))(_)(Monoids.any)
 
   /** check if all targets satisfy the predicate */
-  @inline final def all(p: A => Boolean): S => Boolean =
+  final def all(p: A => Boolean): S => Boolean =
     foldMap(p(_))(_)(Monoids.all)
 
   /** calculate the number of targets */
-  @inline final def length(s: S): Int =
+  final def length(s: S): Int =
     foldMap(_ => 1)(s)
 
   /** check if there is no target */
-  @inline final def isEmpty(s: S): Boolean =
+  final def isEmpty(s: S): Boolean =
     foldMap(_ => false)(s)(Monoids.all)
 
   /** check if there is at least one target */
-  @inline final def nonEmpty(s: S): Boolean =
+  final def nonEmpty(s: S): Boolean =
     !isEmpty(s)
 
   /** modify polymorphically the target of a [[PTraversal]] with a function */
-  @inline final def modify(f: A => B): S => T =
+  final def modify(f: A => B): S => T =
     modifyF[Id](f)
 
   /** replace polymorphically the target of a [[PTraversal]] with a value */
-  @inline final def replace(b: B): S => T = modify(_ => b)
+  final def replace(b: B): S => T = modify(_ => b)
 
   /** alias to replace */
   @deprecated("use replace instead", since = "3.0.0-M1")
-  @inline final def set(b: B): S => T = replace(b)
+  final def set(b: B): S => T = replace(b)
 
   /** join two [[PTraversal]] with the same target */
-  @inline final def choice[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[Either[S, S1], Either[T, T1], A, B] =
+  final def choice[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[Either[S, S1], Either[T, T1], A, B] =
     new PTraversal[Either[S, S1], Either[T, T1], A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: Either[S, S1]): F[Either[T, T1]] =
         s.fold(
@@ -100,7 +100,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
 
   /** [[PTraversal.modifyF]] for a `Parallel` applicative functor.
     */
-  @inline final def parModifyF[F[_]](f: A => F[B])(s: S)(implicit F: Parallel[F]): F[T] =
+  final def parModifyF[F[_]](f: A => F[B])(s: S)(implicit F: Parallel[F]): F[T] =
     F.sequential(
       modifyF(a => F.parallel(f(a)))(s)(F.applicative)
     )
@@ -151,54 +151,54 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
     andThen(other)
 
   /** Compose with a function lifted into a Getter */
-  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+  def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
 
   /** compose a [[PTraversal]] with a [[Getter]] */
-  @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+  final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PSetter]] */
-  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+  final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PTraversal]] */
-  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[POptional]] */
-  @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def composeOptional[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PPrism]] */
-  @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def composePrism[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PLens]] */
-  @inline final def composeLens[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def composeLens[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PIso]] */
-  @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def composeIso[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composeTraversal */
-  @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composeOptional */
-  @inline final def ^|-?[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def ^|-?[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composePrism */
-  @inline final def ^<-?[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def ^<-?[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composeLens */
-  @inline final def ^|->[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def ^|->[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composeIso */
-  @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def ^<->[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** *******************************************************************
@@ -207,14 +207,14 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   /** *******************************************************************
     */
   /** view a [[PTraversal]] as a [[Fold]] */
-  @inline final def asFold: Fold[S, A] =
+  final def asFold: Fold[S, A] =
     new Fold[S, A] {
       def foldMap[M: Monoid](f: A => M)(s: S): M =
         self.foldMap(f)(s)
     }
 
   /** view a [[PTraversal]] as a [[PSetter]] */
-  @inline final def asSetter: PSetter[S, T, A, B] =
+  final def asSetter: PSetter[S, T, A, B] =
     PSetter(modify)
 }
 

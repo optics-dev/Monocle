@@ -44,80 +44,80 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   def getOption(s: S): Option[A]
 
   /** modify polymorphically the target of a [[PPrism]] with an Applicative function */
-  @inline final def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+  final def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
     getOrModify(s).fold(
       t => Applicative[F].pure(t),
       a => Applicative[F].map(f(a))(reverseGet)
     )
 
   /** modify polymorphically the target of a [[PPrism]] with a function */
-  @inline final def modify(f: A => B): S => T =
+  final def modify(f: A => B): S => T =
     getOrModify(_).fold(identity, a => reverseGet(f(a)))
 
   /** modify polymorphically the target of a [[PPrism]] with a function.
     * return empty if the [[PPrism]] is not matching
     */
-  @inline final def modifyOption(f: A => B): S => Option[T] =
+  final def modifyOption(f: A => B): S => Option[T] =
     s => getOption(s).map(a => reverseGet(f(a)))
 
   /** replace polymorphically the target of a [[PPrism]] with a value */
-  @inline final def replace(b: B): S => T =
+  final def replace(b: B): S => T =
     modify(_ => b)
 
   /** alias to replace */
   @deprecated("use replace instead", since = "3.0.0-M1")
-  @inline final def set(b: B): S => T = replace(b)
+  final def set(b: B): S => T = replace(b)
 
   /** replace polymorphically the target of a [[PPrism]] with a value.
     * return empty if the [[PPrism]] is not matching
     */
-  @inline final def setOption(b: B): S => Option[T] =
+  final def setOption(b: B): S => Option[T] =
     modifyOption(_ => b)
 
   /** check if there is no target */
-  @inline final def isEmpty(s: S): Boolean =
+  final def isEmpty(s: S): Boolean =
     getOption(s).isEmpty
 
   /** check if there is a target */
-  @inline final def nonEmpty(s: S): Boolean =
+  final def nonEmpty(s: S): Boolean =
     getOption(s).isDefined
 
   /** find if the target satisfies the predicate */
-  @inline final def find(p: A => Boolean): S => Option[A] =
+  final def find(p: A => Boolean): S => Option[A] =
     getOption(_).flatMap(a => Some(a).filter(p))
 
   /** check if there is a target and it satisfies the predicate */
-  @inline final def exist(p: A => Boolean): S => Boolean =
+  final def exist(p: A => Boolean): S => Boolean =
     getOption(_).fold(false)(p)
 
   /** check if there is no target or the target satisfies the predicate */
-  @inline final def all(p: A => Boolean): S => Boolean =
+  final def all(p: A => Boolean): S => Boolean =
     getOption(_).fold(true)(p)
 
   /** create a [[Getter]] from the modified target to the modified source of a [[PPrism]] */
-  @inline final def re: Getter[B, T] =
+  final def re: Getter[B, T] =
     Getter(reverseGet)
 
-  @inline final def first[C]: PPrism[(S, C), (T, C), (A, C), (B, C)] =
+  final def first[C]: PPrism[(S, C), (T, C), (A, C), (B, C)] =
     PPrism[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       getOrModify(s).bimap(_ -> c, _ -> c)
     } { case (b, c) =>
       (reverseGet(b), c)
     }
 
-  @inline final def second[C]: PPrism[(C, S), (C, T), (C, A), (C, B)] =
+  final def second[C]: PPrism[(C, S), (C, T), (C, A), (C, B)] =
     PPrism[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
       getOrModify(s).bimap(c -> _, c -> _)
     } { case (c, b) =>
       (c, reverseGet(b))
     }
 
-  @inline final def left[C]: PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
+  final def left[C]: PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
     PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]](
       _.fold(getOrModify(_).bimap(Either.left, Either.left), c => Either.right(Either.right(c)))
     )(_.leftMap(reverseGet))
 
-  @inline final def right[C]: PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
+  final def right[C]: PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](
       _.fold(c => Either.right(Either.left(c)), getOrModify(_).bimap(Either.right, Either.right))
     )(_.map(reverseGet))
@@ -172,38 +172,38 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
     andThen(other.asPrism)
 
   /** compose a [[PPrism]] with a [[Fold]] */
-  @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+  final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     andThen(other)
 
   /** Compose with a function lifted into a Getter */
-  @inline def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+  def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
 
   /** compose a [[PPrism]] with a [[Getter]] */
-  @inline final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+  final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[PPrism]] with a [[PSetter]] */
-  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+  final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PPrism]] with a [[PTraversal]] */
-  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PPrism]] with a [[POptional]] */
-  @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+  final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PPrism]] with a [[PLens]] */
-  @inline final def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
+  final def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PPrism]] with a [[PPrism]] */
-  @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+  final def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PPrism]] with a [[PIso]] */
-  @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
+  final def composeIso[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
     andThen(other)
 
   /** *****************************************
@@ -212,23 +212,23 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /** *****************************************
     */
   /** alias to composeTraversal */
-  @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composeOptional */
-  @inline final def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+  final def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** alias to composePrism */
-  @inline final def ^<-?[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+  final def ^<-?[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
     andThen(other)
 
   /** alias to composeLens */
-  @inline final def ^|->[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
+  final def ^|->[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** alias to composeIso */
-  @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
+  final def ^<->[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
     andThen(other)
 
   /** ***************************************************************
@@ -237,14 +237,14 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /** ***************************************************************
     */
   /** view a [[PPrism]] as a [[Fold]] */
-  @inline final def asFold: Fold[S, A] =
+  final def asFold: Fold[S, A] =
     new Fold[S, A] {
       def foldMap[M: Monoid](f: A => M)(s: S): M =
         getOption(s) map f getOrElse Monoid[M].empty
     }
 
   /** view a [[PPrism]] as a [[Setter]] */
-  @inline final def asSetter: PSetter[S, T, A, B] =
+  final def asSetter: PSetter[S, T, A, B] =
     new PSetter[S, T, A, B] {
       def modify(f: A => B): S => T =
         self.modify(f)
@@ -254,14 +254,14 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
     }
 
   /** view a [[PPrism]] as a [[PTraversal]] */
-  @inline final def asTraversal: PTraversal[S, T, A, B] =
+  final def asTraversal: PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 
   /** view a [[PPrism]] as a [[POptional]] */
-  @inline final def asOptional: POptional[S, T, A, B] =
+  final def asOptional: POptional[S, T, A, B] =
     new POptional[S, T, A, B] {
       def getOrModify(s: S): Either[T, A] =
         self.getOrModify(s)

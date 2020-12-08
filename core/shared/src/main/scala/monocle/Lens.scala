@@ -51,21 +51,21 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   def modify(f: A => B): S => T
 
   /** find if the target satisfies the predicate */
-  @inline final def find(p: A => Boolean): S => Option[A] =
+  final def find(p: A => Boolean): S => Option[A] =
     s => Some(get(s)).filter(p)
 
   /** check if the target satisfies the predicate */
-  @inline final def exist(p: A => Boolean): S => Boolean =
+  final def exist(p: A => Boolean): S => Boolean =
     p compose get
 
   /** join two [[PLens]] with the same target */
-  @inline final def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[Either[S, S1], Either[T, T1], A, B] =
+  final def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[Either[S, S1], Either[T, T1], A, B] =
     PLens[Either[S, S1], Either[T, T1], A, B](_.fold(self.get, other.get))(b =>
       _.bimap(self.replace(b), other.replace(b))
     )
 
   /** pair two disjoint [[PLens]] */
-  @inline final def split[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
+  final def split[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
     PLens[(S, S1), (T, T1), (A, A1), (B, B1)] { case (s, s1) =>
       (self.get(s), other.get(s1))
     } {
@@ -74,7 +74,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  @inline final def first[C]: PLens[(S, C), (T, C), (A, C), (B, C)] =
+  final def first[C]: PLens[(S, C), (T, C), (A, C), (B, C)] =
     PLens[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       (get(s), c)
     } {
@@ -83,7 +83,7 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  @inline final def second[C]: PLens[(C, S), (C, T), (C, A), (C, B)] =
+  final def second[C]: PLens[(C, S), (C, T), (C, A), (C, B)] =
     PLens[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
       (c, get(s))
     } {
@@ -139,42 +139,42 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
     }
 
   /** compose a [[PLens]] with an [[PIso]] */
-  @inline final def andThen[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] =
+  final def andThen[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] =
     andThen(other.asLens)
 
   /** compose a [[PLens]] with a [[Fold]] */
-  @inline final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+  final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     andThen(other)
 
   /** Compose with a function lifted into a Getter */
-  @inline def to[C](f: A => C): Getter[S, C] = composeGetter(Getter(f))
+  def to[C](f: A => C): Getter[S, C] = composeGetter(Getter(f))
 
   /** compose a [[PLens]] with a [[Getter]] */
-  @inline final def composeGetter[C](other: Getter[A, C]): Getter[S, C] =
+  final def composeGetter[C](other: Getter[A, C]): Getter[S, C] =
     andThen(other)
 
   /** compose a [[PLens]] with a [[PSetter]] */
-  @inline final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+  final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PLens]] with a [[PTraversal]] */
-  @inline final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PLens]] with an [[POptional]] */
-  @inline final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+  final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PLens]] with a [[PPrism]] */
-  @inline final def composePrism[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
+  final def composePrism[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PLens]] with a [[PLens]] */
-  @inline final def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
+  final def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PLens]] with an [[PIso]] */
-  @inline final def composeIso[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] =
+  final def composeIso[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] =
     andThen(other)
 
   /** *****************************************
@@ -183,23 +183,23 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /** *****************************************
     */
   /** alias to composeTraversal */
-  @inline final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+  final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** alias to composeOptional */
-  @inline final def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+  final def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** alias to composePrism */
-  @inline final def ^<-?[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
+  final def ^<-?[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** alias to composeLens */
-  @inline final def ^|->[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
+  final def ^|->[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
     andThen(other)
 
   /** alias to composeIso */
-  @inline final def ^<->[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] =
+  final def ^<->[C, D](other: PIso[A, B, C, D]): PLens[S, T, C, D] =
     andThen(other)
 
   /** *********************************************************************************************
@@ -208,18 +208,18 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
   /** *********************************************************************************************
     */
   /** view a [[PLens]] as a [[Fold]] */
-  @inline final def asFold: Fold[S, A] =
+  final def asFold: Fold[S, A] =
     new Fold[S, A] {
       def foldMap[M: Monoid](f: A => M)(s: S): M =
         f(get(s))
     }
 
   /** view a [[PLens]] as a [[Getter]] */
-  @inline final def asGetter: Getter[S, A] =
+  final def asGetter: Getter[S, A] =
     (s: S) => self.get(s)
 
   /** view a [[PLens]] as a [[PSetter]] */
-  @inline final def asSetter: PSetter[S, T, A, B] =
+  final def asSetter: PSetter[S, T, A, B] =
     new PSetter[S, T, A, B] {
       def modify(f: A => B): S => T =
         self.modify(f)
@@ -229,14 +229,14 @@ abstract class PLens[S, T, A, B] extends Serializable { self =>
     }
 
   /** view a [[PLens]] as a [[PTraversal]] */
-  @inline final def asTraversal: PTraversal[S, T, A, B] =
+  final def asTraversal: PTraversal[S, T, A, B] =
     new PTraversal[S, T, A, B] {
       def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         self.modifyF(f)(s)
     }
 
   /** view a [[PLens]] as an [[POptional]] */
-  @inline final def asOptional: POptional[S, T, A, B] =
+  final def asOptional: POptional[S, T, A, B] =
     new POptional[S, T, A, B] {
       def getOrModify(s: S): Either[T, A] =
         Either.right(get(s))

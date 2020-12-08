@@ -19,34 +19,34 @@ abstract class Getter[S, A] extends Serializable { self =>
   def get(s: S): A
 
   /** find if the target satisfies the predicate */
-  @inline final def find(p: A => Boolean): S => Option[A] =
+  final def find(p: A => Boolean): S => Option[A] =
     s => Some(get(s)).filter(p)
 
   /** check if the target satisfies the predicate */
-  @inline final def exist(p: A => Boolean): S => Boolean =
+  final def exist(p: A => Boolean): S => Boolean =
     p compose get
 
   /** join two [[Getter]] with the same target */
-  @inline final def choice[S1](other: Getter[S1, A]): Getter[Either[S, S1], A] =
+  final def choice[S1](other: Getter[S1, A]): Getter[Either[S, S1], A] =
     Getter[Either[S, S1], A](_.fold(self.get, other.get))
 
   /** pair two disjoint [[Getter]] */
-  @inline final def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
+  final def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
     Getter[(S, S1), (A, A1)] { case (s, s1) => (self.get(s), other.get(s1)) }
 
-  @inline final def zip[A1](other: Getter[S, A1]): Getter[S, (A, A1)] =
+  final def zip[A1](other: Getter[S, A1]): Getter[S, (A, A1)] =
     Getter[S, (A, A1)](s => (self.get(s), other.get(s)))
 
-  @inline final def first[B]: Getter[(S, B), (A, B)] =
+  final def first[B]: Getter[(S, B), (A, B)] =
     Getter[(S, B), (A, B)] { case (s, b) => (self.get(s), b) }
 
-  @inline final def second[B]: Getter[(B, S), (B, A)] =
+  final def second[B]: Getter[(B, S), (B, A)] =
     Getter[(B, S), (B, A)] { case (b, s) => (b, self.get(s)) }
 
-  @inline final def left[C]: Getter[Either[S, C], Either[A, C]] =
+  final def left[C]: Getter[Either[S, C], Either[A, C]] =
     Getter[Either[S, C], Either[A, C]](_.leftMap(get))
 
-  @inline final def right[C]: Getter[Either[C, S], Either[C, A]] =
+  final def right[C]: Getter[Either[C, S], Either[C, A]] =
     Getter[Either[C, S], Either[C, A]](_.map(get))
 
   /** Compose with a function lifted into a Getter */
@@ -100,31 +100,31 @@ abstract class Getter[S, A] extends Serializable { self =>
     andThen(other.asGetter)
 
   /** compose a [[Getter]] with a [[Fold]] */
-  @inline final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
+  final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
     andThen(other)
 
   /** compose a [[Getter]] with a [[Getter]] */
-  @inline final def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
+  final def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
     andThen(other)
 
   /** compose a [[Getter]] with a [[PTraversal]] */
-  @inline final def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+  final def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[Getter]] with a [[POptional]] */
-  @inline final def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+  final def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[Getter]] with a [[PPrism]] */
-  @inline final def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+  final def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[Getter]] with a [[PLens]] */
-  @inline final def composeLens[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
+  final def composeLens[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
     composeGetter(other.asGetter)
 
   /** compose a [[Getter]] with a [[PIso]] */
-  @inline final def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
+  final def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     andThen(other)
 
   /** *****************************************
@@ -133,23 +133,23 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** *****************************************
     */
   /** alias to composeTraversal */
-  @inline final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+  final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composeOptional */
-  @inline final def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+  final def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composePrism */
-  @inline final def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+  final def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composeLens */
-  @inline final def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
+  final def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
     andThen(other)
 
   /** alias to composeIso */
-  @inline final def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
+  final def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     andThen(other)
 
   /** ***************************************************************
@@ -158,7 +158,7 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** ***************************************************************
     */
   /** view a [[Getter]] with a [[Fold]] */
-  @inline final def asFold: Fold[S, A] =
+  final def asFold: Fold[S, A] =
     new Fold[S, A] {
       def foldMap[M: Monoid](f: A => M)(s: S): M =
         f(get(s))

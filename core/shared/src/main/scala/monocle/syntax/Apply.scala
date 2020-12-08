@@ -34,11 +34,11 @@ final case class ApplyGetterOps[S](private val s: S) extends AnyVal {
 }
 
 final case class ApplyIsoOps[S](private val s: S) extends AnyVal {
-  @inline def applyIso[T, A, B](iso: PIso[S, T, A, B]): ApplyIso[S, T, A, B] =
+  def applyIso[T, A, B](iso: PIso[S, T, A, B]): ApplyIso[S, T, A, B] =
     ApplyIso[S, T, A, B](s, iso)
 
   /** alias to applyIso */
-  @inline def &<->[T, A, B](iso: PIso[S, T, A, B]): ApplyIso[S, T, A, B] =
+  def &<->[T, A, B](iso: PIso[S, T, A, B]): ApplyIso[S, T, A, B] =
     applyIso(iso)
 }
 

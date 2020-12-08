@@ -30,7 +30,7 @@ trait CommonPlatedFunctions {
 trait PlatedFunctions extends CommonPlatedFunctions {
 
   /** get the immediate self-similar children of a target */
-  @inline def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
+  def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
 
   /** rewrite a target by applying a rule as often as possible until it reaches
     * a fixpoint (this is an infinite loop if there is no fixpoint)
