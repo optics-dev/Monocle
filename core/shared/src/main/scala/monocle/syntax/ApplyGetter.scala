@@ -51,8 +51,10 @@ final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]) {
   def composeIso[B, C, D](other: PIso[A, B, C, D]): ApplyGetter[S, C]           = andThen(other)
 
   /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
   def ^|->[B, C, D](other: PLens[A, B, C, D]): ApplyGetter[S, C] = andThen(other)
 
   /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
   def ^<->[B, C, D](other: PIso[A, B, C, D]): ApplyGetter[S, C] = andThen(other)
 }
