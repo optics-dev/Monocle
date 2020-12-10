@@ -5,9 +5,11 @@ import monocle.law.discipline.{IsoTests, PrismTests}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 import shapeless.{:+:, CNil, Coproduct, Inl, Inr}
-
 import cats.Eq
 
+import scala.annotation.nowarn
+
+@nowarn
 class CoproductSpec extends MonocleSuite {
   type IB = Int :+: Boolean :+: CNil
 

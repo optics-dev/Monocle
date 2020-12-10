@@ -4,7 +4,6 @@ import java.util.concurrent.TimeUnit
 import monocle.Iso
 import monocle.macros.GenIso
 import org.openjdk.jmh.annotations._
-import monocle.generic.product._
 
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -37,14 +36,6 @@ class ProductIsoBench {
     override val poly4 = GenIso.fields[Poly4[A]]
     override val poly8 = GenIso.fields[Poly8[A]]
   }
-  object ShapelessIsos extends Isos {
-    override val mono2 = productToTuple[Mono2]
-    override val mono4 = productToTuple[Mono4]
-    override val mono8 = productToTuple[Mono8]
-    override val poly2 = productToTuple[Poly2[A]]
-    override val poly4 = productToTuple[Poly4[A]]
-    override val poly8 = productToTuple[Poly8[A]]
-  }
 
   trait Test {
     type A
@@ -73,8 +64,7 @@ class ProductIsoBench {
   @Setup
   def setup(): Unit = {
     val isos = pIsos match {
-      case "fields"    => GenIsoIsos
-      case "shapeless" => ShapelessIsos
+      case "fields" => GenIsoIsos
     }
     val a  = 7
     val as = List(3, 5, 7)
