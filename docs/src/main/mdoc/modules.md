@@ -10,7 +10,7 @@ In an attempt to be modular, Monocle is broken up into several modules:
 * *macro* - macros to simplify the generation of optics
 * *laws* - laws for the optics and type classes
 * *generic* (deprecated) - optics and type class instances for `HList` and `Coproduct` from [shapeless](https://github.com/milessabin/shapeless)
-* *state* - conversion between optics and `State` or `Reader`
+* *state* (deprecated) - conversion between optics and `State` or `Reader`
 * *refined* - optics and type class instances using refinement types from [refined](https://github.com/fthomas/refined)
 * *unsafe* - optics that do not fully satisfy laws but that are very convenient. More details [here](unsafe_module.html)
 * *tests* - tests that check optics and type class instances satisfy laws
