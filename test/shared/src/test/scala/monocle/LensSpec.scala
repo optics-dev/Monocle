@@ -130,6 +130,16 @@ class LensSpec extends MonocleSuite {
     assertEquals(obj.applyLens(lens).each.getAll, List(1, 2, 3))
   }
 
+  test("filter") {
+    case class SomeTest(x: Int, y: Int)
+    val obj = SomeTest(1, 2)
+
+    val lens = GenLens[SomeTest](_.y)
+
+    assertEquals(lens.filter(_ > 0).getOption(obj), Some(2))
+    assertEquals(obj.applyLens(lens).filter(_ > 0).getOption, Some(2))
+  }
+
   test("at") {
     val tuple2     = (1, 2)
     val tuple2Lens = Lens.id[(Int, Int)]

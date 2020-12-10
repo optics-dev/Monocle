@@ -201,6 +201,16 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     assertEquals(obj.applyIso(iso).each.getAll, List(1, 2, 3))
   }
 
+  test("each") {
+    case class SomeTest(y: Int)
+    val obj = SomeTest(2)
+
+    val iso = Iso[SomeTest, Int](_.y)(SomeTest)
+
+    assertEquals(iso.filter(_ > 0).getOption(obj), Some(2))
+    assertEquals(obj.applyIso(iso).filter(_ > 0).getOption, Some(2))
+  }
+
   test("at") {
     val tuple2     = (1, 2)
     val tuple2Lens = Iso.id[(Int, Int)]
