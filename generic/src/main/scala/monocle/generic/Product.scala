@@ -8,17 +8,21 @@ import cats.Applicative
 import cats.syntax.apply._
 import shapeless.{::, Generic, HList, HNil}
 
+@deprecated("no replacement", since = "3.0.0-M1")
 object product extends ProductOptics
 
 trait ProductOptics {
+  @deprecated("no replacement", since = "3.0.0-M1")
   def productToTuple[S <: Product](implicit ev: TupleGeneric[S]): Iso[S, ev.Repr] =
     Iso[S, ev.Repr](s => ev.to(s))(t => ev.from(t))
 
+  @deprecated("no replacement", since = "3.0.0-M1")
   implicit def hNilEach[A] =
     new Each[HNil, A] {
       def each: Traversal[HNil, A] = Traversal.void[HNil, A]
     }
 
+  @deprecated("no replacement", since = "3.0.0-M1")
   implicit def hConsEach[A, Rest <: HList](implicit restEach: Each[Rest, A]) =
     new Each[A :: Rest, A] {
       def each: Traversal[A :: Rest, A] =
@@ -28,6 +32,7 @@ trait ProductOptics {
         }
     }
 
+  @deprecated("no replacement", since = "3.0.0-M1")
   implicit def productEach[S, SGen <: HList, A](implicit
     gen: Generic.Aux[S, SGen],
     genEach: Each[SGen, A]

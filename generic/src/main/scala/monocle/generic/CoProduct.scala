@@ -5,9 +5,14 @@ import monocle.generic.internal.{CoproductToDisjunction, DisjunctionToCoproduct}
 import shapeless.{Coproduct, Generic}
 import shapeless.ops.coproduct.{CoproductToEither, EitherToCoproduct, Inject, Selector}
 
+import scala.annotation.nowarn
+
+@deprecated("no replacement", since = "3.0.0-M1")
 object coproduct extends CoProductInstances
 
+@nowarn
 trait CoProductInstances {
+  @deprecated("no replacement", since = "3.0.0-M1")
   def coProductPrism[C <: Coproduct, A](implicit evInject: Inject[C, A], evSelector: Selector[C, A]): Prism[C, A] =
     Prism[C, A](evSelector.apply(_))(evInject.apply)
 
@@ -19,6 +24,7 @@ trait CoProductInstances {
     *   val iso: Iso[ISB, Either[Int, Either[String, Boolean]]] = coProductEitherIso[ISB].apply
     * }}}
     */
+  @deprecated("no replacement", since = "3.0.0-M1")
   def coProductEitherIso[S <: Coproduct]: GenCoProductEitherIso[S] = new GenCoProductEitherIso
 
   class GenCoProductEitherIso[S <: Coproduct] {
@@ -40,6 +46,7 @@ trait CoProductInstances {
     *   val iso: Iso[S, Either[A, Either[B, C]]] = coProductToEither[S].apply
     * }}}
     */
+  @deprecated("no replacement", since = "3.0.0-M1")
   def coProductToEither[S]: GenCoProductToEither[S] = new GenCoProductToEither
 
   class GenCoProductToEither[S] {
@@ -59,6 +66,7 @@ trait CoProductInstances {
     *   val iso: Iso[ISB, Either[Int, Either[String, Boolean]] = coProductDisjunctionIso[ISB].apply
     * }}}
     */
+  @deprecated("no replacement", since = "3.0.0-M1")
   def coProductDisjunctionIso[S <: Coproduct]: GenCoProductDisjunctionIso[S] = new GenCoProductDisjunctionIso
 
   class GenCoProductDisjunctionIso[S <: Coproduct] {
@@ -80,6 +88,7 @@ trait CoProductInstances {
     *   val iso: Iso[S, Either[A, Either[B, C])] = coProductToDisjunction[S].apply
     * }}}
     */
+  @deprecated("no replacement", since = "3.0.0-M1")
   def coProductToDisjunction[S]: GenCoProductToDisjunction[S] = new GenCoProductToDisjunction
 
   class GenCoProductToDisjunction[S] {
