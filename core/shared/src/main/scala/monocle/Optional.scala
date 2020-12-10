@@ -299,6 +299,33 @@ object Optional {
   def void[S, A]: Optional[S, A] =
     Optional[S, A](_ => None)(_ => identity)
 
+  /** Select all the elements which satisfies the predicate.
+    * {{{
+    *   val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional filter[Int](_ >= 0)
+    *
+    *   positiveNumbers.getAll(List(1,2,-3,4,-5)) == List(1,2,4)
+    *   positiveNumbers.modify(_ * 10)(List(1,2,-3,4,-5)) == List(10,20,-3,40,-5)
+    * }}}
+    *
+    * `filter` can break the fusion property, if `replace` or `modify` do not preserve the predicate.
+    * For example, here the first `modify` (`x - 3`) transform the positive number 1 into the
+    * negative number -2.
+    * {{{
+    *   val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional Optional.filter[Int](_ >= 0)
+    *   val list            = List(1, 5, -3)
+    *   val firstStep       = positiveNumbers.modify(_ - 3)(list)            // List(-2, 2, -3)
+    *   val secondStep      = positiveNumbers.modify(_ * 2)(firstStep)       // List(-2, 4, -3)
+    *   val bothSteps       = positiveNumbers.modify(x => (x - 3) * 2)(list) // List(-4, 4, -3)
+    *   secondStep != bothSteps
+    * }}}
+    *
+    * @see This method is called `filtered` in Haskell Lens.
+    */
+  def filter[A](predicate: A => Boolean): Optional[A, A] =
+    Optional[A, A](value => if (predicate(value)) Some(value) else None)(newValue =>
+      current => if (predicate(current)) newValue else current
+    )
+
   /** alias for [[POptional]] apply restricted to monomorphic update */
   def apply[S, A](_getOption: S => Option[A])(_set: A => S => S): Optional[S, A] =
     new Optional[S, A] {
@@ -337,6 +364,12 @@ sealed abstract class OptionalInstances {
 final case class OptionalSyntax[S, A](private val self: Optional[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self composeTraversal evEach.each
+
+  /** Select all the elements which satisfies the predicate.
+    * This combinator can break the fusion property see Optional.filter for more details.
+    */
+  def filter(predicate: A => Boolean): Optional[S, A] =
+    self.andThen(Optional.filter(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Optional[S, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
