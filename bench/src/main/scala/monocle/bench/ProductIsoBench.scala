@@ -64,7 +64,7 @@ class ProductIsoBench {
   @Setup
   def setup(): Unit = {
     val isos = pIsos match {
-      case "fields"    => GenIsoIsos
+      case "fields" => GenIsoIsos
     }
     val a  = 7
     val as = List(3, 5, 7)
