@@ -2,7 +2,7 @@ package monocle.syntax
 
 import cats.Eq
 import monocle.function.{At, Each, Index}
-import monocle.{std, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
+import monocle.{std, Optional, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplySetter[S, T, A, B](s: S, setter: PSetter[S, T, A, B]) {
   def replace(b: B): T     = setter.replace(b)(s)
@@ -68,6 +68,12 @@ object ApplySetter {
 final case class ApplySetterSyntax[S, A](private val self: ApplySetter[S, S, A, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): ApplySetter[S, S, C, C] =
     self composeTraversal evEach.each
+
+  /** Select all the elements which satisfies the predicate.
+    * This combinator can break the fusion property see Optional.filter for more details.
+    */
+  def filter(predicate: A => Boolean): ApplySetter[S, S, A, A] =
+    self.andThen(Optional.filter(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplySetter[S, S, A1, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))

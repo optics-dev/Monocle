@@ -411,6 +411,12 @@ final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self composeTraversal evEach.each
 
+  /** Select all the elements which satisfies the predicate.
+    * This combinator can break the fusion property see Optional.filter for more details.
+    */
+  def filter(predicate: A => Boolean): Optional[S, A] =
+    self.andThen(Optional.filter(predicate))
+
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Iso[S, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 

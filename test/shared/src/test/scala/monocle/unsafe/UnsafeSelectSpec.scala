@@ -4,9 +4,11 @@ import monocle.MonocleSuite
 import monocle.law.discipline.OptionalTests
 import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
-
 import cats.Eq
 
+import scala.annotation.nowarn
+
+@nowarn
 class UnsafeSelectSpec extends MonocleSuite {
   /*
     This fails the "unsafe.Prism.round trip other way" test with value -1
