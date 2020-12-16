@@ -5,6 +5,8 @@ import monocle.Iso
 import scala.reflect.internal.SymbolTable
 import scala.reflect.macros.{blackbox, whitebox}
 
+import probably._
+
 object GenIso {
 
   /** Generate an [[Iso]] between a case class `S` and its unique field of type `A`. */
@@ -58,7 +60,7 @@ sealed abstract class GenIsoImplBase {
 class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
   import c.universe._
 
-  def genIso_impl[S: c.WeakTypeTag, A: c.WeakTypeTag]: c.Expr[Iso[S, A]] = {
+  def genIso_impl[S: c.WeakTypeTag, A: c.WeakTypeTag]: c.Expr[Iso[S, A]] = c.test(s"genIso[${weakTypeOf[S]}, ${weakTypeOf[A]}]") {
     val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
 
     val fieldMethod = caseAccessorsOf[S] match {
@@ -94,7 +96,7 @@ class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
           }
       }
     """)
-  }
+  }.check(_ => true)
 
   def genIso_unit_impl[S: c.WeakTypeTag]: c.Expr[Iso[S, Unit]] =
     c.Expr[Iso[S, Unit]](genIso_unit_tree[S])

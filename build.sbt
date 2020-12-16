@@ -109,6 +109,8 @@ lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "
 lazy val munit           = Def.setting("org.scalameta" %% "munit" % "0.7.16" % Test)
 lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "1.0.3" % Test)
 
+lazy val probably        = Def.setting("com.propensive" %% "probably-cli" % "0.8.0")
+
 lazy val macroVersion = "2.1.1"
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
@@ -226,7 +228,8 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= Seq(
       scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
-      scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided"
+      scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
+      probably.value
     ),
     unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / s"scala-${scalaBinaryVersion.value}"
   )
