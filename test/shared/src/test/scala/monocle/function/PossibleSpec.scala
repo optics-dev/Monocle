@@ -5,6 +5,9 @@ import monocle.MonocleSuite
 import monocle.law.discipline.function.PossibleTests
 import Possible.optionPossible
 
+import scala.annotation.nowarn
+
+@nowarn
 class PossibleSpec extends MonocleSuite {
   implicit def optionEitherPossible[A]: Possible[Either[Unit, A], A] =
     Possible.fromIso(Iso[Either[Unit, A], Option[A]] {

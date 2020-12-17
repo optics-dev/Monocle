@@ -15,7 +15,7 @@ class OptionSpec extends MonocleSuite {
   checkAll("pOptionToDisjunction", IsoTests(pOptionToDisjunction[Int, Int]))
 
   checkAll("each Option", EachTests[Option[Int], Int])
-  checkAll("possible Option", PossibleTests[Option[Int], Int])
+  checkAll("possible Option", PossibleTests[Option[Int], Int]): @nowarn
   checkAll("empty Option", EmptyTests[Option[Int]]): @nowarn
 
   case class IntNoZero(value: Int)

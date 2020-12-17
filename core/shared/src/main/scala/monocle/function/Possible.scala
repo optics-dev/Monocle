@@ -10,11 +10,13 @@ import cats.data.Validated
   * @tparam S source of the [[Optional]]
   * @tparam A target of the [[Optional]], `A` is supposed to be unique for a given `S`
   */
+@deprecated("no replacement", since = "3.0.0-M1")
 abstract class Possible[S, A] extends Serializable {
   def possible: Optional[S, A]
 }
 
 trait PossibleFunctions {
+  @deprecated("no replacement", since = "3.0.0-M1")
   def possible[S, A](implicit ev: Possible[S, A]): Optional[S, A] = ev.possible
 }
 
