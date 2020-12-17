@@ -12,21 +12,20 @@ case class JNum(num: Double) extends Json
 
 object MacroTests extends Suite("Monocle Macro Tests") {
   def run(test: Runner): Unit = {
-
     test("construct Lens[Employee, Address] using GenLens") {
       GenLens[Employee](_.company.address)
-    }.check(_ => true)
+    }.assert(_ => true)
 
     test("construct Lens[Employee, Int] using GenLens") {
       GenLens[Employee](_.company.address.street.number)
-    }.check(_ => true)
+    }.assert(_ => true)
 
     test("construct Iso[JNum, Double] using GenIso") {
       GenIso[JNum, Double]
-    }.check(_ => true)
+    }.assert(_ => true)
 
     test("construct Prism[Json, JNum] using GenPrism ") {
       GenPrism[Json, JNum]
-    }.check(_ => true)
+    }.assert(_ => true)
   }
 }
