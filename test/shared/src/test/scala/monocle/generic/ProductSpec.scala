@@ -4,9 +4,11 @@ import monocle.MonocleSuite
 import monocle.law.discipline.IsoTests
 import monocle.law.discipline.function.EachTests
 import org.scalacheck.Arbitrary
-
 import cats.Eq
 
+import scala.annotation.nowarn
+
+@nowarn
 class ProductSpec extends MonocleSuite {
   case class Person(name: String, age: Int)
 

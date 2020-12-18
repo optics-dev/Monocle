@@ -301,4 +301,23 @@ class OptionalSpec extends MonocleSuite {
     assertEquals(nel.applyOptional(nelOptional).index(0).getOption, Some(1))
     assertEquals(nel.applyOptional(nelOptional).index(1).getOption, None)
   }
+
+  test("filter") {
+    val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional Optional.filter[Int](_ >= 0)
+
+    assertEquals(positiveNumbers.getAll(List(1, 2, -3, 4, -5)), List(1, 2, 4))
+    assertEquals(positiveNumbers.modify(_ * 10)(List(1, 2, -3, 4, -5)), List(10, 20, -3, 40, -5))
+  }
+
+  test("filter can break the fusion property") {
+    val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional Optional.filter[Int](_ >= 0)
+    val list            = List(1, 5, -3)
+    val firstStep       = positiveNumbers.modify(_ - 3)(list)
+    val secondStep      = positiveNumbers.modify(_ * 2)(firstStep)
+    val bothSteps       = positiveNumbers.modify(x => (x - 3) * 2)(list)
+    assertEquals(firstStep, List(-2, 2, -3))
+    assertEquals(secondStep, List(-2, 4, -3))
+    assertEquals(bothSteps, List(-4, 4, -3))
+    assertNotEquals(secondStep, bothSteps)
+  }
 }

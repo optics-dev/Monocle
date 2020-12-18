@@ -2,6 +2,9 @@ package monocle.state
 
 import monocle.{Getter, MonocleSuite}
 
+import scala.annotation.nowarn
+
+@nowarn
 class ReaderExample extends MonocleSuite {
   case class Person(name: String, age: Int)
   val _age = Getter[Person, Int](_.age)

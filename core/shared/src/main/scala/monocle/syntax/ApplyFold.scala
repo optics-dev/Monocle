@@ -2,7 +2,7 @@ package monocle.syntax
 
 import cats.{Eq, Monoid}
 import monocle.function.{At, Each, Index}
-import monocle.{std, Fold, Getter, PIso, PLens, POptional, PPrism, PTraversal}
+import monocle.{std, Fold, Getter, Optional, PIso, PLens, POptional, PPrism, PTraversal}
 
 case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   def foldMap[M: Monoid](f: A => M): M = _fold.foldMap(f)(s)
@@ -19,6 +19,12 @@ case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
 
   def each[C](implicit evEach: Each[A, C]): ApplyFold[S, C] =
     composeTraversal(evEach.each)
+
+  /** Select all the elements which satisfies the predicate.
+    * This combinator can break the fusion property see Optional.filter for more details.
+    */
+  def filter(predicate: A => Boolean): ApplyFold[S, A] =
+    andThen(Optional.filter(predicate))
 
   def some[A1](implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)

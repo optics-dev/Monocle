@@ -2,7 +2,7 @@ package monocle.syntax
 
 import cats.{Eq, Functor}
 import monocle.function.{At, Each, Index}
-import monocle.{std, Fold, Getter, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
+import monocle.{std, Fold, Getter, Optional, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
   def get: A                                     = iso.get(s)
@@ -77,6 +77,12 @@ object ApplyIso {
 final case class ApplyIsoSyntax[S, A](private val self: ApplyIso[S, S, A, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): ApplyTraversal[S, S, C, C] =
     self composeTraversal evEach.each
+
+  /** Select all the elements which satisfies the predicate.
+    * This combinator can break the fusion property see Optional.filter for more details.
+    */
+  def filter(predicate: A => Boolean): ApplyOptional[S, S, A, A] =
+    self.andThen(Optional.filter(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyIso[S, S, A1, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))

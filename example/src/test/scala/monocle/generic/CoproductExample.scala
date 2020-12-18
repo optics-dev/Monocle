@@ -6,6 +6,9 @@ import monocle.MonocleSuite
 import shapeless.test.illTyped
 import shapeless.{:+:, CNil, Coproduct}
 
+import scala.annotation.nowarn
+
+@nowarn
 class CoproductExample extends MonocleSuite {
   type ISB = Int :+: String :+: Boolean :+: CNil
 

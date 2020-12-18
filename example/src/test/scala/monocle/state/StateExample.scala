@@ -5,6 +5,9 @@ import cats.implicits._
 import monocle.{Getter, MonocleSuite, Optional, PTraversal, Setter}
 import monocle.macros.GenLens
 
+import scala.annotation.nowarn
+
+@nowarn
 class StateExample extends MonocleSuite {
   case class Person(name: String, age: Int)
   val _age = GenLens[Person](_.age)

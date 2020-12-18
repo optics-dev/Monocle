@@ -5,6 +5,8 @@ import monocle.MonocleSuite
 import scala.collection.immutable.SortedMap
 import cats.data.OneAnd
 
+import scala.annotation.nowarn
+
 class EachExample extends MonocleSuite {
   test("Each can be used on Option") {
     assertEquals((Option(3) applyTraversal each modify (_ + 1)), Some(4))
@@ -25,8 +27,8 @@ class EachExample extends MonocleSuite {
   }
 
   test("Each can be used on tuple of same type") {
-    assertEquals(((1, 2) applyTraversal each modify (_ + 1)), ((2, 3)))
-    assertEquals(((1, 2, 3) applyTraversal each modify (_ + 1)), ((2, 3, 4)))
-    assertEquals(((1, 2, 3, 4, 5, 6) applyTraversal each modify (_ + 1)), ((2, 3, 4, 5, 6, 7)))
+    assertEquals(((1, 2) applyTraversal each modify (_ + 1)), ((2, 3))): @nowarn
+    assertEquals(((1, 2, 3) applyTraversal each modify (_ + 1)), ((2, 3, 4))): @nowarn
+    assertEquals(((1, 2, 3, 4, 5, 6) applyTraversal each modify (_ + 1)), ((2, 3, 4, 5, 6, 7))): @nowarn
   }
 }

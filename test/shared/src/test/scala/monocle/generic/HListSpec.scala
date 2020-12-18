@@ -11,6 +11,7 @@ import shapeless.{::, HNil}
 
 import scala.annotation.nowarn
 
+@nowarn
 class HListSpec extends MonocleSuite {
   case class Example(i: Int, b: Boolean, c: Char, f: Float, l: Long, d: Double)
 

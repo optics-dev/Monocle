@@ -56,6 +56,12 @@ abstract class Getter[S, A] extends Serializable { self =>
   def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
     composeTraversal(evEach.each)
 
+  /** Select all the elements which satisfies the predicate.
+    * This combinator can break the fusion property see Optional.filter for more details.
+    */
+  def filter(predicate: A => Boolean): Fold[S, A] =
+    self.andThen(Optional.filter(predicate))
+
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)
 
