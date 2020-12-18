@@ -94,7 +94,7 @@ lazy val buildSettings = Seq(
   Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc / sources).value }
 )
 
-lazy val catsVersion  = "2.3.0"
+lazy val catsVersion  = "2.3.1"
 lazy val dottyVersions = Seq("3.0.0-M1", "3.0.0-M2")
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
