@@ -1,6 +1,7 @@
 package monocle.macros
 
 import monocle.Prism
+import probably._
 
 import scala.reflect.macros.blackbox
 
@@ -11,13 +12,14 @@ object GenPrism {
 }
 
 private class GenPrismImpl(val c: blackbox.Context) {
-  def genPrism_impl[S: c.WeakTypeTag, A: c.WeakTypeTag]: c.Expr[Prism[S, A]] = {
-    import c.universe._
+  def genPrism_impl[S: c.WeakTypeTag, A: c.WeakTypeTag]: c.Expr[Prism[S, A]] =
+    c.test(s"constructing Prism with S=${c.weakTypeOf[S]}, A=${c.weakTypeOf[A]}") {
+      import c.universe._
 
-    val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
+      val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
 
-    val sTpeSym = sTpe.typeSymbol.companion
-    c.Expr[Prism[S, A]](q"""
+      val sTpeSym = sTpe.typeSymbol.companion
+      c.Expr[Prism[S, A]](q"""
       import monocle.Prism
       import scala.{Either => \/, Right => \/-, Left => -\/}
 
@@ -34,5 +36,5 @@ private class GenPrismImpl(val c: blackbox.Context) {
           else None
       }
     """)
-  }
+    }.check(_ => true)
 }

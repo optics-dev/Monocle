@@ -1,6 +1,7 @@
 package monocle.macros
 
 import monocle.Iso
+import probably._
 
 import scala.reflect.internal.SymbolTable
 import scala.reflect.macros.{blackbox, whitebox}
@@ -58,20 +59,21 @@ sealed abstract class GenIsoImplBase {
 class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
   import c.universe._
 
-  def genIso_impl[S: c.WeakTypeTag, A: c.WeakTypeTag]: c.Expr[Iso[S, A]] = {
-    val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
+  def genIso_impl[S: c.WeakTypeTag, A: c.WeakTypeTag]: c.Expr[Iso[S, A]] =
+    c.test(s"Constructing Iso with S= ${c.weakTypeOf[S]}, A=${c.weakTypeOf[A]}") {
+      val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
 
-    val fieldMethod = caseAccessorsOf[S] match {
-      case m :: Nil => m
-      case Nil =>
-        fail(s"Cannot find a case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")
-      case _ =>
-        fail(s"Found several case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")
-    }
+      val fieldMethod = caseAccessorsOf[S] match {
+        case m :: Nil => m
+        case Nil =>
+          fail(s"Cannot find a case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")
+        case _ =>
+          fail(s"Found several case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")
+      }
 
-    val sTpeSym = sTpe.typeSymbol.companion
+      val sTpeSym = sTpe.typeSymbol.companion
 
-    c.Expr[Iso[S, A]](q"""
+      c.Expr[Iso[S, A]](q"""
       import monocle.Iso
 
       new Iso[$sTpe, $aTpe]{ self =>
@@ -94,7 +96,7 @@ class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
           }
       }
     """)
-  }
+    }.check(_ => true)
 
   def genIso_unit_impl[S: c.WeakTypeTag]: c.Expr[Iso[S, Unit]] =
     c.Expr[Iso[S, Unit]](genIso_unit_tree[S])
