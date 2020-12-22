@@ -59,6 +59,16 @@ object Each extends EachFunctions {
 
   implicit def lazyListEach[A]: Each[LazyList[A], A] = fromTraverse
 
+  implicit def defaultMapEach[K, V]: Each[Map[K, V], V] =
+    Each(
+      new Traversal[Map[K, V], V] {
+        def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
+          s.foldLeft(Applicative[F].pure(Map.empty[K, V])) { case (acc, (k, v)) =>
+            Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
+          }
+      }
+    )
+
   implicit def listMapEach[K, V]: Each[ListMap[K, V], V] =
     Each(
       new Traversal[ListMap[K, V], V] {

@@ -2,7 +2,6 @@ package monocle
 
 import alleycats.std.all._
 import monocle.function.Plated
-import monocle.unsafe.MapTraversal._
 
 /** Show how could we use Optics to manipulate some Json AST
   */

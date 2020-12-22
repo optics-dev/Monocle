@@ -1,7 +1,6 @@
 package monocle
 
 import monocle.macros.{GenIso, GenLens, GenPrism}
-import monocle.unsafe.MapTraversal._
 
 /** Show how could we use Monocle to handle custom case classes, objects
   */

@@ -12,6 +12,7 @@ import monocle.function.{Each, FilterIndex}
 
 import scala.collection.immutable.Map
 
+@deprecated("use optic.filter(predicate)", since = "3.0.0-M1")
 object MapTraversal {
   implicit def mapEach[K, V]: Each[Map[K, V], V] = fromTraverse[Map[K, *], V]
 
