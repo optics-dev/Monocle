@@ -79,7 +79,7 @@ class SetterSpec extends MonocleSuite {
     assertEquals(obj.applySetter(setter).each.replace(3), SomeTest(1, List(3, 3, 3)))
   }
 
-  test("each") {
+  test("filter") {
     case class SomeTest(x: Int, y: Int)
     val obj = SomeTest(1, 2)
 
@@ -87,6 +87,16 @@ class SetterSpec extends MonocleSuite {
 
     assertEquals(setter.filter(_ > 0).replace(3)(obj), SomeTest(1, 3))
     assertEquals(obj.applySetter(setter).filter(_ > 0).replace(3), SomeTest(1, 3))
+  }
+
+  test("filterIndex") {
+    case class SomeTest(x: Int, y: List[String])
+    val obj = SomeTest(1, List("hello", "world"))
+
+    val setter = GenLens[SomeTest](_.y).asSetter
+
+    assertEquals(setter.filterIndex((_: Int) > 0).replace("!")(obj), SomeTest(1, List("hello", "!")))
+    assertEquals(obj.applySetter(setter).filterIndex((_: Int) > 0).replace("!"), SomeTest(1, List("hello", "!")))
   }
 
   test("at") {

@@ -1,7 +1,6 @@
 package monocle
 
 import monocle.macros.{GenIso, GenLens, GenPrism}
-import monocle.unsafe.MapTraversal._
 
 /** Show how could we use Monocle to handle custom case classes, objects
   */
@@ -25,13 +24,13 @@ class HttpRequestExample extends MonocleSuite {
   val host  = GenLens[URI](_.host)
   val query = GenLens[URI](_.query)
 
-  val get: Prism[HttpMethod, Unit] = GenPrism[HttpMethod, GET.type] composeIso GenIso.unit[GET.type]
-  val post                         = GenPrism[HttpMethod, POST.type] composeIso GenIso.unit[POST.type]
+  val get: Prism[HttpMethod, Unit] = GenPrism[HttpMethod, GET.type].andThen(GenIso.unit[GET.type])
+  val post                         = GenPrism[HttpMethod, POST.type].andThen(GenIso.unit[POST.type])
 
   test("get and post") {
-    assertEquals((method composePrism get).nonEmpty(r1), true)
-    assertEquals((method composePrism post).nonEmpty(r1), false)
-    assertEquals((method composePrism post).getOption(r2), Some(()))
+    assertEquals(method.andThen(get).nonEmpty(r1), true)
+    assertEquals(method.andThen(post).nonEmpty(r1), false)
+    assertEquals(method.andThen(post).getOption(r2), Some(()))
   }
 
   test("host") {
@@ -39,7 +38,7 @@ class HttpRequestExample extends MonocleSuite {
   }
 
   test("query using index") {
-    val r = uri.andThen(query).composeOptional(index("hop")).andThen(stringToInt).modify(_ + 10)(r1)
+    val r = uri.andThen(query).index("hop").andThen(stringToInt).modify(_ + 10)(r1)
 
     assertEquals(r.uri.query.get("hop"), Some("15"))
   }
@@ -49,19 +48,19 @@ class HttpRequestExample extends MonocleSuite {
     /**  `at` returns Lens[S, Option[A]] while `index` returns Optional[S, A]
       *  So that we need the `some: Prism[Option[A], A]` for further investigation
       */
-    val r = uri.andThen(query).composeLens(at("hop")).some.andThen(stringToInt).modify(_ + 10)(r1)
+    val r = uri.andThen(query).at("hop").some.andThen(stringToInt).modify(_ + 10)(r1)
 
     assertEquals(r.uri.query.get("hop"), Some("15"))
   }
 
   test("headers") {
-    val r = headers.composeLens(at("Content-Type")).replace(Some("text/plain; utf-8"))(r2)
+    val r = headers.at("Content-Type").replace(Some("text/plain; utf-8"))(r2)
     assertEquals(r.headers.get("Content-Type"), Some("text/plain; utf-8"))
   }
 
   test("headers with filterIndex") {
     val r = headers
-      .composeTraversal(filterIndex { h: String => h.contains("timeout") })
+      .filterIndex { h: String => h.contains("timeout") }
       .andThen(stringToInt)
       .modify(_ * 2)(r1)
 

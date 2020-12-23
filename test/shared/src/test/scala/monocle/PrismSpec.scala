@@ -228,6 +228,16 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     assertEquals(obj.applyPrism(prism).filter(_ > 0).getOption, Some(2))
   }
 
+  test("filterIndex") {
+    case class SomeTest(y: List[String])
+    val obj = SomeTest(List("hello", "world"))
+
+    val prism = Iso[SomeTest, List[String]](_.y)(SomeTest).asPrism
+
+    assertEquals(prism.filterIndex((_: Int) > 0).getAll(obj), List("world"))
+    assertEquals(obj.applyPrism(prism).filterIndex((_: Int) > 0).getAll, List("world"))
+  }
+
   test("at") {
     val tuple2      = (1, 2)
     val tuple2Prism = Prism.id[(Int, Int)]

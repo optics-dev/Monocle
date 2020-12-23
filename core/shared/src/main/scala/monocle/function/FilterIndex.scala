@@ -59,6 +59,22 @@ object FilterIndex extends FilterIndexFunctions {
   implicit def lazyListFilterIndex[A]: FilterIndex[LazyList[A], Int, A] =
     fromTraverse(_.zipWithIndex)
 
+  implicit def mapFilterIndex[K, V]: FilterIndex[Map[K, V], K, V] =
+    new FilterIndex[Map[K, V], K, V] {
+      import cats.syntax.applicative._
+      import cats.syntax.functor._
+
+      def filterIndex(predicate: K => Boolean) =
+        new Traversal[Map[K, V], V] {
+          def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
+            s.toList
+              .traverse { case (k, v) =>
+                (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
+              }
+              .map(_.toMap)
+        }
+    }
+
   implicit def sortedMapFilterIndex[K, V](implicit ok: Order[K]): FilterIndex[SortedMap[K, V], K, V] =
     new FilterIndex[SortedMap[K, V], K, V] {
       import cats.syntax.applicative._

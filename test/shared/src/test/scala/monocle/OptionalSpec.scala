@@ -303,14 +303,24 @@ class OptionalSpec extends MonocleSuite {
   }
 
   test("filter") {
-    val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional Optional.filter[Int](_ >= 0)
+    val positiveNumbers = Traversal.fromTraverse[List, Int].andThen(Optional.filter[Int](_ >= 0))
 
     assertEquals(positiveNumbers.getAll(List(1, 2, -3, 4, -5)), List(1, 2, 4))
     assertEquals(positiveNumbers.modify(_ * 10)(List(1, 2, -3, 4, -5)), List(10, 20, -3, 40, -5))
   }
 
+  test("filterIndex") {
+    case class SomeTest(x: Int, y: List[String])
+    val obj = SomeTest(1, List("hello", "world"))
+
+    val optional = GenLens[SomeTest](_.y).asOptional
+
+    assertEquals(optional.filterIndex((_: Int) > 0).getAll(obj), List("world"))
+    assertEquals(obj.applyOptional(optional).filterIndex((_: Int) > 0).getAll, List("world"))
+  }
+
   test("filter can break the fusion property") {
-    val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional Optional.filter[Int](_ >= 0)
+    val positiveNumbers = Traversal.fromTraverse[List, Int].andThen(Optional.filter[Int](_ >= 0))
     val list            = List(1, 5, -3)
     val firstStep       = positiveNumbers.modify(_ - 3)(list)
     val secondStep      = positiveNumbers.modify(_ * 2)(firstStep)

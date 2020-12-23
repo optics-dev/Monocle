@@ -55,17 +55,17 @@ def isLongString(json: Json): Boolean = json match {
 }
 ```
 
-We can also use `set` and `modify` to update a `Json` only if it is a `JStr`:
+We can also use `replace` and `modify` to update a `Json` only if it is a `JStr`:
 
 ```scala mdoc
-jStr.set("Bar")(JStr("Hello"))
+jStr.replace("Bar")(JStr("Hello"))
 jStr.modify(_.reverse)(JStr("Hello"))
 ```
 
-If we supply another type of `Json`, `set` and `modify` will be a no operation:
+If we supply another type of `Json`, `replace` and `modify` will be a no operation:
 
 ```scala mdoc
-jStr.set("Bar")(JNum(10))
+jStr.replace("Bar")(JNum(10))
 jStr.modify(_.reverse)(JNum(10))
 ```
 

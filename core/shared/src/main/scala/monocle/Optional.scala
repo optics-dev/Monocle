@@ -3,7 +3,7 @@ package monocle
 import cats.{Applicative, Eq, Monoid}
 import cats.arrow.Choice
 import cats.syntax.either._
-import monocle.function.{At, Each, Index}
+import monocle.function.{At, Each, FilterIndex, Index}
 
 /** A [[POptional]] can be seen as a pair of functions:
   *  - `getOrModify: S      => Either[T, A]`
@@ -159,6 +159,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     andThen(other.asOptional)
 
   /** compose a [[POptional]] with a [[Fold]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     andThen(other)
 
@@ -166,30 +167,37 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
 
   /** compose a [[POptional]] with a [[Getter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[POptional]] with a [[PSetter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[POptional]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[POptional]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** compose a [[POptional]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composePrism[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** compose a [[POptional]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
   /** compose a [[POptional]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeIso[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
     andThen(other)
 
@@ -371,12 +379,15 @@ final case class OptionalSyntax[S, A](private val self: Optional[S, A]) extends 
   def filter(predicate: A => Boolean): Optional[S, A] =
     self.andThen(Optional.filter(predicate))
 
+  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Traversal[S, A1] =
+    self.andThen(ev.filterIndex(predicate))
+
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Optional[S, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Optional[S, A1] =
-    self composeLens evAt.at(i)
+    self.andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Optional[S, A1] =
-    self composeOptional evIndex.index(i)
+    self.andThen(evIndex.index(i))
 }

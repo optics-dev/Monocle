@@ -29,9 +29,7 @@ object Field4 extends Field4Functions {
 
   /** lift an instance of [[Field4]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field4[A, B]): Field4[S, B] =
-    Field4(
-      iso composeLens ev.fourth
-    )
+    Field4(iso.andThen(ev.fourth))
 
   /** *********************************************************************************************
     */

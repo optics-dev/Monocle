@@ -197,6 +197,14 @@ class TraversalSpec extends MonocleSuite {
     assertEquals(numbers.applyTraversal(traversal).filter(_ > 1).getAll, List(2, 3))
   }
 
+  test("filterIndex") {
+    val words     = List(List("hello", "world"), List("hey", "hi"))
+    val traversal = Traversal.fromTraverse[List, List[String]]
+
+    assertEquals(traversal.filterIndex((_: Int) > 0).getAll(words), List("world", "hi"))
+    assertEquals(words.applyTraversal(traversal).filterIndex((_: Int) > 0).getAll, List("world", "hi"))
+  }
+
   test("at") {
     val tuple2          = (1, 2)
     val tuple2Traversal = Traversal.id[(Int, Int)]

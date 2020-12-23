@@ -33,7 +33,7 @@ This operator is considered unsafe because it allows for inconsistency if a `Len
 import monocle.unsafe.UnsafeSelect
 import monocle.macros.GenLens
 
-UnsafeSelect.unsafeSelect[Person](_.age >= 18).andThen(GenLens[Person](_.age)).set(0)
+UnsafeSelect.unsafeSelect[Person](_.age >= 18).andThen(GenLens[Person](_.age)).replace(0)
 ```
 
 In this example the age is reset to `0` which invalidates the original predicate of `age >= 18`. More formally `UnsafeSelect` can invalidate the `roundTripOtherWayLaw` law.

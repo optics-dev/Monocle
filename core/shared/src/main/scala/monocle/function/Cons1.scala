@@ -1,6 +1,5 @@
 package monocle.function
 
-import monocle.function.At.at
 import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
@@ -18,8 +17,8 @@ import scala.annotation.implicitNotFound
 abstract class Cons1[S, H, T] extends Serializable {
   def cons1: Iso[S, (H, T)]
 
-  def head: Lens[S, H] = cons1 composeLens at(1)
-  def tail: Lens[S, T] = cons1 composeLens at(2)
+  def head: Lens[S, H] = cons1.at(1)
+  def tail: Lens[S, T] = cons1.at(2)
 }
 
 trait Cons1Functions {
@@ -97,8 +96,9 @@ object Cons1 extends Cons1Functions {
   /** *********************************************************************************************
     */
   import cats.Now
-  import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector, OneAnd}
+  import cats.data._
   import cats.free.Cofree
+
   import scala.{List => IList, Vector => IVector}
 
   implicit def cofreeCons1[S[_], A]: Cons1[Cofree[S, A], A, S[Cofree[S, A]]] =

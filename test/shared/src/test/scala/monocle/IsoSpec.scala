@@ -201,7 +201,7 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     assertEquals(obj.applyIso(iso).each.getAll, List(1, 2, 3))
   }
 
-  test("each") {
+  test("filter") {
     case class SomeTest(y: Int)
     val obj = SomeTest(2)
 
@@ -209,6 +209,16 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
 
     assertEquals(iso.filter(_ > 0).getOption(obj), Some(2))
     assertEquals(obj.applyIso(iso).filter(_ > 0).getOption, Some(2))
+  }
+
+  test("filterIndex") {
+    case class SomeTest(y: List[String])
+    val obj = SomeTest(List("hello", "world"))
+
+    val iso = Iso[SomeTest, List[String]](_.y)(SomeTest)
+
+    assertEquals(iso.filterIndex((_: Int) > 0).getAll(obj), List("world"))
+    assertEquals(obj.applyIso(iso).filterIndex((_: Int) > 0).getAll, List("world"))
   }
 
   test("at") {

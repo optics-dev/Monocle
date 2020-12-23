@@ -37,15 +37,11 @@ val departments = GenLens[University](_.departments)
 then we zoom into the `Map` at the `History` key using `At` typeclass
 
 
-```scala mdoc:silent
-import monocle.function.At.at // to get at Lens
-```
-
 ```scala mdoc
-departments.composeLens(at("History")).set(None)(uni)
+departments.at("History").replace(None)(uni)
 ```
 
-if instead we wanted to create a department, we would have used `set` with `Some`:
+if instead we wanted to create a department, we would have used `replace` with `Some`:
 
 ```scala mdoc:silent
 val physics = Department(36, List(
@@ -55,7 +51,7 @@ val physics = Department(36, List(
 ```
 
 ```scala mdoc
-departments.composeLens(at("Physics")).set(Some(physics))(uni)
+departments.at("Physics").replace(Some(physics))(uni)
 ```
 
 ## How to update a field in a nested case class
@@ -77,7 +73,7 @@ import monocle.function.all._ // to get each and other typeclass based optics su
 import monocle.Traversal
 import monocle.unsafe.MapTraversal._ // to get Each instance for Map (SortedMap does not require this import)
 
-val allLecturers: Traversal[University, Lecturer] = departments.composeTraversal(each).andThen(lecturers).composeTraversal(each)
+val allLecturers: Traversal[University, Lecturer] = departments.each.andThen(lecturers).each
 ```
 
 Note that we used `each` twice, the first time on `Map` and the second time on `List`.
@@ -103,8 +99,8 @@ Then, we can use `Cons` typeclass which provides both `headOption` and `tailOpti
 to use `headOption` to zoom into the first character of a `String`
 
 ```scala mdoc
-val upperCasedFirstName = allLecturers.andThen(firstName).composeOptional(headOption).modify(_.toUpper)(uni)
-allLecturers.andThen(lastName).composeOptional(headOption).modify(_.toUpper)(upperCasedFirstName)
+val upperCasedFirstName = allLecturers.andThen(firstName).index(0).modify(_.toUpper)(uni)
+allLecturers.andThen(lastName).index(0).modify(_.toUpper)(upperCasedFirstName)
 ```
 
 It is annoying that we have to call `modify` on first name and then repeat the same action on last name. Ideally, we
@@ -116,5 +112,5 @@ val firstAndLastNames = Traversal.apply2[Lecturer, String](_.firstName, _.lastNa
 ```
 
 ```scala mdoc
-allLecturers.andThen(firstAndLastNames).composeOptional(headOption).modify(_.toUpper)(uni)
+allLecturers.andThen(firstAndLastNames).index(0).modify(_.toUpper)(uni)
 ```
