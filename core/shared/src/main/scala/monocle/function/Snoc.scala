@@ -1,12 +1,11 @@
 package monocle.function
 
-import monocle.function.At.at
-import monocle.{Iso, Optional, Prism}
-
-import scala.annotation.{implicitNotFound, tailrec}
 import cats.Applicative
 import cats.instances.option._
 import cats.syntax.either._
+import monocle.{Iso, Optional, Prism}
+
+import scala.annotation.{implicitNotFound, tailrec}
 
 /** Typeclass that defines a [[Prism]] between an `S` and its init `S` and last `S`
   * @tparam S source of [[Prism]] and init of [[Prism]] target
@@ -19,8 +18,8 @@ import cats.syntax.either._
 abstract class Snoc[S, A] extends Serializable {
   def snoc: Prism[S, (S, A)]
 
-  def initOption: Optional[S, S] = snoc composeLens at(1)
-  def lastOption: Optional[S, A] = snoc composeLens at(2)
+  def initOption: Optional[S, S] = snoc.at(1)
+  def lastOption: Optional[S, A] = snoc.at(2)
 }
 
 trait SnocFunctions {

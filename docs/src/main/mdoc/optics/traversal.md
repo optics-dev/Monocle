@@ -18,7 +18,7 @@ val xs = List(1,2,3,4,5)
 
 ```scala mdoc
 val eachL = Traversal.fromTraverse[List, Int]
-eachL.set(0)(xs)
+eachL.replace(0)(xs)
 eachL.modify(_ + 1)(xs)
 ```
 
@@ -40,7 +40,7 @@ val points = Traversal.apply2[Point, Int](_.x, _.y)((x, y, p) => p.copy(x = x, y
 ```
 
 ```scala mdoc
-points.set(5)(Point("bottom-left",0,0))
+points.replace(5)(Point("bottom-left",0,0))
 ```
 
 Finally, if you want to build something more custom you will have to implement a `Traversal` manually.

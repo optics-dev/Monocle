@@ -17,9 +17,8 @@ class MonocleIsoBench extends IsoBench {
   val w3_i = Iso[IntWrapper3, Int](_.i)(IntWrapper3.apply)
   val w6_i = Iso[IntWrapper6, Int](_.i)(IntWrapper6.apply)
 
-  val w0_w3_i = w0_w1 composeIso w1_w2 composeIso w2_w3 composeIso w3_i
-  val w0_w6_i =
-    w0_w1 composeIso w1_w2 composeIso w2_w3 composeIso w3_w4 composeIso w4_w5 composeIso w5_w6 composeIso w6_i
+  val w0_w3_i = w0_w1 andThen w1_w2 andThen w2_w3 andThen w3_i
+  val w0_w6_i = w0_w1 andThen w1_w2 andThen w2_w3 andThen w3_w4 andThen w4_w5 andThen w5_w6 andThen w6_i
 
   val i_w0                   = w0_i.reverse
   val i_w3_w0                = w0_w3_i.reverse

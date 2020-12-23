@@ -33,7 +33,7 @@ object At extends AtFunctions {
 
   /** lift an instance of [[At]] using an [[Iso]] */
   def fromIso[S, U, I, A](iso: Iso[S, U])(implicit ev: At[U, I, A]): At[S, I, A] =
-    At(iso composeLens ev.at(_))
+    At((i: I) => iso.andThen(ev.at(i)))
 
   /* ************** */
   /* Std instances  */

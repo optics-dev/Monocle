@@ -25,7 +25,7 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
   def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyTraversal[S, T, A1, B1] =
-    adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+    adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyTraversal[S, T, A1, B1] =
     evB.substituteCo[ApplyTraversal[S, T, A1, *]](evA.substituteCo[ApplyTraversal[S, T, *, B]](this))
@@ -45,13 +45,20 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
   def andThen[C, D](other: PIso[A, B, C, D]): ApplyTraversal[S, T, C, D] =
     ApplyTraversal(s, traversal.andThen(other))
 
-  def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D]          = andThen(other)
-  def composeFold[C](other: Fold[A, C]): ApplyFold[S, C]                                = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
   def composeTraversal[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
-  def composeOptional[C, D](other: POptional[A, B, C, D]): ApplyTraversal[S, T, C, D]   = andThen(other)
-  def composePrism[C, D](other: PPrism[A, B, C, D]): ApplyTraversal[S, T, C, D]         = andThen(other)
-  def composeLens[C, D](other: PLens[A, B, C, D]): ApplyTraversal[S, T, C, D]           = andThen(other)
-  def composeIso[C, D](other: PIso[A, B, C, D]): ApplyTraversal[S, T, C, D]             = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
 
   /** alias to composeTraversal */
   @deprecated("use andThen", since = "3.0.0-M1")
@@ -82,7 +89,7 @@ object ApplyTraversal {
 /** Extension methods for monomorphic ApplyTraversal */
 final case class ApplyTraversalSyntax[S, A](private val self: ApplyTraversal[S, S, A, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): ApplyTraversal[S, S, C, C] =
-    self composeTraversal evEach.each
+    self.andThen(evEach.each)
 
   /** Select all the elements which satisfies the predicate.
     * This combinator can break the fusion property see Optional.filter for more details.
@@ -94,11 +101,11 @@ final case class ApplyTraversalSyntax[S, A](private val self: ApplyTraversal[S, 
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyTraversal[S, S, A1, A1] =
-    self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
+    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyTraversal[S, S, A1, A1] =
-    self composeLens evAt.at(i)
+    self.andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): ApplyTraversal[S, S, A1, A1] =
-    self composeOptional evIndex.index(i)
+    self.andThen(evIndex.index(i))
 }
