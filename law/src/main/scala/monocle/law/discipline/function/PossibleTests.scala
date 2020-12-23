@@ -8,6 +8,7 @@ import org.typelevel.discipline.Laws
 
 import cats.Eq
 
+@deprecated("no replacement", since = "3.0.0-M1")
 object PossibleTests extends Laws {
   def apply[S: Eq: Arbitrary, A: Eq: Arbitrary](implicit
     evPossible: Possible[S, A],
