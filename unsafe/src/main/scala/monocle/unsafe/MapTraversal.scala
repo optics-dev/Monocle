@@ -20,7 +20,7 @@ object MapTraversal {
     Iso[Map[K, V], List[(K, V)]](_.toList)(_.toMap)
 
   def mapKVTraversal[K, V]: Traversal[Map[K, V], (K, V)] =
-    allKeyValues.composeTraversal(Traversal.fromTraverse[List, (K, V)])
+    allKeyValues.andThen(Traversal.fromTraverse[List, (K, V)])
 
   implicit def mapMapFilterIndex[K, V]: FilterIndex[Map[K, V], K, V] =
     new FilterIndex[Map[K, V], K, V] {

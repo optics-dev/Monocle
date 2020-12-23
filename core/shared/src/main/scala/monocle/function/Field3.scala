@@ -29,9 +29,7 @@ object Field3 extends Field3Functions {
 
   /** lift an instance of [[Field3]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Field3[A, B]): Field3[S, B] =
-    Field3(
-      iso composeLens ev.third
-    )
+    Field3(iso.andThen(ev.third))
 
   /** *********************************************************************************************
     */

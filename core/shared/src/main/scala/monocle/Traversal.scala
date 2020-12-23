@@ -147,6 +147,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
     andThen(other.asTraversal)
 
   /** compose a [[PTraversal]] with a [[Fold]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     andThen(other)
 
@@ -154,30 +155,37 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
   def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
 
   /** compose a [[PTraversal]] with a [[Getter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PSetter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeOptional[C, D](other: POptional[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composePrism[C, D](other: PPrism[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeLens[C, D](other: PLens[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PTraversal]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeIso[C, D](other: PIso[A, B, C, D]): PTraversal[S, T, C, D] =
     andThen(other)
 
@@ -361,8 +369,8 @@ final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extend
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Traversal[S, A1] =
-    self composeLens evAt.at(i)
+    self.andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Traversal[S, A1] =
-    self composeOptional evIndex.index(i)
+    self.andThen(evIndex.index(i))
 }

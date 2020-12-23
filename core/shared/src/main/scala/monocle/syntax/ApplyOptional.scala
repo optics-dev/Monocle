@@ -47,13 +47,20 @@ final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]
   def andThen[C, D](other: PIso[A, B, C, D]): ApplyOptional[S, T, C, D] =
     ApplyOptional(s, optional.andThen(other))
 
-  def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D]          = andThen(other)
-  def composeFold[C](other: Fold[A, C]): ApplyFold[S, C]                                = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeSetter[C, D](other: PSetter[A, B, C, D]): ApplySetter[S, T, C, D] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeFold[C](other: Fold[A, C]): ApplyFold[S, C] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
   def composeTraversal[C, D](other: PTraversal[A, B, C, D]): ApplyTraversal[S, T, C, D] = andThen(other)
-  def composeOptional[C, D](other: POptional[A, B, C, D]): ApplyOptional[S, T, C, D]    = andThen(other)
-  def composePrism[C, D](other: PPrism[A, B, C, D]): ApplyOptional[S, T, C, D]          = andThen(other)
-  def composeLens[C, D](other: PLens[A, B, C, D]): ApplyOptional[S, T, C, D]            = andThen(other)
-  def composeIso[C, D](other: PIso[A, B, C, D]): ApplyOptional[S, T, C, D]              = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, B, C, D]): ApplyOptional[S, T, C, D] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, B, C, D]): ApplyOptional[S, T, C, D] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, B, C, D]): ApplyOptional[S, T, C, D] = andThen(other)
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, B, C, D]): ApplyOptional[S, T, C, D] = andThen(other)
 
   /** alias to composeTraversal */
   @deprecated("use andThen", since = "3.0.0-M1")
@@ -99,8 +106,8 @@ final case class ApplyOptionalSyntax[S, A](private val self: ApplyOptional[S, S,
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyOptional[S, S, A1, A1] =
-    self composeLens evAt.at(i)
+    self.andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): ApplyOptional[S, S, A1, A1] =
-    self composeOptional evIndex.index(i)
+    self.andThen(evIndex.index(i))
 }

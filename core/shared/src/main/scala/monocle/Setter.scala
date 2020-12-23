@@ -79,26 +79,32 @@ abstract class PSetter[S, T, A, B] extends Serializable { self =>
     andThen(other.asSetter)
 
   /** compose a [[PSetter]] with a [[PSetter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PSetter]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PSetter]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeOptional[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PSetter]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composePrism[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PSetter]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeLens[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
   /** compose a [[PSetter]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
   final def composeIso[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
     andThen(other)
 
@@ -214,8 +220,8 @@ final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyV
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Setter[S, A1] =
-    self composeLens evAt.at(i)
+    self.andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Setter[S, A1] =
-    self composeOptional evIndex.index(i)
+    self.andThen(evIndex.index(i))
 }

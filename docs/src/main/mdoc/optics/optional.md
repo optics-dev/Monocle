@@ -13,7 +13,7 @@ Let's take a simple list with integers.
 We can create an `Optional[List[Int], Int]` which zooms from a `List[Int]` to its potential head by supplying a pair of functions:
 
 *   `getOption: List[Int] => Option[Int]`
-*   `set: Int => List[Int] => List[Int]`
+*   `replace: Int => List[Int] => List[Int]`
 
 ```scala mdoc:silent
 import monocle.Optional
@@ -49,14 +49,14 @@ head.getOrModify(ys)
 The function `getOrModify` is mostly used for polymorphic optics.
 If you use monomorphic optics, use function `getOption`
 
-We can use the supplied `getOption` and `set` functions:
+We can use the supplied `getOption` and `replace` functions:
 
 ```scala mdoc
 head.getOption(xs)
-head.set(5)(xs)
+head.replace(5)(xs)
 
 head.getOption(ys)
-head.set(5)(ys)
+head.replace(5)(ys)
 ```
 
 We can also `modify` the target of `Optional` with a function:
@@ -79,10 +79,10 @@ head.modifyOption(_ + 1)(ys)
 class OptionalLaws[S, A](optional: Optional[S, A]) {
 
   def getOptionSet(s: S): Boolean =
-    optional.getOrModify(s).fold(identity, optional.set(_)(s)) == s
+    optional.getOrModify(s).fold(identity, optional.replace(_)(s)) == s
 
   def setGetOption(s: S, a: A): Boolean =
-    optional.getOption(optional.set(a)(s)) == optional.getOption(s).map(_ => a)
+    optional.getOption(optional.replace(a)(s)) == optional.getOption(s).map(_ => a)
 
 }
 ```
@@ -90,6 +90,6 @@ class OptionalLaws[S, A](optional: Optional[S, A]) {
 An `Optional` must satisfy all properties defined in `OptionalLaws` in `core` module.
 You can check the validity of your own `Optional` using `OptionalTests` in `law` module.
 
-`getOptionSet` states that if you `getOrModify` a value `A` from `S` and then `set` it back in, the result is an object identical to the original one.
+`getOptionSet` states that if you `getOrModify` a value `A` from `S` and then `replace` it back in, the result is an object identical to the original one.
 
-`setGetOption` states that if you `set` a value, you always `getOption` the same value back.
+`setGetOption` states that if you `replace` a value, you always `getOption` the same value back.
