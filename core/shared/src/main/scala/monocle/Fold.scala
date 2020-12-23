@@ -5,7 +5,7 @@ import cats.arrow.Choice
 import cats.instances.int._
 import cats.instances.list._
 import cats.syntax.either._
-import monocle.function.{At, Each, Index}
+import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.internal.Monoids
 
 /** A [[Fold]] can be seen as a [[Getter]] with many targets or
@@ -96,6 +96,9 @@ abstract class Fold[S, A] extends Serializable { self =>
     */
   def filter(predicate: A => Boolean): Fold[S, A] =
     self.andThen(Optional.filter(predicate))
+
+  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Fold[S, A1] =
+    self.andThen(ev.filterIndex(predicate))
 
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)

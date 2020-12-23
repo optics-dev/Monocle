@@ -3,7 +3,7 @@ package monocle
 import cats.{Eq, Monoid, Semigroupal}
 import cats.arrow.{Arrow, Choice}
 import cats.implicits._
-import monocle.function.{At, Each, Index}
+import monocle.function.{At, Each, FilterIndex, Index}
 
 /** A [[Getter]] can be seen as a glorified get method between
   * a type S and a type A.
@@ -61,6 +61,9 @@ abstract class Getter[S, A] extends Serializable { self =>
     */
   def filter(predicate: A => Boolean): Fold[S, A] =
     self.andThen(Optional.filter(predicate))
+
+  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Fold[S, A1] =
+    self.andThen(ev.filterIndex(predicate))
 
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)

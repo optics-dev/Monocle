@@ -134,6 +134,14 @@ class FoldSpec extends MonocleSuite {
     assertEquals(numbers.applyFold(fold).filter(_ > 1).getAll, List(2, 3))
   }
 
+  test("filterIndex") {
+    val words = List(List("hello", "world"), List("hey", "hi"))
+    val fold  = Fold.fromFoldable[List, List[String]]
+
+    assertEquals(fold.filterIndex((_: Int) > 0).getAll(words), List("world", "hi"))
+    assertEquals(words.applyFold(fold).filterIndex((_: Int) > 0).getAll, List("world", "hi"))
+  }
+
   test("at") {
     val tuple2     = (1, 2)
     val tuple2Fold = Fold.id[(Int, Int)]
