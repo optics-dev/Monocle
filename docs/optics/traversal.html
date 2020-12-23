@@ -64,8 +64,8 @@ To do this we will use the relation between the typeclass <code>cats.Traverse</c
 <span class="hljs-keyword">val</span> xs = <span class="hljs-type">List</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>)
 </code></pre>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> eachL = <span class="hljs-type">Traversal</span>.fromTraverse[<span class="hljs-type">List</span>, <span class="hljs-type">Int</span>]
-<span class="hljs-comment">// eachL: Traversal[List[Int], Int] = monocle.PTraversal$$anon$5@4f13ddd2</span>
-eachL.set(<span class="hljs-number">0</span>)(xs)
+<span class="hljs-comment">// eachL: Traversal[List[Int], Int] = monocle.PTraversal$$anon$5@2b5c724d</span>
+eachL.replace(<span class="hljs-number">0</span>)(xs)
 <span class="hljs-comment">// res0: List[Int] = List(0, 0, 0, 0, 0)</span>
 eachL.modify(_ + <span class="hljs-number">1</span>)(xs)
 <span class="hljs-comment">// res1: List[Int] = List(2, 3, 4, 5, 6)</span>
@@ -85,7 +85,7 @@ eachL.all(_ % <span class="hljs-number">2</span> == <span class="hljs-number">0<
 
 <span class="hljs-keyword">val</span> points = <span class="hljs-type">Traversal</span>.apply2[<span class="hljs-type">Point</span>, <span class="hljs-type">Int</span>](_.x, _.y)((x, y, p) =&gt; p.copy(x = x, y = y))
 </code></pre>
-<pre><code class="hljs css language-scala">points.set(<span class="hljs-number">5</span>)(<span class="hljs-type">Point</span>(<span class="hljs-string">"bottom-left"</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>))
+<pre><code class="hljs css language-scala">points.replace(<span class="hljs-number">5</span>)(<span class="hljs-type">Point</span>(<span class="hljs-string">"bottom-left"</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>))
 <span class="hljs-comment">// res6: Point = Point(id = "bottom-left", x = 5, y = 5)</span>
 </code></pre>
 <p>Finally, if you want to build something more custom you will have to implement a <code>Traversal</code> manually.
@@ -106,7 +106,7 @@ A <code>Traversal</code> is defined by a single method <code>modifyF</code> whic
 <span class="hljs-keyword">val</span> m = <span class="hljs-type">Map</span>(<span class="hljs-number">1</span> -&gt; <span class="hljs-string">"one"</span>, <span class="hljs-number">2</span> -&gt; <span class="hljs-string">"two"</span>, <span class="hljs-number">3</span> -&gt; <span class="hljs-string">"three"</span>, <span class="hljs-number">4</span> -&gt; <span class="hljs-string">"Four"</span>)
 </code></pre>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> filterEven = filterKey[<span class="hljs-type">Int</span>, <span class="hljs-type">String</span>](_ % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>)
-<span class="hljs-comment">// filterEven: Traversal[Map[Int, String], String] = repl.MdocSession$App$$anon$1@6aa09613</span>
+<span class="hljs-comment">// filterEven: Traversal[Map[Int, String], String] = repl.MdocSession$App$$anon$1@12e6ed80</span>
 
 filterEven.modify(_.toUpperCase)(m)
 <span class="hljs-comment">// res7: Map[Int, String] = Map(</span>

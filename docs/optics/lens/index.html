@@ -62,7 +62,7 @@
 <p>We can create a <code>Lens[Address, Int]</code> which zooms from an <code>Address</code> to its field <code>streetNumber</code> by supplying a pair of functions:</p>
 <ul>
 <li><code>get: Address =&gt; Int</code></li>
-<li><code>set: Int =&gt; Address =&gt; Address</code></li>
+<li><code>replace: Int =&gt; Address =&gt; Address</code></li>
 </ul>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Lens</span>
 <span class="hljs-keyword">val</span> streetNumber = <span class="hljs-type">Lens</span>[<span class="hljs-type">Address</span>, <span class="hljs-type">Int</span>](_.streetNumber)(n =&gt; a =&gt; a.copy(streetNumber = n))
@@ -71,22 +71,22 @@
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenLens</span>
 <span class="hljs-keyword">val</span> streetNumber = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Address</span>](_.streetNumber)
 </code></pre>
-<p>Once we have a <code>Lens</code>, we can use the supplied <code>get</code> and <code>set</code> functions (nothing fancy!):</p>
+<p>Once we have a <code>Lens</code>, we can use the supplied <code>get</code> and <code>replace</code> functions (nothing fancy!):</p>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> address = <span class="hljs-type">Address</span>(<span class="hljs-number">10</span>, <span class="hljs-string">"High Street"</span>)
 <span class="hljs-comment">// address: Address = Address(streetNumber = 10, streetName = "High Street")</span>
 
 streetNumber.get(address)
 <span class="hljs-comment">// res0: Int = 10</span>
-streetNumber.set(<span class="hljs-number">5</span>)(address)
+streetNumber.replace(<span class="hljs-number">5</span>)(address)
 <span class="hljs-comment">// res1: Address = Address(streetNumber = 5, streetName = "High Street")</span>
 </code></pre>
-<p>We can also <code>modify</code> the target of <code>Lens</code> with a function, this is equivalent to call <code>get</code> and then <code>set</code>:</p>
+<p>We can also <code>modify</code> the target of <code>Lens</code> with a function, this is equivalent to call <code>get</code> and then <code>replace</code>:</p>
 <pre><code class="hljs css language-scala">streetNumber.modify(_ + <span class="hljs-number">1</span>)(address)
 <span class="hljs-comment">// res2: Address = Address(streetNumber = 11, streetName = "High Street")</span>
 
 <span class="hljs-keyword">val</span> n = streetNumber.get(address)
 <span class="hljs-comment">// n: Int = 10</span>
-streetNumber.set(n + <span class="hljs-number">1</span>)(address)
+streetNumber.replace(n + <span class="hljs-number">1</span>)(address)
 <span class="hljs-comment">// res3: Address = Address(streetNumber = 11, streetName = "High Street")</span>
 </code></pre>
 <p>We can push the idea even further, with <code>modifyF</code> we can update the target of a <code>Lens</code> in a context, cf <code>cats.Functor</code>:</p>
@@ -124,7 +124,7 @@ where one has the task to update a deeply nested structure with the result of an
 </code></pre>
 <pre><code class="hljs css language-scala">address.andThen(streetNumber).get(john)
 <span class="hljs-comment">// res7: Int = 10</span>
-address.andThen(streetNumber).set(<span class="hljs-number">2</span>)(john)
+address.andThen(streetNumber).replace(<span class="hljs-number">2</span>)(john)
 <span class="hljs-comment">// res8: Person = Person(</span>
 <span class="hljs-comment">//   name = "John",</span>
 <span class="hljs-comment">//   age = 20,</span>
@@ -133,14 +133,14 @@ address.andThen(streetNumber).set(<span class="hljs-number">2</span>)(john)
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="other-ways-of-lens-composition"></a><a href="#other-ways-of-lens-composition" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Other Ways of Lens Composition</h2>
 <p>Is possible to compose few <code>Lenses</code> together by using <code>compose</code>:</p>
-<pre><code class="hljs css language-scala"><span class="hljs-type">GenLens</span>[<span class="hljs-type">Person</span>](_.name).set(<span class="hljs-string">"Mike"</span>) compose <span class="hljs-type">GenLens</span>[<span class="hljs-type">Person</span>](_.age).modify(_ + <span class="hljs-number">1</span>)
+<pre><code class="hljs css language-scala"><span class="hljs-type">GenLens</span>[<span class="hljs-type">Person</span>](_.name).replace(<span class="hljs-string">"Mike"</span>) compose <span class="hljs-type">GenLens</span>[<span class="hljs-type">Person</span>](_.age).modify(_ + <span class="hljs-number">1</span>)
 </code></pre>
 <p>Same but with the simplified macro based syntax:</p>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.macros.syntax.lens._
 
-john.lens(_.name).set(<span class="hljs-string">"Mike"</span>).lens(_.age).modify(_ + <span class="hljs-number">1</span>)
+john.lens(_.name).replace(<span class="hljs-string">"Mike"</span>).lens(_.age).modify(_ + <span class="hljs-number">1</span>)
 </code></pre>
-<p>(All <code>Setter</code> like optics offer <code>set</code> and <code>modify</code> methods that returns an <code>EndoFunction</code> (i.e. <code>S =&gt; S</code>) which means that we can compose modification using basic function composition.)</p>
+<p>(All <code>Setter</code> like optics offer <code>replace</code> and <code>modify</code> methods that returns an <code>EndoFunction</code> (i.e. <code>S =&gt; S</code>) which means that we can compose modification using basic function composition.)</p>
 <p>Sometimes you need an easy way to update <code>Product</code> type inside
 <code>Sum</code> type - for that case you can compose <code>Prism</code> with <code>Lens</code> by using <code>some</code>:</p>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenLens</span>
@@ -149,9 +149,9 @@ john.lens(_.name).set(<span class="hljs-string">"Mike"</span>).lens(_.age).modif
 <span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span>(<span class="hljs-params">b: <span class="hljs-type">Option</span>[<span class="hljs-type">B</span>]</span>)</span>
 
 <span class="hljs-keyword">val</span> c = <span class="hljs-type">GenLens</span>[<span class="hljs-type">B</span>](_.c)
-<span class="hljs-comment">// c: Lens[B, Int] = repl.MdocSession$App$$anon$7@60968d95</span>
+<span class="hljs-comment">// c: Lens[B, Int] = repl.MdocSession$App$$anon$7@22173bf2</span>
 <span class="hljs-keyword">val</span> b = <span class="hljs-type">GenLens</span>[<span class="hljs-type">A</span>](_.b)
-<span class="hljs-comment">// b: Lens[A, Option[B]] = repl.MdocSession$App$$anon$8@1593d2ee</span>
+<span class="hljs-comment">// b: Lens[A, Option[B]] = repl.MdocSession$App$$anon$8@649f3b66</span>
 
 b.some.andThen(c).getOption(<span class="hljs-type">A</span>(<span class="hljs-type">Some</span>(<span class="hljs-type">B</span>(<span class="hljs-number">1</span>))))
 <span class="hljs-comment">// res11: Option[Int] = Some(value = 1)</span>
@@ -164,7 +164,7 @@ are defined in a separate module (see <a href="../modules.html">modules</a>).</p
 <span class="hljs-keyword">val</span> age = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Person</span>](_.age)
 </code></pre>
 <p><code>GenLens</code> can also be used to generate <code>Lens</code> several level deep:</p>
-<pre><code class="hljs css language-scala"><span class="hljs-type">GenLens</span>[<span class="hljs-type">Person</span>](_.address.streetName).set(<span class="hljs-string">"Iffley Road"</span>)(john)
+<pre><code class="hljs css language-scala"><span class="hljs-type">GenLens</span>[<span class="hljs-type">Person</span>](_.address.streetName).replace(<span class="hljs-string">"Iffley Road"</span>)(john)
 <span class="hljs-comment">// res12: Person = Person(</span>
 <span class="hljs-comment">//   name = "John",</span>
 <span class="hljs-comment">//   age = 20,</span>
@@ -179,7 +179,7 @@ are defined in a separate module (see <a href="../modules.html">modules</a>).</p
 </code></pre>
 <pre><code class="hljs css language-scala"><span class="hljs-type">Point</span>.x.get(p)
 <span class="hljs-comment">// res13: Int = 5</span>
-<span class="hljs-type">Point</span>.y.set(<span class="hljs-number">0</span>)(p)
+<span class="hljs-type">Point</span>.y.replace(<span class="hljs-number">0</span>)(p)
 <span class="hljs-comment">// res14: Point = Point(x = 5, y = 0)</span>
 </code></pre>
 <p>You can also add a prefix to <code>@Lenses</code> in order to prefix the generated <code>Lenses</code>:</p>
@@ -193,15 +193,15 @@ are defined in a separate module (see <a href="../modules.html">modules</a>).</p
 <h2><a class="anchor" aria-hidden="true" id="laws"></a><a href="#laws" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Laws</h2>
 <p>A <code>Lens</code> must satisfy all properties defined in <code>LensLaws</code> from the <code>core</code> module.
 You can check the validity of your own <code>Lenses</code> using <code>LensTests</code> from the <code>law</code> module.</p>
-<p>In particular, a <code>Lens</code> must respect the <code>getSet</code> law which states that if you <code>get</code> a value <code>A</code> from <code>S</code> and
-<code>set</code> it back in, the result is an object identical to the original one. A side effect of this law is that <code>set</code>
+<p>In particular, a <code>Lens</code> must respect the <code>getReplace</code> law which states that if you <code>get</code> a value <code>A</code> from <code>S</code> and
+<code>replace</code> it back in, the result is an object identical to the original one. A side effect of this law is that <code>replace</code>
 must only update the <code>A</code> it points to, for example it cannot increment a counter or modify another value.</p>
-<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getSet</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](l: <span class="hljs-type">Lens</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>): <span class="hljs-type">Boolean</span> =
-  l.set(l.get(s))(s) == s
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getReplace</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](l: <span class="hljs-type">Lens</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>): <span class="hljs-type">Boolean</span> =
+  l.replace(l.get(s))(s) == s
 </code></pre>
-<p>On the other hand, the <code>setGet</code> law states that if you <code>set</code> a value, you always <code>get</code> the same value back.
-This law guarantees that <code>set</code> is actually updating a value <code>A</code> inside of <code>S</code>.</p>
-<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">setGet</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](l: <span class="hljs-type">Lens</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>, a: <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
-  l.get(l.set(a)(s)) == a
+<p>On the other hand, the <code>replaceGet</code> law states that if you <code>replace</code> a value, you always <code>get</code> the same value back.
+This law guarantees that <code>replace</code> is actually updating a value <code>A</code> inside of <code>S</code>.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">replaceGet</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](l: <span class="hljs-type">Lens</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>, a: <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
+  l.get(l.replace(a)(s)) == a
 </code></pre>
 </span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/Monocle/docs/optics/iso"><span class="arrow-prev">← </span><span>Iso</span></a><a class="docs-next button" href="/Monocle/docs/optics/prism"><span>Prism</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#other-ways-of-lens-composition">Other Ways of Lens Composition</a></li><li><a href="#lens-generation">Lens Generation</a></li><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>

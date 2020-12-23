@@ -93,14 +93,14 @@ jStr.getOption(<span class="hljs-type">JNum</span>(<span class="hljs-number">3.2
   <span class="hljs-keyword">case</span> _       =&gt; <span class="hljs-literal">false</span>
 }
 </code></pre>
-<p>We can also use <code>set</code> and <code>modify</code> to update a <code>Json</code> only if it is a <code>JStr</code>:</p>
-<pre><code class="hljs css language-scala">jStr.set(<span class="hljs-string">"Bar"</span>)(<span class="hljs-type">JStr</span>(<span class="hljs-string">"Hello"</span>))
+<p>We can also use <code>replace</code> and <code>modify</code> to update a <code>Json</code> only if it is a <code>JStr</code>:</p>
+<pre><code class="hljs css language-scala">jStr.replace(<span class="hljs-string">"Bar"</span>)(<span class="hljs-type">JStr</span>(<span class="hljs-string">"Hello"</span>))
 <span class="hljs-comment">// res3: Json = JStr(v = "Bar")</span>
 jStr.modify(_.reverse)(<span class="hljs-type">JStr</span>(<span class="hljs-string">"Hello"</span>))
 <span class="hljs-comment">// res4: Json = JStr(v = "olleH")</span>
 </code></pre>
-<p>If we supply another type of <code>Json</code>, <code>set</code> and <code>modify</code> will be a no operation:</p>
-<pre><code class="hljs css language-scala">jStr.set(<span class="hljs-string">"Bar"</span>)(<span class="hljs-type">JNum</span>(<span class="hljs-number">10</span>))
+<p>If we supply another type of <code>Json</code>, <code>replace</code> and <code>modify</code> will be a no operation:</p>
+<pre><code class="hljs css language-scala">jStr.replace(<span class="hljs-string">"Bar"</span>)(<span class="hljs-type">JNum</span>(<span class="hljs-number">10</span>))
 <span class="hljs-comment">// res5: Json = JNum(v = 10.0)</span>
 jStr.modify(_.reverse)(<span class="hljs-type">JNum</span>(<span class="hljs-number">10</span>))
 <span class="hljs-comment">// res6: Json = JNum(v = 10.0)</span>

@@ -22,9 +22,7 @@ and a few <code>Lecturer</code>s.</p>
 <span class="hljs-keyword">val</span> departments = <span class="hljs-type">GenLens</span>[<span class="hljs-type">University</span>](_.departments)
 </code></pre>
 <p>then we zoom into the <code>Map</code> at the <code>History</code> key using <code>At</code> typeclass</p>
-<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.function.<span class="hljs-type">At</span>.at <span class="hljs-comment">// to get at Lens</span>
-</code></pre>
-<pre><code class="hljs css language-scala">departments.composeLens(at(<span class="hljs-string">"History"</span>)).set(<span class="hljs-type">None</span>)(uni)
+<pre><code class="hljs css language-scala">departments.at(<span class="hljs-string">"History"</span>).replace(<span class="hljs-type">None</span>)(uni)
 <span class="hljs-comment">// res0: University = University(</span>
 <span class="hljs-comment">//   name = "oxford",</span>
 <span class="hljs-comment">//   departments = Map(</span>
@@ -38,13 +36,13 @@ and a few <code>Lecturer</code>s.</p>
 <span class="hljs-comment">//   )</span>
 <span class="hljs-comment">// )</span>
 </code></pre>
-<p>if instead we wanted to create a department, we would have used <code>set</code> with <code>Some</code>:</p>
+<p>if instead we wanted to create a department, we would have used <code>replace</code> with <code>Some</code>:</p>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> physics = <span class="hljs-type">Department</span>(<span class="hljs-number">36</span>, <span class="hljs-type">List</span>(
   <span class="hljs-type">Lecturer</span>(<span class="hljs-string">"daniel"</span>, <span class="hljs-string">"jones"</span>, <span class="hljs-number">12</span>),
   <span class="hljs-type">Lecturer</span>(<span class="hljs-string">"roger"</span> , <span class="hljs-string">"smith"</span>, <span class="hljs-number">14</span>)
 ))
 </code></pre>
-<pre><code class="hljs css language-scala">departments.composeLens(at(<span class="hljs-string">"Physics"</span>)).set(<span class="hljs-type">Some</span>(physics))(uni)
+<pre><code class="hljs css language-scala">departments.at(<span class="hljs-string">"Physics"</span>).replace(<span class="hljs-type">Some</span>(physics))(uni)
 <span class="hljs-comment">// res1: University = University(</span>
 <span class="hljs-comment">//   name = "oxford",</span>
 <span class="hljs-comment">//   departments = Map(</span>
@@ -83,7 +81,7 @@ which zooms into all elements of a container (e.g. <code>List</code>, <code>Vect
 <span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Traversal</span>
 <span class="hljs-keyword">import</span> monocle.unsafe.<span class="hljs-type">MapTraversal</span>._ <span class="hljs-comment">// to get Each instance for Map (SortedMap does not require this import)</span>
 
-<span class="hljs-keyword">val</span> allLecturers: <span class="hljs-type">Traversal</span>[<span class="hljs-type">University</span>, <span class="hljs-type">Lecturer</span>] = departments.composeTraversal(each).andThen(lecturers).composeTraversal(each)
+<span class="hljs-keyword">val</span> allLecturers: <span class="hljs-type">Traversal</span>[<span class="hljs-type">University</span>, <span class="hljs-type">Lecturer</span>] = departments.each.andThen(lecturers).each
 </code></pre>
 <p>Note that we used <code>each</code> twice, the first time on <code>Map</code> and the second time on <code>List</code>.</p>
 <pre><code class="hljs css language-scala">allLecturers.andThen(salary).modify(_ + <span class="hljs-number">2</span>)(uni)
@@ -116,7 +114,7 @@ character of both <code>firstName</code> and <code>lastName</code>.</p>
 </code></pre>
 <p>Then, we can use <code>Cons</code> typeclass which provides both <code>headOption</code> and <code>tailOption</code> optics. In our case, we want
 to use <code>headOption</code> to zoom into the first character of a <code>String</code></p>
-<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> upperCasedFirstName = allLecturers.andThen(firstName).composeOptional(headOption).modify(_.toUpper)(uni)
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> upperCasedFirstName = allLecturers.andThen(firstName).index(<span class="hljs-number">0</span>).modify(_.toUpper)(uni)
 <span class="hljs-comment">// upperCasedFirstName: University = University(</span>
 <span class="hljs-comment">//   name = "oxford",</span>
 <span class="hljs-comment">//   departments = Map(</span>
@@ -135,7 +133,7 @@ to use <code>headOption</code> to zoom into the first character of a <code>Strin
 <span class="hljs-comment">//     )</span>
 <span class="hljs-comment">//   )</span>
 <span class="hljs-comment">// )</span>
-allLecturers.andThen(lastName).composeOptional(headOption).modify(_.toUpper)(upperCasedFirstName)
+allLecturers.andThen(lastName).index(<span class="hljs-number">0</span>).modify(_.toUpper)(upperCasedFirstName)
 <span class="hljs-comment">// res3: University = University(</span>
 <span class="hljs-comment">//   name = "oxford",</span>
 <span class="hljs-comment">//   departments = Map(</span>
@@ -159,7 +157,7 @@ allLecturers.andThen(lastName).composeOptional(headOption).modify(_.toUpper)(upp
 would like to focus to both first and last name. To do that we need to create our own <code>Traversal</code></p>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> firstAndLastNames = <span class="hljs-type">Traversal</span>.apply2[<span class="hljs-type">Lecturer</span>, <span class="hljs-type">String</span>](_.firstName, _.lastName){ <span class="hljs-keyword">case</span> (fn, ln, l) =&gt; l.copy(firstName = fn, lastName = ln)}
 </code></pre>
-<pre><code class="hljs css language-scala">allLecturers.andThen(firstAndLastNames).composeOptional(headOption).modify(_.toUpper)(uni)
+<pre><code class="hljs css language-scala">allLecturers.andThen(firstAndLastNames).index(<span class="hljs-number">0</span>).modify(_.toUpper)(uni)
 <span class="hljs-comment">// res4: University = University(</span>
 <span class="hljs-comment">//   name = "oxford",</span>
 <span class="hljs-comment">//   departments = Map(</span>
