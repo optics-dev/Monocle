@@ -4,6 +4,7 @@ import monocle.MonocleSuite
 import monocle.law.discipline.function._
 
 import scala.annotation.nowarn
+import scala.collection.immutable.Map
 
 class MapSpec extends MonocleSuite {
   checkAll("at Map", AtTests[Map[Int, String], Int, Option[String]])
