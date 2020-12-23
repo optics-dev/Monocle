@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import cats.Eq
-import monocle.function.{At, Each, Index}
+import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.{std, Fold, Getter, Optional, PIso, PLens, POptional, PPrism, PTraversal}
 
 final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]) {
@@ -17,6 +17,9 @@ final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]) {
     */
   def filter(predicate: A => Boolean): ApplyFold[S, A] =
     andThen(Optional.filter(predicate))
+
+  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): ApplyFold[S, A1] =
+    andThen(ev.filterIndex(predicate))
 
   def some[A1](implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
     adapt[Option[A1]] composePrism (std.option.pSome)

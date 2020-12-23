@@ -6,7 +6,7 @@ import cats.data.Const
 import cats.instances.int._
 import cats.instances.list._
 import cats.syntax.either._
-import monocle.function.{At, Each, Index}
+import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.internal.Monoids
 
 /** A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
@@ -353,6 +353,9 @@ final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extend
     */
   def filter(predicate: A => Boolean): Traversal[S, A] =
     self.andThen(Optional.filter(predicate))
+
+  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Traversal[S, A1] =
+    self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Traversal[S, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))

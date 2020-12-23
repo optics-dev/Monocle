@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import cats.{Eq, Functor}
-import monocle.function.{At, Each, Index}
+import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.{std, Fold, Getter, Optional, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
@@ -83,6 +83,9 @@ final case class ApplyIsoSyntax[S, A](private val self: ApplyIso[S, S, A, A]) ex
     */
   def filter(predicate: A => Boolean): ApplyOptional[S, S, A, A] =
     self.andThen(Optional.filter(predicate))
+
+  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): ApplyTraversal[S, S, A1, A1] =
+    self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyIso[S, S, A1, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))

@@ -1,7 +1,7 @@
 package monocle.syntax
 
 import cats.Eq
-import monocle.function.{At, Each, Index}
+import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.{std, Optional, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
 final case class ApplySetter[S, T, A, B](s: S, setter: PSetter[S, T, A, B]) {
@@ -74,6 +74,9 @@ final case class ApplySetterSyntax[S, A](private val self: ApplySetter[S, S, A, 
     */
   def filter(predicate: A => Boolean): ApplySetter[S, S, A, A] =
     self.andThen(Optional.filter(predicate))
+
+  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): ApplySetter[S, S, A1, A1] =
+    self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplySetter[S, S, A1, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))

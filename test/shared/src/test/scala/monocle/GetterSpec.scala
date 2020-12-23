@@ -119,6 +119,16 @@ class GetterSpec extends MonocleSuite {
     assertEquals(obj.applyGetter(getter).filter(_ > 0).getAll, List(2))
   }
 
+  test("filterIndex") {
+    case class SomeTest(x: Int, y: List[String])
+    val obj = SomeTest(1, List("hello", "world"))
+
+    val getter = Getter[SomeTest, List[String]](_.y)
+
+    assertEquals(getter.filterIndex((_: Int) > 0).getAll(obj), List("world"))
+    assertEquals(obj.applyGetter(getter).filterIndex((_: Int) > 0).getAll, List("world"))
+  }
+
   test("at") {
     val tuple2       = (1, 2)
     val tuple2Getter = Getter.id[(Int, Int)]

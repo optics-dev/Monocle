@@ -5,7 +5,7 @@ import cats.arrow.Category
 import cats.evidence.{<~<, Is}
 import cats.instances.option._
 import cats.syntax.either._
-import monocle.function.{At, Each, Index}
+import monocle.function.{At, Each, FilterIndex, Index}
 
 /** A [[PPrism]] can be seen as a pair of functions:
   *  - `getOrModify: S => Either[T, A]`
@@ -382,6 +382,9 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
     */
   def filter(predicate: A => Boolean): Optional[S, A] =
     self.andThen(Optional.filter(predicate))
+
+  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Traversal[S, A1] =
+    self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Prism[S, A1] =
     self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
