@@ -192,7 +192,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     val prism = Iso[SomeTest, Option[Int]](_.y)(SomeTest).asPrism
 
     assertEquals(prism.some.getOption(obj), Some(2))
-    assertEquals(obj.applyPrism(prism).some.getOption, Some(2))
+    assertEquals(obj.optics.andThen(prism).some.getOption, Some(2))
   }
 
   test("withDefault") {
@@ -205,7 +205,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     assertEquals(prism.withDefault(0).getOption(objSome), Some(2))
     assertEquals(prism.withDefault(0).getOption(objNone), Some(0))
 
-    assertEquals(objNone.applyPrism(prism).withDefault(0).getOption, Some(0))
+    assertEquals(objNone.optics.andThen(prism).withDefault(0).getOption, Some(0))
   }
 
   test("each") {
@@ -215,7 +215,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     val prism = Iso[SomeTest, List[Int]](_.y)(SomeTest).asPrism
 
     assertEquals(prism.each.getAll(obj), List(1, 2, 3))
-    assertEquals(obj.applyPrism(prism).each.getAll, List(1, 2, 3))
+    assertEquals(obj.optics.andThen(prism).each.getAll, List(1, 2, 3))
   }
 
   test("filter") {
@@ -225,7 +225,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     val prism = Iso[SomeTest, Int](_.y)(SomeTest).asPrism
 
     assertEquals(prism.filter(_ > 0).getOption(obj), Some(2))
-    assertEquals(obj.applyPrism(prism).filter(_ > 0).getOption, Some(2))
+    assertEquals(obj.optics.andThen(prism).filter(_ > 0).getOption, Some(2))
   }
 
   test("filterIndex") {
@@ -235,7 +235,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     val prism = Iso[SomeTest, List[String]](_.y)(SomeTest).asPrism
 
     assertEquals(prism.filterIndex((_: Int) > 0).getAll(obj), List("world"))
-    assertEquals(obj.applyPrism(prism).filterIndex((_: Int) > 0).getAll, List("world"))
+    assertEquals(obj.optics.andThen(prism).filterIndex((_: Int) > 0).getAll, List("world"))
   }
 
   test("at") {
@@ -243,17 +243,17 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     val tuple2Prism = Prism.id[(Int, Int)]
     assertEquals(tuple2Prism.at(1).getOption(tuple2), Some(1))
     assertEquals(tuple2Prism.at(2).getOption(tuple2), Some(2))
-    assertEquals(tuple2.applyPrism(tuple2Prism).at(1).getOption, Some(1))
-    assertEquals(tuple2.applyPrism(tuple2Prism).at(2).getOption, Some(2))
+    assertEquals(tuple2.optics.andThen(tuple2Prism).at(1).getOption, Some(1))
+    assertEquals(tuple2.optics.andThen(tuple2Prism).at(2).getOption, Some(2))
 
     val tuple3      = (1, 2, 3)
     val tuple3Prism = Prism.id[(Int, Int, Int)]
     assertEquals(tuple3Prism.at(1).getOption(tuple3), Some(1))
     assertEquals(tuple3Prism.at(2).getOption(tuple3), Some(2))
     assertEquals(tuple3Prism.at(3).getOption(tuple3), Some(3))
-    assertEquals(tuple3.applyPrism(tuple3Prism).at(1).getOption, Some(1))
-    assertEquals(tuple3.applyPrism(tuple3Prism).at(2).getOption, Some(2))
-    assertEquals(tuple3.applyPrism(tuple3Prism).at(3).getOption, Some(3))
+    assertEquals(tuple3.optics.andThen(tuple3Prism).at(1).getOption, Some(1))
+    assertEquals(tuple3.optics.andThen(tuple3Prism).at(2).getOption, Some(2))
+    assertEquals(tuple3.optics.andThen(tuple3Prism).at(3).getOption, Some(3))
 
     val tuple4      = (1, 2, 3, 4)
     val tuple4Prism = Prism.id[(Int, Int, Int, Int)]
@@ -261,10 +261,10 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     assertEquals(tuple4Prism.at(2).getOption(tuple4), Some(2))
     assertEquals(tuple4Prism.at(3).getOption(tuple4), Some(3))
     assertEquals(tuple4Prism.at(4).getOption(tuple4), Some(4))
-    assertEquals(tuple4.applyPrism(tuple4Prism).at(1).getOption, Some(1))
-    assertEquals(tuple4.applyPrism(tuple4Prism).at(2).getOption, Some(2))
-    assertEquals(tuple4.applyPrism(tuple4Prism).at(3).getOption, Some(3))
-    assertEquals(tuple4.applyPrism(tuple4Prism).at(4).getOption, Some(4))
+    assertEquals(tuple4.optics.andThen(tuple4Prism).at(1).getOption, Some(1))
+    assertEquals(tuple4.optics.andThen(tuple4Prism).at(2).getOption, Some(2))
+    assertEquals(tuple4.optics.andThen(tuple4Prism).at(3).getOption, Some(3))
+    assertEquals(tuple4.optics.andThen(tuple4Prism).at(4).getOption, Some(4))
 
     val tuple5      = (1, 2, 3, 4, 5)
     val tuple5Prism = Prism.id[(Int, Int, Int, Int, Int)]
@@ -273,11 +273,11 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     assertEquals(tuple5Prism.at(3).getOption(tuple5), Some(3))
     assertEquals(tuple5Prism.at(4).getOption(tuple5), Some(4))
     assertEquals(tuple5Prism.at(5).getOption(tuple5), Some(5))
-    assertEquals(tuple5.applyPrism(tuple5Prism).at(1).getOption, Some(1))
-    assertEquals(tuple5.applyPrism(tuple5Prism).at(2).getOption, Some(2))
-    assertEquals(tuple5.applyPrism(tuple5Prism).at(3).getOption, Some(3))
-    assertEquals(tuple5.applyPrism(tuple5Prism).at(4).getOption, Some(4))
-    assertEquals(tuple5.applyPrism(tuple5Prism).at(5).getOption, Some(5))
+    assertEquals(tuple5.optics.andThen(tuple5Prism).at(1).getOption, Some(1))
+    assertEquals(tuple5.optics.andThen(tuple5Prism).at(2).getOption, Some(2))
+    assertEquals(tuple5.optics.andThen(tuple5Prism).at(3).getOption, Some(3))
+    assertEquals(tuple5.optics.andThen(tuple5Prism).at(4).getOption, Some(4))
+    assertEquals(tuple5.optics.andThen(tuple5Prism).at(5).getOption, Some(5))
 
     val tuple6      = (1, 2, 3, 4, 5, 6)
     val tuple6Prism = Prism.id[(Int, Int, Int, Int, Int, Int)]
@@ -287,40 +287,40 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     assertEquals(tuple6Prism.at(4).getOption(tuple6), Some(4))
     assertEquals(tuple6Prism.at(5).getOption(tuple6), Some(5))
     assertEquals(tuple6Prism.at(6).getOption(tuple6), Some(6))
-    assertEquals(tuple6.applyPrism(tuple6Prism).at(1).getOption, Some(1))
-    assertEquals(tuple6.applyPrism(tuple6Prism).at(2).getOption, Some(2))
-    assertEquals(tuple6.applyPrism(tuple6Prism).at(3).getOption, Some(3))
-    assertEquals(tuple6.applyPrism(tuple6Prism).at(4).getOption, Some(4))
-    assertEquals(tuple6.applyPrism(tuple6Prism).at(5).getOption, Some(5))
-    assertEquals(tuple6.applyPrism(tuple6Prism).at(6).getOption, Some(6))
+    assertEquals(tuple6.optics.andThen(tuple6Prism).at(1).getOption, Some(1))
+    assertEquals(tuple6.optics.andThen(tuple6Prism).at(2).getOption, Some(2))
+    assertEquals(tuple6.optics.andThen(tuple6Prism).at(3).getOption, Some(3))
+    assertEquals(tuple6.optics.andThen(tuple6Prism).at(4).getOption, Some(4))
+    assertEquals(tuple6.optics.andThen(tuple6Prism).at(5).getOption, Some(5))
+    assertEquals(tuple6.optics.andThen(tuple6Prism).at(6).getOption, Some(6))
 
     val sortedMap      = immutable.SortedMap(1 -> "one")
     val sortedMapPrism = Prism.id[immutable.SortedMap[Int, String]]
     assertEquals(sortedMapPrism.at(1).getOption(sortedMap), Some(Some("one")))
     assertEquals(sortedMapPrism.at(0).getOption(sortedMap), Some(None))
-    assertEquals(sortedMap.applyPrism(sortedMapPrism).at(1).getOption, Some(Some("one")))
-    assertEquals(sortedMap.applyPrism(sortedMapPrism).at(0).getOption, Some(None))
+    assertEquals(sortedMap.optics.andThen(sortedMapPrism).at(1).getOption, Some(Some("one")))
+    assertEquals(sortedMap.optics.andThen(sortedMapPrism).at(0).getOption, Some(None))
 
     val listMap      = immutable.ListMap(1 -> "one")
     val listMapPrism = Prism.id[immutable.ListMap[Int, String]]
     assertEquals(listMapPrism.at(1).getOption(listMap), Some(Some("one")))
     assertEquals(listMapPrism.at(0).getOption(listMap), Some(None))
-    assertEquals(listMap.applyPrism(listMapPrism).at(1).getOption, Some(Some("one")))
-    assertEquals(listMap.applyPrism(listMapPrism).at(0).getOption, Some(None))
+    assertEquals(listMap.optics.andThen(listMapPrism).at(1).getOption, Some(Some("one")))
+    assertEquals(listMap.optics.andThen(listMapPrism).at(0).getOption, Some(None))
 
     val map      = immutable.Map(1 -> "one")
     val mapPrism = Prism.id[Map[Int, String]]
     assertEquals(mapPrism.at(1).getOption(map), Some(Some("one")))
     assertEquals(mapPrism.at(0).getOption(map), Some(None))
-    assertEquals(map.applyPrism(mapPrism).at(1).getOption, Some(Some("one")))
-    assertEquals(map.applyPrism(mapPrism).at(0).getOption, Some(None))
+    assertEquals(map.optics.andThen(mapPrism).at(1).getOption, Some(Some("one")))
+    assertEquals(map.optics.andThen(mapPrism).at(0).getOption, Some(None))
 
     val set      = Set(1)
     val setPrism = Prism.id[Set[Int]]
     assertEquals(setPrism.at(1).getOption(set), Some(true))
     assertEquals(setPrism.at(0).getOption(set), Some(false))
-    assertEquals(set.applyPrism(setPrism).at(1).getOption, Some(true))
-    assertEquals(set.applyPrism(setPrism).at(0).getOption, Some(false))
+    assertEquals(set.optics.andThen(setPrism).at(1).getOption, Some(true))
+    assertEquals(set.optics.andThen(setPrism).at(0).getOption, Some(false))
   }
 
   test("index") {
@@ -328,70 +328,70 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     val listPrism = Prism.id[List[Int]]
     assertEquals(listPrism.index(0).getOption(list), Some(1))
     assertEquals(listPrism.index(1).getOption(list), None)
-    assertEquals(list.applyPrism(listPrism).index(0).getOption, Some(1))
-    assertEquals(list.applyPrism(listPrism).index(1).getOption, None)
+    assertEquals(list.optics.andThen(listPrism).index(0).getOption, Some(1))
+    assertEquals(list.optics.andThen(listPrism).index(1).getOption, None)
 
     val lazyList      = LazyList(1)
     val lazyListPrism = Prism.id[LazyList[Int]]
     assertEquals(lazyListPrism.index(0).getOption(lazyList), Some(1))
     assertEquals(lazyListPrism.index(1).getOption(lazyList), None)
-    assertEquals(lazyList.applyPrism(lazyListPrism).index(0).getOption, Some(1))
-    assertEquals(lazyList.applyPrism(lazyListPrism).index(1).getOption, None)
+    assertEquals(lazyList.optics.andThen(lazyListPrism).index(0).getOption, Some(1))
+    assertEquals(lazyList.optics.andThen(lazyListPrism).index(1).getOption, None)
 
     val listMap      = immutable.ListMap(1 -> "one")
     val listMapPrism = Prism.id[immutable.ListMap[Int, String]]
     assertEquals(listMapPrism.index(0).getOption(listMap), None)
     assertEquals(listMapPrism.index(1).getOption(listMap), Some("one"))
-    assertEquals(listMap.applyPrism(listMapPrism).index(0).getOption, None)
-    assertEquals(listMap.applyPrism(listMapPrism).index(1).getOption, Some("one"))
+    assertEquals(listMap.optics.andThen(listMapPrism).index(0).getOption, None)
+    assertEquals(listMap.optics.andThen(listMapPrism).index(1).getOption, Some("one"))
 
     val map      = Map(1 -> "one")
     val mapPrism = Prism.id[Map[Int, String]]
     assertEquals(mapPrism.index(0).getOption(map), None)
     assertEquals(mapPrism.index(1).getOption(map), Some("one"))
-    assertEquals(map.applyPrism(mapPrism).index(0).getOption, None)
-    assertEquals(map.applyPrism(mapPrism).index(1).getOption, Some("one"))
+    assertEquals(map.optics.andThen(mapPrism).index(0).getOption, None)
+    assertEquals(map.optics.andThen(mapPrism).index(1).getOption, Some("one"))
 
     val sortedMap      = immutable.SortedMap(1 -> "one")
     val sortedMapPrism = Prism.id[immutable.SortedMap[Int, String]]
     assertEquals(sortedMapPrism.index(0).getOption(sortedMap), None)
     assertEquals(sortedMapPrism.index(1).getOption(sortedMap), Some("one"))
-    assertEquals(sortedMap.applyPrism(sortedMapPrism).index(0).getOption, None)
-    assertEquals(sortedMap.applyPrism(sortedMapPrism).index(1).getOption, Some("one"))
+    assertEquals(sortedMap.optics.andThen(sortedMapPrism).index(0).getOption, None)
+    assertEquals(sortedMap.optics.andThen(sortedMapPrism).index(1).getOption, Some("one"))
 
     val vector      = Vector(1)
     val vectorPrism = Prism.id[Vector[Int]]
     assertEquals(vectorPrism.index(0).getOption(vector), Some(1))
     assertEquals(vectorPrism.index(1).getOption(vector), None)
-    assertEquals(vector.applyPrism(vectorPrism).index(0).getOption, Some(1))
-    assertEquals(vector.applyPrism(vectorPrism).index(1).getOption, None)
+    assertEquals(vector.optics.andThen(vectorPrism).index(0).getOption, Some(1))
+    assertEquals(vector.optics.andThen(vectorPrism).index(1).getOption, None)
 
     val chain      = Chain.one(1)
     val chainPrism = Prism.id[Chain[Int]]
     assertEquals(chainPrism.index(0).getOption(chain), Some(1))
     assertEquals(chainPrism.index(1).getOption(chain), None)
-    assertEquals(chain.applyPrism(chainPrism).index(0).getOption, Some(1))
-    assertEquals(chain.applyPrism(chainPrism).index(1).getOption, None)
+    assertEquals(chain.optics.andThen(chainPrism).index(0).getOption, Some(1))
+    assertEquals(chain.optics.andThen(chainPrism).index(1).getOption, None)
 
     val nec      = NonEmptyChain.one(1)
     val necPrism = Prism.id[NonEmptyChain[Int]]
     assertEquals(necPrism.index(0).getOption(nec), Some(1))
     assertEquals(necPrism.index(1).getOption(nec), None)
-    assertEquals(nec.applyPrism(necPrism).index(0).getOption, Some(1))
-    assertEquals(nec.applyPrism(necPrism).index(1).getOption, None)
+    assertEquals(nec.optics.andThen(necPrism).index(0).getOption, Some(1))
+    assertEquals(nec.optics.andThen(necPrism).index(1).getOption, None)
 
     val nev      = NonEmptyVector.one(1)
     val nevPrism = Prism.id[NonEmptyVector[Int]]
     assertEquals(nevPrism.index(0).getOption(nev), Some(1))
     assertEquals(nevPrism.index(1).getOption(nev), None)
-    assertEquals(nev.applyPrism(nevPrism).index(0).getOption, Some(1))
-    assertEquals(nev.applyPrism(nevPrism).index(1).getOption, None)
+    assertEquals(nev.optics.andThen(nevPrism).index(0).getOption, Some(1))
+    assertEquals(nev.optics.andThen(nevPrism).index(1).getOption, None)
 
     val nel      = NonEmptyList.one(1)
     val nelPrism = Prism.id[NonEmptyList[Int]]
     assertEquals(nelPrism.index(0).getOption(nel), Some(1))
     assertEquals(nelPrism.index(1).getOption(nel), None)
-    assertEquals(nel.applyPrism(nelPrism).index(0).getOption, Some(1))
-    assertEquals(nel.applyPrism(nelPrism).index(1).getOption, None)
+    assertEquals(nel.optics.andThen(nelPrism).index(0).getOption, Some(1))
+    assertEquals(nel.optics.andThen(nelPrism).index(1).getOption, None)
   }
 }
