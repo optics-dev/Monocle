@@ -157,9 +157,9 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     assertEquals(i.replace(1)(S("")), S(""))
   }
 
-  test("setOption") {
-    assertEquals(i.setOption(1)(I(3)), Some(I(1)))
-    assertEquals(i.setOption(1)(S("")), None)
+  test("replaceOption") {
+    assertEquals(i.replaceOption(1)(I(3)), Some(I(1)))
+    assertEquals(i.replaceOption(1)(S("")), None)
   }
 
   test("GenPrism nullary equality".ignore) {
