@@ -107,7 +107,7 @@ head.replace(<span class="hljs-number">5</span>)(ys)
 head.modify(_ + <span class="hljs-number">1</span>)(ys)
 <span class="hljs-comment">// res9: List[Int] = List()</span>
 </code></pre>
-<p>Or use <code>modifyOption</code> / <code>setOption</code> to know if the update was successful:</p>
+<p>Or use <code>modifyOption</code> / <code>replaceOption</code> to know if the update was successful:</p>
 <pre><code class="hljs css language-scala">head.modifyOption(_ + <span class="hljs-number">1</span>)(xs)
 <span class="hljs-comment">// res10: Option[List[Int]] = Some(value = List(2, 2, 3))</span>
 head.modifyOption(_ + <span class="hljs-number">1</span>)(ys)
@@ -128,4 +128,4 @@ head.modifyOption(_ + <span class="hljs-number">1</span>)(ys)
 You can check the validity of your own <code>Optional</code> using <code>OptionalTests</code> in <code>law</code> module.</p>
 <p><code>getOptionSet</code> states that if you <code>getOrModify</code> a value <code>A</code> from <code>S</code> and then <code>replace</code> it back in, the result is an object identical to the original one.</p>
 <p><code>setGetOption</code> states that if you <code>replace</code> a value, you always <code>getOption</code> the same value back.</p>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/Monocle/docs/optics/prism"><span class="arrow-prev">← </span><span>Prism</span></a><a class="docs-next button" href="/Monocle/docs/optics/traversal"><span>Traversal</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2020.</section></footer></div></body></html>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/Monocle/docs/optics/prism"><span class="arrow-prev">← </span><span>Prism</span></a><a class="docs-next button" href="/Monocle/docs/optics/traversal"><span>Traversal</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2021.</section></footer></div></body></html>
