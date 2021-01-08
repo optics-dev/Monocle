@@ -14,10 +14,10 @@ class HeadOptionExample extends MonocleSuite {
     assertEquals((List.empty[Int] applyOptional headOption modify (_ + 1)), Nil)
 
     assertEquals((List(1, 2, 3) applyOptional headOption replace 0), List(0, 2, 3))
-    assertEquals((List(1, 2, 3) applyOptional headOption setOption 0), Some(List(0, 2, 3)))
+    assertEquals((List(1, 2, 3) applyOptional headOption replaceOption 0), Some(List(0, 2, 3)))
 
     assertEquals((List.empty[Int] applyOptional headOption replace 0), Nil)
-    assertEquals((List.empty[Int] applyOptional headOption setOption 0), None)
+    assertEquals((List.empty[Int] applyOptional headOption replaceOption 0), None)
   }
 
   test("headOption creates a Traversal from a String to its optional head Char") {

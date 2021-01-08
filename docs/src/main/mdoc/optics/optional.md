@@ -66,7 +66,7 @@ head.modify(_ + 1)(xs)
 head.modify(_ + 1)(ys)
 ```
 
-Or use `modifyOption` / `setOption` to know if the update was successful:
+Or use `modifyOption` / `replaceOption` to know if the update was successful:
 
 ```scala mdoc
 head.modifyOption(_ + 1)(xs)
