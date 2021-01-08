@@ -71,8 +71,13 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
   /** replace polymorphically the target of a [[PPrism]] with a value.
     * return empty if the [[PPrism]] is not matching
     */
-  final def setOption(b: B): S => Option[T] =
+  final def replaceOption(b: B): S => Option[T] =
     modifyOption(_ => b)
+
+  /** alias to replaceOption */
+  @deprecated("use replaceOption instead", since = "3.0.0-M1")
+  final def setOption(b: B): S => Option[T] =
+    replaceOption(b)
 
   /** check if there is no target */
   final def isEmpty(s: S): Boolean =

@@ -69,7 +69,7 @@ jStr.replace("Bar")(JNum(10))
 jStr.modify(_.reverse)(JNum(10))
 ```
 
-If we care about the success or failure of the update, we can use `setOption` or `modifyOption`:
+If we care about the success or failure of the update, we can use `replaceOption` or `modifyOption`:
 
 ```scala mdoc
 jStr.modifyOption(_.reverse)(JStr("Hello"))

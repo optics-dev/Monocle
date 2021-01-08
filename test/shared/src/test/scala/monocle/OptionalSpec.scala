@@ -93,9 +93,9 @@ class OptionalSpec extends MonocleSuite {
     assertEquals(headOptionI.replace(0)(Nil), Nil)
   }
 
-  test("setOption") {
-    assertEquals(headOptionI.setOption(0)(List(1, 2, 3, 4)), Some(List(0, 2, 3, 4)))
-    assertEquals(headOptionI.setOption(0)(Nil), None)
+  test("replaceOption") {
+    assertEquals(headOptionI.replaceOption(0)(List(1, 2, 3, 4)), Some(List(0, 2, 3, 4)))
+    assertEquals(headOptionI.replaceOption(0)(Nil), None)
   }
 
   test("modify") {

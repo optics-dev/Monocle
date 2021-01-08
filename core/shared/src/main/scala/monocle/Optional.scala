@@ -56,8 +56,13 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   /** replace polymorphically the target of a [[POptional]] with a value.
     * return empty if the [[POptional]] is not matching
     */
-  final def setOption(b: B): S => Option[T] =
+  final def replaceOption(b: B): S => Option[T] =
     modifyOption(_ => b)
+
+  /** alias to replaceOption */
+  @deprecated("use replaceOption instead", since = "3.0.0-M1")
+  final def setOption(b: B): S => Option[T] =
+    replaceOption(b)
 
   /** check if there is no target */
   final def isEmpty(s: S): Boolean =
@@ -90,7 +95,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       getOrModify(s).bimap(_ -> c, _ -> c)
     } {
       case (b, c) => { case (s, c2) =>
-        setOption(b)(s).fold(replace(b)(s) -> c2)(_ -> c)
+        replaceOption(b)(s).fold(replace(b)(s) -> c2)(_ -> c)
       }
     }
 
@@ -99,7 +104,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       getOrModify(s).bimap(c -> _, c -> _)
     } {
       case (c, b) => { case (c2, s) =>
-        setOption(b)(s).fold(c2 -> replace(b)(s))(c -> _)
+        replaceOption(b)(s).fold(c2 -> replace(b)(s))(c -> _)
       }
     }
 
