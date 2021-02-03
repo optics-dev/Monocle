@@ -3,7 +3,7 @@ package monocle
 import monocle.law.discipline.{OptionalTests, SetterTests, TraversalTests}
 import cats.arrow.{Category, Choice, Compose}
 import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
-import monocle.macros.GenLens
+import monocle.macros.{GenLens, GenPrism}
 
 import scala.collection.immutable
 
@@ -110,6 +110,24 @@ class OptionalSpec extends MonocleSuite {
 
   test("to") {
     assertEquals(headOptionI.to(_.toString()).getAll(List(1, 2, 3)), List("1"))
+  }
+
+  test("orElse") {
+    sealed trait User
+
+    case class Editor(id: Int, favoriteFont: String) extends User
+    case class Reader(id: Int, isPremium: Boolean) extends User
+
+    val idEditor = GenPrism[User, Editor] andThen GenLens[Editor](_.id)
+    val idReader = GenPrism[User, Reader] andThen GenLens[Reader](_.id)
+
+    val id = idEditor.orElse(idReader)
+
+    assertEquals(id.getOption(Editor(1, "Comic Sans")), Some(1))
+    assertEquals(id.getOption(Reader(1, false)), Some(1))
+
+    assertEquals(id.replace(5)(Editor(1, "Comic Sans")), Editor(5, "Comic Sans"))
+    assertEquals(id.replace(5)(Reader(1, false)), Reader(5, false))
   }
 
   test("some") {
