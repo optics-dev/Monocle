@@ -86,10 +86,8 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
 
   /** fall-back to another [[POptional]] in case this one doesn't match */
   def orElse(other: POptional[S, T, A, B]): POptional[S, T, A, B] =
-    POptional[S, T, A, B](
-      from => self.getOrModify(from).orElse(other.getOrModify(from))
-    )( to => from =>
-      self.replaceOption(to)(from).getOrElse(other.replace(to)(from))
+    POptional[S, T, A, B](from => self.getOrModify(from).orElse(other.getOrModify(from)))(to =>
+      from => self.replaceOption(to)(from).getOrElse(other.replace(to)(from))
     )
 
   /** join two [[POptional]] with the same target */

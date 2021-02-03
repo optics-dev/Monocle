@@ -116,7 +116,7 @@ class OptionalSpec extends MonocleSuite {
     sealed trait User
 
     case class Editor(id: Int, favoriteFont: String) extends User
-    case class Reader(id: Int, isPremium: Boolean) extends User
+    case class Reader(id: Int, isPremium: Boolean)   extends User
 
     val idEditor = GenPrism[User, Editor] andThen GenLens[Editor](_.id)
     val idReader = GenPrism[User, Reader] andThen GenLens[Reader](_.id)
