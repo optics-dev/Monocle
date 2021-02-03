@@ -9,33 +9,20 @@ inThisBuild(List(
   organization := "com.github.julien-truffaut",
   homepage := Some(url("https://github.com/optics-dev/Monocle")),
   licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
-  developers := List(
-    Developer(
-      "julien-truffaut",
-      "Julien Truffaut",
-      "truffaut.julien@gmail.com",
-      url("https://github.com/julien-truffaut")
-    ),
-    Developer(
-      "NightRa",
-      "Ilan Godik",
-      "",
-      url("https://github.com/NightRa")
-    ),
-    Developer(
-      "aoiroaoino",
-      "Naoki Aoyama",
-      "aoiro.aoino@gmail.com",
-      url("https://github.com/aoiroaoino")
-    ),
-    Developer(
-      "xuwei-k",
-      "Kenji Yoshida",
-      " 6b656e6a69@gmail.com",
-      url("https://github.com/xuwei-k")
-    ),
+  developers :=
+    List(
+      "aoiroaoino" -> "Naoki Aoyama",
+      "cquiroz" -> "Carlos Quiroz",
+      "kenbot" -> " Ken Scambler",
+      "julien-truffaut" -> "Julien Truffaut",
+      "NightRa" -> "Ilan Godik",
+      "xuwei-k" -> "Kenji Yoshida",
+      "yilinwei" -> "Yilin Wei",
+    ).map { case (username, fullName) =>
+      Developer(username, fullName, s"@$username", url(s"https://github.com/$username"))
+    }
   )
-))
+)
 
 lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.11.3" cross CrossVersion.full
 
