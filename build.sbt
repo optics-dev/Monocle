@@ -1,5 +1,4 @@
-import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
-import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
+import com.typesafe.tools.mima.core._
 import sbt.Keys._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
@@ -98,7 +97,7 @@ lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "
 
 lazy val macroVersion = "2.1.1"
 
-def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
+def mimaSettings(module: String): Seq[Setting[_]] = Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %% s"monocle-${module}" % "2.0.0")
 )
 
