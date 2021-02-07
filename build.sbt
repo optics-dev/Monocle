@@ -29,6 +29,8 @@ lazy val buildSettings = Seq(
   scalaVersion := "2.13.3",
   crossScalaVersions := Seq("2.13.3"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+  Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
+  Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
   scalacOptions ++= Seq(
     "-encoding",
     "UTF-8",
@@ -40,7 +42,7 @@ lazy val buildSettings = Seq(
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions ++= {
     if (isDotty.value)
-      Seq("-source:3.0-migration", "-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
+      Seq("-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
     else Seq(
       "-Ymacro-annotations",
       "-Ywarn-dead-code",
@@ -118,6 +120,19 @@ lazy val scalajsSettings = Seq(
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
 )
 
+// copied from cats build
+def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scalaVersion: String) = {
+  def extraDirs(suffix: String) =
+    List(CrossType.Pure, CrossType.Full)
+      .flatMap(_.sharedSrcDir(srcBaseDir, srcName).toList.map(f => file(f.getPath + suffix)))
+
+  CrossVersion.partialVersion(scalaVersion) match {
+    case Some((2, y))     => extraDirs("-2.x") ++ (if (y >= 13) extraDirs("-2.13+") else Nil)
+    case Some((0 | 3, _)) => extraDirs("-2.13+") ++ extraDirs("-3.x")
+    case _                => Nil
+  }
+}
+
 lazy val monocleSettings    = buildSettings
 lazy val monocleJvmSettings = monocleSettings
 lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
@@ -159,7 +174,10 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
       Set(
         "-Xfatal-warnings" // Workaround for sbt bug
       )
-    ))
+    )),
+    libraryDependencies ++= Seq(
+      munitDiscipline.value,
+    )
   )
 
 lazy val generic = crossProject(JVMPlatform, JSPlatform)
