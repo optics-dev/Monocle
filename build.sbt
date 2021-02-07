@@ -42,7 +42,7 @@ lazy val buildSettings = Seq(
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions ++= {
     if (isDotty.value)
-      Seq("-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
+      Seq("-source:3.0-migration", "-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
     else Seq(
       "-Ymacro-annotations",
       "-Ywarn-dead-code",
@@ -172,7 +172,8 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     moduleName := "monocle-core",
     scalacOptions ~= (_.filterNot(
       Set(
-        "-Xfatal-warnings" // Workaround for sbt bug
+        "-Xfatal-warnings", // Workaround for sbt bug
+        "-source:3.0-migration",
       )
     )),
     libraryDependencies ++= Seq(
