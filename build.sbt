@@ -1,5 +1,4 @@
-import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
-import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
+import com.typesafe.tools.mima.core._
 import sbt.Keys._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
@@ -9,33 +8,20 @@ inThisBuild(List(
   organization := "com.github.julien-truffaut",
   homepage := Some(url("https://github.com/optics-dev/Monocle")),
   licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
-  developers := List(
-    Developer(
-      "julien-truffaut",
-      "Julien Truffaut",
-      "truffaut.julien@gmail.com",
-      url("https://github.com/julien-truffaut")
-    ),
-    Developer(
-      "NightRa",
-      "Ilan Godik",
-      "",
-      url("https://github.com/NightRa")
-    ),
-    Developer(
-      "aoiroaoino",
-      "Naoki Aoyama",
-      "aoiro.aoino@gmail.com",
-      url("https://github.com/aoiroaoino")
-    ),
-    Developer(
-      "xuwei-k",
-      "Kenji Yoshida",
-      " 6b656e6a69@gmail.com",
-      url("https://github.com/xuwei-k")
-    ),
+  developers :=
+    List(
+      "aoiroaoino" -> "Naoki Aoyama",
+      "cquiroz" -> "Carlos Quiroz",
+      "kenbot" -> " Ken Scambler",
+      "julien-truffaut" -> "Julien Truffaut",
+      "NightRa" -> "Ilan Godik",
+      "xuwei-k" -> "Kenji Yoshida",
+      "yilinwei" -> "Yilin Wei",
+    ).map { case (username, fullName) =>
+      Developer(username, fullName, s"@$username", url(s"https://github.com/$username"))
+    }
   )
-))
+)
 
 lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.11.3" cross CrossVersion.full
 
@@ -43,6 +29,8 @@ lazy val buildSettings = Seq(
   scalaVersion := "2.13.3",
   crossScalaVersions := Seq("2.13.3"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+  Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
+  Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
   scalacOptions ++= Seq(
     "-encoding",
     "UTF-8",
@@ -94,24 +82,24 @@ lazy val buildSettings = Seq(
   Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc / sources).value }
 )
 
-lazy val catsVersion  = "2.3.0"
-lazy val dottyVersions = Seq("3.0.0-M1", "3.0.0-M2")
+lazy val catsVersion  = "2.3.1"
+lazy val dottyVersions = Seq("3.0.0-M3")
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel" %%% "cats-laws" % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel" %%% "alleycats-core" % catsVersion)
 lazy val shapeless         = Def.setting("com.chuusai" %%% "shapeless" % "2.3.3")
-lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.9.19")
-lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.9.19" % "test")
+lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.9.20")
+lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.9.20" % "test")
 
-lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "1.1.2")
-lazy val munit           = Def.setting("org.scalameta" %% "munit" % "0.7.16" % Test)
+lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "1.1.3")
+lazy val munit           = Def.setting("org.scalameta" %% "munit" % "0.7.21" % Test)
 lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "1.0.5" % Test)
 
 lazy val macroVersion = "2.1.1"
 
-def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
+def mimaSettings(module: String): Seq[Setting[_]] = Seq(
   mimaPreviousArtifacts := Set("com.github.julien-truffaut" %% s"monocle-${module}" % "2.0.0")
 )
 
@@ -131,6 +119,19 @@ lazy val scalajsSettings = Seq(
   },
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
 )
+
+// copied from cats build
+def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scalaVersion: String) = {
+  def extraDirs(suffix: String) =
+    List(CrossType.Pure, CrossType.Full)
+      .flatMap(_.sharedSrcDir(srcBaseDir, srcName).toList.map(f => file(f.getPath + suffix)))
+
+  CrossVersion.partialVersion(scalaVersion) match {
+    case Some((2, y))     => extraDirs("-2.x") ++ (if (y >= 13) extraDirs("-2.13+") else Nil)
+    case Some((0 | 3, _)) => extraDirs("-2.13+") ++ extraDirs("-3.x")
+    case _                => Nil
+  }
+}
 
 lazy val monocleSettings    = buildSettings
 lazy val monocleJvmSettings = monocleSettings
@@ -171,9 +172,13 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     moduleName := "monocle-core",
     scalacOptions ~= (_.filterNot(
       Set(
-        "-Xfatal-warnings" // Workaround for sbt bug
+        "-Xfatal-warnings", // Workaround for sbt bug
+        "-source:3.0-migration",
       )
-    ))
+    )),
+    libraryDependencies ++= Seq(
+      munitDiscipline.value,
+    )
   )
 
 lazy val generic = crossProject(JVMPlatform, JSPlatform)

@@ -1,6 +1,7 @@
 package monocle.law
 
 import cats.Id
+import cats.catsInstancesForId
 import cats.data.Const
 import cats.kernel.Monoid
 import monocle.Prism
