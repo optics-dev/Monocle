@@ -9,7 +9,7 @@ import shapeless.{:+:, CNil, Coproduct}
 import scala.annotation.nowarn
 
 @nowarn
-class CoproductExample extends MonocleSuite {
+class CoproductExample extends MonocleSuite with GenericInstances {
   type ISB = Int :+: String :+: Boolean :+: CNil
 
   test("coProductPrism creates a Prism between a Coproduct and one of its choice") {

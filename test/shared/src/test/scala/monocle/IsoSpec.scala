@@ -1,7 +1,6 @@
 package monocle
 
 import monocle.law.discipline._
-import monocle.macros.GenIso
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary._
 import cats.Eq
@@ -14,33 +13,29 @@ class IsoSpec extends MonocleSuite {
   val _nullary: Iso[Nullary, Unit] = Iso[Nullary, Unit](n => ()) { case () =>
     Nullary()
   }
-  val _unary: Iso[Unary, Int] = Iso[Unary, Int](_.i)(Unary)
+  val _unary: Iso[Unary, Int] = Iso[Unary, Int](_.i)(Unary.apply)
   val _binary: Iso[Binary, (String, Int)] =
-    Iso[Binary, (String, Int)](b => (b.s, b.i))(Binary.tupled)
+    Iso[Binary, (String, Int)](b => (b.s, b.i))((Binary.apply _).tupled)
   val _quintary: Iso[Quintary, (Char, Boolean, String, Int, Double)] =
-    Iso[Quintary, (Char, Boolean, String, Int, Double)](b => (b.c, b.b, b.s, b.i, b.f))(Quintary.tupled)
+    Iso[Quintary, (Char, Boolean, String, Int, Double)](b => (b.c, b.b, b.s, b.i, b.f))((Quintary.apply _).tupled)
 
   case class IntWrapper(i: Int)
   implicit val intWrapperGen: Arbitrary[IntWrapper] = Arbitrary(arbitrary[Int].map(IntWrapper.apply))
-  implicit val intWrapperEq                         = Eq.fromUniversalEquals[IntWrapper]
+  implicit val intWrapperEq: Eq[IntWrapper]         = Eq.fromUniversalEquals[IntWrapper]
 
   case class IdWrapper[A](value: A)
   implicit def idWrapperGen[A: Arbitrary]: Arbitrary[IdWrapper[A]] =
     Arbitrary(arbitrary[A].map(IdWrapper.apply))
   implicit def idWrapperEq[A: Eq]: Eq[IdWrapper[A]] = Eq.fromUniversalEquals
 
-  case object AnObject
-  implicit val anObjectGen: Arbitrary[AnObject.type] = Arbitrary(Gen.const(AnObject))
-  implicit val anObjectEq                            = Eq.fromUniversalEquals[AnObject.type]
-
   case class EmptyCase()
   implicit val emptyCaseGen: Arbitrary[EmptyCase] = Arbitrary(Gen.const(EmptyCase()))
-  implicit val emptyCaseEq                        = Eq.fromUniversalEquals[EmptyCase]
+  implicit val emptyCaseEq: Eq[EmptyCase]         = Eq.fromUniversalEquals[EmptyCase]
 
   case class EmptyCaseType[A]()
   implicit def emptyCaseTypeGen[A]: Arbitrary[EmptyCaseType[A]] =
     Arbitrary(Gen.const(EmptyCaseType()))
-  implicit def emptyCaseTypeEq[A] = Eq.fromUniversalEquals[EmptyCaseType[A]]
+  implicit def emptyCaseTypeEq[A]: Eq[EmptyCaseType[A]] = Eq.fromUniversalEquals[EmptyCaseType[A]]
 
   val iso = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)
   val involutedListReverse =
@@ -48,12 +43,6 @@ class IsoSpec extends MonocleSuite {
   val involutedTwoMinusN = Iso.involuted[Int](2 - _) //  ∀ {n : Int} -> n == 2 - (2 - n)
 
   checkAll("apply Iso", IsoTests(iso))
-  checkAll("GenIso", IsoTests(GenIso[IntWrapper, Int]))
-  checkAll("GenIso with type param", IsoTests(GenIso[IdWrapper[Int], Int]))
-  checkAll("GenIso.unit object", IsoTests(GenIso.unit[AnObject.type]))
-  checkAll("GenIso.unit empty case class", IsoTests(GenIso.unit[EmptyCase]))
-  checkAll("GenIso.unit empty case class with type param", IsoTests(GenIso.unit[EmptyCaseType[Int]]))
-
   checkAll("Iso id", IsoTests(Iso.id[Int]))
 
   checkAll("Iso involutedListReverse", IsoTests(involutedListReverse))
@@ -148,22 +137,6 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     assertEquals(involutedTwoMinusN.reverse.reverseGet(5), involutedTwoMinusN.reverseGet(5))
   }
 
-  test("GenIso nullary equality".ignore) {
-    assertEquals(GenIso.unit[Nullary], _nullary)
-  }
-
-  test("GenIso unary equality".ignore) {
-    assertEquals(GenIso[Unary, Int], _unary)
-  }
-
-  test("GenIso binary equality".ignore) {
-    assertEquals(GenIso.fields[Binary], _binary)
-  }
-
-  test("GenIso quintary equality".ignore) {
-    assertEquals(GenIso.fields[Quintary], _quintary)
-  }
-
   test("to") {
     assertEquals(iso.to(_.toString()).get(IntWrapper(5)), "5")
   }
@@ -172,7 +145,7 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     case class SomeTest(y: Option[Int])
     val obj = SomeTest(Some(2))
 
-    val iso = Iso[SomeTest, Option[Int]](_.y)(SomeTest)
+    val iso = Iso[SomeTest, Option[Int]](_.y)(SomeTest.apply)
 
     assertEquals(iso.some.getOption(obj), Some(2))
     assertEquals(obj.optics.andThen(iso).some.getOption, Some(2))
@@ -183,7 +156,7 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     val objSome = SomeTest(Some(2))
     val objNone = SomeTest(None)
 
-    val iso = Iso[SomeTest, Option[Int]](_.y)(SomeTest)
+    val iso = Iso[SomeTest, Option[Int]](_.y)(SomeTest.apply)
 
     assertEquals(iso.withDefault(0).get(objSome), 2)
     assertEquals(iso.withDefault(0).get(objNone), 0)
@@ -195,7 +168,7 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     case class SomeTest(y: List[Int])
     val obj = SomeTest(List(1, 2, 3))
 
-    val iso = Iso[SomeTest, List[Int]](_.y)(SomeTest)
+    val iso = Iso[SomeTest, List[Int]](_.y)(SomeTest.apply)
 
     assertEquals(iso.each.getAll(obj), List(1, 2, 3))
     assertEquals(obj.optics.andThen(iso).each.getAll, List(1, 2, 3))
@@ -205,7 +178,7 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     case class SomeTest(y: Int)
     val obj = SomeTest(2)
 
-    val iso = Iso[SomeTest, Int](_.y)(SomeTest)
+    val iso = Iso[SomeTest, Int](_.y)(SomeTest.apply)
 
     assertEquals(iso.filter(_ > 0).getOption(obj), Some(2))
     assertEquals(obj.optics.andThen(iso).filter(_ > 0).getOption, Some(2))
@@ -215,7 +188,7 @@ assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     case class SomeTest(y: List[String])
     val obj = SomeTest(List("hello", "world"))
 
-    val iso = Iso[SomeTest, List[String]](_.y)(SomeTest)
+    val iso = Iso[SomeTest, List[String]](_.y)(SomeTest.apply)
 
     assertEquals(iso.filterIndex((_: Int) > 0).getAll(obj), List("world"))
     assertEquals(obj.optics.andThen(iso).filterIndex((_: Int) > 0).getAll, List("world"))

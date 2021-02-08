@@ -36,9 +36,8 @@ lazy val buildSettings = Seq(
     "UTF-8",
     "-feature",
     "-unchecked",
-    "-Xfatal-warnings",
     "-deprecation",
-  ),
+  ) ++ { if(isDotty.value) Seq() else Seq("-Xfatal-warnings") }, // Scala 3 doesn't support -Wconf
   scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
   scalacOptions ++= {
     if (isDotty.value)
@@ -183,14 +182,14 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
 
 lazy val generic = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(core)
+  .dependsOn(core, law % "test->test")
   .settings(moduleName := "monocle-generic")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
   .jvmSettings(mimaSettings("generic"): _*)
-  .settings(libraryDependencies ++= Seq(cats.value, shapeless.value))
+  .settings(libraryDependencies ++= Seq(cats.value, shapeless.value, munitDiscipline.value))
 
 lazy val refined = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -220,7 +219,7 @@ lazy val law = crossProject(JVMPlatform, JSPlatform)
 
 lazy val macros = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(core)
+  .dependsOn(core, law % "test->test")
   .in(file("macro"))
   .settings(moduleName := "monocle-macro")
   .configureCross(
@@ -231,10 +230,11 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
     crossScalaVersions ++= dottyVersions,
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= {
-      if (isDotty.value) Seq.empty else Seq(
+      Seq(munitDiscipline.value) ++
+      {if (isDotty.value) Seq.empty else Seq(
         scalaOrganization.value % "scala-reflect" % scalaVersion.value,
         scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided"
-      )
+      )}
     }
   )
 
@@ -265,7 +265,7 @@ lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
   .jvmSettings(mimaSettings("unsafe"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, alleycats.value))
 
-lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, macros, law, state, refined, unsafe)
+lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, law, state, refined, unsafe)
   .settings(moduleName := "monocle-test")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -273,10 +273,10 @@ lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, generic, m
   )
   .settings(noPublishSettings: _*)
   .settings(
+    crossScalaVersions ++= dottyVersions,
     libraryDependencies ++= Seq(
       cats.value,
       catsLaws.value,
-      shapeless.value,
       munitDiscipline.value,
       refinedScalacheck.value
     )

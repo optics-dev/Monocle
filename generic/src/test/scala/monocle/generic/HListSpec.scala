@@ -2,7 +2,6 @@ package monocle.generic
 
 import cats.Eq
 import cats.implicits._
-import monocle.MonocleSuite
 import monocle.law.discipline.IsoTests
 import org.scalacheck.{Arbitrary, Cogen}
 import shapeless.HList._
@@ -10,9 +9,12 @@ import shapeless.ops.hlist.{IsHCons, Init => HListInit}
 import shapeless.{::, HNil}
 
 import scala.annotation.nowarn
+import munit.DisciplineSuite
+import monocle.generic.all._
+import monocle.function.all._
 
 @nowarn
-class HListSpec extends MonocleSuite {
+class HListSpec extends DisciplineSuite {
   case class Example(i: Int, b: Boolean, c: Char, f: Float, l: Long, d: Double)
 
   type H        = Int :: Boolean :: Char :: Float :: Long :: Double :: HNil
