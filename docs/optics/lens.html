@@ -149,9 +149,9 @@ john.lens(_.name).replace(<span class="hljs-string">"Mike"</span>).lens(_.age).m
 <span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span>(<span class="hljs-params">b: <span class="hljs-type">Option</span>[<span class="hljs-type">B</span>]</span>)</span>
 
 <span class="hljs-keyword">val</span> c = <span class="hljs-type">GenLens</span>[<span class="hljs-type">B</span>](_.c)
-<span class="hljs-comment">// c: Lens[B, Int] = repl.MdocSession$App$$anon$7@46157879</span>
+<span class="hljs-comment">// c: Lens[B, Int] = repl.MdocSession$App$$anon$7@290cacbc</span>
 <span class="hljs-keyword">val</span> b = <span class="hljs-type">GenLens</span>[<span class="hljs-type">A</span>](_.b)
-<span class="hljs-comment">// b: Lens[A, Option[B]] = repl.MdocSession$App$$anon$8@1aa074ca</span>
+<span class="hljs-comment">// b: Lens[A, Option[B]] = repl.MdocSession$App$$anon$8@7863ae40</span>
 
 b.some.andThen(c).getOption(<span class="hljs-type">A</span>(<span class="hljs-type">Some</span>(<span class="hljs-type">B</span>(<span class="hljs-number">1</span>))))
 <span class="hljs-comment">// res11: Option[Int] = Some(value = 1)</span>
