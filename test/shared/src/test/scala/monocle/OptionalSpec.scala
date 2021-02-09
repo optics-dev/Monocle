@@ -3,7 +3,6 @@ package monocle
 import monocle.law.discipline.{OptionalTests, SetterTests, TraversalTests}
 import cats.arrow.{Category, Choice, Compose}
 import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
-import monocle.macros.{GenLens, GenPrism}
 
 import scala.collection.immutable
 
@@ -118,8 +117,20 @@ class OptionalSpec extends MonocleSuite {
     case class Editor(id: Int, favoriteFont: String) extends User
     case class Reader(id: Int, isPremium: Boolean)   extends User
 
-    val idEditor = GenPrism[User, Editor] andThen GenLens[Editor](_.id)
-    val idReader = GenPrism[User, Reader] andThen GenLens[Reader](_.id)
+    val idEditor = Optional[User, Int] {
+      case x: Editor => Some(x.id)
+      case _         => None
+    }(newId => {
+      case x: Editor => x.copy(id = newId)
+      case other     => other
+    })
+    val idReader = Optional[User, Int] {
+      case x: Reader => Some(x.id)
+      case _         => None
+    }(newId => {
+      case x: Reader => x.copy(id = newId)
+      case other     => other
+    })
 
     val id = idEditor.orElse(idReader)
 
@@ -134,7 +145,7 @@ class OptionalSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: Option[Int])
     val obj = SomeTest(1, Some(2))
 
-    val optional = GenLens[SomeTest](_.y).asOptional
+    val optional = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asOptional
 
     assertEquals(optional.some.getOption(obj), Some(2))
     assertEquals(obj.optics.andThen(optional).some.getOption, Some(2))
@@ -145,7 +156,7 @@ class OptionalSpec extends MonocleSuite {
     val objSome = SomeTest(1, Some(2))
     val objNone = SomeTest(1, None)
 
-    val optional = GenLens[SomeTest](_.y).asOptional
+    val optional = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asOptional
 
     assertEquals(optional.withDefault(0).getOption(objSome), Some(2))
     assertEquals(optional.withDefault(0).getOption(objNone), Some(0))
@@ -157,7 +168,7 @@ class OptionalSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: List[Int])
     val obj = SomeTest(1, List(1, 2, 3))
 
-    val optional = GenLens[SomeTest](_.y).asOptional
+    val optional = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asOptional
 
     assertEquals(optional.each.getAll(obj), List(1, 2, 3))
     assertEquals(obj.optics.andThen(optional).each.getAll, List(1, 2, 3))
@@ -331,7 +342,7 @@ class OptionalSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: List[String])
     val obj = SomeTest(1, List("hello", "world"))
 
-    val optional = GenLens[SomeTest](_.y).asOptional
+    val optional = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asOptional
 
     assertEquals(optional.filterIndex((_: Int) > 0).getAll(obj), List("world"))
     assertEquals(obj.optics.andThen(optional).filterIndex((_: Int) > 0).getAll, List("world"))

@@ -1,8 +1,7 @@
 package monocle.unsafe
 
-import monocle.MonocleSuite
+import monocle.{Lens, MonocleSuite}
 import monocle.law.discipline.OptionalTests
-import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import cats.Eq
 
@@ -40,8 +39,10 @@ class UnsafeSelectSpec extends MonocleSuite {
     age  <- Arbitrary.arbitrary[Int]
   } yield Person(name, age))
 
+  val _name: Lens[Person, String] = Lens((_: Person).name)(newValue => _.copy(name = newValue))
+
   checkAll(
     "unsafe legal",
-    OptionalTests(UnsafeSelect.unsafeSelect[Person](_.age >= 18).andThen(GenLens[Person](_.name)))
+    OptionalTests(UnsafeSelect.unsafeSelect[Person](_.age >= 18).andThen(_name))
   )
 }

@@ -1,7 +1,6 @@
 package monocle
 
 import monocle.function.GenericOptics
-import monocle.generic.GenericInstances
 import monocle.refined.RefinedInstances
 import monocle.state._
 import monocle.std.StdInstances
@@ -13,7 +12,6 @@ trait MonocleSuite
     with TestInstances
     with StdInstances
     with GenericOptics
-    with GenericInstances
     with RefinedInstances
     with Syntaxes
     with StateLensSyntax

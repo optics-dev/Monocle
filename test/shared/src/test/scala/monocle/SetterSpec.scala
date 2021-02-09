@@ -2,7 +2,6 @@ package monocle
 
 import cats.arrow.{Category, Choice, Compose}
 import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
-import monocle.macros.GenLens
 
 import scala.collection.immutable
 
@@ -50,7 +49,7 @@ class SetterSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: Option[Int])
     val obj = SomeTest(1, Some(2))
 
-    val setter = GenLens[SomeTest](_.y).asSetter
+    val setter = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asSetter
 
     assertEquals(setter.some.replace(3)(obj), SomeTest(1, Some(3)))
     assertEquals(obj.optics.andThen(setter).some.replace(3), SomeTest(1, Some(3)))
@@ -61,7 +60,7 @@ class SetterSpec extends MonocleSuite {
     val objSome = SomeTest(1, Some(2))
     val objNone = SomeTest(1, None)
 
-    val setter = GenLens[SomeTest](_.y).asSetter
+    val setter = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asSetter
 
     assertEquals(setter.withDefault(0).modify(_ + 1)(objSome), SomeTest(1, Some(3)))
     assertEquals(setter.withDefault(0).modify(_ + 1)(objNone), SomeTest(1, Some(1)))
@@ -73,7 +72,7 @@ class SetterSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: List[Int])
     val obj = SomeTest(1, List(1, 2, 3))
 
-    val setter = GenLens[SomeTest](_.y).asSetter
+    val setter = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asSetter
 
     assertEquals(setter.each.replace(3)(obj), SomeTest(1, List(3, 3, 3)))
     assertEquals(obj.optics.andThen(setter).each.replace(3), SomeTest(1, List(3, 3, 3)))
@@ -83,7 +82,7 @@ class SetterSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: Int)
     val obj = SomeTest(1, 2)
 
-    val setter = GenLens[SomeTest](_.y).asSetter
+    val setter = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asSetter
 
     assertEquals(setter.filter(_ > 0).replace(3)(obj), SomeTest(1, 3))
     assertEquals(obj.optics.andThen(setter).filter(_ > 0).replace(3), SomeTest(1, 3))
@@ -93,7 +92,7 @@ class SetterSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: List[String])
     val obj = SomeTest(1, List("hello", "world"))
 
-    val setter = GenLens[SomeTest](_.y).asSetter
+    val setter = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asSetter
 
     assertEquals(setter.filterIndex((_: Int) > 0).replace("!")(obj), SomeTest(1, List("hello", "!")))
     assertEquals(obj.optics.andThen(setter).filterIndex((_: Int) > 0).replace("!"), SomeTest(1, List("hello", "!")))

@@ -1,16 +1,17 @@
 package monocle.generic
 
-import monocle.MonocleSuite
 import monocle.law.discipline.{IsoTests, PrismTests}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 import shapeless.{:+:, CNil, Coproduct, Inl, Inr}
 import cats.Eq
+import monocle.std.StdInstances
+import munit.DisciplineSuite
 
 import scala.annotation.nowarn
 
 @nowarn
-class CoproductSpec extends MonocleSuite {
+class CoproductSpec extends DisciplineSuite with StdInstances with GenericOptics with GenericInstances {
   type IB = Int :+: Boolean :+: CNil
 
   implicit val isbArbitrary = Arbitrary(

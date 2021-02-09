@@ -8,6 +8,7 @@ import cats.instances.list._
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.internal.Monoids
+import cats.catsInstancesForId
 
 /** A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
   * where n can be infinite.
