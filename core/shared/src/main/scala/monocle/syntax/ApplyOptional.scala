@@ -31,7 +31,7 @@ final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]
   def setOption(b: B): Option[T] = replaceOption(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyOptional[S, T, A1, B1] =
-    adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+    adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyOptional[S, T, A1, B1] =
     evB.substituteCo[ApplyOptional[S, T, A1, *]](evA.substituteCo[ApplyOptional[S, T, *, B]](this))

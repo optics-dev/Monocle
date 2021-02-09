@@ -16,7 +16,7 @@ final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
   def set(b: B): T = replace(b)
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): ApplyPrism[S, T, A1, B1] =
-    adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+    adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): ApplyIso[S, T, A1, B1] =
     evB.substituteCo[ApplyIso[S, T, A1, *]](evA.substituteCo[ApplyIso[S, T, *, B]](this))
