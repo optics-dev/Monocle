@@ -9,8 +9,8 @@ final case class ApplyIso[S, T, A, B](s: S, iso: PIso[S, T, A, B]) {
   def replace(b: B): T                           = iso.replace(b)(s)
   def modify(f: A => B): T                       = iso.modify(f)(s)
   def modifyF[F[_]: Functor](f: A => F[B]): F[T] = iso.modifyF(f)(s)
-  def exist(p: A => Boolean): S => Boolean       = iso.exist(p)
-  def find(p: A => Boolean): S => Option[A]      = iso.find(p)
+  def exist(p: A => Boolean): Boolean            = iso.exist(p)(s)
+  def find(p: A => Boolean): Option[A]           = iso.find(p)(s)
 
   @deprecated("use replace instead", since = "3.0.0-M1")
   def set(b: B): T = replace(b)

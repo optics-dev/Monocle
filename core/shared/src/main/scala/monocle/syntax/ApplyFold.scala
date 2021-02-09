@@ -7,15 +7,15 @@ import monocle.{std, Fold, Getter, Optional, PIso, PLens, POptional, PPrism, PTr
 case class ApplyFold[S, A](s: S, _fold: Fold[S, A]) {
   def foldMap[M: Monoid](f: A => M): M = _fold.foldMap(f)(s)
 
-  def getAll: List[A]                       = _fold.getAll(s)
-  def find(p: A => Boolean): S => Option[A] = _fold.find(p)
-  def headOption: Option[A]                 = _fold.headOption(s)
-  def lastOption: Option[A]                 = _fold.lastOption(s)
-  def exist(p: A => Boolean): Boolean       = _fold.exist(p)(s)
-  def all(p: A => Boolean): Boolean         = _fold.all(p)(s)
-  def length: Int                           = _fold.length(s)
-  def isEmpty: Boolean                      = _fold.isEmpty(s)
-  def nonEmpty: Boolean                     = _fold.nonEmpty(s)
+  def getAll: List[A]                  = _fold.getAll(s)
+  def find(p: A => Boolean): Option[A] = _fold.find(p)(s)
+  def headOption: Option[A]            = _fold.headOption(s)
+  def lastOption: Option[A]            = _fold.lastOption(s)
+  def exist(p: A => Boolean): Boolean  = _fold.exist(p)(s)
+  def all(p: A => Boolean): Boolean    = _fold.all(p)(s)
+  def length: Int                      = _fold.length(s)
+  def isEmpty: Boolean                 = _fold.isEmpty(s)
+  def nonEmpty: Boolean                = _fold.nonEmpty(s)
 
   def each[C](implicit evEach: Each[A, C]): ApplyFold[S, C] =
     andThen(evEach.each)

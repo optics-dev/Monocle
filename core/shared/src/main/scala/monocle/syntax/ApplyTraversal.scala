@@ -14,11 +14,11 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
   def modifyF[F[_]: Applicative](f: A => F[B]): F[T] =
     traversal.modifyF(f)(s)
 
-  def find(p: A => Boolean): S => Option[A] = traversal.find(p)
-  def exist(p: A => Boolean): S => Boolean  = traversal.exist(p)
-  def all(p: A => Boolean): S => Boolean    = traversal.all(p)
-  def isEmpty(s: S): Boolean                = traversal.isEmpty(s)
-  def nonEmpty(s: S): Boolean               = traversal.nonEmpty(s)
+  def find(p: A => Boolean): Option[A] = traversal.find(p)(s)
+  def exist(p: A => Boolean): Boolean  = traversal.exist(p)(s)
+  def all(p: A => Boolean): Boolean    = traversal.all(p)(s)
+  def isEmpty(s: S): Boolean           = traversal.isEmpty(s)
+  def nonEmpty(s: S): Boolean          = traversal.nonEmpty(s)
 
   /** alias to replace */
   @deprecated("use replace instead", since = "3.0.0-M1")
