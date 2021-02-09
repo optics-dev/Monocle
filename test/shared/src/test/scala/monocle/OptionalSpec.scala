@@ -111,6 +111,36 @@ class OptionalSpec extends MonocleSuite {
     assertEquals(headOptionI.to(_.toString()).getAll(List(1, 2, 3)), List("1"))
   }
 
+  test("orElse") {
+    sealed trait User
+
+    case class Editor(id: Int, favoriteFont: String) extends User
+    case class Reader(id: Int, isPremium: Boolean)   extends User
+
+    val idEditor = Optional[User, Int] {
+      case x: Editor => Some(x.id)
+      case _         => None
+    }(newId => {
+      case x: Editor => x.copy(id = newId)
+      case other     => other
+    })
+    val idReader = Optional[User, Int] {
+      case x: Reader => Some(x.id)
+      case _         => None
+    }(newId => {
+      case x: Reader => x.copy(id = newId)
+      case other     => other
+    })
+
+    val id = idEditor.orElse(idReader)
+
+    assertEquals(id.getOption(Editor(1, "Comic Sans")), Some(1))
+    assertEquals(id.getOption(Reader(1, false)), Some(1))
+
+    assertEquals(id.replace(5)(Editor(1, "Comic Sans")), Editor(5, "Comic Sans"))
+    assertEquals(id.replace(5)(Reader(1, false)), Reader(5, false))
+  }
+
   test("some") {
     case class SomeTest(x: Int, y: Option[Int])
     val obj = SomeTest(1, Some(2))
