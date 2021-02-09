@@ -5,9 +5,9 @@ import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.{std, Fold, Getter, Optional, PIso, PLens, POptional, PPrism, PTraversal}
 
 final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]) {
-  def get: A                                = getter.get(s)
-  def exist(p: A => Boolean): S => Boolean  = getter.exist(p)
-  def find(p: A => Boolean): S => Option[A] = getter.find(p)
+  def get: A                           = getter.get(s)
+  def exist(p: A => Boolean): Boolean  = getter.exist(p)(s)
+  def find(p: A => Boolean): Option[A] = getter.find(p)(s)
 
   def each[C](implicit evEach: Each[A, C]): ApplyFold[S, C] =
     andThen(evEach.each)

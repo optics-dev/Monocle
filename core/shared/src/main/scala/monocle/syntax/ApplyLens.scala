@@ -9,8 +9,8 @@ final case class ApplyLens[S, T, A, B](s: S, lens: PLens[S, T, A, B]) {
   def replace(b: B): T                           = lens.replace(b)(s)
   def modify(f: A => B): T                       = lens.modify(f)(s)
   def modifyF[F[_]: Functor](f: A => F[B]): F[T] = lens.modifyF(f)(s)
-  def exist(p: A => Boolean): S => Boolean       = lens.exist(p)
-  def find(p: A => Boolean): S => Option[A]      = lens.find(p)
+  def exist(p: A => Boolean): Boolean            = lens.exist(p)(s)
+  def find(p: A => Boolean): Option[A]           = lens.find(p)(s)
 
   /** alias to replace */
   @deprecated("use replace instead", since = "3.0.0-M1")
