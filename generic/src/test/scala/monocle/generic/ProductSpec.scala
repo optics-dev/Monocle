@@ -1,15 +1,16 @@
 package monocle.generic
 
-import monocle.MonocleSuite
 import monocle.law.discipline.IsoTests
 import monocle.law.discipline.function.EachTests
+import monocle.generic.all._
 import org.scalacheck.Arbitrary
 import cats.Eq
+import munit.DisciplineSuite
 
 import scala.annotation.nowarn
 
 @nowarn
-class ProductSpec extends MonocleSuite {
+class ProductSpec extends DisciplineSuite {
   case class Person(name: String, age: Int)
 
   implicit val personEq: Eq[Person] = Eq.fromUniversalEquals

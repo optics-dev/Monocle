@@ -1,7 +1,6 @@
 package monocle
 
 import monocle.law.discipline.{SetterTests, TraversalTests}
-import monocle.macros.GenLens
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 import cats.Eq
@@ -29,7 +28,7 @@ class TraversalSpec extends MonocleSuite {
     n <- arbitrary[String]
   } yield Location(x, y, n))
 
-  implicit val exampleEq = Eq.fromUniversalEquals[Location]
+  implicit val exampleEq: Eq[Location] = Eq.fromUniversalEquals[Location]
 
   // Below we test a 7-lenses Traversal created using applyN
 
@@ -37,13 +36,13 @@ class TraversalSpec extends MonocleSuite {
   case class ManyPropObject(p1: Int, p2: Int, p3: String, p4: Int, p5: Int, p6: Int, p7: Int, p8: Int)
 
   // the 7 lenses for each int properties of the test object
-  val l1: Lens[ManyPropObject, Int] = GenLens[ManyPropObject](_.p1)
-  val l2: Lens[ManyPropObject, Int] = GenLens[ManyPropObject](_.p2)
-  val l3: Lens[ManyPropObject, Int] = GenLens[ManyPropObject](_.p4)
-  val l4: Lens[ManyPropObject, Int] = GenLens[ManyPropObject](_.p5)
-  val l5: Lens[ManyPropObject, Int] = GenLens[ManyPropObject](_.p6)
-  val l6: Lens[ManyPropObject, Int] = GenLens[ManyPropObject](_.p7)
-  val l7: Lens[ManyPropObject, Int] = GenLens[ManyPropObject](_.p8)
+  val l1: Lens[ManyPropObject, Int] = Lens((_: ManyPropObject).p1)(newValue => _.copy(p1 = newValue))
+  val l2: Lens[ManyPropObject, Int] = Lens((_: ManyPropObject).p2)(newValue => _.copy(p2 = newValue))
+  val l3: Lens[ManyPropObject, Int] = Lens((_: ManyPropObject).p4)(newValue => _.copy(p4 = newValue))
+  val l4: Lens[ManyPropObject, Int] = Lens((_: ManyPropObject).p5)(newValue => _.copy(p5 = newValue))
+  val l5: Lens[ManyPropObject, Int] = Lens((_: ManyPropObject).p6)(newValue => _.copy(p6 = newValue))
+  val l6: Lens[ManyPropObject, Int] = Lens((_: ManyPropObject).p7)(newValue => _.copy(p7 = newValue))
+  val l7: Lens[ManyPropObject, Int] = Lens((_: ManyPropObject).p8)(newValue => _.copy(p8 = newValue))
 
   // the 7-lenses Traversal generated using applyN
   val traversalN: Traversal[ManyPropObject, Int] =
@@ -61,7 +60,7 @@ class TraversalSpec extends MonocleSuite {
     p8 <- arbitrary[Int]
   } yield ManyPropObject(p1, p2, p3, p4, p5, p6, p7, p8))
 
-  implicit val eqForManyPropObject = Eq.fromUniversalEquals[ManyPropObject]
+  implicit val eqForManyPropObject: Eq[ManyPropObject] = Eq.fromUniversalEquals[ManyPropObject]
 
   checkAll("apply2 Traversal", TraversalTests(coordinates))
   checkAll("applyN Traversal", TraversalTests(traversalN))

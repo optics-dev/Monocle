@@ -4,30 +4,13 @@ import cats.Eq
 import cats.arrow.{Category, Choice, Compose}
 import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
 import monocle.law.discipline.{LensTests, OptionalTests, SetterTests, TraversalTests}
-import monocle.macros.{GenLens, Lenses}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 
 import scala.collection.immutable
 
 case class Point(x: Int, y: Int)
-@Lenses case class Example(s: String, p: Point)
-@Lenses case class Foo[A, B](q: Map[(A, B), Double], default: Double)
-
-// a few more examples that should compile
-@Lenses case class HasCompanion1[A](a: A)
-object HasCompanion1
-
-@Lenses case class HasCompanion2[A](a: A)
-object HasCompanion2 { def foo = () }
-
-trait Bar; trait Baz
-@Lenses case class HasCompanion3[A](a: A)
-object HasCompanion3 extends Bar with Baz
-
-class annot extends annotation.StaticAnnotation
-@Lenses case class HasCompanion4(l: Long, s: String)
-@annot object HasCompanion4
+case class Example(s: String, p: Point)
 
 class LensSpec extends MonocleSuite {
   val s = Lens[Example, String](_.s)(s => ex => ex.copy(s = s))
@@ -43,12 +26,9 @@ class LensSpec extends MonocleSuite {
     y <- arbitrary[Int]
   } yield Example(s, Point(x, y)))
 
-  implicit val exampleEq = Eq.fromUniversalEquals[Example]
+  implicit val exampleEq: Eq[Example] = Eq.fromUniversalEquals[Example]
 
   checkAll("apply Lens", LensTests(s))
-  checkAll("GenLens", LensTests(GenLens[Example](_.s)))
-  checkAll("GenLens chain", LensTests(GenLens[Example](_.p.x)))
-  checkAll("Lenses", LensTests(Example.s))
 
   checkAll("lens.asOptional", OptionalTests(s.asOptional))
   checkAll("lens.asTraversal", TraversalTests(s.asTraversal))
@@ -101,7 +81,7 @@ class LensSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: Option[Int])
     val obj = SomeTest(1, Some(2))
 
-    val lens = GenLens[SomeTest](_.y)
+    val lens = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue))
 
     assertEquals(lens.some.getOption(obj), Some(2))
     assertEquals(obj.optics.andThen(lens).some.getOption, Some(2))
@@ -112,7 +92,7 @@ class LensSpec extends MonocleSuite {
     val objSome = SomeTest(1, Some(2))
     val objNone = SomeTest(1, None)
 
-    val lens = GenLens[SomeTest](_.y)
+    val lens = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue))
 
     assertEquals(lens.withDefault(0).get(objSome), 2)
     assertEquals(lens.withDefault(0).get(objNone), 0)
@@ -124,7 +104,7 @@ class LensSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: List[Int])
     val obj = SomeTest(1, List(1, 2, 3))
 
-    val lens = GenLens[SomeTest](_.y)
+    val lens = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue))
 
     assertEquals(lens.each.getAll(obj), List(1, 2, 3))
     assertEquals(obj.optics.andThen(lens).each.getAll, List(1, 2, 3))
@@ -134,7 +114,7 @@ class LensSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: Int)
     val obj = SomeTest(1, 2)
 
-    val lens = GenLens[SomeTest](_.y)
+    val lens = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue))
 
     assertEquals(lens.filter(_ > 0).getOption(obj), Some(2))
     assertEquals(obj.optics.andThen(lens).filter(_ > 0).getOption, Some(2))
@@ -144,7 +124,7 @@ class LensSpec extends MonocleSuite {
     case class SomeTest(x: Int, y: List[String])
     val obj = SomeTest(1, List("hello", "world"))
 
-    val lens = GenLens[SomeTest](_.y)
+    val lens = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue))
 
     assertEquals(lens.filterIndex((_: Int) > 0).getAll(obj), List("world"))
     assertEquals(obj.optics.andThen(lens).filterIndex((_: Int) > 0).getAll, List("world"))

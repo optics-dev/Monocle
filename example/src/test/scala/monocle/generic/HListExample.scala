@@ -6,7 +6,7 @@ import shapeless.HNil
 import scala.annotation.nowarn
 
 @nowarn
-class HListExample extends MonocleSuite {
+class HListExample extends MonocleSuite with GenericInstances {
   case class Example(i: Int, s: String, b: Boolean)
 
   test("toHList creates an Iso between a Generic (typically a case class) and HList") {
