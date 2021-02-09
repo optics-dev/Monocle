@@ -1,14 +1,14 @@
 package other
 
-import monocle.{Iso, MonocleSuite}
+import cats.kernel.Eq
+import monocle.Iso
 import monocle.law.discipline.{IsoTests, LensTests, PrismTests}
 import monocle.macros.{GenIso, GenLens, GenPrism}
+import munit.DisciplineSuite
 import org.scalacheck.Arbitrary.{arbOption => _, _}
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 
-import cats.Eq
-
-class MacroOutSideMonocleSpec extends MonocleSuite {
+class MacroOutSideMonocleSpec extends DisciplineSuite {
   case class Example(i: Int)
   case class Example2(l: Long, s: String)
   case object ExampleObject

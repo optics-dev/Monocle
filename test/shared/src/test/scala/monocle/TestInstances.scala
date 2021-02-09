@@ -21,15 +21,15 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
   }
 
   // Equal instances
-  implicit val uriEqual = Eq.fromUniversalEquals[URI]
+  implicit val uriEqual: Eq[URI] = Eq.fromUniversalEquals[URI]
 
-  implicit val aritiesEq  = Eq.fromUniversalEquals[Arities]
-  implicit val nullaryEq  = Eq.fromUniversalEquals[Nullary]
-  implicit val unaryEq    = Eq.fromUniversalEquals[Unary]
-  implicit val binaryEq   = Eq.fromUniversalEquals[Binary]
-  implicit val quintaryEq = Eq.fromUniversalEquals[Quintary]
+  implicit val aritiesEq: Eq[Arities]   = Eq.fromUniversalEquals[Arities]
+  implicit val nullaryEq: Eq[Nullary]   = Eq.fromUniversalEquals[Nullary]
+  implicit val unaryEq: Eq[Unary]       = Eq.fromUniversalEquals[Unary]
+  implicit val binaryEq: Eq[Binary]     = Eq.fromUniversalEquals[Binary]
+  implicit val quintaryEq: Eq[Quintary] = Eq.fromUniversalEquals[Quintary]
 
-  implicit def function1Eq[A, B](implicit A: Arbitrary[A], B: Eq[B]) =
+  implicit def function1Eq[A, B](implicit A: Arbitrary[A], B: Eq[B]): Eq[A => B] =
     new Eq[A => B] {
       val samples      = LazyList.continually(A.arbitrary.sample).flatten
       val samplesCount = 50
@@ -63,10 +63,10 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
   implicit def vectorArbitrary[A: Arbitrary]: Arbitrary[Vector[A]] =
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toVector))
 
-  implicit def listMapArbitrary[K: Arbitrary, V: Arbitrary] =
+  implicit def listMapArbitrary[K: Arbitrary, V: Arbitrary]: Arbitrary[ListMap[K, V]] =
     Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(l => ListMap(l: _*)))
 
-  implicit def mapArbitrary[K: Arbitrary, V: Arbitrary] =
+  implicit def mapArbitrary[K: Arbitrary, V: Arbitrary]: Arbitrary[Map[K, V]] =
     Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(_.toMap))
 
   implicit def setArbitrary[A: Arbitrary]: Arbitrary[Set[A]] =

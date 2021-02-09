@@ -1,7 +1,6 @@
 package monocle
 
 import monocle.law.discipline.{OptionalTests, PrismTests, SetterTests, TraversalTests}
-import monocle.macros.{GenIso, GenPrism}
 import cats.arrow.{Category, Compose}
 import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
 import cats.syntax.either._
@@ -25,17 +24,17 @@ class PrismSpec extends MonocleSuite {
     Prism[Arities, Int] {
       case Unary(i) => Some(i)
       case _        => None
-    }(Unary)
+    }(Unary.apply)
   val _binary: Prism[Arities, (String, Int)] =
     Prism[Arities, (String, Int)] {
       case Binary(s, i) => Some((s, i))
       case _            => None
-    }(Binary.tupled)
+    }((Binary.apply _).tupled)
   val _quintary: Prism[Arities, (Char, Boolean, String, Int, Double)] =
     Prism[Arities, (Char, Boolean, String, Int, Double)] {
       case Quintary(c, b, s, i, f) => Some((c, b, s, i, f))
       case _                       => None
-    }(Quintary.tupled)
+    }((Quintary.apply _).tupled)
 
   checkAll("apply Prism", PrismTests(_right[String, Int]))
   checkAll("apply partial Prism", PrismTests(_pright[String, Int]))
@@ -99,7 +98,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
   case class I(i: Int)    extends IntOrString
   case class S(s: String) extends IntOrString
 
-  val i = GenPrism[IntOrString, I].andThen(GenIso[I, Int])
+  val i = Prism.partial[IntOrString, I] { case i: I => i }(identity).andThen(Iso[I, Int](_.i)(I.apply))
   val s = Prism[IntOrString, String] { case S(s) => Some(s); case _ => None }(S.apply)
 
   test("getOption") {
@@ -162,25 +161,6 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     assertEquals(i.replaceOption(1)(S("")), None)
   }
 
-  test("GenPrism nullary equality".ignore) {
-    assertEquals(
-      GenPrism[Arities, Nullary].andThen(GenIso.unit[Nullary]),
-      _nullary
-    )
-  }
-
-  test("GenPrism unary equality".ignore) {
-    assertEquals(GenPrism[Arities, Unary].andThen(GenIso[Unary, Int]), _unary)
-  }
-
-  test("GenPrism binary equality".ignore) {
-    assertEquals(GenPrism[Arities, Binary].andThen(GenIso.fields[Binary]), _binary)
-  }
-
-  test("GenPrism quintary equality".ignore) {
-    assertEquals(GenPrism[Arities, Quintary].andThen(GenIso.fields[Quintary]), _quintary)
-  }
-
   test("to") {
     assertEquals(i.to(_.toString()).getAll(I(1)), List("1"))
   }
@@ -189,7 +169,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     case class SomeTest(y: Option[Int])
     val obj = SomeTest(Some(2))
 
-    val prism = Iso[SomeTest, Option[Int]](_.y)(SomeTest).asPrism
+    val prism = Iso[SomeTest, Option[Int]](_.y)(SomeTest.apply).asPrism
 
     assertEquals(prism.some.getOption(obj), Some(2))
     assertEquals(obj.optics.andThen(prism).some.getOption, Some(2))
@@ -200,7 +180,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     val objSome = SomeTest(Some(2))
     val objNone = SomeTest(None)
 
-    val prism = Iso[SomeTest, Option[Int]](_.y)(SomeTest).asPrism
+    val prism = Iso[SomeTest, Option[Int]](_.y)(SomeTest.apply).asPrism
 
     assertEquals(prism.withDefault(0).getOption(objSome), Some(2))
     assertEquals(prism.withDefault(0).getOption(objNone), Some(0))
@@ -212,7 +192,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     case class SomeTest(y: List[Int])
     val obj = SomeTest(List(1, 2, 3))
 
-    val prism = Iso[SomeTest, List[Int]](_.y)(SomeTest).asPrism
+    val prism = Iso[SomeTest, List[Int]](_.y)(SomeTest.apply).asPrism
 
     assertEquals(prism.each.getAll(obj), List(1, 2, 3))
     assertEquals(obj.optics.andThen(prism).each.getAll, List(1, 2, 3))
@@ -222,7 +202,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     case class SomeTest(y: Int)
     val obj = SomeTest(2)
 
-    val prism = Iso[SomeTest, Int](_.y)(SomeTest).asPrism
+    val prism = Iso[SomeTest, Int](_.y)(SomeTest.apply).asPrism
 
     assertEquals(prism.filter(_ > 0).getOption(obj), Some(2))
     assertEquals(obj.optics.andThen(prism).filter(_ > 0).getOption, Some(2))
@@ -232,7 +212,7 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
     case class SomeTest(y: List[String])
     val obj = SomeTest(List("hello", "world"))
 
-    val prism = Iso[SomeTest, List[String]](_.y)(SomeTest).asPrism
+    val prism = Iso[SomeTest, List[String]](_.y)(SomeTest.apply).asPrism
 
     assertEquals(prism.filterIndex((_: Int) > 0).getAll(obj), List("world"))
     assertEquals(obj.optics.andThen(prism).filterIndex((_: Int) > 0).getAll, List("world"))
