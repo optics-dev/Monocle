@@ -1,16 +1,20 @@
 package monocle
 
-import monocle.internal.focus.FocusImpl
+import monocle.internal.focus.{FocusImpl, AppliedFocusImpl}
 
 object Focus {
 
+  extension [From, To] (from: From) 
+    transparent inline def focus(inline lambda: (From => To)): Any = 
+      ${AppliedFocusImpl[From, To]('from, 'lambda)}
+
   extension [A] (opt: Option[A])
-    def some: A = scala.sys.error("Extension method 'some' should only be used within the moocle.Focus macro.")
+    def some: A = scala.sys.error("Extension method 'some' should only be used within the monocle.Focus macro.")
   
   def apply[S] = new MkFocus[S]
 
-  class MkFocus[S] {
-    transparent inline def apply[T](inline get: (S => T)): Any = 
-      ${ FocusImpl('get) }
+  class MkFocus[From] {
+    transparent inline def apply[To](inline lambda: (From => To)): Any = 
+      ${ FocusImpl('lambda) }
   }
 }

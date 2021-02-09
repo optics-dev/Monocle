@@ -25,7 +25,7 @@ private[focus] class FocusImpl(val macroContext: Quotes)
   }
 }
 
-object FocusImpl {
+private[monocle] object FocusImpl {
   def apply[From: Type, To: Type](lambda: Expr[From => To])(using Quotes): Expr[Any] =
     new FocusImpl(quotes).run(lambda)
 }

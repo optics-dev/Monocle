@@ -31,3 +31,6 @@ project/metals.sbt
 /website/static/api/
 /website/variables.js
 /website/yarn.lock
+
+# VSCode
+.vscode/
