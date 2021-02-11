@@ -28,7 +28,7 @@ object Possible extends PossibleFunctions {
 
   /** lift an instance of [[monocle.Optional]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Possible[A, B]): Possible[S, B] =
-    Possible(iso composeOptional ev.possible)
+    Possible(iso.andThen(ev.possible))
 
   /** *********************************************************************************************
     */

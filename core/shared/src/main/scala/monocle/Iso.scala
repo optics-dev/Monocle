@@ -108,7 +108,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
     PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](_.map(get))(_.map(reverseGet))
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
-    adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+    adapt[Option[A1], Option[B1]].andThen(std.option.pSome)
 
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PIso[S, T, A1, B1] =
     evB.substituteCo[PIso[S, T, A1, *]](evA.substituteCo[PIso[S, T, *, B]](this))
@@ -169,7 +169,7 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
     andThen(other)
 
   /** Compose with a function lifted into a Getter */
-  def to[C](f: A => C): Getter[S, C] = composeGetter(Getter(f))
+  def to[C](f: A => C): Getter[S, C] = andThen(Getter(f))
 
   /** compose a [[PIso]] with a [[Getter]] */
   @deprecated("use andThen", since = "3.0.0-M1")
@@ -410,14 +410,14 @@ sealed abstract class IsoInstances {
       Iso.id[A]
 
     def compose[A, B, C](f: Iso[B, C], g: Iso[A, B]): Iso[A, C] =
-      g composeIso f
+      g.andThen(f)
   }
 }
 
 /** Extension methods for monomorphic Iso */
 final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
-    self composeTraversal evEach.each
+    self.andThen(evEach.each)
 
   /** Select all the elements which satisfies the predicate.
     * This combinator can break the fusion property see Optional.filter for more details.
@@ -429,11 +429,11 @@ final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Iso[S, A1] =
-    self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
+    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Lens[S, A1] =
     self.andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Optional[S, A1] =
-    self composeOptional evIndex.index(i)
+    self.andThen(evIndex.index(i))
 }

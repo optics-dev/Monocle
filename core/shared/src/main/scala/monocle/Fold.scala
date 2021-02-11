@@ -89,7 +89,7 @@ abstract class Fold[S, A] extends Serializable { self =>
     andThen(Getter(f))
 
   def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
-    composeTraversal(evEach.each)
+   andThen(evEach.each)
 
   /** Select all the elements which satisfies the predicate.
     * This combinator can break the fusion property see Optional.filter for more details.
@@ -101,10 +101,10 @@ abstract class Fold[S, A] extends Serializable { self =>
     self.andThen(ev.filterIndex(predicate))
 
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
-    adapt[Option[A1]] composePrism (std.option.pSome)
+    adapt[Option[A1]].andThen(std.option.some[A1])
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): Fold[S, A1] =
-    adapt[Option[A1]] composeIso (std.option.withDefault(defaultValue))
+    adapt[Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   private def adapt[A1](implicit evA: A =:= A1): Fold[S, A1] =
     evA.substituteCo[Fold[S, *]](this)
@@ -113,7 +113,7 @@ abstract class Fold[S, A] extends Serializable { self =>
     andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
-    composeOptional(evIndex.index(i))
+   andThen(evIndex.index(i))
 
   /** compose a [[Fold]] with another [[Fold]] */
   final def andThen[B](other: Fold[A, B]): Fold[S, B] =
@@ -249,6 +249,6 @@ sealed abstract class FoldInstances {
       Fold.id[A]
 
     def compose[A, B, C](f: Fold[B, C], g: Fold[A, B]): Fold[A, C] =
-      g composeFold f
+      g.andThen(f)
   }
 }

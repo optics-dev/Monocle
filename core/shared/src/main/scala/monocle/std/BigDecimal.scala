@@ -8,7 +8,7 @@ trait BigDecimalOptics {
   val bigDecimalToLong: Prism[BigDecimal, Long] =
     Prism[BigDecimal, Long](bi => if (bi.isValidLong) Some(bi.toLongExact) else None)(BigDecimal(_))
 
-  val bigDecimalToInt: Prism[BigDecimal, Int] = bigDecimalToLong composePrism long.longToInt
+  val bigDecimalToInt: Prism[BigDecimal, Int] = bigDecimalToLong.andThen(long.longToInt)
 
   // bigDecimalToDouble cannot be a Prism: some doubles loose precision when converted to a BigDecimal:
   // new java.math.BigDecimal(-2.147483649E-1634, MathContext.UNLIMITED) => java.math.BigDecimal = 0

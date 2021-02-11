@@ -23,10 +23,10 @@ trait StringOptics extends PlatformSpecificStringOptics {
     Prism(parseLong)(_.toString)
 
   val stringToInt: Prism[String, Int] =
-    stringToLong composePrism long.longToInt
+    stringToLong.andThen(long.longToInt)
 
   val stringToByte: Prism[String, Byte] =
-    stringToLong composePrism long.longToByte
+    stringToLong.andThen(long.longToByte)
 
   val stringToUUID: Prism[String, UUID] =
     Prism((s: String) => Try(UUID.fromString(s)).toOption)(_.toString)

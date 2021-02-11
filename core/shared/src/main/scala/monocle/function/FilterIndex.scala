@@ -31,7 +31,7 @@ object FilterIndex extends FilterIndexFunctions {
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: FilterIndex[A, I, B]): FilterIndex[S, I, B] =
     new FilterIndex[S, I, B] {
       def filterIndex(predicate: I => Boolean): Traversal[S, B] =
-        iso composeTraversal ev.filterIndex(predicate)
+        iso.andThen(ev.filterIndex(predicate))
     }
 
   def fromTraverse[S[_]: Traverse, A](zipWithIndex: S[A] => S[(A, Int)]): FilterIndex[S[A], Int, A] =
@@ -94,8 +94,8 @@ object FilterIndex extends FilterIndexFunctions {
   implicit val stringFilterIndex: FilterIndex[String, Int, Char] =
     new FilterIndex[String, Int, Char] {
       def filterIndex(predicate: Int => Boolean) =
-        monocle.std.string.stringToList composeTraversal FilterIndex
-          .filterIndex[List[Char], Int, Char](predicate)
+        monocle.std.string.stringToList.andThen(
+          FilterIndex.filterIndex[List[Char], Int, Char](predicate))
     }
 
   implicit def vectorFilterIndex[A]: FilterIndex[Vector[A], Int, A] =

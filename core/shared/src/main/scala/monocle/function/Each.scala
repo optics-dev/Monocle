@@ -31,7 +31,7 @@ object Each extends EachFunctions {
   /** lift an instance of [[Each]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Each[A, B]): Each[S, B] =
     Each(
-      iso composeTraversal ev.each
+      iso.andThen(ev.each)
     )
 
   def fromTraverse[S[_]: Traverse, A]: Each[S[A], A] =
@@ -88,7 +88,7 @@ object Each extends EachFunctions {
     }
 
   implicit val stringEach: Each[String, Char] = Each(
-    monocle.std.string.stringToList composeTraversal Each.each[List[Char], Char]
+    monocle.std.string.stringToList.andThen(Each.each[List[Char], Char])
   )
 
   implicit def tryEach[A]: Each[Try[A], A] =
