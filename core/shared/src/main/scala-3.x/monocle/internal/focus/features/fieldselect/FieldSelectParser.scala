@@ -15,8 +15,8 @@ private[focus] trait FieldSelectParser {
         val remainingCodeWithAction = action.map(a => (remainingCode, a))
         Some(remainingCodeWithAction)
 
-      case Select(remainingCode, _) => 
-        Some(FocusError.NotACaseClass(remainingCode.tpe.show).asResult)
+      case Select(remainingCode, fieldName) => 
+        Some(FocusError.NotACaseClass(remainingCode.tpe.show, fieldName).asResult)
         
       case _ => None
     }

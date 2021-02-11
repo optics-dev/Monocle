@@ -13,15 +13,17 @@ private[focus] trait FocusBase {
   enum FocusAction {
     case FieldSelect(name: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
     case OptionSome(toType: TypeRepr)
+    case CastAs(fromType: TypeRepr, toType: TypeRepr)
 
     override def toString(): String = this match {
-      case FieldSelect(name, fromType, fromTypeArgs, toType) => s"FieldSelect($name, ${fromType.show}, ${fromTypeArgs.map(_.show).mkString("[", ",", "]")}, ${toType.show})"
+      case FieldSelect(name, fromType, fromTypeArgs, toType) => s"FieldSelect($name, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
       case OptionSome(toType) => s"OptionSome(${toType.show})"
+      case CastAs(fromType, toType) => s"CastAs(${fromType.show}, ${toType.show})"
     }
   }
 
   enum FocusError {
-    case NotACaseClass(className: String)
+    case NotACaseClass(className: String, fieldName: String)
     case NotAConcreteClass(className: String)
     case DidNotDirectlyAccessArgument(argName: String)
     case NotASimpleLambdaFunction
