@@ -30,9 +30,7 @@ object Index extends IndexFunctions {
 
   /** lift an instance of [[Index]] using an [[Iso]] */
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: Index[A, I, B]): Index[S, I, B] =
-    Index(key =>
-      iso.andThen(ev.index(key))
-    )
+    Index(key => iso.andThen(ev.index(key)))
 
   def fromAt[S, I, A](implicit ev: At[S, I, Option[A]]): Index[S, I, A] =
     Index(
@@ -69,9 +67,8 @@ object Index extends IndexFunctions {
 
   implicit def sortedMapIndex[K, V]: Index[SortedMap[K, V], K, V] = fromAt
 
-  implicit val stringIndex: Index[String, Int, Char] = Index(key =>
-    monocle.std.string.stringToList.andThen(Index.index[List[Char], Int, Char](key))
-  )
+  implicit val stringIndex: Index[String, Int, Char] =
+    Index(key => monocle.std.string.stringToList.andThen(Index.index[List[Char], Int, Char](key)))
 
   implicit def vectorIndex[A]: Index[Vector[A], Int, A] =
     Index(i =>

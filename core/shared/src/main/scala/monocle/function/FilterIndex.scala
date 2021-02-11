@@ -94,8 +94,7 @@ object FilterIndex extends FilterIndexFunctions {
   implicit val stringFilterIndex: FilterIndex[String, Int, Char] =
     new FilterIndex[String, Int, Char] {
       def filterIndex(predicate: Int => Boolean) =
-        monocle.std.string.stringToList.andThen(
-          FilterIndex.filterIndex[List[Char], Int, Char](predicate))
+        monocle.std.string.stringToList.andThen(FilterIndex.filterIndex[List[Char], Int, Char](predicate))
     }
 
   implicit def vectorFilterIndex[A]: FilterIndex[Vector[A], Int, A] =

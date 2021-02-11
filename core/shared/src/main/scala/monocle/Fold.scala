@@ -89,7 +89,7 @@ abstract class Fold[S, A] extends Serializable { self =>
     andThen(Getter(f))
 
   def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
-   andThen(evEach.each)
+    andThen(evEach.each)
 
   /** Select all the elements which satisfies the predicate.
     * This combinator can break the fusion property see Optional.filter for more details.
@@ -113,7 +113,7 @@ abstract class Fold[S, A] extends Serializable { self =>
     andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
-   andThen(evIndex.index(i))
+    andThen(evIndex.index(i))
 
   /** compose a [[Fold]] with another [[Fold]] */
   final def andThen[B](other: Fold[A, B]): Fold[S, B] =
