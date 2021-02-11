@@ -4,6 +4,8 @@ rule = Monocle
 package fix
 import monocle.Lens
 import monocle.Optional
+import monocle.function.all._
+
 object Monocle2To3 {
   case class Address(streetNumber: Int, streetName: String)
   val streetNumber: Lens[Address, Int] =
@@ -20,4 +22,8 @@ object Monocle2To3 {
     }
   }
   head.setOption(1)
+
+  case class Person(name: String, address: Address, tags: Map[String, String])
+  val tags: Lens[Person, Map[String, String]] = ???
+  val tagsA = tags composeLens at("A")
 }
