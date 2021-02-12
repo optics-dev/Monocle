@@ -3,11 +3,13 @@ package monocle.internal.focus
 import scala.quoted.Type
 import monocle.internal.focus.features.fieldselect.FieldSelectParser
 import monocle.internal.focus.features.optionsome.OptionSomeParser
+import monocle.internal.focus.features.castas.CastAsParser
 
 private[focus] trait AllParsers 
   extends FocusBase
   with FieldSelectParser 
   with OptionSomeParser
+  with CastAsParser
 
 private[focus] trait ParserLoop {
   this: FocusBase with AllParsers => 
@@ -43,10 +45,13 @@ private[focus] trait ParserLoop {
         case OptionSome(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case OptionSome(Left(error)) => Left(error)
 
+        case CastAs(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case CastAs(Left(error)) => Left(error)
+
         case FieldSelect(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case FieldSelect(Left(error)) => Left(error)
 
-        case unexpected => FocusError.UnexpectedCodeStructure(unexpected.show).asResult
+        case unexpected => FocusError.UnexpectedCodeStructure(unexpected.toString).asResult
       }
     }
     loop(params.lambdaBody, Nil)

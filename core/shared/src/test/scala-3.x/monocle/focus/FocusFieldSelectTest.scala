@@ -83,4 +83,13 @@ final class FocusFieldSelectTest extends munit.FunSuite {
       "Bob"
     )
   }*/
+
+  /*
+  test("Existential type field accessss") {
+    val existentialBox: Box[_] = Box("abc")
+    assertEquals(
+      Focus[Box[_]](_.a).get(existentialBox),
+      "abc"
+    )
+  }*/
 }

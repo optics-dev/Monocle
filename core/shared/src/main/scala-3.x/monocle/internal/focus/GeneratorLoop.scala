@@ -2,6 +2,7 @@ package monocle.internal.focus
 
 import monocle.internal.focus.features.fieldselect.FieldSelectGenerator
 import monocle.internal.focus.features.optionsome.OptionSomeGenerator
+import monocle.internal.focus.features.castas.CastAsGenerator
 import monocle.{Lens, Iso, Prism, Optional}
 import scala.quoted.Type
 
@@ -10,6 +11,7 @@ private[focus] trait AllGenerators
   extends FocusBase
   with FieldSelectGenerator 
   with OptionSomeGenerator
+  with CastAsGenerator
 
 private[focus] trait GeneratorLoop {
   this: FocusBase with AllGenerators => 
@@ -28,6 +30,7 @@ private[focus] trait GeneratorLoop {
     action match {
       case FocusAction.FieldSelect(name, fromType, fromTypeArgs, toType) => generateFieldSelect(name, fromType, fromTypeArgs, toType)
       case FocusAction.OptionSome(toType) => generateOptionSome(toType)
+      case FocusAction.CastAs(fromType, toType) => generateCastAs(fromType, toType)
     }
 
   private def composeOptics(lens1: Term, lens2: Term): FocusResult[Term] = {
