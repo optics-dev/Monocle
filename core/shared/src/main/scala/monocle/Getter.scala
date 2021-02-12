@@ -80,6 +80,9 @@ abstract class Getter[S, A] extends Serializable { self =>
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
     composeOptional(evIndex.index(i))
 
+  def as[Next <: A]: Fold[S, Next] =
+    self.andThen(Prism.as[A, Next])
+
   /** compose a [[Getter]] with a [[Fold]] */
   final def andThen[B](other: Fold[A, B]): Fold[S, B] =
     asFold.andThen(other)

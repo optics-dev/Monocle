@@ -204,6 +204,9 @@ sealed abstract class SetterInstances {
 /** Extension methods for monomorphic Setter
   */
 final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyVal {
+  def as[Next <: A]: Setter[S, Next] =
+    self.andThen(Prism.as[A, Next])
+
   def each[C](implicit evEach: Each[A, C]): Setter[S, C] =
     self composeTraversal evEach.each
 

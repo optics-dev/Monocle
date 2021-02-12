@@ -369,6 +369,23 @@ object Prism {
   /** a [[Prism]] that checks for equality with a given value */
   def only[A](a: A)(implicit A: Eq[A]): Prism[A, Unit] =
     Prism[A, Unit](a2 => if (A.eqv(a, a2)) Some(()) else None)(_ => a)
+
+  /** Focus into a sub-type of the `Source`.
+    * Common use case: select a branch of a sealed trait.
+    */
+  def as[Source, Target <: Source]: Prism[Source, Target] =
+    new Prism[Source, Target] {
+      override def getOrModify(source: Source): Either[Source, Target] =
+        if (source.isInstanceOf[Target]) Right(source.asInstanceOf[Target])
+        else Left(source)
+
+      override def reverseGet(target: Target): Source =
+        target.asInstanceOf[Source]
+
+      override def getOption(source: Source): Option[Target] =
+        if (source.isInstanceOf[Target]) Some(source.asInstanceOf[Target])
+        else None
+    }
 }
 
 sealed abstract class PrismInstances {
@@ -386,6 +403,9 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
   /** lift a [[Prism]] such as it only matches if all elements of `F[S]` are getOrModify */
   def below[F[_]](implicit F: Traverse[F]): Prism[F[S], F[A]] =
     Prism[F[S], F[A]](F.traverse(_)(self.getOption))(F.map(_)(self.reverseGet))
+
+  def as[Next <: A]: Prism[S, Next] =
+    self.andThen(Prism.as[A, Next])
 
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self composeTraversal evEach.each
