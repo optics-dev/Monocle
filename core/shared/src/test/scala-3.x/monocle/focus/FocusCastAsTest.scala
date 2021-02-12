@@ -35,15 +35,6 @@ final class FocusCastAsTest extends munit.FunSuite {
     assertEquals(mealAppleColor.getOption(mealB), None)
   }
 
-  test("Cast a narrow thing to a broad thing, which is useless but allowed") {
-    val asFood = Focus[Banana](_.as[Food])
-
-    val foodB = Banana(40, true)
-
-    assertEquals(asFood.getOption(foodB), Some(Banana(40, true)))
-  }
-
-  
   test("Cast a broad thing to a narrow thing with type parameters") {
     // Generates warning, but it is allowed
     val getMystery = Focus[Food](_.as[MysteryFood[String]].mystery) 

@@ -11,5 +11,6 @@ private[focus] trait ErrorHandling {
     case FocusError.ComposeMismatch(type1, type2) => s"Could not compose $type1.andThen($type2)"
     case FocusError.UnexpectedCodeStructure(code) => s"Unexpected code structure: $code"
     case FocusError.CouldntFindFieldType(fromType, fieldName) => s"Couldn't find type for $fromType.$fieldName"
+    case FocusError.InvalidDowncast(fromType, toType) => s"Type '$fromType' could not be cast to '$toType'"
   }
 }

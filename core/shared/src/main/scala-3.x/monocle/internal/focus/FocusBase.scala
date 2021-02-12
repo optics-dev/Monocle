@@ -30,6 +30,7 @@ private[focus] trait FocusBase {
     case UnexpectedCodeStructure(code: String)
     case CouldntFindFieldType(fromType: String, fieldName: String)
     case ComposeMismatch(type1: String, type2: String)
+    case InvalidDowncast(fromType: String, toType: String)
 
     def asResult: FocusResult[Nothing] = Left(this)
   }

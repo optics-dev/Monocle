@@ -11,10 +11,14 @@ private[focus] trait CastAsParser {
 
     def unapply(term: Term): Option[FocusResult[(Term, FocusAction)]] = term match {
       case Apply(TypeApply(Ident("as"), List(typeArg)), List(remainingCode)) => 
-        val toType = typeArg.tpe
         val fromType = remainingCode.tpe.widen
-        val action = FocusAction.CastAs(fromType, toType)
-        Some(Right(remainingCode, action))
+        val toType = typeArg.tpe
+
+        if (toType <:< fromType) {
+          val action = FocusAction.CastAs(fromType, toType)
+          Some(Right(remainingCode, action))
+        }
+        else Some(Left(FocusError.InvalidDowncast(fromType.show, toType.show)))
         
       case _ => None
     }
