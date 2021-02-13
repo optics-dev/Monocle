@@ -5,10 +5,10 @@ import scala.quoted.{Type, Expr, Quotes, quotes}
 
 
 private[monocle] object AppliedFocusImpl {
-  def apply[From: Type, To: Type](from: Expr[From], lambda: Expr[From => To])(using Quotes): Expr[Any] = {
+  def apply[From: Type, To: Type](from: Expr[From], lambda: Expr[InFocus ?=> From => To])(using Quotes): Expr[Any] = {
     import quotes.reflect._
 
-    val generatedOptic = new FocusImpl(quotes).run(lambda)
+    val generatedOptic = FocusImpl(lambda)
 
     generatedOptic.asTerm.tpe.asType match {
       case '[Lens[f, t]] => '{ _root_.monocle.syntax.ApplyLens[From, From, To, To]($from, ${generatedOptic.asExprOf[Lens[From,To]]}) }

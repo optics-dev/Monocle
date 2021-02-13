@@ -3,21 +3,21 @@ package monocle.internal.focus
 import monocle.Lens
 import scala.quoted.{Type, Expr, Quotes, quotes}
 
-private[focus] class FocusImpl(val macroContext: Quotes) 
-    extends FocusBase 
+private[focus] class FocusImpl(val macroContext: Quotes)
+    extends FocusBase
     with ErrorHandling
-    with ParserLoop with AllParsers 
+    with ParserLoop with AllParsers
     with GeneratorLoop with AllGenerators {
 
   import macroContext.reflect._
 
   def run[From: Type, To: Type](lambda: Expr[From => To]): Expr[Any] = {
-    val parseResult: FocusResult[List[FocusAction]] = 
+    val parseResult: FocusResult[List[FocusAction]] =
       parseLambda[From](lambda.asTerm)
 
-    val generatedCode: FocusResult[Term] = 
+    val generatedCode: FocusResult[Term] =
       parseResult.flatMap(generateCode[From])
-      
+
     generatedCode match {
       case Right(code) => code.asExpr
       case Left(error) => report.error(errorMessage(error)); '{???}
@@ -25,7 +25,12 @@ private[focus] class FocusImpl(val macroContext: Quotes)
   }
 }
 
+
 private[monocle] object FocusImpl {
-  def apply[From: Type, To: Type](lambda: Expr[From => To])(using Quotes): Expr[Any] =
-    new FocusImpl(quotes).run(lambda)
+  def apply[From: Type, To: Type](contextExpr: Expr[InFocus ?=> From => To])(using Quotes): Expr[Any] = {
+    InFocus.stripContext[From, To](contextExpr) match {
+      case Some(lambda) => new FocusImpl(quotes).run(lambda)
+      case _ => sys.error("Unexpected code structure ${contextExpr.show}")
+    }
+  }
 }
