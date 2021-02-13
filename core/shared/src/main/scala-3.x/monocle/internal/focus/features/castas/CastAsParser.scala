@@ -3,14 +3,14 @@ package monocle.internal.focus.features.castas
 import monocle.internal.focus.FocusBase
 
 private[focus] trait CastAsParser {
-  this: FocusBase => 
+  this: FocusBase =>
 
   import macroContext.reflect._
 
   object CastAs extends FocusParser {
 
     def unapply(term: Term): Option[FocusResult[(Term, FocusAction)]] = term match {
-      case Apply(TypeApply(Ident("as"), List(typeArg)), List(remainingCode)) => 
+      case Apply(Apply(TypeApply(Ident("as"), List(typeArg)), List(remainingCode)), _) =>
         val fromType = remainingCode.tpe.widen
         val toType = typeArg.tpe
 
@@ -19,7 +19,7 @@ private[focus] trait CastAsParser {
           Some(Right(remainingCode, action))
         }
         else Some(Left(FocusError.InvalidDowncast(fromType.show, toType.show)))
-        
+
       case _ => None
     }
   }
