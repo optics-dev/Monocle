@@ -7,7 +7,7 @@ let siteConfig;
 siteConfig = {
     title: "Monocle",
     disableHeaderTitle : true,
-    tagline: "Optics for Scala",
+    tagline: "Access and transform immutable data",
     url: "https://optics.dev/Monocle",
     baseUrl: "/Monocle/",
     customDocsPath: "docs/target/mdoc",
