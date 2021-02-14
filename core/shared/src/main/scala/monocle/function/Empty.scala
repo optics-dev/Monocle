@@ -40,7 +40,7 @@ object Empty extends EmptyFunctions {
   /** lift an instance of [[Empty]] using an [[Iso]] */
   def fromIso[S, A](iso: Iso[S, A])(implicit ev: Empty[A]): Empty[S] =
     Empty(
-      iso composePrism ev.empty
+      iso.andThen(ev.empty)
     )
 
   /** *********************************************************************************************

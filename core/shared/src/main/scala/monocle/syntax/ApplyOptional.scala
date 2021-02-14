@@ -95,7 +95,7 @@ object ApplyOptional {
 /** Extension methods for monomorphic ApplyOptional */
 final case class ApplyOptionalSyntax[S, A](private val self: ApplyOptional[S, S, A, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): ApplyTraversal[S, S, C, C] =
-    self composeTraversal evEach.each
+    self.andThen(evEach.each)
 
   /** Select all the elements which satisfies the predicate.
     * This combinator can break the fusion property see Optional.filter for more details.
@@ -107,7 +107,7 @@ final case class ApplyOptionalSyntax[S, A](private val self: ApplyOptional[S, S,
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyOptional[S, S, A1, A1] =
-    self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
+    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyOptional[S, S, A1, A1] =
     self.andThen(evAt.at(i))

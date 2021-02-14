@@ -15,5 +15,5 @@ trait IntOptics {
     Bounded.orderingBoundedSafeCast[Int, Byte](_.toByte)(_.toInt)
 
   val intToBoolean: Prism[Int, Boolean] =
-    intToByte composePrism byte.byteToBoolean
+    intToByte.andThen(byte.byteToBoolean)
 }

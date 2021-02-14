@@ -9,14 +9,14 @@ trait BigIntOptics {
     Prism[BigInt, Long](bi => if (bi.isValidLong) Some(bi.longValue) else None)(BigInt(_))
 
   val bigIntToInt: Prism[BigInt, Int] =
-    bigIntToLong composePrism long.longToInt
+    bigIntToLong.andThen(long.longToInt)
 
   val bigIntToChar: Prism[BigInt, Char] =
-    bigIntToLong composePrism long.longToChar
+    bigIntToLong.andThen(long.longToChar)
 
   val bigIntToByte: Prism[BigInt, Byte] =
-    bigIntToLong composePrism long.longToByte
+    bigIntToLong.andThen(long.longToByte)
 
   val bigIntToBoolean: Prism[BigInt, Boolean] =
-    bigIntToLong composePrism long.longToBoolean
+    bigIntToLong.andThen(long.longToBoolean)
 }
