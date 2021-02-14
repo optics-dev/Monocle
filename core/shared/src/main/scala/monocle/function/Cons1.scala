@@ -51,7 +51,7 @@ object Cons1 extends Cons1Functions {
   /** lift an instance of [[Cons1]] using an [[Iso]] */
   def fromIso[S, A, H, T](iso: Iso[S, A])(implicit ev: Cons1[A, H, T]): Cons1[S, H, T] =
     Cons1(
-      iso composeIso ev.cons1
+      iso.andThen(ev.cons1)
     )
 
   /** *********************************************************************************************

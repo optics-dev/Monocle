@@ -107,7 +107,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
     )
 
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PTraversal[S, T, A1, B1] =
-    adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+    adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PTraversal[S, T, A1, B1] =
     evB.substituteCo[PTraversal[S, T, A1, *]](evA.substituteCo[PTraversal[S, T, *, B]](this))
@@ -153,7 +153,7 @@ abstract class PTraversal[S, T, A, B] extends Serializable { self =>
     andThen(other)
 
   /** Compose with a function lifted into a Getter */
-  def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+  def to[C](f: A => C): Fold[S, C] = andThen(Getter(f))
 
   /** compose a [[PTraversal]] with a [[Getter]] */
   @deprecated("use andThen", since = "3.0.0-M1")
@@ -341,7 +341,7 @@ object Traversal {
 sealed abstract class TraversalInstances {
   implicit val traversalChoice: Choice[Traversal] = new Choice[Traversal] {
     def compose[A, B, C](f: Traversal[B, C], g: Traversal[A, B]): Traversal[A, C] =
-      g composeTraversal f
+      g.andThen(f)
 
     def id[A]: Traversal[A, A] =
       Traversal.id
@@ -355,7 +355,7 @@ sealed abstract class TraversalInstances {
   */
 final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
-    self composeTraversal evEach.each
+    self.andThen(evEach.each)
 
   /** Select all the elements which satisfies the predicate.
     * This combinator can break the fusion property see Optional.filter for more details.
@@ -367,7 +367,7 @@ final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extend
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Traversal[S, A1] =
-    self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
+    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Traversal[S, A1] =
     self.andThen(evAt.at(i))

@@ -30,13 +30,11 @@ object Index extends IndexFunctions {
 
   /** lift an instance of [[Index]] using an [[Iso]] */
   def fromIso[S, A, I, B](iso: Iso[S, A])(implicit ev: Index[A, I, B]): Index[S, I, B] =
-    Index(
-      iso composeOptional ev.index(_)
-    )
+    Index(key => iso.andThen(ev.index(key)))
 
   def fromAt[S, I, A](implicit ev: At[S, I, Option[A]]): Index[S, I, A] =
     Index(
-      ev.at(_) composePrism monocle.std.option.some
+      ev.at(_).andThen(monocle.std.option.some[A])
     )
 
   /** *********************************************************************************************
@@ -69,10 +67,8 @@ object Index extends IndexFunctions {
 
   implicit def sortedMapIndex[K, V]: Index[SortedMap[K, V], K, V] = fromAt
 
-  implicit val stringIndex: Index[String, Int, Char] = Index(
-    monocle.std.string.stringToList composeOptional Index
-      .index[List[Char], Int, Char](_)
-  )
+  implicit val stringIndex: Index[String, Int, Char] =
+    Index(key => monocle.std.string.stringToList.andThen(Index.index[List[Char], Int, Char](key)))
 
   implicit def vectorIndex[A]: Index[Vector[A], Int, A] =
     Index(i =>
@@ -125,7 +121,7 @@ object Index extends IndexFunctions {
       def index(i: Int): Optional[NonEmptyChain[A], A] =
         i match {
           case 0 => necCons1.head.asOptional
-          case _ => necCons1.tail composeOptional chainIndex.index(i - 1)
+          case _ => necCons1.tail.index(i - 1)
         }
     }
 
@@ -134,7 +130,7 @@ object Index extends IndexFunctions {
       def index(i: Int): Optional[NonEmptyList[A], A] =
         i match {
           case 0 => nelCons1.head.asOptional
-          case _ => nelCons1.tail composeOptional listIndex.index(i - 1)
+          case _ => nelCons1.tail.index(i - 1)
         }
     }
 
@@ -143,13 +139,13 @@ object Index extends IndexFunctions {
       def index(i: Int): Optional[NonEmptyVector[A], A] =
         i match {
           case 0 => nevCons1.head.asOptional
-          case _ => nevCons1.tail composeOptional vectorIndex.index(i - 1)
+          case _ => nevCons1.tail.index(i - 1)
         }
     }
 
   implicit def oneAndIndex[T[_], A](implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] =
     Index {
       case 0 => oneAndCons1[T, A].head.asOptional
-      case i => oneAndCons1[T, A].tail composeOptional ev.index(i - 1)
+      case i => oneAndCons1[T, A].tail.index(i - 1)
     }
 }

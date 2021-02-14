@@ -54,7 +54,7 @@ abstract class Getter[S, A] extends Serializable { self =>
     andThen(Getter(f))
 
   def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
-    composeTraversal(evEach.each)
+    andThen(evEach.each)
 
   /** Select all the elements which satisfies the predicate.
     * This combinator can break the fusion property see Optional.filter for more details.
@@ -66,10 +66,10 @@ abstract class Getter[S, A] extends Serializable { self =>
     self.andThen(ev.filterIndex(predicate))
 
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
-    adapt[Option[A1]] composePrism (std.option.pSome)
+    adapt[Option[A1]].andThen(std.option.some[A1])
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): Getter[S, A1] =
-    adapt[Option[A1]] composeIso (std.option.withDefault(defaultValue))
+    adapt[Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   private def adapt[A1](implicit evA: A =:= A1): Getter[S, A1] =
     evA.substituteCo[Getter[S, *]](this)
@@ -78,7 +78,7 @@ abstract class Getter[S, A] extends Serializable { self =>
     andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
-    composeOptional(evIndex.index(i))
+    andThen(evIndex.index(i))
 
   /** compose a [[Getter]] with a [[Fold]] */
   final def andThen[B](other: Fold[A, B]): Fold[S, B] =
@@ -136,7 +136,7 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** compose a [[Getter]] with a [[PLens]] */
   @deprecated("use andThen", since = "3.0.0-M1")
   final def composeLens[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
-    composeGetter(other.asGetter)
+    andThen(other.asGetter)
 
   /** compose a [[Getter]] with a [[PIso]] */
   @deprecated("use andThen", since = "3.0.0-M1")
@@ -212,7 +212,7 @@ sealed abstract class GetterInstances extends GetterInstances0 {
       Getter.id
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
-      g composeGetter f
+      g.andThen(f)
   }
 
   implicit def getterSemigroupal[S]: Semigroupal[Getter[S, *]] =
@@ -230,6 +230,6 @@ sealed abstract class GetterInstances0 {
       Getter.id
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
-      g composeGetter f
+      g.andThen(f)
   }
 }
