@@ -1,6 +1,6 @@
 package monocle.syntax
 
-trait FocusSyntax {
+sealed trait FocusSyntax {
   extension [CastTo] (from: Any)
     def as: CastTo = scala.sys.error("Extension method 'as[CastTo]' should only be used within the monocle.Focus macro.")
 

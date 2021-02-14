@@ -1,11 +1,12 @@
 package monocle.internal.focus
 
+import monocle.syntax.FocusSyntax
 import monocle.{Focus, Lens, Iso, Prism, Optional}
 import scala.quoted.{Type, Expr, Quotes, quotes}
 
 
 private[monocle] object AppliedFocusImpl {
-  def apply[From: Type, To: Type](from: Expr[From], lambda: Expr[InFocus ?=> From => To])(using Quotes): Expr[Any] = {
+  def apply[From: Type, To: Type](from: Expr[From], lambda: Expr[FocusSyntax ?=> From => To])(using Quotes): Expr[Any] = {
     import quotes.reflect._
 
     val generatedOptic = FocusImpl(lambda)

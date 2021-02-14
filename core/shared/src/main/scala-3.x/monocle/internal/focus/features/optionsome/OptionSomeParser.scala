@@ -10,7 +10,7 @@ private[focus] trait OptionSomeParser {
   object OptionSome extends FocusParser {
 
     def unapply(term: Term): Option[FocusResult[(Term, FocusAction)]] = term match {
-      case Apply(Apply(TypeApply(Ident("some"), List(typeArg)), List(remainingCode)), _) =>
+      case Apply(TypeApply(Select(_, "some"), List(typeArg)), List(remainingCode)) =>
         val toType = typeArg.tpe
         val action = FocusAction.OptionSome(toType)
         Some(Right(remainingCode, action))

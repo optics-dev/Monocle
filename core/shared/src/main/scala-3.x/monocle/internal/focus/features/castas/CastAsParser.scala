@@ -10,9 +10,11 @@ private[focus] trait CastAsParser {
   object CastAs extends FocusParser {
 
     def unapply(term: Term): Option[FocusResult[(Term, FocusAction)]] = term match {
-      case Apply(Apply(TypeApply(Ident("as"), List(typeArg)), List(remainingCode)), _) =>
+      case Apply(TypeApply(Select(_, "as"), List(typeArg)), List(remainingCode)) =>
+
         val fromType = remainingCode.tpe.widen
         val toType = typeArg.tpe
+
 
         if (toType <:< fromType) {
           val action = FocusAction.CastAs(fromType, toType)
