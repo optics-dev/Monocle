@@ -18,5 +18,5 @@ trait LongOptics {
     Bounded.orderingBoundedSafeCast[Long, Byte](_.toByte)(_.toLong)
 
   val longToBoolean: Prism[Long, Boolean] =
-    longToByte composePrism byte.byteToBoolean
+    longToByte.andThen(byte.byteToBoolean)
 }

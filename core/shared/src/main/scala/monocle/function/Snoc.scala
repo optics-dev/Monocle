@@ -54,7 +54,7 @@ object Snoc extends SnocFunctions {
   /** lift an instance of [[Snoc]] using an [[Iso]] */
   def fromIso[S, A, B](iso: Iso[S, A])(implicit ev: Snoc[A, B]): Snoc[S, B] =
     Snoc(
-      iso composePrism ev.snoc composeIso iso.reverse.first
+      iso.andThen(ev.snoc).andThen(iso.reverse.first[B])
     )
 
   /** *********************************************************************************************
