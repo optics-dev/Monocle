@@ -17,4 +17,10 @@ final class FocusImportTest extends munit.FunSuite {
     Focus[User](_.address.some.streetNumber)
   }
 
+  test("Focus as entry point to Monocle") {
+    val user = User("bob", Some(Address(12, "XXX")))
+
+    assertEquals(Focus[Option[User]]().some.getOption(Some(user)), Some(user))
+  }
+
 }

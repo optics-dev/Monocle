@@ -12,6 +12,9 @@ object Focus extends FocusSyntax {
   def apply[S] = new MkFocus[S]
 
   class MkFocus[From] {
+    inline def apply(): Iso[From, From] =
+      Iso.id
+
     transparent inline def apply[To](inline lambda: (From => To)): Any = 
       ${ FocusImpl('lambda) }
   }
