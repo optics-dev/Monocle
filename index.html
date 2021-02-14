@@ -1,83 +1,28 @@
-<!DOCTYPE html><html lang=""><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Monocle · Optics for Scala</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Optics for Scala"/><meta property="og:title" content="Monocle · Optics for Scala"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/Monocle/Monocle/"/><meta property="og:description" content="Optics for Scala"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/Monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/Monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/Monocle/css/main.css"/><script src="/Monocle/js/codetabs.js"></script></head><body><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/Monocle/"><img class="logo" src="/Monocle/img/monocle-full-white.png" alt="Monocle"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/Monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/Monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/Monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/Monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div><div class="homeContainer"><div class="homeSplashFade"><div class="wrapper homeWrapper"><div class="inner"><h2 class="projectTitle"><img class="projectTitleLogo" src="img/monocle-full.png"/><small>Optics for Scala</small></h2><div class="section promoSection"><div class="promoRow"><div class="pluginRowBlock"><div class="pluginWrapper buttonWrapper"><a class="button" href="/Monocle/api/monocle/index.html">API Docs</a></div><div class="pluginWrapper buttonWrapper"><a class="button" href="/Monocle/docs/modules">Documentation</a></div><div class="pluginWrapper buttonWrapper"><a class="button" href="https://github.com/optics-dev/monocle">View on GitHub</a></div></div></div></div></div></div></div></div><div class="mainContainer"><div class="index"><div><span><p><a href="https://gitter.im/optics-dev/Monocle?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/optics-dev/Monocle"></a>
+<!DOCTYPE html><html lang=""><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Monocle · Access and transform immutable data</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Access and transform immutable data"/><meta property="og:title" content="Monocle · Access and transform immutable data"/><meta property="og:type" content="website"/><meta property="og:url" content="https://optics.dev/Monocle/Monocle/"/><meta property="og:description" content="Access and transform immutable data"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/Monocle/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/Monocle/js/scrollSpy.js"></script><link rel="stylesheet" href="/Monocle/css/main.css"/><script src="/Monocle/js/codetabs.js"></script></head><body><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/Monocle/"><img class="logo" src="/Monocle/img/monocle-full-white.png" alt="Monocle"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/Monocle/api/monocle/index.html" target="_self">API Docs</a></li><li class=""><a href="/Monocle/docs/optics" target="_self">Optics</a></li><li class=""><a href="/Monocle/docs/release_notes" target="_self">Release Notes</a></li><li class=""><a href="/Monocle/docs/faq" target="_self">FAQ</a></li><li class=""><a href="https://github.com/optics-dev/monocle" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div><div class="homeContainer"><div class="homeSplashFade"><div class="wrapper homeWrapper"><div class="inner"><h2 class="projectTitle"><img class="projectTitleLogo" src="img/monocle-full.png"/><small>Access and transform immutable data</small></h2><div class="section promoSection"><div class="promoRow"><div class="pluginRowBlock"><div class="pluginWrapper buttonWrapper"><a class="button" href="/Monocle/api/monocle/index.html">API Docs</a></div><div class="pluginWrapper buttonWrapper"><a class="button" href="/Monocle/docs/modules">Documentation</a></div><div class="pluginWrapper buttonWrapper"><a class="button" href="https://github.com/optics-dev/monocle">View on GitHub</a></div></div></div></div></div></div></div></div><div class="mainContainer"><div class="index"><div><span><p><a href="https://gitter.im/optics-dev/Monocle?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/optics-dev/Monocle"></a>
 <a href="http://search.maven.org/#search|ga|1|com.github.julien-truffaut.monocle"><img src="https://img.shields.io/maven-central/v/com.github.julien-truffaut/monocle_2.12.svg" alt="Maven Central"></a></p>
-<p>Monocle is an optics library for Scala (and <a href="https://www.scala-js.org/">Scala.js</a>) strongly inspired by Haskell <a href="https://github.com/ekmett/lens">Lens</a>.</p>
-<p>Optics are a group of purely functional abstractions to manipulate (<code>get</code>, <code>set</code>, <code>modify</code>, ...) immutable objects.</p>
-<h2><a class="anchor" aria-hidden="true" id="getting-started"></a><a href="#getting-started" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Getting started</h2>
-<p>Monocle is published to Maven Central and cross-built for Scala <code>2.12</code> and <code>2.13</code> so you can just add the following to your build:</p>
+<p>Monocle is a Scala library which offers a simple yet powerful API to access and transform immutable data.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.syntax.all._
+
+<span class="hljs-keyword">val</span> user = <span class="hljs-type">User</span>( <span class="hljs-string">"Anna"</span>, <span class="hljs-type">Address</span>(<span class="hljs-number">12</span>, <span class="hljs-string">"high street"</span>))
+
+user.focus(_.name).replace(<span class="hljs-string">"Bob"</span>)
+<span class="hljs-comment">// res: User = User( "Bob", Address(12, "high street"))</span>
+
+user.focus(_.address.streetName).modify(_.toUpperCase)
+<span class="hljs-comment">// res: User = User( "Anna", Address(12, "HIGH STREET"))</span>
+
+user.focus(_.address.streetNumber).get
+<span class="hljs-comment">// res: Int = 12</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="installation"></a><a href="#installation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Installation</h2>
+<p>Monocle is published for Scala <strong>2.13</strong> and <strong>3.0.0-M3</strong>. You can add it to your sbt build with:</p>
 <pre><code class="hljs css language-scala">libraryDependencies ++= <span class="hljs-type">Seq</span>(
- <span class="hljs-string">"com.github.julien-truffaut"</span> %% <span class="hljs-string">"monocle-core"</span>  % <span class="hljs-string">"2.0.3"</span>,
- <span class="hljs-string">"com.github.julien-truffaut"</span> %% <span class="hljs-string">"monocle-macro"</span> % <span class="hljs-string">"2.0.3"</span>,
+ <span class="hljs-string">"com.github.julien-truffaut"</span> %% <span class="hljs-string">"monocle-core"</span>  % <span class="hljs-string">"3.0.0-M1"</span>,
+ <span class="hljs-string">"com.github.julien-truffaut"</span> %% <span class="hljs-string">"monocle-macro"</span> % <span class="hljs-string">"3.0.0-M1"</span>, <span class="hljs-comment">// Not required for Scala 3</span>
 )
 </code></pre>
-<p>If you want to use macro annotations such as <code>@Lenses</code>, you will also need to include the following for Scala <code>2.12</code>:</p>
-<pre><code class="hljs css language-scala">addCompilerPlugin(<span class="hljs-string">"org.scalamacros"</span> %% <span class="hljs-string">"paradise"</span> % <span class="hljs-string">"2.1.1"</span> cross <span class="hljs-type">CrossVersion</span>.full)
-</code></pre>
-<p>On Scala <code>2.13</code>, enable the compiler flag <code>-Ymacro-annotations</code> instead:</p>
-<pre><code class="hljs css language-scala">scalacOptions in <span class="hljs-type">Global</span> += <span class="hljs-string">"-Ymacro-annotations"</span>
-</code></pre>
-<h2><a class="anchor" aria-hidden="true" id="motivation"></a><a href="#motivation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Motivation</h2>
-<p>Scala already provides getters and setters for case classes but modifying nested objects is verbose which makes code
-difficult to understand and reason about. Let's have a look at some examples:</p>
-<pre><code class="hljs css language-scala mdoc:silent"><span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Street</span>(<span class="hljs-params">number: <span class="hljs-type">Int</span>, name: <span class="hljs-type">String</span></span>)</span>
-<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Address</span>(<span class="hljs-params">city: <span class="hljs-type">String</span>, street: <span class="hljs-type">Street</span></span>)</span>
-<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Company</span>(<span class="hljs-params">name: <span class="hljs-type">String</span>, address: <span class="hljs-type">Address</span></span>)</span>
-<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Employee</span>(<span class="hljs-params">name: <span class="hljs-type">String</span>, company: <span class="hljs-type">Company</span></span>)</span>
-</code></pre>
-<p>Let's say we have an employee and we need to upper case the first character of his company street name.
-Here is how we could write it in vanilla Scala:</p>
-<pre><code class="hljs css language-scala mdoc:silent"><span class="hljs-keyword">val</span> employee = <span class="hljs-type">Employee</span>(<span class="hljs-string">"john"</span>, <span class="hljs-type">Company</span>(<span class="hljs-string">"awesome inc"</span>, <span class="hljs-type">Address</span>(<span class="hljs-string">"london"</span>, <span class="hljs-type">Street</span>(<span class="hljs-number">23</span>, <span class="hljs-string">"high street"</span>))))
-</code></pre>
-<pre><code class="hljs css language-scala mdoc">employee.copy(
-  company = employee.company.copy(
-    address = employee.company.address.copy(
-      street = employee.company.address.street.copy(
-        name = employee.company.address.street.name.capitalize <span class="hljs-comment">// luckily capitalize exists</span>
-      )
-    )
-  )
-)
-</code></pre>
-<p>As we can see <code>copy</code> is not convenient to update nested objects because we need to repeat ourselves.
-Let's see what could we do with Monocle (type annotations are only added for clarity):</p>
-<pre><code class="hljs css language-scala mdoc:silent"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Lens</span>
-<span class="hljs-keyword">import</span> monocle.macros.<span class="hljs-type">GenLens</span>
-
-<span class="hljs-keyword">val</span> company   : <span class="hljs-type">Lens</span>[<span class="hljs-type">Employee</span>, <span class="hljs-type">Company</span>] = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Employee</span>](_.company)
-<span class="hljs-keyword">val</span> address   : <span class="hljs-type">Lens</span>[<span class="hljs-type">Company</span> , <span class="hljs-type">Address</span>] = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Company</span>](_.address)
-<span class="hljs-keyword">val</span> street    : <span class="hljs-type">Lens</span>[<span class="hljs-type">Address</span> , <span class="hljs-type">Street</span>]  = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Address</span>](_.street)
-<span class="hljs-keyword">val</span> streetName: <span class="hljs-type">Lens</span>[<span class="hljs-type">Street</span>  , <span class="hljs-type">String</span>]  = <span class="hljs-type">GenLens</span>[<span class="hljs-type">Street</span>](_.name)
-
-company composeLens address composeLens street composeLens streetName
-</code></pre>
-<p><code>composeLens</code> takes two <code>Lenses</code>, one from <code>A</code> to <code>B</code> and another one from <code>B</code> to <code>C</code> and creates a third <code>Lens</code> from <code>A</code> to <code>C</code>.
-Therefore, after composing <code>company</code>, <code>address</code>, <code>street</code> and <code>name</code>, we obtain a <code>Lens</code> from <code>Employee</code> to <code>String</code> (the street name).
-Now we can use this <code>Lens</code> issued from the composition to <code>modify</code> the street name using the function <code>capitalize</code>:</p>
-<pre><code class="hljs css language-scala mdoc">(company composeLens address composeLens street composeLens streetName).modify(_.capitalize)(employee)
-</code></pre>
-<p>Here <code>modify</code> lifts a function <code>String =&gt; String</code> to a function <code>Employee =&gt; Employee</code>.
-It works but it would be clearer if we could zoom into the first character of a <code>String</code> with a <code>Lens</code>.
-However, we cannot write such a <code>Lens</code> because <code>Lenses</code> require the field they are directed at to be <em>mandatory</em>.
-In our case the first character of a <code>String</code> is optional as a <code>String</code> can be empty.
-So we need another abstraction that would be a sort of partial <code>Lens</code>, in Monocle it is called an <code>Optional</code>.</p>
-<pre><code class="hljs css language-scala mdoc:silent"><span class="hljs-keyword">import</span> monocle.function.<span class="hljs-type">Cons</span>.headOption <span class="hljs-comment">// to use headOption (an optic from Cons typeclass)</span>
-</code></pre>
-<pre><code class="hljs css language-scala mdoc">(company composeLens address
-         composeLens street
-         composeLens streetName
-         composeOptional headOption).modify(_.toUpper)(employee)
-</code></pre>
-<p>Similarly to <code>composeLens</code>, <code>composeOptional</code> takes two <code>Optionals</code>, one from <code>A</code> to <code>B</code> and another from <code>B</code> to <code>C</code> and
-creates a third <code>Optional</code> from <code>A</code> to <code>C</code>. All <code>Lenses</code> can be seen as <code>Optionals</code> where the optional element to zoom into is always
-present, hence composing an <code>Optional</code> and a <code>Lens</code> always produces an <code>Optional</code> (see class <a href="/Monocle/docs/optics.html">diagram</a> for full inheritance
-relation between optics).</p>
-<p>Monocle offers various functions and macros to cut the boilerplate even further, here is an example:</p>
-<pre><code class="hljs css language-scala mdoc"><span class="hljs-keyword">import</span> monocle.macros.syntax.lens._
-
-employee.lens(_.company.address.street.name).composeOptional(headOption).modify(_.toUpper)
-</code></pre>
-<p>Please consult the <a href="/Monocle/docs/modules.html">documentation</a> or the <a href="/Monocle/api">scaladoc</a> for more details and examples.</p>
 <h2><a class="anchor" aria-hidden="true" id="copyright-and-license"></a><a href="#copyright-and-license" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Copyright and license</h2>
 <p>All code is available to you under the MIT license, available <a href="http://opensource.org/licenses/mit-license.php">here</a>.
 The design is informed by many other projects, in particular Haskell <a href="https://github.com/ekmett/lens">Lens</a>.</p>
-<p>Copyright the maintainers, 2016.</p>
+<p>Copyright the maintainers, 2016 - 2021.</p>
 </span></div></div></div></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2021.</section></footer></div></body></html>
