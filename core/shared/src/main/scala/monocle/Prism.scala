@@ -182,7 +182,7 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
     andThen(other)
 
   /** Compose with a function lifted into a Getter */
-  def to[C](f: A => C): Fold[S, C] = composeGetter(Getter(f))
+  def to[C](f: A => C): Fold[S, C] = andThen(Getter(f))
 
   /** compose a [[PPrism]] with a [[Getter]] */
   @deprecated("use andThen", since = "3.0.0-M1")
@@ -377,7 +377,7 @@ sealed abstract class PrismInstances {
       Prism.id
 
     def compose[A, B, C](f: Prism[B, C], g: Prism[A, B]): Prism[A, C] =
-      g composePrism f
+      g.andThen(f)
   }
 }
 
@@ -388,7 +388,7 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
     Prism[F[S], F[A]](F.traverse(_)(self.getOption))(F.map(_)(self.reverseGet))
 
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
-    self composeTraversal evEach.each
+    self.andThen(evEach.each)
 
   /** Select all the elements which satisfies the predicate.
     * This combinator can break the fusion property see Optional.filter for more details.
@@ -400,7 +400,7 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Prism[S, A1] =
-    self.adapt[Option[A1], Option[A1]] composeIso (std.option.withDefault(defaultValue))
+    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Optional[S, A1] =
     self.andThen(evAt.at(i))
