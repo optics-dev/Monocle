@@ -1,5 +1,6 @@
 package monocle.internal.focus
 
+import monocle.syntax.FocusSyntax
 import monocle.Lens
 import scala.quoted.{Type, Expr, Quotes, quotes}
 
@@ -27,7 +28,7 @@ private[focus] class FocusImpl(val macroContext: Quotes)
 
 
 private[monocle] object FocusImpl {
-  def apply[From: Type, To: Type](contextExpr: Expr[InFocus ?=> From => To])(using Quotes): Expr[Any] = {
+  def apply[From: Type, To: Type](contextExpr: Expr[FocusSyntax ?=> From => To])(using Quotes): Expr[Any] = {
     InFocus.stripContext[From, To](contextExpr) match {
       case Some(lambda) => new FocusImpl(quotes).run(lambda)
       case _ => sys.error("Unexpected code structure ${contextExpr.show}")
