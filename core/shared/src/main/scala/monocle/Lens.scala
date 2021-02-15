@@ -29,13 +29,13 @@ abstract class PLens[SourceIn, SourceOut, TargetIn, TargetOut] extends Serializa
   /** modify the target using a function with effects */
   def modifyF[Effect[_]: Functor](f: TargetIn => Effect[TargetOut])(s: SourceIn): Effect[SourceOut]
 
-  /** modify the target using a function. 
+  /** modify the target using a function.
     * This is equivalent to: {{
     *   val target    = get(source)
     *   val newTarget = update(target)
     *   replace(newTarget)(source)
     * }}
-    * */
+    */
   def modify(update: TargetIn => TargetOut): SourceIn => SourceOut
 
   /** find if the target satisfies a predicate */
@@ -47,13 +47,17 @@ abstract class PLens[SourceIn, SourceOut, TargetIn, TargetOut] extends Serializa
     predicate compose get
 
   /** join two Lenses with the same targets */
-  final def choice[S1, T1](other: PLens[S1, T1, TargetIn, TargetOut]): PLens[Either[SourceIn, S1], Either[SourceOut, T1], TargetIn, TargetOut] =
+  final def choice[S1, T1](
+    other: PLens[S1, T1, TargetIn, TargetOut]
+  ): PLens[Either[SourceIn, S1], Either[SourceOut, T1], TargetIn, TargetOut] =
     PLens[Either[SourceIn, S1], Either[SourceOut, T1], TargetIn, TargetOut](_.fold(self.get, other.get))(b =>
       _.bimap(self.replace(b), other.replace(b))
     )
 
   /** pair two disjoint Lenses */
-  final def split[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(SourceIn, S1), (SourceOut, T1), (TargetIn, A1), (TargetOut, B1)] =
+  final def split[S1, T1, A1, B1](
+    other: PLens[S1, T1, A1, B1]
+  ): PLens[(SourceIn, S1), (SourceOut, T1), (TargetIn, A1), (TargetOut, B1)] =
     PLens[(SourceIn, S1), (SourceOut, T1), (TargetIn, A1), (TargetOut, B1)] { case (s, s1) =>
       (self.get(s), other.get(s1))
     } {
@@ -80,11 +84,19 @@ abstract class PLens[SourceIn, SourceOut, TargetIn, TargetOut] extends Serializa
       }
     }
 
-  def some[A1, B1](implicit targetInIsOption: TargetIn =:= Option[A1], targetOutIsOption: TargetOut =:= Option[B1]): POptional[SourceIn, SourceOut, A1, B1] =
+  def some[A1, B1](implicit
+    targetInIsOption: TargetIn =:= Option[A1],
+    targetOutIsOption: TargetOut =:= Option[B1]
+  ): POptional[SourceIn, SourceOut, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  private[monocle] def adapt[A1, B1](implicit evA: TargetIn =:= A1, evB: TargetOut =:= B1): PLens[SourceIn, SourceOut, A1, B1] =
-    evB.substituteCo[PLens[SourceIn, SourceOut, A1, *]](evA.substituteCo[PLens[SourceIn, SourceOut, *, TargetOut]](this))
+  private[monocle] def adapt[A1, B1](implicit
+    evA: TargetIn =:= A1,
+    evB: TargetOut =:= B1
+  ): PLens[SourceIn, SourceOut, A1, B1] =
+    evB.substituteCo[PLens[SourceIn, SourceOut, A1, *]](
+      evA.substituteCo[PLens[SourceIn, SourceOut, *, TargetOut]](this)
+    )
 
   /** compose with a [[Fold]] */
   final def andThen[C](other: Fold[TargetIn, C]): Fold[SourceIn, C] =
@@ -95,23 +107,33 @@ abstract class PLens[SourceIn, SourceOut, TargetIn, TargetOut] extends Serializa
     asGetter.andThen(other)
 
   /** compose with a [[PSetter]] */
-  final def andThen[NextIn, NextOut](other: PSetter[TargetIn, TargetOut, NextIn, NextOut]): PSetter[SourceIn, SourceOut, NextIn, NextOut] =
+  final def andThen[NextIn, NextOut](
+    other: PSetter[TargetIn, TargetOut, NextIn, NextOut]
+  ): PSetter[SourceIn, SourceOut, NextIn, NextOut] =
     asSetter.andThen(other)
 
   /** compose with a [[PTraversal]] */
-  final def andThen[NextIn, NextOut](other: PTraversal[TargetIn, TargetOut, NextIn, NextOut]): PTraversal[SourceIn, SourceOut, NextIn, NextOut] =
+  final def andThen[NextIn, NextOut](
+    other: PTraversal[TargetIn, TargetOut, NextIn, NextOut]
+  ): PTraversal[SourceIn, SourceOut, NextIn, NextOut] =
     asTraversal.andThen(other)
 
   /** compose with an [[POptional]] */
-  final def andThen[NextIn, NextOut](other: POptional[TargetIn, TargetOut, NextIn, NextOut]): POptional[SourceIn, SourceOut, NextIn, NextOut] =
+  final def andThen[NextIn, NextOut](
+    other: POptional[TargetIn, TargetOut, NextIn, NextOut]
+  ): POptional[SourceIn, SourceOut, NextIn, NextOut] =
     asOptional.andThen(other)
 
   /** compose with a [[PPrism]] */
-  final def andThen[NextIn, NextOut](other: PPrism[TargetIn, TargetOut, NextIn, NextOut]): POptional[SourceIn, SourceOut, NextIn, NextOut] =
+  final def andThen[NextIn, NextOut](
+    other: PPrism[TargetIn, TargetOut, NextIn, NextOut]
+  ): POptional[SourceIn, SourceOut, NextIn, NextOut] =
     asOptional.andThen(other)
 
   /** compose with a [[PLens]] */
-  final def andThen[NextIn, NextOut](other: PLens[TargetIn, TargetOut, NextIn, NextOut]): PLens[SourceIn, SourceOut, NextIn, NextOut] =
+  final def andThen[NextIn, NextOut](
+    other: PLens[TargetIn, TargetOut, NextIn, NextOut]
+  ): PLens[SourceIn, SourceOut, NextIn, NextOut] =
     new PLens[SourceIn, SourceOut, NextIn, NextOut] {
       def get(source: SourceIn): NextIn =
         other.get(self.get(source))
@@ -127,7 +149,9 @@ abstract class PLens[SourceIn, SourceOut, TargetIn, TargetOut] extends Serializa
     }
 
   /** compose with an [[PIso]] */
-  final def andThen[NextIn, NextOut](other: PIso[TargetIn, TargetOut, NextIn, NextOut]): PLens[SourceIn, SourceOut, NextIn, NextOut] =
+  final def andThen[NextIn, NextOut](
+    other: PIso[TargetIn, TargetOut, NextIn, NextOut]
+  ): PLens[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other.asLens)
 
   /** compose with a [[Fold]] */
@@ -144,32 +168,44 @@ abstract class PLens[SourceIn, SourceOut, TargetIn, TargetOut] extends Serializa
 
   /** compose  with a [[PSetter]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeSetter[NextIn, NextOut](other: PSetter[TargetIn, TargetOut, NextIn, NextOut]): PSetter[SourceIn, SourceOut, NextIn, NextOut] =
+  final def composeSetter[NextIn, NextOut](
+    other: PSetter[TargetIn, TargetOut, NextIn, NextOut]
+  ): PSetter[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** compose with a [[PTraversal]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeTraversal[NextIn, NextOut](other: PTraversal[TargetIn, TargetOut, NextIn, NextOut]): PTraversal[SourceIn, SourceOut, NextIn, NextOut] =
+  final def composeTraversal[NextIn, NextOut](
+    other: PTraversal[TargetIn, TargetOut, NextIn, NextOut]
+  ): PTraversal[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** compose with an [[POptional]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeOptional[NextIn, NextOut](other: POptional[TargetIn, TargetOut, NextIn, NextOut]): POptional[SourceIn, SourceOut, NextIn, NextOut] =
+  final def composeOptional[NextIn, NextOut](
+    other: POptional[TargetIn, TargetOut, NextIn, NextOut]
+  ): POptional[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** compose with a [[PPrism]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composePrism[NextIn, NextOut](other: PPrism[TargetIn, TargetOut, NextIn, NextOut]): POptional[SourceIn, SourceOut, NextIn, NextOut] =
+  final def composePrism[NextIn, NextOut](
+    other: PPrism[TargetIn, TargetOut, NextIn, NextOut]
+  ): POptional[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** compose with a [[PLens]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeLens[NextIn, NextOut](other: PLens[TargetIn, TargetOut, NextIn, NextOut]): PLens[SourceIn, SourceOut, NextIn, NextOut] =
+  final def composeLens[NextIn, NextOut](
+    other: PLens[TargetIn, TargetOut, NextIn, NextOut]
+  ): PLens[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** compose with an [[PIso]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeIso[NextIn, NextOut](other: PIso[TargetIn, TargetOut, NextIn, NextOut]): PLens[SourceIn, SourceOut, NextIn, NextOut] =
+  final def composeIso[NextIn, NextOut](
+    other: PIso[TargetIn, TargetOut, NextIn, NextOut]
+  ): PLens[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** *****************************************
@@ -179,27 +215,37 @@ abstract class PLens[SourceIn, SourceOut, TargetIn, TargetOut] extends Serializa
     */
   /** alias to composeTraversal */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->>[NextIn, NextOut](other: PTraversal[TargetIn, TargetOut, NextIn, NextOut]): PTraversal[SourceIn, SourceOut, NextIn, NextOut] =
+  final def ^|->>[NextIn, NextOut](
+    other: PTraversal[TargetIn, TargetOut, NextIn, NextOut]
+  ): PTraversal[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** alias to composeOptional */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|-?[NextIn, NextOut](other: POptional[TargetIn, TargetOut, NextIn, NextOut]): POptional[SourceIn, SourceOut, NextIn, NextOut] =
+  final def ^|-?[NextIn, NextOut](
+    other: POptional[TargetIn, TargetOut, NextIn, NextOut]
+  ): POptional[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** alias to composePrism */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<-?[NextIn, NextOut](other: PPrism[TargetIn, TargetOut, NextIn, NextOut]): POptional[SourceIn, SourceOut, NextIn, NextOut] =
+  final def ^<-?[NextIn, NextOut](
+    other: PPrism[TargetIn, TargetOut, NextIn, NextOut]
+  ): POptional[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** alias to composeLens */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->[NextIn, NextOut](other: PLens[TargetIn, TargetOut, NextIn, NextOut]): PLens[SourceIn, SourceOut, NextIn, NextOut] =
+  final def ^|->[NextIn, NextOut](
+    other: PLens[TargetIn, TargetOut, NextIn, NextOut]
+  ): PLens[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** alias to composeIso */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<->[NextIn, NextOut](other: PIso[TargetIn, TargetOut, NextIn, NextOut]): PLens[SourceIn, SourceOut, NextIn, NextOut] =
+  final def ^<->[NextIn, NextOut](
+    other: PIso[TargetIn, TargetOut, NextIn, NextOut]
+  ): PLens[SourceIn, SourceOut, NextIn, NextOut] =
     andThen(other)
 
   /** *********************************************************************************************
@@ -267,7 +313,9 @@ object PLens extends LensInstances {
   /** create a [[PLens]] using a pair of functions: one to get the target, one to replace the target.
     * @see macro module for methods generating [[PLens]] with less boiler plate
     */
-  def apply[SourceIn, SourceOut, TargetIn, TargetOut](_get: SourceIn => TargetIn)(_replace: TargetOut => SourceIn => SourceOut): PLens[SourceIn, SourceOut, TargetIn, TargetOut] =
+  def apply[SourceIn, SourceOut, TargetIn, TargetOut](
+    _get: SourceIn => TargetIn
+  )(_replace: TargetOut => SourceIn => SourceOut): PLens[SourceIn, SourceOut, TargetIn, TargetOut] =
     new PLens[SourceIn, SourceOut, TargetIn, TargetOut] {
       def get(source: SourceIn): TargetIn =
         _get(source)
@@ -301,7 +349,10 @@ object Lens {
 
 sealed abstract class LensInstances {
   implicit val lensChoice: Choice[Lens] = new Choice[Lens] {
-    def choice[Source, OtherSource, Target](f: Lens[Source, Target], g: Lens[OtherSource, Target]): Lens[Either[Source, OtherSource], Target] =
+    def choice[Source, OtherSource, Target](
+      f: Lens[Source, Target],
+      g: Lens[OtherSource, Target]
+    ): Lens[Either[Source, OtherSource], Target] =
       f choice g
 
     def id[Source]: Lens[Source, Source] =
@@ -323,7 +374,9 @@ final case class LensSyntax[Source, Target](private val self: Lens[Source, Targe
   def filter(predicate: Target => Boolean): Optional[Source, Target] =
     self.andThen(Optional.filter(predicate))
 
-  def filterIndex[Key, Next](predicate: Key => Boolean)(implicit ev: FilterIndex[Target, Key, Next]): Traversal[Source, Next] =
+  def filterIndex[Key, Next](predicate: Key => Boolean)(implicit
+    ev: FilterIndex[Target, Key, Next]
+  ): Traversal[Source, Next] =
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[Next: Eq](defaultValue: Next)(implicit evOpt: Target =:= Option[Next]): Lens[Source, Next] =
