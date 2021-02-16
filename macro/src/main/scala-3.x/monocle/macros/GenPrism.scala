@@ -1,7 +1,7 @@
 package monocle.macros
 
-import Monocle.Focus.MkFocus
+import monocle.Focus
 
 object GenPrism {
-  def apply[Source, Target] = new MkFocus[Source](_.as[Target])
+  def apply[Source, Target <: Source] = Focus[Source](_.as[Target])
 }
