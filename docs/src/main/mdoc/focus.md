@@ -104,10 +104,10 @@ bob
   .modify(_ + 1)
 ```
 
-## Update a single element inside a List/Vector
+## Update a single element inside a List
 
 In this example, `User` contains a `List` of `DebitCard`. Let's imagine we want to update the expiration date of
-the first debit card. 
+the second debit card. 
 
 ```scala mdoc:reset:silent
 import java.time.YearMonth
@@ -133,7 +133,7 @@ import monocle.syntax.all._
 
 anna
   .focus(_.debitCards)  // soon .focus(_.debitCards.index(0).expirationDate)
-  .index(0)
+  .index(1)
   .andThen(Focus[DebitCard](_.expirationDate))
   .replace(YearMonth.of(2026, 2))
 // res: User = User(
@@ -141,12 +141,12 @@ anna
 //   debitCards = List(
 //     DebitCard(
 //       cardNumber = "4568 5794 3109 3087",
-//       expirationDate = 2026-02,
+//       expirationDate = 2022-04,
 //       securityCode = 361
 //     ),
 //     DebitCard(
 //       cardNumber = "5566 2337 3022 2470",
-//       expirationDate = 2024-08,
+//       expirationDate = 2026-02,
 //       securityCode = 990
 //     )
 //   )
@@ -154,7 +154,7 @@ anna
 
 bob
   .focus(_.debitCards) 
-  .index(0)
+  .index(1)
   .andThen(Focus[DebitCard](_.expirationDate))
   .replace(YearMonth.of(2026, 2))
 // res: User = User("Bob", List())
@@ -167,13 +167,30 @@ import monocle.macros.syntax.all._
 
 anna
   .focus(_.debitCards) 
-  .index(0)
+  .index(1)
   .andThen(Focus[DebitCard](_.expirationDate))
   .replace(YearMonth.of(2026, 2))
 
 bob
   .focus(_.debitCards) 
-  .index(0)
+  .index(1)
   .andThen(Focus[DebitCard](_.expirationDate))
   .replace(YearMonth.of(2026, 2))
 ```
+
+`replace` had no effect on `bob` because he doesn't have a debit card.
+
+`index` only targets the object at the specified key. If there is no value at this key,
+then `replace` and `modify` are no-operation.
+
+`index` works out of the box for the following data structures:
+* `List`
+* `LazyList`
+* `Map`
+* `String`
+* `Vector`
+* `cats.data.Chain`
+* `cats.NonEmptyChain`
+* `cats.data.NonEmptyList`
+* `cats.data.OneAnd`
+
