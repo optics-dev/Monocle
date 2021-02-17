@@ -9,6 +9,7 @@
       "optics/traversal"
     ],
     "Documentation": [
+      "focus",
       "modules",
       "examples",
       "faq",
