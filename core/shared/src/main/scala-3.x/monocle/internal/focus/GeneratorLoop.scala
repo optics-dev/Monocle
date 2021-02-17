@@ -37,7 +37,7 @@ private[focus] trait GeneratorLoop {
     }
 
   private def composeOptics(lens1: Term, lens2: Term): FocusResult[Term] = {
-    lens2.tpe match {
+    lens2.tpe.widen match {
       // Won't yet work for polymorphism where A != B, nor for non-polymorphic optics Getter, Setter or Fold.
       case AppliedType(_, List(_, toType2)) => Right(Select.overloaded(lens1, "andThen", List(toType2, toType2), List(lens2)))
       case _ => FocusError.ComposeMismatch(lens1.tpe.show, lens2.tpe.show).asResult
