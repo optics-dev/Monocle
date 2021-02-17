@@ -3,12 +3,11 @@
 //import eu.timepit.refined.scalacheck.refTypeCogen
 //import eu.timepit.refined.scalacheck.string.{endsWithArbitrary, startsWithArbitrary}
 //import eu.timepit.refined.scalacheck.any.arbitraryFromValidate
-//import monocle.MonocleSuite
 //import monocle.law.discipline.PrismTests
-//
+//import monocle.refined.all._
 //import cats.Eq
 //
-//class StringsSpec extends MonocleSuite {
+//class StringsSpec extends munit.DisciplineSuite {
 //  implicit val eqStartsWith: Eq[StartsWithString["hello"]] =
 //    Eq.fromUniversalEquals[StartsWithString["hello"]]
 //  implicit val eqEndsWith: Eq[EndsWithString["world"]] = Eq.fromUniversalEquals[EndsWithString["world"]]

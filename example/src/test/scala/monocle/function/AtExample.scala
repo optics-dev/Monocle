@@ -2,6 +2,7 @@ package monocle.function
 
 import monocle.MonocleSuite
 import monocle.refined._
+import monocle.refined.all._
 import shapeless.test.illTyped
 import eu.timepit.refined.auto._
 
