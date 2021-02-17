@@ -193,7 +193,7 @@ lazy val generic = crossProject(JVMPlatform, JSPlatform)
 
 lazy val refined = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(core)
+  .dependsOn(core, law)
   .settings(moduleName := "monocle-refined")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -201,7 +201,12 @@ lazy val refined = crossProject(JVMPlatform, JSPlatform)
   )
   .settings(
     crossScalaVersions ++= dottyVersions,
-    libraryDependencies ++= Seq(cats.value, refinedDep.value)
+    libraryDependencies ++= Seq(
+      cats.value,
+      refinedDep.value,
+      munitDiscipline.value,
+      refinedScalacheck.value
+    )
   )
 
 lazy val law = crossProject(JVMPlatform, JSPlatform)
@@ -265,7 +270,7 @@ lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
   .jvmSettings(mimaSettings("unsafe"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, alleycats.value))
 
-lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, law, state, refined, unsafe)
+lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, law, state, unsafe)
   .settings(moduleName := "monocle-test")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
@@ -278,7 +283,6 @@ lazy val test = crossProject(JVMPlatform, JSPlatform).dependsOn(core, law, state
       cats.value,
       catsLaws.value,
       munitDiscipline.value,
-      refinedScalacheck.value
     )
   )
 
