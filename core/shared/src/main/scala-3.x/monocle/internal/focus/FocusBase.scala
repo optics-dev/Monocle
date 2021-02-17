@@ -14,11 +14,13 @@ private[focus] trait FocusBase {
     case FieldSelect(name: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
     case OptionSome(toType: TypeRepr)
     case CastAs(fromType: TypeRepr, toType: TypeRepr)
+    case Each(fromType: TypeRepr, toType: TypeRepr, eachInstance: Term)
 
     override def toString(): String = this match {
       case FieldSelect(name, fromType, fromTypeArgs, toType) => s"FieldSelect($name, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
       case OptionSome(toType) => s"OptionSome(${toType.show})"
       case CastAs(fromType, toType) => s"CastAs(${fromType.show}, ${toType.show})"
+      case Each(fromType, toType, eachInstance) => s"Each(${fromType.show}, ${toType.show}, ...)"
     }
   }
 
@@ -40,5 +42,4 @@ private[focus] trait FocusBase {
   }
 
   type FocusResult[+A] = Either[FocusError, A]
-  type ParseResult = FocusResult[List[FocusAction]]
 }

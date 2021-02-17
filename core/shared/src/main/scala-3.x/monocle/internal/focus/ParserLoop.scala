@@ -4,19 +4,21 @@ import scala.quoted.Type
 import monocle.internal.focus.features.fieldselect.FieldSelectParser
 import monocle.internal.focus.features.optionsome.OptionSomeParser
 import monocle.internal.focus.features.castas.CastAsParser
+import monocle.internal.focus.features.each.EachParser
 
 private[focus] trait AllParsers 
   extends FocusBase
   with FieldSelectParser 
   with OptionSomeParser
   with CastAsParser
+  with EachParser
 
 private[focus] trait ParserLoop {
   this: FocusBase with AllParsers => 
 
   import macroContext.reflect._
   
-  def parseLambda[From: Type](lambda: Term): ParseResult = {
+  def parseLambda[From: Type](lambda: Term): FocusResult[List[FocusAction]] = {
     val fromTypeIsConcrete = TypeRepr.of[From].classSymbol.isDefined
 
     lambda match {
@@ -35,8 +37,8 @@ private[focus] trait ParserLoop {
     }
   }
 
-  private def parseLambdaBody(params: ParseParams): ParseResult = {
-    def loop(remainingBody: Term, listSoFar: List[FocusAction]): ParseResult = {
+  private def parseLambdaBody(params: ParseParams): FocusResult[List[FocusAction]] = {
+    def loop(remainingBody: Term, listSoFar: List[FocusAction]): FocusResult[List[FocusAction]] = {
 
       remainingBody match {
         case LambdaArgument(idName) if idName == params.argName => Right(listSoFar)
@@ -44,6 +46,9 @@ private[focus] trait ParserLoop {
 
         case OptionSome(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case OptionSome(Left(error)) => Left(error)
+
+        case Each(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case Each(Left(error)) => Left(error)
 
         case CastAs(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case CastAs(Left(error)) => Left(error)
@@ -56,7 +61,7 @@ private[focus] trait ParserLoop {
     }
     loop(params.lambdaBody, Nil)
   }
-
+  
   private def unwrap(term: Term): Term = {
     term match {
       case Block(List(), inner) => unwrap(inner)

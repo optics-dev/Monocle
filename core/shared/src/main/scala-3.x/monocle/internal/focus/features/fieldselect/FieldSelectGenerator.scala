@@ -19,7 +19,7 @@ private[focus] trait FieldSelectGenerator {
           val getter: f => t = (from: f) => 
             ${ generateGetter(field, '{from}.asTerm).asExprOf[t] }
 
-          _root_.monocle.Lens.apply[f, t](getter)(setter)
+          Lens.apply[f, t](getter)(setter)
         }.asTerm
     }
   }
