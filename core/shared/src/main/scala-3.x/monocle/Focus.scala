@@ -1,5 +1,6 @@
 package monocle
 
+import monocle.function.Each
 import monocle.internal.focus.{FocusImpl, AppliedFocusImpl}
 import monocle.syntax.FocusSyntax
 
