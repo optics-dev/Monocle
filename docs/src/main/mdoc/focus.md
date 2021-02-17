@@ -103,3 +103,77 @@ bob
   .andThen(Focus[Address](_.streetNumber))
   .modify(_ + 1)
 ```
+
+## Update a single element inside a List/Vector
+
+In this example, `User` contains a `List` of `DebitCard`. Let's imagine we want to update the expiration date of
+the first debit card. 
+
+```scala mdoc:reset:silent
+import java.time.YearMonth
+
+case class User(name: String, debitCards: List[DebitCard])
+case class DebitCard(cardNumber: String, expirationDate: YearMonth, securityCode: Int)
+
+val anna = User(
+  "Anna",
+  List(
+    DebitCard("4568 5794 3109 3087", YearMonth.of(2022, 4), 361),
+    DebitCard("5566 2337 3022 2470", YearMonth.of(2024, 8), 990)
+  )
+)
+
+val bob = User("Bob", List())
+```
+
+In Scala 3
+```scala
+import monocle.Focus
+import monocle.syntax.all._
+
+anna
+  .focus(_.debitCards)  // soon .focus(_.debitCards.index(0).expirationDate)
+  .index(0)
+  .andThen(Focus[DebitCard](_.expirationDate))
+  .replace(YearMonth.of(2026, 2))
+// res: User = User(
+//   name = "Anna",
+//   debitCards = List(
+//     DebitCard(
+//       cardNumber = "4568 5794 3109 3087",
+//       expirationDate = 2026-02,
+//       securityCode = 361
+//     ),
+//     DebitCard(
+//       cardNumber = "5566 2337 3022 2470",
+//       expirationDate = 2024-08,
+//       securityCode = 990
+//     )
+//   )
+// )
+
+bob
+  .focus(_.debitCards) 
+  .index(0)
+  .andThen(Focus[DebitCard](_.expirationDate))
+  .replace(YearMonth.of(2026, 2))
+// res: User = User("Bob", List())
+```
+
+In Scala 2
+```scala mdoc
+import monocle.Focus
+import monocle.macros.syntax.all._
+
+anna
+  .focus(_.debitCards) 
+  .index(0)
+  .andThen(Focus[DebitCard](_.expirationDate))
+  .replace(YearMonth.of(2026, 2))
+
+bob
+  .focus(_.debitCards) 
+  .index(0)
+  .andThen(Focus[DebitCard](_.expirationDate))
+  .replace(YearMonth.of(2026, 2))
+```
