@@ -29,7 +29,7 @@ class LensMonoExample extends MonocleSuite {
     assertEquals(Manual._name.get(john), "John")
     assertEquals(Semi.name.get(john), "John")
     assertEquals(Person.name.get(john), "John")
-    assertEquals(john.lens(_.name).get, "John")
+    assertEquals(john.focus(_.name).get, "John")
   }
 
   test("set") {
@@ -38,14 +38,14 @@ class LensMonoExample extends MonocleSuite {
     assertEquals(Manual._age.replace(45)(john), changedJohn)
     assertEquals(Semi.age.replace(45)(john), changedJohn)
     assertEquals(Person.age.replace(45)(john), changedJohn)
-    assertEquals(john.lens(_.age).replace(45), changedJohn)
+    assertEquals(john.focus(_.age).replace(45), changedJohn)
   }
 
   test("compose") {
     assertEquals((Manual._address andThen Manual._streetNumber).get(john), 126)
     assertEquals((Semi.address andThen Semi.streetNumber).get(john), 126)
     assertEquals((Person.address andThen Address.streetNumber).get(john), 126)
-    assertEquals(john.lens(_.address.streetNumber).get, 126)
+    assertEquals(john.focus(_.address.streetNumber).get, 126)
   }
 
   @Lenses("_") // this generates lenses prefixed with _ in the Cat companion object

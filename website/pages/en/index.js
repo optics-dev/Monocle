@@ -52,8 +52,8 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <ProjectTitle siteConfig={siteConfig} />
           <PromoSection>
-            <Button href={siteConfig.apiUrl}>API Docs</Button>
-            <Button href={docUrl("modules", language)}>Documentation</Button>
+            <Button href={siteConfig.apiUrl}>Scaladoc</Button>
+            <Button href={docUrl("focus", language)}>Get Started</Button>
             <Button href={siteConfig.repoUrl}>View on GitHub</Button>
           </PromoSection>
         </div>
@@ -99,13 +99,13 @@ Monocle is a Scala library which offers a simple yet powerful API to access and 
 \`\`\`scala
 import monocle.syntax.all._
 
-val user = User( "Anna", Address(12, "high street"))
+val user = User("Anna", Address(12, "high street"))
 
 user.focus(_.name).replace("Bob")
-// res: User = User( "Bob", Address(12, "high street"))
+// res: User = User("Bob", Address(12, "high street"))
 
 user.focus(_.address.streetName).modify(_.toUpperCase)
-// res: User = User( "Anna", Address(12, "HIGH STREET"))
+// res: User = User("Anna", Address(12, "HIGH STREET"))
 
 user.focus(_.address.streetNumber).get
 // res: Int = 12

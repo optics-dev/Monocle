@@ -7,7 +7,9 @@ trait GenApplyLensSyntax {
 }
 
 class GenApplyLensOps[A](private val value: A) extends AnyVal {
+  @deprecated("use focus", since = "3.0.0-M1")
   def lens[C](field: A => C): ApplyLens[A, A, C, C] = macro GenApplyLensOpsImpl.lens_impl[A, C]
+  def focus[C](field: A => C): ApplyLens[A, A, C, C] = macro GenApplyLensOpsImpl.lens_impl[A, C]
 }
 
 class GenApplyLensOpsImpl(val c: blackbox.Context) {
