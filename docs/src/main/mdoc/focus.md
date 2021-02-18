@@ -183,14 +183,5 @@ bob
 `index` only targets the object at the specified key. If there is no value at this key,
 then `replace` and `modify` are no-operation.
 
-`index` works out of the box for the following data structures:
-* `List`
-* `LazyList`
-* `Map`
-* `String`
-* `Vector`
-* `cats.data.Chain`
-* `cats.NonEmptyChain`
-* `cats.data.NonEmptyList`
-* `cats.data.OneAnd`
+`index` also works on other "indexable" datastructures such as `Vector` or `Map`.
 
