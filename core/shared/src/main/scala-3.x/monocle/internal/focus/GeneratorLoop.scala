@@ -8,7 +8,7 @@ import monocle.{Lens, Iso, Prism, Optional, Traversal}
 import scala.quoted.Type
 
 
-private[focus] trait AllGenerators
+private[focus] trait AllFeatureGenerators
   extends FocusBase
   with FieldSelectGenerator 
   with OptionSomeGenerator
@@ -16,7 +16,7 @@ private[focus] trait AllGenerators
   with EachGenerator
 
 private[focus] trait GeneratorLoop {
-  this: FocusBase with AllGenerators => 
+  this: FocusBase with AllFeatureGenerators => 
 
   import macroContext.reflect._
 
