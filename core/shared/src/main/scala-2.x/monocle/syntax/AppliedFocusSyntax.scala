@@ -1,3 +1,3 @@
 package monocle.syntax
 
-trait FocusSyntax
+trait AppliedFocusSyntax
