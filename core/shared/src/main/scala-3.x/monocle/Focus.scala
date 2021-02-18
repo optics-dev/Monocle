@@ -7,7 +7,7 @@ import monocle.function.Each
 
 object Focus extends AppliedFocusSyntax {
 
-  sealed trait MagicKeywords {
+  sealed trait KeywordContext {
     extension [CastTo] (from: Any)
       def as: CastTo = scala.sys.error("Extension method 'as[CastTo]' should only be used within the monocle.Focus macro.")
 
@@ -21,7 +21,7 @@ object Focus extends AppliedFocusSyntax {
   def apply[S] = new MkFocus[S]
 
   class MkFocus[From] {
-    transparent inline def apply[To](inline lambda: (MagicKeywords ?=> From => To)): Any = 
+    transparent inline def apply[To](inline lambda: (KeywordContext ?=> From => To)): Any = 
       ${ FocusImpl('lambda) }
   }
 }

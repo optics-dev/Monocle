@@ -6,7 +6,7 @@ import scala.quoted.{Type, Expr, Quotes, quotes}
 
 
 private[monocle] object AppliedFocusImpl {
-  def apply[From: Type, To: Type](from: Expr[From], lambda: Expr[Focus.MagicKeywords ?=> From => To])(using Quotes): Expr[Any] = {
+  def apply[From: Type, To: Type](from: Expr[From], lambda: Expr[Focus.KeywordContext ?=> From => To])(using Quotes): Expr[Any] = {
 
     import quotes.reflect._
 

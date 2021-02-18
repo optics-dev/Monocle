@@ -12,7 +12,7 @@ private[focus] class FocusImpl(val macroContext: Quotes)
 
   import macroContext.reflect._
 
-  def run[From: Type, To: Type](lambda: Expr[Focus.MagicKeywords ?=> From => To]): Expr[Any] = {
+  def run[From: Type, To: Type](lambda: Expr[Focus.KeywordContext ?=> From => To]): Expr[Any] = {
     val generatedCode = 
       for {
         config <- parseLambdaConfig[From](lambda.asTerm)
@@ -28,6 +28,6 @@ private[focus] class FocusImpl(val macroContext: Quotes)
 }
 
 private[monocle] object FocusImpl {
-  def apply[From: Type, To: Type](lambda: Expr[Focus.MagicKeywords ?=> From => To])(using Quotes): Expr[Any] =
+  def apply[From: Type, To: Type](lambda: Expr[Focus.KeywordContext ?=> From => To])(using Quotes): Expr[Any] =
     new FocusImpl(quotes).run(lambda)
 }

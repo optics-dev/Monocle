@@ -11,14 +11,14 @@ private[focus] trait LambdaConfigParser {
     val fromTypeIsConcrete = TypeRepr.of[From].classSymbol.isDefined
 
     lambda match {
-      case WithMagicKeywords(ExpectedLambdaFunction(config)) if fromTypeIsConcrete => Right(config)
-      case WithMagicKeywords(ExpectedLambdaFunction(_)) => FocusError.NotAConcreteClass(Type.show[Type[From]]).asResult 
-      case WithMagicKeywords(_) => FocusError.NotASimpleLambdaFunction.asResult
-      case _ => FocusError.CouldntRemoveMagicKeywords.asResult
+      case WithKeywordContext(ExpectedLambdaFunction(config)) if fromTypeIsConcrete => Right(config)
+      case WithKeywordContext(ExpectedLambdaFunction(_)) => FocusError.NotAConcreteClass(Type.show[Type[From]]).asResult 
+      case WithKeywordContext(_) => FocusError.NotASimpleLambdaFunction.asResult
+      case _ => FocusError.CouldntUnderstandKeywordContext.asResult
     }
   }
 
-  private object WithMagicKeywords {
+  private object WithKeywordContext {
     def unapply(lambdaWithMagic: Term): Option[Term] = unwrap(lambdaWithMagic) match {
       case Block(List(DefDef(_, _, _, _, Some(magicFreeLambda))), _) => Some(magicFreeLambda)
       case _ => None

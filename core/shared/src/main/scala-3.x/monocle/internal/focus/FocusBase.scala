@@ -31,7 +31,7 @@ private[focus] trait FocusBase {
     case NotAConcreteClass(className: String)
     case DidNotDirectlyAccessArgument(argName: String)
     case NotASimpleLambdaFunction
-    case CouldntRemoveMagicKeywords
+    case CouldntUnderstandKeywordContext
     case UnexpectedCodeStructure(code: String)
     case CouldntFindFieldType(fromType: String, fieldName: String)
     case ComposeMismatch(type1: String, type2: String)
