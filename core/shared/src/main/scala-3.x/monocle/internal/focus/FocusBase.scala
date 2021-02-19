@@ -10,6 +10,8 @@ private[focus] trait FocusBase {
   type Term = macroContext.reflect.Term
   type TypeRepr = macroContext.reflect.TypeRepr
 
+  case class LambdaConfig(argName: String, lambdaBody: Term)
+
   enum FocusAction {
     case FieldSelect(name: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
     case OptionSome(toType: TypeRepr)
@@ -29,6 +31,7 @@ private[focus] trait FocusBase {
     case NotAConcreteClass(className: String)
     case DidNotDirectlyAccessArgument(argName: String)
     case NotASimpleLambdaFunction
+    case CouldntUnderstandKeywordContext
     case UnexpectedCodeStructure(code: String)
     case CouldntFindFieldType(fromType: String, fieldName: String)
     case ComposeMismatch(type1: String, type2: String)
@@ -39,7 +42,18 @@ private[focus] trait FocusBase {
 
   trait FocusParser {
     def unapply(term: Term): Option[FocusResult[(Term, FocusAction)]]
+
+    object FocusKeyword {
+      import macroContext.reflect._
+
+      def unapply(term: Term): Option[String] = term match {
+        case Select(_, keyword) => Some(keyword)
+        case _ => None
+      }
+    }
   }
+
+
 
   type FocusResult[+A] = Either[FocusError, A]
 }

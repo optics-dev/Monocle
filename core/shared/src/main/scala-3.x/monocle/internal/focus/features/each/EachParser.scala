@@ -10,7 +10,7 @@ private[focus] trait EachParser {
   object Each extends FocusParser {
 
     def unapply(term: Term): Option[FocusResult[(Term, FocusAction)]] = term match {
-      case Apply(Apply(TypeApply(Ident("each"), List(_, toTypeTree)), List(remainingCode)), List(eachInstance)) => 
+      case Apply(Apply(TypeApply(FocusKeyword("each"), List(_, toTypeTree)), List(remainingCode)), List(eachInstance)) => 
         val fromType = remainingCode.tpe.widen
         val toType = toTypeTree.tpe
         val action = FocusAction.Each(fromType, toType, eachInstance)
