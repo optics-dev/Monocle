@@ -70,7 +70,7 @@ trait PlatedFunctions extends CommonPlatedFunctions {
   def transformM[A: Plated, M[_]: Monad](f: A => M[A])(a: A): M[A] = {
     val l = plate[A]
     def go(c: A): M[A] =
-      l.modifyF[M](b => f(b).flatMap(go))(c)
+      l.modifyA[M](b => f(b).flatMap(go))(c)
     go(a)
   }
 
@@ -96,7 +96,7 @@ object Plated extends PlatedFunctions {
   implicit def listPlated[A]: Plated[List[A]] =
     Plated(
       new Traversal[List[A], List[A]] {
-        def modifyF[F[_]: Applicative](f: List[A] => F[List[A]])(s: List[A]): F[List[A]] =
+        def modifyA[F[_]: Applicative](f: List[A] => F[List[A]])(s: List[A]): F[List[A]] =
           s match {
             case x :: xs => Applicative[F].map(f(xs))(x :: _)
             case Nil     => Applicative[F].pure(Nil)
@@ -107,7 +107,7 @@ object Plated extends PlatedFunctions {
   implicit def lazyListPlated[A]: Plated[LazyList[A]] =
     Plated(
       new Traversal[LazyList[A], LazyList[A]] {
-        def modifyF[F[_]: Applicative](f: LazyList[A] => F[LazyList[A]])(s: LazyList[A]): F[LazyList[A]] =
+        def modifyA[F[_]: Applicative](f: LazyList[A] => F[LazyList[A]])(s: LazyList[A]): F[LazyList[A]] =
           s match {
             case x #:: xs   => Applicative[F].map(f(xs))(x #:: _)
             case LazyList() => Applicative[F].pure(LazyList.empty)
@@ -117,7 +117,7 @@ object Plated extends PlatedFunctions {
 
   implicit val stringPlated: Plated[String] = Plated(
     new Traversal[String, String] {
-      def modifyF[F[_]: Applicative](f: String => F[String])(s: String): F[String] =
+      def modifyA[F[_]: Applicative](f: String => F[String])(s: String): F[String] =
         s.headOption match {
           case Some(h) => Applicative[F].map(f(s.tail))(h.toString ++ _)
           case None    => Applicative[F].pure("")
@@ -128,7 +128,7 @@ object Plated extends PlatedFunctions {
   implicit def vectorPlated[A]: Plated[Vector[A]] =
     Plated(
       new Traversal[Vector[A], Vector[A]] {
-        def modifyF[F[_]: Applicative](f: Vector[A] => F[Vector[A]])(s: Vector[A]): F[Vector[A]] =
+        def modifyA[F[_]: Applicative](f: Vector[A] => F[Vector[A]])(s: Vector[A]): F[Vector[A]] =
           s match {
             case h +: t => Applicative[F].map(f(t))(h +: _)
             case _      => Applicative[F].pure(Vector.empty)
@@ -149,7 +149,7 @@ object Plated extends PlatedFunctions {
     new Plated[Chain[A]] {
       val plate: Traversal[Chain[A], Chain[A]] =
         new Traversal[Chain[A], Chain[A]] {
-          def modifyF[F[_]: Applicative](f: Chain[A] => F[Chain[A]])(s: Chain[A]): F[Chain[A]] =
+          def modifyA[F[_]: Applicative](f: Chain[A] => F[Chain[A]])(s: Chain[A]): F[Chain[A]] =
             s.uncons match {
               case Some((x, xs)) => Applicative[F].map(f(xs))(_.prepend(x))
               case None          => Applicative[F].pure(Chain.empty)
@@ -160,7 +160,7 @@ object Plated extends PlatedFunctions {
   implicit def cofreePlated[S[_]: Traverse, A]: Plated[Cofree[S, A]] =
     Plated(
       new Traversal[Cofree[S, A], Cofree[S, A]] {
-        def modifyF[F[_]: Applicative](f: Cofree[S, A] => F[Cofree[S, A]])(s: Cofree[S, A]): F[Cofree[S, A]] =
+        def modifyA[F[_]: Applicative](f: Cofree[S, A] => F[Cofree[S, A]])(s: Cofree[S, A]): F[Cofree[S, A]] =
           Applicative[F].map(Traverse[S].traverse(s.tail.value)(f))(t => Cofree(s.head, Now(t)))
       }
     )
@@ -168,7 +168,7 @@ object Plated extends PlatedFunctions {
   implicit def freePlated[S[_]: Traverse, A]: Plated[Free[S, A]] =
     Plated(
       new Traversal[Free[S, A], Free[S, A]] {
-        def modifyF[F[_]: Applicative](f: Free[S, A] => F[Free[S, A]])(s: Free[S, A]): F[Free[S, A]] =
+        def modifyA[F[_]: Applicative](f: Free[S, A] => F[Free[S, A]])(s: Free[S, A]): F[Free[S, A]] =
           s.resume.fold(
             as => Applicative[F].map(Traverse[S].traverse(as)(f))(Free.roll),
             x => Applicative[F].pure(Free.pure(x))

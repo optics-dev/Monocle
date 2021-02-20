@@ -52,7 +52,7 @@ object Each extends EachFunctions {
 
   implicit def eitherEach[A, B]: Each[Either[A, B], B] =
     new Each[Either[A, B], B] {
-      def each = monocle.std.either.stdRight.asTraversal
+      def each = monocle.std.either.stdRight
     }
 
   implicit def listEach[A]: Each[List[A], A] = fromTraverse
@@ -62,7 +62,7 @@ object Each extends EachFunctions {
   implicit def defaultMapEach[K, V]: Each[Map[K, V], V] =
     Each(
       new Traversal[Map[K, V], V] {
-        def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
+        def modifyA[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
           s.foldLeft(Applicative[F].pure(Map.empty[K, V])) { case (acc, (k, v)) =>
             Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
           }
@@ -72,7 +72,7 @@ object Each extends EachFunctions {
   implicit def listMapEach[K, V]: Each[ListMap[K, V], V] =
     Each(
       new Traversal[ListMap[K, V], V] {
-        def modifyF[F[_]: Applicative](f: V => F[V])(s: ListMap[K, V]): F[ListMap[K, V]] =
+        def modifyA[F[_]: Applicative](f: V => F[V])(s: ListMap[K, V]): F[ListMap[K, V]] =
           s.foldLeft(Applicative[F].pure(ListMap.empty[K, V])) { case (acc, (k, v)) =>
             Applicative[F].map2(f(v), acc)((head, tail) => tail + (k -> head))
           }
@@ -84,7 +84,7 @@ object Each extends EachFunctions {
 
   implicit def optEach[A]: Each[Option[A], A] =
     new Each[Option[A], A] {
-      def each = monocle.std.option.some[A].asTraversal
+      def each = monocle.std.option.some[A]
     }
 
   implicit val stringEach: Each[String, Char] = Each(
@@ -93,12 +93,12 @@ object Each extends EachFunctions {
 
   implicit def tryEach[A]: Each[Try[A], A] =
     new Each[Try[A], A] {
-      def each = monocle.std.utilTry.trySuccess.asTraversal
+      def each = monocle.std.utilTry.trySuccess
     }
 
   implicit def tuple1Each[A]: Each[Tuple1[A], A] =
     Each(
-      monocle.std.tuple1.tuple1Iso[A].asTraversal
+      monocle.std.tuple1.tuple1Iso[A]
     )
 
   implicit def tuple2Each[A]: Each[(A, A), A] =
@@ -156,13 +156,13 @@ object Each extends EachFunctions {
   implicit def oneAndEach[T[_], A](implicit ev: Each[T[A], A]): Each[OneAnd[T, A], A] =
     Each(
       new Traversal[OneAnd[T, A], A] {
-        def modifyF[F[_]: Applicative](f: A => F[A])(s: OneAnd[T, A]): F[OneAnd[T, A]] =
-          Applicative[F].map2(f(s.head), ev.each.modifyF(f)(s.tail))((head, tail) => new OneAnd(head, tail))
+        def modifyA[F[_]: Applicative](f: A => F[A])(s: OneAnd[T, A]): F[OneAnd[T, A]] =
+          Applicative[F].map2(f(s.head), ev.each.modifyA(f)(s.tail))((head, tail) => new OneAnd(head, tail))
       }
     )
 
   implicit def validatedEach[A, B]: Each[Validated[A, B], B] =
     new Each[Validated[A, B], B] {
-      def each = monocle.std.validated.success.asTraversal
+      def each = monocle.std.validated.success
     }
 }

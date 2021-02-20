@@ -13,134 +13,77 @@ import monocle.function.{At, Each, FilterIndex, Index}
   * @tparam S the source of a [[Getter]]
   * @tparam A the target of a [[Getter]]
   */
-abstract class Getter[S, A] extends Serializable { self =>
+trait Getter[S, A] extends Fold[S, A] { self =>
 
-  /** get the target of a [[Getter]] */
+  /** get the target of a [Getter */
   def get(s: S): A
 
+  def foldMap[M: Monoid](f: A => M)(s: S): M =
+    f(get(s))
+
   /** find if the target satisfies the predicate */
-  final def find(p: A => Boolean): S => Option[A] =
+  override def find(p: A => Boolean): S => Option[A] =
     s => Some(get(s)).filter(p)
 
   /** check if the target satisfies the predicate */
-  final def exist(p: A => Boolean): S => Boolean =
+  override def exist(p: A => Boolean): S => Boolean =
     p compose get
 
   /** join two [[Getter]] with the same target */
-  final def choice[S1](other: Getter[S1, A]): Getter[Either[S, S1], A] =
+  def choice[S1](other: Getter[S1, A]): Getter[Either[S, S1], A] =
     Getter[Either[S, S1], A](_.fold(self.get, other.get))
 
   /** pair two disjoint [[Getter]] */
-  final def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
+  def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
     Getter[(S, S1), (A, A1)] { case (s, s1) => (self.get(s), other.get(s1)) }
 
-  final def zip[A1](other: Getter[S, A1]): Getter[S, (A, A1)] =
+  def zip[A1](other: Getter[S, A1]): Getter[S, (A, A1)] =
     Getter[S, (A, A1)](s => (self.get(s), other.get(s)))
 
-  final def first[B]: Getter[(S, B), (A, B)] =
+  def first[B]: Getter[(S, B), (A, B)] =
     Getter[(S, B), (A, B)] { case (s, b) => (self.get(s), b) }
 
-  final def second[B]: Getter[(B, S), (B, A)] =
+  def second[B]: Getter[(B, S), (B, A)] =
     Getter[(B, S), (B, A)] { case (b, s) => (b, self.get(s)) }
 
-  final def left[C]: Getter[Either[S, C], Either[A, C]] =
+  override def left[C]: Getter[Either[S, C], Either[A, C]] =
     Getter[Either[S, C], Either[A, C]](_.leftMap(get))
 
-  final def right[C]: Getter[Either[C, S], Either[C, A]] =
+  override def right[C]: Getter[Either[C, S], Either[C, A]] =
     Getter[Either[C, S], Either[C, A]](_.map(get))
 
   /** Compose with a function lifted into a Getter */
-  def to[C](f: A => C): Getter[S, C] =
+  override def to[C](f: A => C): Getter[S, C] =
     andThen(Getter(f))
 
-  def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
-    andThen(evEach.each)
-
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
-    */
-  def filter(predicate: A => Boolean): Fold[S, A] =
-    self.andThen(Optional.filter(predicate))
-
-  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Fold[S, A1] =
-    self.andThen(ev.filterIndex(predicate))
-
-  def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
+  override def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]].andThen(std.option.some[A1])
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): Getter[S, A1] =
-    adapt[Option[A1]].andThen(std.option.withDefault(defaultValue))
-
-  private def adapt[A1](implicit evA: A =:= A1): Getter[S, A1] =
+  override private[monocle] def adapt[A1](implicit evA: A =:= A1): Getter[S, A1] =
     evA.substituteCo[Getter[S, *]](this)
 
-  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Getter[S, A1] =
-    andThen(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
-    andThen(evIndex.index(i))
-
-  /** compose a [[Getter]] with a [[Fold]] */
-  final def andThen[B](other: Fold[A, B]): Fold[S, B] =
-    asFold.andThen(other)
-
   /** compose a [[Getter]] with a [[Getter]] */
-  final def andThen[B](other: Getter[A, B]): Getter[S, B] =
+  def andThen[B](other: Getter[A, B]): Getter[S, B] =
     (s: S) => other.get(self.get(s))
 
-  /** compose a [[Getter]] with a [[PTraversal]] */
-  final def andThen[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
-    asFold.andThen(other)
-
-  /** compose a [[Getter]] with a [[POptional]] */
-  final def andThen[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
-    asFold.andThen(other)
-
-  /** compose a [[Getter]] with a [[PPrism]] */
-  final def andThen[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
-    asFold.andThen(other)
-
-  /** compose a [[Getter]] with a [[PLens]] */
-  final def andThen[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
-    andThen(other.asGetter)
-
-  /** compose a [[Getter]] with a [[PIso]] */
-  final def andThen[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
-    andThen(other.asGetter)
-
   /** compose a [[Getter]] with a [[Fold]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeFold[B](other: Fold[A, B]): Fold[S, B] =
+  override def composeFold[B](other: Fold[A, B]): Fold[S, B] =
     andThen(other)
 
   /** compose a [[Getter]] with a [[Getter]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
-    andThen(other)
-
-  /** compose a [[Getter]] with a [[PTraversal]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[Getter]] with a [[POptional]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[Getter]] with a [[PPrism]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+  override def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
     andThen(other)
 
   /** compose a [[Getter]] with a [[PLens]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeLens[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
+  override def composeLens[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
     andThen(other.asGetter)
 
   /** compose a [[Getter]] with a [[PIso]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
+  override def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     andThen(other)
 
   /** *****************************************
@@ -148,29 +91,30 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** Experimental aliases of compose methods */
   /** *****************************************
     */
+
   /** alias to composeTraversal */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+  override def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composeOptional */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+  override def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composePrism */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+  override def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
     andThen(other)
 
   /** alias to composeLens */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
+  override def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
     andThen(other)
 
   /** alias to composeIso */
   @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
+  override def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
     andThen(other)
 
   /** ***************************************************************
@@ -179,7 +123,7 @@ abstract class Getter[S, A] extends Serializable { self =>
   /** ***************************************************************
     */
   /** view a [[Getter]] with a [[Fold]] */
-  final def asFold: Fold[S, A] =
+  def asFold: Fold[S, A] =
     new Fold[S, A] {
       def foldMap[M: Monoid](f: A => M)(s: S): M =
         f(get(s))
@@ -187,14 +131,18 @@ abstract class Getter[S, A] extends Serializable { self =>
 }
 
 object Getter extends GetterInstances {
+  @deprecated("use PIso.id", since = "3.0.0-M2")
   def id[A]: Getter[A, A] =
-    Iso.id[A].asGetter
+    Iso.id[A]
 
   def codiagonal[A]: Getter[Either[A, A], A] =
     Getter[Either[A, A], A](_.fold(identity, identity))
 
   def apply[S, A](_get: S => A): Getter[S, A] =
     (s: S) => _get(s)
+
+  implicit def getterSyntax[S, A](self: Getter[S, A]): GetterSyntax[S, A] =
+    new GetterSyntax(self)
 }
 
 sealed abstract class GetterInstances extends GetterInstances0 {
@@ -209,7 +157,7 @@ sealed abstract class GetterInstances extends GetterInstances0 {
       f.second
 
     override def id[A]: Getter[A, A] =
-      Getter.id
+      Iso.id
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
       g.andThen(f)
@@ -227,9 +175,33 @@ sealed abstract class GetterInstances0 {
       f choice g
 
     def id[A]: Getter[A, A] =
-      Getter.id
+      Iso.id
 
     def compose[A, B, C](f: Getter[B, C], g: Getter[A, B]): Getter[A, C] =
       g.andThen(f)
   }
+}
+
+/** Extension methods for Fold */
+final case class GetterSyntax[S, A](private val self: Getter[S, A]) extends AnyVal {
+  def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
+    self.andThen(evEach.each)
+
+  /** Select all the elements which satisfies the predicate.
+    * This combinator can break the fusion property see Optional.filter for more details.
+    */
+  def filter(predicate: A => Boolean): Fold[S, A] =
+    self.andThen(Optional.filter(predicate))
+
+  def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Fold[S, A1] =
+    self.andThen(ev.filterIndex(predicate))
+
+  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Getter[S, A1] =
+    self.adapt[Option[A1]].andThen(std.option.withDefault(defaultValue))
+
+  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Getter[S, A1] =
+    self.andThen(evAt.at(i))
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
+    self.andThen(evIndex.index(i))
 }
