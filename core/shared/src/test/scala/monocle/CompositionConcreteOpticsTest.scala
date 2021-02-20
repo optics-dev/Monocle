@@ -2,14 +2,14 @@ package monocle
 
 final class CompositionConcreteOpticsTest extends munit.FunSuite {
 
-  val iso: Iso[Int, Int] = Iso.id
-  val lens: Lens[Int, Int] = Lens.id
-  val prism: Prism[Int, Int] = Prism.id
-  val optional: Optional[Int, Int] = Optional.id
+  val iso: Iso[Int, Int]             = Iso.id
+  val lens: Lens[Int, Int]           = Lens.id
+  val prism: Prism[Int, Int]         = Prism.id
+  val optional: Optional[Int, Int]   = Optional.id
   val traversal: Traversal[Int, Int] = Traversal.id
-  val setter: Setter[Int, Int] = Setter.id
-  val getter: Getter[Int, Int] = Getter.id
-  val fold: Fold[Int, Int] = Fold.id
+  val setter: Setter[Int, Int]       = Setter.id
+  val getter: Getter[Int, Int]       = Getter.id
+  val fold: Fold[Int, Int]           = Fold.id
 
   test("iso . iso") {
     val optic = iso.andThen(iso)
