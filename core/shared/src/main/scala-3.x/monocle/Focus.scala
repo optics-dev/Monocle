@@ -1,9 +1,8 @@
 package monocle
 
 import monocle.syntax.AppliedFocusSyntax
-import monocle.function.Each
 import monocle.internal.focus.FocusImpl
-import monocle.function.Each
+import monocle.function.{Each, At, Index}
 
 object Focus extends AppliedFocusSyntax {
 
@@ -16,6 +15,12 @@ object Focus extends AppliedFocusSyntax {
 
     extension [From, To] (from: From)(using Each[From, To])
       def each: To = scala.sys.error("Extension method 'each' should only be used within the monocle.Focus macro.")
+
+    extension [From, I, To] (from: From)
+      def at(i: I)(using At[From, i.type, To]): To = scala.sys.error("Extension method 'at(i)' should only be used within the monocle.Focus macro.")
+
+    extension [From, I, To] (from: From)
+      def index(i: I)(using Index[From, I, To]): To = scala.sys.error("Extension method 'index(i)' should only be used within the monocle.Focus macro.")
   }
 
   def apply[S] = new MkFocus[S]

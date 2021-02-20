@@ -1,9 +1,12 @@
-package monocle.internal.focus
+package monocle.internal.focus.features
 
+import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.fieldselect.FieldSelectGenerator
 import monocle.internal.focus.features.optionsome.OptionSomeGenerator
 import monocle.internal.focus.features.castas.CastAsGenerator
 import monocle.internal.focus.features.each.EachGenerator
+import monocle.internal.focus.features.at.AtGenerator
+import monocle.internal.focus.features.index.IndexGenerator
 import monocle.{Lens, Iso, Prism, Optional, Traversal}
 import scala.quoted.Type
 
@@ -14,9 +17,11 @@ private[focus] trait AllFeatureGenerators
   with OptionSomeGenerator
   with CastAsGenerator
   with EachGenerator
+  with AtGenerator
+  with IndexGenerator
 
 private[focus] trait GeneratorLoop {
-  this: FocusBase with AllFeatureGenerators => 
+  this: AllFeatureGenerators => 
 
   import macroContext.reflect._
 
@@ -34,6 +39,8 @@ private[focus] trait GeneratorLoop {
       case FocusAction.OptionSome(toType) => generateOptionSome(toType)
       case FocusAction.CastAs(fromType, toType) => generateCastAs(fromType, toType)
       case FocusAction.Each(fromType, toType, eachInstance) => generateEach(fromType, toType, eachInstance)
+      case FocusAction.At(fromType, toType, index, atInstance) => generateAt(fromType, toType, index, atInstance)
+      case FocusAction.Index(fromType, toType, index, indexInstance) => generateIndex(fromType, toType, index, indexInstance)
     }
 
   private def composeOptics(lens1: Term, lens2: Term): FocusResult[Term] = {

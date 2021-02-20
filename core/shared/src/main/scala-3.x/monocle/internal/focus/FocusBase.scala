@@ -17,12 +17,16 @@ private[focus] trait FocusBase {
     case OptionSome(toType: TypeRepr)
     case CastAs(fromType: TypeRepr, toType: TypeRepr)
     case Each(fromType: TypeRepr, toType: TypeRepr, eachInstance: Term)
+    case At(fromType: TypeRepr, toType: TypeRepr, index: Term, atInstance: Term)
+    case Index(fromType: TypeRepr, toType: TypeRepr, index: Term, indexInstance: Term)
 
     override def toString(): String = this match {
       case FieldSelect(name, fromType, fromTypeArgs, toType) => s"FieldSelect($name, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
       case OptionSome(toType) => s"OptionSome(${toType.show})"
       case CastAs(fromType, toType) => s"CastAs(${fromType.show}, ${toType.show})"
-      case Each(fromType, toType, eachInstance) => s"Each(${fromType.show}, ${toType.show}, ...)"
+      case Each(fromType, toType, _) => s"Each(${fromType.show}, ${toType.show}, ...)"
+      case At(fromType, toType, _, _) => s"At(${fromType.show}, ${toType.show}, ..., ...)"
+      case Index(fromType, toType, _, _) => s"Index(${fromType.show}, ${toType.show}, ..., ...)"
     }
   }
 
@@ -39,21 +43,6 @@ private[focus] trait FocusBase {
 
     def asResult: FocusResult[Nothing] = Left(this)
   }
-
-  trait FocusParser {
-    def unapply(term: Term): Option[FocusResult[(Term, FocusAction)]]
-
-    object FocusKeyword {
-      import macroContext.reflect._
-
-      def unapply(term: Term): Option[String] = term match {
-        case Select(_, keyword) => Some(keyword)
-        case _ => None
-      }
-    }
-  }
-
-
 
   type FocusResult[+A] = Either[FocusError, A]
 }
