@@ -67,52 +67,6 @@ trait Getter[-S, +A] extends Fold[S, A] { self =>
   def andThen[B](other: Getter[A, B]): Getter[S, B] =
     (s: S) => other.get(self.get(s))
 
-  /** compose a [[Getter]] with a [[Getter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeGetter[B](other: Getter[A, B]): Getter[S, B] =
-    andThen(other)
-
-  /** compose a [[Getter]] with a [[PLens]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeLens[C, D](other: PLens[A, Nothing, C, D]): Getter[S, C] =
-    andThen(other.asGetter)
-
-  /** compose a [[Getter]] with a [[PIso]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeIso[C, D](other: PIso[A, Nothing, C, D]): Getter[S, C] =
-    andThen(other)
-
-  /** *****************************************
-    */
-  /** Experimental aliases of compose methods */
-  /** *****************************************
-    */
-
-  /** alias to composeTraversal */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** alias to composeOptional */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** alias to composePrism */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** alias to composeLens */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
-    andThen(other)
-
-  /** alias to composeIso */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
-    andThen(other)
-
   /** ***************************************************************
     */
   /** Transformation methods to view a [[Getter]] as another Optics */
@@ -200,4 +154,64 @@ final case class GetterSyntax[S, A](private val self: Getter[S, A]) extends AnyV
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
     self.andThen(evIndex.index(i))
+
+  /** compose a [[Fold]] with a [[Fold]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[Getter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeGetter[C](other: Getter[A, C]): Getter[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeTraversal[C, D](other: PTraversal[A, Nothing, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, Nothing, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, Nothing, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, Nothing, C, D]): Getter[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, Nothing, C, D]): Getter[S, C] =
+    self.andThen(other)
+
+  /** alias to composeTraversal */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** alias to composeOptional */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** alias to composePrism */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
+    self.andThen(other)
+
+  /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<->[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
+    self.andThen(other)
 }

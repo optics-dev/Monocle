@@ -257,7 +257,7 @@ class StateExample extends MonocleSuite {
   // first and second projections of a triple
   def _pi12Tr[A, B, C]: PTraversal[(A, A, C), (B, B, C), A, B] =
     new PTraversal[(A, A, C), (B, B, C), A, B] {
-      override def modifyF[F[_]: Applicative](f: A => F[B])(s: (A, A, C)): F[(B, B, C)] = {
+      override def modifyA[F[_]: Applicative](f: A => F[B])(s: (A, A, C)): F[(B, B, C)] = {
         val (a1, a2, c) = s
         (f(a1), f(a2), c.pure[F]).tupled
       }
