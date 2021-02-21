@@ -1,6 +1,6 @@
 package monocle.focus
 
-import monocle.Focus
+import monocle.{Focus, Lens}
 
 final class FocusFieldSelectTest extends munit.FunSuite {
 
@@ -19,6 +19,11 @@ final class FocusFieldSelectTest extends munit.FunSuite {
   case class UnionBox[A,B](aOrB: A | B)
   case class ConstraintBox[A <: AnyVal](a: A)
   case class Varargs[A](a: A*)
+
+  object Public {
+    case class Private(private[Public] a: Int)
+    def lens: Lens[Private, Int] = Focus[Private](_.a)
+  }
 
   test("Single field access") {
     assertEquals(
@@ -74,6 +79,13 @@ final class FocusFieldSelectTest extends munit.FunSuite {
       Focus[HigherBox[Option, Int]](_.fa).get(HigherBox(Some(23))),
       Some(23)
     )
+  }
+
+  test("Private field access") {
+    val a = Public.Private(44)
+    
+    assertEquals(Public.lens.get(a), 44)
+    assertEquals(Public.lens.replace(55)(a), Public.Private(55))
   }
 
   /*
