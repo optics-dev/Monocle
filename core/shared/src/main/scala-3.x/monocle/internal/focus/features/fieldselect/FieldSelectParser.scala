@@ -1,18 +1,20 @@
 package monocle.internal.focus.features.fieldselect
 
 import monocle.internal.focus.FocusBase
+import monocle.internal.focus.features.ParserBase
 
 private[focus] trait FieldSelectParser {
-  this: FocusBase => 
+  this: FocusBase with ParserBase => 
 
   import this.macroContext.reflect._
   
   object FieldSelect extends FocusParser {
 
-    def unapply(term: Term): Option[FocusResult[(Term, FocusAction)]] = term match {
+    def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
+      
       case Select(CaseClass(remainingCode), fieldName) => 
         val action = getFieldAction(getFromType(remainingCode), fieldName)
-        val remainingCodeWithAction = action.map(a => (remainingCode, a))
+        val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
         Some(remainingCodeWithAction)
 
       case Select(remainingCode, fieldName) => 
