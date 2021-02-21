@@ -26,7 +26,7 @@ import monocle.function.{At, Each, FilterIndex, Index}
   * @tparam A the target of a [[PSetter]]
   * @tparam B the modified target of a [[PSetter]]
   */
-trait PSetter[S, T, A, B] extends Serializable { self =>
+trait PSetter[-S, +T, +A, -B] extends Serializable { self =>
 
   /** modify polymorphically the target of a [[PSetter]] with a function */
   def modify(f: A => B): S => T
@@ -39,14 +39,14 @@ trait PSetter[S, T, A, B] extends Serializable { self =>
   def set(b: B): S => T = replace(b)
 
   /** join two [[PSetter]] with the same target */
-  def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
-    PSetter[Either[S, S1], Either[T, T1], A, B](b => _.bimap(self.modify(b), other.modify(b)))
+  def choice[S1, T1, A1 >: A, B1 <: B](other: PSetter[S1, T1, A1, B1]): PSetter[Either[S, S1], Either[T, T1], A1, B1] =
+    PSetter[Either[S, S1], Either[T, T1], A1, B1](b => _.bimap(self.modify(b), other.modify(b)))
 
-  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PSetter[S, T, A1, B1] =
+  def some[A1, B1](implicit ev1: A <:< Option[A1], ev2: Option[B1] <:< B): PSetter[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PSetter[S, T, A1, B1] =
-    evB.substituteCo[PSetter[S, T, A1, *]](evA.substituteCo[PSetter[S, T, *, B]](this))
+  private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PSetter[S, T, A1, B1] =
+    evB.substituteContra[PSetter[S, T, A1, -*]](evA.substituteCo[PSetter[S, T, +*, B]](this))
 
   /** compose a [[PSetter]] with another [[PSetter]] */
   def andThen[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
@@ -200,7 +200,7 @@ final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyV
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Setter[S, A1] =
-    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
+    self.adapt(evOpt, evOpt.flip).andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Setter[S, A1] =
     self.andThen(evAt.at(i))

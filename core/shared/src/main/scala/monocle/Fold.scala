@@ -8,6 +8,8 @@ import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.internal.Monoids
 
+import scala.annotation.unchecked.uncheckedVariance
+
 /** A [[Fold]] can be seen as a [[Getter]] with many targets or
   * a weaker [[PTraversal]] which cannot modify its target.
   *
@@ -18,7 +20,7 @@ import monocle.internal.Monoids
   * @tparam S the source of a [[Fold]]
   * @tparam A the target of a [[Fold]]
   */
-trait Fold[S, A] extends Serializable { self =>
+trait Fold[-S, +A] extends Serializable { self =>
 
   /** map each target to a Monoid and combine the results
     * underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap
@@ -26,7 +28,7 @@ trait Fold[S, A] extends Serializable { self =>
   def foldMap[M: Monoid](f: A => M)(s: S): M
 
   /** combine all targets using a target's Monoid */
-  def fold(s: S)(implicit ev: Monoid[A]): A =
+  def fold(s: S)(implicit ev: Monoid[A] @uncheckedVariance): A =
     foldMap(identity)(s)
 
   /** get all the targets of a [[Fold]] */
@@ -66,9 +68,9 @@ trait Fold[S, A] extends Serializable { self =>
     !isEmpty(s)
 
   /** join two [[Fold]] with the same target */
-  def choice[S1](other: Fold[S1, A]): Fold[Either[S, S1], A] =
-    new Fold[Either[S, S1], A] {
-      def foldMap[M: Monoid](f: A => M)(s: Either[S, S1]): M =
+  def choice[S1, A1 >: A](other: Fold[S1, A1]): Fold[Either[S, S1], A1] =
+    new Fold[Either[S, S1], A1] {
+      def foldMap[M: Monoid](f: A1 => M)(s: Either[S, S1]): M =
         s.fold(self.foldMap(f), other.foldMap(f))
     }
 
@@ -88,11 +90,11 @@ trait Fold[S, A] extends Serializable { self =>
   def to[C](f: A => C): Fold[S, C] =
     andThen(Getter(f))
 
-  def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
+  def some[A1](implicit ev1: A <:< Option[A1]): Fold[S, A1] =
     adapt[Option[A1]].andThen(std.option.some[A1])
 
-  private[monocle] def adapt[A1](implicit evA: A =:= A1): Fold[S, A1] =
-    evA.substituteCo[Fold[S, *]](this)
+  private[monocle] def adapt[A1](implicit evA: A <:< A1): Fold[S, A1] =
+    evA.substituteCo[Fold[S, +*]](this)
 
   /** compose a [[Fold]] with another [[Fold]] */
   def andThen[B](other: Fold[A, B]): Fold[S, B] =
@@ -103,7 +105,7 @@ trait Fold[S, A] extends Serializable { self =>
 
   /** compose a [[Fold]] with a [[Fold]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  def composeFold[B](other: Fold[A, B]): Fold[S, B] =
+  def composeFold[C](other: Fold[A, C]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[Fold]] with a [[Getter]] */
@@ -113,27 +115,27 @@ trait Fold[S, A] extends Serializable { self =>
 
   /** compose a [[Fold]] with a [[PTraversal]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  def composeTraversal[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+  def composeTraversal[C, D](other: PTraversal[A, Nothing, C, D]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[Fold]] with a [[POptional]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  def composeOptional[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+  def composeOptional[C, D](other: POptional[A, Nothing, C, D]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[Fold]] with a [[PPrism]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  def composePrism[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+  def composePrism[C, D](other: PPrism[A, Nothing, C, D]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[Fold]] with a [[PLens]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  def composeLens[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
+  def composeLens[C, D](other: PLens[A, Nothing, C, D]): Fold[S, C] =
     andThen(other)
 
   /** compose a [[Fold]] with a [[PIso]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  def composeIso[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
+  def composeIso[C, D](other: PIso[A, Nothing, C, D]): Fold[S, C] =
     andThen(other)
 
   /** *****************************************
@@ -227,7 +229,7 @@ final case class FoldSyntax[S, A](private val self: Fold[S, A]) extends AnyVal {
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Fold[S, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Fold[S, A1] =
+  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A <:< Option[A1]): Fold[S, A1] =
     self.adapt[Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Fold[S, A1] =

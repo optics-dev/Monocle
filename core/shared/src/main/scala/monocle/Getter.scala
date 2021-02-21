@@ -13,7 +13,7 @@ import monocle.function.{At, Each, FilterIndex, Index}
   * @tparam S the source of a [[Getter]]
   * @tparam A the target of a [[Getter]]
   */
-trait Getter[S, A] extends Fold[S, A] { self =>
+trait Getter[-S, +A] extends Fold[S, A] { self =>
 
   /** get the target of a [Getter */
   def get(s: S): A
@@ -30,15 +30,16 @@ trait Getter[S, A] extends Fold[S, A] { self =>
     p compose get
 
   /** join two [[Getter]] with the same target */
-  def choice[S1](other: Getter[S1, A]): Getter[Either[S, S1], A] =
-    Getter[Either[S, S1], A](_.fold(self.get, other.get))
+  def choice[S1, A1 >: A](other: Getter[S1, A1]): Getter[Either[S, S1], A1] =
+    Getter[Either[S, S1], A1](_.fold(self.get, other.get))
 
   /** pair two disjoint [[Getter]] */
   def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
     Getter[(S, S1), (A, A1)] { case (s, s1) => (self.get(s), other.get(s1)) }
 
-  def zip[A1](other: Getter[S, A1]): Getter[S, (A, A1)] =
-    Getter[S, (A, A1)](s => (self.get(s), other.get(s)))
+
+  def zip[S1 <: S, A1](other: Getter[S1, A1]): Getter[S1, (A, A1)] =
+    Getter[S1, (A, A1)](s => (self.get(s), other.get(s)))
 
   def first[B]: Getter[(S, B), (A, B)] =
     Getter[(S, B), (A, B)] { case (s, b) => (self.get(s), b) }
@@ -56,20 +57,15 @@ trait Getter[S, A] extends Fold[S, A] { self =>
   override def to[C](f: A => C): Getter[S, C] =
     andThen(Getter(f))
 
-  override def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
+  override def some[A1](implicit ev1: A <:< Option[A1]): Fold[S, A1] =
     adapt[Option[A1]].andThen(std.option.some[A1])
 
-  override private[monocle] def adapt[A1](implicit evA: A =:= A1): Getter[S, A1] =
-    evA.substituteCo[Getter[S, *]](this)
+  override private[monocle] def adapt[A1](implicit evA: A <:< A1): Getter[S, A1] =
+    evA.substituteCo[Getter[S, +*]](this)
 
   /** compose a [[Getter]] with a [[Getter]] */
   def andThen[B](other: Getter[A, B]): Getter[S, B] =
     (s: S) => other.get(self.get(s))
-
-  /** compose a [[Getter]] with a [[Fold]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeFold[B](other: Fold[A, B]): Fold[S, B] =
-    andThen(other)
 
   /** compose a [[Getter]] with a [[Getter]] */
   @deprecated("use andThen", since = "3.0.0-M1")
@@ -78,12 +74,12 @@ trait Getter[S, A] extends Fold[S, A] { self =>
 
   /** compose a [[Getter]] with a [[PLens]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeLens[B, C, D](other: PLens[A, B, C, D]): Getter[S, C] =
+  override def composeLens[C, D](other: PLens[A, Nothing, C, D]): Getter[S, C] =
     andThen(other.asGetter)
 
   /** compose a [[Getter]] with a [[PIso]] */
   @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeIso[B, C, D](other: PIso[A, B, C, D]): Getter[S, C] =
+  override def composeIso[C, D](other: PIso[A, Nothing, C, D]): Getter[S, C] =
     andThen(other)
 
   /** *****************************************
@@ -196,7 +192,7 @@ final case class GetterSyntax[S, A](private val self: Getter[S, A]) extends AnyV
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Fold[S, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Getter[S, A1] =
+  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A <:< Option[A1]): Getter[S, A1] =
     self.adapt[Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Getter[S, A1] =

@@ -7,6 +7,8 @@ import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 import cats.catsInstancesForId
 
+import scala.annotation.unchecked.uncheckedVariance
+
 /** A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
   * where n can be infinite.
   *
@@ -24,12 +26,12 @@ import cats.catsInstancesForId
   * @tparam A the target of a [[PTraversal]]
   * @tparam B the modified target of a [[PTraversal]]
   */
-trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] with Fold[S, A] { self =>
+trait PTraversal[-S, +T, +A, -B] extends PSetter[S, T, A, B] with Fold[S, A] { self =>
 
   /** modify polymorphically the target of a [[PTraversal]] with an Applicative function
     * all traversal methods are written in terms of modifyA
     */
-  def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T]
+  def modifyA[F[_]: Applicative](f: A => F[B] @uncheckedVariance)(s: S): F[T] @uncheckedVariance
 
   /** map each target to a Monoid and combine the results */
   def foldMap[M: Monoid](f: A => M)(s: S): M =
@@ -43,27 +45,27 @@ trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] with Fold[S, A] { self 
   def replace(b: B): S => T = modify(_ => b)
 
   /** join two [[PTraversal]] with the same target */
-  def choice[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[Either[S, S1], Either[T, T1], A, B] =
-    new PTraversal[Either[S, S1], Either[T, T1], A, B] {
-      def modifyA[F[_]: Applicative](f: A => F[B])(s: Either[S, S1]): F[Either[T, T1]] =
+  def choice[S1, T1, A1 >: A, B1 <: B](other: PTraversal[S1, T1, A1, B1]): PTraversal[Either[S, S1], Either[T, T1], A1, B1] =
+    new PTraversal[Either[S, S1], Either[T, T1], A1, B1] {
+      def modifyA[F[_]: Applicative](f: A1 => F[B1])(s: Either[S, S1]): F[Either[T, T1]] =
         s.fold(
-          s => Functor[F].map(self.modifyA(f)(s))(Either.left),
+          s => Functor[F].map(self.modifyA(x => Functor[F].widen[B1, B](f(x)))(s))(Either.left(_)),
           s1 => Functor[F].map(other.modifyA(f)(s1))(Either.right)
         )
     }
 
   /** [[PTraversal.modifyA]] for a `Parallel` applicative functor.
     */
-  def parModifyF[F[_]](f: A => F[B])(s: S)(implicit F: Parallel[F]): F[T] =
+  def parModifyF[F[_]](f: A => F[B] @uncheckedVariance)(s: S)(implicit F: Parallel[F]): F[T] @uncheckedVariance =
     F.sequential(
       modifyA(a => F.parallel(f(a)))(s)(F.applicative)
     )
 
-  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PTraversal[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A <:< Option[A1], ev2: Option[B1] <:< B): PTraversal[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PTraversal[S, T, A1, B1] =
-    evB.substituteCo[PTraversal[S, T, A1, *]](evA.substituteCo[PTraversal[S, T, *, B]](this))
+  override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PTraversal[S, T, A1, B1] =
+    evB.substituteContra[PTraversal[S, T, A1, -*]](evA.substituteCo[PTraversal[S, T, +*, B]](this))
 
   /** compose a [[PTraversal]] with another [[PTraversal]] */
   def andThen[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
@@ -290,7 +292,7 @@ final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extend
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Traversal[S, A1] =
-    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
+    self.adapt(evOpt, evOpt.flip).andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Traversal[S, A1] =
     self.andThen(evAt.at(i))

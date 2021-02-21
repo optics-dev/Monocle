@@ -7,6 +7,8 @@ import cats.instances.option._
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 
+import scala.annotation.unchecked.uncheckedVariance
+
 /** A [[PPrism]] can be seen as a pair of functions:
   *  - `getOrModify: S => Either[T, A]`
   *  - `reverseGet : B => T`
@@ -32,7 +34,7 @@ import monocle.function.{At, Each, FilterIndex, Index}
   * @tparam A the target of a [[PPrism]]
   * @tparam B the modified target of a [[PPrism]]
   */
-trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
+trait PPrism[-S, +T, +A, -B] extends POptional[S, T, A, B] { self =>
 
   /** get the target of a [[PPrism]] or return the original value while allowing the type to change if it does not match */
   def getOrModify(s: S): Either[T, A]
@@ -44,7 +46,7 @@ trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
   def getOption(s: S): Option[A]
 
   /** modify polymorphically the target of a [[PPrism]] with an Applicative function */
-  def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+  def modifyA[F[_]: Applicative](f: A => F[B] @uncheckedVariance)(s: S): F[T] @uncheckedVariance =
     getOrModify(s).fold(
       t => Applicative[F].pure(t),
       a => Applicative[F].map(f(a))(reverseGet)
@@ -88,11 +90,11 @@ trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
       _.fold(c => Either.right(Either.left(c)), getOrModify(_).bimap(Either.right, Either.right))
     )(_.map(reverseGet))
 
-  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A <:< Option[A1], ev2: Option[B1] <:< B): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PPrism[S, T, A1, B1] =
-    evB.substituteCo[PPrism[S, T, A1, *]](evA.substituteCo[PPrism[S, T, *, B]](this))
+  override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PPrism[S, T, A1, B1] =
+    evB.substituteContra[PPrism[S, T, A1, -*]](evA.substituteCo[PPrism[S, T, +*, B]](this))
 
   /** compose a [[PPrism]] with another [[PPrism]] */
   def andThen[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
@@ -194,7 +196,7 @@ trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
   /** Apply methods to treat a [[PPrism]] as smart constructors for type T */
   /** **********************************************************************
     */
-  def apply()(implicit ev: Is[B, Unit]): T =
+  def apply[B1 <: B]()(implicit ev: Is[B1, Unit]): T =
     ev.substitute[PPrism[S, T, A, *]](self).reverseGet(())
 
   def apply(b: B): T = reverseGet(b)
@@ -294,7 +296,7 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Prism[S, A1] =
-    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
+    self.adapt(evOpt, evOpt.flip).andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Optional[S, A1] =
     self.andThen(evAt.at(i))
