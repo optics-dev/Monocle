@@ -149,4 +149,90 @@ bob
   .modify(_ + <span class="hljs-number">1</span>)
 <span class="hljs-comment">// res4: User = User(name = "bob", address = None)</span>
 </code></pre>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/Monocle/docs/optics/traversal"><span class="arrow-prev">← </span><span>Traversal</span></a><a class="docs-next button" href="/Monocle/docs/modules"><span>Modules</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#update-a-field-of-a-case-class">Update a field of a case class</a></li><li><a href="#update-an-optional-field-of-a-case-class">Update an optional field of a case class</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2021.</section></footer></div></body></html>
+<h2><a class="anchor" aria-hidden="true" id="update-a-single-element-inside-a-list"></a><a href="#update-a-single-element-inside-a-list" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Update a single element inside a List</h2>
+<p>In this example, <code>User</code> contains a <code>List</code> of <code>DebitCard</code>. Let's imagine we want to update the expiration date of
+the second debit card.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> java.time.<span class="hljs-type">YearMonth</span>
+
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>(<span class="hljs-params">name: <span class="hljs-type">String</span>, debitCards: <span class="hljs-type">List</span>[<span class="hljs-type">DebitCard</span>]</span>)</span>
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DebitCard</span>(<span class="hljs-params">cardNumber: <span class="hljs-type">String</span>, expirationDate: <span class="hljs-type">YearMonth</span>, securityCode: <span class="hljs-type">Int</span></span>)</span>
+
+<span class="hljs-keyword">val</span> anna = <span class="hljs-type">User</span>(
+  <span class="hljs-string">"Anna"</span>,
+  <span class="hljs-type">List</span>(
+    <span class="hljs-type">DebitCard</span>(<span class="hljs-string">"4568 5794 3109 3087"</span>, <span class="hljs-type">YearMonth</span>.of(<span class="hljs-number">2022</span>, <span class="hljs-number">4</span>), <span class="hljs-number">361</span>),
+    <span class="hljs-type">DebitCard</span>(<span class="hljs-string">"5566 2337 3022 2470"</span>, <span class="hljs-type">YearMonth</span>.of(<span class="hljs-number">2024</span>, <span class="hljs-number">8</span>), <span class="hljs-number">990</span>)
+  )
+)
+
+<span class="hljs-keyword">val</span> bob = <span class="hljs-type">User</span>(<span class="hljs-string">"Bob"</span>, <span class="hljs-type">List</span>())
+</code></pre>
+<p>In Scala 3</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Focus</span>
+<span class="hljs-keyword">import</span> monocle.syntax.all._
+
+anna
+  .focus(_.debitCards)  <span class="hljs-comment">// soon .focus(_.debitCards.index(0).expirationDate)</span>
+  .index(<span class="hljs-number">1</span>)
+  .andThen(<span class="hljs-type">Focus</span>[<span class="hljs-type">DebitCard</span>](_.expirationDate))
+  .replace(<span class="hljs-type">YearMonth</span>.of(<span class="hljs-number">2026</span>, <span class="hljs-number">2</span>))
+<span class="hljs-comment">// res: User = User(</span>
+<span class="hljs-comment">//   name = "Anna",</span>
+<span class="hljs-comment">//   debitCards = List(</span>
+<span class="hljs-comment">//     DebitCard(</span>
+<span class="hljs-comment">//       cardNumber = "4568 5794 3109 3087",</span>
+<span class="hljs-comment">//       expirationDate = 2022-04,</span>
+<span class="hljs-comment">//       securityCode = 361</span>
+<span class="hljs-comment">//     ),</span>
+<span class="hljs-comment">//     DebitCard(</span>
+<span class="hljs-comment">//       cardNumber = "5566 2337 3022 2470",</span>
+<span class="hljs-comment">//       expirationDate = 2026-02,</span>
+<span class="hljs-comment">//       securityCode = 990</span>
+<span class="hljs-comment">//     )</span>
+<span class="hljs-comment">//   )</span>
+<span class="hljs-comment">// )</span>
+
+bob
+  .focus(_.debitCards) 
+  .index(<span class="hljs-number">1</span>)
+  .andThen(<span class="hljs-type">Focus</span>[<span class="hljs-type">DebitCard</span>](_.expirationDate))
+  .replace(<span class="hljs-type">YearMonth</span>.of(<span class="hljs-number">2026</span>, <span class="hljs-number">2</span>))
+<span class="hljs-comment">// res: User = User("Bob", List())</span>
+</code></pre>
+<p>In Scala 2</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Focus</span>
+<span class="hljs-keyword">import</span> monocle.macros.syntax.all._
+
+anna
+  .focus(_.debitCards) 
+  .index(<span class="hljs-number">1</span>)
+  .andThen(<span class="hljs-type">Focus</span>[<span class="hljs-type">DebitCard</span>](_.expirationDate))
+  .replace(<span class="hljs-type">YearMonth</span>.of(<span class="hljs-number">2026</span>, <span class="hljs-number">2</span>))
+<span class="hljs-comment">// res6: User = User(</span>
+<span class="hljs-comment">//   name = "Anna",</span>
+<span class="hljs-comment">//   debitCards = List(</span>
+<span class="hljs-comment">//     DebitCard(</span>
+<span class="hljs-comment">//       cardNumber = "4568 5794 3109 3087",</span>
+<span class="hljs-comment">//       expirationDate = 2022-04,</span>
+<span class="hljs-comment">//       securityCode = 361</span>
+<span class="hljs-comment">//     ),</span>
+<span class="hljs-comment">//     DebitCard(</span>
+<span class="hljs-comment">//       cardNumber = "5566 2337 3022 2470",</span>
+<span class="hljs-comment">//       expirationDate = 2026-02,</span>
+<span class="hljs-comment">//       securityCode = 990</span>
+<span class="hljs-comment">//     )</span>
+<span class="hljs-comment">//   )</span>
+<span class="hljs-comment">// )</span>
+
+bob
+  .focus(_.debitCards) 
+  .index(<span class="hljs-number">1</span>)
+  .andThen(<span class="hljs-type">Focus</span>[<span class="hljs-type">DebitCard</span>](_.expirationDate))
+  .replace(<span class="hljs-type">YearMonth</span>.of(<span class="hljs-number">2026</span>, <span class="hljs-number">2</span>))
+<span class="hljs-comment">// res7: User = User(name = "Bob", debitCards = List())</span>
+</code></pre>
+<p><code>replace</code> had no effect on <code>bob</code> because he doesn't have a debit card.</p>
+<p><code>index</code> only targets the object at the specified key. If there is no value at this key,
+then <code>replace</code> and <code>modify</code> are no-operation.</p>
+<p><code>index</code> also works on other &quot;indexable&quot; datastructures such as <code>Vector</code> or <code>Map</code>.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/Monocle/docs/optics/traversal"><span class="arrow-prev">← </span><span>Traversal</span></a><a class="docs-next button" href="/Monocle/docs/modules"><span>Modules</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#update-a-field-of-a-case-class">Update a field of a case class</a></li><li><a href="#update-an-optional-field-of-a-case-class">Update an optional field of a case class</a></li><li><a href="#update-a-single-element-inside-a-list">Update a single element inside a List</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2021.</section></footer></div></body></html>
