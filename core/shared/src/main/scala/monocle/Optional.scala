@@ -37,9 +37,6 @@ trait POptional[-S, +T, +A, -B] extends PTraversal[S, T, A, B] { self =>
   /** get the target of a [[POptional]] or nothing if there is no target */
   def getOption(s: S): Option[A]
 
-  /** modify polymorphically the target of a [[POptional]] with a function */
-  def modify(f: A => B): S => T
-
   /** modify polymorphically the target of a [[POptional]] with a function.
     * return empty if the [[POptional]] is not matching
     */
@@ -111,7 +108,7 @@ trait POptional[-S, +T, +A, -B] extends PTraversal[S, T, A, B] { self =>
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): POptional[S, T, A1, B1] =
-    evB.substituteContra[POptional[S, T, A1, -*]](evA.substituteCo[POptional[S, T, +*, B]](this))
+    asInstanceOf[POptional[S, T, A1, B1]]
 
   /** compose a [[POptional]] with a [[POptional]] */
   def andThen[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =

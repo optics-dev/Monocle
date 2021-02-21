@@ -61,7 +61,7 @@ trait Getter[-S, +A] extends Fold[S, A] { self =>
     adapt[Option[A1]].andThen(std.option.some[A1])
 
   override private[monocle] def adapt[A1](implicit evA: A <:< A1): Getter[S, A1] =
-    evA.substituteCo[Getter[S, +*]](this)
+    asInstanceOf[Getter[S, A1]]
 
   /** compose a [[Getter]] with a [[Getter]] */
   def andThen[B](other: Getter[A, B]): Getter[S, B] =

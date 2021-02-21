@@ -74,9 +74,6 @@ trait PIso[-S, +T, +A, -B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { s
   override def modify(f: A => B): S => T =
     s => reverseGet(f(get(s)))
 
-  @deprecated("use replace instead", since = "3.0.0-M1")
-  override def set(b: B): S => T = replace(b)
-
   /** replace polymorphically the target of a [[PIso]] with a value */
   override def replace(b: B): S => T =
     _ => reverseGet(b)
@@ -113,7 +110,7 @@ trait PIso[-S, +T, +A, -B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { s
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PIso[S, T, A1, B1] =
-    evB.substituteContra[PIso[S, T, A1, -*]](evA.substituteCo[PIso[S, T, +*, B]](this))
+    asInstanceOf[PIso[S, T, A1, B1]]
 
   /** compose a [[PIso]] with another [[PIso]] */
   def andThen[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =

@@ -36,14 +36,8 @@ import scala.annotation.unchecked.uncheckedVariance
   */
 trait PPrism[-S, +T, +A, -B] extends POptional[S, T, A, B] { self =>
 
-  /** get the target of a [[PPrism]] or return the original value while allowing the type to change if it does not match */
-  def getOrModify(s: S): Either[T, A]
-
   /** get the modified source of a [[PPrism]] */
   def reverseGet(b: B): T
-
-  /** get the target of a [[PPrism]] or nothing if there is no target */
-  def getOption(s: S): Option[A]
 
   /** modify polymorphically the target of a [[PPrism]] with an Applicative function */
   def modifyA[F[_]: Applicative](f: A => F[B] @uncheckedVariance)(s: S): F[T] @uncheckedVariance =
@@ -56,11 +50,8 @@ trait PPrism[-S, +T, +A, -B] extends POptional[S, T, A, B] { self =>
   override def modify(f: A => B): S => T =
     getOrModify(_).fold(identity, a => reverseGet(f(a)))
 
-  /** modify polymorphically the target of a [[PPrism]] with a function.
-    * return empty if the [[PPrism]] is not matching
-    */
-  override def modifyOption(f: A => B): S => Option[T] =
-    s => getOption(s).map(a => reverseGet(f(a)))
+  override def replace(b: B): S => T =
+    modify(_ => b)
 
   /** create a [[Getter]] from the modified target to the modified source of a [[PPrism]] */
   def re: Getter[B, T] =
@@ -94,7 +85,7 @@ trait PPrism[-S, +T, +A, -B] extends POptional[S, T, A, B] { self =>
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PPrism[S, T, A1, B1] =
-    evB.substituteContra[PPrism[S, T, A1, -*]](evA.substituteCo[PPrism[S, T, +*, B]](this))
+    asInstanceOf[PPrism[S, T, A1, B1]]
 
   /** compose a [[PPrism]] with another [[PPrism]] */
   def andThen[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =

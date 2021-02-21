@@ -46,7 +46,7 @@ trait PSetter[-S, +T, +A, -B] extends Serializable { self =>
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PSetter[S, T, A1, B1] =
-    evB.substituteContra[PSetter[S, T, A1, -*]](evA.substituteCo[PSetter[S, T, +*, B]](this))
+    asInstanceOf[PSetter[S, T, A1, B1]]
 
   /** compose a [[PSetter]] with another [[PSetter]] */
   def andThen[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =

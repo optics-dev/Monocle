@@ -42,7 +42,8 @@ trait PTraversal[-S, +T, +A, -B] extends PSetter[S, T, A, B] with Fold[S, A] { s
     modifyA[Id](f)
 
   /** replace polymorphically the target of a [[PTraversal]] with a value */
-  def replace(b: B): S => T = modify(_ => b)
+  def replace(b: B): S => T =
+    modify(_ => b)
 
   /** join two [[PTraversal]] with the same target */
   def choice[S1, T1, A1 >: A, B1 <: B](other: PTraversal[S1, T1, A1, B1]): PTraversal[Either[S, S1], Either[T, T1], A1, B1] =
@@ -65,7 +66,9 @@ trait PTraversal[-S, +T, +A, -B] extends PSetter[S, T, A, B] with Fold[S, A] { s
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PTraversal[S, T, A1, B1] =
-    evB.substituteContra[PTraversal[S, T, A1, -*]](evA.substituteCo[PTraversal[S, T, +*, B]](this))
+    asInstanceOf[PTraversal[S, T, A1, B1]]
+  // doesn't compile in Scala 3
+  // evB.substituteContra[PTraversal[S, T, A1, -*]](evA.substituteCo[PTraversal[S, T, +*, B]](this))
 
   /** compose a [[PTraversal]] with another [[PTraversal]] */
   def andThen[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =

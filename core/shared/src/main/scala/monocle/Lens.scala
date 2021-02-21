@@ -104,7 +104,7 @@ trait PLens[-S, +T, +A, -B] extends POptional[S, T, A, B] with Getter[S, A] { se
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PLens[S, T, A1, B1] =
-    evB.substituteContra[PLens[S, T, A1, -*]](evA.substituteCo[PLens[S, T, +*, B]](this))
+    asInstanceOf[PLens[S, T, A1, B1]]
 
   /** compose a [[PLens]] with a [[PLens]] */
   def andThen[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
