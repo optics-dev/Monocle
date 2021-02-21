@@ -38,13 +38,6 @@ trait PSetter[-S, +T, +A, -B] extends Serializable { self =>
   @deprecated("use replace instead", since = "3.0.0-M1")
   def set(b: B): S => T = replace(b)
 
-  /** join two [[PSetter]] with the same target */
-  def choice[S1, T1, A1 >: A, B1 <: B](other: PSetter[S1, T1, A1, B1]): PSetter[Either[S, S1], Either[T, T1], A1, B1] =
-    PSetter[Either[S, S1], Either[T, T1], A1, B1](b => _.bimap(self.modify(b), other.modify(b)))
-
-  def some[A1, B1](implicit ev1: A <:< Option[A1], ev2: Option[B1] <:< B): PSetter[S, T, A1, B1] =
-    adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
-
   private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PSetter[S, T, A1, B1] =
     evB.substituteContra[PSetter[S, T, A1, -*]](evA.substituteCo[PSetter[S, T, +*, B]](this))
 
@@ -58,65 +51,6 @@ trait PSetter[-S, +T, +A, -B] extends Serializable { self =>
         self.modify(other.replace(d))
     }
 
-  /** compose a [[PSetter]] with a [[PSetter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PSetter]] with a [[PTraversal]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PSetter]] with a [[POptional]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeOptional[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PSetter]] with a [[PPrism]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composePrism[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PSetter]] with a [[PLens]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeLens[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PSetter]] with a [[PIso]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeIso[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** *****************************************
-    */
-  /** Experimental aliases of compose methods */
-  /** *****************************************
-    */
-  /** alias to composeTraversal */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^|->>[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeOptional */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^|-?[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composePrism */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^<-?[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeLens */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^|->[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeIso */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^<->[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
 }
 
 object PSetter extends SetterInstances {
@@ -149,6 +83,9 @@ object PSetter extends SetterInstances {
   def fromProfunctor[P[_, _], A, B, C](implicit P: Profunctor[P]): PSetter[P[B, C], P[A, C], A, B] =
     PSetter[P[B, C], P[A, C], A, B](f => P.lmap(_)(f))
 
+  implicit def pSetterSyntax[S, T, A, B](self: PSetter[S, T, A, B]): PSetterSyntax[S, T, A, B] =
+    new PSetterSyntax(self)
+
   implicit def setterSyntax[S, A](self: Setter[S, A]): SetterSyntax[S, A] =
     new SetterSyntax(self)
 }
@@ -180,13 +117,78 @@ sealed abstract class SetterInstances {
       Iso.id
 
     def choice[A, B, C](f1: Setter[A, C], f2: Setter[B, C]): Setter[Either[A, B], C] =
-      f1 choice f2
+      PSetterSyntax(f1).choice(f2)
   }
+}
+
+final case class PSetterSyntax[S, T, A, B](private val self: PSetter[S, T, A, B]) extends AnyVal {
+
+  /** join two [[PSetter]] with the same target */
+  def choice[S1, T1, A1 >: A, B1 <: B](other: PSetter[S1, T1, A1, B1]): PSetter[Either[S, S1], Either[T, T1], A1, B1] =
+    PSetter[Either[S, S1], Either[T, T1], A1, B1](b => _.bimap(self.modify(b), other.modify(b)))
+
+  /** compose a [[PSetter]] with a [[PSetter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PSetter]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PSetter]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PSetter]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PSetter]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PSetter]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeTraversal */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->>[C, D](other: PTraversal[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeOptional */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|-?[C, D](other: POptional[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composePrism */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<-?[C, D](other: PPrism[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->[C, D](other: PLens[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<->[C, D](other: PIso[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
 }
 
 /** Extension methods for monomorphic Setter
   */
 final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyVal {
+  def some[A1](implicit ev1: A =:= Option[A1]): Setter[S, A1] =
+    self.adapt(ev1, ev1.flip).andThen(std.option.some[A1])
+
   def each[C](implicit evEach: Each[A, C]): Setter[S, C] =
     self.andThen(evEach.each)
 

@@ -66,33 +66,6 @@ trait PPrism[-S, +T, +A, -B] extends POptional[S, T, A, B] { self =>
   def re: Getter[B, T] =
     Getter(reverseGet)
 
-  override def first[C]: PPrism[(S, C), (T, C), (A, C), (B, C)] =
-    PPrism[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
-      getOrModify(s).bimap(_ -> c, _ -> c)
-    } { case (b, c) =>
-      (reverseGet(b), c)
-    }
-
-  override def second[C]: PPrism[(C, S), (C, T), (C, A), (C, B)] =
-    PPrism[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
-      getOrModify(s).bimap(c -> _, c -> _)
-    } { case (c, b) =>
-      (c, reverseGet(b))
-    }
-
-  override def left[C]: PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
-    PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]](
-      _.fold(getOrModify(_).bimap(Either.left, Either.left), c => Either.right(Either.right(c)))
-    )(_.leftMap(reverseGet))
-
-  override def right[C]: PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
-    PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](
-      _.fold(c => Either.right(Either.left(c)), getOrModify(_).bimap(Either.right, Either.right))
-    )(_.map(reverseGet))
-
-  override def some[A1, B1](implicit ev1: A <:< Option[A1], ev2: Option[B1] <:< B): PPrism[S, T, A1, B1] =
-    adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
-
   override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PPrism[S, T, A1, B1] =
     evB.substituteContra[PPrism[S, T, A1, -*]](evA.substituteCo[PPrism[S, T, +*, B]](this))
 
@@ -110,76 +83,6 @@ trait PPrism[-S, +T, +A, -B] extends POptional[S, T, A, B] { self =>
       def getOption(s: S): Option[C] =
         self.getOption(s) flatMap other.getOption
     }
-
-  /** compose a [[PPrism]] with a [[Fold]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeFold[C](other: Fold[A, C]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[Getter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PSetter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PTraversal]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[POptional]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PLens]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PPrism]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PIso]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def composeIso[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
-
-  /** *****************************************
-    */
-  /** Experimental aliases of compose methods */
-  /** *****************************************
-    */
-  /** alias to composeTraversal */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeOptional */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composePrism */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^<-?[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeLens */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^|->[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeIso */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  override def ^<->[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
 
   /** ***************************************************************
     */
@@ -236,6 +139,9 @@ object PPrism extends PrismInstances {
         _getOrModify(s).toOption
     }
 
+  implicit def pPrismSyntax[S, T, A, B](self: PPrism[S, T, A, B]): PPrismSyntax[S, T, A, B] =
+    new PPrismSyntax(self)
+
   implicit def prismSyntax[S, A](self: Prism[S, A]): PrismSyntax[S, A] =
     new PrismSyntax(self)
 }
@@ -277,7 +183,106 @@ sealed abstract class PrismInstances {
   }
 }
 
+final case class PPrismSyntax[S, T, A, B](private val self: PPrism[S, T, A, B]) extends AnyVal {
+
+  def first[C]: PPrism[(S, C), (T, C), (A, C), (B, C)] =
+    PPrism[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
+      self.getOrModify(s).bimap(_ -> c, _ -> c)
+    } { case (b, c) =>
+      (self.reverseGet(b), c)
+    }
+
+  def second[C]: PPrism[(C, S), (C, T), (C, A), (C, B)] =
+    PPrism[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
+      self.getOrModify(s).bimap(c -> _, c -> _)
+    } { case (c, b) =>
+      (c, self.reverseGet(b))
+    }
+
+  def left[C]: PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
+    PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]](
+      _.fold(self.getOrModify(_).bimap(Either.left, Either.left), c => Either.right(Either.right(c)))
+    )(_.leftMap(self.reverseGet))
+
+  def right[C]: PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
+    PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](
+      _.fold(c => Either.right(Either.left(c)), self.getOrModify(_).bimap(Either.right, Either.right))
+    )(_.map(self.reverseGet))
+
+  /** compose a [[PPrism]] with a [[Fold]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[Getter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PSetter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
+
+  /** *****************************************
+    */
+  /** Experimental aliases of compose methods */
+  /** *****************************************
+    */
+  /** alias to composeTraversal */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeOptional */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composePrism */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<-?[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<->[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
+}
+
 final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal {
+  def some[A1](implicit ev1: A =:= Option[A1]): Prism[S, A1] =
+    self.adapt(ev1, ev1.flip).andThen(std.option.some[A1])
 
   /** lift a [[Prism]] such as it only matches if all elements of `F[S]` are getOrModify */
   def below[F[_]](implicit F: Traverse[F]): Prism[F[S], F[A]] =

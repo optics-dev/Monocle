@@ -67,31 +67,9 @@ trait Fold[-S, +A] extends Serializable { self =>
   def nonEmpty(s: S): Boolean =
     !isEmpty(s)
 
-  /** join two [[Fold]] with the same target */
-  def choice[S1, A1 >: A](other: Fold[S1, A1]): Fold[Either[S, S1], A1] =
-    new Fold[Either[S, S1], A1] {
-      def foldMap[M: Monoid](f: A1 => M)(s: Either[S, S1]): M =
-        s.fold(self.foldMap(f), other.foldMap(f))
-    }
-
-  def left[C]: Fold[Either[S, C], Either[A, C]] =
-    new Fold[Either[S, C], Either[A, C]] {
-      override def foldMap[M: Monoid](f: Either[A, C] => M)(s: Either[S, C]): M =
-        s.fold(self.foldMap(a => f(Either.left(a))), c => f(Either.right(c)))
-    }
-
-  def right[C]: Fold[Either[C, S], Either[C, A]] =
-    new Fold[Either[C, S], Either[C, A]] {
-      override def foldMap[M: Monoid](f: Either[C, A] => M)(s: Either[C, S]): M =
-        s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
-    }
-
   /** Compose with a function lifted into a Getter */
   def to[C](f: A => C): Fold[S, C] =
     andThen(Getter(f))
-
-  def some[A1](implicit ev1: A <:< Option[A1]): Fold[S, A1] =
-    adapt[Option[A1]].andThen(std.option.some[A1])
 
   private[monocle] def adapt[A1](implicit evA: A <:< A1): Fold[S, A1] =
     evA.substituteCo[Fold[S, +*]](this)
@@ -103,70 +81,6 @@ trait Fold[-S, +A] extends Serializable { self =>
         self.foldMap(other.foldMap(f)(_))(s)
     }
 
-  /** compose a [[Fold]] with a [[Fold]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeFold[C](other: Fold[A, C]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[Fold]] with a [[Getter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[Fold]] with a [[PTraversal]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeTraversal[C, D](other: PTraversal[A, Nothing, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[Fold]] with a [[POptional]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeOptional[C, D](other: POptional[A, Nothing, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[Fold]] with a [[PPrism]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composePrism[C, D](other: PPrism[A, Nothing, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[Fold]] with a [[PLens]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeLens[C, D](other: PLens[A, Nothing, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[Fold]] with a [[PIso]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeIso[C, D](other: PIso[A, Nothing, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** *****************************************
-    */
-  /** Experimental aliases of compose methods */
-  /** *****************************************
-    */
-  /** alias to composeTraversal */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** alias to composeOptional */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** alias to composePrism */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** alias to composeLens */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^|->[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
-    andThen(other)
-
-  /** alias to composeIso */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^<->[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
-    andThen(other)
 }
 
 object Fold extends FoldInstances {
@@ -205,7 +119,7 @@ object Fold extends FoldInstances {
 sealed abstract class FoldInstances {
   implicit val foldChoice: Choice[Fold] = new Choice[Fold] {
     def choice[A, B, C](f: Fold[A, C], g: Fold[B, C]): Fold[Either[A, B], C] =
-      f choice g
+      FoldSyntax(f).choice(g)
 
     def id[A]: Fold[A, A] =
       Iso.id[A]
@@ -237,4 +151,86 @@ final case class FoldSyntax[S, A](private val self: Fold[S, A]) extends AnyVal {
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
     self.andThen(evIndex.index(i))
+
+  /** join two [[Fold]] with the same target */
+  def choice[S1, A1 >: A](other: Fold[S1, A1]): Fold[Either[S, S1], A1] =
+    new Fold[Either[S, S1], A1] {
+      def foldMap[M: Monoid](f: A1 => M)(s: Either[S, S1]): M =
+        s.fold(self.foldMap(f), other.foldMap(f))
+    }
+
+  def left[C]: Fold[Either[S, C], Either[A, C]] =
+    new Fold[Either[S, C], Either[A, C]] {
+      override def foldMap[M: Monoid](f: Either[A, C] => M)(s: Either[S, C]): M =
+        s.fold(self.foldMap(a => f(Either.left(a))), c => f(Either.right(c)))
+    }
+
+  def right[C]: Fold[Either[C, S], Either[C, A]] =
+    new Fold[Either[C, S], Either[C, A]] {
+      override def foldMap[M: Monoid](f: Either[C, A] => M)(s: Either[C, S]): M =
+        s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
+    }
+
+  def some[A1](implicit ev1: A <:< Option[A1]): Fold[S, A1] =
+    self.adapt[Option[A1]].andThen(std.option.some[A1])
+
+  /** compose a [[Fold]] with a [[Fold]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[Getter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeTraversal[C, D](other: PTraversal[A, Nothing, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, Nothing, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, Nothing, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, Nothing, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[Fold]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, Nothing, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** alias to composeTraversal */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->>[B, C, D](other: PTraversal[A, B, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** alias to composeOptional */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|-?[B, C, D](other: POptional[A, B, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** alias to composePrism */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<-?[B, C, D](other: PPrism[A, B, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->[B, C, D](other: PLens[A, B, C, D]): Fold[S, C] =
+    self.andThen(other)
+
+  /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<->[B, C, D](other: PIso[A, B, C, D]): Fold[S, C] =
+    self.andThen(other)
 }
