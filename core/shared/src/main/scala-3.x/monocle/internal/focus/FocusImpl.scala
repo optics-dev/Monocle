@@ -2,6 +2,7 @@ package monocle.internal.focus
 
 import monocle.{Lens, Focus}
 import scala.quoted.{Type, Expr, Quotes, quotes}
+import monocle.internal.focus.features.{ParserLoop, AllFeatureParsers, GeneratorLoop, AllFeatureGenerators}
 
 private[focus] class FocusImpl(val macroContext: Quotes)
     extends FocusBase

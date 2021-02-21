@@ -31,7 +31,7 @@ final class FocusEachTest extends munit.FunSuite {
     assertEquals(studentNames.getAll(school), List("Arlen", "Bob", "Carol"))
   }
   
-  test("Focus operator each commutes with standalone operator each") {
+  test("Focus operator `each` commutes with standalone operator `each`") {
     case class School(name: String, students: List[Student])
     case class Student(firstName: String, lastName: String, yearLevel: Int)
     
