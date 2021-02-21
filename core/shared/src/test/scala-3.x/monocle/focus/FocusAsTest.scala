@@ -6,7 +6,7 @@ import monocle.Focus._
 import scala.annotation.nowarn
 
 
-final class FocusCastAsTest extends munit.FunSuite {
+final class FocusAsTest extends munit.FunSuite {
 
   trait Food { def calories: Int }
   case class Banana(calories: Int, squishy: Boolean) extends Food

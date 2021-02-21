@@ -3,8 +3,8 @@ package monocle.internal.focus.features
 import scala.quoted.Type
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.fieldselect.FieldSelectParser
-import monocle.internal.focus.features.optionsome.OptionSomeParser
-import monocle.internal.focus.features.castas.CastAsParser
+import monocle.internal.focus.features.some.SomeParser
+import monocle.internal.focus.features.as.AsParser
 import monocle.internal.focus.features.each.EachParser
 import monocle.internal.focus.features.at.AtParser
 import monocle.internal.focus.features.index.IndexParser
@@ -13,8 +13,8 @@ private[focus] trait AllFeatureParsers
   extends FocusBase 
   with ParserBase
   with FieldSelectParser 
-  with OptionSomeParser
-  with CastAsParser
+  with SomeParser
+  with AsParser
   with EachParser
   with AtParser
   with IndexParser
@@ -31,20 +31,20 @@ private[focus] trait ParserLoop {
         case LambdaArgument(idName) if idName == config.argName => Right(listSoFar)
         case LambdaArgument(idName) => FocusError.DidNotDirectlyAccessArgument(idName).asResult
 
-        case OptionSome(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
-        case OptionSome(Left(error)) => Left(error)
+        case KeywordSome(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case KeywordSome(Left(error)) => Left(error)
 
-        case Each(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
-        case Each(Left(error)) => Left(error)
+        case KeywordEach(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case KeywordEach(Left(error)) => Left(error)
 
-        case At(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
-        case At(Left(error)) => Left(error)
+        case KeywordAt(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case KeywordAt(Left(error)) => Left(error)
 
-        case Index(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
-        case Index(Left(error)) => Left(error)
+        case KeywordIndex(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case KeywordIndex(Left(error)) => Left(error)
 
-        case CastAs(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
-        case CastAs(Left(error)) => Left(error)
+        case KeywordAs(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case KeywordAs(Left(error)) => Left(error)
 
         case FieldSelect(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case FieldSelect(Left(error)) => Left(error)
