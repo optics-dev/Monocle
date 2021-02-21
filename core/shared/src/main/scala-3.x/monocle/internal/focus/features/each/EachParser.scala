@@ -1,19 +1,17 @@
 package monocle.internal.focus.features.each
 
 import monocle.internal.focus.FocusBase
+import monocle.internal.focus.features.ParserBase
 
 private[focus] trait EachParser {
-  this: FocusBase => 
+  this: FocusBase with ParserBase => 
 
-  import macroContext.reflect._
+  object KeywordEach extends FocusParser {
 
-  object Each extends FocusParser {
-
-    def unapply(term: Term): Option[FocusResult[(Term, FocusAction)]] = term match {
-      case Apply(Apply(TypeApply(Ident("each"), List(_, toTypeTree)), List(remainingCode)), List(eachInstance)) => 
-        val fromType = remainingCode.tpe.widen
-        val toType = toTypeTree.tpe
-        val action = FocusAction.Each(fromType, toType, eachInstance)
+    def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
+      
+      case FocusKeywordGiven(Name("each"), FromType(fromType), TypeArgs(_, toType), ValueArgs(), GivenInstance(eachInstance), remainingCode) => 
+        val action = FocusAction.KeywordEach(fromType, toType, eachInstance)
         Some(Right(remainingCode, action))
         
       case _ => None

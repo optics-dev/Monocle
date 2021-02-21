@@ -52,4 +52,13 @@ final class FocusSomeTest extends munit.FunSuite {
     assertEquals(name.getOption(Some(None)), None)
     assertEquals(name.getOption(None), None)
   }
+
+  test("Focus operator `some` commutes with standalone operator `some`") {
+    
+    val opt: Option[Int] = Some(33)
+
+    assertEquals(
+      Focus[Option[Int]](_.some).getOption(opt),
+      Focus[Option[Int]](a => a).some.getOption(opt))
+  }
 }
