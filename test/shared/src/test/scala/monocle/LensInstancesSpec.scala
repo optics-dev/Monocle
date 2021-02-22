@@ -1,7 +1,7 @@
 package monocle
 
 import cats.Eq
-import cats.laws.discipline.InvariantTests
+import cats.laws.discipline.{InvariantTests, SemigroupalTests}
 import org.scalacheck.{Arbitrary, Gen}
 /*
  Proof(?) that a lens can be Invariant and Semigroupal
@@ -29,6 +29,8 @@ class LensInstancesSpec extends MonocleSuite
   )
 
   checkAll("Lens.InvariantLaws", InvariantTests[Lens[Sample, *]].invariant[Char, Int, Boolean])
+
+  checkAll("Lens.SemigroupalLaws", SemigroupalTests[Lens[Sample, *]].semigroupal[Char, Int, Boolean])
 }
 
 
