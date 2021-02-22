@@ -79,11 +79,11 @@ trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
       _.fold(c => Either.right(Either.left(c)), getOrModify(_).bimap(Either.right, Either.right))
     )(_.map(reverseGet))
 
-  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: Option[B1] =:= B): PPrism[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): PPrism[S, T, A1, B1] =
-    evB.substituteContra[PPrism[S, T, A1, *]](evA.substituteCo[PPrism[S, T, *, B]](this))
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PPrism[S, T, A1, B1] =
+    evB.substituteCo[PPrism[S, T, A1, *]](evA.substituteCo[PPrism[S, T, *, B]](this))
 
   /** compose a [[PPrism]] with another [[PPrism]] */
   def andThen[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
@@ -286,7 +286,7 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Prism[S, A1] =
-    self.adapt(evOpt, evOpt.flip).andThen(std.option.withDefault(defaultValue))
+    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Optional[S, A1] =
     self.andThen(evAt.at(i))

@@ -104,11 +104,11 @@ trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self 
   override def right[C]: PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](_.map(get))(_.map(reverseGet))
 
-  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: Option[B1] =:= B): PPrism[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): PIso[S, T, A1, B1] =
-    evB.substituteContra[PIso[S, T, A1, *]](evA.substituteCo[PIso[S, T, *, B]](this))
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PIso[S, T, A1, B1] =
+    evB.substituteCo[PIso[S, T, A1, *]](evA.substituteCo[PIso[S, T, *, B]](this))
 
   /** compose a [[PIso]] with another [[PIso]] */
   def andThen[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
@@ -341,7 +341,7 @@ final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Iso[S, A1] =
-    self.adapt(evOpt, evOpt.flip).andThen(std.option.withDefault(defaultValue))
+    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Lens[S, A1] =
     self.andThen(evAt.at(i))

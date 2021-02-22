@@ -60,11 +60,11 @@ trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] with Fold[S, A] { self 
       modifyA(a => F.parallel(f(a)))(s)(F.applicative)
     )
 
-  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: Option[B1] =:= B): PTraversal[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PTraversal[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): PTraversal[S, T, A1, B1] =
-    evB.substituteContra[PTraversal[S, T, A1, *]](evA.substituteCo[PTraversal[S, T, *, B]](this))
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PTraversal[S, T, A1, B1] =
+    evB.substituteCo[PTraversal[S, T, A1, *]](evA.substituteCo[PTraversal[S, T, *, B]](this))
 
   /** compose a [[PTraversal]] with another [[PTraversal]] */
   def andThen[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
@@ -294,7 +294,7 @@ final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extend
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Traversal[S, A1] =
-    self.adapt(evOpt, evOpt.flip).andThen(std.option.withDefault(defaultValue))
+    self.adapt(evOpt, evOpt).andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Traversal[S, A1] =
     self.andThen(evAt.at(i))

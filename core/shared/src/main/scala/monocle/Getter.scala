@@ -30,15 +30,15 @@ trait Getter[S, A] extends Fold[S, A] { self =>
     p compose get
 
   /** join two [[Getter]] with the same target */
-  def choice[S1, A1 >: A](other: Getter[S1, A1]): Getter[Either[S, S1], A1] =
-    Getter[Either[S, S1], A1](_.fold(self.get, other.get))
+  def choice[S1](other: Getter[S1, A]): Getter[Either[S, S1], A] =
+    Getter[Either[S, S1], A](_.fold(self.get, other.get))
 
   /** pair two disjoint [[Getter]] */
   def split[S1, A1](other: Getter[S1, A1]): Getter[(S, S1), (A, A1)] =
     Getter[(S, S1), (A, A1)] { case (s, s1) => (self.get(s), other.get(s1)) }
 
-  def zip[S1 <: S, A1](other: Getter[S1, A1]): Getter[S1, (A, A1)] =
-    Getter[S1, (A, A1)](s => (self.get(s), other.get(s)))
+  def zip[A1](other: Getter[S, A1]): Getter[S, (A, A1)] =
+    Getter[S, (A, A1)](s => (self.get(s), other.get(s)))
 
   def first[B]: Getter[(S, B), (A, B)] =
     Getter[(S, B), (A, B)] { case (s, b) => (self.get(s), b) }

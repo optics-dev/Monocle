@@ -98,11 +98,11 @@ trait PLens[S, T, A, B] extends POptional[S, T, A, B] with Getter[S, A] { self =
       }
     }
 
-  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: Option[B1] =:= B): POptional[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): PLens[S, T, A1, B1] =
-    evB.substituteContra[PLens[S, T, A1, *]](evA.substituteCo[PLens[S, T, *, B]](this))
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PLens[S, T, A1, B1] =
+    evB.substituteCo[PLens[S, T, A1, *]](evA.substituteCo[PLens[S, T, *, B]](this))
 
   /** compose a [[PLens]] with a [[PLens]] */
   def andThen[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
@@ -270,9 +270,6 @@ final case class PLensSyntax[S, T, A, B](private val self: PLens[S, T, A, B]) ex
 /** Extension methods for monomorphic Lens
   */
 final case class LensSyntax[S, A](private val self: Lens[S, A]) extends AnyVal {
-  def some[A1](implicit ev1: A =:= Option[A1]): Optional[S, A1] =
-    self.adapt(ev1, ev1.flip).andThen(std.option.some[A1])
-
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self.andThen(evEach.each)
 
@@ -286,7 +283,7 @@ final case class LensSyntax[S, A](private val self: Lens[S, A]) extends AnyVal {
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Lens[S, A1] =
-    self.adapt(evOpt, evOpt.flip).andThen(std.option.withDefault(defaultValue))
+    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Lens[S, A1] =
     self.andThen(evAt.at(i))
