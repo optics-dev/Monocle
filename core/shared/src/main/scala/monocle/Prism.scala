@@ -83,7 +83,7 @@ trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): PPrism[S, T, A1, B1] =
-    asInstanceOf[PPrism[S, T, A1, B1]]
+    evB.substituteContra[PPrism[S, T, A1, *]](evA.substituteCo[PPrism[S, T, *, B]](this))
 
   /** compose a [[PPrism]] with another [[PPrism]] */
   def andThen[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =

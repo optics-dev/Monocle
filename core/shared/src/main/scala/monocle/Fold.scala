@@ -92,7 +92,7 @@ trait Fold[S, A] extends Serializable { self =>
     adapt[Option[A1]].andThen(std.option.some[A1])
 
   private[monocle] def adapt[A1](implicit evA: A =:= A1): Fold[S, A1] =
-    asInstanceOf[Fold[S, A1]]
+    evA.substituteCo[Fold[S, *]](this)
 
   /** compose a [[Fold]] with another [[Fold]] */
   def andThen[B](other: Fold[A, B]): Fold[S, B] =

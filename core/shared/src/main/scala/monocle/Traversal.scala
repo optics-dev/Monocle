@@ -64,9 +64,7 @@ trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] with Fold[S, A] { self 
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
   override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): PTraversal[S, T, A1, B1] =
-    asInstanceOf[PTraversal[S, T, A1, B1]]
-  // doesn't compile in Scala 3
-  // evB.substituteContra[PTraversal[S, T, A1, -*]](evA.substituteCo[PTraversal[S, T, +*, B]](this))
+    evB.substituteContra[PTraversal[S, T, A1, *]](evA.substituteCo[PTraversal[S, T, *, B]](this))
 
   /** compose a [[PTraversal]] with another [[PTraversal]] */
   def andThen[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
