@@ -72,11 +72,7 @@ trait Getter[S, A] extends Fold[S, A] { self =>
   /** ***************************************************************
     */
   /** view a [[Getter]] with a [[Fold]] */
-  def asFold: Fold[S, A] =
-    new Fold[S, A] {
-      def foldMap[M: Monoid](f: A => M)(s: S): M =
-        f(get(s))
-    }
+  def asFold: Fold[S, A] = this
 }
 
 object Getter extends GetterInstances {
