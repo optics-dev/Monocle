@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Eq, Functor, Monoid}
+import cats.{Applicative, Eq, Functor, Invariant, Monoid, Semigroupal}
 import cats.arrow.Choice
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
@@ -320,6 +320,18 @@ sealed abstract class LensInstances {
 
     def compose[A, B, C](f: Lens[B, C], g: Lens[A, B]): Lens[A, C] =
       g.andThen(f)
+  }
+
+  implicit def lensInvariant[S]: Invariant[Lens[S, *]] = new Invariant[Lens[S, *]] {
+    override def imap[A, B](fa: Lens[S, A])(f: A => B)(g: B => A): Lens[S, B] =
+      Lens.apply[S, B](s => f(fa.get(s)))(g andThen fa.replace)
+  }
+
+  implicit def lensSemigroupal[S]: Semigroupal[Lens[S, *]] = new Semigroupal[Lens[S, *]] {
+    override def product[A, B](fa: Lens[S, A], fb: Lens[S, B]): Lens[S, (A, B)] =
+      Lens.apply[S, (A, B)](s => fa.get(s) -> fb.get(s)) {
+        case (a, b) => fa.replace(a) andThen fb.replace(b)
+      }
   }
 }
 
