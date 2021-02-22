@@ -294,7 +294,7 @@ final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extend
     self.andThen(ev.filterIndex(predicate))
 
   def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Traversal[S, A1] =
-    self.adapt(evOpt, evOpt).andThen(std.option.withDefault(defaultValue))
+    self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Traversal[S, A1] =
     self.andThen(evAt.at(i))
