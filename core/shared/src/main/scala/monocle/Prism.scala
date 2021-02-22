@@ -7,8 +7,6 @@ import cats.instances.option._
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 
-import scala.annotation.unchecked.uncheckedVariance
-
 /** A [[PPrism]] can be seen as a pair of functions:
   *  - `getOrModify: S => Either[T, A]`
   *  - `reverseGet : B => T`
@@ -34,13 +32,13 @@ import scala.annotation.unchecked.uncheckedVariance
   * @tparam A the target of a [[PPrism]]
   * @tparam B the modified target of a [[PPrism]]
   */
-trait PPrism[-S, +T, +A, -B] extends POptional[S, T, A, B] { self =>
+trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
 
   /** get the modified source of a [[PPrism]] */
   def reverseGet(b: B): T
 
   /** modify polymorphically the target of a [[PPrism]] with an Applicative function */
-  def modifyA[F[_]: Applicative](f: A => F[B] @uncheckedVariance)(s: S): F[T] @uncheckedVariance =
+  def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
     getOrModify(s).fold(
       t => Applicative[F].pure(t),
       a => Applicative[F].map(f(a))(reverseGet)
@@ -81,10 +79,10 @@ trait PPrism[-S, +T, +A, -B] extends POptional[S, T, A, B] { self =>
       _.fold(c => Either.right(Either.left(c)), getOrModify(_).bimap(Either.right, Either.right))
     )(_.map(reverseGet))
 
-  override def some[A1, B1](implicit ev1: A <:< Option[A1], ev2: Option[B1] <:< B): PPrism[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: Option[B1] =:= B): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PPrism[S, T, A1, B1] =
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): PPrism[S, T, A1, B1] =
     asInstanceOf[PPrism[S, T, A1, B1]]
 
   /** compose a [[PPrism]] with another [[PPrism]] */
@@ -117,7 +115,7 @@ trait PPrism[-S, +T, +A, -B] extends POptional[S, T, A, B] { self =>
   /** Apply methods to treat a [[PPrism]] as smart constructors for type T */
   /** **********************************************************************
     */
-  def apply[B1 <: B]()(implicit ev: Is[B1, Unit]): T =
+  def apply()(implicit ev: Is[B, Unit]): T =
     ev.substitute[PPrism[S, T, A, *]](self).reverseGet(())
 
   def apply(b: B): T = reverseGet(b)

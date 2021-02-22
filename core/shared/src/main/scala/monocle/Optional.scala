@@ -26,7 +26,7 @@ import monocle.function.{At, Each, FilterIndex, Index}
   * @tparam A the target of a [[POptional]]
   * @tparam B the modified target of a [[POptional]]
   */
-trait POptional[-S, +T, +A, -B] extends PTraversal[S, T, A, B] { self =>
+trait POptional[S, T, A, B] extends PTraversal[S, T, A, B] { self =>
 
   /** get the target of a [[POptional]] or return the original value while allowing the type to change if it does not match */
   def getOrModify(s: S): Either[T, A]
@@ -75,14 +75,14 @@ trait POptional[-S, +T, +A, -B] extends PTraversal[S, T, A, B] { self =>
     getOption(_).fold(true)(p)
 
   /** fall-back to another [[POptional]] in case this one doesn't match */
-  def orElse[S1 <: S, T1 >: T, A1 >: A, B1 <: B](other: POptional[S1, T1, A1, B1]): POptional[S1, T1, A1, B1] =
-    POptional[S1, T1, A1, B1](from => self.getOrModify(from).orElse(other.getOrModify(from)))(to =>
+  def orElse(other: POptional[S, T, A, B]): POptional[S, T, A, B] =
+    POptional[S, T, A, B](from => self.getOrModify(from).orElse(other.getOrModify(from)))(to =>
       from => self.replaceOption(to)(from).getOrElse(other.replace(to)(from))
     )
 
   /** join two [[POptional]] with the same target */
-  def choice[S1, T1, A1 >: A, B1 <: B](other: POptional[S1, T1, A1, B1]): POptional[Either[S, S1], Either[T, T1], A1, B1] =
-    POptional[Either[S, S1], Either[T, T1], A1, B1](
+  def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[Either[S, S1], Either[T, T1], A, B] =
+    POptional[Either[S, S1], Either[T, T1], A, B](
       _.fold(self.getOrModify(_).leftMap(Either.left), other.getOrModify(_).leftMap(Either.right))
     )(b => _.bimap(self.replace(b), other.replace(b)))
 
@@ -104,10 +104,10 @@ trait POptional[-S, +T, +A, -B] extends PTraversal[S, T, A, B] { self =>
       }
     }
 
-  override def some[A1, B1](implicit ev1: A <:< Option[A1], ev2: Option[B1] <:< B): POptional[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: Option[B1] =:= B): POptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): POptional[S, T, A1, B1] =
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): POptional[S, T, A1, B1] =
     asInstanceOf[POptional[S, T, A1, B1]]
 
   /** compose a [[POptional]] with a [[POptional]] */
@@ -253,6 +253,7 @@ sealed abstract class OptionalInstances {
 }
 
 final case class POptionalSyntax[S, T, A, B](private val self: POptional[S, T, A, B]) extends AnyVal {
+
   /** compose a [[POptional]] with a [[Fold]] */
   @deprecated("use andThen", since = "3.0.0-M1")
   def composeFold[C](other: Fold[A, C]): Fold[S, C] =

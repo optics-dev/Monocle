@@ -6,8 +6,6 @@ import cats.evidence.{<~<, Is}
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 
-import scala.annotation.unchecked.uncheckedVariance
-
 /** [[Iso]] is a type alias for [[PIso]] where `S` = `A` and `T` = `B`:
   * {{{
   * type Iso[S, A] = PIso[S, S, A, A]
@@ -43,13 +41,13 @@ import scala.annotation.unchecked.uncheckedVariance
   * @tparam A the target of a [[PIso]]
   * @tparam B the modified target of a [[PIso]]
   */
-trait PIso[-S, +T, +A, -B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self =>
+trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self =>
 
   /** reverse a [[PIso]]: the source becomes the target and the target becomes the source */
   def reverse: PIso[B, A, T, S]
 
   /** lift a [[PIso]] to a Functor level */
-  def mapping[F[_]: Functor]: PIso[F[S], F[T], F[A], F[B]] @uncheckedVariance =
+  def mapping[F[_]: Functor]: PIso[F[S], F[T], F[A], F[B]] =
     PIso[F[S], F[T], F[A], F[B]](fs => Functor[F].map(fs)(self.get))(fb => Functor[F].map(fb)(self.reverseGet))
 
   override def foldMap[M: Monoid](f: A => M)(s: S): M =
@@ -64,10 +62,10 @@ trait PIso[-S, +T, +A, -B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { s
     p compose get
 
   /** modify polymorphically the target of a [[PIso]] with a Functor function */
-  override def modifyF[F[_]: Functor](f: A => F[B] @uncheckedVariance)(s: S): F[T] @uncheckedVariance =
+  override def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
     Functor[F].map(f(get(s)))(reverseGet)
 
-  override def modifyA[F[_]: Applicative](f: A => F[B] @uncheckedVariance)(s: S): F[T] @uncheckedVariance =
+  override def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
     modifyF(f)(s)
 
   /** modify polymorphically the target of a [[PIso]] with a function */
@@ -106,10 +104,10 @@ trait PIso[-S, +T, +A, -B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { s
   override def right[C]: PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](_.map(get))(_.map(reverseGet))
 
-  override def some[A1, B1](implicit ev1: A <:< Option[A1], ev2: Option[B1] <:< B): PPrism[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: Option[B1] =:= B): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PIso[S, T, A1, B1] =
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): PIso[S, T, A1, B1] =
     asInstanceOf[PIso[S, T, A1, B1]]
 
   /** compose a [[PIso]] with another [[PIso]] */
@@ -165,7 +163,7 @@ trait PIso[-S, +T, +A, -B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { s
   /** Apply methods to treat a [[PIso]] as smart constructors for type T */
   /** **********************************************************************
     */
-  override def apply[B1 <: B]()(implicit ev: Is[B1, Unit]): T =
+  override def apply()(implicit ev: Is[B, Unit]): T =
     ev.substitute[PIso[S, T, A, *]](self).reverseGet(())
 
   override def apply(b: B): T = reverseGet(b)
@@ -261,6 +259,7 @@ sealed abstract class IsoInstances {
 }
 
 final case class PIsoSyntax[S, T, A, B](private val self: PIso[S, T, A, B]) extends AnyVal {
+
   /** compose a [[PIso]] with a [[Fold]] */
   @deprecated("use andThen", since = "3.0.0-M1")
   def composeFold[C](other: Fold[A, C]): Fold[S, C] =

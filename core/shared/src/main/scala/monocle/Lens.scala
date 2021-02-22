@@ -5,8 +5,6 @@ import cats.arrow.Choice
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 
-import scala.annotation.unchecked.uncheckedVariance
-
 /** A [[PLens]] can be seen as a pair of functions:
   *  - `get: S      => A` i.e. from an `S`, we can extract an `A`
   *  - `set: (B, S) => T` i.e. if we replace an `A` by a `B` in an `S`, we obtain a `T`
@@ -34,7 +32,7 @@ import scala.annotation.unchecked.uncheckedVariance
   * @tparam A the target of a [[PLens]]
   * @tparam B the modified target of a [[PLens]]
   */
-trait PLens[-S, +T, +A, -B] extends POptional[S, T, A, B] with Getter[S, A] { self =>
+trait PLens[S, T, A, B] extends POptional[S, T, A, B] with Getter[S, A] { self =>
 
   /** get the target of a [[PLens]] */
   def get(s: S): A
@@ -43,7 +41,7 @@ trait PLens[-S, +T, +A, -B] extends POptional[S, T, A, B] with Getter[S, A] { se
   def replace(b: B): S => T
 
   /** modify polymorphically the target of a [[PLens]] using Functor function */
-  def modifyF[F[_]: Functor](f: A => F[B] @uncheckedVariance)(s: S): F[T] @uncheckedVariance
+  def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T]
 
   /** modify polymorphically the target of a [[PLens]] using a function */
   def modify(f: A => B): S => T
@@ -52,7 +50,7 @@ trait PLens[-S, +T, +A, -B] extends POptional[S, T, A, B] with Getter[S, A] { se
 
   def getOption(s: S): Option[A] = Some(get(s))
 
-  override def modifyA[F[_]: Applicative](f: A => F[B] @uncheckedVariance)(s: S): F[T] @uncheckedVariance =
+  override def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
     modifyF(f)(s)
 
   override def foldMap[M: Monoid](f: A => M)(s: S): M =
@@ -100,10 +98,10 @@ trait PLens[-S, +T, +A, -B] extends POptional[S, T, A, B] with Getter[S, A] { se
       }
     }
 
-  override def some[A1, B1](implicit ev1: A <:< Option[A1], ev2: Option[B1] <:< B): POptional[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: Option[B1] =:= B): POptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override private[monocle] def adapt[A1, B1](implicit evA: A <:< A1, evB: B1 <:< B): PLens[S, T, A1, B1] =
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B1 =:= B): PLens[S, T, A1, B1] =
     asInstanceOf[PLens[S, T, A1, B1]]
 
   /** compose a [[PLens]] with a [[PLens]] */
