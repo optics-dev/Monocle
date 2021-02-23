@@ -17,8 +17,8 @@ import scala.annotation.implicitNotFound
 abstract class Cons1[S, H, T] extends Serializable {
   def cons1: Iso[S, (H, T)]
 
-  def head: Lens[S, H] = cons1.at(1)
-  def tail: Lens[S, T] = cons1.at(2)
+  def head: Lens[S, H] = cons1.composeLens(Field1.first)
+  def tail: Lens[S, T] = cons1.composeLens(Field2.second)
 }
 
 trait Cons1Functions {

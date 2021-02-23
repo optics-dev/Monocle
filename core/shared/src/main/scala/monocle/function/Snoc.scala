@@ -18,8 +18,8 @@ import scala.annotation.{implicitNotFound, tailrec}
 abstract class Snoc[S, A] extends Serializable {
   def snoc: Prism[S, (S, A)]
 
-  def initOption: Optional[S, S] = snoc.at(1)
-  def lastOption: Optional[S, A] = snoc.at(2)
+  def initOption: Optional[S, S] = snoc.composeLens(Field1.first)
+  def lastOption: Optional[S, A] = snoc.composeLens(Field2.second)
 }
 
 trait SnocFunctions {
