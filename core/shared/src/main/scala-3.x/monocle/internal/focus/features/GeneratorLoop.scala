@@ -2,8 +2,8 @@ package monocle.internal.focus.features
 
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.fieldselect.FieldSelectGenerator
-import monocle.internal.focus.features.optionsome.OptionSomeGenerator
-import monocle.internal.focus.features.castas.CastAsGenerator
+import monocle.internal.focus.features.some.SomeGenerator
+import monocle.internal.focus.features.as.AsGenerator
 import monocle.internal.focus.features.each.EachGenerator
 import monocle.internal.focus.features.at.AtGenerator
 import monocle.internal.focus.features.index.IndexGenerator
@@ -14,8 +14,8 @@ import scala.quoted.Type
 private[focus] trait AllFeatureGenerators
   extends FocusBase
   with FieldSelectGenerator 
-  with OptionSomeGenerator
-  with CastAsGenerator
+  with SomeGenerator
+  with AsGenerator
   with EachGenerator
   with AtGenerator
   with IndexGenerator
@@ -36,11 +36,11 @@ private[focus] trait GeneratorLoop {
   private def generateActionCode(action: FocusAction): Term = 
     action match {
       case FocusAction.FieldSelect(name, fromType, fromTypeArgs, toType) => generateFieldSelect(name, fromType, fromTypeArgs, toType)
-      case FocusAction.OptionSome(toType) => generateOptionSome(toType)
-      case FocusAction.CastAs(fromType, toType) => generateCastAs(fromType, toType)
-      case FocusAction.Each(fromType, toType, eachInstance) => generateEach(fromType, toType, eachInstance)
-      case FocusAction.At(fromType, toType, index, atInstance) => generateAt(fromType, toType, index, atInstance)
-      case FocusAction.Index(fromType, toType, index, indexInstance) => generateIndex(fromType, toType, index, indexInstance)
+      case FocusAction.KeywordSome(toType) => generateSome(toType)
+      case FocusAction.KeywordAs(fromType, toType) => generateAs(fromType, toType)
+      case FocusAction.KeywordEach(fromType, toType, eachInstance) => generateEach(fromType, toType, eachInstance)
+      case FocusAction.KeywordAt(fromType, toType, index, atInstance) => generateAt(fromType, toType, index, atInstance)
+      case FocusAction.KeywordIndex(fromType, toType, index, indexInstance) => generateIndex(fromType, toType, index, indexInstance)
     }
 
   private def composeOptics(lens1: Term, lens2: Term): FocusResult[Term] = {

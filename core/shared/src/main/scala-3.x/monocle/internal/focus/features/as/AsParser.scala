@@ -1,18 +1,18 @@
-package monocle.internal.focus.features.castas
+package monocle.internal.focus.features.as
 
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.ParserBase
 
-private[focus] trait CastAsParser {
+private[focus] trait AsParser {
   this: FocusBase with ParserBase =>
 
-  object CastAs extends FocusParser {
+  object KeywordAs extends FocusParser {
 
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
       
       case FocusKeyword(Name("as"), FromType(fromType), TypeArgs(toType), remainingCode) => 
         if (toType <:< fromType) {
-          val action = FocusAction.CastAs(fromType, toType)
+          val action = FocusAction.KeywordAs(fromType, toType)
           Some(Right(remainingCode, action))
         }
         else Some(Left(FocusError.InvalidDowncast(fromType.show, toType.show)))
