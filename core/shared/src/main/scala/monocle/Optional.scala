@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Monoid}
+import cats.Applicative
 import cats.arrow.Choice
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
