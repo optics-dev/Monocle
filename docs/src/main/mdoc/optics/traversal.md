@@ -44,7 +44,7 @@ points.replace(5)(Point("bottom-left",0,0))
 ```
 
 Finally, if you want to build something more custom you will have to implement a `Traversal` manually.
-A `Traversal` is defined by a single method `modifyF` which corresponds to the Van Laarhoven representation.
+A `Traversal` is defined by a single method `modifyA` which corresponds to the Van Laarhoven representation.
 
 
 For example, let's write a `Traversal` for `Map` that will focus into all values where the key satisfies a certain predicate:
@@ -56,7 +56,7 @@ import alleycats.std.map._ // to get Traverse instance for Map (SortedMap does n
 
 def filterKey[K, V](predicate: K => Boolean): Traversal[Map[K, V], V] =
     new Traversal[Map[K, V], V]{
-      def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
+      def modifyA[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
         s.map{ case (k, v) =>
           k -> (if(predicate(k)) f(v) else v.pure[F])
         }.sequence

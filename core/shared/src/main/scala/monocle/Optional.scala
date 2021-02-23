@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Eq, Monoid}
+import cats.{Applicative, Eq}
 import cats.arrow.Choice
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
@@ -26,7 +26,7 @@ import monocle.function.{At, Each, FilterIndex, Index}
   * @tparam A the target of a [[POptional]]
   * @tparam B the modified target of a [[POptional]]
   */
-abstract class POptional[S, T, A, B] extends Serializable { self =>
+trait POptional[S, T, A, B] extends PTraversal[S, T, A, B] { self =>
 
   /** get the target of a [[POptional]] or return the original value while allowing the type to change if it does not match */
   def getOrModify(s: S): Either[T, A]
@@ -34,54 +34,44 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
   /** get the modified source of a [[POptional]] */
   def replace(b: B): S => T
 
-  /** alias to replace */
-  @deprecated("use replace instead", since = "3.0.0-M1")
-  def set(b: B): S => T = replace(b)
-
   /** get the target of a [[POptional]] or nothing if there is no target */
   def getOption(s: S): Option[A]
-
-  /** modify polymorphically the target of a [[POptional]] with an Applicative function */
-  def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T]
-
-  /** modify polymorphically the target of a [[POptional]] with a function */
-  def modify(f: A => B): S => T
 
   /** modify polymorphically the target of a [[POptional]] with a function.
     * return empty if the [[POptional]] is not matching
     */
-  final def modifyOption(f: A => B): S => Option[T] =
+  def modifyOption(f: A => B): S => Option[T] =
     s => getOption(s).map(a => replace(f(a))(s))
 
   /** replace polymorphically the target of a [[POptional]] with a value.
     * return empty if the [[POptional]] is not matching
     */
-  final def replaceOption(b: B): S => Option[T] =
+  def replaceOption(b: B): S => Option[T] =
     modifyOption(_ => b)
 
   /** alias to replaceOption */
   @deprecated("use replaceOption instead", since = "3.0.0-M1")
-  final def setOption(b: B): S => Option[T] =
+  def setOption(b: B): S => Option[T] =
     replaceOption(b)
 
   /** check if there is no target */
-  final def isEmpty(s: S): Boolean =
+  override def isEmpty(s: S): Boolean =
     getOption(s).isEmpty
 
   /** check if there is a target */
-  final def nonEmpty(s: S): Boolean =
+  override def nonEmpty(s: S): Boolean =
     getOption(s).isDefined
 
   /** find if the target satisfies the predicate */
-  final def find(p: A => Boolean): S => Option[A] =
+  override def find(p: A => Boolean): S => Option[A] =
     getOption(_).flatMap(a => Some(a).filter(p))
 
   /** check if there is a target and it satisfies the predicate */
-  final def exist(p: A => Boolean): S => Boolean =
+  override def exist(p: A => Boolean): S => Boolean =
     getOption(_).fold(false)(p)
 
   /** check if there is no target or the target satisfies the predicate */
-  final def all(p: A => Boolean): S => Boolean =
+  override def all(p: A => Boolean): S => Boolean =
     getOption(_).fold(true)(p)
 
   /** fall-back to another [[POptional]] in case this one doesn't match */
@@ -91,12 +81,12 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
     )
 
   /** join two [[POptional]] with the same target */
-  final def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[Either[S, S1], Either[T, T1], A, B] =
+  def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[Either[S, S1], Either[T, T1], A, B] =
     POptional[Either[S, S1], Either[T, T1], A, B](
       _.fold(self.getOrModify(_).leftMap(Either.left), other.getOrModify(_).leftMap(Either.right))
     )(b => _.bimap(self.replace(b), other.replace(b)))
 
-  final def first[C]: POptional[(S, C), (T, C), (A, C), (B, C)] =
+  def first[C]: POptional[(S, C), (T, C), (A, C), (B, C)] =
     POptional[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       getOrModify(s).bimap(_ -> c, _ -> c)
     } {
@@ -105,7 +95,7 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  final def second[C]: POptional[(C, S), (C, T), (C, A), (C, B)] =
+  def second[C]: POptional[(C, S), (C, T), (C, A), (C, B)] =
     POptional[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
       getOrModify(s).bimap(c -> _, c -> _)
     } {
@@ -114,167 +104,47 @@ abstract class POptional[S, T, A, B] extends Serializable { self =>
       }
     }
 
-  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): POptional[S, T, A1, B1] =
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): POptional[S, T, A1, B1] =
     evB.substituteCo[POptional[S, T, A1, *]](evA.substituteCo[POptional[S, T, *, B]](this))
 
-  /** compose a [[POptional]] with a [[Fold]] */
-  final def andThen[C](other: Fold[A, C]): Fold[S, C] =
-    asFold.andThen(other)
-
-  /** compose a [[POptional]] with a [[Getter]] */
-  final def andThen[C](other: Getter[A, C]): Fold[S, C] =
-    asFold.andThen(other)
-
-  /** compose a [[POptional]] with a [[PSetter]] */
-  final def andThen[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    asSetter.andThen(other)
-
-  /** compose a [[POptional]] with a [[PTraversal]] */
-  final def andThen[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    asTraversal.andThen(other)
-
   /** compose a [[POptional]] with a [[POptional]] */
-  final def andThen[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+  def andThen[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
     new POptional[S, T, C, D] {
       def getOrModify(s: S): Either[T, C] =
         self
           .getOrModify(s)
           .flatMap(a => other.getOrModify(a).bimap(self.replace(_)(s), identity))
 
-      def replace(d: D): S => T =
+      override def replace(d: D): S => T =
         self.modify(other.replace(d))
 
       def getOption(s: S): Option[C] =
         self.getOption(s) flatMap other.getOption
 
-      def modifyF[F[_]: Applicative](f: C => F[D])(s: S): F[T] =
-        self.modifyF(other.modifyF(f))(s)
+      def modifyA[F[_]: Applicative](f: C => F[D])(s: S): F[T] =
+        self.modifyA(other.modifyA(f))(s)
 
-      def modify(f: C => D): S => T =
+      override def modify(f: C => D): S => T =
         self.modify(other.modify(f))
     }
-
-  /** compose a [[POptional]] with a [[PPrism]] */
-  final def andThen[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other.asOptional)
-
-  /** compose a [[POptional]] with a [[PLens]] */
-  final def andThen[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other.asOptional)
-
-  /** compose a [[POptional]] with a [[PIso]] */
-  final def andThen[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other.asOptional)
-
-  /** compose a [[POptional]] with a [[Fold]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
-    andThen(other)
-
-  /** Compose with a function lifted into a Getter */
-  def to[C](f: A => C): Fold[S, C] = andThen(Getter(f))
-
-  /** compose a [[POptional]] with a [[Getter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[POptional]] with a [[PSetter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[POptional]] with a [[PTraversal]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[POptional]] with a [[POptional]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[POptional]] with a [[PPrism]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composePrism[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[POptional]] with a [[PLens]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[POptional]] with a [[PIso]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeIso[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** *****************************************
-    */
-  /** Experimental aliases of compose methods */
-  /** *****************************************
-    */
-  /** alias to composeTraversal */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeOptional */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composePrism */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<-?[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeLens */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeIso */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<->[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
 
   /** ******************************************************************
     */
   /** Transformation methods to view a [[POptional]] as another Optics */
   /** ******************************************************************
     */
-  /** view a [[POptional]] as a [[Fold]] */
-  final def asFold: Fold[S, A] =
-    new Fold[S, A] {
-      def foldMap[M: Monoid](f: A => M)(s: S): M =
-        self.getOption(s) map f getOrElse Monoid[M].empty
-    }
-
-  /** view a [[POptional]] as a [[PSetter]] */
-  final def asSetter: PSetter[S, T, A, B] =
-    new PSetter[S, T, A, B] {
-      def modify(f: A => B): S => T =
-        self.modify(f)
-
-      def replace(b: B): S => T =
-        self.replace(b)
-    }
 
   /** view a [[POptional]] as a [[PTraversal]] */
-  final def asTraversal: PTraversal[S, T, A, B] =
-    new PTraversal[S, T, A, B] {
-      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        self.modifyF(f)(s)
-    }
+  def asTraversal: PTraversal[S, T, A, B] = this
 }
 
 object POptional extends OptionalInstances {
+  @deprecated("use PIso.id", since = "3.0.0-M2")
   def id[S, T]: POptional[S, T, S, T] =
-    PIso.id[S, T].asOptional
+    PIso.id[S, T]
 
   def codiagonal[S, T]: POptional[Either[S, S], Either[T, T], S, T] =
     POptional[Either[S, S], Either[T, T], S, T](
@@ -287,29 +157,33 @@ object POptional extends OptionalInstances {
       def getOrModify(s: S): Either[T, A] =
         _getOrModify(s)
 
-      def replace(b: B): S => T =
+      override def replace(b: B): S => T =
         _set(b)
 
       def getOption(s: S): Option[A] =
         _getOrModify(s).toOption
 
-      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+      def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
         _getOrModify(s).fold(
           t => Applicative[F].pure(t),
           a => Applicative[F].map(f(a))(_set(_)(s))
         )
 
-      def modify(f: A => B): S => T =
+      override def modify(f: A => B): S => T =
         s => _getOrModify(s).fold(identity, a => _set(f(a))(s))
     }
+
+  implicit def pOptionalSyntax[S, T, A, B](self: POptional[S, T, A, B]): POptionalSyntax[S, T, A, B] =
+    new POptionalSyntax(self)
 
   implicit def optionalSyntax[S, A](self: Optional[S, A]): OptionalSyntax[S, A] =
     new OptionalSyntax(self)
 }
 
 object Optional {
+  @deprecated("use Iso.id", since = "3.0.0-M2")
   def id[A]: Optional[A, A] =
-    Iso.id[A].asOptional
+    Iso.id[A]
 
   def codiagonal[S]: Optional[Either[S, S], S] =
     POptional.codiagonal
@@ -351,16 +225,16 @@ object Optional {
       def getOrModify(s: S): Either[S, A] =
         _getOption(s).fold[Either[S, A]](Either.left(s))(Either.right)
 
-      def replace(a: A): S => S =
+      override def replace(a: A): S => S =
         _set(a)
 
       def getOption(s: S): Option[A] =
         _getOption(s)
 
-      def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
+      def modifyA[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
         _getOption(s).fold(Applicative[F].pure(s))(a => Applicative[F].map(f(a))(_set(_)(s)))
 
-      def modify(f: A => A): S => S =
+      override def modify(f: A => A): S => S =
         s => _getOption(s).fold(s)(a => _set(f(a))(s))
     }
 }
@@ -371,16 +245,85 @@ sealed abstract class OptionalInstances {
       f choice g
 
     def id[A]: Optional[A, A] =
-      Optional.id[A]
+      Iso.id[A]
 
     def compose[A, B, C](f: Optional[B, C], g: Optional[A, B]): Optional[A, C] =
       g.andThen(f)
   }
 }
 
+final case class POptionalSyntax[S, T, A, B](private val self: POptional[S, T, A, B]) extends AnyVal {
+
+  /** compose a [[POptional]] with a [[Fold]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[POptional]] with a [[Getter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[POptional]] with a [[PSetter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[POptional]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[POptional]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[POptional]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[POptional]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[POptional]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeTraversal */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeOptional */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composePrism */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<-?[C, D](other: PPrism[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<->[C, D](other: PIso[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+}
+
 /** Extension methods for monomorphic Optional
   */
 final case class OptionalSyntax[S, A](private val self: Optional[S, A]) extends AnyVal {
+
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self.andThen(evEach.each)
 

@@ -27,8 +27,8 @@ trait ProductOptics {
     new Each[A :: Rest, A] {
       def each: Traversal[A :: Rest, A] =
         new PTraversal[A :: Rest, A :: Rest, A, A] {
-          def modifyF[F[_]: Applicative](f: A => F[A])(s: A :: Rest): F[A :: Rest] =
-            (f(s.head), restEach.each.modifyF(f)(s.tail)).mapN(_ :: _)
+          def modifyA[F[_]: Applicative](f: A => F[A])(s: A :: Rest): F[A :: Rest] =
+            (f(s.head), restEach.each.modifyA(f)(s.tail)).mapN(_ :: _)
         }
     }
 
@@ -40,8 +40,8 @@ trait ProductOptics {
     new Each[S, A] {
       def each: Traversal[S, A] =
         new Traversal[S, A] {
-          def modifyF[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
-            Applicative[F].map(genEach.each.modifyF(f)(gen.to(s)))(gen.from)
+          def modifyA[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
+            Applicative[F].map(genEach.each.modifyA(f)(gen.to(s)))(gen.from)
         }
     }
 }

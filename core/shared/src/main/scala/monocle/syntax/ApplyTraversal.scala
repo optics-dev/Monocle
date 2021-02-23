@@ -11,8 +11,8 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
 
   def replace(b: B): T     = traversal.replace(b)(s)
   def modify(f: A => B): T = traversal.modify(f)(s)
-  def modifyF[F[_]: Applicative](f: A => F[B]): F[T] =
-    traversal.modifyF(f)(s)
+  def modifyA[F[_]: Applicative](f: A => F[B]): F[T] =
+    traversal.modifyA(f)(s)
 
   def find(p: A => Boolean): Option[A] = traversal.find(p)(s)
   def exist(p: A => Boolean): Boolean  = traversal.exist(p)(s)

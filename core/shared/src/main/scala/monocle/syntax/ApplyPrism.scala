@@ -8,8 +8,8 @@ final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]) {
   def getOption: Option[A] = prism.getOption(s)
 
   def modify(f: A => B): T = prism.modify(f)(s)
-  def modifyF[F[_]: Applicative](f: A => F[B]): F[T] =
-    prism.modifyF(f)(s)
+  def modifyA[F[_]: Applicative](f: A => F[B]): F[T] =
+    prism.modifyA(f)(s)
   def modifyOption(f: A => B): Option[T] = prism.modifyOption(f)(s)
 
   def replace(b: B): T                 = prism.replace(b)(s)

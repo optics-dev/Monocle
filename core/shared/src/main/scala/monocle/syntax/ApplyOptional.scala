@@ -15,8 +15,8 @@ final case class ApplyOptional[S, T, A, B](s: S, optional: POptional[S, T, A, B]
   def find(p: A => Boolean): Option[A] = optional.find(p)(s)
 
   def modify(f: A => B): T = optional.modify(f)(s)
-  def modifyF[F[_]: Applicative](f: A => F[B]): F[T] =
-    optional.modifyF(f)(s)
+  def modifyA[F[_]: Applicative](f: A => F[B]): F[T] =
+    optional.modifyA(f)(s)
   def modifyOption(f: A => B): Option[T] = optional.modifyOption(f)(s)
 
   def replace(b: B): T               = optional.replace(b)(s)
