@@ -8,6 +8,7 @@ import monocle.internal.focus.features.as.AsParser
 import monocle.internal.focus.features.each.EachParser
 import monocle.internal.focus.features.at.AtParser
 import monocle.internal.focus.features.index.IndexParser
+import monocle.internal.focus.features.withdefault.WithDefaultParser
 
 private[focus] trait AllFeatureParsers 
   extends FocusBase 
@@ -18,6 +19,7 @@ private[focus] trait AllFeatureParsers
   with EachParser
   with AtParser
   with IndexParser
+  with WithDefaultParser
 
 private[focus] trait ParserLoop {
   this: AllFeatureParsers => 
@@ -45,6 +47,9 @@ private[focus] trait ParserLoop {
 
         case KeywordAs(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case KeywordAs(Left(error)) => Left(error)
+
+        case KeywordWithDefault(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case KeywordWithDefault(Left(error)) => Left(error)
 
         case FieldSelect(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case FieldSelect(Left(error)) => Left(error)

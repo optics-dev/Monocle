@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Eq, Foldable, Monoid}
+import cats.{Foldable, Monoid}
 import cats.arrow.Choice
 import cats.instances.int._
 import cats.instances.list._
@@ -163,7 +163,7 @@ final case class FoldSyntax[S, A](private val self: Fold[S, A]) extends AnyVal {
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Fold[S, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Fold[S, A1] =
+  def withDefault[A1](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Fold[S, A1] =
     self.adapt[Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Fold[S, A1] =
