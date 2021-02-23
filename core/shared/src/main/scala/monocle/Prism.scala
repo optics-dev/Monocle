@@ -285,7 +285,7 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Traversal[S, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Prism[S, A1] =
+  def withDefault[A1](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Prism[S, A1] =
     self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Optional[S, A1] =
