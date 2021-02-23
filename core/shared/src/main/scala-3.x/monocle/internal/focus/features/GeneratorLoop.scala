@@ -7,6 +7,7 @@ import monocle.internal.focus.features.as.AsGenerator
 import monocle.internal.focus.features.each.EachGenerator
 import monocle.internal.focus.features.at.AtGenerator
 import monocle.internal.focus.features.index.IndexGenerator
+import monocle.internal.focus.features.withdefault.WithDefaultGenerator
 import monocle.{Lens, Iso, Prism, Optional, Traversal}
 import scala.quoted.Type
 
@@ -19,6 +20,7 @@ private[focus] trait AllFeatureGenerators
   with EachGenerator
   with AtGenerator
   with IndexGenerator
+  with WithDefaultGenerator
 
 private[focus] trait GeneratorLoop {
   this: AllFeatureGenerators => 
@@ -41,6 +43,7 @@ private[focus] trait GeneratorLoop {
       case FocusAction.KeywordEach(fromType, toType, eachInstance) => generateEach(fromType, toType, eachInstance)
       case FocusAction.KeywordAt(fromType, toType, index, atInstance) => generateAt(fromType, toType, index, atInstance)
       case FocusAction.KeywordIndex(fromType, toType, index, indexInstance) => generateIndex(fromType, toType, index, indexInstance)
+      case FocusAction.KeywordWithDefault(toType, defaultValue) => generateWithDefault(toType, defaultValue)
     }
 
   private def composeOptics(lens1: Term, lens2: Term): FocusResult[Term] = {

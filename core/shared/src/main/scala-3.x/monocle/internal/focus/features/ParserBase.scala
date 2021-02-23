@@ -20,9 +20,12 @@ private[focus] trait ParserBase {
   case class ValueArgs(args: Term*)
 
   object FocusKeyword {
-    def unapply(term: Term): Option[(Name, FromType, TypeArgs, RemainingCode)] = term match {
+    def unapply(term: Term): Option[(Name, FromType, TypeArgs, ValueArgs, RemainingCode)] = term match {
       case Apply(TypeApply(Select(_, keyword), typeArgs), List(code)) => 
-        Some(Name(keyword), FromType(code.tpe.widen), TypeArgs(typeArgs.map(_.tpe): _*), RemainingCode(code))
+        Some(Name(keyword), FromType(code.tpe.widen), TypeArgs(typeArgs.map(_.tpe): _*), ValueArgs(), RemainingCode(code))
+
+      case Apply(Apply(TypeApply(Select(_, keyword), typeArgs), List(code)), valueArgs) => 
+        Some(Name(keyword), FromType(code.tpe.widen), TypeArgs(typeArgs.map(_.tpe): _*), ValueArgs(valueArgs: _*), RemainingCode(code))
 
       case _ => None
     }
@@ -30,11 +33,8 @@ private[focus] trait ParserBase {
 
   object FocusKeywordGiven {
     def unapply(term: Term): Option[(Name, FromType, TypeArgs, ValueArgs, GivenInstance, RemainingCode)] = term match {
-      case Apply(Apply(FocusKeyword(keyword, fromType, typeArgs, code), argList), List(instance)) => 
-        Some(keyword, fromType, typeArgs, ValueArgs(argList: _*), GivenInstance(instance), code)
-
-      case Apply(FocusKeyword(keyword, fromType, typeArgs, code), List(instance)) => 
-        Some(keyword, fromType, typeArgs, ValueArgs(), GivenInstance(instance), code)
+      case Apply(FocusKeyword(keyword, fromType, typeArgs, valueArgs, code), List(instance)) => 
+        Some(keyword, fromType, typeArgs, valueArgs, GivenInstance(instance), code)
 
       case _ => None
     }

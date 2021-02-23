@@ -21,6 +21,9 @@ object Focus extends AppliedFocusSyntax {
 
     extension [From, I, To] (from: From)
       def index(i: I)(using Index[From, I, To]): To = scala.sys.error("Extension method 'index(i)' should only be used within the monocle.Focus macro.")
+
+    extension [A] (from: Option[A])
+      def withDefault(defaultValue: A): A = scala.sys.error("Extension method 'withDefault(value)' should only be used within the monocle.Focus macro.")
   }
 
   def apply[S] = new MkFocus[S]

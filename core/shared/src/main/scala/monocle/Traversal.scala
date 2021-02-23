@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Eq, Functor, Id, Monoid, Parallel, Traverse}
+import cats.{Applicative, Functor, Id, Monoid, Parallel, Traverse}
 import cats.arrow.Choice
 import cats.data.Const
 import cats.syntax.either._
@@ -293,7 +293,7 @@ final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extend
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Traversal[S, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Traversal[S, A1] =
+  def withDefault[A1](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Traversal[S, A1] =
     self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Traversal[S, A1] =
