@@ -1,7 +1,5 @@
 package monocle.std
 
-import cats.implicits._
-import cats.Eq
 import monocle.{Iso, PIso, PPrism, Prism}
 
 object option extends OptionOptics
@@ -39,6 +37,6 @@ trait OptionOptics {
     *
     * @see This method is called `non` in Haskell Lens.
     */
-  final def withDefault[A: Eq](defaultValue: A): Iso[Option[A], A] =
-    Iso[Option[A], A](_.getOrElse(defaultValue))(value => if (value === defaultValue) None else Some(value))
+  final def withDefault[A](defaultValue: A): Iso[Option[A], A] =
+    Iso[Option[A], A](_.getOrElse(defaultValue))(value => if (value == defaultValue) None else Some(value))
 }

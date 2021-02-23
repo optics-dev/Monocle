@@ -19,6 +19,7 @@ private[focus] trait FocusBase {
     case KeywordEach(fromType: TypeRepr, toType: TypeRepr, eachInstance: Term)
     case KeywordAt(fromType: TypeRepr, toType: TypeRepr, index: Term, atInstance: Term)
     case KeywordIndex(fromType: TypeRepr, toType: TypeRepr, index: Term, indexInstance: Term)
+    case KeywordWithDefault(toType: TypeRepr, defaultValue: Term)
 
     override def toString(): String = this match {
       case FieldSelect(name, fromType, fromTypeArgs, toType) => s"FieldSelect($name, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
@@ -27,6 +28,7 @@ private[focus] trait FocusBase {
       case KeywordEach(fromType, toType, _) => s"KeywordEach(${fromType.show}, ${toType.show}, ...)"
       case KeywordAt(fromType, toType, _, _) => s"KeywordAt(${fromType.show}, ${toType.show}, ..., ...)"
       case KeywordIndex(fromType, toType, _, _) => s"KeywordIndex(${fromType.show}, ${toType.show}, ..., ...)"
+      case KeywordWithDefault(toType, _) => s"KeywordWithDefault(${toType.show}, ...)"
     }
   }
 
