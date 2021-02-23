@@ -39,7 +39,7 @@ lazy val buildSettings = Seq(
     "-unchecked",
     "-deprecation"
   ) ++ { if (isDotty.value) Seq() else Seq("-Xfatal-warnings") }, // Scala 3 doesn't support -Wconf
-  scalacOptions in (Compile, console) -= "-Ywarn-unused:imports",
+  Compile / console / scalacOptions -= "-Ywarn-unused:imports",
   scalacOptions ++= {
     if (isDotty.value)
       Seq("-source:3.0-migration", "-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
@@ -111,14 +111,14 @@ lazy val scalajsSettings = Seq(
     if (isDotty.value)
       Seq.empty
     else {
-      val tag = (version in ThisBuild).value
+      val tag = (ThisBuild / version).value
       val s   = if (isSnapshot.value) gitRev else tag
-      val a   = (baseDirectory in LocalRootProject).value.toURI.toString
+      val a   = (LocalRootProject / baseDirectory).value.toURI.toString
       val g   = "https://raw.githubusercontent.com/optics-dev/Monocle"
       Seq(s"-P:scalajs:mapSourceURI:$a->$g/$s/")
     }
   },
-  testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
 )
 
 // copied from cats build
@@ -337,47 +337,47 @@ lazy val buildInfoSettings = Seq(
     scalaVersion,
     scalacOptions,
     sourceDirectory,
-    latestVersion in ThisBuild,
-    BuildInfoKey.map(version in ThisBuild) { case (_, v) =>
+    ThisBuild / latestVersion,
+    BuildInfoKey.map(ThisBuild / version) { case (_, v) =>
       "latestSnapshotVersion" -> v
     },
-    BuildInfoKey.map(moduleName in core.jvm) { case (k, v) =>
+    BuildInfoKey.map(core.jvm / moduleName) { case (k, v) =>
       "core" ++ k.capitalize -> v
     },
-    BuildInfoKey.map(crossScalaVersions in core.jvm) { case (k, v) =>
+    BuildInfoKey.map(core.jvm / crossScalaVersions) { case (k, v) =>
       "core" ++ k.capitalize -> v
     },
-    organization in LocalRootProject,
-    crossScalaVersions in core.jvm
+    LocalRootProject / organization,
+    core.jvm / crossScalaVersions
   )
 )
 
 lazy val mdocSettings = Seq(
-  mdoc := run.in(Compile).evaluated,
+  mdoc := (Compile / run).evaluated,
   scalacOptions --= Seq("-Xfatal-warnings", "-Ywarn-unused"),
   scalacOptions ~= (_.filterNot(_.startsWith("-Wconf"))),
   crossScalaVersions := Seq(scalaVersion.value),
-  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(core.jvm),
-  target in (ScalaUnidoc, unidoc) := (baseDirectory in LocalRootProject).value / "website" / "static" / "api",
-  cleanFiles += (target in (ScalaUnidoc, unidoc)).value,
+  ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(core.jvm),
+  (ScalaUnidoc / unidoc / target) := (LocalRootProject / baseDirectory).value / "website" / "static" / "api",
+  cleanFiles += (ScalaUnidoc / unidoc / target).value,
   docusaurusCreateSite := docusaurusCreateSite
-    .dependsOn(unidoc in Compile)
-    .dependsOn(updateSiteVariables in ThisBuild)
+    .dependsOn(Compile / unidoc)
+    .dependsOn(ThisBuild / updateSiteVariables)
     .value,
   docusaurusPublishGhpages :=
     docusaurusPublishGhpages
-      .dependsOn(unidoc in Compile)
-      .dependsOn(updateSiteVariables in ThisBuild)
+      .dependsOn(Compile / unidoc)
+      .dependsOn(ThisBuild / updateSiteVariables)
       .value,
-  scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
+  (ScalaUnidoc / unidoc / scalacOptions) ++= Seq(
     "-doc-source-url",
-    s"https://github.com/optics-dev/Monocle/tree/v${(latestVersion in ThisBuild).value}€{FILE_PATH}.scala",
+    s"https://github.com/optics-dev/Monocle/tree/v${(ThisBuild / latestVersion).value}€{FILE_PATH}.scala",
     "-sourcepath",
-    baseDirectory.in(LocalRootProject).value.getAbsolutePath,
+    (LocalRootProject / baseDirectory).value.getAbsolutePath,
     "-doc-title",
     "Monocle",
     "-doc-version",
-    s"v${(latestVersion in ThisBuild).value}"
+    s"v${(ThisBuild / latestVersion).value}"
   )
 )
 
@@ -388,28 +388,28 @@ def minorVersion(version: String): String = {
 }
 
 val latestVersion = settingKey[String]("Latest stable released version")
-latestVersion in ThisBuild := {
-  val snapshot = (isSnapshot in ThisBuild).value
-  val stable   = (isVersionStable in ThisBuild).value
+ThisBuild / latestVersion := {
+  val snapshot = (ThisBuild / isSnapshot).value
+  val stable   = (ThisBuild / isVersionStable).value
 
   if (!snapshot && stable) {
-    (version in ThisBuild).value
+    (ThisBuild / version).value
   } else {
-    (previousStableVersion in ThisBuild).value.getOrElse("0.0.0")
+    (ThisBuild / previousStableVersion).value.getOrElse("0.0.0")
   }
 }
 
 val updateSiteVariables = taskKey[Unit]("Update site variables")
-updateSiteVariables in ThisBuild := {
-  val file = (baseDirectory in LocalRootProject).value / "website" / "variables.js"
+ThisBuild / updateSiteVariables := {
+  val file = (LocalRootProject / baseDirectory).value / "website" / "variables.js"
 
   val variables =
     Map[String, String](
-      "organization"   -> (organization in LocalRootProject).value,
-      "coreModuleName" -> (moduleName in core.jvm).value,
-      "latestVersion"  -> (latestVersion in ThisBuild).value,
+      "organization"   -> (LocalRootProject / organization).value,
+      "coreModuleName" -> (core.jvm / moduleName).value,
+      "latestVersion"  -> (ThisBuild / latestVersion).value,
       "scalaPublishVersions" -> {
-        val minorVersions = (crossScalaVersions in core.jvm).value.map(minorVersion)
+        val minorVersions = (core.jvm / crossScalaVersions).value.map(minorVersion)
         if (minorVersions.size <= 2) minorVersions.mkString(" and ")
         else minorVersions.init.mkString(", ") ++ " and " ++ minorVersions.last
       }
@@ -431,5 +431,5 @@ lazy val noPublishSettings = Seq(
   publish := {},
   publishLocal := {},
   publishArtifact := false,
-  skip in publish := true
+  publish / skip := true
 )
