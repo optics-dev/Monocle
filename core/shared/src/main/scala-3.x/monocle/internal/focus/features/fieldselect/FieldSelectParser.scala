@@ -36,8 +36,13 @@ private[focus] trait FieldSelectParser {
     remainingCode.tpe.widen
 
   private def getFieldType(fromType: TypeRepr, fieldName: String): Option[TypeRepr] = {
-    fromType.classSymbol.flatMap { 
-      _.memberField(fieldName) match {
+    // We need to do this to support tuples, because even though they conform as case classes in other respects, 
+    // for some reason their field names (_1, _2, etc) have a space at the end, ie `_1 `.
+    def searchForTrimmedMethod(clsSym: Symbol): Symbol = 
+      clsSym.memberFields.find(_.name.trim == fieldName).getOrElse(Symbol.noSymbol)
+
+    fromType.classSymbol.flatMap { clsSym => 
+      searchForTrimmedMethod(clsSym) match {
         case FieldType(possiblyTypeArg) => Some(swapWithSuppliedType(fromType, possiblyTypeArg))
         case _ => None
       }

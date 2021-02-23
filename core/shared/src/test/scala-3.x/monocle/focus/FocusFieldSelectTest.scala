@@ -88,6 +88,26 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     assertEquals(Public.lens.replace(55)(a), Public.Private(55))
   }
 
+  test("Tuple field access") {
+    val f1 = Focus[(Int, String)](_._1)
+    val f2 = Focus[(Int, String)](_._2)
+
+    val tup = (11,"a")
+
+    assertEquals(f1.get(tup), 11)
+    assertEquals(f2.get(tup), "a")
+  }
+
+  test("Tuple set field") {
+    val f1 = Focus[(Int, String)](_._1)
+    val f2 = Focus[(Int, String)](_._2)
+
+    val tup = (11,"a")
+
+    assertEquals(f1.replace(99)(tup), (99, "a"))
+    assertEquals(f2.replace("moo")(tup), (11, "moo"))
+  }
+
   /*
   test("Refined type field accessss") {
     assertEquals(
