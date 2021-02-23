@@ -26,7 +26,7 @@ object MapTraversal {
     new FilterIndex[Map[K, V], K, V] {
       def filterIndex(predicate: K => Boolean) =
         new Traversal[Map[K, V], V] {
-          def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
+          def modifyA[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
             s.toList
               .traverse { case (k, v) =>
                 (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)

@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import cats.{Applicative, Eq}
+import cats.Applicative
 import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.{std, Fold, Optional, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
@@ -8,8 +8,8 @@ final case class ApplyPrism[S, T, A, B](s: S, prism: PPrism[S, T, A, B]) {
   def getOption: Option[A] = prism.getOption(s)
 
   def modify(f: A => B): T = prism.modify(f)(s)
-  def modifyF[F[_]: Applicative](f: A => F[B]): F[T] =
-    prism.modifyF(f)(s)
+  def modifyA[F[_]: Applicative](f: A => F[B]): F[T] =
+    prism.modifyA(f)(s)
   def modifyOption(f: A => B): Option[T] = prism.modifyOption(f)(s)
 
   def replace(b: B): T                 = prism.replace(b)(s)
@@ -104,7 +104,7 @@ final case class ApplyPrismSyntax[S, A](private val self: ApplyPrism[S, S, A, A]
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): ApplyTraversal[S, S, A1, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyPrism[S, S, A1, A1] =
+  def withDefault[A1](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyPrism[S, S, A1, A1] =
     self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyOptional[S, S, A1, A1] =

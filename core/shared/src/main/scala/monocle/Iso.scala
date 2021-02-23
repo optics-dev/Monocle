@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Eq, Functor, Monoid}
+import cats.{Applicative, Functor, Monoid}
 import cats.arrow.Category
 import cats.evidence.{<~<, Is}
 import cats.syntax.either._
@@ -41,13 +41,7 @@ import monocle.function.{At, Each, FilterIndex, Index}
   * @tparam A the target of a [[PIso]]
   * @tparam B the modified target of a [[PIso]]
   */
-abstract class PIso[S, T, A, B] extends Serializable { self =>
-
-  /** get the target of a [[PIso]] */
-  def get(s: S): A
-
-  /** get the modified source of a [[PIso]] */
-  def reverseGet(b: B): T
+trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self =>
 
   /** reverse a [[PIso]]: the source becomes the target and the target becomes the source */
   def reverse: PIso[B, A, T, S]
@@ -56,93 +50,68 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   def mapping[F[_]: Functor]: PIso[F[S], F[T], F[A], F[B]] =
     PIso[F[S], F[T], F[A], F[B]](fs => Functor[F].map(fs)(self.get))(fb => Functor[F].map(fb)(self.reverseGet))
 
+  override def foldMap[M: Monoid](f: A => M)(s: S): M =
+    f(get(s))
+
   /** find if the target satisfies the predicate */
-  final def find(p: A => Boolean): S => Option[A] =
+  override def find(p: A => Boolean): S => Option[A] =
     s => Some(get(s)).filter(p)
 
   /** check if the target satisfies the predicate */
-  final def exist(p: A => Boolean): S => Boolean =
+  override def exist(p: A => Boolean): S => Boolean =
     p compose get
 
   /** modify polymorphically the target of a [[PIso]] with a Functor function */
-  final def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
+  override def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
     Functor[F].map(f(get(s)))(reverseGet)
 
+  override def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+    modifyF(f)(s)
+
   /** modify polymorphically the target of a [[PIso]] with a function */
-  final def modify(f: A => B): S => T =
+  override def modify(f: A => B): S => T =
     s => reverseGet(f(get(s)))
 
-  @deprecated("use replace instead", since = "3.0.0-M1")
-  final def set(b: B): S => T = replace(b)
-
   /** replace polymorphically the target of a [[PIso]] with a value */
-  final def replace(b: B): S => T =
+  override def replace(b: B): S => T =
     _ => reverseGet(b)
 
   /** pair two disjoint [[PIso]] */
-  final def split[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
+  def split[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
     PIso[(S, S1), (T, T1), (A, A1), (B, B1)] { case (s, s1) =>
       (get(s), other.get(s1))
     } { case (b, b1) =>
       (reverseGet(b), other.reverseGet(b1))
     }
 
-  final def first[C]: PIso[(S, C), (T, C), (A, C), (B, C)] =
+  override def first[C]: PIso[(S, C), (T, C), (A, C), (B, C)] =
     PIso[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       (get(s), c)
     } { case (b, c) =>
       (reverseGet(b), c)
     }
 
-  final def second[C]: PIso[(C, S), (C, T), (C, A), (C, B)] =
+  override def second[C]: PIso[(C, S), (C, T), (C, A), (C, B)] =
     PIso[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
       (c, get(s))
     } { case (c, b) =>
       (c, reverseGet(b))
     }
 
-  final def left[C]: PIso[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
+  override def left[C]: PIso[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
     PIso[Either[S, C], Either[T, C], Either[A, C], Either[B, C]](_.leftMap(get))(_.leftMap(reverseGet))
 
-  final def right[C]: PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
+  override def right[C]: PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](_.map(get))(_.map(reverseGet))
 
-  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
-    adapt[Option[A1], Option[B1]].andThen(std.option.pSome)
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
+    adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PIso[S, T, A1, B1] =
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PIso[S, T, A1, B1] =
     evB.substituteCo[PIso[S, T, A1, *]](evA.substituteCo[PIso[S, T, *, B]](this))
 
-  /** compose a [[PIso]] with a [[Fold]] */
-  final def andThen[C](other: Fold[A, C]): Fold[S, C] =
-    asFold.andThen(other)
-
-  /** compose a [[PIso]] with a [[Getter]] */
-  final def andThen[C](other: Getter[A, C]): Getter[S, C] =
-    asGetter.andThen(other)
-
-  /** compose a [[PIso]] with a [[PSetter]] */
-  final def andThen[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    asSetter.andThen(other)
-
-  /** compose a [[PIso]] with a [[PTraversal]] */
-  final def andThen[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    asTraversal.andThen(other)
-
-  /** compose a [[PIso]] with a [[POptional]] */
-  final def andThen[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    asOptional.andThen(other)
-
-  /** compose a [[PIso]] with a [[PPrism]] */
-  final def andThen[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
-    asPrism.andThen(other)
-
-  /** compose a [[PIso]] with a [[PLens]] */
-  final def andThen[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
-    asLens.andThen(other)
-
   /** compose a [[PIso]] with another [[PIso]] */
-  final def andThen[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
+  def andThen[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
     new PIso[S, T, C, D] { composeSelf =>
       def get(s: S): C =
         other.get(self.get(s))
@@ -163,78 +132,8 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
         }
     }
 
-  /** compose a [[PIso]] with a [[Fold]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
-    andThen(other)
-
   /** Compose with a function lifted into a Getter */
-  def to[C](f: A => C): Getter[S, C] = andThen(Getter(f))
-
-  /** compose a [[PIso]] with a [[Getter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeGetter[C](other: Getter[A, C]): Getter[S, C] =
-    andThen(other)
-
-  /** compose a [[PIso]] with a [[PSetter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PIso]] with a [[PTraversal]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PIso]] with a [[POptional]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PIso]] with a [[PPrism]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PIso]] with a [[PLens]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PIso]] with a [[PIso]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeIso[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
-    andThen(other)
-
-  /** *****************************************
-    */
-  /** Experimental aliases of compose methods */
-  /** *****************************************
-    */
-  /** alias to composeTraversal */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeOptional */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composePrism */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<-?[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeLens */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeIso */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<->[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
-    andThen(other)
+  override def to[C](f: A => C): Getter[S, C] = andThen(Getter(f))
 
   /** *************************************************************
     */
@@ -242,106 +141,48 @@ abstract class PIso[S, T, A, B] extends Serializable { self =>
   /** *************************************************************
     */
   /** view a [[PIso]] as a [[Fold]] */
-  final def asFold: Fold[S, A] =
-    new Fold[S, A] {
-      def foldMap[M: Monoid](f: A => M)(s: S): M =
-        f(get(s))
-    }
-
-  /** view a [[PIso]] as a [[Getter]] */
-  final def asGetter: Getter[S, A] =
-    (s: S) => self.get(s)
+  override def asFold: Fold[S, A] = this
 
   /** view a [[PIso]] as a [[Setter]] */
-  final def asSetter: PSetter[S, T, A, B] =
-    new PSetter[S, T, A, B] {
-      def modify(f: A => B): S => T =
-        self.modify(f)
-
-      def replace(b: B): S => T =
-        self.replace(b)
-    }
+  override def asSetter: PSetter[S, T, A, B] = this
 
   /** view a [[PIso]] as a [[PTraversal]] */
-  final def asTraversal: PTraversal[S, T, A, B] =
-    new PTraversal[S, T, A, B] {
-      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        self.modifyF(f)(s)
-    }
+  override def asTraversal: PTraversal[S, T, A, B] = this
 
   /** view a [[PIso]] as a [[POptional]] */
-  final def asOptional: POptional[S, T, A, B] =
-    new POptional[S, T, A, B] {
-      def getOrModify(s: S): Either[T, A] =
-        Either.right(get(s))
-
-      def replace(b: B): S => T =
-        self.replace(b)
-
-      def getOption(s: S): Option[A] =
-        Some(self.get(s))
-
-      def modify(f: A => B): S => T =
-        self.modify(f)
-
-      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        self.modifyF(f)(s)
-    }
+  override def asOptional: POptional[S, T, A, B] = this
 
   /** view a [[PIso]] as a [[PPrism]] */
-  final def asPrism: PPrism[S, T, A, B] =
-    new PPrism[S, T, A, B] {
-      def getOrModify(s: S): Either[T, A] =
-        Either.right(get(s))
-
-      def reverseGet(b: B): T =
-        self.reverseGet(b)
-
-      def getOption(s: S): Option[A] =
-        Some(self.get(s))
-    }
+  def asPrism: PPrism[S, T, A, B] = this
 
   /** view a [[PIso]] as a [[PLens]] */
-  final def asLens: PLens[S, T, A, B] =
-    new PLens[S, T, A, B] {
-      def get(s: S): A =
-        self.get(s)
-
-      def replace(b: B): S => T =
-        self.replace(b)
-
-      def modify(f: A => B): S => T =
-        self.modify(f)
-
-      def modifyF[F[_]: Functor](f: A => F[B])(s: S): F[T] =
-        self.modifyF(f)(s)
-    }
+  def asLens: PLens[S, T, A, B] = this
 
   /** **********************************************************************
     */
   /** Apply methods to treat a [[PIso]] as smart constructors for type T */
   /** **********************************************************************
     */
-  def apply()(implicit ev: Is[B, Unit]): T =
+  override def apply()(implicit ev: Is[B, Unit]): T =
     ev.substitute[PIso[S, T, A, *]](self).reverseGet(())
 
-  def apply(b: B): T = reverseGet(b)
+  override def apply(b: B): T = reverseGet(b)
 
-  def apply[C, D](c: C, d: D)(implicit ev: (C, D) <~< B): T = apply(ev((c, d)))
+  override def apply[C, D](c: C, d: D)(implicit ev: (C, D) <~< B): T = apply(ev((c, d)))
 
-  def apply[C, D, E](c: C, d: D, e: E)(implicit ev: (C, D, E) <~< B): T =
+  override def apply[C, D, E](c: C, d: D, e: E)(implicit ev: (C, D, E) <~< B): T =
     apply(ev((c, d, e)))
 
-  def apply[C, D, E, F](c: C, d: D, e: E, f: F)(implicit ev: (C, D, E, F) <~< B): T =
+  override def apply[C, D, E, F](c: C, d: D, e: E, f: F)(implicit ev: (C, D, E, F) <~< B): T =
     apply(ev((c, d, e, f)))
 
-  def apply[C, D, E, F, G](c: C, d: D, e: E, f: F, g: G)(implicit ev: (C, D, E, F, G) <~< B): T =
+  override def apply[C, D, E, F, G](c: C, d: D, e: E, f: F, g: G)(implicit ev: (C, D, E, F, G) <~< B): T =
     apply(ev((c, d, e, f, g)))
 
-  def apply[C, D, E, F, G, H](c: C, d: D, e: E, f: F, g: G, h: H)(implicit ev: (C, D, E, F, G, H) <~< B): T =
+  override def apply[C, D, E, F, G, H](c: C, d: D, e: E, f: F, g: G, h: H)(implicit ev: (C, D, E, F, G, H) <~< B): T =
     apply(ev((c, d, e, f, g, h)))
 
-  def unapply(obj: S): Some[A] = Some(get(obj))
+  override def unapply(obj: S): Some[A] = Some(get(obj))
 }
 
 object PIso extends IsoInstances {
@@ -385,6 +226,9 @@ object PIso extends IsoInstances {
         }
     }
 
+  implicit def pIsoSyntax[S, T, A, B](self: PIso[S, T, A, B]): PIsoSyntax[S, T, A, B] =
+    new PIsoSyntax(self)
+
   implicit def isoSyntax[S, A](self: Iso[S, A]): IsoSyntax[S, A] =
     new IsoSyntax(self)
 }
@@ -414,6 +258,74 @@ sealed abstract class IsoInstances {
   }
 }
 
+final case class PIsoSyntax[S, T, A, B](private val self: PIso[S, T, A, B]) extends AnyVal {
+
+  /** compose a [[PIso]] with a [[Fold]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[PIso]] with a [[Getter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeGetter[C](other: Getter[A, C]): Getter[S, C] =
+    self.andThen(other)
+
+  /** compose a [[PIso]] with a [[PSetter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PIso]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PIso]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PIso]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PIso]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PIso]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeTraversal */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeOptional */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composePrism */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<-?[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->[C, D](other: PLens[A, B, C, D]): PLens[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<->[C, D](other: PIso[A, B, C, D]): PIso[S, T, C, D] =
+    self.andThen(other)
+}
+
 /** Extension methods for monomorphic Iso */
 final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
@@ -428,7 +340,7 @@ final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Traversal[S, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Iso[S, A1] =
+  def withDefault[A1](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Iso[S, A1] =
     self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Lens[S, A1] =

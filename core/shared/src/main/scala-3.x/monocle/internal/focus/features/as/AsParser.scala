@@ -10,7 +10,7 @@ private[focus] trait AsParser {
 
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
       
-      case FocusKeyword(Name("as"), FromType(fromType), TypeArgs(toType), remainingCode) => 
+      case FocusKeyword(Name("as"), FromType(fromType), TypeArgs(toType), ValueArgs(), remainingCode) => 
         if (toType <:< fromType) {
           val action = FocusAction.KeywordAs(fromType, toType)
           Some(Right(remainingCode, action))

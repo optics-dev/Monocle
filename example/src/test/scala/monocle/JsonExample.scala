@@ -215,7 +215,7 @@ class JsonExample extends MonocleSuite {
     import cats.syntax.traverse._
 
     val plate: Traversal[Json, Json] = new Traversal[Json, Json] {
-      def modifyF[F[_]: Applicative](f: Json => F[Json])(a: Json): F[Json] =
+      def modifyA[F[_]: Applicative](f: Json => F[Json])(a: Json): F[Json] =
         a match {
           case j @ (JsString(_) | JsNumber(_)) => Applicative[F].pure(j)
           case JsArray(l)                      => l.traverse(f).map(JsArray)

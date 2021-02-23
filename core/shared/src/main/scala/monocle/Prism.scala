@@ -1,6 +1,6 @@
 package monocle
 
-import cats.{Applicative, Eq, Monoid, Traverse}
+import cats.{Applicative, Eq, Traverse}
 import cats.arrow.Category
 import cats.evidence.{<~<, Is}
 import cats.instances.option._
@@ -32,133 +32,61 @@ import monocle.function.{At, Each, FilterIndex, Index}
   * @tparam A the target of a [[PPrism]]
   * @tparam B the modified target of a [[PPrism]]
   */
-abstract class PPrism[S, T, A, B] extends Serializable { self =>
-
-  /** get the target of a [[PPrism]] or return the original value while allowing the type to change if it does not match */
-  def getOrModify(s: S): Either[T, A]
+trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
 
   /** get the modified source of a [[PPrism]] */
   def reverseGet(b: B): T
 
-  /** get the target of a [[PPrism]] or nothing if there is no target */
-  def getOption(s: S): Option[A]
-
   /** modify polymorphically the target of a [[PPrism]] with an Applicative function */
-  final def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
+  def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
     getOrModify(s).fold(
       t => Applicative[F].pure(t),
       a => Applicative[F].map(f(a))(reverseGet)
     )
 
   /** modify polymorphically the target of a [[PPrism]] with a function */
-  final def modify(f: A => B): S => T =
+  override def modify(f: A => B): S => T =
     getOrModify(_).fold(identity, a => reverseGet(f(a)))
 
-  /** modify polymorphically the target of a [[PPrism]] with a function.
-    * return empty if the [[PPrism]] is not matching
-    */
-  final def modifyOption(f: A => B): S => Option[T] =
-    s => getOption(s).map(a => reverseGet(f(a)))
-
-  /** replace polymorphically the target of a [[PPrism]] with a value */
-  final def replace(b: B): S => T =
+  override def replace(b: B): S => T =
     modify(_ => b)
 
-  /** alias to replace */
-  @deprecated("use replace instead", since = "3.0.0-M1")
-  final def set(b: B): S => T = replace(b)
-
-  /** replace polymorphically the target of a [[PPrism]] with a value.
-    * return empty if the [[PPrism]] is not matching
-    */
-  final def replaceOption(b: B): S => Option[T] =
-    modifyOption(_ => b)
-
-  /** alias to replaceOption */
-  @deprecated("use replaceOption instead", since = "3.0.0-M1")
-  final def setOption(b: B): S => Option[T] =
-    replaceOption(b)
-
-  /** check if there is no target */
-  final def isEmpty(s: S): Boolean =
-    getOption(s).isEmpty
-
-  /** check if there is a target */
-  final def nonEmpty(s: S): Boolean =
-    getOption(s).isDefined
-
-  /** find if the target satisfies the predicate */
-  final def find(p: A => Boolean): S => Option[A] =
-    getOption(_).flatMap(a => Some(a).filter(p))
-
-  /** check if there is a target and it satisfies the predicate */
-  final def exist(p: A => Boolean): S => Boolean =
-    getOption(_).fold(false)(p)
-
-  /** check if there is no target or the target satisfies the predicate */
-  final def all(p: A => Boolean): S => Boolean =
-    getOption(_).fold(true)(p)
-
   /** create a [[Getter]] from the modified target to the modified source of a [[PPrism]] */
-  final def re: Getter[B, T] =
+  def re: Getter[B, T] =
     Getter(reverseGet)
 
-  final def first[C]: PPrism[(S, C), (T, C), (A, C), (B, C)] =
+  override def first[C]: PPrism[(S, C), (T, C), (A, C), (B, C)] =
     PPrism[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       getOrModify(s).bimap(_ -> c, _ -> c)
     } { case (b, c) =>
       (reverseGet(b), c)
     }
 
-  final def second[C]: PPrism[(C, S), (C, T), (C, A), (C, B)] =
+  override def second[C]: PPrism[(C, S), (C, T), (C, A), (C, B)] =
     PPrism[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
       getOrModify(s).bimap(c -> _, c -> _)
     } { case (c, b) =>
       (c, reverseGet(b))
     }
 
-  final def left[C]: PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
+  override def left[C]: PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
     PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]](
       _.fold(getOrModify(_).bimap(Either.left, Either.left), c => Either.right(Either.right(c)))
     )(_.leftMap(reverseGet))
 
-  final def right[C]: PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
+  override def right[C]: PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](
       _.fold(c => Either.right(Either.left(c)), getOrModify(_).bimap(Either.right, Either.right))
     )(_.map(reverseGet))
 
-  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
-    adapt[Option[A1], Option[B1]] composePrism (std.option.pSome)
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
+    adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PPrism[S, T, A1, B1] =
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PPrism[S, T, A1, B1] =
     evB.substituteCo[PPrism[S, T, A1, *]](evA.substituteCo[PPrism[S, T, *, B]](this))
 
-  /** compose a [[PPrism]] with a [[Fold]] */
-  final def andThen[C](other: Fold[A, C]): Fold[S, C] =
-    asFold.andThen(other)
-
-  /** compose a [[PPrism]] with a [[Getter]] */
-  final def andThen[C](other: Getter[A, C]): Fold[S, C] =
-    asFold.andThen(other)
-
-  /** compose a [[PPrism]] with a [[PSetter]] */
-  final def andThen[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    asSetter.andThen(other)
-
-  /** compose a [[PPrism]] with a [[PTraversal]] */
-  final def andThen[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    asTraversal.andThen(other)
-
-  /** compose a [[PPrism]] with a [[POptional]] */
-  final def andThen[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    asOptional.andThen(other)
-
-  /** compose a [[PPrism]] with a [[PLens]] */
-  final def andThen[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    asOptional.andThen(other.asOptional)
-
   /** compose a [[PPrism]] with another [[PPrism]] */
-  final def andThen[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+  def andThen[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
     new PPrism[S, T, C, D] {
       def getOrModify(s: S): Either[T, C] =
         self
@@ -172,130 +100,15 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
         self.getOption(s) flatMap other.getOption
     }
 
-  /** compose a [[PPrism]] with a [[PIso]] */
-  final def andThen[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other.asPrism)
-
-  /** compose a [[PPrism]] with a [[Fold]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeFold[C](other: Fold[A, C]): Fold[S, C] =
-    andThen(other)
-
-  /** Compose with a function lifted into a Getter */
-  def to[C](f: A => C): Fold[S, C] = andThen(Getter(f))
-
-  /** compose a [[PPrism]] with a [[Getter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PSetter]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PTraversal]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[POptional]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PLens]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PPrism]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
-
-  /** compose a [[PPrism]] with a [[PIso]] */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def composeIso[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
-
-  /** *****************************************
-    */
-  /** Experimental aliases of compose methods */
-  /** *****************************************
-    */
-  /** alias to composeTraversal */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeOptional */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composePrism */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<-?[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeLens */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^|->[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
-    andThen(other)
-
-  /** alias to composeIso */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  final def ^<->[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
-    andThen(other)
-
   /** ***************************************************************
     */
   /** Transformation methods to view a [[PPrism]] as another Optics */
   /** ***************************************************************
     */
   /** view a [[PPrism]] as a [[Fold]] */
-  final def asFold: Fold[S, A] =
-    new Fold[S, A] {
-      def foldMap[M: Monoid](f: A => M)(s: S): M =
-        getOption(s) map f getOrElse Monoid[M].empty
-    }
-
-  /** view a [[PPrism]] as a [[Setter]] */
-  final def asSetter: PSetter[S, T, A, B] =
-    new PSetter[S, T, A, B] {
-      def modify(f: A => B): S => T =
-        self.modify(f)
-
-      def replace(b: B): S => T =
-        self.replace(b)
-    }
-
-  /** view a [[PPrism]] as a [[PTraversal]] */
-  final def asTraversal: PTraversal[S, T, A, B] =
-    new PTraversal[S, T, A, B] {
-      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        self.modifyF(f)(s)
-    }
 
   /** view a [[PPrism]] as a [[POptional]] */
-  final def asOptional: POptional[S, T, A, B] =
-    new POptional[S, T, A, B] {
-      def getOrModify(s: S): Either[T, A] =
-        self.getOrModify(s)
-
-      def replace(b: B): S => T =
-        self.replace(b)
-
-      def getOption(s: S): Option[A] =
-        self.getOption(s)
-
-      def modify(f: A => B): S => T =
-        self.modify(f)
-
-      def modifyF[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
-        self.modifyF(f)(s)
-    }
+  def asOptional: POptional[S, T, A, B] = this
 
   /** **********************************************************************
     */
@@ -325,8 +138,9 @@ abstract class PPrism[S, T, A, B] extends Serializable { self =>
 }
 
 object PPrism extends PrismInstances {
+  @deprecated("use PIso.id", since = "3.0.0-M2")
   def id[S, T]: PPrism[S, T, S, T] =
-    PIso.id[S, T].asPrism
+    PIso.id[S, T]
 
   /** create a [[PPrism]] using the canonical functions: getOrModify and reverseGet */
   def apply[S, T, A, B](_getOrModify: S => Either[T, A])(_reverseGet: B => T): PPrism[S, T, A, B] =
@@ -341,13 +155,17 @@ object PPrism extends PrismInstances {
         _getOrModify(s).toOption
     }
 
+  implicit def pPrismSyntax[S, T, A, B](self: PPrism[S, T, A, B]): PPrismSyntax[S, T, A, B] =
+    new PPrismSyntax(self)
+
   implicit def prismSyntax[S, A](self: Prism[S, A]): PrismSyntax[S, A] =
     new PrismSyntax(self)
 }
 
 object Prism {
+  @deprecated("use Iso.id", since = "3.0.0-M2")
   def id[A]: Prism[A, A] =
-    Iso.id[A].asPrism
+    Iso.id[A]
 
   /** alias for [[PPrism]] apply restricted to monomorphic update */
   def apply[S, A](_getOption: S => Option[A])(_reverseGet: A => S): Prism[S, A] =
@@ -374,11 +192,79 @@ object Prism {
 sealed abstract class PrismInstances {
   implicit val prismCategory: Category[Prism] = new Category[Prism] {
     def id[A]: Prism[A, A] =
-      Prism.id
+      Iso.id
 
     def compose[A, B, C](f: Prism[B, C], g: Prism[A, B]): Prism[A, C] =
       g.andThen(f)
   }
+}
+
+final case class PPrismSyntax[S, T, A, B](private val self: PPrism[S, T, A, B]) extends AnyVal {
+
+  /** compose a [[PPrism]] with a [[Fold]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeFold[C](other: Fold[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[Getter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeGetter[C](other: Getter[A, C]): Fold[S, C] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PSetter]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeSetter[C, D](other: PSetter[A, B, C, D]): PSetter[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PTraversal]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeTraversal[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[POptional]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PLens]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PPrism]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
+
+  /** compose a [[PPrism]] with a [[PIso]] */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeTraversal */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->>[C, D](other: PTraversal[A, B, C, D]): PTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeOptional */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|-?[C, D](other: POptional[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composePrism */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<-?[C, D](other: PPrism[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeLens */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->[C, D](other: PLens[A, B, C, D]): POptional[S, T, C, D] =
+    self.andThen(other)
+
+  /** alias to composeIso */
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<->[C, D](other: PIso[A, B, C, D]): PPrism[S, T, C, D] =
+    self.andThen(other)
 }
 
 final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal {
@@ -399,7 +285,7 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): Traversal[S, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Prism[S, A1] =
+  def withDefault[A1](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): Prism[S, A1] =
     self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): Optional[S, A1] =

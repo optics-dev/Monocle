@@ -10,7 +10,7 @@ private[focus] trait SomeParser {
 
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
 
-      case FocusKeyword(Name("some"), _, TypeArgs(toType), remainingCode) => 
+      case FocusKeyword(Name("some"), _, TypeArgs(toType), ValueArgs(), remainingCode) => 
         val action = FocusAction.KeywordSome(toType)
         Some(Right(remainingCode, action))
 

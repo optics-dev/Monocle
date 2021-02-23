@@ -29,10 +29,10 @@ case class OptionalLaws[S, A](optional: Optional[S, A]) {
     optional.replace(a)(s) <==> optional.modify(_ => a)(s)
 
   def consistentModifyModifyId(s: S, f: A => A): IsEq[S] =
-    optional.modify(f)(s) <==> optional.modifyF[Id](f)(s)
+    optional.modify(f)(s) <==> optional.modifyA[Id](f)(s)
 
   def consistentGetOptionModifyId(s: S): IsEq[Option[A]] = {
     implicit val optionMonoid: Monoid[Option[A]] = Monoids.firstOption
-    optional.getOption(s) <==> optional.modifyF[Const[Option[A], *]](a => Const(Some(a)))(s).getConst
+    optional.getOption(s) <==> optional.modifyA[Const[Option[A], *]](a => Const(Some(a)))(s).getConst
   }
 }
