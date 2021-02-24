@@ -166,7 +166,7 @@ class TraversalSpec extends MonocleSuite {
     val traversal = Traversal.fromTraverse[List, Option[Int]]
 
     assertEquals(traversal.some.replace(5)(numbers), List(Some(5), None, Some(5), None))
-    assertEquals(numbers.optics.andThen(traversal).some.replace(5), List(Some(5), None, Some(5), None))
+    assertEquals(numbers.focus().andThen(traversal).some.replace(5), List(Some(5), None, Some(5), None))
   }
 
   test("withDefault") {
@@ -175,7 +175,7 @@ class TraversalSpec extends MonocleSuite {
 
     assertEquals(traversal.withDefault(0).modify(_ + 1)(numbers), List(Some(2), Some(1), Some(3), Some(1)))
     assertEquals(
-      numbers.optics.andThen(traversal).withDefault(0).modify(_ + 1),
+      numbers.focus().andThen(traversal).withDefault(0).modify(_ + 1),
       List(Some(2), Some(1), Some(3), Some(1))
     )
   }
@@ -185,7 +185,7 @@ class TraversalSpec extends MonocleSuite {
     val traversal = Traversal.fromTraverse[List, List[Int]]
 
     assertEquals(traversal.each.getAll(numbers), List(1, 2, 3, 4))
-    assertEquals(numbers.optics.andThen(traversal).each.getAll, List(1, 2, 3, 4))
+    assertEquals(numbers.focus().andThen(traversal).each.getAll, List(1, 2, 3, 4))
   }
 
   test("filter") {
@@ -193,7 +193,7 @@ class TraversalSpec extends MonocleSuite {
     val traversal = Traversal.fromTraverse[List, Int]
 
     assertEquals(traversal.filter(_ > 1).getAll(numbers), List(2, 3))
-    assertEquals(numbers.optics.andThen(traversal).filter(_ > 1).getAll, List(2, 3))
+    assertEquals(numbers.focus().andThen(traversal).filter(_ > 1).getAll, List(2, 3))
   }
 
   test("filterIndex") {
@@ -201,7 +201,7 @@ class TraversalSpec extends MonocleSuite {
     val traversal = Traversal.fromTraverse[List, List[String]]
 
     assertEquals(traversal.filterIndex((_: Int) > 0).getAll(words), List("world", "hi"))
-    assertEquals(words.optics.andThen(traversal).filterIndex((_: Int) > 0).getAll, List("world", "hi"))
+    assertEquals(words.focus().andThen(traversal).filterIndex((_: Int) > 0).getAll, List("world", "hi"))
   }
 
   test("at") {
@@ -209,29 +209,29 @@ class TraversalSpec extends MonocleSuite {
     val sortedMapTraversal = Iso.id[immutable.SortedMap[Int, String]].asTraversal
     assertEquals(sortedMapTraversal.at(1).getAll(sortedMap), List(Some("one")))
     assertEquals(sortedMapTraversal.at(0).getAll(sortedMap), List(None))
-    assertEquals(sortedMap.optics.andThen(sortedMapTraversal).at(1).getAll, List(Some("one")))
-    assertEquals(sortedMap.optics.andThen(sortedMapTraversal).at(0).getAll, List(None))
+    assertEquals(sortedMap.focus().andThen(sortedMapTraversal).at(1).getAll, List(Some("one")))
+    assertEquals(sortedMap.focus().andThen(sortedMapTraversal).at(0).getAll, List(None))
 
     val listMap          = immutable.ListMap(1 -> "one")
     val listMapTraversal = Iso.id[immutable.ListMap[Int, String]].asTraversal
     assertEquals(listMapTraversal.at(1).getAll(listMap), List(Some("one")))
     assertEquals(listMapTraversal.at(0).getAll(listMap), List(None))
-    assertEquals(listMap.optics.andThen(listMapTraversal).at(1).getAll, List(Some("one")))
-    assertEquals(listMap.optics.andThen(listMapTraversal).at(0).getAll, List(None))
+    assertEquals(listMap.focus().andThen(listMapTraversal).at(1).getAll, List(Some("one")))
+    assertEquals(listMap.focus().andThen(listMapTraversal).at(0).getAll, List(None))
 
     val map          = immutable.Map(1 -> "one")
     val mapTraversal = Iso.id[Map[Int, String]].asTraversal
     assertEquals(mapTraversal.at(1).getAll(map), List(Some("one")))
     assertEquals(mapTraversal.at(0).getAll(map), List(None))
-    assertEquals(map.optics.andThen(mapTraversal).at(1).getAll, List(Some("one")))
-    assertEquals(map.optics.andThen(mapTraversal).at(0).getAll, List(None))
+    assertEquals(map.focus().andThen(mapTraversal).at(1).getAll, List(Some("one")))
+    assertEquals(map.focus().andThen(mapTraversal).at(0).getAll, List(None))
 
     val set          = Set(1)
     val setTraversal = Iso.id[Set[Int]].asTraversal
     assertEquals(setTraversal.at(1).getAll(set), List(true))
     assertEquals(setTraversal.at(0).getAll(set), List(false))
-    assertEquals(set.optics.andThen(setTraversal).at(1).getAll, List(true))
-    assertEquals(set.optics.andThen(setTraversal).at(0).getAll, List(false))
+    assertEquals(set.focus().andThen(setTraversal).at(1).getAll, List(true))
+    assertEquals(set.focus().andThen(setTraversal).at(0).getAll, List(false))
   }
 
   test("index") {
@@ -239,70 +239,70 @@ class TraversalSpec extends MonocleSuite {
     val listTraversal = Iso.id[List[Int]].asTraversal
     assertEquals(listTraversal.index(0).getAll(list), List(1))
     assertEquals(listTraversal.index(1).getAll(list), Nil)
-    assertEquals(list.optics.andThen(listTraversal).index(0).getAll, List(1))
-    assertEquals(list.optics.andThen(listTraversal).index(1).getAll, Nil)
+    assertEquals(list.focus().andThen(listTraversal).index(0).getAll, List(1))
+    assertEquals(list.focus().andThen(listTraversal).index(1).getAll, Nil)
 
     val lazyList          = LazyList(1)
     val lazyListTraversal = Iso.id[LazyList[Int]].asTraversal
     assertEquals(lazyListTraversal.index(0).getAll(lazyList), List(1))
     assertEquals(lazyListTraversal.index(1).getAll(lazyList), Nil)
-    assertEquals(lazyList.optics.andThen(lazyListTraversal).index(0).getAll, List(1))
-    assertEquals(lazyList.optics.andThen(lazyListTraversal).index(1).getAll, Nil)
+    assertEquals(lazyList.focus().andThen(lazyListTraversal).index(0).getAll, List(1))
+    assertEquals(lazyList.focus().andThen(lazyListTraversal).index(1).getAll, Nil)
 
     val listMap          = immutable.ListMap(1 -> "one")
     val listMapTraversal = Iso.id[immutable.ListMap[Int, String]].asTraversal
     assertEquals(listMapTraversal.index(0).getAll(listMap), Nil)
     assertEquals(listMapTraversal.index(1).getAll(listMap), List("one"))
-    assertEquals(listMap.optics.andThen(listMapTraversal).index(0).getAll, Nil)
-    assertEquals(listMap.optics.andThen(listMapTraversal).index(1).getAll, List("one"))
+    assertEquals(listMap.focus().andThen(listMapTraversal).index(0).getAll, Nil)
+    assertEquals(listMap.focus().andThen(listMapTraversal).index(1).getAll, List("one"))
 
     val map          = Map(1 -> "one")
     val mapTraversal = Iso.id[Map[Int, String]].asTraversal
     assertEquals(mapTraversal.index(0).getAll(map), Nil)
     assertEquals(mapTraversal.index(1).getAll(map), List("one"))
-    assertEquals(map.optics.andThen(mapTraversal).index(0).getAll, Nil)
-    assertEquals(map.optics.andThen(mapTraversal).index(1).getAll, List("one"))
+    assertEquals(map.focus().andThen(mapTraversal).index(0).getAll, Nil)
+    assertEquals(map.focus().andThen(mapTraversal).index(1).getAll, List("one"))
 
     val sortedMap          = immutable.SortedMap(1 -> "one")
     val sortedMapTraversal = Iso.id[immutable.SortedMap[Int, String]].asTraversal
     assertEquals(sortedMapTraversal.index(0).getAll(sortedMap), Nil)
     assertEquals(sortedMapTraversal.index(1).getAll(sortedMap), List("one"))
-    assertEquals(sortedMap.optics.andThen(sortedMapTraversal).index(0).getAll, Nil)
-    assertEquals(sortedMap.optics.andThen(sortedMapTraversal).index(1).getAll, List("one"))
+    assertEquals(sortedMap.focus().andThen(sortedMapTraversal).index(0).getAll, Nil)
+    assertEquals(sortedMap.focus().andThen(sortedMapTraversal).index(1).getAll, List("one"))
 
     val vector          = Vector(1)
     val vectorTraversal = Iso.id[Vector[Int]].asTraversal
     assertEquals(vectorTraversal.index(0).getAll(vector), List(1))
     assertEquals(vectorTraversal.index(1).getAll(vector), Nil)
-    assertEquals(vector.optics.andThen(vectorTraversal).index(0).getAll, List(1))
-    assertEquals(vector.optics.andThen(vectorTraversal).index(1).getAll, Nil)
+    assertEquals(vector.focus().andThen(vectorTraversal).index(0).getAll, List(1))
+    assertEquals(vector.focus().andThen(vectorTraversal).index(1).getAll, Nil)
 
     val chain          = Chain.one(1)
     val chainTraversal = Iso.id[Chain[Int]].asTraversal
     assertEquals(chainTraversal.index(0).getAll(chain), List(1))
     assertEquals(chainTraversal.index(1).getAll(chain), Nil)
-    assertEquals(chain.optics.andThen(chainTraversal).index(0).getAll, List(1))
-    assertEquals(chain.optics.andThen(chainTraversal).index(1).getAll, Nil)
+    assertEquals(chain.focus().andThen(chainTraversal).index(0).getAll, List(1))
+    assertEquals(chain.focus().andThen(chainTraversal).index(1).getAll, Nil)
 
     val nec          = NonEmptyChain.one(1)
     val necTraversal = Iso.id[NonEmptyChain[Int]].asTraversal
     assertEquals(necTraversal.index(0).getAll(nec), List(1))
     assertEquals(necTraversal.index(1).getAll(nec), Nil)
-    assertEquals(nec.optics.andThen(necTraversal).index(0).getAll, List(1))
-    assertEquals(nec.optics.andThen(necTraversal).index(1).getAll, Nil)
+    assertEquals(nec.focus().andThen(necTraversal).index(0).getAll, List(1))
+    assertEquals(nec.focus().andThen(necTraversal).index(1).getAll, Nil)
 
     val nev          = NonEmptyVector.one(1)
     val nevTraversal = Iso.id[NonEmptyVector[Int]].asTraversal
     assertEquals(nevTraversal.index(0).getAll(nev), List(1))
     assertEquals(nevTraversal.index(1).getAll(nev), Nil)
-    assertEquals(nev.optics.andThen(nevTraversal).index(0).getAll, List(1))
-    assertEquals(nev.optics.andThen(nevTraversal).index(1).getAll, Nil)
+    assertEquals(nev.focus().andThen(nevTraversal).index(0).getAll, List(1))
+    assertEquals(nev.focus().andThen(nevTraversal).index(1).getAll, Nil)
 
     val nel          = NonEmptyList.one(1)
     val nelTraversal = Iso.id[NonEmptyList[Int]].asTraversal
     assertEquals(nelTraversal.index(0).getAll(nel), List(1))
     assertEquals(nelTraversal.index(1).getAll(nel), Nil)
-    assertEquals(nel.optics.andThen(nelTraversal).index(0).getAll, List(1))
-    assertEquals(nel.optics.andThen(nelTraversal).index(1).getAll, Nil)
+    assertEquals(nel.focus().andThen(nelTraversal).index(0).getAll, List(1))
+    assertEquals(nel.focus().andThen(nelTraversal).index(1).getAll, Nil)
   }
 }
