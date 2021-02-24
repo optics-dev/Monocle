@@ -175,61 +175,6 @@ class OptionalSpec extends MonocleSuite {
   }
 
   test("at") {
-    val tuple2         = (1, 2)
-    val tuple2Optional = Iso.id[(Int, Int)].asOptional
-    assertEquals(tuple2Optional.at(1).getOption(tuple2), Some(1))
-    assertEquals(tuple2Optional.at(2).getOption(tuple2), Some(2))
-    assertEquals(tuple2.optics.andThen(tuple2Optional).at(1).getOption, Some(1))
-    assertEquals(tuple2.optics.andThen(tuple2Optional).at(2).getOption, Some(2))
-
-    val tuple3         = (1, 2, 3)
-    val tuple3Optional = Iso.id[(Int, Int, Int)].asOptional
-    assertEquals(tuple3Optional.at(1).getOption(tuple3), Some(1))
-    assertEquals(tuple3Optional.at(2).getOption(tuple3), Some(2))
-    assertEquals(tuple3Optional.at(3).getOption(tuple3), Some(3))
-    assertEquals(tuple3.optics.andThen(tuple3Optional).at(1).getOption, Some(1))
-    assertEquals(tuple3.optics.andThen(tuple3Optional).at(2).getOption, Some(2))
-    assertEquals(tuple3.optics.andThen(tuple3Optional).at(3).getOption, Some(3))
-
-    val tuple4         = (1, 2, 3, 4)
-    val tuple4Optional = Iso.id[(Int, Int, Int, Int)].asOptional
-    assertEquals(tuple4Optional.at(1).getOption(tuple4), Some(1))
-    assertEquals(tuple4Optional.at(2).getOption(tuple4), Some(2))
-    assertEquals(tuple4Optional.at(3).getOption(tuple4), Some(3))
-    assertEquals(tuple4Optional.at(4).getOption(tuple4), Some(4))
-    assertEquals(tuple4.optics.andThen(tuple4Optional).at(1).getOption, Some(1))
-    assertEquals(tuple4.optics.andThen(tuple4Optional).at(2).getOption, Some(2))
-    assertEquals(tuple4.optics.andThen(tuple4Optional).at(3).getOption, Some(3))
-    assertEquals(tuple4.optics.andThen(tuple4Optional).at(4).getOption, Some(4))
-
-    val tuple5         = (1, 2, 3, 4, 5)
-    val tuple5Optional = Iso.id[(Int, Int, Int, Int, Int)].asOptional
-    assertEquals(tuple5Optional.at(1).getOption(tuple5), Some(1))
-    assertEquals(tuple5Optional.at(2).getOption(tuple5), Some(2))
-    assertEquals(tuple5Optional.at(3).getOption(tuple5), Some(3))
-    assertEquals(tuple5Optional.at(4).getOption(tuple5), Some(4))
-    assertEquals(tuple5Optional.at(5).getOption(tuple5), Some(5))
-    assertEquals(tuple5.optics.andThen(tuple5Optional).at(1).getOption, Some(1))
-    assertEquals(tuple5.optics.andThen(tuple5Optional).at(2).getOption, Some(2))
-    assertEquals(tuple5.optics.andThen(tuple5Optional).at(3).getOption, Some(3))
-    assertEquals(tuple5.optics.andThen(tuple5Optional).at(4).getOption, Some(4))
-    assertEquals(tuple5.optics.andThen(tuple5Optional).at(5).getOption, Some(5))
-
-    val tuple6         = (1, 2, 3, 4, 5, 6)
-    val tuple6Optional = Iso.id[(Int, Int, Int, Int, Int, Int)].asOptional
-    assertEquals(tuple6Optional.at(1).getOption(tuple6), Some(1))
-    assertEquals(tuple6Optional.at(2).getOption(tuple6), Some(2))
-    assertEquals(tuple6Optional.at(3).getOption(tuple6), Some(3))
-    assertEquals(tuple6Optional.at(4).getOption(tuple6), Some(4))
-    assertEquals(tuple6Optional.at(5).getOption(tuple6), Some(5))
-    assertEquals(tuple6Optional.at(6).getOption(tuple6), Some(6))
-    assertEquals(tuple6.optics.andThen(tuple6Optional).at(1).getOption, Some(1))
-    assertEquals(tuple6.optics.andThen(tuple6Optional).at(2).getOption, Some(2))
-    assertEquals(tuple6.optics.andThen(tuple6Optional).at(3).getOption, Some(3))
-    assertEquals(tuple6.optics.andThen(tuple6Optional).at(4).getOption, Some(4))
-    assertEquals(tuple6.optics.andThen(tuple6Optional).at(5).getOption, Some(5))
-    assertEquals(tuple6.optics.andThen(tuple6Optional).at(6).getOption, Some(6))
-
     val sortedMap         = immutable.SortedMap(1 -> "one")
     val sortedMapOptional = Iso.id[immutable.SortedMap[Int, String]].asOptional
     assertEquals(sortedMapOptional.at(1).getOption(sortedMap), Some(Some("one")))

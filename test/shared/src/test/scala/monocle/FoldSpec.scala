@@ -143,61 +143,6 @@ class FoldSpec extends MonocleSuite {
   }
 
   test("at") {
-    val tuple2     = (1, 2)
-    val tuple2Fold = Iso.id[(Int, Int)].asFold
-    assertEquals(tuple2Fold.at(1).getAll(tuple2), List(1))
-    assertEquals(tuple2Fold.at(2).getAll(tuple2), List(2))
-    assertEquals(tuple2.optics.andThen(tuple2Fold).at(1).getAll, List(1))
-    assertEquals(tuple2.optics.andThen(tuple2Fold).at(2).getAll, List(2))
-
-    val tuple3     = (1, 2, 3)
-    val tuple3Fold = Iso.id[(Int, Int, Int)].asFold
-    assertEquals(tuple3Fold.at(1).getAll(tuple3), List(1))
-    assertEquals(tuple3Fold.at(2).getAll(tuple3), List(2))
-    assertEquals(tuple3Fold.at(3).getAll(tuple3), List(3))
-    assertEquals(tuple3.optics.andThen(tuple3Fold).at(1).getAll, List(1))
-    assertEquals(tuple3.optics.andThen(tuple3Fold).at(2).getAll, List(2))
-    assertEquals(tuple3.optics.andThen(tuple3Fold).at(3).getAll, List(3))
-
-    val tuple4     = (1, 2, 3, 4)
-    val tuple4Fold = Iso.id[(Int, Int, Int, Int)].asFold
-    assertEquals(tuple4Fold.at(1).getAll(tuple4), List(1))
-    assertEquals(tuple4Fold.at(2).getAll(tuple4), List(2))
-    assertEquals(tuple4Fold.at(3).getAll(tuple4), List(3))
-    assertEquals(tuple4Fold.at(4).getAll(tuple4), List(4))
-    assertEquals(tuple4.optics.andThen(tuple4Fold).at(1).getAll, List(1))
-    assertEquals(tuple4.optics.andThen(tuple4Fold).at(2).getAll, List(2))
-    assertEquals(tuple4.optics.andThen(tuple4Fold).at(3).getAll, List(3))
-    assertEquals(tuple4.optics.andThen(tuple4Fold).at(4).getAll, List(4))
-
-    val tuple5     = (1, 2, 3, 4, 5)
-    val tuple5Fold = Iso.id[(Int, Int, Int, Int, Int)].asFold
-    assertEquals(tuple5Fold.at(1).getAll(tuple5), List(1))
-    assertEquals(tuple5Fold.at(2).getAll(tuple5), List(2))
-    assertEquals(tuple5Fold.at(3).getAll(tuple5), List(3))
-    assertEquals(tuple5Fold.at(4).getAll(tuple5), List(4))
-    assertEquals(tuple5Fold.at(5).getAll(tuple5), List(5))
-    assertEquals(tuple5.optics.andThen(tuple5Fold).at(1).getAll, List(1))
-    assertEquals(tuple5.optics.andThen(tuple5Fold).at(2).getAll, List(2))
-    assertEquals(tuple5.optics.andThen(tuple5Fold).at(3).getAll, List(3))
-    assertEquals(tuple5.optics.andThen(tuple5Fold).at(4).getAll, List(4))
-    assertEquals(tuple5.optics.andThen(tuple5Fold).at(5).getAll, List(5))
-
-    val tuple6     = (1, 2, 3, 4, 5, 6)
-    val tuple6Fold = Iso.id[(Int, Int, Int, Int, Int, Int)].asFold
-    assertEquals(tuple6Fold.at(1).getAll(tuple6), List(1))
-    assertEquals(tuple6Fold.at(2).getAll(tuple6), List(2))
-    assertEquals(tuple6Fold.at(3).getAll(tuple6), List(3))
-    assertEquals(tuple6Fold.at(4).getAll(tuple6), List(4))
-    assertEquals(tuple6Fold.at(5).getAll(tuple6), List(5))
-    assertEquals(tuple6Fold.at(6).getAll(tuple6), List(6))
-    assertEquals(tuple6.optics.andThen(tuple6Fold).at(1).getAll, List(1))
-    assertEquals(tuple6.optics.andThen(tuple6Fold).at(2).getAll, List(2))
-    assertEquals(tuple6.optics.andThen(tuple6Fold).at(3).getAll, List(3))
-    assertEquals(tuple6.optics.andThen(tuple6Fold).at(4).getAll, List(4))
-    assertEquals(tuple6.optics.andThen(tuple6Fold).at(5).getAll, List(5))
-    assertEquals(tuple6.optics.andThen(tuple6Fold).at(6).getAll, List(6))
-
     val sortedMap     = immutable.SortedMap(1 -> "one")
     val sortedMapFold = Iso.id[immutable.SortedMap[Int, String]].asFold
     assertEquals(sortedMapFold.at(1).getAll(sortedMap), List(Some("one")))

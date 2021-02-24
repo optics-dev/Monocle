@@ -15,7 +15,7 @@ import scala.util.Try
 @implicitNotFound(
   "Could not find an instance of Index[${S},${I},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
-abstract class Index[S, I, A] extends Serializable {
+abstract class Index[S, -I, A] extends Serializable {
   def index(i: I): Optional[S, A]
 }
 

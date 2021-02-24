@@ -15,8 +15,8 @@ import scala.annotation.implicitNotFound
 abstract class Cons[S, A] extends Serializable {
   def cons: Prism[S, (A, S)]
 
-  def headOption: Optional[S, A] = cons.at(1)
-  def tailOption: Optional[S, S] = cons.at(2)
+  def headOption: Optional[S, A] = cons.composeLens(Field1.first)
+  def tailOption: Optional[S, S] = cons.composeLens(Field2.second)
 }
 
 trait ConsFunctions {
