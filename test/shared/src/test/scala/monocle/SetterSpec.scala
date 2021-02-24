@@ -99,61 +99,6 @@ class SetterSpec extends MonocleSuite {
   }
 
   test("at") {
-    val tuple2       = (1, 2)
-    val tuple2Setter = Iso.id[(Int, Int)].asSetter
-    assertEquals(tuple2Setter.at(1).replace(2)(tuple2), (2, 2))
-    assertEquals(tuple2Setter.at(2).replace(3)(tuple2), (1, 3))
-    assertEquals(tuple2.optics.andThen(tuple2Setter).at(1).replace(2), (2, 2))
-    assertEquals(tuple2.optics.andThen(tuple2Setter).at(2).replace(3), (1, 3))
-
-    val tuple3       = (1, 2, 3)
-    val tuple3Setter = Iso.id[(Int, Int, Int)].asSetter
-    assertEquals(tuple3Setter.at(1).replace(2)(tuple3), (2, 2, 3))
-    assertEquals(tuple3Setter.at(2).replace(3)(tuple3), (1, 3, 3))
-    assertEquals(tuple3Setter.at(3).replace(4)(tuple3), (1, 2, 4))
-    assertEquals(tuple3.optics.andThen(tuple3Setter).at(1).replace(2), (2, 2, 3))
-    assertEquals(tuple3.optics.andThen(tuple3Setter).at(2).replace(3), (1, 3, 3))
-    assertEquals(tuple3.optics.andThen(tuple3Setter).at(3).replace(4), (1, 2, 4))
-
-    val tuple4       = (1, 2, 3, 4)
-    val tuple4Setter = Iso.id[(Int, Int, Int, Int)].asSetter
-    assertEquals(tuple4Setter.at(1).replace(2)(tuple4), (2, 2, 3, 4))
-    assertEquals(tuple4Setter.at(2).replace(3)(tuple4), (1, 3, 3, 4))
-    assertEquals(tuple4Setter.at(3).replace(4)(tuple4), (1, 2, 4, 4))
-    assertEquals(tuple4Setter.at(4).replace(1)(tuple4), (1, 2, 3, 1))
-    assertEquals(tuple4.optics.andThen(tuple4Setter).at(1).replace(2), (2, 2, 3, 4))
-    assertEquals(tuple4.optics.andThen(tuple4Setter).at(2).replace(3), (1, 3, 3, 4))
-    assertEquals(tuple4.optics.andThen(tuple4Setter).at(3).replace(4), (1, 2, 4, 4))
-    assertEquals(tuple4.optics.andThen(tuple4Setter).at(4).replace(1), (1, 2, 3, 1))
-
-    val tuple5       = (1, 2, 3, 4, 5)
-    val tuple5Setter = Iso.id[(Int, Int, Int, Int, Int)].asSetter
-    assertEquals(tuple5Setter.at(1).replace(2)(tuple5), (2, 2, 3, 4, 5))
-    assertEquals(tuple5Setter.at(2).replace(3)(tuple5), (1, 3, 3, 4, 5))
-    assertEquals(tuple5Setter.at(3).replace(4)(tuple5), (1, 2, 4, 4, 5))
-    assertEquals(tuple5Setter.at(4).replace(5)(tuple5), (1, 2, 3, 5, 5))
-    assertEquals(tuple5Setter.at(5).replace(1)(tuple5), (1, 2, 3, 4, 1))
-    assertEquals(tuple5.optics.andThen(tuple5Setter).at(1).replace(2), (2, 2, 3, 4, 5))
-    assertEquals(tuple5.optics.andThen(tuple5Setter).at(2).replace(3), (1, 3, 3, 4, 5))
-    assertEquals(tuple5.optics.andThen(tuple5Setter).at(3).replace(4), (1, 2, 4, 4, 5))
-    assertEquals(tuple5.optics.andThen(tuple5Setter).at(4).replace(5), (1, 2, 3, 5, 5))
-    assertEquals(tuple5.optics.andThen(tuple5Setter).at(5).replace(1), (1, 2, 3, 4, 1))
-
-    val tuple6       = (1, 2, 3, 4, 5, 6)
-    val tuple6Setter = Iso.id[(Int, Int, Int, Int, Int, Int)].asSetter
-    assertEquals(tuple6Setter.at(1).replace(2)(tuple6), (2, 2, 3, 4, 5, 6))
-    assertEquals(tuple6Setter.at(2).replace(3)(tuple6), (1, 3, 3, 4, 5, 6))
-    assertEquals(tuple6Setter.at(3).replace(4)(tuple6), (1, 2, 4, 4, 5, 6))
-    assertEquals(tuple6Setter.at(4).replace(5)(tuple6), (1, 2, 3, 5, 5, 6))
-    assertEquals(tuple6Setter.at(5).replace(6)(tuple6), (1, 2, 3, 4, 6, 6))
-    assertEquals(tuple6Setter.at(6).replace(1)(tuple6), (1, 2, 3, 4, 5, 1))
-    assertEquals(tuple6.optics.andThen(tuple6Setter).at(1).replace(2), (2, 2, 3, 4, 5, 6))
-    assertEquals(tuple6.optics.andThen(tuple6Setter).at(2).replace(3), (1, 3, 3, 4, 5, 6))
-    assertEquals(tuple6.optics.andThen(tuple6Setter).at(3).replace(4), (1, 2, 4, 4, 5, 6))
-    assertEquals(tuple6.optics.andThen(tuple6Setter).at(4).replace(5), (1, 2, 3, 5, 5, 6))
-    assertEquals(tuple6.optics.andThen(tuple6Setter).at(5).replace(6), (1, 2, 3, 4, 6, 6))
-    assertEquals(tuple6.optics.andThen(tuple6Setter).at(6).replace(1), (1, 2, 3, 4, 5, 1))
-
     val sortedMap       = immutable.SortedMap(1 -> "one")
     val sortedMapSetter = Iso.id[immutable.SortedMap[Int, String]].asSetter
     assertEquals(sortedMapSetter.at(1).replace(Some("two"))(sortedMap), immutable.SortedMap(1 -> "two"))
