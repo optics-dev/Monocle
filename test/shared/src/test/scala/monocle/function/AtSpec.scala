@@ -21,16 +21,4 @@ class AtSpec extends MonocleSuite {
     assertEquals(map.optics.at("One").replace(Some(-1)), Map("One" -> -1, "Two" -> 2))
     assertEquals(map.optics.at("Two").get, Some(2))
   }
-
-  test("at for tuples") {
-    val tuple2 = (true, "hello")
-    val tuple3 = (true, "hello", 5)
-
-    assertEquals(tuple2.optics.at(1).get, true)
-    assertEquals(tuple2.optics.at(2).get, "hello")
-
-    assertEquals(tuple3.optics.at(1).get, true)
-    assertEquals(tuple3.optics.at(2).get, "hello")
-    assertEquals(tuple3.optics.at(3).get, 5)
-  }
 }

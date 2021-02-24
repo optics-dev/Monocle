@@ -29,9 +29,9 @@ Our university is having some financial issues and it has to close the History d
 First, we need to zoom into `University` to the departments field using a `Lens`
 
 ```scala mdoc:silent
-import monocle.macros.GenLens  // require monocle-macro module
+import monocle.Focus  // require monocle-macro module in Scala 2
 
-val departments = GenLens[University](_.departments)
+val departments = Focus[University](_.departments)
 ```
 
 then we zoom into the `Map` at the `History` key using `At` typeclass
@@ -61,17 +61,15 @@ Let's have a look at a more positive scenario where all university lecturers get
 First we need to generate a few `Lens`es in order to zoom in the interesting fields of our model.
 
 ```scala mdoc:silent
-val lecturers = GenLens[Department](_.lecturers)
-val salary = GenLens[Lecturer](_.salary)
+val lecturers = Focus[Department](_.lecturers)
+val salary = Focus[Lecturer](_.salary)
 ```
 
 We want to focus to all university lecturers, for this we can use `Each` typeclass as it provides a `Traversal`
 which zooms into all elements of a container (e.g. `List`, `Vector` `Map`)
 
 ```scala mdoc:silent
-import monocle.function.all._ // to get each and other typeclass based optics such as at or headOption
 import monocle.Traversal
-import monocle.unsafe.MapTraversal._ // to get Each instance for Map (SortedMap does not require this import)
 
 val allLecturers: Traversal[University, Lecturer] = departments.each.andThen(lecturers).each
 ```
@@ -91,8 +89,8 @@ character of both `firstName` and `lastName`.
 You know the drill, first we need to create the `Lens`es we need.
 
 ```scala mdoc:silent
-val firstName = GenLens[Lecturer](_.firstName)
-val lastName  = GenLens[Lecturer](_.lastName)
+val firstName = Focus[Lecturer](_.firstName)
+val lastName  = Focus[Lecturer](_.lastName)
 ```
 
 Then, we can use `Cons` typeclass which provides both `headOption` and `tailOption` optics. In our case, we want

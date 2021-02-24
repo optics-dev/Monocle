@@ -130,61 +130,6 @@ class GetterSpec extends MonocleSuite {
   }
 
   test("at") {
-    val tuple2       = (1, 2)
-    val tuple2Getter = Iso.id[(Int, Int)].asGetter
-    assertEquals(tuple2Getter.at(1).get(tuple2), 1)
-    assertEquals(tuple2Getter.at(2).get(tuple2), 2)
-    assertEquals(tuple2.optics.andThen(tuple2Getter).at(1).get, 1)
-    assertEquals(tuple2.optics.andThen(tuple2Getter).at(2).get, 2)
-
-    val tuple3       = (1, 2, 3)
-    val tuple3Getter = Iso.id[(Int, Int, Int)].asGetter
-    assertEquals(tuple3Getter.at(1).get(tuple3), 1)
-    assertEquals(tuple3Getter.at(2).get(tuple3), 2)
-    assertEquals(tuple3Getter.at(3).get(tuple3), 3)
-    assertEquals(tuple3.optics.andThen(tuple3Getter).at(1).get, 1)
-    assertEquals(tuple3.optics.andThen(tuple3Getter).at(2).get, 2)
-    assertEquals(tuple3.optics.andThen(tuple3Getter).at(3).get, 3)
-
-    val tuple4       = (1, 2, 3, 4)
-    val tuple4Getter = Iso.id[(Int, Int, Int, Int)].asGetter
-    assertEquals(tuple4Getter.at(1).get(tuple4), 1)
-    assertEquals(tuple4Getter.at(2).get(tuple4), 2)
-    assertEquals(tuple4Getter.at(3).get(tuple4), 3)
-    assertEquals(tuple4Getter.at(4).get(tuple4), 4)
-    assertEquals(tuple4.optics.andThen(tuple4Getter).at(1).get, 1)
-    assertEquals(tuple4.optics.andThen(tuple4Getter).at(2).get, 2)
-    assertEquals(tuple4.optics.andThen(tuple4Getter).at(3).get, 3)
-    assertEquals(tuple4.optics.andThen(tuple4Getter).at(4).get, 4)
-
-    val tuple5       = (1, 2, 3, 4, 5)
-    val tuple5Getter = Iso.id[(Int, Int, Int, Int, Int)].asGetter
-    assertEquals(tuple5Getter.at(1).get(tuple5), 1)
-    assertEquals(tuple5Getter.at(2).get(tuple5), 2)
-    assertEquals(tuple5Getter.at(3).get(tuple5), 3)
-    assertEquals(tuple5Getter.at(4).get(tuple5), 4)
-    assertEquals(tuple5Getter.at(5).get(tuple5), 5)
-    assertEquals(tuple5.optics.andThen(tuple5Getter).at(1).get, 1)
-    assertEquals(tuple5.optics.andThen(tuple5Getter).at(2).get, 2)
-    assertEquals(tuple5.optics.andThen(tuple5Getter).at(3).get, 3)
-    assertEquals(tuple5.optics.andThen(tuple5Getter).at(4).get, 4)
-    assertEquals(tuple5.optics.andThen(tuple5Getter).at(5).get, 5)
-
-    val tuple6       = (1, 2, 3, 4, 5, 6)
-    val tuple6Getter = Iso.id[(Int, Int, Int, Int, Int, Int)].asGetter
-    assertEquals(tuple6Getter.at(1).get(tuple6), 1)
-    assertEquals(tuple6Getter.at(2).get(tuple6), 2)
-    assertEquals(tuple6Getter.at(3).get(tuple6), 3)
-    assertEquals(tuple6Getter.at(4).get(tuple6), 4)
-    assertEquals(tuple6Getter.at(5).get(tuple6), 5)
-    assertEquals(tuple6Getter.at(6).get(tuple6), 6)
-    assertEquals(tuple6.optics.andThen(tuple6Getter).at(1).get, 1)
-    assertEquals(tuple6.optics.andThen(tuple6Getter).at(2).get, 2)
-    assertEquals(tuple6.optics.andThen(tuple6Getter).at(3).get, 3)
-    assertEquals(tuple6.optics.andThen(tuple6Getter).at(4).get, 4)
-    assertEquals(tuple6.optics.andThen(tuple6Getter).at(5).get, 5)
-    assertEquals(tuple6.optics.andThen(tuple6Getter).at(6).get, 6)
-
     val sortedMap       = immutable.SortedMap(1 -> "one")
     val sortedMapGetter = Iso.id[immutable.SortedMap[Int, String]].asGetter
     assertEquals(sortedMapGetter.at(1).get(sortedMap), Some("one"))

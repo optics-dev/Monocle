@@ -219,61 +219,6 @@ assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) , 
   }
 
   test("at") {
-    val tuple2      = (1, 2)
-    val tuple2Prism = Iso.id[(Int, Int)].asPrism
-    assertEquals(tuple2Prism.at(1).getOption(tuple2), Some(1))
-    assertEquals(tuple2Prism.at(2).getOption(tuple2), Some(2))
-    assertEquals(tuple2.optics.andThen(tuple2Prism).at(1).getOption, Some(1))
-    assertEquals(tuple2.optics.andThen(tuple2Prism).at(2).getOption, Some(2))
-
-    val tuple3      = (1, 2, 3)
-    val tuple3Prism = Iso.id[(Int, Int, Int)].asPrism
-    assertEquals(tuple3Prism.at(1).getOption(tuple3), Some(1))
-    assertEquals(tuple3Prism.at(2).getOption(tuple3), Some(2))
-    assertEquals(tuple3Prism.at(3).getOption(tuple3), Some(3))
-    assertEquals(tuple3.optics.andThen(tuple3Prism).at(1).getOption, Some(1))
-    assertEquals(tuple3.optics.andThen(tuple3Prism).at(2).getOption, Some(2))
-    assertEquals(tuple3.optics.andThen(tuple3Prism).at(3).getOption, Some(3))
-
-    val tuple4      = (1, 2, 3, 4)
-    val tuple4Prism = Iso.id[(Int, Int, Int, Int)].asPrism
-    assertEquals(tuple4Prism.at(1).getOption(tuple4), Some(1))
-    assertEquals(tuple4Prism.at(2).getOption(tuple4), Some(2))
-    assertEquals(tuple4Prism.at(3).getOption(tuple4), Some(3))
-    assertEquals(tuple4Prism.at(4).getOption(tuple4), Some(4))
-    assertEquals(tuple4.optics.andThen(tuple4Prism).at(1).getOption, Some(1))
-    assertEquals(tuple4.optics.andThen(tuple4Prism).at(2).getOption, Some(2))
-    assertEquals(tuple4.optics.andThen(tuple4Prism).at(3).getOption, Some(3))
-    assertEquals(tuple4.optics.andThen(tuple4Prism).at(4).getOption, Some(4))
-
-    val tuple5      = (1, 2, 3, 4, 5)
-    val tuple5Prism = Iso.id[(Int, Int, Int, Int, Int)].asPrism
-    assertEquals(tuple5Prism.at(1).getOption(tuple5), Some(1))
-    assertEquals(tuple5Prism.at(2).getOption(tuple5), Some(2))
-    assertEquals(tuple5Prism.at(3).getOption(tuple5), Some(3))
-    assertEquals(tuple5Prism.at(4).getOption(tuple5), Some(4))
-    assertEquals(tuple5Prism.at(5).getOption(tuple5), Some(5))
-    assertEquals(tuple5.optics.andThen(tuple5Prism).at(1).getOption, Some(1))
-    assertEquals(tuple5.optics.andThen(tuple5Prism).at(2).getOption, Some(2))
-    assertEquals(tuple5.optics.andThen(tuple5Prism).at(3).getOption, Some(3))
-    assertEquals(tuple5.optics.andThen(tuple5Prism).at(4).getOption, Some(4))
-    assertEquals(tuple5.optics.andThen(tuple5Prism).at(5).getOption, Some(5))
-
-    val tuple6      = (1, 2, 3, 4, 5, 6)
-    val tuple6Prism = Iso.id[(Int, Int, Int, Int, Int, Int)].asPrism
-    assertEquals(tuple6Prism.at(1).getOption(tuple6), Some(1))
-    assertEquals(tuple6Prism.at(2).getOption(tuple6), Some(2))
-    assertEquals(tuple6Prism.at(3).getOption(tuple6), Some(3))
-    assertEquals(tuple6Prism.at(4).getOption(tuple6), Some(4))
-    assertEquals(tuple6Prism.at(5).getOption(tuple6), Some(5))
-    assertEquals(tuple6Prism.at(6).getOption(tuple6), Some(6))
-    assertEquals(tuple6.optics.andThen(tuple6Prism).at(1).getOption, Some(1))
-    assertEquals(tuple6.optics.andThen(tuple6Prism).at(2).getOption, Some(2))
-    assertEquals(tuple6.optics.andThen(tuple6Prism).at(3).getOption, Some(3))
-    assertEquals(tuple6.optics.andThen(tuple6Prism).at(4).getOption, Some(4))
-    assertEquals(tuple6.optics.andThen(tuple6Prism).at(5).getOption, Some(5))
-    assertEquals(tuple6.optics.andThen(tuple6Prism).at(6).getOption, Some(6))
-
     val sortedMap      = immutable.SortedMap(1 -> "one")
     val sortedMapPrism = Iso.id[immutable.SortedMap[Int, String]].asPrism
     assertEquals(sortedMapPrism.at(1).getOption(sortedMap), Some(Some("one")))
