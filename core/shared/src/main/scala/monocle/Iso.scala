@@ -224,6 +224,15 @@ object PIso extends IsoInstances {
           def reverseGet(s: S): S       = s
           def reverse: PIso[S, T, S, T] = self
         }
+
+      override def andThen[C, D](other: PIso[S, T, C, D]): PIso[S, T, C, D]             = other
+      override def andThen[C, D](other: PLens[S, T, C, D]): PLens[S, T, C, D]           = other
+      override def andThen[C, D](other: PPrism[S, T, C, D]): PPrism[S, T, C, D]         = other
+      override def andThen[C, D](other: POptional[S, T, C, D]): POptional[S, T, C, D]   = other
+      override def andThen[C, D](other: PTraversal[S, T, C, D]): PTraversal[S, T, C, D] = other
+      override def andThen[C, D](other: PSetter[S, T, C, D]): PSetter[S, T, C, D]       = other
+      override def andThen[B](other: Getter[S, B]): Getter[S, B]                        = other
+      override def andThen[B](other: Fold[S, B]): Fold[S, B]                            = other
     }
 
   implicit def pIsoSyntax[S, T, A, B](self: PIso[S, T, A, B]): PIsoSyntax[S, T, A, B] =
