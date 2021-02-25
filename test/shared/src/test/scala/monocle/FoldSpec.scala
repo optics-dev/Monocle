@@ -107,7 +107,7 @@ class FoldSpec extends MonocleSuite {
     val fold    = Fold.fromFoldable[List, Option[Int]]
 
     assertEquals(fold.some.getAll(numbers), List(1, 2))
-    assertEquals(numbers.optics.andThen(fold).some.getAll, List(1, 2))
+    assertEquals(numbers.focus().andThen(fold).some.getAll, List(1, 2))
   }
 
   test("withDefault") {
@@ -115,7 +115,7 @@ class FoldSpec extends MonocleSuite {
     val fold    = Fold.fromFoldable[List, Option[Int]]
 
     assertEquals(fold.withDefault(0).getAll(numbers), List(1, 0, 2, 0))
-    assertEquals(numbers.optics.andThen(fold).withDefault(0).getAll, List(1, 0, 2, 0))
+    assertEquals(numbers.focus().andThen(fold).withDefault(0).getAll, List(1, 0, 2, 0))
   }
 
   test("each") {
@@ -123,7 +123,7 @@ class FoldSpec extends MonocleSuite {
     val fold    = Fold.fromFoldable[List, List[Int]]
 
     assertEquals(fold.each.getAll(numbers), List(1, 2, 3, 4))
-    assertEquals(numbers.optics.andThen(fold).each.getAll, List(1, 2, 3, 4))
+    assertEquals(numbers.focus().andThen(fold).each.getAll, List(1, 2, 3, 4))
   }
 
   test("filter") {
@@ -131,7 +131,7 @@ class FoldSpec extends MonocleSuite {
     val fold    = Fold.fromFoldable[List, Int]
 
     assertEquals(fold.filter(_ > 1).getAll(numbers), List(2, 3))
-    assertEquals(numbers.optics.andThen(fold).filter(_ > 1).getAll, List(2, 3))
+    assertEquals(numbers.focus().andThen(fold).filter(_ > 1).getAll, List(2, 3))
   }
 
   test("filterIndex") {
@@ -139,7 +139,7 @@ class FoldSpec extends MonocleSuite {
     val fold  = Fold.fromFoldable[List, List[String]]
 
     assertEquals(fold.filterIndex((_: Int) > 0).getAll(words), List("world", "hi"))
-    assertEquals(words.optics.andThen(fold).filterIndex((_: Int) > 0).getAll, List("world", "hi"))
+    assertEquals(words.focus().andThen(fold).filterIndex((_: Int) > 0).getAll, List("world", "hi"))
   }
 
   test("at") {
@@ -147,29 +147,29 @@ class FoldSpec extends MonocleSuite {
     val sortedMapFold = Iso.id[immutable.SortedMap[Int, String]].asFold
     assertEquals(sortedMapFold.at(1).getAll(sortedMap), List(Some("one")))
     assertEquals(sortedMapFold.at(0).getAll(sortedMap), List(None))
-    assertEquals(sortedMap.optics.andThen(sortedMapFold).at(1).getAll, List(Some("one")))
-    assertEquals(sortedMap.optics.andThen(sortedMapFold).at(0).getAll, List(None))
+    assertEquals(sortedMap.focus().andThen(sortedMapFold).at(1).getAll, List(Some("one")))
+    assertEquals(sortedMap.focus().andThen(sortedMapFold).at(0).getAll, List(None))
 
     val listMap     = immutable.ListMap(1 -> "one")
     val listMapFold = Iso.id[immutable.ListMap[Int, String]].asFold
     assertEquals(listMapFold.at(1).getAll(listMap), List(Some("one")))
     assertEquals(listMapFold.at(0).getAll(listMap), List(None))
-    assertEquals(listMap.optics.andThen(listMapFold).at(1).getAll, List(Some("one")))
-    assertEquals(listMap.optics.andThen(listMapFold).at(0).getAll, List(None))
+    assertEquals(listMap.focus().andThen(listMapFold).at(1).getAll, List(Some("one")))
+    assertEquals(listMap.focus().andThen(listMapFold).at(0).getAll, List(None))
 
     val map     = immutable.Map(1 -> "one")
     val mapFold = Iso.id[Map[Int, String]].asFold
     assertEquals(mapFold.at(1).getAll(map), List(Some("one")))
     assertEquals(mapFold.at(0).getAll(map), List(None))
-    assertEquals(map.optics.andThen(mapFold).at(1).getAll, List(Some("one")))
-    assertEquals(map.optics.andThen(mapFold).at(0).getAll, List(None))
+    assertEquals(map.focus().andThen(mapFold).at(1).getAll, List(Some("one")))
+    assertEquals(map.focus().andThen(mapFold).at(0).getAll, List(None))
 
     val set     = Set(1)
     val setFold = Iso.id[Set[Int]].asFold
     assertEquals(setFold.at(1).getAll(set), List(true))
     assertEquals(setFold.at(0).getAll(set), List(false))
-    assertEquals(set.optics.andThen(setFold).at(1).getAll, List(true))
-    assertEquals(set.optics.andThen(setFold).at(0).getAll, List(false))
+    assertEquals(set.focus().andThen(setFold).at(1).getAll, List(true))
+    assertEquals(set.focus().andThen(setFold).at(0).getAll, List(false))
   }
 
   test("index") {
@@ -177,70 +177,70 @@ class FoldSpec extends MonocleSuite {
     val listFold = Iso.id[List[Int]].asFold
     assertEquals(listFold.index(0).getAll(list), List(1))
     assertEquals(listFold.index(1).getAll(list), Nil)
-    assertEquals(list.optics.andThen(listFold).index(0).getAll, List(1))
-    assertEquals(list.optics.andThen(listFold).index(1).getAll, Nil)
+    assertEquals(list.focus().andThen(listFold).index(0).getAll, List(1))
+    assertEquals(list.focus().andThen(listFold).index(1).getAll, Nil)
 
     val lazyList     = LazyList(1)
     val lazyListFold = Iso.id[LazyList[Int]].asFold
     assertEquals(lazyListFold.index(0).getAll(lazyList), List(1))
     assertEquals(lazyListFold.index(1).getAll(lazyList), Nil)
-    assertEquals(lazyList.optics.andThen(lazyListFold).index(0).getAll, List(1))
-    assertEquals(lazyList.optics.andThen(lazyListFold).index(1).getAll, Nil)
+    assertEquals(lazyList.focus().andThen(lazyListFold).index(0).getAll, List(1))
+    assertEquals(lazyList.focus().andThen(lazyListFold).index(1).getAll, Nil)
 
     val listMap     = immutable.ListMap(1 -> "one")
     val listMapFold = Iso.id[immutable.ListMap[Int, String]].asFold
     assertEquals(listMapFold.index(0).getAll(listMap), Nil)
     assertEquals(listMapFold.index(1).getAll(listMap), List("one"))
-    assertEquals(listMap.optics.andThen(listMapFold).index(0).getAll, Nil)
-    assertEquals(listMap.optics.andThen(listMapFold).index(1).getAll, List("one"))
+    assertEquals(listMap.focus().andThen(listMapFold).index(0).getAll, Nil)
+    assertEquals(listMap.focus().andThen(listMapFold).index(1).getAll, List("one"))
 
     val map     = Map(1 -> "one")
     val mapFold = Iso.id[Map[Int, String]].asFold
     assertEquals(mapFold.index(0).getAll(map), Nil)
     assertEquals(mapFold.index(1).getAll(map), List("one"))
-    assertEquals(map.optics.andThen(mapFold).index(0).getAll, Nil)
-    assertEquals(map.optics.andThen(mapFold).index(1).getAll, List("one"))
+    assertEquals(map.focus().andThen(mapFold).index(0).getAll, Nil)
+    assertEquals(map.focus().andThen(mapFold).index(1).getAll, List("one"))
 
     val sortedMap     = immutable.SortedMap(1 -> "one")
     val sortedMapFold = Iso.id[immutable.SortedMap[Int, String]].asFold
     assertEquals(sortedMapFold.index(0).getAll(sortedMap), Nil)
     assertEquals(sortedMapFold.index(1).getAll(sortedMap), List("one"))
-    assertEquals(sortedMap.optics.andThen(sortedMapFold).index(0).getAll, Nil)
-    assertEquals(sortedMap.optics.andThen(sortedMapFold).index(1).getAll, List("one"))
+    assertEquals(sortedMap.focus().andThen(sortedMapFold).index(0).getAll, Nil)
+    assertEquals(sortedMap.focus().andThen(sortedMapFold).index(1).getAll, List("one"))
 
     val vector     = Vector(1)
     val vectorFold = Iso.id[Vector[Int]].asFold
     assertEquals(vectorFold.index(0).getAll(vector), List(1))
     assertEquals(vectorFold.index(1).getAll(vector), Nil)
-    assertEquals(vector.optics.andThen(vectorFold).index(0).getAll, List(1))
-    assertEquals(vector.optics.andThen(vectorFold).index(1).getAll, Nil)
+    assertEquals(vector.focus().andThen(vectorFold).index(0).getAll, List(1))
+    assertEquals(vector.focus().andThen(vectorFold).index(1).getAll, Nil)
 
     val chain     = Chain.one(1)
     val chainFold = Iso.id[Chain[Int]].asFold
     assertEquals(chainFold.index(0).getAll(chain), List(1))
     assertEquals(chainFold.index(1).getAll(chain), Nil)
-    assertEquals(chain.optics.andThen(chainFold).index(0).getAll, List(1))
-    assertEquals(chain.optics.andThen(chainFold).index(1).getAll, Nil)
+    assertEquals(chain.focus().andThen(chainFold).index(0).getAll, List(1))
+    assertEquals(chain.focus().andThen(chainFold).index(1).getAll, Nil)
 
     val nec     = NonEmptyChain.one(1)
     val necFold = Iso.id[NonEmptyChain[Int]].asFold
     assertEquals(necFold.index(0).getAll(nec), List(1))
     assertEquals(necFold.index(1).getAll(nec), Nil)
-    assertEquals(nec.optics.andThen(necFold).index(0).getAll, List(1))
-    assertEquals(nec.optics.andThen(necFold).index(1).getAll, Nil)
+    assertEquals(nec.focus().andThen(necFold).index(0).getAll, List(1))
+    assertEquals(nec.focus().andThen(necFold).index(1).getAll, Nil)
 
     val nev     = NonEmptyVector.one(1)
     val nevFold = Iso.id[NonEmptyVector[Int]].asFold
     assertEquals(nevFold.index(0).getAll(nev), List(1))
     assertEquals(nevFold.index(1).getAll(nev), Nil)
-    assertEquals(nev.optics.andThen(nevFold).index(0).getAll, List(1))
-    assertEquals(nev.optics.andThen(nevFold).index(1).getAll, Nil)
+    assertEquals(nev.focus().andThen(nevFold).index(0).getAll, List(1))
+    assertEquals(nev.focus().andThen(nevFold).index(1).getAll, Nil)
 
     val nel     = NonEmptyList.one(1)
     val nelFold = Iso.id[NonEmptyList[Int]].asFold
     assertEquals(nelFold.index(0).getAll(nel), List(1))
     assertEquals(nelFold.index(1).getAll(nel), Nil)
-    assertEquals(nel.optics.andThen(nelFold).index(0).getAll, List(1))
-    assertEquals(nel.optics.andThen(nelFold).index(1).getAll, Nil)
+    assertEquals(nel.focus().andThen(nelFold).index(0).getAll, List(1))
+    assertEquals(nel.focus().andThen(nelFold).index(1).getAll, Nil)
   }
 }

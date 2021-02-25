@@ -1,15 +1,19 @@
 package monocle.macros.syntax
-import scala.reflect.macros.blackbox
-import monocle.syntax.ApplyLens
+import monocle.Iso
 
-trait GenApplyLensSyntax {
-  implicit def toGenApplyLensOps[S](value: S): GenApplyLensOps[S] = new GenApplyLensOps(value)
+import scala.reflect.macros.blackbox
+import monocle.syntax.{ApplyIso, ApplyLens}
+
+trait ApplyFocusSyntax {
+  implicit def toApplyFocusOps[S](value: S): ApplyFocusOps[S] = new ApplyFocusOps(value)
 }
 
-class GenApplyLensOps[A](private val value: A) extends AnyVal {
+class ApplyFocusOps[A](private val value: A) extends AnyVal {
   @deprecated("use focus", since = "3.0.0-M1")
   def lens[C](field: A => C): ApplyLens[A, A, C, C] = macro GenApplyLensOpsImpl.lens_impl[A, C]
   def focus[C](field: A => C): ApplyLens[A, A, C, C] = macro GenApplyLensOpsImpl.lens_impl[A, C]
+
+  def focus(): ApplyIso[A, A, A, A] = ApplyIso(value, Iso.id)
 }
 
 class GenApplyLensOpsImpl(val c: blackbox.Context) {

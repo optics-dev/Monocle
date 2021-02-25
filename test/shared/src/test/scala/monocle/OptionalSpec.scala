@@ -148,7 +148,7 @@ class OptionalSpec extends MonocleSuite {
     val optional = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asOptional
 
     assertEquals(optional.some.getOption(obj), Some(2))
-    assertEquals(obj.optics.andThen(optional).some.getOption, Some(2))
+    assertEquals(obj.focus().andThen(optional).some.getOption, Some(2))
   }
 
   test("withDefault") {
@@ -161,7 +161,7 @@ class OptionalSpec extends MonocleSuite {
     assertEquals(optional.withDefault(0).getOption(objSome), Some(2))
     assertEquals(optional.withDefault(0).getOption(objNone), Some(0))
 
-    assertEquals(objNone.optics.andThen(optional).withDefault(0).getOption, Some(0))
+    assertEquals(objNone.focus().andThen(optional).withDefault(0).getOption, Some(0))
   }
 
   test("each") {
@@ -171,7 +171,7 @@ class OptionalSpec extends MonocleSuite {
     val optional = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asOptional
 
     assertEquals(optional.each.getAll(obj), List(1, 2, 3))
-    assertEquals(obj.optics.andThen(optional).each.getAll, List(1, 2, 3))
+    assertEquals(obj.focus().andThen(optional).each.getAll, List(1, 2, 3))
   }
 
   test("at") {
@@ -179,29 +179,29 @@ class OptionalSpec extends MonocleSuite {
     val sortedMapOptional = Iso.id[immutable.SortedMap[Int, String]].asOptional
     assertEquals(sortedMapOptional.at(1).getOption(sortedMap), Some(Some("one")))
     assertEquals(sortedMapOptional.at(0).getOption(sortedMap), Some(None))
-    assertEquals(sortedMap.optics.andThen(sortedMapOptional).at(1).getOption, Some(Some("one")))
-    assertEquals(sortedMap.optics.andThen(sortedMapOptional).at(0).getOption, Some(None))
+    assertEquals(sortedMap.focus().andThen(sortedMapOptional).at(1).getOption, Some(Some("one")))
+    assertEquals(sortedMap.focus().andThen(sortedMapOptional).at(0).getOption, Some(None))
 
     val listMap         = immutable.ListMap(1 -> "one")
     val listMapOptional = Iso.id[immutable.ListMap[Int, String]].asOptional
     assertEquals(listMapOptional.at(1).getOption(listMap), Some(Some("one")))
     assertEquals(listMapOptional.at(0).getOption(listMap), Some(None))
-    assertEquals(listMap.optics.andThen(listMapOptional).at(1).getOption, Some(Some("one")))
-    assertEquals(listMap.optics.andThen(listMapOptional).at(0).getOption, Some(None))
+    assertEquals(listMap.focus().andThen(listMapOptional).at(1).getOption, Some(Some("one")))
+    assertEquals(listMap.focus().andThen(listMapOptional).at(0).getOption, Some(None))
 
     val map         = immutable.Map(1 -> "one")
     val mapOptional = Iso.id[Map[Int, String]].asOptional
     assertEquals(mapOptional.at(1).getOption(map), Some(Some("one")))
     assertEquals(mapOptional.at(0).getOption(map), Some(None))
-    assertEquals(map.optics.andThen(mapOptional).at(1).getOption, Some(Some("one")))
-    assertEquals(map.optics.andThen(mapOptional).at(0).getOption, Some(None))
+    assertEquals(map.focus().andThen(mapOptional).at(1).getOption, Some(Some("one")))
+    assertEquals(map.focus().andThen(mapOptional).at(0).getOption, Some(None))
 
     val set         = Set(1)
     val setOptional = Iso.id[Set[Int]].asOptional
     assertEquals(setOptional.at(1).getOption(set), Some(true))
     assertEquals(setOptional.at(0).getOption(set), Some(false))
-    assertEquals(set.optics.andThen(setOptional).at(1).getOption, Some(true))
-    assertEquals(set.optics.andThen(setOptional).at(0).getOption, Some(false))
+    assertEquals(set.focus().andThen(setOptional).at(1).getOption, Some(true))
+    assertEquals(set.focus().andThen(setOptional).at(0).getOption, Some(false))
   }
 
   test("index") {
@@ -209,71 +209,71 @@ class OptionalSpec extends MonocleSuite {
     val listOptional = Iso.id[List[Int]].asOptional
     assertEquals(listOptional.index(0).getOption(list), Some(1))
     assertEquals(listOptional.index(1).getOption(list), None)
-    assertEquals(list.optics.andThen(listOptional).index(0).getOption, Some(1))
-    assertEquals(list.optics.andThen(listOptional).index(1).getOption, None)
+    assertEquals(list.focus().andThen(listOptional).index(0).getOption, Some(1))
+    assertEquals(list.focus().andThen(listOptional).index(1).getOption, None)
 
     val lazyList         = LazyList(1)
     val lazyListOptional = Iso.id[LazyList[Int]].asOptional
     assertEquals(lazyListOptional.index(0).getOption(lazyList), Some(1))
     assertEquals(lazyListOptional.index(1).getOption(lazyList), None)
-    assertEquals(lazyList.optics.andThen(lazyListOptional).index(0).getOption, Some(1))
-    assertEquals(lazyList.optics.andThen(lazyListOptional).index(1).getOption, None)
+    assertEquals(lazyList.focus().andThen(lazyListOptional).index(0).getOption, Some(1))
+    assertEquals(lazyList.focus().andThen(lazyListOptional).index(1).getOption, None)
 
     val listMap         = immutable.ListMap(1 -> "one")
     val listMapOptional = Iso.id[immutable.ListMap[Int, String]].asOptional
     assertEquals(listMapOptional.index(0).getOption(listMap), None)
     assertEquals(listMapOptional.index(1).getOption(listMap), Some("one"))
-    assertEquals(listMap.optics.andThen(listMapOptional).index(0).getOption, None)
-    assertEquals(listMap.optics.andThen(listMapOptional).index(1).getOption, Some("one"))
+    assertEquals(listMap.focus().andThen(listMapOptional).index(0).getOption, None)
+    assertEquals(listMap.focus().andThen(listMapOptional).index(1).getOption, Some("one"))
 
     val map         = Map(1 -> "one")
     val mapOptional = Iso.id[Map[Int, String]].asOptional
     assertEquals(mapOptional.index(0).getOption(map), None)
     assertEquals(mapOptional.index(1).getOption(map), Some("one"))
-    assertEquals(map.optics.andThen(mapOptional).index(0).getOption, None)
-    assertEquals(map.optics.andThen(mapOptional).index(1).getOption, Some("one"))
+    assertEquals(map.focus().andThen(mapOptional).index(0).getOption, None)
+    assertEquals(map.focus().andThen(mapOptional).index(1).getOption, Some("one"))
 
     val sortedMap         = immutable.SortedMap(1 -> "one")
     val sortedMapOptional = Iso.id[immutable.SortedMap[Int, String]].asOptional
     assertEquals(sortedMapOptional.index(0).getOption(sortedMap), None)
     assertEquals(sortedMapOptional.index(1).getOption(sortedMap), Some("one"))
-    assertEquals(sortedMap.optics.andThen(sortedMapOptional).index(0).getOption, None)
-    assertEquals(sortedMap.optics.andThen(sortedMapOptional).index(1).getOption, Some("one"))
+    assertEquals(sortedMap.focus().andThen(sortedMapOptional).index(0).getOption, None)
+    assertEquals(sortedMap.focus().andThen(sortedMapOptional).index(1).getOption, Some("one"))
 
     val vector         = Vector(1)
     val vectorOptional = Iso.id[Vector[Int]].asOptional
     assertEquals(vectorOptional.index(0).getOption(vector), Some(1))
     assertEquals(vectorOptional.index(1).getOption(vector), None)
-    assertEquals(vector.optics.andThen(vectorOptional).index(0).getOption, Some(1))
-    assertEquals(vector.optics.andThen(vectorOptional).index(1).getOption, None)
+    assertEquals(vector.focus().andThen(vectorOptional).index(0).getOption, Some(1))
+    assertEquals(vector.focus().andThen(vectorOptional).index(1).getOption, None)
 
     val chain         = Chain.one(1)
     val chainOptional = Iso.id[Chain[Int]].asOptional
     assertEquals(chainOptional.index(0).getOption(chain), Some(1))
     assertEquals(chainOptional.index(1).getOption(chain), None)
-    assertEquals(chain.optics.andThen(chainOptional).index(0).getOption, Some(1))
-    assertEquals(chain.optics.andThen(chainOptional).index(1).getOption, None)
+    assertEquals(chain.focus().andThen(chainOptional).index(0).getOption, Some(1))
+    assertEquals(chain.focus().andThen(chainOptional).index(1).getOption, None)
 
     val nec         = NonEmptyChain.one(1)
     val necOptional = Iso.id[NonEmptyChain[Int]].asOptional
     assertEquals(necOptional.index(0).getOption(nec), Some(1))
     assertEquals(necOptional.index(1).getOption(nec), None)
-    assertEquals(nec.optics.andThen(necOptional).index(0).getOption, Some(1))
-    assertEquals(nec.optics.andThen(necOptional).index(1).getOption, None)
+    assertEquals(nec.focus().andThen(necOptional).index(0).getOption, Some(1))
+    assertEquals(nec.focus().andThen(necOptional).index(1).getOption, None)
 
     val nev         = NonEmptyVector.one(1)
     val nevOptional = Iso.id[NonEmptyVector[Int]].asOptional
     assertEquals(nevOptional.index(0).getOption(nev), Some(1))
     assertEquals(nevOptional.index(1).getOption(nev), None)
-    assertEquals(nev.optics.andThen(nevOptional).index(0).getOption, Some(1))
-    assertEquals(nev.optics.andThen(nevOptional).index(1).getOption, None)
+    assertEquals(nev.focus().andThen(nevOptional).index(0).getOption, Some(1))
+    assertEquals(nev.focus().andThen(nevOptional).index(1).getOption, None)
 
     val nel         = NonEmptyList.one(1)
     val nelOptional = Iso.id[NonEmptyList[Int]].asOptional
     assertEquals(nelOptional.index(0).getOption(nel), Some(1))
     assertEquals(nelOptional.index(1).getOption(nel), None)
-    assertEquals(nel.optics.andThen(nelOptional).index(0).getOption, Some(1))
-    assertEquals(nel.optics.andThen(nelOptional).index(1).getOption, None)
+    assertEquals(nel.focus().andThen(nelOptional).index(0).getOption, Some(1))
+    assertEquals(nel.focus().andThen(nelOptional).index(1).getOption, None)
   }
 
   test("filter") {
@@ -290,7 +290,7 @@ class OptionalSpec extends MonocleSuite {
     val optional = Lens((_: SomeTest).y)(newValue => _.copy(y = newValue)).asOptional
 
     assertEquals(optional.filterIndex((_: Int) > 0).getAll(obj), List("world"))
-    assertEquals(obj.optics.andThen(optional).filterIndex((_: Int) > 0).getAll, List("world"))
+    assertEquals(obj.focus().andThen(optional).filterIndex((_: Int) > 0).getAll, List("world"))
   }
 
   test("filter can break the fusion property") {

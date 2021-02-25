@@ -13,7 +13,7 @@ inThisBuild(
       List(
         "aoiroaoino"      -> "Naoki Aoyama",
         "cquiroz"         -> "Carlos Quiroz",
-        "kenbot"          -> " Ken Scambler",
+        "kenbot"          -> "Ken Scambler",
         "julien-truffaut" -> "Julien Truffaut",
         "NightRa"         -> "Ilan Godik",
         "xuwei-k"         -> "Kenji Yoshida",
@@ -285,7 +285,7 @@ lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
   .settings(libraryDependencies ++= Seq(cats.value, alleycats.value))
 
 lazy val test = crossProject(JVMPlatform, JSPlatform)
-  .dependsOn(core, law, state, unsafe)
+  .dependsOn(core, law, state, unsafe, macros)
   .settings(moduleName := "monocle-test")
   .configureCross(
     _.jvmSettings(monocleJvmSettings),
