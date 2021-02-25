@@ -29,6 +29,8 @@ object Focus extends AppliedFocusSyntax {
   def apply[S] = new MkFocus[S]
 
   class MkFocus[From] {
+    def apply(): Iso[From, From] = Iso.id
+
     transparent inline def apply[To](inline lambda: (KeywordContext ?=> From => To)): Any = 
       ${ FocusImpl('lambda) }
   }

@@ -18,7 +18,7 @@ class AtSpec extends MonocleSuite {
 
   test("at creates a Lens from a Map, SortedMap to an optional value") {
     val map = Map("One" -> 1, "Two" -> 2)
-    assertEquals(map.optics.at("One").replace(Some(-1)), Map("One" -> -1, "Two" -> 2))
-    assertEquals(map.optics.at("Two").get, Some(2))
+    assertEquals(map.focus().at("One").replace(Some(-1)), Map("One" -> -1, "Two" -> 2))
+    assertEquals(map.focus().at("Two").get, Some(2))
   }
 }

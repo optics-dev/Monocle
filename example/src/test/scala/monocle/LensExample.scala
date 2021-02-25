@@ -1,7 +1,6 @@
 package monocle
 
 import monocle.macros.{GenLens, Lenses, PLenses}
-import monocle.macros.syntax.lens._
 import shapeless.test.illTyped
 
 class LensMonoExample extends MonocleSuite {
