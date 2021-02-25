@@ -81,17 +81,25 @@ class PrismSpec extends MonocleSuite {
   }
 
   test("unapply") {
-    // format: off
-assertEquals(    ((Nullary(): Arities) match { case _nullary(unit) => unit }) ,  (()))
-    // format: on
-    assertEquals(((Unary(3): Arities) match { case _unary(value) => value * 2 }), 6)
-    assertEquals(((Binary("foo", 7): Arities) match { case _binary(s, i) => s + i }), "foo7")
-    assertEquals(
-      ((Quintary('x', true, "bar", 13, 0.4): Arities) match {
-        case _quintary(c, b, s, i, f) => "" + c + b + s + i + f
-      }),
-      "xtruebar130.4"
-    )
+    (Nullary(): Arities) match {
+      case _nullary(unit) => assertEquals(unit, ())
+      case _              => fail("Failed to match on Nullary")
+    }
+
+    (Unary(3): Arities) match {
+      case _unary(value) => assertEquals(value, 3)
+      case _             => fail("Failed to match on Unary")
+    }
+
+    (Binary("foo", 7): Arities) match {
+      case _binary(s, i) => assertEquals(s + i, "foo7")
+      case _             => fail("Failed to match on Binary")
+    }
+
+    (Quintary('x', true, "bar", 13, 0.4): Arities) match {
+      case _quintary(c, b, s, i, f) => assertEquals("" + c + b + s + i + f, "xtruebar130.4")
+      case _                        => fail("Failed to match on Quintary")
+    }
   }
 
   sealed trait IntOrString
