@@ -6,6 +6,7 @@ import cats.data.Const
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 import cats.catsInstancesForId
+import cats.syntax.traverse._
 
 /** A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
   * where n can be infinite.
@@ -185,14 +186,18 @@ object Traversal {
   ): Traversal[S, A] =
     PTraversal.apply6(get1, get2, get3, get4, get5, get6)(set)
 
-  /** Composes N lenses horizontally.  Note that although it is possible to pass two or more lenses
-    * that point to the same `A`, in practice it considered an unsafe usage (see https://github.com/julien-truffaut/Monocle/issues/379#issuecomment-236374838).
+  /** Merge multiple Optionals together.
+    * All Optional must target different piece of data otherwise the Traversal doesn't respect all properties.
+    * See this thread for more details: https://github.com/julien-truffaut/Monocle/issues/379#issuecomment-236374838.
     */
-  def applyN[S, A](xs: Lens[S, A]*): Traversal[S, A] =
+  def applyN[S, A](xs: Optional[S, A]*): Traversal[S, A] =
     new PTraversal[S, S, A, A] {
       def modifyA[F[_]: Applicative](f: A => F[A])(s: S): F[S] =
         xs.foldLeft(Applicative[F].pure(s))((fs, lens) =>
-          Applicative[F].map2(f(lens.get(s)), fs)((a, s) => lens.replace(a)(s))
+          Applicative[F].map2(lens.getOption(s).traverse(f), fs) {
+            case (None, s)    => s
+            case (Some(a), s) => lens.replace(a)(s)
+          }
         )
     }
 }
