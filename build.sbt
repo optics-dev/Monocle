@@ -84,7 +84,7 @@ lazy val buildSettings = Seq(
 )
 
 lazy val catsVersion   = "2.4.2"
-lazy val dottyVersions = Seq("3.0.0-M3")
+lazy val dottyVersions = Seq("3.0.0-RC1")
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
