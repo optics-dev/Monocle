@@ -20,7 +20,7 @@ private[focus] trait LambdaConfigParser {
 
   private object WithKeywordContext {
     def unapply(lambdaWithMagic: Term): Option[Term] = unwrap(lambdaWithMagic) match {
-      case Block(List(DefDef(_, _, _, _, Some(magicFreeLambda))), _) => Some(magicFreeLambda)
+      case Block(List(DefDef(_, _, _, Some(magicFreeLambda))), _) => Some(magicFreeLambda)
       case _ => None
     }
   }
