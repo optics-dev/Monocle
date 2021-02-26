@@ -78,9 +78,7 @@ lazy val buildSettings = Seq(
   scmInfo := Some(
     ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")
   ),
-  useScala3doc := false,
-  testFrameworks += new TestFramework("munit.Framework"),
-  Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc / sources).value }
+  testFrameworks += new TestFramework("munit.Framework")
 )
 
 lazy val catsVersion   = "2.4.2"
