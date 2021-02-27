@@ -128,13 +128,10 @@ val bob = User("Bob", List())
 
 In Scala 3
 ```scala
-import monocle.Focus
 import monocle.syntax.all._
 
 anna
-  .focus(_.debitCards)  // soon .focus(_.debitCards.index(0).expirationDate)
-  .index(1)
-  .andThen(Focus[DebitCard](_.expirationDate))
+  .focus(_.debitCards.index(0).expirationDate)
   .replace(YearMonth.of(2026, 2))
 // res: User = User(
 //   name = "Anna",
@@ -153,9 +150,7 @@ anna
 // )
 
 bob
-  .focus(_.debitCards) 
-  .index(1)
-  .andThen(Focus[DebitCard](_.expirationDate))
+  .focus(_.debitCards.index(1).as[DebitCard].expirationDate)
   .replace(YearMonth.of(2026, 2))
 // res: User = User("Bob", List())
 ```
