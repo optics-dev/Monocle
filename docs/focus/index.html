@@ -168,13 +168,10 @@ the second debit card.</p>
 <span class="hljs-keyword">val</span> bob = <span class="hljs-type">User</span>(<span class="hljs-string">"Bob"</span>, <span class="hljs-type">List</span>())
 </code></pre>
 <p>In Scala 3</p>
-<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.<span class="hljs-type">Focus</span>
-<span class="hljs-keyword">import</span> monocle.syntax.all._
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> monocle.syntax.all._
 
 anna
-  .focus(_.debitCards)  <span class="hljs-comment">// soon .focus(_.debitCards.index(0).expirationDate)</span>
-  .index(<span class="hljs-number">1</span>)
-  .andThen(<span class="hljs-type">Focus</span>[<span class="hljs-type">DebitCard</span>](_.expirationDate))
+  .focus(_.debitCards.index(<span class="hljs-number">0</span>).expirationDate)
   .replace(<span class="hljs-type">YearMonth</span>.of(<span class="hljs-number">2026</span>, <span class="hljs-number">2</span>))
 <span class="hljs-comment">// res: User = User(</span>
 <span class="hljs-comment">//   name = "Anna",</span>
@@ -193,9 +190,7 @@ anna
 <span class="hljs-comment">// )</span>
 
 bob
-  .focus(_.debitCards) 
-  .index(<span class="hljs-number">1</span>)
-  .andThen(<span class="hljs-type">Focus</span>[<span class="hljs-type">DebitCard</span>](_.expirationDate))
+  .focus(_.debitCards.index(<span class="hljs-number">1</span>).as[<span class="hljs-type">DebitCard</span>].expirationDate)
   .replace(<span class="hljs-type">YearMonth</span>.of(<span class="hljs-number">2026</span>, <span class="hljs-number">2</span>))
 <span class="hljs-comment">// res: User = User("Bob", List())</span>
 </code></pre>
