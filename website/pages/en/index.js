@@ -71,7 +71,7 @@ class Index extends React.Component {
     const docUrl = doc => `${baseUrl}${docsPart}${langPart}${doc}`;
 
     const organization = "com.github.julien-truffaut";
-    const latestVersion = "3.0.0-M2"
+    const latestVersion = "3.0.0-M3"
 
     const latestVersionBadge = latestVersion
       .replace("-", "--")
