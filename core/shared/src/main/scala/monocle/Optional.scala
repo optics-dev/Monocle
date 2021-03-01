@@ -54,6 +54,9 @@ trait POptional[S, T, A, B] extends PTraversal[S, T, A, B] { self =>
   def setOption(b: B): S => Option[T] =
     replaceOption(b)
 
+  override def iterator(from: S): Iterator[A] =
+    getOption(from).iterator
+
   /** check if there is no target */
   override def isEmpty(s: S): Boolean =
     getOption(s).isEmpty

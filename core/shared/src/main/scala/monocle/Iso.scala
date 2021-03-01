@@ -50,6 +50,9 @@ trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self 
   def mapping[F[_]: Functor]: PIso[F[S], F[T], F[A], F[B]] =
     PIso[F[S], F[T], F[A], F[B]](fs => Functor[F].map(fs)(self.get))(fb => Functor[F].map(fb)(self.reverseGet))
 
+  override def iterator(from: S): Iterator[A] =
+    Iterator.single(get(from))
+
   override def foldMap[M: Monoid](f: A => M)(s: S): M =
     f(get(s))
 

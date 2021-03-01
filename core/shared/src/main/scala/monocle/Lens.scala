@@ -53,6 +53,9 @@ trait PLens[S, T, A, B] extends POptional[S, T, A, B] with Getter[S, A] { self =
   override def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T] =
     modifyF(f)(s)
 
+  override def iterator(from: S): Iterator[A] =
+    Iterator.single(get(from))
+
   override def foldMap[M: Monoid](f: A => M)(s: S): M =
     f(get(s))
 

@@ -18,7 +18,10 @@ trait Getter[S, A] extends Fold[S, A] { self =>
   /** get the target of a [Getter */
   def get(s: S): A
 
-  def foldMap[M: Monoid](f: A => M)(s: S): M =
+  def iterator(from: S): Iterator[A] =
+    Iterator.single(get(from))
+
+  override def foldMap[M: Monoid](f: A => M)(s: S): M =
     f(get(s))
 
   /** find if the target satisfies the predicate */

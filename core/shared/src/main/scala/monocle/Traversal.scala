@@ -32,9 +32,9 @@ trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] with Fold[S, A] { self 
     */
   def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T]
 
-  /** map each target to a Monoid and combine the results */
-  def foldMap[M: Monoid](f: A => M)(s: S): M =
-    modifyA[Const[M, *]](a => Const(f(a)))(s).getConst
+  // TODO improve performance
+  def iterator(from: S): Iterator[A] =
+    modifyA[Const[List[A], *]](a => Const(List(a)))(from).getConst.iterator
 
   /** modify polymorphically the target of a [[PTraversal]] with a function */
   def modify(f: A => B): S => T =

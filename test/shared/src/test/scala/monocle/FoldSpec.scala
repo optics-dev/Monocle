@@ -1,6 +1,5 @@
 package monocle
 
-import cats.Monoid
 import cats.arrow.{Category, Choice, Compose}
 import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
 
@@ -12,8 +11,8 @@ class FoldSpec extends MonocleSuite {
 
   def nestedListFold[A] =
     new Fold[List[List[A]], List[A]] {
-      def foldMap[M: Monoid](f: (List[A]) => M)(s: List[List[A]]): M =
-        s.foldRight(Monoid[M].empty)((l, acc) => Monoid[M].combine(f(l), acc))
+      def iterator(from: List[List[A]]): Iterator[List[A]] =
+        from.iterator
     }
 
   // test implicit resolution of type classes

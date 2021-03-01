@@ -1,12 +1,8 @@
 package monocle
 
-import cats.{Foldable, Monoid}
 import cats.arrow.Choice
-import cats.instances.int._
-import cats.instances.list._
-import cats.syntax.either._
+import cats.{Foldable, Monoid}
 import monocle.function.{At, Each, FilterIndex, Index}
-import monocle.internal.Monoids
 
 /** A [[Fold]] can be seen as a [[Getter]] with many targets or
   * a weaker [[PTraversal]] which cannot modify its target.
@@ -20,10 +16,13 @@ import monocle.internal.Monoids
   */
 trait Fold[S, A] extends Serializable { self =>
 
+  def iterator(from: S): Iterator[A]
+
   /** map each target to a Monoid and combine the results
     * underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap
     */
-  def foldMap[M: Monoid](f: A => M)(s: S): M
+  def foldMap[M: Monoid](f: A => M)(s: S): M =
+    iterator(s).foldLeft(Monoid[M].empty)((state, a) => Monoid[M].combine(state, f(a)))
 
   /** combine all targets using a target's Monoid */
   def fold(s: S)(implicit ev: Monoid[A]): A =
@@ -31,57 +30,69 @@ trait Fold[S, A] extends Serializable { self =>
 
   /** get all the targets of a [[Fold]] */
   def getAll(s: S): List[A] =
-    foldMap(List(_))(s)
+    iterator(s).toList
 
   /** find the first target matching the predicate */
   def find(p: A => Boolean): S => Option[A] =
-    foldMap(a => Some(a).filter(p))(_)(Monoids.firstOption)
+    iterator(_).find(p)
 
   /** get the first target */
-  def headOption(s: S): Option[A] =
-    foldMap(Option(_))(s)(Monoids.firstOption)
+  def headOption(s: S): Option[A] = {
+    val it = iterator(s)
+    if(it.hasNext) Some(it.next())
+    else None
+  }
 
   /** get the last target */
-  def lastOption(s: S): Option[A] =
-    foldMap(Option(_))(s)(Monoids.lastOption)
+  def lastOption(s: S): Option[A] = {
+    var last: Option[A] = None
+    iterator(s).foreach(value => last = Some(value))
+    last
+  }
 
   /** check if at least one target satisfies the predicate */
   def exist(p: A => Boolean): S => Boolean =
-    foldMap(p(_))(_)(Monoids.any)
+    iterator(_).exists(p)
 
   /** check if all targets satisfy the predicate */
   def all(p: A => Boolean): S => Boolean =
-    foldMap(p(_))(_)(Monoids.all)
+    iterator(_).forall(p)
 
   /** calculate the number of targets */
   def length(s: S): Int =
-    foldMap(_ => 1)(s)
+    iterator(s).size
 
   /** check if there is no target */
   def isEmpty(s: S): Boolean =
-    foldMap(_ => false)(s)(Monoids.all)
+    iterator(s).isEmpty
 
   /** check if there is at least one target */
   def nonEmpty(s: S): Boolean =
-    !isEmpty(s)
+    iterator(s).nonEmpty
 
   /** join two [[Fold]] with the same target */
   def choice[S1](other: Fold[S1, A]): Fold[Either[S, S1], A] =
     new Fold[Either[S, S1], A] {
-      def foldMap[M: Monoid](f: A => M)(s: Either[S, S1]): M =
-        s.fold(self.foldMap(f), other.foldMap(f))
+      def iterator(from: Either[S, S1]): Iterator[A] =
+        from.fold(self.iterator, other.iterator)
     }
 
   def left[C]: Fold[Either[S, C], Either[A, C]] =
     new Fold[Either[S, C], Either[A, C]] {
-      override def foldMap[M: Monoid](f: Either[A, C] => M)(s: Either[S, C]): M =
-        s.fold(self.foldMap(a => f(Either.left(a))), c => f(Either.right(c)))
+      def iterator(from: Either[S, C]): Iterator[Either[A, C]] =
+        from.fold(
+          self.iterator(_).map(Left(_)),
+          c => Iterator.single(Right(c))
+        )
     }
 
   def right[C]: Fold[Either[C, S], Either[C, A]] =
     new Fold[Either[C, S], Either[C, A]] {
-      override def foldMap[M: Monoid](f: Either[C, A] => M)(s: Either[C, S]): M =
-        s.fold(c => f(Either.left(c)), self.foldMap(a => f(Either.right(a))))
+      def iterator(from: Either[C, S]): Iterator[Either[C, A]] =
+        from.fold(
+          c => Iterator.single(Left(c)),
+          self.iterator(_).map(Right(_))
+        )
     }
 
   /** Compose with a function lifted into a Getter */
@@ -97,8 +108,8 @@ trait Fold[S, A] extends Serializable { self =>
   /** compose a [[Fold]] with another [[Fold]] */
   def andThen[B](other: Fold[A, B]): Fold[S, B] =
     new Fold[S, B] {
-      def foldMap[M: Monoid](f: B => M)(s: S): M =
-        self.foldMap(other.foldMap(f)(_))(s)
+      def iterator(from: S): Iterator[B] =
+        self.iterator(from).flatMap(other.iterator)
     }
 
 }
@@ -110,14 +121,14 @@ object Fold extends FoldInstances {
 
   def codiagonal[A]: Fold[Either[A, A], A] =
     new Fold[Either[A, A], A] {
-      def foldMap[M: Monoid](f: A => M)(s: Either[A, A]): M =
-        s.fold(f, f)
+      def iterator(from: Either[A, A]): Iterator[A] =
+        from.fold(Iterator.single, Iterator.single)
     }
 
   def select[A](p: A => Boolean): Fold[A, A] =
     new Fold[A, A] {
-      def foldMap[M: Monoid](f: A => M)(s: A): M =
-        if (p(s)) f(s) else Monoid[M].empty
+      def iterator(from: A): Iterator[A] =
+        if(p(from)) Iterator.single(from) else Iterator.empty
     }
 
   /** [[Fold]] that points to nothing */
@@ -128,7 +139,10 @@ object Fold extends FoldInstances {
   /** create a [[Fold]] from a Foldable */
   def fromFoldable[F[_]: Foldable, A]: Fold[F[A], A] =
     new Fold[F[A], A] {
-      def foldMap[M: Monoid](f: A => M)(s: F[A]): M =
+      def iterator(from: F[A]): Iterator[A] =
+        Foldable[F].toIterable(from).iterator
+
+      override def foldMap[M: Monoid](f: A => M)(s: F[A]): M =
         Foldable[F].foldMap(s)(f)
     }
 
