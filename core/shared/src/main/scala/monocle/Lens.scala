@@ -205,8 +205,8 @@ sealed abstract class LensInstances {
 
   implicit def lensSemigroupal[S]: Semigroupal[Lens[S, *]] = new Semigroupal[Lens[S, *]] {
     override def product[A, B](fa: Lens[S, A], fb: Lens[S, B]): Lens[S, (A, B)] =
-      Lens.apply[S, (A, B)](s => fa.get(s) -> fb.get(s)) {
-        case (a, b) => fa.replace(a) andThen fb.replace(b)
+      Lens.apply[S, (A, B)](s => fa.get(s) -> fb.get(s)) { case (a, b) =>
+        fa.replace(a) andThen fb.replace(b)
       }
   }
 }
