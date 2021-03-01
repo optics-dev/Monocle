@@ -47,8 +47,7 @@ class LensSpec extends MonocleSuite {
 
   //Conflicting lenses break the get what you replace law
   //checkAll("tupled", LensTests((x,x).tupled))
-  checkAll("tupled", LensTests((x,y).tupled))
-
+  checkAll("tupled", LensTests((x, y).tupled))
 
   // test implicit resolution of type classes
 
