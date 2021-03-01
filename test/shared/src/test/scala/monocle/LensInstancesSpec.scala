@@ -1,11 +1,12 @@
 package monocle
 
 import cats.Eq
+import cats.implicits.catsSyntaxTuple2Semigroupal
 import cats.laws.discipline.{InvariantTests, SemigroupalTests}
 import org.scalacheck.{Arbitrary, Gen}
-/*
- Proof(?) that a lens can be Invariant and Semigroupal
- */
+
+//I'm wondering if this is worth keeping with the
+//sampledEq being deprecated
 class LensInstancesSpec extends MonocleSuite
 {
   case class Sample(a: Char, b: Int, c: Boolean)
@@ -31,6 +32,17 @@ class LensInstancesSpec extends MonocleSuite
   checkAll("Lens.InvariantLaws", InvariantTests[Lens[Sample, *]].invariant[Char, Int, Boolean])
 
   checkAll("Lens.SemigroupalLaws", SemigroupalTests[Lens[Sample, *]].semigroupal[Char, Int, Boolean])
+
+  //Explicit tests for clarity
+  test("conflicting lenses are left associative") {
+    val charLens = Lens[Sample, Char](_.a)(aChar => s => s.copy(a = aChar))
+
+    val sample = Sample('a', 0, false)
+    val zippedLenses: Lens[Sample, (Char, Char)] =
+      (charLens, charLens).tupled
+
+    assertEquals(zippedLenses.replace('b', 'c')(sample), sample.copy(a = 'c'))
+  }
 }
 
 
@@ -63,14 +75,4 @@ object LensInstancesSpec {
     }
     object SampledEq extends SampledEq
   }
-}
-
-
-// Motivation for having Invariant and Semigroupal for Lens
-object LensSyntax {
-  import cats.implicits.catsSyntaxTuple2Semigroupal
-
-  //this must compile
-  def motivation[S, A, B](lsa: Lens[S, A], lsb: Lens[S, B]): Lens[S, (A, B)] =
-    (lsa, lsb).tupled
 }
