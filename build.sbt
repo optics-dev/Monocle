@@ -79,9 +79,10 @@ lazy val buildSettings = Seq(
     ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")
   ),
   testFrameworks += new TestFramework("munit.Framework"),
-  Compile / doc / scalacOptions ++= { 
-    if (!isDotty.value) Nil 
-    else Seq("-source-links:github://optics-dev/Monocle", "-revision", revisionToUse.value) }
+  Compile / doc / scalacOptions ++= {
+    if (!isDotty.value) Nil
+    else Seq("-source-links:github://optics-dev/Monocle", "-revision", revisionToUse.value)
+  }
 )
 
 lazy val catsVersion   = "2.4.2"
@@ -117,9 +118,9 @@ lazy val scalajsSettings = Seq(
     if (isDotty.value)
       Seq.empty
     else {
-      val s   = revisionToUse.value
-      val a   = (LocalRootProject / baseDirectory).value.toURI.toString
-      val g   = "https://raw.githubusercontent.com/optics-dev/Monocle"
+      val s = revisionToUse.value
+      val a = (LocalRootProject / baseDirectory).value.toURI.toString
+      val g = "https://raw.githubusercontent.com/optics-dev/Monocle"
       Seq(s"-P:scalajs:mapSourceURI:$a->$g/$s/")
     }
   },
