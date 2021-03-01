@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import cats.{Applicative, Eq}
+import cats.Applicative
 import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.{std, Fold, Optional, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
@@ -11,8 +11,8 @@ final case class ApplyTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A,
 
   def replace(b: B): T     = traversal.replace(b)(s)
   def modify(f: A => B): T = traversal.modify(f)(s)
-  def modifyF[F[_]: Applicative](f: A => F[B]): F[T] =
-    traversal.modifyF(f)(s)
+  def modifyA[F[_]: Applicative](f: A => F[B]): F[T] =
+    traversal.modifyA(f)(s)
 
   def find(p: A => Boolean): Option[A] = traversal.find(p)(s)
   def exist(p: A => Boolean): Boolean  = traversal.exist(p)(s)
@@ -100,7 +100,7 @@ final case class ApplyTraversalSyntax[S, A](private val self: ApplyTraversal[S, 
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): ApplyTraversal[S, S, A1, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyTraversal[S, S, A1, A1] =
+  def withDefault[A1](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyTraversal[S, S, A1, A1] =
     self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyTraversal[S, S, A1, A1] =

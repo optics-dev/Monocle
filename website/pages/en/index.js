@@ -71,7 +71,7 @@ class Index extends React.Component {
     const docUrl = doc => `${baseUrl}${docsPart}${langPart}${doc}`;
 
     const organization = "com.github.julien-truffaut";
-    const latestVersion = "3.0.0-M1"
+    const latestVersion = "3.0.0-M3"
 
     const latestVersionBadge = latestVersion
       .replace("-", "--")
@@ -113,7 +113,7 @@ user.focus(_.address.streetNumber).get
 
 ## Installation
 
-Monocle is published for Scala **2.13** and **3.0.0-M3**. You can add it to your sbt build with:
+Monocle is published for Scala **2.13** and **3.0.0-RC1**. You can add it to your sbt build with:
 
 
 \`\`\`scala

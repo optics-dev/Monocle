@@ -1,6 +1,5 @@
 package monocle.syntax
 
-import cats.Eq
 import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.{std, Fold, Getter, Optional, PIso, PLens, POptional, PPrism, PTraversal}
 
@@ -24,7 +23,7 @@ final case class ApplyGetter[S, A](s: S, getter: Getter[S, A]) {
   def some[A1](implicit ev1: A =:= Option[A1]): ApplyFold[S, A1] =
     adapt[Option[A1]].andThen(std.option.some[A1])
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit ev1: A =:= Option[A1]): ApplyGetter[S, A1] =
+  def withDefault[A1](defaultValue: A1)(implicit ev1: A =:= Option[A1]): ApplyGetter[S, A1] =
     adapt[Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyGetter[S, A1] =

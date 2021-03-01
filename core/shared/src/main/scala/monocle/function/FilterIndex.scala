@@ -38,7 +38,7 @@ object FilterIndex extends FilterIndexFunctions {
     new FilterIndex[S[A], Int, A] {
       def filterIndex(predicate: Int => Boolean) =
         new Traversal[S[A], A] {
-          def modifyF[F[_]: Applicative](f: A => F[A])(s: S[A]): F[S[A]] =
+          def modifyA[F[_]: Applicative](f: A => F[A])(s: S[A]): F[S[A]] =
             zipWithIndex(s).traverse { case (a, j) =>
               if (predicate(j)) f(a) else Applicative[F].pure(a)
             }
@@ -66,7 +66,7 @@ object FilterIndex extends FilterIndexFunctions {
 
       def filterIndex(predicate: K => Boolean) =
         new Traversal[Map[K, V], V] {
-          def modifyF[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
+          def modifyA[F[_]: Applicative](f: V => F[V])(s: Map[K, V]): F[Map[K, V]] =
             s.toList
               .traverse { case (k, v) =>
                 (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
@@ -82,7 +82,7 @@ object FilterIndex extends FilterIndexFunctions {
 
       def filterIndex(predicate: K => Boolean) =
         new Traversal[SortedMap[K, V], V] {
-          def modifyF[F[_]: Applicative](f: V => F[V])(s: SortedMap[K, V]): F[SortedMap[K, V]] =
+          def modifyA[F[_]: Applicative](f: V => F[V])(s: SortedMap[K, V]): F[SortedMap[K, V]] =
             s.toList
               .traverse { case (k, v) =>
                 (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)

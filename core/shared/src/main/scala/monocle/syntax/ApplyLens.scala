@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import cats.{Eq, Functor}
+import cats.Functor
 import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.{std, Fold, Getter, Optional, PIso, PLens, POptional, PPrism, PSetter, PTraversal}
 
@@ -96,7 +96,7 @@ final case class ApplyLensSyntax[S, A](private val self: ApplyLens[S, S, A, A]) 
   def filterIndex[I, A1](predicate: I => Boolean)(implicit ev: FilterIndex[A, I, A1]): ApplyTraversal[S, S, A1, A1] =
     self.andThen(ev.filterIndex(predicate))
 
-  def withDefault[A1: Eq](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyLens[S, S, A1, A1] =
+  def withDefault[A1](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): ApplyLens[S, S, A1, A1] =
     self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
   def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): ApplyLens[S, S, A1, A1] =

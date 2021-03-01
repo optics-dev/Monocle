@@ -15,7 +15,7 @@ import scala.util.Try
 @implicitNotFound(
   "Could not find an instance of Index[${S},${I},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
 )
-abstract class Index[S, I, A] extends Serializable {
+abstract class Index[S, -I, A] extends Serializable {
   def index(i: I): Optional[S, A]
 }
 
@@ -120,7 +120,7 @@ object Index extends IndexFunctions {
     new Index[NonEmptyChain[A], Int, A] {
       def index(i: Int): Optional[NonEmptyChain[A], A] =
         i match {
-          case 0 => necCons1.head.asOptional
+          case 0 => necCons1.head
           case _ => necCons1.tail.index(i - 1)
         }
     }
@@ -129,7 +129,7 @@ object Index extends IndexFunctions {
     new Index[NonEmptyList[A], Int, A] {
       def index(i: Int): Optional[NonEmptyList[A], A] =
         i match {
-          case 0 => nelCons1.head.asOptional
+          case 0 => nelCons1.head
           case _ => nelCons1.tail.index(i - 1)
         }
     }
@@ -138,14 +138,14 @@ object Index extends IndexFunctions {
     new Index[NonEmptyVector[A], Int, A] {
       def index(i: Int): Optional[NonEmptyVector[A], A] =
         i match {
-          case 0 => nevCons1.head.asOptional
+          case 0 => nevCons1.head
           case _ => nevCons1.tail.index(i - 1)
         }
     }
 
   implicit def oneAndIndex[T[_], A](implicit ev: Index[T[A], Int, A]): Index[OneAnd[T, A], Int, A] =
     Index {
-      case 0 => oneAndCons1[T, A].head.asOptional
+      case 0 => oneAndCons1[T, A].head
       case i => oneAndCons1[T, A].tail.index(i - 1)
     }
 }
