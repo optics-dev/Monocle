@@ -7,8 +7,7 @@ import org.scalacheck.{Arbitrary, Gen}
 
 //I'm wondering if this is worth keeping with the
 //sampledEq being deprecated
-class LensInstancesSpec extends MonocleSuite
-{
+class LensInstancesSpec extends MonocleSuite {
   case class Sample(a: Char, b: Int, c: Boolean)
   implicit val sampleEq: Eq[Sample] = Eq.fromUniversalEquals
   implicit val sampleArb: Arbitrary[Sample] = Arbitrary(
@@ -45,29 +44,30 @@ class LensInstancesSpec extends MonocleSuite
   }
 }
 
-
 object LensInstancesSpec {
   implicit def eqLens[S, A](implicit
-                            eqS: Eq[S],
-                            eqA: Eq[A],
-                            arbS: Arbitrary[S],
-                            arbA: Arbitrary[A]
-                           ): Eq[Lens[S, A]] = {
+    eqS: Eq[S],
+    eqA: Eq[A],
+    arbS: Arbitrary[S],
+    arbA: Arbitrary[A]
+  ): Eq[Lens[S, A]] = {
     val arbSA = Arbitrary(
       for {
         s <- arbS.arbitrary
         a <- arbA.arbitrary
       } yield (s, a)
     )
-    val eqSA = Eq.and(Eq.by[(S,A), S](_._1), Eq.by[(S, A), A](_._2))
-    InheritFromCatsLaws.SampledEq.catsLawsSampledEq[Lens[S, A], (S, A), (S, A)](arbSA, eqSA) {
-      case (l, (s, a)) =>
-        l.replace(a)(s) -> l.get(s)
+    val eqSA = Eq.and(Eq.by[(S, A), S](_._1), Eq.by[(S, A), A](_._2))
+    InheritFromCatsLaws.SampledEq.catsLawsSampledEq[Lens[S, A], (S, A), (S, A)](arbSA, eqSA) { case (l, (s, a)) =>
+      l.replace(a)(s) -> l.get(s)
     }
   }
 
   object InheritFromCatsLaws {
-    @deprecated("Inherited from cats", "This helper method is deprecated from cats, looking for a better idea on running eq for lens")
+    @deprecated(
+      "Inherited from cats",
+      "This helper method is deprecated from cats, looking for a better idea on running eq for lens"
+    )
     class SampledEq {
       import cats.laws.discipline.DeprecatedEqInstances.sampledEq
       def catsLawsSampledEq[A, B, C](implicit B: Arbitrary[B], evEq: Eq[C]): ((A, B) => C) => Eq[A] =
