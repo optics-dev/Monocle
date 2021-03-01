@@ -78,7 +78,11 @@ lazy val buildSettings = Seq(
   scmInfo := Some(
     ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")
   ),
-  testFrameworks += new TestFramework("munit.Framework")
+  testFrameworks += new TestFramework("munit.Framework"),
+  Compile / doc / scalacOptions ++= {
+    if (!isDotty.value) Nil
+    else Seq("-source-links:github://optics-dev/Monocle", "-revision", revisionToUse.value)
+  }
 )
 
 lazy val catsVersion   = "2.4.2"
@@ -104,15 +108,19 @@ def mimaSettings(module: String): Seq[Setting[_]] = Seq(
 
 lazy val gitRev = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
+def revisionToUse = Def.task {
+  val tag = (ThisBuild / version).value
+  if (isSnapshot.value) gitRev else tag
+}
+
 lazy val scalajsSettings = Seq(
   scalacOptions ++= {
     if (isDotty.value)
       Seq.empty
     else {
-      val tag = (ThisBuild / version).value
-      val s   = if (isSnapshot.value) gitRev else tag
-      val a   = (LocalRootProject / baseDirectory).value.toURI.toString
-      val g   = "https://raw.githubusercontent.com/optics-dev/Monocle"
+      val s = revisionToUse.value
+      val a = (LocalRootProject / baseDirectory).value.toURI.toString
+      val g = "https://raw.githubusercontent.com/optics-dev/Monocle"
       Seq(s"-P:scalajs:mapSourceURI:$a->$g/$s/")
     }
   },
