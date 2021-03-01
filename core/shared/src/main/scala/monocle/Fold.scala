@@ -39,7 +39,7 @@ trait Fold[S, A] extends Serializable { self =>
   /** get the first target */
   def headOption(s: S): Option[A] = {
     val it = iterator(s)
-    if(it.hasNext) Some(it.next())
+    if (it.hasNext) Some(it.next())
     else None
   }
 
@@ -128,7 +128,7 @@ object Fold extends FoldInstances {
   def select[A](p: A => Boolean): Fold[A, A] =
     new Fold[A, A] {
       def iterator(from: A): Iterator[A] =
-        if(p(from)) Iterator.single(from) else Iterator.empty
+        if (p(from)) Iterator.single(from) else Iterator.empty
     }
 
   /** [[Fold]] that points to nothing */
