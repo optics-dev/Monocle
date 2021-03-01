@@ -1,8 +1,9 @@
 package monocle
 
-import cats.Eq
+import cats.{Eq, Semigroupal}
 import cats.arrow.{Category, Choice, Compose}
 import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
+import cats.implicits.catsSyntaxTuple2Semigroupal
 import monocle.law.discipline.{LensTests, OptionalTests, SetterTests, TraversalTests}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
@@ -49,6 +50,26 @@ class LensSpec extends MonocleSuite {
 
   test("Lens has a Choice instance") {
     assertEquals(Choice[Lens].choice(x, y).get(Right(Point(5, 6))), 6)
+  }
+
+  test("Lens has a Semigroupal instance") {
+    assertEquals(Semigroupal[Lens[Point, *]].product(x, y).get(Point(5, 6)), (5, 6))
+  }
+
+  test("Lens has an Invariant instance") {
+    val zippedLenses: Lens[Point, (Int, Int)] = (x, y).tupled
+    assertEquals(
+      zippedLenses.replace((2, 3))(Point(5, 6)),
+      Point(2, 3)
+    )
+  }
+
+  test("tupled breaks get what you replace if you tuple the same/conflicting lenses") {
+    val zippedLenses: Lens[Point, (Int, Int)] = (x, x).tupled
+    assertEquals(
+      zippedLenses.replace((2, 3))(Point(5, 6)),
+      Point(3, 6)
+    )
   }
 
   test("get") {
