@@ -21,11 +21,18 @@ class LensSpec extends MonocleSuite {
   val y  = Lens[Point, Int](_.y)(y => p => p.copy(y = y))
   val xy = Lens[Point, (Int, Int)](p => (p.x, p.y))(xy => p => p.copy(x = xy._1, y = xy._2))
 
+  implicit val arbitraryPointEq: Eq[Point] = Eq.fromUniversalEquals
+
+  implicit val arbitraryPoint: Arbitrary[Point] = Arbitrary(
+    for {
+      x <- arbitrary[Int]
+      y <- arbitrary[Int]
+    } yield Point(x, y)
+  )
   implicit val exampleGen: Arbitrary[Example] = Arbitrary(for {
     s <- arbitrary[String]
-    x <- arbitrary[Int]
-    y <- arbitrary[Int]
-  } yield Example(s, Point(x, y)))
+    p <- arbitrary[Point]
+  } yield Example(s, p))
 
   implicit val exampleEq: Eq[Example] = Eq.fromUniversalEquals[Example]
 
@@ -37,6 +44,11 @@ class LensSpec extends MonocleSuite {
 
   checkAll("first", LensTests(s.first[Boolean]))
   checkAll("second", LensTests(s.second[Boolean]))
+
+  //Conflicting lenses break the get what you replace law
+  //checkAll("tupled", LensTests((x,x).tupled))
+  checkAll("tupled", LensTests((x,y).tupled))
+
 
   // test implicit resolution of type classes
 
@@ -69,7 +81,8 @@ class LensSpec extends MonocleSuite {
     assertEquals(
       zippedLenses.replace((2, 3))(Point(5, 6)),
       Point(3, 6)
-    )
+    ) //2 disappeared
+
   }
 
   test("get") {
