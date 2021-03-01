@@ -1,8 +1,9 @@
 package monocle
 
-import cats.Eq
+import cats.{Eq, Semigroupal}
 import cats.arrow.{Category, Choice, Compose}
 import cats.data.{Chain, NonEmptyChain, NonEmptyList, NonEmptyVector}
+import cats.implicits.catsSyntaxTuple2Semigroupal
 import monocle.law.discipline.{LensTests, OptionalTests, SetterTests, TraversalTests}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
@@ -20,11 +21,18 @@ class LensSpec extends MonocleSuite {
   val y  = Lens[Point, Int](_.y)(y => p => p.copy(y = y))
   val xy = Lens[Point, (Int, Int)](p => (p.x, p.y))(xy => p => p.copy(x = xy._1, y = xy._2))
 
+  implicit val arbitraryPointEq: Eq[Point] = Eq.fromUniversalEquals
+
+  implicit val arbitraryPoint: Arbitrary[Point] = Arbitrary(
+    for {
+      x <- arbitrary[Int]
+      y <- arbitrary[Int]
+    } yield Point(x, y)
+  )
   implicit val exampleGen: Arbitrary[Example] = Arbitrary(for {
     s <- arbitrary[String]
-    x <- arbitrary[Int]
-    y <- arbitrary[Int]
-  } yield Example(s, Point(x, y)))
+    p <- arbitrary[Point]
+  } yield Example(s, p))
 
   implicit val exampleEq: Eq[Example] = Eq.fromUniversalEquals[Example]
 
@@ -36,6 +44,10 @@ class LensSpec extends MonocleSuite {
 
   checkAll("first", LensTests(s.first[Boolean]))
   checkAll("second", LensTests(s.second[Boolean]))
+
+  //Conflicting lenses break the get what you replace law
+  //checkAll("tupled", LensTests((x,x).tupled))
+  checkAll("tupled", LensTests((x, y).tupled))
 
   // test implicit resolution of type classes
 
@@ -49,6 +61,27 @@ class LensSpec extends MonocleSuite {
 
   test("Lens has a Choice instance") {
     assertEquals(Choice[Lens].choice(x, y).get(Right(Point(5, 6))), 6)
+  }
+
+  test("Lens has a Semigroupal instance") {
+    assertEquals(Semigroupal[Lens[Point, *]].product(x, y).get(Point(5, 6)), (5, 6))
+  }
+
+  test("Lens has an Invariant instance") {
+    val zippedLenses: Lens[Point, (Int, Int)] = (x, y).tupled
+    assertEquals(
+      zippedLenses.replace((2, 3))(Point(5, 6)),
+      Point(2, 3)
+    )
+  }
+
+  test("tupled breaks get what you replace if you tuple the same/conflicting lenses") {
+    val zippedLenses: Lens[Point, (Int, Int)] = (x, x).tupled
+    assertEquals(
+      zippedLenses.replace((2, 3))(Point(5, 6)),
+      Point(3, 6)
+    ) //2 disappeared
+
   }
 
   test("get") {
