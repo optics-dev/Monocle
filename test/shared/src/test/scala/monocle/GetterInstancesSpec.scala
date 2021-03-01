@@ -3,6 +3,7 @@ package monocle
 import cats.Eq
 import cats.laws.discipline.{FunctorTests, SemigroupalTests}
 import org.scalacheck.{Arbitrary, Gen}
+import GetterInstancesSpec.eqGetter
 
 //I'm wondering if this is worth keeping with the
 //sampledEq being deprecated
@@ -41,7 +42,7 @@ class GetterInstancesSpec extends MonocleSuite {
 }
 
 object GetterInstancesSpec {
-  implicit def eqLens[S, A](implicit
+  implicit def eqGetter[S, A](implicit
     eqA: Eq[A],
     arbS: Arbitrary[S]
   ): Eq[Getter[S, A]] =

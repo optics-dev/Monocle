@@ -4,6 +4,7 @@ import cats.Eq
 import cats.implicits.catsSyntaxTuple2Semigroupal
 import cats.laws.discipline.{InvariantTests, SemigroupalTests}
 import org.scalacheck.{Arbitrary, Gen}
+import LensInstancesSpec.eqLens
 
 //I'm wondering if this is worth keeping with the
 //sampledEq being deprecated
