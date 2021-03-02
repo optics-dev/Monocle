@@ -115,13 +115,14 @@ def revisionToUse = Def.task {
 
 lazy val scalajsSettings = Seq(
   scalacOptions ++= {
-    if (isDotty.value)
-      Seq.empty
-    else {
-      val s = revisionToUse.value
-      val a = (LocalRootProject / baseDirectory).value.toURI.toString
-      val g = "https://raw.githubusercontent.com/optics-dev/Monocle"
-      Seq(s"-P:scalajs:mapSourceURI:$a->$g/$s/")
+    val s = revisionToUse.value
+    val a = (LocalRootProject / baseDirectory).value.toURI.toString
+    val g = "https://raw.githubusercontent.com/optics-dev/Monocle"
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((3, _)) =>
+        Seq(s"-scalajs-mapSourceURI:$a->$g")
+      case _ =>
+        Seq(s"-P:scalajs:mapSourceURI:$a->$g/$s/")
     }
   },
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
