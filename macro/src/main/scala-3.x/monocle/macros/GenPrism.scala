@@ -1,8 +1,9 @@
 package monocle.macros
 
-import monocle.Focus
+import monocle.{Focus, Prism}
+import monocle.syntax.all._
 
 object GenPrism {
-  transparent inline def apply[Source, Target <: Source] =
-    Focus[Source](_.as[Target])
+  inline def apply[Source, Target <: Source]: Prism[Source, Target] =
+    Focus[Source]().as[Target]
 }
