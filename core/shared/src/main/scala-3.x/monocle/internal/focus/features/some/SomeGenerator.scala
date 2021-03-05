@@ -8,9 +8,8 @@ private[focus] trait SomeGenerator {
 
   import macroContext.reflect._
 
-  def generateSome(toType: TypeRepr): Term = {
-    toType.asType match {
+  def generateSome(action: FocusAction.KeywordSome): Term = 
+    action.toType.asType match {
       case '[t] => '{ some[t] }.asTerm
     }
-  }
 }

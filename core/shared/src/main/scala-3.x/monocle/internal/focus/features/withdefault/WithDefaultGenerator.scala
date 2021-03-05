@@ -8,7 +8,9 @@ private[focus] trait WithDefaultGenerator {
 
   import macroContext.reflect._
 
-  def generateWithDefault(toType: TypeRepr, defaultValue: Term): Term = {
+  def generateWithDefault(action: FocusAction.KeywordWithDefault): Term = {
+    import action.{toType, defaultValue}
+
     toType.asType match {
       case '[t] => '{ withDefault[t](${defaultValue.asExprOf[t]}) }.asTerm
     }

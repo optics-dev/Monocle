@@ -13,7 +13,8 @@ private[focus] trait FocusBase {
   case class LambdaConfig(argName: String, lambdaBody: Term)
 
   enum FocusAction {
-    case FieldSelect(name: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
+    case SelectField(fieldName: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
+    case SelectOnlyField(fieldName: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], fromCompanion: Term, toType: TypeRepr)
     case KeywordSome(toType: TypeRepr)
     case KeywordAs(fromType: TypeRepr, toType: TypeRepr)
     case KeywordEach(fromType: TypeRepr, toType: TypeRepr, eachInstance: Term)
@@ -22,7 +23,8 @@ private[focus] trait FocusBase {
     case KeywordWithDefault(toType: TypeRepr, defaultValue: Term)
 
     override def toString(): String = this match {
-      case FieldSelect(name, fromType, fromTypeArgs, toType) => s"FieldSelect($name, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
+      case SelectField(fieldName, fromType, fromTypeArgs, toType) => s"SelectField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
+      case SelectOnlyField(fieldName, fromType, fromTypeArgs, _, toType) => s"SelectOnlyField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ..., ${toType.show})"
       case KeywordSome(toType) => s"KeywordSome(${toType.show})"
       case KeywordAs(fromType, toType) => s"KeywordAs(${fromType.show}, ${toType.show})"
       case KeywordEach(fromType, toType, _) => s"KeywordEach(${fromType.show}, ${toType.show}, ...)"

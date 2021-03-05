@@ -2,7 +2,8 @@ package monocle.internal.focus.features
 
 import scala.quoted.Type
 import monocle.internal.focus.FocusBase
-import monocle.internal.focus.features.fieldselect.FieldSelectParser
+import monocle.internal.focus.features.selectfield.SelectFieldParser
+import monocle.internal.focus.features.selectonlyfield.SelectOnlyFieldParser
 import monocle.internal.focus.features.some.SomeParser
 import monocle.internal.focus.features.as.AsParser
 import monocle.internal.focus.features.each.EachParser
@@ -12,8 +13,10 @@ import monocle.internal.focus.features.withdefault.WithDefaultParser
 
 private[focus] trait AllFeatureParsers 
   extends FocusBase 
-  with ParserBase
-  with FieldSelectParser 
+  with SelectParserBase
+  with KeywordParserBase
+  with SelectFieldParser 
+  with SelectOnlyFieldParser
   with SomeParser
   with AsParser
   with EachParser
@@ -51,8 +54,11 @@ private[focus] trait ParserLoop {
         case KeywordWithDefault(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case KeywordWithDefault(Left(error)) => Left(error)
 
-        case FieldSelect(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
-        case FieldSelect(Left(error)) => Left(error)
+        case SelectOnlyField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case SelectOnlyField(Left(error)) => Left(error)
+
+        case SelectField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case SelectField(Left(error)) => Left(error)
 
         case unexpected => FocusError.UnexpectedCodeStructure(unexpected.toString).asResult
       }

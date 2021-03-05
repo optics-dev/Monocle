@@ -8,9 +8,12 @@ private[focus] trait AtGenerator {
 
   import macroContext.reflect._
 
-  def generateAt(fromType: TypeRepr, toType: TypeRepr, index: Term, atInstance: Term): Term = 
+  def generateAt(action: FocusAction.KeywordAt): Term = {
+    import action.{fromType, toType, index, atInstance}
+
     (fromType.asType, index.tpe.asType, toType.asType) match {
       case ('[f], '[i], '[t]) => '{(${atInstance.asExprOf[At[f, i, t]]}.at(${index.asExprOf[i]}))}.asTerm
     }
+  }
     
 }
