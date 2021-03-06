@@ -69,7 +69,7 @@ lazy val buildSettings = Seq(
         "-Wconf:msg=method first in trait:i",
         "-Wconf:msg=method second in trait:i",
         "-Wconf:msg=method left in trait:i",
-        "-Wconf:msg=method right in trait:i",
+        "-Wconf:msg=method right in trait:i"
       )
   },
   libraryDependencies ++= {
