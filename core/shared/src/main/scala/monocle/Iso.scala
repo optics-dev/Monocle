@@ -77,6 +77,7 @@ trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self 
     _ => reverseGet(b)
 
   /** pair two disjoint [[PIso]] */
+  @deprecated("no replacement", since = "3.0.0-M4")
   def split[S1, T1, A1, B1](other: PIso[S1, T1, A1, B1]): PIso[(S, S1), (T, T1), (A, A1), (B, B1)] =
     PIso[(S, S1), (T, T1), (A, A1), (B, B1)] { case (s, s1) =>
       (get(s), other.get(s1))
@@ -84,6 +85,7 @@ trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self 
       (reverseGet(b), other.reverseGet(b1))
     }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def first[C]: PIso[(S, C), (T, C), (A, C), (B, C)] =
     PIso[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       (get(s), c)
@@ -91,6 +93,7 @@ trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self 
       (reverseGet(b), c)
     }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def second[C]: PIso[(C, S), (C, T), (C, A), (C, B)] =
     PIso[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
       (c, get(s))
@@ -98,9 +101,11 @@ trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self 
       (c, reverseGet(b))
     }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def left[C]: PIso[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
     PIso[Either[S, C], Either[T, C], Either[A, C], Either[B, C]](_.leftMap(get))(_.leftMap(reverseGet))
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def right[C]: PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PIso[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](_.map(get))(_.map(reverseGet))
 
