@@ -1,7 +1,7 @@
 package monocle.internal.focus
 
 import monocle.{Focus, Lens, Iso, Prism, Optional, Traversal }
-import monocle.syntax.{ApplyLens, ApplyPrism, ApplyIso, ApplyOptional, ApplyTraversal }
+import monocle.syntax.{ApplyPLens, ApplyPPrism, ApplyPIso, ApplyPOptional, ApplyPTraversal }
 import scala.quoted.{Type, Expr, Quotes, quotes}
 
 
@@ -13,11 +13,11 @@ private[monocle] object AppliedFocusImpl {
     val generatedOptic = FocusImpl(lambda)
 
     generatedOptic.asTerm.tpe.asType match {
-      case '[Lens[f, t]] => '{ ApplyLens[From, From, To, To]($from, ${generatedOptic.asExprOf[Lens[From,To]]}) }
-      case '[Prism[f, t]] => '{ ApplyPrism[From, From, To, To]($from, ${generatedOptic.asExprOf[Prism[From,To]]}) }
-      case '[Iso[f, t]] => '{ ApplyIso[From, From, To, To]($from, ${generatedOptic.asExprOf[Iso[From,To]]}) }
-      case '[Optional[f, t]] => '{ ApplyOptional[From, From, To, To]($from, ${generatedOptic.asExprOf[Optional[From,To]]}) }
-      case '[Traversal[f, t]] => '{ ApplyTraversal[From, From, To, To]($from, ${generatedOptic.asExprOf[Traversal[From,To]]}) }
+      case '[Lens[f, t]] => '{ ApplyPLens[From, From, To, To]($from, ${generatedOptic.asExprOf[Lens[From,To]]}) }
+      case '[Prism[f, t]] => '{ ApplyPPrism[From, From, To, To]($from, ${generatedOptic.asExprOf[Prism[From,To]]}) }
+      case '[Iso[f, t]] => '{ ApplyPIso[From, From, To, To]($from, ${generatedOptic.asExprOf[Iso[From,To]]}) }
+      case '[Optional[f, t]] => '{ ApplyPOptional[From, From, To, To]($from, ${generatedOptic.asExprOf[Optional[From,To]]}) }
+      case '[Traversal[f, t]] => '{ ApplyPTraversal[From, From, To, To]($from, ${generatedOptic.asExprOf[Traversal[From,To]]}) }
     }
   }
 }

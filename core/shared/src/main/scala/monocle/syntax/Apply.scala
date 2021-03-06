@@ -37,61 +37,61 @@ final case class ApplyGetterOps[S](private val s: S) extends AnyVal {
 
 final case class ApplyIsoOps[S](private val s: S) extends AnyVal {
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def applyIso[T, A, B](iso: PIso[S, T, A, B]): ApplyIso[S, T, A, B] =
-    ApplyIso[S, T, A, B](s, iso)
+  def applyIso[T, A, B](iso: PIso[S, T, A, B]): ApplyPIso[S, T, A, B] =
+    ApplyPIso[S, T, A, B](s, iso)
 
   /** alias to applyIso */
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def &<->[T, A, B](iso: PIso[S, T, A, B]): ApplyIso[S, T, A, B] =
+  def &<->[T, A, B](iso: PIso[S, T, A, B]): ApplyPIso[S, T, A, B] =
     applyIso(iso)
 }
 
 final case class ApplyLensOps[S](private val s: S) extends AnyVal {
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def applyLens[T, A, B](lens: PLens[S, T, A, B]): ApplyLens[S, T, A, B] =
-    ApplyLens[S, T, A, B](s, lens)
+  def applyLens[T, A, B](lens: PLens[S, T, A, B]): ApplyPLens[S, T, A, B] =
+    ApplyPLens[S, T, A, B](s, lens)
 
   /** alias to applyLens */
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def &|->[T, A, B](lens: PLens[S, T, A, B]): ApplyLens[S, T, A, B] =
+  def &|->[T, A, B](lens: PLens[S, T, A, B]): ApplyPLens[S, T, A, B] =
     applyLens(lens)
 }
 
 final case class ApplyOptionalOps[S](private val s: S) extends AnyVal {
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def applyOptional[T, A, B](optional: POptional[S, T, A, B]): ApplyOptional[S, T, A, B] =
-    ApplyOptional[S, T, A, B](s, optional)
+  def applyOptional[T, A, B](optional: POptional[S, T, A, B]): ApplyPOptional[S, T, A, B] =
+    ApplyPOptional[S, T, A, B](s, optional)
 
   /** alias to applyOptional */
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def &|-?[T, A, B](optional: POptional[S, T, A, B]): ApplyOptional[S, T, A, B] =
+  def &|-?[T, A, B](optional: POptional[S, T, A, B]): ApplyPOptional[S, T, A, B] =
     applyOptional(optional)
 }
 
 final case class ApplyPrismOps[S](private val s: S) extends AnyVal {
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def applyPrism[T, A, B](prism: PPrism[S, T, A, B]): ApplyPrism[S, T, A, B] =
-    ApplyPrism[S, T, A, B](s, prism)
+  def applyPrism[T, A, B](prism: PPrism[S, T, A, B]): ApplyPPrism[S, T, A, B] =
+    ApplyPPrism[S, T, A, B](s, prism)
 
   /** alias to applyPrism */
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def &<-?[T, A, B](prism: PPrism[S, T, A, B]): ApplyPrism[S, T, A, B] =
+  def &<-?[T, A, B](prism: PPrism[S, T, A, B]): ApplyPPrism[S, T, A, B] =
     applyPrism(prism)
 }
 
 final case class ApplySetterOps[S](private val s: S) extends AnyVal {
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def applySetter[T, A, B](setter: PSetter[S, T, A, B]): ApplySetter[S, T, A, B] =
-    new ApplySetter[S, T, A, B](s, setter)
+  def applySetter[T, A, B](setter: PSetter[S, T, A, B]): ApplyPSetter[S, T, A, B] =
+    new ApplyPSetter[S, T, A, B](s, setter)
 }
 
 final case class ApplyTraversalOps[S](private val s: S) extends AnyVal {
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def applyTraversal[T, A, B](traversal: PTraversal[S, T, A, B]): ApplyTraversal[S, T, A, B] =
-    ApplyTraversal[S, T, A, B](s, traversal)
+  def applyTraversal[T, A, B](traversal: PTraversal[S, T, A, B]): ApplyPTraversal[S, T, A, B] =
+    ApplyPTraversal[S, T, A, B](s, traversal)
 
   /** alias to applyTraversal */
   @deprecated("use focus().andThen", since = "3.0.0-M1")
-  def &|->>[T, A, B](traversal: PTraversal[S, T, A, B]): ApplyTraversal[S, T, A, B] =
+  def &|->>[T, A, B](traversal: PTraversal[S, T, A, B]): ApplyPTraversal[S, T, A, B] =
     applyTraversal(traversal)
 }
