@@ -81,12 +81,9 @@ object PTraversal extends TraversalInstances {
   def id[S, T]: PTraversal[S, T, S, T] =
     PIso.id[S, T]
 
+  @deprecated("use PLens.codiagonal", since = "3.0.0-M4")
   def codiagonal[S, T]: PTraversal[Either[S, S], Either[T, T], S, T] =
-    new PTraversal[Either[S, S], Either[T, T], S, T] {
-      def modifyA[F[_]: Applicative](f: S => F[T])(s: Either[S, S]): F[Either[T, T]] =
-        s.bimap(f, f)
-          .fold(Applicative[F].map(_)(Either.left), Applicative[F].map(_)(Either.right))
-    }
+    PLens.codiagonal
 
   /** create a [[PTraversal]] from a Traverse */
   def fromTraverse[T[_]: Traverse, A, B]: PTraversal[T[A], T[B], A, B] =
@@ -145,8 +142,9 @@ object Traversal {
   def id[A]: Traversal[A, A] =
     Iso.id[A]
 
+  @deprecated("use Lens.codiagonal", since = "3.0.0-M4")
   def codiagonal[S, T]: Traversal[Either[S, S], S] =
-    PTraversal.codiagonal
+    Lens.codiagonal
 
   /** create a [[PTraversal]] from a Traverse */
   def fromTraverse[T[_]: Traverse, A]: Traversal[T[A], A] =
