@@ -8,11 +8,12 @@ private[focus] trait LambdaConfigParser {
   import macroContext.reflect._
   
   def parseLambdaConfig[From: Type](lambda: Term): FocusResult[LambdaConfig] = {
-    val fromTypeIsConcrete = TypeRepr.of[From].classSymbol.isDefined
+    val fromType = TypeRepr.of[From]
+    val fromTypeIsConcrete = fromType.classSymbol.isDefined
 
     lambda match {
       case WithKeywordContext(ExpectedLambdaFunction(config)) if fromTypeIsConcrete => Right(config)
-      case WithKeywordContext(ExpectedLambdaFunction(_)) => FocusError.NotAConcreteClass(Type.show[Type[From]]).asResult 
+      case WithKeywordContext(ExpectedLambdaFunction(_)) => FocusError.NotAConcreteClass(fromType.show).asResult 
       case WithKeywordContext(_) => FocusError.NotASimpleLambdaFunction.asResult
       case _ => FocusError.CouldntUnderstandKeywordContext.asResult
     }

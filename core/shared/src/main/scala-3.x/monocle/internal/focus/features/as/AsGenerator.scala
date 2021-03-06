@@ -8,7 +8,9 @@ private[focus] trait AsGenerator {
 
   import macroContext.reflect._
 
-  def generateAs(fromType: TypeRepr, toType: TypeRepr): Term = {
+  def generateAs(action: FocusAction.KeywordAs): Term = {
+    import action.{fromType, toType}
+
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) => '{ 
         Prism[f, t]((from: f) => if (from.isInstanceOf[t]) Some(from.asInstanceOf[t]) else None)

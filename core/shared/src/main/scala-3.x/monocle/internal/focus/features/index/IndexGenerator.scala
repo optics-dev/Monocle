@@ -8,9 +8,12 @@ private[focus] trait IndexGenerator {
 
   import macroContext.reflect._
 
-  def generateIndex(fromType: TypeRepr, toType: TypeRepr, index: Term, indexInstance: Term): Term = 
+  def generateIndex(action: FocusAction.KeywordIndex): Term = {
+    import action.{fromType, toType, index, indexInstance}
+
     (fromType.asType, index.tpe.widen.asType, toType.asType) match {
       case ('[f], '[i], '[t]) => '{(${indexInstance.asExprOf[Index[f, i, t]]}.index(${index.asExprOf[i]}))}.asTerm
     }
+  }
     
 }

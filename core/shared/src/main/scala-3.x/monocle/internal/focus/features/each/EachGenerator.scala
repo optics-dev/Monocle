@@ -8,9 +8,12 @@ private[focus] trait EachGenerator {
 
   import macroContext.reflect._
 
-  def generateEach(fromType: TypeRepr, toType: TypeRepr, eachInstance: Term): Term = 
+  def generateEach(action: FocusAction.KeywordEach): Term = {
+    import action.{fromType, toType, eachInstance}
+
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) => '{(${eachInstance.asExprOf[Each[f, t]]}.each)}.asTerm
     }
+  }
     
 }

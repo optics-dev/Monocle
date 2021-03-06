@@ -1,6 +1,6 @@
 package monocle.focus
 
-import monocle.{Focus, Lens}
+import monocle.{Focus, Lens, Iso}
 
 final class FocusFieldSelectTest extends munit.FunSuite {
 
@@ -106,6 +106,12 @@ final class FocusFieldSelectTest extends munit.FunSuite {
 
     assertEquals(f1.replace(99)(tup), (99, "a"))
     assertEquals(f2.replace("moo")(tup), (11, "moo"))
+  }
+
+  test("Single field should be an Iso") {
+    val iso: Iso[Animal, String] = Focus[Animal](_.name)
+    assertEquals(iso.get(Animal("Bob")), "Bob")
+    assertEquals(iso.reverseGet("Bob"), Animal("Bob"))
   }
 
   /*
