@@ -1,7 +1,8 @@
 package monocle.focus
 
 import monocle.Focus
-import monocle.Focus._
+import monocle.syntax.all.as
+
 
 import scala.annotation.nowarn
 
@@ -41,5 +42,20 @@ final class FocusAsTest extends munit.FunSuite {
     val mysteryFood = MysteryFood[String]("abc", 44)
 
     assertEquals(getMystery.getOption(mysteryFood), Some("abc"))
+  }
+
+   test("Focus operator `as` commutes with standalone operator `as`") {
+    val asBanana = Focus[Food](_.as[Banana])
+
+    val foodA: Food = Apple(35, "blue")
+    val foodB: Food = Banana(-88, false)
+
+    assertEquals(
+      Focus[Food](_.as[Banana]).getOption(foodB), 
+      Focus[Food]().as[Banana].getOption(foodB))
+
+    assertEquals(
+      Focus[Food](_.as[Banana]).getOption(foodA), 
+      Focus[Food]().as[Banana].getOption(foodA))
   }
 }
