@@ -44,16 +44,6 @@ trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] with Fold[S, A] { self 
   def replace(b: B): S => T =
     modify(_ => b)
 
-  /** join two [[PTraversal]] with the same target */
-  def choice[S1, T1](other: PTraversal[S1, T1, A, B]): PTraversal[Either[S, S1], Either[T, T1], A, B] =
-    new PTraversal[Either[S, S1], Either[T, T1], A, B] {
-      def modifyA[F[_]: Applicative](f: A => F[B])(s: Either[S, S1]): F[Either[T, T1]] =
-        s.fold(
-          s => Functor[F].map(self.modifyA(x => f(x))(s))(Either.left(_)),
-          s1 => Functor[F].map(other.modifyA(f)(s1))(Either.right)
-        )
-    }
-
   /** [[PTraversal.modifyA]] for a `Parallel` applicative functor.
     */
   def parModifyF[F[_]](f: A => F[B])(s: S)(implicit F: Parallel[F]): F[T] =
@@ -211,7 +201,13 @@ sealed abstract class TraversalInstances {
       Iso.id
 
     def choice[A, B, C](f1: Traversal[A, C], f2: Traversal[B, C]): Traversal[Either[A, B], C] =
-      f1 choice f2
+      new Traversal[Either[A, B], C] {
+        def modifyA[F[_]: Applicative](f: C => F[C])(s: Either[A, B]): F[Either[A, B]] =
+          s.fold(
+            a => Functor[F].map(f1.modifyA(f)(a))(Either.left),
+            b => Functor[F].map(f2.modifyA(f)(b))(Either.right)
+          )
+      }
   }
 }
 

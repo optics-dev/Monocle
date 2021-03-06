@@ -1,5 +1,6 @@
 package monocle.generic
 
+import cats.implicits._
 import monocle.Lens
 import monocle.macros.GenLens
 import monocle.MonocleSuite

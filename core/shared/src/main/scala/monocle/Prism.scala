@@ -55,6 +55,7 @@ trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
   def re: Getter[B, T] =
     Getter(reverseGet)
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def first[C]: PPrism[(S, C), (T, C), (A, C), (B, C)] =
     PPrism[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       getOrModify(s).bimap(_ -> c, _ -> c)
@@ -62,6 +63,7 @@ trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
       (reverseGet(b), c)
     }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def second[C]: PPrism[(C, S), (C, T), (C, A), (C, B)] =
     PPrism[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
       getOrModify(s).bimap(c -> _, c -> _)
@@ -69,11 +71,13 @@ trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
       (c, reverseGet(b))
     }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def left[C]: PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]] =
     PPrism[Either[S, C], Either[T, C], Either[A, C], Either[B, C]](
       _.fold(getOrModify(_).bimap(Either.left, Either.left), c => Either.right(Either.right(c)))
     )(_.leftMap(reverseGet))
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def right[C]: PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]] =
     PPrism[Either[C, S], Either[C, T], Either[C, A], Either[C, B]](
       _.fold(c => Either.right(Either.left(c)), getOrModify(_).bimap(Either.right, Either.right))
