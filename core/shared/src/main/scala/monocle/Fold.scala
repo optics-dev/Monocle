@@ -65,19 +65,14 @@ trait Fold[S, A] extends Serializable { self =>
   def nonEmpty(s: S): Boolean =
     !isEmpty(s)
 
-  /** join two [[Fold]] with the same target */
-  def choice[S1](other: Fold[S1, A]): Fold[Either[S, S1], A] =
-    new Fold[Either[S, S1], A] {
-      def foldMap[M: Monoid](f: A => M)(s: Either[S, S1]): M =
-        s.fold(self.foldMap(f), other.foldMap(f))
-    }
-
+  @deprecated("no replacement", since = "3.0.0-M4")
   def left[C]: Fold[Either[S, C], Either[A, C]] =
     new Fold[Either[S, C], Either[A, C]] {
       override def foldMap[M: Monoid](f: Either[A, C] => M)(s: Either[S, C]): M =
         s.fold(self.foldMap(a => f(Either.left(a))), c => f(Either.right(c)))
     }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   def right[C]: Fold[Either[C, S], Either[C, A]] =
     new Fold[Either[C, S], Either[C, A]] {
       override def foldMap[M: Monoid](f: Either[C, A] => M)(s: Either[C, S]): M =
@@ -138,8 +133,11 @@ object Fold extends FoldInstances {
 
 sealed abstract class FoldInstances {
   implicit val foldChoice: Choice[Fold] = new Choice[Fold] {
-    def choice[A, B, C](f: Fold[A, C], g: Fold[B, C]): Fold[Either[A, B], C] =
-      f choice g
+    def choice[A, B, C](fold1: Fold[A, C], fold2: Fold[B, C]): Fold[Either[A, B], C] =
+      new Fold[Either[A, B], C] {
+        def foldMap[M: Monoid](f: C => M)(s: Either[A, B]): M =
+          s.fold(fold1.foldMap(f), fold2.foldMap(f))
+      }
 
     def id[A]: Fold[A, A] =
       Iso.id[A]

@@ -80,12 +80,7 @@ trait POptional[S, T, A, B] extends PTraversal[S, T, A, B] { self =>
       from => self.replaceOption(to)(from).getOrElse(other.replace(to)(from))
     )
 
-  /** join two [[POptional]] with the same target */
-  def choice[S1, T1](other: POptional[S1, T1, A, B]): POptional[Either[S, S1], Either[T, T1], A, B] =
-    POptional[Either[S, S1], Either[T, T1], A, B](
-      _.fold(self.getOrModify(_).leftMap(Either.left), other.getOrModify(_).leftMap(Either.right))
-    )(b => _.bimap(self.replace(b), other.replace(b)))
-
+  @deprecated("no replacement", since = "3.0.0-M4")
   def first[C]: POptional[(S, C), (T, C), (A, C), (B, C)] =
     POptional[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       getOrModify(s).bimap(_ -> c, _ -> c)
@@ -95,6 +90,7 @@ trait POptional[S, T, A, B] extends PTraversal[S, T, A, B] { self =>
       }
     }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   def second[C]: POptional[(C, S), (C, T), (C, A), (C, B)] =
     POptional[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
       getOrModify(s).bimap(c -> _, c -> _)
@@ -242,7 +238,9 @@ object Optional {
 sealed abstract class OptionalInstances {
   implicit val optionalChoice: Choice[Optional] = new Choice[Optional] {
     def choice[A, B, C](f: Optional[A, C], g: Optional[B, C]): Optional[Either[A, B], C] =
-      f choice g
+      Optional[Either[A, B], C](
+        _.fold(f.getOption, g.getOption)
+      )(b => _.bimap(f.replace(b), g.replace(b)))
 
     def id[A]: Optional[A, A] =
       Iso.id[A]

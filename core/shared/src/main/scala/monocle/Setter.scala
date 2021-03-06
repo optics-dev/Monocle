@@ -38,10 +38,6 @@ trait PSetter[S, T, A, B] extends Serializable { self =>
   @deprecated("use replace instead", since = "3.0.0-M1")
   def set(b: B): S => T = replace(b)
 
-  /** join two [[PSetter]] with the same target */
-  def choice[S1, T1](other: PSetter[S1, T1, A, B]): PSetter[Either[S, S1], Either[T, T1], A, B] =
-    PSetter[Either[S, S1], Either[T, T1], A, B](b => _.bimap(self.modify(b), other.modify(b)))
-
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PSetter[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
@@ -124,7 +120,7 @@ sealed abstract class SetterInstances {
       Iso.id
 
     def choice[A, B, C](f1: Setter[A, C], f2: Setter[B, C]): Setter[Either[A, B], C] =
-      f1 choice f2
+      Setter[Either[A, B], C](b => _.bimap(f1.modify(b), f2.modify(b)))
   }
 }
 

@@ -64,13 +64,8 @@ trait PLens[S, T, A, B] extends POptional[S, T, A, B] with Getter[S, A] { self =
   override def exist(p: A => Boolean): S => Boolean =
     p compose get
 
-  /** join two [[PLens]] with the same target */
-  def choice[S1, T1](other: PLens[S1, T1, A, B]): PLens[Either[S, S1], Either[T, T1], A, B] =
-    PLens[Either[S, S1], Either[T, T1], A, B](_.fold(self.get, other.get))(b =>
-      _.bimap(self.replace(b), other.replace(b))
-    )
-
   /** pair two disjoint [[PLens]] */
+  @deprecated("no replacement", since = "3.0.0-M4")
   def split[S1, T1, A1, B1](other: PLens[S1, T1, A1, B1]): PLens[(S, S1), (T, T1), (A, A1), (B, B1)] =
     PLens[(S, S1), (T, T1), (A, A1), (B, B1)] { case (s, s1) =>
       (self.get(s), other.get(s1))
@@ -80,6 +75,7 @@ trait PLens[S, T, A, B] extends POptional[S, T, A, B] with Getter[S, A] { self =
       }
     }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def first[C]: PLens[(S, C), (T, C), (A, C), (B, C)] =
     PLens[(S, C), (T, C), (A, C), (B, C)] { case (s, c) =>
       (get(s), c)
@@ -89,6 +85,7 @@ trait PLens[S, T, A, B] extends POptional[S, T, A, B] with Getter[S, A] { self =
       }
     }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def second[C]: PLens[(C, S), (C, T), (C, A), (C, B)] =
     PLens[(C, S), (C, T), (C, A), (C, B)] { case (c, s) =>
       (c, get(s))
@@ -189,7 +186,7 @@ object Lens {
 sealed abstract class LensInstances {
   implicit val lensChoice: Choice[Lens] = new Choice[Lens] {
     def choice[A, B, C](f: Lens[A, C], g: Lens[B, C]): Lens[Either[A, B], C] =
-      f choice g
+      Lens[Either[A, B], C](_.fold(f.get, g.get))(b => _.bimap(f.replace(b), g.replace(b)))
 
     def id[A]: Lens[A, A] =
       Iso.id

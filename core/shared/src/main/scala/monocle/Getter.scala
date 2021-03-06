@@ -40,15 +40,19 @@ trait Getter[S, A] extends Fold[S, A] { self =>
   def zip[A1](other: Getter[S, A1]): Getter[S, (A, A1)] =
     Getter[S, (A, A1)](s => (self.get(s), other.get(s)))
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   def first[B]: Getter[(S, B), (A, B)] =
     Getter[(S, B), (A, B)] { case (s, b) => (self.get(s), b) }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   def second[B]: Getter[(B, S), (B, A)] =
     Getter[(B, S), (B, A)] { case (b, s) => (b, self.get(s)) }
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def left[C]: Getter[Either[S, C], Either[A, C]] =
     Getter[Either[S, C], Either[A, C]](_.leftMap(get))
 
+  @deprecated("no replacement", since = "3.0.0-M4")
   override def right[C]: Getter[Either[C, S], Either[C, A]] =
     Getter[Either[C, S], Either[C, A]](_.map(get))
 
@@ -96,10 +100,10 @@ sealed abstract class GetterInstances extends GetterInstances0 {
       Getter(f)
 
     def first[A, B, C](f: Getter[A, B]): Getter[(A, C), (B, C)] =
-      f.first
+      Getter[(A, C), (B, C)] { case (a, c) => (f.get(a), c) }
 
     override def second[A, B, C](f: Getter[A, B]): Getter[(C, A), (C, B)] =
-      f.second
+      Getter[(C, A), (C, B)] { case (c, a) => (c, f.get(a)) }
 
     override def id[A]: Getter[A, A] =
       Iso.id
