@@ -1,3 +1,3 @@
 package monocle.macros.syntax
 
-object all extends ApplyFocusSyntax with MacroSyntax
+object all extends AppliedFocusSyntax with MacroSyntax
