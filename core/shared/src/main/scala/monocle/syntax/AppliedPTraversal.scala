@@ -4,89 +4,100 @@ import cats.Applicative
 import monocle.function.{At, Each, FilterIndex, Index}
 import monocle._
 
-final case class AppliedPTraversal[S, T, A, B](s: S, traversal: PTraversal[S, T, A, B]) {
-  def getAll: List[A]       = traversal.getAll(s)
-  def headOption: Option[A] = traversal.headOption(s)
-  def lastOption: Option[A] = traversal.lastOption(s)
+trait AppliedPTraversal[S, T, A, B] extends AppliedPSetter[S, T, A, B] with AppliedFold[S, A] {
+  override def optic: PTraversal[S, T, A, B]
 
-  def replace(b: B): T     = traversal.replace(b)(s)
-  def modify(f: A => B): T = traversal.modify(f)(s)
   def modifyA[F[_]: Applicative](f: A => F[B]): F[T] =
-    traversal.modifyA(f)(s)
+    optic.modifyA(f)(value)
 
-  def find(p: A => Boolean): Option[A] = traversal.find(p)(s)
-  def exist(p: A => Boolean): Boolean  = traversal.exist(p)(s)
-  def all(p: A => Boolean): Boolean    = traversal.all(p)(s)
-  def isEmpty(s: S): Boolean           = traversal.isEmpty(s)
-  def nonEmpty(s: S): Boolean          = traversal.nonEmpty(s)
-
-  /** alias to replace */
-  @deprecated("use replace instead", since = "3.0.0-M1")
-  def set(b: B): T = replace(b)
-
-  def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): AppliedPTraversal[S, T, A1, B1] =
+  override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): AppliedPTraversal[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): AppliedPTraversal[S, T, A1, B1] =
+  override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): AppliedPTraversal[S, T, A1, B1] =
     evB.substituteCo[AppliedPTraversal[S, T, A1, *]](evA.substituteCo[AppliedPTraversal[S, T, *, B]](this))
 
-  def andThen[C, D](other: PSetter[A, B, C, D]): AppliedPSetter[S, T, C, D] =
-    AppliedPSetter(s, traversal.andThen(other))
-  def andThen[C](other: Fold[A, C]): AppliedFold[S, C] =
-    AppliedFold(s, traversal.andThen(other))
   def andThen[C, D](other: PTraversal[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
-    AppliedPTraversal(s, traversal.andThen(other))
-  def andThen[C, D](other: POptional[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
-    AppliedPTraversal(s, traversal.andThen(other))
-  def andThen[C, D](other: PPrism[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
-    AppliedPTraversal(s, traversal.andThen(other))
-  def andThen[C, D](other: PLens[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
-    AppliedPTraversal(s, traversal.andThen(other))
-  def andThen[C, D](other: PIso[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
-    AppliedPTraversal(s, traversal.andThen(other))
-
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeSetter[C, D](other: PSetter[A, B, C, D]): AppliedPSetter[S, T, C, D] = andThen(other)
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeFold[C](other: Fold[A, C]): AppliedFold[S, C] = andThen(other)
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeTraversal[C, D](other: PTraversal[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeOptional[C, D](other: POptional[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composePrism[C, D](other: PPrism[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeLens[C, D](other: PLens[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def composeIso[C, D](other: PIso[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
-
-  /** alias to composeTraversal */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^|->>[C, D](other: PTraversal[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
-
-  /** alias to composeOptional */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^|-?[C, D](other: POptional[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
-
-  /** alias to composePrism */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^<-?[C, D](other: PPrism[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
-
-  /** alias to composeLens */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^|->[C, D](other: PLens[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
-
-  /** alias to composeIso */
-  @deprecated("use andThen", since = "3.0.0-M1")
-  def ^<->[C, D](other: PIso[A, B, C, D]): AppliedPTraversal[S, T, C, D] = andThen(other)
+    AppliedPTraversal(value, optic.andThen(other))
 }
 
 object AppliedPTraversal {
+  def apply[S, T, A, B](_value: S, _optic: PTraversal[S, T, A, B]): AppliedPTraversal[S, T, A, B] =
+    new AppliedPTraversal[S, T, A, B] {
+      val value: S                      = _value
+      val optic: PTraversal[S, T, A, B] = _optic
+    }
+
+  implicit def appliedPTraversalSyntax[S, T, A, B](
+    self: AppliedPTraversal[S, T, A, B]
+  ): AppliedPTraversalSyntax[S, T, A, B] =
+    new AppliedPTraversalSyntax(self)
+
   implicit def appliedTraversalSyntax[S, A](self: AppliedTraversal[S, A]): AppliedTraversalSyntax[S, A] =
     new AppliedTraversalSyntax(self)
 }
 
-/** Extension methods for monomorphic ApplyTraversal */
+object AppliedTraversal {
+  def apply[S, A](_value: S, _optic: Traversal[S, A]): AppliedTraversal[S, A] =
+    AppliedPTraversal(_value, _optic)
+}
+
+final case class AppliedPTraversalSyntax[S, T, A, B](private val self: AppliedPTraversal[S, T, A, B]) extends AnyVal {
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeFold[C](other: Fold[A, C]): AppliedFold[S, C] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeGetter[C](other: Getter[A, C]): AppliedFold[S, C] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeSetter[C, D](other: PSetter[A, B, C, D]): AppliedPSetter[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeTraversal[C, D](other: PTraversal[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeOptional[C, D](other: POptional[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composePrism[C, D](other: PPrism[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeLens[C, D](other: PLens[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def composeIso[C, D](other: PIso[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->>[C, D](other: PTraversal[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|-?[C, D](other: POptional[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<-?[C, D](other: PPrism[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^|->[C, D](other: PLens[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+
+  @deprecated("use andThen", since = "3.0.0-M1")
+  def ^<->[C, D](other: PIso[A, B, C, D]): AppliedPTraversal[S, T, C, D] =
+    self.andThen(other)
+}
+
+/** Extension methods for monomorphic Traversal
+  */
 final case class AppliedTraversalSyntax[S, A](private val self: AppliedTraversal[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): AppliedTraversal[S, C] =
     self.andThen(evEach.each)
@@ -103,7 +114,7 @@ final case class AppliedTraversalSyntax[S, A](private val self: AppliedTraversal
   def withDefault[A1](defaultValue: A1)(implicit evOpt: A =:= Option[A1]): AppliedTraversal[S, A1] =
     self.adapt[Option[A1], Option[A1]].andThen(std.option.withDefault(defaultValue))
 
-  def at[I, A1](i: I)(implicit evAt: At[A, i.type, A1]): AppliedTraversal[S, A1] =
+  def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): AppliedTraversal[S, A1] =
     self.andThen(evAt.at(i))
 
   def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): AppliedTraversal[S, A1] =
