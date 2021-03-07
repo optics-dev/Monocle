@@ -84,8 +84,9 @@ object Getter extends GetterInstances {
   def id[A]: Getter[A, A] =
     Iso.id[A]
 
+  @deprecated("use Lens.codiagonal", since = "3.0.0-M4")
   def codiagonal[A]: Getter[Either[A, A], A] =
-    Getter[Either[A, A], A](_.fold(identity, identity))
+    Lens.codiagonal
 
   def apply[S, A](_get: S => A): Getter[S, A] =
     (s: S) => _get(s)

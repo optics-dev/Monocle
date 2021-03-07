@@ -142,10 +142,9 @@ object POptional extends OptionalInstances {
   def id[S, T]: POptional[S, T, S, T] =
     PIso.id[S, T]
 
+  @deprecated("use PLens.codiagonal", since = "3.0.0-M4")
   def codiagonal[S, T]: POptional[Either[S, S], Either[T, T], S, T] =
-    POptional[Either[S, S], Either[T, T], S, T](
-      _.fold(Either.right, Either.right)
-    )(t => _.bimap(_ => t, _ => t))
+    PLens.codiagonal
 
   /** create a [[POptional]] using the canonical functions: getOrModify and replace */
   def apply[S, T, A, B](_getOrModify: S => Either[T, A])(_set: B => S => T): POptional[S, T, A, B] =
@@ -181,8 +180,9 @@ object Optional {
   def id[A]: Optional[A, A] =
     Iso.id[A]
 
+  @deprecated("use Lens.codiagonal", since = "3.0.0-M4")
   def codiagonal[S]: Optional[Either[S, S], S] =
-    POptional.codiagonal
+    Lens.codiagonal
 
   /** [[Optional]] that points to nothing */
   def void[S, A]: Optional[S, A] =

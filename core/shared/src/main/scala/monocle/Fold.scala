@@ -103,11 +103,9 @@ object Fold extends FoldInstances {
   def id[A]: Fold[A, A] =
     Iso.id[A]
 
+  @deprecated("use Lens.codiagonal", since = "3.0.0-M4")
   def codiagonal[A]: Fold[Either[A, A], A] =
-    new Fold[Either[A, A], A] {
-      def foldMap[M: Monoid](f: A => M)(s: Either[A, A]): M =
-        s.fold(f, f)
-    }
+    Lens.codiagonal
 
   def select[A](p: A => Boolean): Fold[A, A] =
     new Fold[A, A] {
