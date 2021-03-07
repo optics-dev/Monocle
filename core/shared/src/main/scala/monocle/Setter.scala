@@ -61,8 +61,9 @@ object PSetter extends SetterInstances {
   def id[S, T]: PSetter[S, T, S, T] =
     PIso.id[S, T]
 
+  @deprecated("use PLens.codiagonal", since = "3.0.0-M4")
   def codiagonal[S, T]: PSetter[Either[S, S], Either[T, T], S, T] =
-    PSetter[Either[S, S], Either[T, T], S, T](f => _.bimap(f, f))
+    PLens.codiagonal
 
   /** create a [[PSetter]] using modify function */
   def apply[S, T, A, B](_modify: (A => B) => S => T): PSetter[S, T, A, B] =
@@ -98,8 +99,9 @@ object Setter {
   def id[A]: Setter[A, A] =
     Iso.id[A]
 
+  @deprecated("use Lens.codiagonal", since = "3.0.0-M4")
   def codiagonal[S]: Setter[Either[S, S], S] =
-    PSetter.codiagonal
+    Lens.codiagonal
 
   /** [[Setter]] that points to nothing */
   @deprecated("use Optional.void", since = "3.0.0-M2")
