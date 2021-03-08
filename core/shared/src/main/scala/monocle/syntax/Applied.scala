@@ -9,33 +9,33 @@ object applied extends AppliedSyntax
 
 trait AppliedSyntax {
   implicit def toAppliedFoldOps[S](value: S): AppliedFoldOps[S] =
-    new AppliedFoldOps(value)
+    AppliedFoldOps(value)
   implicit def toAppliedGetterOps[S](value: S): AppliedGetterOps[S] =
-    new AppliedGetterOps(value)
+    AppliedGetterOps(value)
   implicit def toAppliedIsoOps[S](value: S): AppliedIsoOps[S] =
-    new AppliedIsoOps(value)
+    AppliedIsoOps(value)
   implicit def toAppliedLensOps[S](value: S): AppliedLensOps[S] =
-    new AppliedLensOps(value)
+    AppliedLensOps(value)
   implicit def toAppliedOptionalOps[S](value: S): AppliedOptionalOps[S] =
-    new AppliedOptionalOps(value)
+    AppliedOptionalOps(value)
   implicit def toAppliedPrismOps[S](value: S): AppliedPrismOps[S] =
-    new AppliedPrismOps(value)
+    AppliedPrismOps(value)
   implicit def toAppliedSetterOps[S](value: S): AppliedSetterOps[S] =
-    new AppliedSetterOps(value)
+    AppliedSetterOps(value)
   implicit def toAppliedTraversalOps[S](value: S): AppliedTraversalOps[S] =
-    new AppliedTraversalOps(value)
+    AppliedTraversalOps(value)
 }
 
 final case class AppliedFoldOps[S](private val s: S) extends AnyVal {
   @deprecated("use focus().andThen", since = "3.0.0-M1")
   def applyFold[A](fold: Fold[S, A]): AppliedFold[S, A] =
-    new AppliedFold[S, A](s, fold)
+    AppliedFold[S, A](s, fold)
 }
 
 final case class AppliedGetterOps[S](private val s: S) extends AnyVal {
   @deprecated("use focus().andThen", since = "3.0.0-M1")
   def applyGetter[A](getter: Getter[S, A]): AppliedGetter[S, A] =
-    new AppliedGetter[S, A](s, getter)
+    AppliedGetter[S, A](s, getter)
 }
 
 final case class AppliedIsoOps[S](private val s: S) extends AnyVal {
@@ -85,7 +85,7 @@ final case class AppliedPrismOps[S](private val s: S) extends AnyVal {
 final case class AppliedSetterOps[S](private val s: S) extends AnyVal {
   @deprecated("use focus().andThen", since = "3.0.0-M1")
   def applySetter[T, A, B](setter: PSetter[S, T, A, B]): AppliedPSetter[S, T, A, B] =
-    new AppliedPSetter[S, T, A, B](s, setter)
+    AppliedPSetter[S, T, A, B](s, setter)
 }
 
 final case class AppliedTraversalOps[S](private val s: S) extends AnyVal {
