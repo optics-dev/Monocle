@@ -119,8 +119,14 @@ Monocle is published for Scala **2.13** and **3.0.0-RC1**. You can add it to you
 \`\`\`scala
 libraryDependencies ++= Seq(
  "${organization}" %% "monocle-core"  % "${latestVersion}",
- "${organization}" %% "monocle-macro" % "${latestVersion}", // Not required for Scala 3
+ "${organization}" %% "monocle-macro" % "${latestVersion}", // only for Scala 2.13
 )
+\`\`\`
+
+You also need this compiler option if you want to use macro annotations - only available for Scala **2.13*: 
+
+\`\`\`scala
+scalacOptions in Global += "-Ymacro-annotations"
 \`\`\`
 
 ## Copyright and license
