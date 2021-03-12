@@ -28,4 +28,23 @@ class AsSyntaxSpec extends DisciplineSuite {
   test("getter.as"){ assert(getter.as[I].getAll(I(1)) == List(I(1))) }
   test("fold.as"){ assert(fold.as[I].getAll(I(1)) == List(I(1))) }
 
+  val sOrI: StringOrInt = I(1)
+  val appliedIso: AppliedIso[StringOrInt, StringOrInt]             = AppliedIso(sOrI, iso)
+//  val appliedLens: AppliedLens[StringOrInt, StringOrInt]           = AppliedIso(sOrI, iso)
+//  val appliedPrism: AppliedPrism[StringOrInt, StringOrInt]         = AppliedIso(sOrI, iso)
+//  val appliedOptional: AppliedOptional[StringOrInt, StringOrInt]   = AppliedIso(sOrI, iso)
+//  val appliedTraversal: AppliedTraversal[StringOrInt, StringOrInt] = AppliedIso(sOrI, iso)
+//  val appliedSetter: AppliedSetter[StringOrInt, StringOrInt]       = AppliedIso(sOrI, iso)
+//  val appliedGetter: AppliedGetter[StringOrInt, StringOrInt]       = AppliedIso(sOrI, iso)
+//  val appliedFold: AppliedFold[StringOrInt, StringOrInt]           = AppliedIso(sOrI, iso)
+
+  test("applied iso.as"){ assertEquals(appliedIso.as[I].getOption, Some(I(1))) }
+//  test("applied lens.as"){ assertEquals(appliedLens.as[I].getOption, Some(I(1))) }
+//  test("applied prism.as"){ assertEquals(appliedPrism.as[I].getOption, Some(I(1))) }
+//  test("applied optional.as"){ assertEquals(appliedOptional.as[I].getOption, Some(I(1))) }
+//  test("applied traversal.as"){ assertEquals(appliedTraversal.as[I].getAll, List(I(1))) }
+//  test("applied setter.as"){ assertEquals(appliedSetter.as[I].replace(I(5)), I(5)) }
+//  test("applied getter.as"){ assert(appliedGetter.as[I].getAll == List(I(1))) }
+//  test("applied fold.as"){ assert(appliedFold.as[I].getAll == List(I(1))) }
+
 }

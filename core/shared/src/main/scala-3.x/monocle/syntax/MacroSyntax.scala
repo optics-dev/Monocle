@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle.{Focus, Fold, Iso, Optional, Prism, Setter, Traversal}
+import monocle._
 
 import scala.quoted.{Expr, Quotes, Type}
 
@@ -28,6 +28,31 @@ trait MacroSyntax {
 
   extension [From, To] (optic: Fold[From, To]) {
     inline def as[CastTo <: To]: Fold[From, CastTo] =
+      optic.andThen(AsPrism[To, CastTo])
+  }
+
+  extension [From, To] (optic: AppliedPrism[From, To]) {
+    inline def as[CastTo <: To]: AppliedPrism[From, CastTo] =
+      optic.andThen(AsPrism[To, CastTo])
+  }
+
+  extension [From, To] (optic: AppliedOptional[From, To]) {
+    inline def as[CastTo <: To]: AppliedOptional[From, CastTo] =
+      optic.andThen(AsPrism[To, CastTo])
+  }
+
+  extension [From, To] (optic: AppliedTraversal[From, To]) {
+    inline def as[CastTo <: To]: AppliedTraversal[From, CastTo] =
+      optic.andThen(AsPrism[To, CastTo])
+  }
+
+  extension [From, To] (optic: AppliedSetter[From, To]) {
+    inline def as[CastTo <: To]: AppliedSetter[From, CastTo] =
+      optic.andThen(AsPrism[To, CastTo])
+  }
+
+  extension [From, To] (optic: AppliedFold[From, To]) {
+    inline def as[CastTo <: To]: AppliedFold[From, CastTo] =
       optic.andThen(AsPrism[To, CastTo])
   }
 
