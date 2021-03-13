@@ -43,7 +43,7 @@ anna
 
 The Scala 2 version is the same, except for the import
 ```scala mdoc
-import monocle.macros.syntax.all._
+import monocle.syntax.all._
 
 anna
   .focus(_.name)
@@ -91,7 +91,7 @@ As you can see, focusing on the street number has no effect on `bob` because thi
 In Scala 2
 ```scala mdoc
 import monocle.Focus
-import monocle.macros.syntax.all._
+import monocle.syntax.all._
 
 anna
   .focus(_.address).some
@@ -158,7 +158,7 @@ bob
 In Scala 2
 ```scala mdoc
 import monocle.Focus
-import monocle.macros.syntax.all._
+import monocle.syntax.all._
 
 anna
   .focus(_.debitCards) 
