@@ -30,7 +30,7 @@ class FieldSyntaxSpec extends DisciplineSuite {
   test("getter.field")(assert(getter.field(_.name).get(user) == user.name))
   test("fold.field")(assert(fold.field(_.name).getAll(user) == List(user.name)))
 
-  test("field doesn't work for nested fields"){
+  test("field doesn't work for nested fields") {
     compileErrors("iso.field(_.address.streetNumber)")
   }
 
