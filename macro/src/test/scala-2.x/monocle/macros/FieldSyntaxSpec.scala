@@ -31,7 +31,7 @@ class FieldSyntaxSpec extends DisciplineSuite {
   test("fold.field")(assert(fold.field(_.name).getAll(user) == List(user.name)))
 
   test("field doesn't work for nested fields") {
-    compileErrors("iso.field(_.address.streetNumber)")
+    assertEquals(compileErrors("iso.field(_.address.streetNumber)"), "expect some error")
   }
 
   val appliedIso: AppliedIso[User, User]             = AppliedIso(user, iso)
