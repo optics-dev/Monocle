@@ -33,7 +33,7 @@ object AppliedPIso {
 
 object AppliedIso {
   def apply[S, A](_value: S, _optic: Iso[S, A]): AppliedIso[S, A] =
-    AppliedIso(_value, _optic)
+    AppliedPIso(_value, _optic)
 }
 
 final case class AppliedPIsoSyntax[S, T, A, B](private val self: AppliedPIso[S, T, A, B]) extends AnyVal {

@@ -1,6 +1,6 @@
 package monocle.macros.syntax
 
-import monocle.{Fold, Optional, Prism, Setter, Traversal}
+import monocle._
 
 import scala.reflect.macros.blackbox
 
@@ -10,6 +10,17 @@ trait MacroSyntax {
   implicit def toMacroTraversalOps[S, A](optic: Traversal[S, A]): MacroTraversalOps[S, A] = new MacroTraversalOps(optic)
   implicit def toMacroSetterOps[S, A](optic: Setter[S, A]): MacroSetterOps[S, A]          = new MacroSetterOps(optic)
   implicit def toMacroFoldOps[S, A](optic: Fold[S, A]): MacroFoldOps[S, A]                = new MacroFoldOps(optic)
+
+  implicit def toMacroAppliedPrismOps[S, A](optic: AppliedPrism[S, A]): MacroAppliedPrismOps[S, A] =
+    new MacroAppliedPrismOps(optic)
+  implicit def toMacroAppliedOptionalOps[S, A](optic: AppliedOptional[S, A]): MacroAppliedOptionalOps[S, A] =
+    new MacroAppliedOptionalOps(optic)
+  implicit def toMacroAppliedTraversalOps[S, A](optic: AppliedTraversal[S, A]): MacroAppliedTraversalOps[S, A] =
+    new MacroAppliedTraversalOps(optic)
+  implicit def toMacroAppliedSetterOps[S, A](optic: AppliedSetter[S, A]): MacroAppliedSetterOps[S, A] =
+    new MacroAppliedSetterOps(optic)
+  implicit def toMacroAppliedFoldOps[S, A](optic: AppliedFold[S, A]): MacroAppliedFoldOps[S, A] =
+    new MacroAppliedFoldOps(optic)
 }
 
 class MacroPrismOps[S, A](private val optic: Prism[S, A]) extends AnyVal {
@@ -30,6 +41,26 @@ class MacroSetterOps[S, A](private val optic: Setter[S, A]) extends AnyVal {
 
 class MacroFoldOps[S, A](private val optic: Fold[S, A]) extends AnyVal {
   def as[CastTo <: A]: Fold[S, CastTo] = macro MacroAsOpsImpl.as_impl[Fold, S, A, CastTo]
+}
+
+class MacroAppliedPrismOps[S, A](private val optic: AppliedPrism[S, A]) extends AnyVal {
+  def as[CastTo <: A]: AppliedPrism[S, CastTo] = macro MacroAsOpsImpl.as_impl[AppliedPrism, S, A, CastTo]
+}
+
+class MacroAppliedOptionalOps[S, A](private val optic: AppliedOptional[S, A]) extends AnyVal {
+  def as[CastTo <: A]: AppliedOptional[S, CastTo] = macro MacroAsOpsImpl.as_impl[AppliedOptional, S, A, CastTo]
+}
+
+class MacroAppliedTraversalOps[S, A](private val optic: AppliedTraversal[S, A]) extends AnyVal {
+  def as[CastTo <: A]: AppliedTraversal[S, CastTo] = macro MacroAsOpsImpl.as_impl[AppliedTraversal, S, A, CastTo]
+}
+
+class MacroAppliedSetterOps[S, A](private val optic: AppliedSetter[S, A]) extends AnyVal {
+  def as[CastTo <: A]: AppliedSetter[S, CastTo] = macro MacroAsOpsImpl.as_impl[AppliedSetter, S, A, CastTo]
+}
+
+class MacroAppliedFoldOps[S, A](private val optic: AppliedFold[S, A]) extends AnyVal {
+  def as[CastTo <: A]: AppliedFold[S, CastTo] = macro MacroAsOpsImpl.as_impl[AppliedFold, S, A, CastTo]
 }
 
 class MacroAsOpsImpl(val c: blackbox.Context) {
