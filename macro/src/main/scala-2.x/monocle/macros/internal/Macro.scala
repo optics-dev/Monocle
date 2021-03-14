@@ -9,7 +9,7 @@ object Macro {
 }
 
 private[macros] class MacroImpl(val c: blackbox.Context) {
-  def genLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](field: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
+  def genLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](lambda: c.Expr[S => A]): c.Expr[Lens[S, A]] = {
     import c.universe._
 
     /** Extractor for member select chains.
@@ -28,7 +28,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
         }
     }
 
-    field match {
+    lambda match {
       // _.field
       case Expr(
             Function(
@@ -55,7 +55,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
       case _ =>
         c.abort(
           c.enclosingPosition,
-          s"Illegal field reference ${show(field.tree)}; please use _.field1.field2... instead"
+          s"Illegal field reference ${show(lambda.tree)}; please use _.field1.field2... instead"
         )
     }
   }
