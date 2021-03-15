@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: coursier/cache-action@v5
+      - uses: coursier/cache-action@v6
       - uses: olafurpg/setup-scala@v10
       - uses: olafurpg/setup-gpg@v3
       - name: Publish
