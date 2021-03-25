@@ -43,7 +43,7 @@ anna
 
 The Scala 2 version is the same, except for the import
 ```scala mdoc
-import monocle.macros.syntax.all._
+import monocle.syntax.all._
 
 anna
   .focus(_.name)
@@ -90,17 +90,18 @@ As you can see, focusing on the street number has no effect on `bob` because thi
 
 In Scala 2
 ```scala mdoc
-import monocle.Focus
-import monocle.macros.syntax.all._
+import monocle.syntax.all._
 
 anna
-  .focus(_.address).some
-  .andThen(Focus[Address](_.streetNumber))
+  .focus(_.address)
+  .some
+  .field(_.streetNumber)
   .modify(_ + 1)
 
 bob
-  .focus(_.address).some
-  .andThen(Focus[Address](_.streetNumber))
+  .focus(_.address)
+  .some
+  .field(_.streetNumber)
   .modify(_ + 1)
 ```
 
@@ -157,19 +158,18 @@ bob
 
 In Scala 2
 ```scala mdoc
-import monocle.Focus
-import monocle.macros.syntax.all._
+import monocle.syntax.all._
 
 anna
   .focus(_.debitCards) 
   .index(1)
-  .andThen(Focus[DebitCard](_.expirationDate))
+  .field(_.expirationDate)
   .replace(YearMonth.of(2026, 2))
 
 bob
   .focus(_.debitCards) 
   .index(1)
-  .andThen(Focus[DebitCard](_.expirationDate))
+  .field(_.expirationDate)
   .replace(YearMonth.of(2026, 2))
 ```
 
