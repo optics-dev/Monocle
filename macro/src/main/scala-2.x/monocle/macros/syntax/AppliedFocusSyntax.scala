@@ -27,16 +27,6 @@ class GenAppliedLensOpsImpl(val c: blackbox.Context) {
         c.abort(c.enclosingPosition, s"Invalid prefix tree ${show(t)}")
     }
 
-    lambda match {
-      // _.field
-      case Expr(Function(List(ValDef(_, _, _, EmptyTree)), Select(Ident(_), _))) => ()
-      case _ =>
-        c.abort(
-          c.enclosingPosition,
-          s"Illegal field reference ${show(lambda.tree)}; please use _.field... instead"
-        )
-    }
-
     c.Expr[AppliedLens[A, C]](q"""
       _root_.monocle.syntax.AppliedPLens(
         $subj,
