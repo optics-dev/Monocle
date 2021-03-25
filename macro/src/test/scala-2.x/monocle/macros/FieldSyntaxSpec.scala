@@ -31,7 +31,12 @@ class FieldSyntaxSpec extends DisciplineSuite {
   test("fold.field")(assert(fold.field(_.name).getAll(user) == List(user.name)))
 
   test("field doesn't work for nested fields") {
-    assertEquals(compileErrors("iso.field(_.address.streetNumber)"), "expect some error")
+    assertEquals(
+      compileErrors("iso.field(_.address.streetNumber)"),
+      """error: Illegal field reference ((x$9: FieldSyntaxSpec.this.User) => x$9.address.streetNumber); please use _.field... instead
+iso.field(_.address.streetNumber)
+         ^"""
+    )
   }
 
   val appliedIso: AppliedIso[User, User]             = AppliedIso(user, iso)
@@ -51,5 +56,14 @@ class FieldSyntaxSpec extends DisciplineSuite {
   test("applied setter.field")(assertEquals(appliedSetter.field(_.name).replace("Eda"), user.copy(name = "Eda")))
   test("applied getter.field")(assert(appliedGetter.field(_.name).get == user.name))
   test("applied fold.field")(assert(appliedFold.field(_.name).getAll == List(user.name)))
+
+  test("field doesn't work for nested fields") {
+    assertEquals(
+      compileErrors("appliedIso.field(_.address.streetNumber)"),
+      """error: Illegal field reference ((x$18: FieldSyntaxSpec.this.User) => x$18.address.streetNumber); please use _.field... instead
+appliedIso.field(_.address.streetNumber)
+                ^"""
+    )
+  }
 
 }

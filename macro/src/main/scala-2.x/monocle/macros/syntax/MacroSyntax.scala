@@ -117,6 +117,16 @@ class MacroOpsImpl(val c: blackbox.Context) {
       case t                               => c.abort(c.enclosingPosition, s"Invalid prefix tree ${show(t)}")
     }
 
+    lambda match {
+      // _.field
+      case Expr(Function(List(ValDef(_, _, _, EmptyTree)), Select(Ident(_), _))) => ()
+      case _ =>
+        c.abort(
+          c.enclosingPosition,
+          s"Illegal field reference ${show(lambda.tree)}; please use _.field... instead"
+        )
+    }
+
     c.Expr[Optic[From, Next]](
       q"""$subj.andThen(_root_.monocle.macros.GenLens[${c.weakTypeOf[To]}](${lambda}))"""
     )
