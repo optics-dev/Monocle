@@ -3,6 +3,7 @@ package monocle.internal.focus.features
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.selectfield.SelectFieldGenerator
 import monocle.internal.focus.features.selectonlyfield.SelectOnlyFieldGenerator
+import monocle.internal.focus.features.selectmultifield.SelectMultiFieldGenerator
 import monocle.internal.focus.features.some.SomeGenerator
 import monocle.internal.focus.features.as.AsGenerator
 import monocle.internal.focus.features.each.EachGenerator
@@ -17,6 +18,7 @@ private[focus] trait AllFeatureGenerators
   extends FocusBase
   with SelectFieldGenerator 
   with SelectOnlyFieldGenerator
+  with SelectMultiFieldGenerator
   with SomeGenerator
   with AsGenerator
   with EachGenerator
@@ -41,6 +43,7 @@ private[focus] trait GeneratorLoop {
     action match {
       case a: FocusAction.SelectField => generateSelectField(a)
       case a: FocusAction.SelectOnlyField => generateSelectOnlyField(a)
+      case a: FocusAction.SelectMultiField => generateSelectMultiField(a)
       case a: FocusAction.KeywordSome => generateSome(a)
       case a: FocusAction.KeywordAs => generateAs(a)
       case a: FocusAction.KeywordEach => generateEach(a)

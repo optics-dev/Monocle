@@ -19,7 +19,7 @@ private[focus] trait SelectFieldParser {
         Some(remainingCodeWithAction)
 
       case Select(remainingCode, fieldName) => 
-        Some(FocusError.NotACaseClass(remainingCode.tpe.show, fieldName).asResult)
+        Some(FocusError.NotACaseClass(getType(remainingCode).show, fieldName).asResult)
         
       case _ => None
     }
