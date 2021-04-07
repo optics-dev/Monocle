@@ -1,10 +1,10 @@
-package monocle.internal.focus.features.selectmultifield
+package monocle.internal.focus.features.selectsharedfield
 
 import monocle.internal.focus.FocusBase
 import monocle.Lens
 import scala.quoted.Quotes
 
-private[focus] trait SelectMultiFieldGenerator {
+private[focus] trait SelectSharedFieldGenerator {
   this: FocusBase => 
 
   import macroContext.reflect._
@@ -42,7 +42,7 @@ private[focus] trait SelectMultiFieldGenerator {
 
 
 
-  def generateSelectMultiField(action: FocusAction.SelectMultiField): Term = {
+  def generateSelectSharedField(action: FocusAction.SelectSharedField): Term = {
     import action.{fieldName, fromType, fromTypeArgs, toType, enumChildren}
 
     def generateGetter(from: Term): Term = 

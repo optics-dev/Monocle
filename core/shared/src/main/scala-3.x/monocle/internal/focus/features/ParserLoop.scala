@@ -4,7 +4,7 @@ import scala.quoted.Type
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.selectfield.SelectFieldParser
 import monocle.internal.focus.features.selectonlyfield.SelectOnlyFieldParser
-import monocle.internal.focus.features.selectmultifield.SelectMultiFieldParser
+import monocle.internal.focus.features.selectsharedfield.SelectSharedFieldParser
 import monocle.internal.focus.features.some.SomeParser
 import monocle.internal.focus.features.as.AsParser
 import monocle.internal.focus.features.each.EachParser
@@ -18,7 +18,7 @@ private[focus] trait AllFeatureParsers
   with KeywordParserBase
   with SelectFieldParser 
   with SelectOnlyFieldParser
-  with SelectMultiFieldParser
+  with SelectSharedFieldParser
   with SomeParser
   with AsParser
   with EachParser
@@ -56,8 +56,8 @@ private[focus] trait ParserLoop {
         case KeywordWithDefault(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case KeywordWithDefault(Left(error)) => Left(error)
 
-        case SelectMultiField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
-        case SelectMultiField(Left(error)) => Left(error)
+        case SelectSharedField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case SelectSharedField(Left(error)) => Left(error)
 
         case SelectOnlyField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case SelectOnlyField(Left(error)) => Left(error)

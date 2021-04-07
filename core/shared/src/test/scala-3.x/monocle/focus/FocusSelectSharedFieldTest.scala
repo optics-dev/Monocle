@@ -2,7 +2,7 @@ package monocle.focus
 
 import monocle.{Focus, Lens}
 
-final class FocusSelectMultiFieldTest extends munit.FunSuite {
+final class FocusSelectSharedFieldTest extends munit.FunSuite {
 
   sealed trait Item { def price: Int }
   case class Hammer(weight: Int, price: Int) extends Item

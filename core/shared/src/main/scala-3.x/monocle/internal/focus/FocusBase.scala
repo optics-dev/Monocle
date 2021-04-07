@@ -16,7 +16,7 @@ private[focus] trait FocusBase {
   enum FocusAction {
     case SelectField(fieldName: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
     case SelectOnlyField(fieldName: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], fromCompanion: Term, toType: TypeRepr)
-    case SelectMultiField(fieldName: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr, enumChildren: List[TypeRepr])
+    case SelectSharedField(fieldName: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr, enumChildren: List[TypeRepr])
     case KeywordSome(toType: TypeRepr)
     case KeywordAs(fromType: TypeRepr, toType: TypeRepr)
     case KeywordEach(fromType: TypeRepr, toType: TypeRepr, eachInstance: Term)
@@ -29,8 +29,8 @@ private[focus] trait FocusBase {
         s"SelectField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
       case SelectOnlyField(fieldName, fromType, fromTypeArgs, _, toType) => 
         s"SelectOnlyField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ..., ${toType.show})"
-      case SelectMultiField(fieldName, fromType, fromTypeArgs, toType, enumChildren) => 
-        s"SelectMultiField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show}, ${enumChildren.map(_.show)})"
+      case SelectSharedField(fieldName, fromType, fromTypeArgs, toType, enumChildren) => 
+        s"SelectSharedField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show}, ${enumChildren.map(_.show)})"
       case KeywordSome(toType) => s"KeywordSome(${toType.show})"
       case KeywordAs(fromType, toType) => s"KeywordAs(${fromType.show}, ${toType.show})"
       case KeywordEach(fromType, toType, _) => s"KeywordEach(${fromType.show}, ${toType.show}, ...)"
