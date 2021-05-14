@@ -11,7 +11,7 @@ An important point before we start. `Focus` is a macro available for both Scala 
 However, the macro API has completely changed between Scala 2 and 3, so for each example, we will first show the 
 version for Scala 3 and then Scala 2 (often more verbose). 
 
-## Update a field of a case class
+## Update a field of a case class (Scala 2 & 3)
 
 ```scala mdoc:silent
 case class User(name: String, address: Address)
@@ -20,7 +20,6 @@ case class Address(streetNumber: Int, streetName: String)
 val anna = User("Anna", Address(12, "high street"))
 ```
 
-In Scala 3
 ```scala
 import monocle.syntax.all._
 
@@ -41,21 +40,7 @@ anna
 // )
 ```
 
-The Scala 2 version is the same, except for the import
-```scala mdoc
-import monocle.syntax.all._
-
-anna
-  .focus(_.name)
-  .replace("Bob")
-
-anna
-  .focus(_.address.streetNumber)
-  .modify(_ + 1)
-```
-
-
-## Update an optional field of a case class
+## Update an optional field of a case class (Scala 3 only)
 
 This time a user may or may not have an `Address`. 
 
@@ -88,24 +73,7 @@ bob
 
 As you can see, focusing on the street number has no effect on `bob` because this instance doesn't have an address.
 
-In Scala 2
-```scala mdoc
-import monocle.syntax.all._
-
-anna
-  .focus(_.address)
-  .some
-  .field(_.streetNumber)
-  .modify(_ + 1)
-
-bob
-  .focus(_.address)
-  .some
-  .field(_.streetNumber)
-  .modify(_ + 1)
-```
-
-## Update a single element inside a List
+## Update a single element inside a List (Scala 3 only)
 
 In this example, `User` contains a `List` of `DebitCard`. Let's imagine we want to update the expiration date of
 the second debit card. 
@@ -127,7 +95,6 @@ val anna = User(
 val bob = User("Bob", List())
 ```
 
-In Scala 3
 ```scala
 import monocle.syntax.all._
 
@@ -154,23 +121,6 @@ bob
   .focus(_.debitCards.index(1).as[DebitCard].expirationDate)
   .replace(YearMonth.of(2026, 2))
 // res: User = User("Bob", List())
-```
-
-In Scala 2
-```scala mdoc
-import monocle.syntax.all._
-
-anna
-  .focus(_.debitCards) 
-  .index(1)
-  .field(_.expirationDate)
-  .replace(YearMonth.of(2026, 2))
-
-bob
-  .focus(_.debitCards) 
-  .index(1)
-  .field(_.expirationDate)
-  .replace(YearMonth.of(2026, 2))
 ```
 
 `replace` had no effect on `bob` because he doesn't have a debit card.
