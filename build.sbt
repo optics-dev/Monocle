@@ -2,6 +2,8 @@ import com.typesafe.tools.mima.core._
 import sbt.Keys._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
+val isScala3 = Def.setting(CrossVersion.partialVersion(scalaVersion.value).exists(_._1 == 3))
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(
@@ -38,10 +40,10 @@ lazy val buildSettings = Seq(
     "-feature",
     "-unchecked",
     "-deprecation"
-  ) ++ { if (isDotty.value) Seq() else Seq("-Xfatal-warnings") }, // Scala 3 doesn't support -Wconf
+  ) ++ { if (isScala3.value) Seq() else Seq("-Xfatal-warnings") }, // Scala 3 doesn't support -Wconf
   Compile / console / scalacOptions -= "-Ywarn-unused:imports",
   scalacOptions ++= {
-    if (isDotty.value)
+    if (isScala3.value)
       Seq("-source:3.0-migration", "-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
     else
       Seq(
@@ -73,7 +75,7 @@ lazy val buildSettings = Seq(
       )
   },
   libraryDependencies ++= {
-    if (isDotty.value) Seq.empty
+    if (isScala3.value) Seq.empty
     else
       Seq(
         compilerPlugin(kindProjector)
@@ -84,7 +86,7 @@ lazy val buildSettings = Seq(
   ),
   testFrameworks += new TestFramework("munit.Framework"),
   Compile / doc / scalacOptions ++= {
-    if (!isDotty.value) Nil
+    if (!isScala3.value) Nil
     else Seq("-source-links:github://optics-dev/Monocle", "-revision", revisionToUse.value)
   }
 )
@@ -258,7 +260,7 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= {
       Seq(munitDiscipline.value) ++ {
-        if (isDotty.value) Seq.empty
+        if (isScala3.value) Seq.empty
         else
           Seq(
             scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
