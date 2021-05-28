@@ -11,6 +11,7 @@ inThisBuild(
     organization := "dev.optics",
     homepage := Some(url("https://github.com/optics-dev/Monocle")),
     licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
+    sonatypeCredentialHost := Sonatype.sonatype01,
     developers :=
       List(
         "aoiroaoino"      -> "Naoki Aoyama",
