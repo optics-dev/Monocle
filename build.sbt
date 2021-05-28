@@ -8,7 +8,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(
   List(
-    organization := "com.github.julien-truffaut",
+    organization := "dev.optics",
     homepage := Some(url("https://github.com/optics-dev/Monocle")),
     licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
     developers :=
