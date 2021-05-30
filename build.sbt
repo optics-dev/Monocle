@@ -11,8 +11,6 @@ inThisBuild(
     organization := "dev.optics",
     homepage := Some(url("https://github.com/optics-dev/Monocle")),
     licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
-    sonatypeCredentialHost := Sonatype.sonatype01,
-    sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
     developers :=
       List(
         "aoiroaoino"      -> "Naoki Aoyama",
@@ -86,6 +84,7 @@ lazy val buildSettings = Seq(
   scmInfo := Some(
     ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")
   ),
+  sonatypeCredentialHost := Sonatype.sonatype01,
   testFrameworks += new TestFramework("munit.Framework"),
   Compile / doc / scalacOptions ++= {
     if (!isScala3.value) Nil
