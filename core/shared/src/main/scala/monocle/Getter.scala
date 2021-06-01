@@ -15,7 +15,7 @@ import monocle.function.{At, Each, FilterIndex, Index}
   */
 trait Getter[S, A] extends Fold[S, A] { self =>
 
-  /** get the target of a [Getter */
+  /** get the target of a [[Getter]] */
   def get(s: S): A
 
   def foldMap[M: Monoid](f: A => M)(s: S): M =
