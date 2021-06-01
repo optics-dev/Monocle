@@ -3,15 +3,15 @@ id: focus
 title: Focus
 ---
 
-`Focus` is the best starting point into Monocle. `Focus` lets you define a path within an immutable object. 
-Then, once you reach your desired target, you can just as easily get, replace or modify it. Let’s have a look at the 
+`Focus` is the best starting point into Monocle. `Focus` lets you define a path within an immutable object.
+Then, once you reach your desired target, you can just as easily get, replace or modify it. Let’s have a look at the
 most common use cases.
 
-An important point before we start. `Focus` is a macro available for both Scala 2.13 and Scala 3. 
-However, the macro API has completely changed between Scala 2 and 3, so for each example, we will first show the 
-version for Scala 3 and then Scala 2 (often more verbose). 
+An important point before we start. `Focus` is a macro available for both Scala 2.13 and Scala 3.
+However, the macro API has completely changed between Scala 2 and 3, so for each example, we will first show the
+version for Scala 3 and then Scala 2 (often more verbose).
 
-## Update a field of a case class
+## Update a field of a case class (Scala 2 & 3)
 
 ```scala mdoc:silent
 case class User(name: String, address: Address)
@@ -20,7 +20,6 @@ case class Address(streetNumber: Int, streetName: String)
 val anna = User("Anna", Address(12, "high street"))
 ```
 
-In Scala 3
 ```scala
 import monocle.syntax.all._
 
@@ -41,23 +40,9 @@ anna
 // )
 ```
 
-The Scala 2 version is the same, except for the import
-```scala mdoc
-import monocle.macros.syntax.all._
+## Update an optional field of a case class (Scala 3 only)
 
-anna
-  .focus(_.name)
-  .replace("Bob")
-
-anna
-  .focus(_.address.streetNumber)
-  .modify(_ + 1)
-```
-
-
-## Update an optional field of a case class
-
-This time a user may or may not have an `Address`. 
+This time a user may or may not have an `Address`.
 
 ```scala mdoc:reset:silent
 case class User(name: String, address: Option[Address])
@@ -67,7 +52,6 @@ val anna = User("Anna", Some(Address(12, "high street")))
 val bob  = User("bob" , None)
 ```
 
-In Scala 3
 ```scala
 import monocle.syntax.all._
 
@@ -79,7 +63,6 @@ anna
 //   address = Some(value = Address(streetNumber = 13, streetName = "high street"))
 // )
 
-
 bob
   .focus(_.address.some.streetNumber)
   .modify(_ + 1)
@@ -88,26 +71,10 @@ bob
 
 As you can see, focusing on the street number has no effect on `bob` because this instance doesn't have an address.
 
-In Scala 2
-```scala mdoc
-import monocle.Focus
-import monocle.macros.syntax.all._
-
-anna
-  .focus(_.address).some
-  .andThen(Focus[Address](_.streetNumber))
-  .modify(_ + 1)
-
-bob
-  .focus(_.address).some
-  .andThen(Focus[Address](_.streetNumber))
-  .modify(_ + 1)
-```
-
-## Update a single element inside a List
+## Update a single element inside a List (Scala 3 only)
 
 In this example, `User` contains a `List` of `DebitCard`. Let's imagine we want to update the expiration date of
-the second debit card. 
+the second debit card.
 
 ```scala mdoc:reset:silent
 import java.time.YearMonth
@@ -126,7 +93,6 @@ val anna = User(
 val bob = User("Bob", List())
 ```
 
-In Scala 3
 ```scala
 import monocle.syntax.all._
 
@@ -155,28 +121,9 @@ bob
 // res: User = User("Bob", List())
 ```
 
-In Scala 2
-```scala mdoc
-import monocle.Focus
-import monocle.macros.syntax.all._
-
-anna
-  .focus(_.debitCards) 
-  .index(1)
-  .andThen(Focus[DebitCard](_.expirationDate))
-  .replace(YearMonth.of(2026, 2))
-
-bob
-  .focus(_.debitCards) 
-  .index(1)
-  .andThen(Focus[DebitCard](_.expirationDate))
-  .replace(YearMonth.of(2026, 2))
-```
-
 `replace` had no effect on `bob` because he doesn't have a debit card.
 
 `index` only targets the object at the specified key. If there is no value at this key,
 then `replace` and `modify` are no-operation.
 
 `index` also works on other "indexable" datastructures such as `Vector` or `Map`.
-
