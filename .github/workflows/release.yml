@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v6
-      - uses: olafurpg/setup-scala@v10
+      - uses: olafurpg/setup-scala@v12
       - uses: olafurpg/setup-gpg@v3
       - name: Publish
         run: |
