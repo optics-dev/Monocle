@@ -14,7 +14,7 @@ jobs:
         run: git fetch --depth=100 origin +refs/tags/*:refs/tags/*
       - uses: coursier/cache-action@v6
       - name: Setup Scala
-        uses: olafurpg/setup-scala@v10
+        uses: olafurpg/setup-scala@v12
       - name: Checking your code format
         run: sbt scalafmtCheckAll scalafmtSbtCheck
       - name: Run tests
