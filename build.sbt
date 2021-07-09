@@ -2,11 +2,13 @@ import com.typesafe.tools.mima.core._
 import sbt.Keys._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
+val isScala3 = Def.setting(CrossVersion.partialVersion(scalaVersion.value).exists(_._1 == 3))
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(
   List(
-    organization := "com.github.julien-truffaut",
+    organization := "dev.optics",
     homepage := Some(url("https://github.com/optics-dev/Monocle")),
     licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
     developers :=
@@ -24,7 +26,7 @@ inThisBuild(
   )
 )
 
-lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.11.3" cross CrossVersion.full
+lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.0" cross CrossVersion.full
 
 lazy val buildSettings = Seq(
   scalaVersion := "2.13.5",
@@ -38,10 +40,10 @@ lazy val buildSettings = Seq(
     "-feature",
     "-unchecked",
     "-deprecation"
-  ) ++ { if (isDotty.value) Seq() else Seq("-Xfatal-warnings") }, // Scala 3 doesn't support -Wconf
+  ) ++ { if (isScala3.value) Seq() else Seq("-Xfatal-warnings") }, // Scala 3 doesn't support -Wconf
   Compile / console / scalacOptions -= "-Ywarn-unused:imports",
   scalacOptions ++= {
-    if (isDotty.value)
+    if (isScala3.value)
       Seq("-source:3.0-migration", "-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
     else
       Seq(
@@ -73,7 +75,7 @@ lazy val buildSettings = Seq(
       )
   },
   libraryDependencies ++= {
-    if (isDotty.value) Seq.empty
+    if (isScala3.value) Seq.empty
     else
       Seq(
         compilerPlugin(kindProjector)
@@ -82,27 +84,28 @@ lazy val buildSettings = Seq(
   scmInfo := Some(
     ScmInfo(url("https://github.com/optics-dev/Monocle"), "scm:git:git@github.com:optics-dev/Monocle.git")
   ),
+  sonatypeCredentialHost := Sonatype.sonatype01,
   testFrameworks += new TestFramework("munit.Framework"),
   Compile / doc / scalacOptions ++= {
-    if (!isDotty.value) Nil
+    if (!isScala3.value) Nil
     else Seq("-source-links:github://optics-dev/Monocle", "-revision", revisionToUse.value)
   }
 )
 
-lazy val catsVersion   = "2.4.2"
-lazy val dottyVersions = Seq("3.0.0-RC1")
+lazy val catsVersion   = "2.6.1"
+lazy val dottyVersions = Seq("3.0.0")
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel" %%% "cats-laws" % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel" %%% "alleycats-core" % catsVersion)
-lazy val shapeless         = Def.setting("com.chuusai" %%% "shapeless" % "2.3.3")
-lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.9.21")
-lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.9.21" % "test")
+lazy val shapeless         = Def.setting("com.chuusai" %%% "shapeless" % "2.3.7")
+lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.9.26")
+lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.9.26" % "test")
 
-lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "1.1.4")
+lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "1.1.5")
 lazy val munit           = Def.setting("org.scalameta" %% "munit" % "0.7.21" % Test)
-lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "1.0.6" % Test)
+lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "1.0.9" % Test)
 
 lazy val macroVersion = "2.1.1"
 
@@ -258,7 +261,7 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= {
       Seq(munitDiscipline.value) ++ {
-        if (isDotty.value) Seq.empty
+        if (isScala3.value) Seq.empty
         else
           Seq(
             scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
