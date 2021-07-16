@@ -5,9 +5,14 @@ import monocle.internal.focus.ComposedFocusImpl
 
 trait ComposedFocusSyntax {
 
-  extension [S, A, Next] (optic: Lens[S, A]) {
-   transparent inline def refocus(inline lambda: (Focus.KeywordContext ?=> A => Next)): Any =
-     ${ComposedFocusImpl[S, A, Next]('optic, 'lambda)}
+  extension [S, A, Next] (optic: Setter[S, A] | Fold[S,A]) {
+    transparent inline def refocus(inline lambda: (Focus.KeywordContext ?=> A => Next)): Any = 
+      ${ComposedFocusImpl[S, A, Next]('optic, 'lambda)}
+  }
+
+  extension [S, A, Next] (optic: AppliedSetter[S, A]) {
+    transparent inline def refocus(inline lambda: (Focus.KeywordContext ?=> A => Next)): Any =
+      ${ComposedFocusImpl.applied[S, A, Next]('optic, 'lambda)}
   }
 
   // extension [S, A, Next] (optic: AppliedLens[S, A]) {
@@ -15,10 +20,10 @@ trait ComposedFocusSyntax {
   //    ${AppliedFocusImpl[S, A, Next]('optic, 'lambda)}
   // }
   
-  extension [S, A, Next] (optic: Iso[S, A]) {
-    transparent inline def refocus(inline lambda: (Focus.KeywordContext ?=> A => Next)): Any =
-      ${ComposedFocusImpl[S, A, Next]('optic, 'lambda)}
-  }
+  // extension [S, A, Next] (optic: Iso[S, A]) {
+  //   transparent inline def refocus(inline lambda: (Focus.KeywordContext ?=> A => Next)): Any =
+  //     ${ComposedFocusImpl[S, A, Next]('optic, 'lambda)}
+  // }
 
 /*
   extension [From, To] (optic: Prism[From, To]) {
