@@ -16,6 +16,6 @@ private[focus] trait ParserBase {
   }
 
   def getType(code: Term): TypeRepr = 
-    code.tpe.widen
+    code.tpe.widen.dealias
 
 }

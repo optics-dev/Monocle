@@ -114,8 +114,17 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     assertEquals(iso.reverseGet("Bob"), Animal("Bob"))
   }
 
+  test("Type alias for parameterised type access") {
+    case class CC[T](t: T, i: Int)
+    type CCInt = CC[Int]
+    val cc = CC(2, 3)
+    
+    assertEquals(Focus[CCInt](_.i).get(cc), 3)
+    assertEquals(Focus[CCInt](_.t).get(cc), 2)
+  }
+
   /*
-  test("Refined type field accessss") {
+  test("Refined type field access") {
     assertEquals(
       Focus[RefinedBox { type A = String }](_.a).get(new RefinedBox { type A = String; def a = "Bob" }),
       "Bob"
@@ -123,7 +132,7 @@ final class FocusFieldSelectTest extends munit.FunSuite {
   }*/
 
   /*
-  test("Existential type field accessss") {
+  test("Existential type field access") {
     val existentialBox: Box[_] = Box("abc")
     assertEquals(
       Focus[Box[_]](_.a).get(existentialBox),
