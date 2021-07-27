@@ -1,10 +1,10 @@
 package monocle
 
-import monocle.syntax.AppliedFocusSyntax
+import monocle.syntax.{AppliedFocusSyntax, ComposedFocusSyntax}
 import monocle.internal.focus.FocusImpl
 import monocle.function.{Each, At, Index}
 
-object Focus extends AppliedFocusSyntax {
+object Focus extends AppliedFocusSyntax with ComposedFocusSyntax {
 
   sealed trait KeywordContext {
     extension [From] (from: From)
