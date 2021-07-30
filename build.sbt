@@ -110,7 +110,7 @@ lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "
 lazy val macroVersion = "2.1.1"
 
 def mimaSettings(module: String): Seq[Setting[_]] = Seq(
-  mimaPreviousArtifacts := Set("com.github.julien-truffaut" %% s"monocle-${module}" % "2.0.0")
+  mimaPreviousArtifacts := Set("dev.optics" %% s"monocle-${module}" % "3.0.0")
 )
 
 lazy val gitRev = sys.process.Process("git rev-parse HEAD").lineStream_!.head
@@ -189,7 +189,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .jvmSettings(mimaSettings("core"): _*)
+  .settings(mimaSettings("core"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, catsFree.value))
   .settings(
     crossScalaVersions ++= dottyVersions,
@@ -213,7 +213,7 @@ lazy val generic = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
-  .jvmSettings(mimaSettings("generic"): _*)
+  .settings(mimaSettings("generic"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, shapeless.value, munitDiscipline.value))
 
 lazy val refined = crossProject(JVMPlatform, JSPlatform)
@@ -224,6 +224,7 @@ lazy val refined = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
+  .settings(mimaSettings("refined"): _*)
   .settings(
     crossScalaVersions ++= dottyVersions,
     libraryDependencies ++= Seq(
@@ -241,6 +242,7 @@ lazy val law = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
+  .settings(mimaSettings("law"): _*)
   .settings(
     moduleName := "monocle-law",
     crossScalaVersions ++= dottyVersions
@@ -256,6 +258,7 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
+  .settings(mimaSettings("macro"): _*)
   .settings(
     crossScalaVersions ++= dottyVersions,
     scalacOptions += "-language:experimental.macros",
@@ -282,6 +285,7 @@ lazy val state = crossProject(JVMPlatform, JSPlatform)
     moduleName := "monocle-state",
     crossScalaVersions ++= dottyVersions
   )
+  .settings(mimaFailOnNoPrevious := false)
   .settings(libraryDependencies ++= Seq(cats.value))
 
 lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
@@ -295,7 +299,7 @@ lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
     moduleName := "monocle-unsafe",
     crossScalaVersions ++= dottyVersions
   )
-  .jvmSettings(mimaSettings("unsafe"): _*)
+  .settings(mimaFailOnNoPrevious := false)
   .settings(libraryDependencies ++= Seq(cats.value, alleycats.value))
 
 lazy val test = crossProject(JVMPlatform, JSPlatform)
@@ -305,6 +309,7 @@ lazy val test = crossProject(JVMPlatform, JSPlatform)
     _.jvmSettings(monocleJvmSettings),
     _.jsSettings(monocleJsSettings)
   )
+  .settings(mimaFailOnNoPrevious := false)
   .settings(noPublishSettings: _*)
   .settings(
     crossScalaVersions ++= dottyVersions,
@@ -319,6 +324,7 @@ lazy val bench = project
   .dependsOn(core.jvm, generic.jvm, macros.jvm)
   .settings(moduleName := "monocle-bench")
   .settings(monocleJvmSettings)
+  .settings(mimaFailOnNoPrevious := false)
   .settings(noPublishSettings)
   .enablePlugins(JmhPlugin)
 
@@ -326,6 +332,7 @@ lazy val example = project
   .dependsOn(core.jvm, generic.jvm, refined.jvm, macros.jvm, state.jvm, test.jvm % "test->test")
   .settings(moduleName := "monocle-example")
   .settings(monocleJvmSettings)
+  .settings(mimaFailOnNoPrevious := false)
   .settings(noPublishSettings)
   .settings(
     libraryDependencies ++= Seq(cats.value, shapeless.value, munitDiscipline.value)
@@ -336,6 +343,7 @@ lazy val docs = project
   .enablePlugins(BuildInfoPlugin, DocusaurusPlugin, MdocPlugin, ScalaUnidocPlugin)
   .settings(moduleName := "monocle-docs")
   .settings(monocleSettings)
+  .settings(mimaFailOnNoPrevious := false)
   .settings(noPublishSettings)
   .settings(mdocSettings)
   .settings(buildInfoSettings)
