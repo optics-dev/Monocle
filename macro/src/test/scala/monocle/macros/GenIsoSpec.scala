@@ -18,7 +18,7 @@ object GenIsoSpec {
 
   case class ZeroT[A]()
   implicit def genZeroT[A]: Arbitrary[ZeroT[A]] = Arbitrary(Gen.const(ZeroT()))
-  implicit def eqZeroT[A]: Eq[ZeroT[A]] = Eq.fromUniversalEquals
+  implicit def eqZeroT[A]: Eq[ZeroT[A]]         = Eq.fromUniversalEquals
 
   case class One(i: Int)
   implicit val genOne: Arbitrary[One] = Arbitrary(arbitrary[Int].map(One.apply))
@@ -33,13 +33,16 @@ object GenIsoSpec {
   implicit val eqTwo: Eq[Two]         = Eq.fromUniversalEquals
 
   case class TwoT[A, B](i: A, l: B)
-  implicit def genTwoT[A: Arbitrary, B: Arbitrary]: Arbitrary[TwoT[A, B]] = Arbitrary(arbitrary[A].flatMap(a => arbitrary[B].map(TwoT(a, _))))
+  implicit def genTwoT[A: Arbitrary, B: Arbitrary]: Arbitrary[TwoT[A, B]] = Arbitrary(
+    arbitrary[A].flatMap(a => arbitrary[B].map(TwoT(a, _)))
+  )
   implicit def eqTwoT[A, B]: Eq[TwoT[A, B]] = Eq.fromUniversalEquals
 }
 
 class GenIsoSpec extends DisciplineSuite {
   import GenIsoSpec._
 
+  // format: off
   trait CompileTimeTests {
     locally { type S = One             ; val x = GenIso.apply[S, Int]; x: Iso[S, Int] }
     locally { type S = OneT[Int]       ; val x = GenIso.apply[S, Int]; x: Iso[S, Int] }
@@ -57,16 +60,16 @@ class GenIsoSpec extends DisciplineSuite {
     locally { type S = ZeroT[Int]      ; val x = GenIso.unit[S]; x: Iso[S, Unit] }
   }
 
-  checkAll("GenIso.apply[One, Int]"              , IsoTests(GenIso.apply[One, Int]))
-  checkAll("GenIso.apply[OneT[Int], Int]"        , IsoTests(GenIso.apply[OneT[Int], Int]))
-  checkAll("GenIso.fields[CaseObj.type]"         , IsoTests(GenIso.fields[CaseObj.type]))
-  checkAll("GenIso.fields[Zero]"                 , IsoTests(GenIso.fields[Zero]))
-  checkAll("GenIso.fields[ZeroT[Int]]"           , IsoTests(GenIso.fields[ZeroT[Int]]))
-  checkAll("GenIso.fields[One]"                  , IsoTests(GenIso.fields[One]))
-  checkAll("GenIso.fields[OneT[Int]]"            , IsoTests(GenIso.fields[OneT[Int]]))
-  checkAll("GenIso.fields[Two]"                  , IsoTests(GenIso.fields[Two]))
-  checkAll("GenIso.fields[TwoT[Int, Short]]"     , IsoTests(GenIso.fields[TwoT[Int, Short]]))
-  checkAll("GenIso.unit[CaseObj.type]"           , IsoTests(GenIso.unit[CaseObj.type]))
-  checkAll("GenIso.unit[Zero]"                   , IsoTests(GenIso.unit[Zero]))
-  checkAll("GenIso.unit[ZeroT[Int]]"             , IsoTests(GenIso.unit[ZeroT[Int]]))
+  checkAll("GenIso.apply[One, Int]"         , IsoTests(GenIso.apply[One, Int]))
+  checkAll("GenIso.apply[OneT[Int], Int]"   , IsoTests(GenIso.apply[OneT[Int], Int]))
+  checkAll("GenIso.fields[CaseObj.type]"    , IsoTests(GenIso.fields[CaseObj.type]))
+  checkAll("GenIso.fields[Zero]"            , IsoTests(GenIso.fields[Zero]))
+  checkAll("GenIso.fields[ZeroT[Int]]"      , IsoTests(GenIso.fields[ZeroT[Int]]))
+  checkAll("GenIso.fields[One]"             , IsoTests(GenIso.fields[One]))
+  checkAll("GenIso.fields[OneT[Int]]"       , IsoTests(GenIso.fields[OneT[Int]]))
+  checkAll("GenIso.fields[Two]"             , IsoTests(GenIso.fields[Two]))
+  checkAll("GenIso.fields[TwoT[Int, Short]]", IsoTests(GenIso.fields[TwoT[Int, Short]]))
+  checkAll("GenIso.unit[CaseObj.type]"      , IsoTests(GenIso.unit[CaseObj.type]))
+  checkAll("GenIso.unit[Zero]"              , IsoTests(GenIso.unit[Zero]))
+  checkAll("GenIso.unit[ZeroT[Int]]"        , IsoTests(GenIso.unit[ZeroT[Int]]))
 }
