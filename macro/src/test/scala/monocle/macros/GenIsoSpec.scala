@@ -7,12 +7,7 @@ import munit.DisciplineSuite
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary.arbitrary
 
-class GenIsoSpec extends DisciplineSuite {
-
-  implicit val genEmptyTupleF: Arbitrary[EmptyTuple => EmptyTuple] = Arbitrary(Gen.const(_ => EmptyTuple))
-  implicit val genEmptyTuple: Arbitrary[EmptyTuple] = Arbitrary(Gen.const(EmptyTuple))
-  implicit val eqEmptyTuple: Eq[EmptyTuple] = Eq.fromUniversalEquals
-
+object GenIsoSpec {
   case object CaseObj
   implicit val genCaseObj: Arbitrary[CaseObj.type] = Arbitrary(Gen.const(CaseObj))
   implicit val eqCaseObj: Eq[CaseObj.type]         = Eq.fromUniversalEquals
@@ -40,9 +35,12 @@ class GenIsoSpec extends DisciplineSuite {
   case class TwoT[A, B](i: A, l: B)
   implicit def genTwoT[A: Arbitrary, B: Arbitrary]: Arbitrary[TwoT[A, B]] = Arbitrary(arbitrary[A].flatMap(a => arbitrary[B].map(TwoT(a, _))))
   implicit def eqTwoT[A, B]: Eq[TwoT[A, B]] = Eq.fromUniversalEquals
+}
+
+class GenIsoSpec extends DisciplineSuite {
+  import GenIsoSpec._
 
   trait CompileTimeTests {
-
     locally { type S = One             ; val x = GenIso.apply[S, Int]; x: Iso[S, Int] }
     locally { type S = OneT[Int]       ; val x = GenIso.apply[S, Int]; x: Iso[S, Int] }
 
@@ -53,14 +51,6 @@ class GenIsoSpec extends DisciplineSuite {
     locally { type S = OneT[Int]       ; val x = GenIso.fields[S]; x: Iso[S, Int] }
     locally { type S = Two             ; val x = GenIso.fields[S]; x: Iso[S, (Int, Short)] }
     locally { type S = TwoT[Int, Short]; val x = GenIso.fields[S]; x: Iso[S, (Int, Short)] }
-
-    locally { type S = CaseObj.type    ; val x = GenIso.fieldsTuple[S]; x: Iso[S, EmptyTuple] }
-    locally { type S = Zero            ; val x = GenIso.fieldsTuple[S]; x: Iso[S, EmptyTuple] }
-    locally { type S = ZeroT[Int]      ; val x = GenIso.fieldsTuple[S]; x: Iso[S, EmptyTuple] }
-    locally { type S = One             ; val x = GenIso.fieldsTuple[S]; x: Iso[S, Tuple1[Int]] }
-    locally { type S = OneT[Int]       ; val x = GenIso.fieldsTuple[S]; x: Iso[S, Tuple1[Int]] }
-    locally { type S = Two             ; val x = GenIso.fieldsTuple[S]; x: Iso[S, (Int, Short)] }
-    locally { type S = TwoT[Int, Short]; val x = GenIso.fieldsTuple[S]; x: Iso[S, (Int, Short)] }
 
     locally { type S = CaseObj.type    ; val x = GenIso.unit[S]; x: Iso[S, Unit] }
     locally { type S = Zero            ; val x = GenIso.unit[S]; x: Iso[S, Unit] }
@@ -76,13 +66,6 @@ class GenIsoSpec extends DisciplineSuite {
   checkAll("GenIso.fields[OneT[Int]]"            , IsoTests(GenIso.fields[OneT[Int]]))
   checkAll("GenIso.fields[Two]"                  , IsoTests(GenIso.fields[Two]))
   checkAll("GenIso.fields[TwoT[Int, Short]]"     , IsoTests(GenIso.fields[TwoT[Int, Short]]))
-  checkAll("GenIso.fieldsTuple[CaseObj.type]"    , IsoTests(GenIso.fieldsTuple[CaseObj.type]))
-  checkAll("GenIso.fieldsTuple[Zero]"            , IsoTests(GenIso.fieldsTuple[Zero]))
-  checkAll("GenIso.fieldsTuple[ZeroT[Int]]"      , IsoTests(GenIso.fieldsTuple[ZeroT[Int]]))
-  checkAll("GenIso.fieldsTuple[One]"             , IsoTests(GenIso.fieldsTuple[One]))
-  checkAll("GenIso.fieldsTuple[OneT[Int]]"       , IsoTests(GenIso.fieldsTuple[OneT[Int]]))
-  checkAll("GenIso.fieldsTuple[Two]"             , IsoTests(GenIso.fieldsTuple[Two]))
-  checkAll("GenIso.fieldsTuple[TwoT[Int, Short]]", IsoTests(GenIso.fieldsTuple[TwoT[Int, Short]]))
   checkAll("GenIso.unit[CaseObj.type]"           , IsoTests(GenIso.unit[CaseObj.type]))
   checkAll("GenIso.unit[Zero]"                   , IsoTests(GenIso.unit[Zero]))
   checkAll("GenIso.unit[ZeroT[Int]]"             , IsoTests(GenIso.unit[ZeroT[Int]]))
