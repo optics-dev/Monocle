@@ -2,10 +2,10 @@ package monocle.internal.focus.features.as
 
 import monocle.Prism
 import monocle.internal.focus.FocusBase
-import monocle.syntax.AsPrism
+import monocle.syntax.AsPrismImpl
 
 private[focus] trait AsGenerator {
-  this: FocusBase => 
+  this: FocusBase =>
 
   import macroContext.reflect._
 
@@ -13,7 +13,7 @@ private[focus] trait AsGenerator {
     import action.{fromType, toType}
 
     (fromType.asType, toType.asType) match {
-      case ('[f], '[t]) => '{ AsPrism[f, t] }.asTerm
+      case ('[f], '[t]) => AsPrismImpl[f, t].asTerm
     }
   }
 }
