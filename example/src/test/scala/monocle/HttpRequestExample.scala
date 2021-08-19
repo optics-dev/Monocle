@@ -45,8 +45,8 @@ class HttpRequestExample extends MonocleSuite {
 
   test("query using at") {
 
-    /**  `at` returns Lens[S, Option[A]] while `index` returns Optional[S, A]
-      *  So that we need the `some: Prism[Option[A], A]` for further investigation
+    /** `at` returns Lens[S, Option[A]] while `index` returns Optional[S, A] So that we need the `some: Prism[Option[A],
+      * A]` for further investigation
       */
     val r = uri.andThen(query).at("hop").some.andThen(stringToInt).modify(_ + 10)(r1)
 

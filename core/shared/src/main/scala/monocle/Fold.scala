@@ -8,20 +8,20 @@ import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.internal.Monoids
 
-/** A [[Fold]] can be seen as a [[Getter]] with many targets or
-  * a weaker [[PTraversal]] which cannot modify its target.
+/** A [[Fold]] can be seen as a [[Getter]] with many targets or a weaker [[PTraversal]] which cannot modify its target.
   *
-  * [[Fold]] is on the top of the Optic hierarchy which means that
-  * [[Getter]], [[PTraversal]], [[POptional]], [[PLens]], [[PPrism]]
-  * and [[PIso]] are valid [[Fold]]
+  * [[Fold]] is on the top of the Optic hierarchy which means that [[Getter]], [[PTraversal]], [[POptional]], [[PLens]],
+  * [[PPrism]] and [[PIso]] are valid [[Fold]]
   *
-  * @tparam S the source of a [[Fold]]
-  * @tparam A the target of a [[Fold]]
+  * @tparam S
+  *   the source of a [[Fold]]
+  * @tparam A
+  *   the target of a [[Fold]]
   */
 trait Fold[S, A] extends Serializable { self =>
 
-  /** map each target to a Monoid and combine the results
-    * underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap
+  /** map each target to a Monoid and combine the results underlying representation of [[Fold]], all [[Fold]] methods
+    * are defined in terms of foldMap
     */
   def foldMap[M: Monoid](f: A => M)(s: S): M
 
@@ -150,8 +150,8 @@ final case class FoldSyntax[S, A](private val self: Fold[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): Fold[S, A] =
     self.andThen(Optional.filter(predicate))

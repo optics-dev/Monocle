@@ -45,8 +45,8 @@ final case class AppliedFoldSyntax[S, A](private val self: AppliedFold[S, A]) ex
   def each[C](implicit evEach: Each[A, C]): AppliedFold[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): AppliedFold[S, A] =
     self.andThen(Optional.filter(predicate))

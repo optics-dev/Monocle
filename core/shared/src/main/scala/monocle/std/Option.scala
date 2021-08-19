@@ -29,13 +29,14 @@ trait OptionOptics {
     * defaultTo0.reverseGet(1) == Some(1)
     * }}}
     *
-    * `withDefault` is a valid Iso only if we consider the set of `A` without `defaultValue`.
-    * For example, `Some(0)` breaks the round-trip property of Iso:
+    * `withDefault` is a valid Iso only if we consider the set of `A` without `defaultValue`. For example, `Some(0)`
+    * breaks the round-trip property of Iso:
     * {{{
     * defaultTo0.reverseGet(defaultTo0.get(Some(0))) == None
     * }}}
     *
-    * @see This method is called `non` in Haskell Lens.
+    * @see
+    *   This method is called `non` in Haskell Lens.
     */
   final def withDefault[A](defaultValue: A): Iso[Option[A], A] =
     Iso[Option[A], A](_.getOrElse(defaultValue))(value => if (value == defaultValue) None else Some(value))

@@ -2,7 +2,7 @@ package monocle.std
 
 import monocle.MonocleSuite
 
-import cats.data.Ior.{Left => This, Right => That, Both}
+import cats.data.Ior.{Both, Left => This, Right => That}
 import cats.data.Ior
 import cats.syntax.either._
 

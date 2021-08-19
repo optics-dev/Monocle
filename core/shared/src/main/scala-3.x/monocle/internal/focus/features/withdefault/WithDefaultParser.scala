@@ -10,7 +10,7 @@ private[focus] trait WithDefaultParser {
 
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
 
-      case FocusKeyword(Name("withDefault"), _, TypeArgs(toType), ValueArgs(defaultValue), remainingCode) => 
+      case FocusKeyword(Name("withDefault"), _, TypeArgs(toType), ValueArgs(defaultValue), remainingCode) =>
         val action = FocusAction.KeywordWithDefault(toType, defaultValue)
         Some(Right(remainingCode, action))
 

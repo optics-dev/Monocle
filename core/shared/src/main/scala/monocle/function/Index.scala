@@ -6,11 +6,14 @@ import scala.annotation.{implicitNotFound, tailrec}
 import scala.collection.immutable.{ListMap, SortedMap}
 import scala.util.Try
 
-/** Typeclass that defines an [[Optional]] from an `S` to an `A` at an index `I`
-  * [[Index]] is less powerful than [[At]] as it cannot create or delete value
-  * @tparam S source of [[Optional]]
-  * @tparam I index
-  * @tparam A target of [[Optional]], `A` is supposed to be unique for a given pair `(S, I)`
+/** Typeclass that defines an [[Optional]] from an `S` to an `A` at an index `I` [[Index]] is less powerful than [[At]]
+  * as it cannot create or delete value
+  * @tparam S
+  *   source of [[Optional]]
+  * @tparam I
+  *   index
+  * @tparam A
+  *   target of [[Optional]], `A` is supposed to be unique for a given pair `(S, I)`
   */
 @implicitNotFound(
   "Could not find an instance of Index[${S},${I},${A}], please check Monocle instance location policy to " + "find out which import is necessary"

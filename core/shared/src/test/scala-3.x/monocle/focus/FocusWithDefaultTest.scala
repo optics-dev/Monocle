@@ -4,7 +4,6 @@ import monocle.{Focus, Iso}
 
 final class FocusWithDefaultTest extends munit.FunSuite {
 
-  
   test("Access `withDefault` directly on argument") {
     val iso: Iso[Option[Int], Int] = Focus[Option[Int]](_.withDefault(555))
     assertEquals(iso.get(Some(3)), 3)
@@ -16,7 +15,7 @@ final class FocusWithDefaultTest extends munit.FunSuite {
     case class Address(streetNumber: Int, postcode: String)
 
     val elise = User("Elise", Some(Address(12, "high street")))
-    val bob   = User("bob"  , None)
+    val bob   = User("bob", None)
 
     val streetNumber = Focus[User](_.address.withDefault(Address(333, "abc")).streetNumber)
 
@@ -28,7 +27,7 @@ final class FocusWithDefaultTest extends munit.FunSuite {
     case class IdOpt[+A](id: Long, value: Option[A])
     case class User(name: String, age: Int)
 
-    val bob = User("bob", 24)
+    val bob    = User("bob", 24)
     val idSome = IdOpt(1, Some(bob))
     val idNone = IdOpt(1, None)
 
@@ -52,19 +51,17 @@ final class FocusWithDefaultTest extends munit.FunSuite {
     case class User(name: String, age: Int)
     val bob = User("Friedrich", 33)
 
-    val name = Focus[Option[Option[User]]](_.withDefault(Some(User("Gunther", 22))).withDefault(User("Brunhild", 44)).name)
+    val name =
+      Focus[Option[Option[User]]](_.withDefault(Some(User("Gunther", 22))).withDefault(User("Brunhild", 44)).name)
 
     assertEquals(name.get(Some(Some(bob))), "Friedrich")
     assertEquals(name.get(Some(None)), "Brunhild")
     assertEquals(name.get(None), "Gunther")
   }
 
-
   test("Focus operator `withDefault` commutes with standalone operator `withDefault`") {
     val opt: Option[Int] = Some(33)
 
-    assertEquals(
-      Focus[Option[Int]](_.withDefault(99)).get(opt),
-      Focus[Option[Int]](a => a).withDefault(99).get(opt))
+    assertEquals(Focus[Option[Int]](_.withDefault(99)).get(opt), Focus[Option[Int]](a => a).withDefault(99).get(opt))
   }
 }

@@ -102,8 +102,8 @@ final case class AppliedTraversalSyntax[S, A](private val self: AppliedTraversal
   def each[C](implicit evEach: Each[A, C]): AppliedTraversal[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): AppliedTraversal[S, A] =
     self.andThen(Optional.filter(predicate))

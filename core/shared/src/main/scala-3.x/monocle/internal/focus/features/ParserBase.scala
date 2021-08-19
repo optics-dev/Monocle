@@ -4,7 +4,7 @@ import scala.quoted.Quotes
 import monocle.internal.focus.FocusBase
 
 private[focus] trait ParserBase {
-  this: FocusBase => 
+  this: FocusBase =>
 
   import macroContext.reflect._
 
@@ -15,7 +15,7 @@ private[focus] trait ParserBase {
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]]
   }
 
-  def getType(code: Term): TypeRepr = 
+  def getType(code: Term): TypeRepr =
     code.tpe.widen.dealias
 
 }
