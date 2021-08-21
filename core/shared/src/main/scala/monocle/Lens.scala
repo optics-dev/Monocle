@@ -98,7 +98,9 @@ trait PLens[S, T, A, B] extends POptional[S, T, A, B] with Getter[S, A] { self =
   override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): POptional[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
-  override def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1], evMonoS: S =:= T, evMonoA: A =:= B): Optional[S, A1] =
+  override def index[I, A1](
+    i: I
+  )(implicit evIndex: Index[A, I, A1], evMonoS: S =:= T, evMonoA: A =:= B): Optional[S, A1] =
     adaptMono.andThen(evIndex.index(i))
 
   override private[monocle] def adaptMono(implicit evMonoS: S =:= T, evMonoA: A =:= B): Lens[S, A] =
