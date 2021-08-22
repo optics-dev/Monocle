@@ -34,12 +34,17 @@ sealed abstract class GenIsoImplBase {
     weakTypeOf[S].decls.collect { case m: MethodSymbol if m.isCaseAccessor => m }.toList
 
   final protected def genIso_unit_tree[S: c.WeakTypeTag]: c.Tree = {
-    val sTpe = weakTypeOf[S]
+    val sTpe = weakTypeOf[S].dealias
 
     if (sTpe.typeSymbol.isModuleClass) {
-      val table = c.universe.asInstanceOf[SymbolTable]
-      val tree  = table.gen
-      val obj   = tree.mkAttributedQualifier(sTpe.asInstanceOf[tree.global.Type]).asInstanceOf[Tree]
+      val obj: Tree =
+        if (sTpe.termSymbol.isTerm)
+          q"${sTpe.termSymbol.asTerm}"
+        else {
+          val table = c.universe.asInstanceOf[SymbolTable]
+          val tree  = table.gen
+          tree.mkAttributedQualifier(sTpe.asInstanceOf[tree.global.Type]).asInstanceOf[Tree]
+        }
       q"""
         monocle.Iso[$sTpe, Unit](Function.const(()))(Function.const($obj))
       """
