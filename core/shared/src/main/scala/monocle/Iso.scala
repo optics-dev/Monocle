@@ -106,6 +106,14 @@ trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self 
   override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
+  override def index[I, A1](
+    i: I
+  )(implicit evIndex: Index[A, I, A1], evMonoS: S =:= T, evMonoA: A =:= B): Optional[S, A1] =
+    adaptMono.andThen(evIndex.index(i))
+
+  override private[monocle] def adaptMono(implicit evMonoS: S =:= T, evMonoA: A =:= B): Iso[S, A] =
+    evMonoS.substituteContra[PIso[S, *, A, A]](evMonoA.substituteContra[PIso[S, T, A, *]](this))
+
   override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PIso[S, T, A1, B1] =
     evB.substituteCo[PIso[S, T, A1, *]](evA.substituteCo[PIso[S, T, *, B]](this))
 
@@ -352,7 +360,4 @@ final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
 
   def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): Lens[S, A1] =
     self.andThen(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Optional[S, A1] =
-    self.andThen(evIndex.index(i))
 }

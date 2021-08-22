@@ -45,6 +45,12 @@ trait PSetter[S, T, A, B] extends Serializable { self =>
   def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PSetter[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
 
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1], evMonoS: S =:= T, evMonoA: A =:= B): Setter[S, A1] =
+    adaptMono.andThen(evIndex.index(i))
+
+  private[monocle] def adaptMono(implicit evMonoS: S =:= T, evMonoA: A =:= B): Setter[S, A] =
+    evMonoS.substituteContra[PSetter[S, *, A, A]](evMonoA.substituteContra[PSetter[S, T, A, *]](this))
+
   private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PSetter[S, T, A1, B1] =
     evB.substituteCo[PSetter[S, T, A1, *]](evA.substituteCo[PSetter[S, T, *, B]](this))
 
@@ -208,7 +214,4 @@ final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyV
 
   def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): Setter[S, A1] =
     self.andThen(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Setter[S, A1] =
-    self.andThen(evIndex.index(i))
 }

@@ -64,6 +64,9 @@ trait Getter[S, A] extends Fold[S, A] { self =>
   override def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]].andThen(std.option.some[A1])
 
+  override def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
+    self.andThen(evIndex.index(i))
+
   override private[monocle] def adapt[A1](implicit evA: A =:= A1): Getter[S, A1] =
     evA.substituteCo[Getter[S, *]](this)
 
@@ -152,9 +155,6 @@ final case class GetterSyntax[S, A](private val self: Getter[S, A]) extends AnyV
 
   def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): Getter[S, A1] =
     self.andThen(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
-    self.andThen(evIndex.index(i))
 
   /** compose a [[Fold]] with a [[Fold]] */
   @deprecated("use andThen", since = "3.0.0-M1")
