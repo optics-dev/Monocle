@@ -6,29 +6,34 @@ import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 
 /** A [[POptional]] can be seen as a pair of functions:
-  *  - `getOrModify: S      => Either[T, A]`
-  *  - `replace    : (B, S) => T`
+  *   - `getOrModify: S => Either[T, A]`
+  *   - `replace : (B, S) => T`
   *
-  * A [[POptional]] could also be defined as a weaker [[PLens]] and
-  * weaker [[PPrism]]
+  * A [[POptional]] could also be defined as a weaker [[PLens]] and weaker [[PPrism]]
   *
-  * [[POptional]] stands for Polymorphic Optional as it replace and modify methods change
-  * a type `A` to `B` and `S` to `T`.
-  * [[Optional]] is a type alias for [[POptional]] restricted to monomorphic updates:
+  * [[POptional]] stands for Polymorphic Optional as it replace and modify methods change a type `A` to `B` and `S` to
+  * `T`. [[Optional]] is a type alias for [[POptional]] restricted to monomorphic updates:
   * {{{
   * type Optional[S, A] = POptional[S, S, A, A]
   * }}}
   *
-  * @see [[monocle.law.OptionalLaws]]
+  * @see
+  *   [[monocle.law.OptionalLaws]]
   *
-  * @tparam S the source of a [[POptional]]
-  * @tparam T the modified source of a [[POptional]]
-  * @tparam A the target of a [[POptional]]
-  * @tparam B the modified target of a [[POptional]]
+  * @tparam S
+  *   the source of a [[POptional]]
+  * @tparam T
+  *   the modified source of a [[POptional]]
+  * @tparam A
+  *   the target of a [[POptional]]
+  * @tparam B
+  *   the modified target of a [[POptional]]
   */
 trait POptional[S, T, A, B] extends PTraversal[S, T, A, B] { self =>
 
-  /** get the target of a [[POptional]] or return the original value while allowing the type to change if it does not match */
+  /** get the target of a [[POptional]] or return the original value while allowing the type to change if it does not
+    * match
+    */
   def getOrModify(s: S): Either[T, A]
 
   /** get the modified source of a [[POptional]] */
@@ -37,14 +42,14 @@ trait POptional[S, T, A, B] extends PTraversal[S, T, A, B] { self =>
   /** get the target of a [[POptional]] or nothing if there is no target */
   def getOption(s: S): Option[A]
 
-  /** modify polymorphically the target of a [[POptional]] with a function.
-    * return empty if the [[POptional]] is not matching
+  /** modify polymorphically the target of a [[POptional]] with a function. return empty if the [[POptional]] is not
+    * matching
     */
   def modifyOption(f: A => B): S => Option[T] =
     s => getOption(s).map(a => replace(f(a))(s))
 
-  /** replace polymorphically the target of a [[POptional]] with a value.
-    * return empty if the [[POptional]] is not matching
+  /** replace polymorphically the target of a [[POptional]] with a value. return empty if the [[POptional]] is not
+    * matching
     */
   def replaceOption(b: B): S => Option[T] =
     modifyOption(_ => b)
@@ -204,9 +209,8 @@ object Optional {
     *   positiveNumbers.modify(_ * 10)(List(1,2,-3,4,-5)) == List(10,20,-3,40,-5)
     * }}}
     *
-    * `filter` can break the fusion property, if `replace` or `modify` do not preserve the predicate.
-    * For example, here the first `modify` (`x - 3`) transform the positive number 1 into the
-    * negative number -2.
+    * `filter` can break the fusion property, if `replace` or `modify` do not preserve the predicate. For example, here
+    * the first `modify` (`x - 3`) transform the positive number 1 into the negative number -2.
     * {{{
     *   val positiveNumbers = Traversal.fromTraverse[List, Int] composeOptional Optional.filter[Int](_ >= 0)
     *   val list            = List(1, 5, -3)
@@ -216,7 +220,8 @@ object Optional {
     *   secondStep != bothSteps
     * }}}
     *
-    * @see This method is called `filtered` in Haskell Lens.
+    * @see
+    *   This method is called `filtered` in Haskell Lens.
     */
   def filter[A](predicate: A => Boolean): Optional[A, A] =
     Optional[A, A](value => if (predicate(value)) Some(value) else None)(newValue =>
@@ -333,8 +338,8 @@ final case class OptionalSyntax[S, A](private val self: Optional[S, A]) extends 
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): Optional[S, A] =
     self.andThen(Optional.filter(predicate))

@@ -7,11 +7,10 @@ import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 
 /** A [[PSetter]] is a generalisation of Functor map:
-  *  - `map:    (A => B) => F[A] => F[B]`
-  *  - `modify: (A => B) => S    => T`
+  *   - `map: (A => B) => F[A] => F[B]`
+  *   - `modify: (A => B) => S => T`
   *
-  * [[PSetter]] stands for Polymorphic Setter as it replace and modify methods change
-  * a type `A` to `B` and `S` to `T`.
+  * [[PSetter]] stands for Polymorphic Setter as it replace and modify methods change a type `A` to `B` and `S` to `T`.
   * [[Setter]] is a type alias for [[PSetter]] restricted to monomorphic updates:
   * {{{
   * type Setter[S, A] = PSetter[S, S, A, A]
@@ -19,12 +18,17 @@ import monocle.function.{At, Each, FilterIndex, Index}
   *
   * [[PTraversal]], [[POptional]], [[PPrism]], [[PLens]] and [[PIso]] are valid [[PSetter]]
   *
-  * @see [[monocle.law.SetterLaws]]
+  * @see
+  *   [[monocle.law.SetterLaws]]
   *
-  * @tparam S the source of a [[PSetter]]
-  * @tparam T the modified source of a [[PSetter]]
-  * @tparam A the target of a [[PSetter]]
-  * @tparam B the modified target of a [[PSetter]]
+  * @tparam S
+  *   the source of a [[PSetter]]
+  * @tparam T
+  *   the modified source of a [[PSetter]]
+  * @tparam A
+  *   the target of a [[PSetter]]
+  * @tparam B
+  *   the modified target of a [[PSetter]]
   */
 trait PSetter[S, T, A, B] extends Serializable { self =>
 
@@ -196,8 +200,8 @@ final case class SetterSyntax[S, A](private val self: Setter[S, A]) extends AnyV
   def each[C](implicit evEach: Each[A, C]): Setter[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): Setter[S, A] =
     self.andThen(Optional.filter(predicate))

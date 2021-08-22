@@ -8,10 +8,14 @@ import cats.syntax.traverse._
 import cats.{Applicative, Order, Traverse}
 import cats.instances.lazyList._
 
-/** Typeclass that defines a [[Traversal]] from an `S` to all its elements `A` whose index `I` in `S` satisfies the predicate
-  * @tparam S source of [[Traversal]]
-  * @tparam I index
-  * @tparam A target of [[Traversal]], `A` is supposed to be unique for a given pair `(S, I)`
+/** Typeclass that defines a [[Traversal]] from an `S` to all its elements `A` whose index `I` in `S` satisfies the
+  * predicate
+  * @tparam S
+  *   source of [[Traversal]]
+  * @tparam I
+  *   index
+  * @tparam A
+  *   target of [[Traversal]], `A` is supposed to be unique for a given pair `(S, I)`
   */
 @implicitNotFound(
   "Could not find an instance of FilterIndex[${S},${I},${A}], please check Monocle instance location policy to " + "find out which import is necessary"

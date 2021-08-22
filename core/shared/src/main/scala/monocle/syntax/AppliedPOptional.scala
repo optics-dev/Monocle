@@ -104,8 +104,8 @@ final case class AppliedPOptionalSyntax[S, T, A, B](private val self: AppliedPOp
   */
 final case class AppliedOptionalSyntax[S, A](private val self: AppliedOptional[S, A]) extends AnyVal {
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): AppliedOptional[S, A] =
     self.andThen(Optional.filter(predicate))

@@ -9,10 +9,10 @@ import cats.instances.int._
 import cats.instances.lazyList._
 import cats.syntax.flatMap._
 
-/** [[Plated]] is a type-class for types which can extract their immediate
-  * self-similar children.
+/** [[Plated]] is a type-class for types which can extract their immediate self-similar children.
   *
-  * @tparam A the parent and child type of a [[Plated]]
+  * @tparam A
+  *   the parent and child type of a [[Plated]]
   */
 @implicitNotFound(
   "Could not find an instance of Plated[${A}], please check Monocle instance location policy to " + "find out which import is necessary"
@@ -32,15 +32,14 @@ trait PlatedFunctions extends CommonPlatedFunctions {
   /** get the immediate self-similar children of a target */
   def children[A: Plated](a: A): List[A] = plate[A].getAll(a)
 
-  /** rewrite a target by applying a rule as often as possible until it reaches
-    * a fixpoint (this is an infinite loop if there is no fixpoint)
+  /** rewrite a target by applying a rule as often as possible until it reaches a fixpoint (this is an infinite loop if
+    * there is no fixpoint)
     */
   def rewrite[A: Plated](f: A => Option[A])(a: A): A =
     rewriteOf(plate[A].asSetter)(f)(a)
 
-  /** rewrite a target by applying a rule within a [[Setter]], as often as
-    * possible until it reaches a fixpoint (this is an infinite loop if there is
-    * no fixpoint)
+  /** rewrite a target by applying a rule within a [[Setter]], as often as possible until it reaches a fixpoint (this is
+    * an infinite loop if there is no fixpoint)
     */
   def rewriteOf[A](l: Setter[A, A])(f: A => Option[A])(a: A): A = {
     def go(b: A): A = {

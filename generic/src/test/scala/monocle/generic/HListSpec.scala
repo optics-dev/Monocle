@@ -5,7 +5,7 @@ import cats.implicits._
 import monocle.law.discipline.IsoTests
 import org.scalacheck.{Arbitrary, Cogen}
 import shapeless.HList._
-import shapeless.ops.hlist.{IsHCons, Init => HListInit}
+import shapeless.ops.hlist.{Init => HListInit, IsHCons}
 import shapeless.{::, HNil}
 
 import scala.annotation.nowarn
@@ -43,7 +43,7 @@ class HListSpec extends DisciplineSuite {
   implicit val example: Cogen[Example] =
     Cogen.tuple6[Int, Boolean, Char, Float, Long, Double].contramap[Example](e => (e.i, e.b, e.c, e.f, e.l, e.d))
 
-  implicit val hArb          = Arbitrary(for { example <- Arbitrary.arbitrary[Example] } yield toHList[Example, H].get(example))
+  implicit val hArb = Arbitrary(for { example <- Arbitrary.arbitrary[Example] } yield toHList[Example, H].get(example))
   implicit val reverseHArb   = Arbitrary(for { h <- Arbitrary.arbitrary[H] } yield h.reverse)
   implicit val hTailArb      = Arbitrary(for { h <- Arbitrary.arbitrary[H] } yield h.tail)
   implicit val hInitArb      = Arbitrary(for { h <- Arbitrary.arbitrary[H] } yield h.init)

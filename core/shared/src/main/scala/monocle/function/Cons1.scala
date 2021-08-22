@@ -4,11 +4,14 @@ import monocle.{Iso, Lens}
 
 import scala.annotation.implicitNotFound
 
-/** Typeclass that defines an [[Iso]] between an `S` and its head `H` and tail `T`
-  * [[Cons1]] is like [[Cons]] but for types that have *always* an head and tail, e.g. a non empty list
-  * @tparam S source of [[Iso]]
-  * @tparam H head of [[Iso]] target, `A` is supposed to be unique for a given `S`
-  * @tparam T tail of [[Iso]] target, `T` is supposed to be unique for a given `S`
+/** Typeclass that defines an [[Iso]] between an `S` and its head `H` and tail `T` [[Cons1]] is like [[Cons]] but for
+  * types that have *always* an head and tail, e.g. a non empty list
+  * @tparam S
+  *   source of [[Iso]]
+  * @tparam H
+  *   head of [[Iso]] target, `A` is supposed to be unique for a given `S`
+  * @tparam T
+  *   tail of [[Iso]] target, `T` is supposed to be unique for a given `S`
   */
 @implicitNotFound(
   "Could not find an instance of Cons1[${S}, ${H}, ${T}], please check Monocle instance location policy to " + "find out which import is necessary"
@@ -106,8 +109,7 @@ object Cons1 extends Cons1Functions {
       val cons1: Iso[Cofree[S, A], (A, S[Cofree[S, A]])] =
         Iso((c: Cofree[S, A]) => (c.head, c.tail.value)) { case (h, t) => Cofree(h, Now(t)) }
 
-      /** Overridden to prevent forcing evaluation of the `tail` when we're only
-        * interested in using the `head`
+      /** Overridden to prevent forcing evaluation of the `tail` when we're only interested in using the `head`
         */
       override def head: Lens[Cofree[S, A], A] =
         Lens((c: Cofree[S, A]) => c.head)(h => c => Cofree(h, c.tail))

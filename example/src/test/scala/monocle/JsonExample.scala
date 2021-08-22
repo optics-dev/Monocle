@@ -151,7 +151,7 @@ class JsonExample extends MonocleSuite {
       JsObject(
         Map(
           "first_name" -> JsString("john"), // starts with lower case
-          "last_name"  -> JsString("doe"), // starts with lower case
+          "last_name"  -> JsString("doe"),  // starts with lower case
           "age"        -> JsNumber(28),
           "siblings" -> JsArray(
             List(
