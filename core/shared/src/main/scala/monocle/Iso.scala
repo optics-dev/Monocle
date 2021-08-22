@@ -11,35 +11,29 @@ import monocle.function.{At, Each, FilterIndex, Index}
   * type Iso[S, A] = PIso[S, S, A, A]
   * }}}
   *
-  * An [[Iso]] defines an isomorphism between a type S and A:
-  * <pre>
-  *             get
-  *     -------------------->
-  *   S                       A
-  *     <--------------------
-  *          reverseGet
-  * </pre>
+  * An [[Iso]] defines an isomorphism between a type S and A: <pre> get
+  * --------------------> S A <-------------------- reverseGet </pre>
   *
-  * A [[PIso]] allows to lift a function `f: A => B` to `S => T` and a function `g: T => S` to `B => A`
-  * <pre>
-  *                                                           g
-  *     S           T                                   S <-------- T
-  *     |           ↑                                   |           ↑
-  *     |           |                                   |           |
-  * get |           | reverseGet     reverse.reverseGet |           | reverse.get
-  *     |           |                                   |           |
-  *     ↓     f     |                                   ↓           |
-  *     A --------> B                                   A           B
-  * </pre>
+  * A [[PIso]] allows to lift a function `f: A => B` to `S => T` and a function `g: T => S` to `B => A` <pre> g S T S
+  * <-------- T
+  * | ↑ | ↑
+  * | | | | get | | reverseGet reverse.reverseGet | | reverse.get
+  * | | | | ↓ f | ↓ | A --------> B A B </pre>
   *
-  * A [[PIso]] is also a valid [[Getter]], [[Fold]], [[PLens]], [[PPrism]], [[POptional]], [[PTraversal]] and [[PSetter]]
+  * A [[PIso]] is also a valid [[Getter]], [[Fold]], [[PLens]], [[PPrism]], [[POptional]], [[PTraversal]] and
+  * [[PSetter]]
   *
-  * @see [[monocle.law.IsoLaws]]
+  * @see
+  *   [[monocle.law.IsoLaws]]
   *
-  * @tparam S the source of a [[PIso]]
-  * @tparam T the modified source of a [[PIso]]
-  * @tparam A the target of a [[PIso]]
-  * @tparam B the modified target of a [[PIso]]
+  * @tparam S
+  *   the source of a [[PIso]]
+  * @tparam T
+  *   the modified source of a [[PIso]]
+  * @tparam A
+  *   the target of a [[PIso]]
+  * @tparam B
+  *   the modified target of a [[PIso]]
   */
 trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self =>
 
@@ -111,6 +105,14 @@ trait PIso[S, T, A, B] extends PLens[S, T, A, B] with PPrism[S, T, A, B] { self 
 
   override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
+
+  override def index[I, A1](
+    i: I
+  )(implicit evIndex: Index[A, I, A1], evMonoS: S =:= T, evMonoA: A =:= B): Optional[S, A1] =
+    adaptMono.andThen(evIndex.index(i))
+
+  override private[monocle] def adaptMono(implicit evMonoS: S =:= T, evMonoA: A =:= B): Iso[S, A] =
+    evMonoS.substituteContra[PIso[S, *, A, A]](evMonoA.substituteContra[PIso[S, T, A, *]](this))
 
   override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PIso[S, T, A1, B1] =
     evB.substituteCo[PIso[S, T, A1, *]](evA.substituteCo[PIso[S, T, *, B]](this))
@@ -214,10 +216,9 @@ object PIso extends IsoInstances {
         }
     }
 
-  /** create a [[PIso]] between any type and itself. id is the zero element of optics composition,
-    * for all optics o of type O (e.g. Lens, Iso, Prism, ...):
-    * o      composeIso Iso.id == o
-    * Iso.id composeO   o        == o (replace composeO by composeLens, composeIso, composePrism, ...)
+  /** create a [[PIso]] between any type and itself. id is the zero element of optics composition, for all optics o of
+    * type O (e.g. Lens, Iso, Prism, ...): o composeIso Iso.id == o Iso.id composeO o == o (replace composeO by
+    * composeLens, composeIso, composePrism, ...)
     */
   def id[S, T]: PIso[S, T, S, T] =
     new PIso[S, T, S, T] { self =>
@@ -345,8 +346,8 @@ final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): Optional[S, A] =
     self.andThen(Optional.filter(predicate))
@@ -359,7 +360,4 @@ final case class IsoSyntax[S, A](private val self: Iso[S, A]) extends AnyVal {
 
   def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): Lens[S, A1] =
     self.andThen(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Optional[S, A1] =
-    self.andThen(evIndex.index(i))
 }

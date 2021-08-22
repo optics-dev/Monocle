@@ -107,8 +107,8 @@ final case class AppliedSetterSyntax[S, A](private val self: AppliedSetter[S, A]
   def each[C](implicit evEach: Each[A, C]): AppliedSetter[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): AppliedSetter[S, A] =
     self.andThen(Optional.filter(predicate))

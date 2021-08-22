@@ -5,13 +5,14 @@ import cats.arrow.{Arrow, Choice}
 import cats.implicits._
 import monocle.function.{At, Each, FilterIndex, Index}
 
-/** A [[Getter]] can be seen as a glorified get method between
-  * a type S and a type A.
+/** A [[Getter]] can be seen as a glorified get method between a type S and a type A.
   *
   * A [[Getter]] is also a valid [[Fold]]
   *
-  * @tparam S the source of a [[Getter]]
-  * @tparam A the target of a [[Getter]]
+  * @tparam S
+  *   the source of a [[Getter]]
+  * @tparam A
+  *   the target of a [[Getter]]
   */
 trait Getter[S, A] extends Fold[S, A] { self =>
 
@@ -62,6 +63,9 @@ trait Getter[S, A] extends Fold[S, A] { self =>
 
   override def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]].andThen(std.option.some[A1])
+
+  override def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
+    self.andThen(evIndex.index(i))
 
   override private[monocle] def adapt[A1](implicit evA: A =:= A1): Getter[S, A1] =
     evA.substituteCo[Getter[S, *]](this)
@@ -137,8 +141,8 @@ final case class GetterSyntax[S, A](private val self: Getter[S, A]) extends AnyV
   def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): Fold[S, A] =
     self.andThen(Optional.filter(predicate))
@@ -151,9 +155,6 @@ final case class GetterSyntax[S, A](private val self: Getter[S, A]) extends AnyV
 
   def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): Getter[S, A1] =
     self.andThen(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
-    self.andThen(evIndex.index(i))
 
   /** compose a [[Fold]] with a [[Fold]] */
   @deprecated("use andThen", since = "3.0.0-M1")

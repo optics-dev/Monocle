@@ -15,8 +15,8 @@ object GenIso {
 
   /** Generate an [[Iso]] between a case class `S` and its fields.
     *
-    * Case classes with 0 fields will correspond with `Unit`, 1 with the field type, 2 or more with
-    * a tuple of all field types in the same order as the fields themselves.
+    * Case classes with 0 fields will correspond with `Unit`, 1 with the field type, 2 or more with a tuple of all field
+    * types in the same order as the fields themselves.
     *
     * Case classes with multiple parameter-lists (example: `case class X(…)(…)`) are rejected.
     */
@@ -46,14 +46,14 @@ sealed abstract class GenIsoImplBase {
           tree.mkAttributedQualifier(sTpe.asInstanceOf[tree.global.Type]).asInstanceOf[Tree]
         }
       q"""
-        monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${obj}))
+        monocle.Iso[$sTpe, Unit](Function.const(()))(Function.const($obj))
       """
     } else
       caseAccessorsOf[S] match {
         case Nil =>
           val sTpeSym = sTpe.typeSymbol.companion
           q"""
-            monocle.Iso[${sTpe}, Unit](Function.const(()))(Function.const(${sTpeSym}()))
+            monocle.Iso[$sTpe, Unit](Function.const(()))(Function.const($sTpeSym()))
           """
         case _ => fail(s"$sTpe needs to be a case class with no accessor or an object.")
       }

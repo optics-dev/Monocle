@@ -4,7 +4,7 @@ import monocle.Optional
 import monocle.POptional
 import monocle.Prism
 
-import cats.data.Ior.{Both, Right => That, Left => This}
+import cats.data.Ior.{Both, Left => This, Right => That}
 import cats.data.Ior
 import cats.syntax.either._
 

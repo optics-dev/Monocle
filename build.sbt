@@ -9,8 +9,8 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 inThisBuild(
   List(
     organization := "dev.optics",
-    homepage := Some(url("https://github.com/optics-dev/Monocle")),
-    licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
+    homepage     := Some(url("https://github.com/optics-dev/Monocle")),
+    licenses     := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
     developers :=
       List(
         "aoiroaoino"      -> "Naoki Aoyama",
@@ -29,7 +29,7 @@ inThisBuild(
 lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.0" cross CrossVersion.full
 
 lazy val buildSettings = Seq(
-  scalaVersion := "2.13.5",
+  scalaVersion       := "2.13.5",
   crossScalaVersions := Seq("2.13.5"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
@@ -110,7 +110,7 @@ lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "
 lazy val macroVersion = "2.1.1"
 
 def mimaSettings(module: String): Seq[Setting[_]] = Seq(
-  mimaPreviousArtifacts := Set("dev.optics" %% s"monocle-${module}" % "3.0.0")
+  mimaPreviousArtifacts := Set("dev.optics" %% s"monocle-$module" % "3.0.0")
 )
 
 lazy val gitRev = sys.process.Process("git rev-parse HEAD").lineStream_!.head
@@ -354,7 +354,7 @@ lazy val docs = project
 
 lazy val buildInfoSettings = Seq(
   buildInfoPackage := "monocle.build",
-  buildInfoObject := "info",
+  buildInfoObject  := "info",
   buildInfoKeys := Seq[BuildInfoKey](
     scalaVersion,
     scalacOptions,
@@ -378,9 +378,9 @@ lazy val mdocSettings = Seq(
   mdoc := (Compile / run).evaluated,
   scalacOptions --= Seq("-Xfatal-warnings", "-Ywarn-unused"),
   scalacOptions ~= (_.filterNot(_.startsWith("-Wconf"))),
-  crossScalaVersions := Seq(scalaVersion.value),
+  crossScalaVersions                         := Seq(scalaVersion.value),
   ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(core.jvm),
-  (ScalaUnidoc / unidoc / target) := (LocalRootProject / baseDirectory).value / "website" / "static" / "api",
+  (ScalaUnidoc / unidoc / target)            := (LocalRootProject / baseDirectory).value / "website" / "static" / "api",
   cleanFiles += (ScalaUnidoc / unidoc / target).value,
   docusaurusCreateSite := docusaurusCreateSite
     .dependsOn(Compile / unidoc)
@@ -450,8 +450,8 @@ ThisBuild / updateSiteVariables := {
 }
 
 lazy val noPublishSettings = Seq(
-  publish := {},
-  publishLocal := {},
+  publish         := {},
+  publishLocal    := {},
   publishArtifact := false,
-  publish / skip := true
+  publish / skip  := true
 )

@@ -1,6 +1,6 @@
 package monocle.focus
 
-import monocle.{Focus, Lens, Iso}
+import monocle.{Focus, Iso, Lens}
 
 final class FocusFieldSelectTest extends munit.FunSuite {
 
@@ -12,11 +12,11 @@ final class FocusFieldSelectTest extends munit.FunSuite {
   case class Animal(name: String)
   case class Owner(pet: Animal)
   case class Shop(owner: Owner)
-  case class Box[A](a: A) 
-  case class MultiBox[A,B](a: A, b: B)
+  case class Box[A](a: A)
+  case class MultiBox[A, B](a: A, b: B)
   case class HigherBox[F[_], A](fa: F[A])
   trait RefinedBox { type A; def a: A }
-  case class UnionBox[A,B](aOrB: A | B)
+  case class UnionBox[A, B](aOrB: A | B)
   case class ConstraintBox[A <: AnyVal](a: A)
   case class Varargs[A](a: A*)
 
@@ -69,7 +69,7 @@ final class FocusFieldSelectTest extends munit.FunSuite {
 
   test("Multiple type parameters set field") {
     assertEquals(
-      Focus[MultiBox[String, Int]](_.a).replace("abc")(MultiBox("whatevs",222)),
+      Focus[MultiBox[String, Int]](_.a).replace("abc")(MultiBox("whatevs", 222)),
       MultiBox("abc", 222)
     )
   }
@@ -83,7 +83,7 @@ final class FocusFieldSelectTest extends munit.FunSuite {
 
   test("Private field access") {
     val a = Public.Private(44)
-    
+
     assertEquals(Public.lens.get(a), 44)
     assertEquals(Public.lens.replace(55)(a), Public.Private(55))
   }
@@ -92,7 +92,7 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     val f1 = Focus[(Int, String)](_._1)
     val f2 = Focus[(Int, String)](_._2)
 
-    val tup = (11,"a")
+    val tup = (11, "a")
 
     assertEquals(f1.get(tup), 11)
     assertEquals(f2.get(tup), "a")
@@ -102,7 +102,7 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     val f1 = Focus[(Int, String)](_._1)
     val f2 = Focus[(Int, String)](_._2)
 
-    val tup = (11,"a")
+    val tup = (11, "a")
 
     assertEquals(f1.replace(99)(tup), (99, "a"))
     assertEquals(f2.replace("moo")(tup), (11, "moo"))
@@ -118,7 +118,7 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     case class CC[T](t: T, i: Int)
     type CCInt = CC[Int]
     val cc = CC(2, 3)
-    
+
     assertEquals(Focus[CCInt](_.i).get(cc), 3)
     assertEquals(Focus[CCInt](_.t).get(cc), 2)
   }
