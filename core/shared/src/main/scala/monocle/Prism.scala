@@ -8,29 +8,33 @@ import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 
 /** A [[PPrism]] can be seen as a pair of functions:
-  *  - `getOrModify: S => Either[T, A]`
-  *  - `reverseGet : B => T`
+  *   - `getOrModify: S => Either[T, A]`
+  *   - `reverseGet : B => T`
   *
   * A [[PPrism]] could also be defined as a weaker [[PIso]] where get can fail.
   *
-  * Typically a [[PPrism]] or [[Prism]] encodes the relation between a Sum or
-  * CoProduct type (e.g. sealed trait) and one of its element.
+  * Typically a [[PPrism]] or [[Prism]] encodes the relation between a Sum or CoProduct type (e.g. sealed trait) and one
+  * of its element.
   *
-  * [[PPrism]] stands for Polymorphic Prism as it replace and modify methods change
-  * a type `A` to `B` and `S` to `T`.
+  * [[PPrism]] stands for Polymorphic Prism as it replace and modify methods change a type `A` to `B` and `S` to `T`.
   * [[Prism]] is a type alias for [[PPrism]] where the type of target cannot be modified:
   * {{{
   * type Prism[S, A] = PPrism[S, S, A, A]
   * }}}
   *
-  * A [[PPrism]] is also a valid  [[Fold]], [[POptional]], [[PTraversal]] and [[PSetter]]
+  * A [[PPrism]] is also a valid [[Fold]], [[POptional]], [[PTraversal]] and [[PSetter]]
   *
-  * @see [[monocle.law.PrismLaws]]
+  * @see
+  *   [[monocle.law.PrismLaws]]
   *
-  * @tparam S the source of a [[PPrism]]
-  * @tparam T the modified source of a [[PPrism]]
-  * @tparam A the target of a [[PPrism]]
-  * @tparam B the modified target of a [[PPrism]]
+  * @tparam S
+  *   the source of a [[PPrism]]
+  * @tparam T
+  *   the modified source of a [[PPrism]]
+  * @tparam A
+  *   the target of a [[PPrism]]
+  * @tparam B
+  *   the modified target of a [[PPrism]]
   */
 trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
 
@@ -85,6 +89,14 @@ trait PPrism[S, T, A, B] extends POptional[S, T, A, B] { self =>
 
   override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PPrism[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
+
+  override def index[I, A1](
+    i: I
+  )(implicit evIndex: Index[A, I, A1], evMonoS: S =:= T, evMonoA: A =:= B): Optional[S, A1] =
+    adaptMono.andThen(evIndex.index(i))
+
+  override private[monocle] def adaptMono(implicit evMonoS: S =:= T, evMonoA: A =:= B): Prism[S, A] =
+    evMonoS.substituteContra[PPrism[S, *, A, A]](evMonoA.substituteContra[PPrism[S, T, A, *]](this))
 
   override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PPrism[S, T, A1, B1] =
     evB.substituteCo[PPrism[S, T, A1, *]](evA.substituteCo[PPrism[S, T, *, B]](this))
@@ -280,8 +292,8 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): Optional[S, A] =
     self.andThen(Optional.filter(predicate))
@@ -294,7 +306,4 @@ final case class PrismSyntax[S, A](private val self: Prism[S, A]) extends AnyVal
 
   def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): Optional[S, A1] =
     self.andThen(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Optional[S, A1] =
-    self.andThen(evIndex.index(i))
 }

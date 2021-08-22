@@ -8,20 +8,20 @@ import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 import monocle.internal.Monoids
 
-/** A [[Fold]] can be seen as a [[Getter]] with many targets or
-  * a weaker [[PTraversal]] which cannot modify its target.
+/** A [[Fold]] can be seen as a [[Getter]] with many targets or a weaker [[PTraversal]] which cannot modify its target.
   *
-  * [[Fold]] is on the top of the Optic hierarchy which means that
-  * [[Getter]], [[PTraversal]], [[POptional]], [[PLens]], [[PPrism]]
-  * and [[PIso]] are valid [[Fold]]
+  * [[Fold]] is on the top of the Optic hierarchy which means that [[Getter]], [[PTraversal]], [[POptional]], [[PLens]],
+  * [[PPrism]] and [[PIso]] are valid [[Fold]]
   *
-  * @tparam S the source of a [[Fold]]
-  * @tparam A the target of a [[Fold]]
+  * @tparam S
+  *   the source of a [[Fold]]
+  * @tparam A
+  *   the target of a [[Fold]]
   */
 trait Fold[S, A] extends Serializable { self =>
 
-  /** map each target to a Monoid and combine the results
-    * underlying representation of [[Fold]], all [[Fold]] methods are defined in terms of foldMap
+  /** map each target to a Monoid and combine the results underlying representation of [[Fold]], all [[Fold]] methods
+    * are defined in terms of foldMap
     */
   def foldMap[M: Monoid](f: A => M)(s: S): M
 
@@ -85,6 +85,9 @@ trait Fold[S, A] extends Serializable { self =>
 
   def some[A1](implicit ev1: A =:= Option[A1]): Fold[S, A1] =
     adapt[Option[A1]].andThen(std.option.some[A1])
+
+  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
+    self.andThen(evIndex.index(i))
 
   private[monocle] def adapt[A1](implicit evA: A =:= A1): Fold[S, A1] =
     evA.substituteCo[Fold[S, *]](this)
@@ -150,8 +153,8 @@ final case class FoldSyntax[S, A](private val self: Fold[S, A]) extends AnyVal {
   def each[C](implicit evEach: Each[A, C]): Fold[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): Fold[S, A] =
     self.andThen(Optional.filter(predicate))
@@ -164,9 +167,6 @@ final case class FoldSyntax[S, A](private val self: Fold[S, A]) extends AnyVal {
 
   def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): Fold[S, A1] =
     self.andThen(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Fold[S, A1] =
-    self.andThen(evIndex.index(i))
 
   /** compose a [[Fold]] with a [[Fold]] */
   @deprecated("use andThen", since = "3.0.0-M1")

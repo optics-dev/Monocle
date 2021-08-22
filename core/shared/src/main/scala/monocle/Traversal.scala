@@ -8,27 +8,30 @@ import monocle.function.{At, Each, FilterIndex, Index}
 import cats.catsInstancesForId
 import cats.syntax.traverse._
 
-/** A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets
-  * where n can be infinite.
+/** A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets where n can be infinite.
   *
-  * [[PTraversal]] stands for Polymorphic Traversal as it replace and modify methods change
-  * a type `A` to `B` and `S` to `T`.
-  * [[Traversal]] is a type alias for [[PTraversal]] restricted to monomorphic updates:
+  * [[PTraversal]] stands for Polymorphic Traversal as it replace and modify methods change a type `A` to `B` and `S` to
+  * `T`. [[Traversal]] is a type alias for [[PTraversal]] restricted to monomorphic updates:
   * {{{
   * type Traversal[S, A] = PTraversal[S, S, A, A]
   * }}}
   *
-  * @see [[monocle.law.TraversalLaws]]
+  * @see
+  *   [[monocle.law.TraversalLaws]]
   *
-  * @tparam S the source of a [[PTraversal]]
-  * @tparam T the modified source of a [[PTraversal]]
-  * @tparam A the target of a [[PTraversal]]
-  * @tparam B the modified target of a [[PTraversal]]
+  * @tparam S
+  *   the source of a [[PTraversal]]
+  * @tparam T
+  *   the modified source of a [[PTraversal]]
+  * @tparam A
+  *   the target of a [[PTraversal]]
+  * @tparam B
+  *   the modified target of a [[PTraversal]]
   */
 trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] with Fold[S, A] { self =>
 
-  /** modify polymorphically the target of a [[PTraversal]] with an Applicative function
-    * all traversal methods are written in terms of modifyA
+  /** modify polymorphically the target of a [[PTraversal]] with an Applicative function all traversal methods are
+    * written in terms of modifyA
     */
   def modifyA[F[_]: Applicative](f: A => F[B])(s: S): F[T]
 
@@ -53,6 +56,14 @@ trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] with Fold[S, A] { self 
 
   override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PTraversal[S, T, A1, B1] =
     adapt[Option[A1], Option[B1]].andThen(std.option.pSome[A1, B1])
+
+  override def index[I, A1](
+    i: I
+  )(implicit evIndex: Index[A, I, A1], evMonoS: S =:= T, evMonoA: A =:= B): Traversal[S, A1] =
+    adaptMono.andThen(evIndex.index(i))
+
+  override private[monocle] def adaptMono(implicit evMonoS: S =:= T, evMonoA: A =:= B): Traversal[S, A] =
+    evMonoS.substituteContra[PTraversal[S, *, A, A]](evMonoA.substituteContra[PTraversal[S, T, A, *]](this))
 
   override private[monocle] def adapt[A1, B1](implicit evA: A =:= A1, evB: B =:= B1): PTraversal[S, T, A1, B1] =
     evB.substituteCo[PTraversal[S, T, A1, *]](evA.substituteCo[PTraversal[S, T, *, B]](this))
@@ -174,9 +185,9 @@ object Traversal {
   ): Traversal[S, A] =
     PTraversal.apply6(get1, get2, get3, get4, get5, get6)(set)
 
-  /** Merge multiple Optionals together.
-    * All Optional must target different piece of data otherwise the Traversal doesn't respect all properties.
-    * See this thread for more details: https://github.com/julien-truffaut/Monocle/issues/379#issuecomment-236374838.
+  /** Merge multiple Optionals together. All Optional must target different piece of data otherwise the Traversal
+    * doesn't respect all properties. See this thread for more details:
+    * https://github.com/julien-truffaut/Monocle/issues/379#issuecomment-236374838.
     */
   def applyN[S, A](xs: Optional[S, A]*): Traversal[S, A] =
     new PTraversal[S, S, A, A] {
@@ -283,8 +294,8 @@ final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extend
   def each[C](implicit evEach: Each[A, C]): Traversal[S, C] =
     self.andThen(evEach.each)
 
-  /** Select all the elements which satisfies the predicate.
-    * This combinator can break the fusion property see Optional.filter for more details.
+  /** Select all the elements which satisfies the predicate. This combinator can break the fusion property see
+    * Optional.filter for more details.
     */
   def filter(predicate: A => Boolean): Traversal[S, A] =
     self.andThen(Optional.filter(predicate))
@@ -297,7 +308,4 @@ final case class TraversalSyntax[S, A](private val self: Traversal[S, A]) extend
 
   def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): Traversal[S, A1] =
     self.andThen(evAt.at(i))
-
-  def index[I, A1](i: I)(implicit evIndex: Index[A, I, A1]): Traversal[S, A1] =
-    self.andThen(evIndex.index(i))
 }

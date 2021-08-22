@@ -30,7 +30,7 @@ class GenAppliedLensOpsImpl(val c: blackbox.Context) {
     c.Expr[AppliedLens[A, C]](q"""
       _root_.monocle.syntax.AppliedPLens(
         $subj,
-        _root_.monocle.macros.GenLens[${c.weakTypeOf[A]}](${field})
+        _root_.monocle.macros.GenLens[${c.weakTypeOf[A]}]($field)
       )
     """)
   }

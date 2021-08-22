@@ -12,7 +12,7 @@ final class AppliedFocusTest extends munit.FunSuite {
     val elise = User("Elise", Some(Address(12, "high street")))
 
     val streetNumber = elise.focus(_.address.some.streetNumber).getOption
-    val newElise = elise.focus(_.address.some.streetNumber).replace(50)
+    val newElise     = elise.focus(_.address.some.streetNumber).replace(50)
 
     assertEquals(streetNumber, Some(12))
     assertEquals(newElise, User("Elise", Some(Address(50, "high street"))))
@@ -25,7 +25,7 @@ final class AppliedFocusTest extends munit.FunSuite {
     val bob = User("Bob", Address(5, "Bob St"))
 
     val streetNumber = bob.focus(_.address.streetNumber).get
-    val newBob = bob.focus(_.address.streetNumber).replace(77)
+    val newBob       = bob.focus(_.address.streetNumber).replace(77)
 
     assertEquals(streetNumber, 5)
     assertEquals(newBob, User("Bob", Address(77, "Bob St")))

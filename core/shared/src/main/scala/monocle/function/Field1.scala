@@ -5,8 +5,10 @@ import monocle.{Iso, Lens}
 import scala.annotation.implicitNotFound
 
 /** Typeclass that defines a [[Lens]] from an `S` to its first element of type `A`
-  * @tparam S source of [[Lens]]
-  * @tparam A target of [[Lens]], `A` is supposed to be unique for a given `S`
+  * @tparam S
+  *   source of [[Lens]]
+  * @tparam A
+  *   target of [[Lens]], `A` is supposed to be unique for a given `S`
   */
 @implicitNotFound(
   "Could not find an instance of Field1[${S},${A}], please check Monocle instance location policy to " + "find out which import is necessary"
