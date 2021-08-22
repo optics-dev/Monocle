@@ -10,7 +10,7 @@ final class FocusSomeTest extends munit.FunSuite {
     case class Address(streetNumber: Int, postcode: String)
 
     val elise = User("Elise", Some(Address(12, "high street")))
-    val bob   = User("bob"  , None)
+    val bob   = User("bob", None)
 
     val streetNumber = Focus[User](_.address.some.streetNumber)
 
@@ -22,7 +22,7 @@ final class FocusSomeTest extends munit.FunSuite {
     case class IdOpt[+A](id: Long, value: Option[A])
     case class User(name: String, age: Int)
 
-    val bob = User("bob", 24)
+    val bob    = User("bob", 24)
     val idSome = IdOpt(1, Some(bob))
     val idNone = IdOpt(1, None)
 
@@ -54,11 +54,9 @@ final class FocusSomeTest extends munit.FunSuite {
   }
 
   test("Focus operator `some` commutes with standalone operator `some`") {
-    
+
     val opt: Option[Int] = Some(33)
 
-    assertEquals(
-      Focus[Option[Int]](_.some).getOption(opt),
-      Focus[Option[Int]](a => a).some.getOption(opt))
+    assertEquals(Focus[Option[Int]](_.some).getOption(opt), Focus[Option[Int]](a => a).some.getOption(opt))
   }
 }

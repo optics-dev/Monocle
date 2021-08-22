@@ -6,7 +6,7 @@ import monocle.function.At._
 final class FocusAtTest extends munit.FunSuite {
 
   test("Get direct `at` on the argument") {
-    val atA = Focus[Map[String,Int]](_.at("a"))
+    val atA = Focus[Map[String, Int]](_.at("a"))
     val map = Map("a" -> 1, "b" -> 2, "c" -> 3)
 
     assertEquals(atA.get(map), Some(1))
@@ -14,7 +14,7 @@ final class FocusAtTest extends munit.FunSuite {
   }
 
   test("Set direct `at` on the argument") {
-    val atB = Focus[Map[String,Int]](_.at("b"))
+    val atB = Focus[Map[String, Int]](_.at("b"))
     val map = Map("a" -> 1, "b" -> 2, "c" -> 3)
 
     assertEquals(atB.replace(Some(55))(map), map.updated("b", 55))
@@ -22,11 +22,9 @@ final class FocusAtTest extends munit.FunSuite {
   }
 
   test("Focus operator `at` commutes with standalone operator `at`") {
-    type PeopleMap = Map[String,Int]
+    type PeopleMap = Map[String, Int]
     val map: PeopleMap = Map("Bob" -> 44, "Sue" -> 21, "Etienne" -> 33)
 
-    assertEquals(
-      Focus[PeopleMap](_.at("Bob")).get(map), 
-      Focus[PeopleMap](a => a).at("Bob").get(map))
+    assertEquals(Focus[PeopleMap](_.at("Bob")).get(map), Focus[PeopleMap](a => a).at("Bob").get(map))
   }
 }

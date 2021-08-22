@@ -7,7 +7,8 @@ import scala.annotation.implicitNotFound
 import scala.collection.immutable.SortedMap
 
 /** Typeclass that defines a [[Prism]] from an `S` and its empty value
-  * @tparam S source of [[Prism]]
+  * @tparam S
+  *   source of [[Prism]]
   */
 @implicitNotFound(
   "Could not find an instance of Empty[${S}], please check Monocle instance location policy to " + "find out which import is necessary"
