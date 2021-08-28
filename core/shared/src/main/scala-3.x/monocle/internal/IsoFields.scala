@@ -1,7 +1,6 @@
 package monocle.internal
 
 import monocle.Iso
-
 import scala.quoted.{Expr, Quotes, Type, quotes}
 import scala.deriving.Mirror
 

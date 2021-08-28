@@ -1,7 +1,6 @@
 package monocle.internal
 
 import monocle.Prism
-
 import scala.quoted.{Expr, Quotes, Type}
 
 private[monocle] object AsPrism {
