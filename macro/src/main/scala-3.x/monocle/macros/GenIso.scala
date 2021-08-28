@@ -71,7 +71,7 @@ object GenIso {
         whitebox(_apply[S, a](e))
 
       case _ =>
-        whitebox(_fieldsTuple[S](e))
+        whitebox(monocle.internal.IsoFields[S](e))
     }
   }
 }
