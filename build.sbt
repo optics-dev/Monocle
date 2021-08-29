@@ -26,7 +26,7 @@ inThisBuild(
   )
 )
 
-lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.0" cross CrossVersion.full
+lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.1" cross CrossVersion.full
 
 lazy val buildSettings = Seq(
   scalaVersion       := "2.13.6",
