@@ -64,7 +64,7 @@ To do this we will use the relation between the typeclass <code>cats.Traverse</c
 <span class="hljs-keyword">val</span> xs = <span class="hljs-type">List</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>)
 </code></pre>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> eachL = <span class="hljs-type">Traversal</span>.fromTraverse[<span class="hljs-type">List</span>, <span class="hljs-type">Int</span>]
-<span class="hljs-comment">// eachL: Traversal[List[Int], Int] = monocle.PTraversal$$anon$2@5bd80de</span>
+<span class="hljs-comment">// eachL: Traversal[List[Int], Int] = monocle.PTraversal$$anon$2@36177bd0</span>
 eachL.replace(<span class="hljs-number">0</span>)(xs)
 <span class="hljs-comment">// res0: List[Int] = List(0, 0, 0, 0, 0)</span>
 eachL.modify(_ + <span class="hljs-number">1</span>)(xs)
@@ -106,7 +106,7 @@ A <code>Traversal</code> is defined by a single method <code>modifyA</code> whic
 <span class="hljs-keyword">val</span> m = <span class="hljs-type">Map</span>(<span class="hljs-number">1</span> -&gt; <span class="hljs-string">"one"</span>, <span class="hljs-number">2</span> -&gt; <span class="hljs-string">"two"</span>, <span class="hljs-number">3</span> -&gt; <span class="hljs-string">"three"</span>, <span class="hljs-number">4</span> -&gt; <span class="hljs-string">"Four"</span>)
 </code></pre>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> filterEven = filterKey[<span class="hljs-type">Int</span>, <span class="hljs-type">String</span>](_ % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>)
-<span class="hljs-comment">// filterEven: Traversal[Map[Int, String], String] = repl.MdocSession$App$$anon$1@1ce5b56a</span>
+<span class="hljs-comment">// filterEven: Traversal[Map[Int, String], String] = repl.MdocSession$App$$anon$1@ebec897</span>
 
 filterEven.modify(_.toUpperCase)(m)
 <span class="hljs-comment">// res7: Map[Int, String] = Map(</span>
