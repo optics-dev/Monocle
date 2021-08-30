@@ -2,7 +2,7 @@ package monocle.internal.focus.features.as
 
 import monocle.Prism
 import monocle.internal.focus.FocusBase
-import monocle.syntax.AsPrismImpl
+import monocle.internal.AsPrismImpl
 
 private[focus] trait AsGenerator {
   this: FocusBase =>
