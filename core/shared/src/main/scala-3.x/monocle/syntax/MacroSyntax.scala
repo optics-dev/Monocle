@@ -1,10 +1,21 @@
 package monocle.syntax
 
 import monocle._
-
-import scala.quoted.{Expr, Quotes, Type}
+import monocle.internal.{AsPrism, IsoFields}
+import scala.deriving.Mirror
 
 trait MacroSyntax {
+
+  extension (isoCompanion: Iso.type) {
+    
+    /** Generate an [[Iso]] between a case class `S` and its fields.
+      *
+      * Case classes with 0 fields will correspond with `EmptyTuple`, 1 with `Tuple1[field type]`, 2 or more with
+      * a tuple of all field types in the same order as the fields themselves.
+      */
+    transparent inline def fields[S <: Product : Mirror.ProductOf]: Iso[S, Tuple] =
+      IsoFields[S]
+  }
 
   extension [From, To] (optic: Prism[From, To]) {
     inline def as[CastTo <: To]: Prism[From, CastTo] =
@@ -56,17 +67,4 @@ trait MacroSyntax {
       optic.andThen(AsPrism[To, CastTo])
   }
 
-}
-
-private[monocle] object AsPrism {
-  inline def apply[From, To]: Prism[From, To] =
-    ${ AsPrismImpl.apply }
-}
-
-private[monocle] object AsPrismImpl {
-  def apply[From: Type, To: Type](using Quotes): Expr[Prism[From, To]] =
-    '{
-      Prism[From, To]((from: From) => if (from.isInstanceOf[To]) Some(from.asInstanceOf[To]) else None)(
-        (to: To) => to.asInstanceOf[From])
-    }
 }

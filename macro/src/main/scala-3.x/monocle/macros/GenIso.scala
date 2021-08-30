@@ -8,6 +8,7 @@ import scala.quoted.*
 object GenIso {
 
   /** Generate an [[Iso]] between a case class `S` and its unique field of type `A`. */
+  @deprecated("Use monocle.Focus[S](_.singleField) to create a single field Iso", since = "3.1.0")
   inline def apply[S <: Product, A](using m: Mirror.ProductOf[S]): Iso[S, A] =
     ${ _apply[S, A]('m) }
 
@@ -28,6 +29,7 @@ object GenIso {
   }
 
   /** Generate an [[Iso]] between an object `S` and `Unit`. */
+  @deprecated("no replacement", since = "3.1.0")
   inline def unit[S <: Product](using m: Mirror.ProductOf[S]): Iso[S, Unit] =
     ${ _unit[S]('m) }
 
@@ -51,6 +53,7 @@ object GenIso {
     * Case classes with 0 fields will correspond with `Unit`, 1 with the field type, 2 or more with
     * a tuple of all field types in the same order as the fields themselves.
     */
+  @deprecated("use monocle.Iso.fields", since = "3.1.0")
   transparent inline def fields[S <: Product](using m: Mirror.ProductOf[S]): Iso[S, Any] =
     ${ _fields[S]('m) }
 
@@ -68,31 +71,7 @@ object GenIso {
         whitebox(_apply[S, a](e))
 
       case _ =>
-        whitebox(_fieldsTuple[S](e))
-    }
-  }
-
-  /** Generate an [[Iso]] between a case class `S` and its fields.
-    *
-    * Case classes with 0 fields will correspond with `EmptyTuple`, 1 with `Tuple1[field type]`, 2 or more with
-    * a tuple of all field types in the same order as the fields themselves.
-    */
-  transparent inline def fieldsTuple[S <: Product](using m: Mirror.ProductOf[S]): Iso[S, Tuple] =
-    ${ _fieldsTuple[S]('m) }
-
-  private def _fieldsTuple[S <: Product](e: Expr[Mirror.ProductOf[S]])(using Quotes, Type[S]): Expr[Iso[S, Tuple]] = {
-    import quotes.reflect.*
-
-    def whitebox[A <: Tuple](e: Expr[Iso[S, A]]): Expr[Iso[S, Tuple]] =
-      e.asInstanceOf[Expr[Iso[S, Tuple]]]
-
-    e match {
-      case '{ type a <: Tuple; $m: Mirror.ProductOf[S] {type MirroredElemTypes = `a`} } =>
-        whitebox('{
-          val f: S => a = Tuple.fromProductTyped(_)(using $m)
-          val g: a => S = $m.fromProduct(_)
-          Iso[S, a](f)(g)
-        })
+        whitebox('{ monocle.internal.IsoFields[S](using $e) })
     }
   }
 }
