@@ -82,12 +82,14 @@ class MacroAppliedTraversalOps[S, A](private val optic: AppliedTraversal[S, A]) 
 }
 
 class MacroAppliedSetterOps[S, A](private val optic: AppliedSetter[S, A]) extends AnyVal {
-  def refocus[Next](lambda: A => Next): AppliedSetter[S, Next] = macro MacroOpsImpl.refocus_impl[AppliedSetter, S, A, Next]
+  def refocus[Next](lambda: A => Next): AppliedSetter[S, Next] =
+    macro MacroOpsImpl.refocus_impl[AppliedSetter, S, A, Next]
   def as[CastTo <: A]: AppliedSetter[S, CastTo] = macro MacroOpsImpl.as_impl[AppliedSetter, S, A, CastTo]
 }
 
 class MacroAppliedGetterOps[S, A](private val optic: AppliedGetter[S, A]) extends AnyVal {
-  def refocus[Next](lambda: A => Next): AppliedGetter[S, Next] = macro MacroOpsImpl.refocus_impl[AppliedGetter, S, A, Next]
+  def refocus[Next](lambda: A => Next): AppliedGetter[S, Next] =
+    macro MacroOpsImpl.refocus_impl[AppliedGetter, S, A, Next]
 }
 
 class MacroAppliedFoldOps[S, A](private val optic: AppliedFold[S, A]) extends AnyVal {
@@ -109,7 +111,9 @@ class MacroOpsImpl(val c: blackbox.Context) {
     )
   }
 
-  def refocus_impl[Optic[_, _], From, To: c.WeakTypeTag, Next](lambda: c.Expr[To => Next]): c.Expr[Optic[From, Next]] = {
+  def refocus_impl[Optic[_, _], From, To: c.WeakTypeTag, Next](
+    lambda: c.Expr[To => Next]
+  ): c.Expr[Optic[From, Next]] = {
     import c.universe._
 
     val subj = c.prefix.tree match {
@@ -118,7 +122,7 @@ class MacroOpsImpl(val c: blackbox.Context) {
     }
 
     c.Expr[Optic[From, Next]](
-      q"""$subj.andThen(_root_.monocle.macros.GenLens[${c.weakTypeOf[To]}](${lambda}))"""
+      q"""$subj.andThen(_root_.monocle.macros.GenLens[${c.weakTypeOf[To]}]($lambda))"""
     )
   }
 }
