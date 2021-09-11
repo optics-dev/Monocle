@@ -11,14 +11,14 @@ trait AppliedFocusSyntax {
 
 class AppliedFocusOps[A](private val value: A) extends AnyVal {
   @deprecated("use focus", since = "3.0.0-M1")
-  def lens[C](field: A => C): AppliedLens[A, C] = macro GenAppliedLensOpsImpl.lens_impl[A, C]
-  def focus[C](field: A => C): AppliedLens[A, C] = macro GenAppliedLensOpsImpl.lens_impl[A, C]
+  def lens[C](lambda: A => C): AppliedLens[A, C] = macro GenAppliedLensOpsImpl.lens_impl[A, C]
+  def focus[C](lambda: A => C): AppliedLens[A, C] = macro GenAppliedLensOpsImpl.lens_impl[A, C]
 
   def focus(): AppliedIso[A, A] = AppliedPIso(value, Iso.id)
 }
 
 class GenAppliedLensOpsImpl(val c: blackbox.Context) {
-  def lens_impl[A: c.WeakTypeTag, C](field: c.Expr[A => C]): c.Expr[AppliedLens[A, C]] = {
+  def lens_impl[A: c.WeakTypeTag, C](lambda: c.Expr[A => C]): c.Expr[AppliedLens[A, C]] = {
     import c.universe._
 
     val subj = c.prefix.tree match {
@@ -30,7 +30,7 @@ class GenAppliedLensOpsImpl(val c: blackbox.Context) {
     c.Expr[AppliedLens[A, C]](q"""
       _root_.monocle.syntax.AppliedPLens(
         $subj,
-        _root_.monocle.macros.GenLens[${c.weakTypeOf[A]}]($field)
+        _root_.monocle.macros.GenLens[${c.weakTypeOf[A]}]($lambda)
       )
     """)
   }
