@@ -4,7 +4,7 @@ import monocle.internal.focus.FocusBase
 import monocle.std.option.withDefault
 
 private[focus] trait WithDefaultGenerator {
-  this: FocusBase => 
+  this: FocusBase =>
 
   import macroContext.reflect._
 
@@ -12,7 +12,7 @@ private[focus] trait WithDefaultGenerator {
     import action.{toType, defaultValue}
 
     toType.asType match {
-      case '[t] => '{ withDefault[t](${defaultValue.asExprOf[t]}) }.asTerm
+      case '[t] => '{ withDefault[t](${ defaultValue.asExprOf[t] }) }.asTerm
     }
   }
 }
