@@ -11,7 +11,8 @@ private[monocle] object AsPrism {
 private[monocle] object AsPrismImpl {
   def apply[From: Type, To: Type](using Quotes): Expr[Prism[From, To]] =
     '{
-      Prism[From, To]((from: From) => if (from.isInstanceOf[To]) Some(from.asInstanceOf[To]) else None)(
-        (to: To) => to.asInstanceOf[From])
+      Prism[From, To]((from: From) => if (from.isInstanceOf[To]) Some(from.asInstanceOf[To]) else None)((to: To) =>
+        to.asInstanceOf[From]
+      )
     }
 }
