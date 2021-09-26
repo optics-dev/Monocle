@@ -4,7 +4,7 @@ import monocle.function.Each
 import monocle.internal.focus.FocusBase
 
 private[focus] trait EachGenerator {
-  this: FocusBase => 
+  this: FocusBase =>
 
   import macroContext.reflect._
 
@@ -12,8 +12,8 @@ private[focus] trait EachGenerator {
     import action.{fromType, toType, eachInstance}
 
     (fromType.asType, toType.asType) match {
-      case ('[f], '[t]) => '{(${eachInstance.asExprOf[Each[f, t]]}.each)}.asTerm
+      case ('[f], '[t]) => '{ (${ eachInstance.asExprOf[Each[f, t]] }.each) }.asTerm
     }
   }
-    
+
 }
