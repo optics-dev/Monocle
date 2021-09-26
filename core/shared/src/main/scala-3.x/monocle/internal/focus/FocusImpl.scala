@@ -1,29 +1,31 @@
 package monocle.internal.focus
 
-import monocle.{Lens, Focus}
-import scala.quoted.{Type, Expr, Quotes, quotes}
-import monocle.internal.focus.features.{ParserLoop, AllFeatureParsers, GeneratorLoop, AllFeatureGenerators}
+import monocle.{Focus, Lens}
+import scala.quoted.{quotes, Expr, Quotes, Type}
+import monocle.internal.focus.features.{AllFeatureGenerators, AllFeatureParsers, GeneratorLoop, ParserLoop}
 
 private[focus] class FocusImpl(val macroContext: Quotes)
     extends FocusBase
     with ErrorHandling
     with LambdaConfigParser
-    with ParserLoop with AllFeatureParsers
-    with GeneratorLoop with AllFeatureGenerators {
+    with ParserLoop
+    with AllFeatureParsers
+    with GeneratorLoop
+    with AllFeatureGenerators {
 
   import macroContext.reflect._
 
   def run[From: Type, To: Type](lambda: Expr[Focus.KeywordContext ?=> From => To]): Expr[Any] = {
-    val generatedCode = 
+    val generatedCode =
       for {
-        config <- parseLambdaConfig[From](lambda.asTerm)
+        config       <- parseLambdaConfig[From](lambda.asTerm)
         focusActions <- parseFocusActions(config)
-        code <- generateCode[From](focusActions)
+        code         <- generateCode[From](focusActions)
       } yield code
-    
+
     generatedCode match {
       case Right(code) => code.asExpr
-      case Left(error) => report.error(errorMessage(error)); '{???}
+      case Left(error) => report.error(errorMessage(error)); '{ ??? }
     }
   }
 }

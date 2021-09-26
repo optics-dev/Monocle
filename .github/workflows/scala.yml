@@ -16,7 +16,7 @@ jobs:
       - name: Setup Scala
         uses: olafurpg/setup-scala@v13
       - name: Checking your code format
-        run: sbt scalafmtCheckAll scalafmtSbtCheck
+        run: sbt +scalafmtCheckAll scalafmtSbtCheck
       - name: Run tests
         run: |
           sbt +test
