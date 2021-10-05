@@ -110,7 +110,7 @@ lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "
 lazy val macroVersion = "2.1.1"
 
 def mimaSettings(module: String): Seq[Setting[_]] = Seq(
-  mimaPreviousArtifacts := Set("dev.optics" %% s"monocle-$module" % "3.0.0")
+  mimaPreviousArtifacts := Set("dev.optics" %% s"monocle-$module" % "3.0.2")
 )
 
 lazy val gitRev = sys.process.Process("git rev-parse HEAD").lineStream_!.head
