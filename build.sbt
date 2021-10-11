@@ -93,7 +93,7 @@ lazy val buildSettings = Seq(
 )
 
 lazy val catsVersion   = "2.6.1"
-lazy val dottyVersions = Seq("3.0.2")
+lazy val scala3Versions = Seq("3.0.2")
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
@@ -192,7 +192,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(mimaSettings("core"): _*)
   .settings(libraryDependencies ++= Seq(cats.value, catsFree.value))
   .settings(
-    crossScalaVersions ++= dottyVersions,
+    crossScalaVersions ++= scala3Versions,
     moduleName := "monocle-core",
     scalacOptions ~= (_.filterNot(
       Set(
@@ -226,7 +226,7 @@ lazy val refined = crossProject(JVMPlatform, JSPlatform)
   )
   .settings(mimaSettings("refined"): _*)
   .settings(
-    crossScalaVersions ++= dottyVersions,
+    crossScalaVersions ++= scala3Versions,
     libraryDependencies ++= Seq(
       cats.value,
       refinedDep.value,
@@ -245,7 +245,7 @@ lazy val law = crossProject(JVMPlatform, JSPlatform)
   .settings(mimaSettings("law"): _*)
   .settings(
     moduleName := "monocle-law",
-    crossScalaVersions ++= dottyVersions
+    crossScalaVersions ++= scala3Versions
   )
   .settings(libraryDependencies += discipline.value)
 
@@ -260,7 +260,7 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
   )
   .settings(mimaSettings("macro"): _*)
   .settings(
-    crossScalaVersions ++= dottyVersions,
+    crossScalaVersions ++= scala3Versions,
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= {
       Seq(munitDiscipline.value) ++ {
@@ -283,7 +283,7 @@ lazy val state = crossProject(JVMPlatform, JSPlatform)
   )
   .settings(
     moduleName := "monocle-state",
-    crossScalaVersions ++= dottyVersions
+    crossScalaVersions ++= scala3Versions
   )
   .settings(mimaFailOnNoPrevious := false)
   .settings(libraryDependencies ++= Seq(cats.value))
@@ -297,7 +297,7 @@ lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
   )
   .settings(
     moduleName := "monocle-unsafe",
-    crossScalaVersions ++= dottyVersions
+    crossScalaVersions ++= scala3Versions
   )
   .settings(mimaFailOnNoPrevious := false)
   .settings(libraryDependencies ++= Seq(cats.value, alleycats.value))
@@ -312,7 +312,7 @@ lazy val test = crossProject(JVMPlatform, JSPlatform)
   .settings(mimaFailOnNoPrevious := false)
   .settings(noPublishSettings: _*)
   .settings(
-    crossScalaVersions ++= dottyVersions,
+    crossScalaVersions ++= scala3Versions,
     libraryDependencies ++= Seq(
       cats.value,
       catsLaws.value,
