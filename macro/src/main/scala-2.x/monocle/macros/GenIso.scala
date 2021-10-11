@@ -117,7 +117,7 @@ class GenIsoImplW(override val c: whitebox.Context) extends GenIsoImplBase {
 
     val a = s.asTerm.name match {
       case n: TermName => n
-      case n: TypeName => fail("Expected a TermName, got " + n)
+      case n           => fail("Expected a TermName, got " + n)
     }
     val A = paramType(a)
     (a, A)
