@@ -93,7 +93,7 @@ lazy val buildSettings = Seq(
 )
 
 lazy val catsVersion   = "2.6.1"
-lazy val dottyVersions = Seq("3.0.0")
+lazy val dottyVersions = Seq("3.0.2")
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
@@ -110,7 +110,7 @@ lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "
 lazy val macroVersion = "2.1.1"
 
 def mimaSettings(module: String): Seq[Setting[_]] = Seq(
-  mimaPreviousArtifacts := Set("dev.optics" %% s"monocle-$module" % "3.0.2")
+  mimaPreviousArtifacts := Set("dev.optics" %% s"monocle-$module" % "3.0.0")
 )
 
 lazy val gitRev = sys.process.Process("git rev-parse HEAD").lineStream_!.head
