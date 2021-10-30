@@ -45,8 +45,8 @@ class LensSpec extends MonocleSuite {
   checkAll("first", LensTests(s.first[Boolean]))
   checkAll("second", LensTests(s.second[Boolean]))
 
-  //Conflicting lenses break the get what you replace law
-  //checkAll("tupled", LensTests((x,x).tupled))
+  // Conflicting lenses break the get what you replace law
+  // checkAll("tupled", LensTests((x,x).tupled))
   checkAll("tupled", LensTests((x, y).tupled))
 
   // test implicit resolution of type classes
@@ -80,7 +80,7 @@ class LensSpec extends MonocleSuite {
     assertEquals(
       zippedLenses.replace((2, 3))(Point(5, 6)),
       Point(3, 6)
-    ) //2 disappeared
+    ) // 2 disappeared
 
   }
 

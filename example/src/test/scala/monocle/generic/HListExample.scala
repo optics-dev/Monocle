@@ -12,7 +12,7 @@ class HListExample extends MonocleSuite with GenericInstances {
   test("toHList creates an Iso between a Generic (typically a case class) and HList") {
     assertEquals((Example(1, "bla", true) applyIso toHList get), (1 :: "bla" :: true :: HNil))
 
-    //assertEquals( (Example(1, "bla", true) applyIso toHList applyLens first replace 5) ,  Example(5, "bla", true))
+    // assertEquals( (Example(1, "bla", true) applyIso toHList applyLens first replace 5) ,  Example(5, "bla", true))
   }
 
   test("reverse creates an Iso between an HList and its reverse version") {
