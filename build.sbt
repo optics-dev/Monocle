@@ -29,8 +29,8 @@ inThisBuild(
 lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.2" cross CrossVersion.full
 
 lazy val buildSettings = Seq(
-  scalaVersion       := "2.13.6",
-  crossScalaVersions := Seq("2.13.6"),
+  scalaVersion       := "2.13.7",
+  crossScalaVersions := Seq("2.13.7"),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("main", baseDirectory.value, scalaVersion.value),
   Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders("test", baseDirectory.value, scalaVersion.value),
