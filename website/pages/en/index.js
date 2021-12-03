@@ -92,7 +92,7 @@ class Index extends React.Component {
     );
 
     const index = `[![Join the chat at https://gitter.im/optics-dev/Monocle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/optics-dev/Monocle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Maven Central](https://img.shields.io/maven-central/v/dev.optics/monocle-core_2.13)](http://search.maven.org/#search|ga|1|dev.optics.monocle-core)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.optics/monocle-core_2.13)](https://search.maven.org/#search|ga|1|dev.optics.monocle-core)
 
 Monocle is a Scala library which offers a simple yet powerful API to access and transform immutable data.
 
