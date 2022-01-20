@@ -16,9 +16,9 @@ import monocle.function.{At, Each, FilterIndex, Index}
   *
   * A [[PIso]] allows to lift a function `f: A => B` to `S => T` and a function `g: T => S` to `B => A` <pre> g S T S
   * <-------- T
-  * | ↑ | ↑
-  * | | | | get | | reverseGet reverse.reverseGet | | reverse.get
-  * | | | | ↓ f | ↓ | A --------> B A B </pre>
+  * \| ↑ | ↑
+  * \| | | | get | | reverseGet reverse.reverseGet | | reverse.get
+  * \| | | | ↓ f | ↓ | A --------> B A B </pre>
   *
   * A [[PIso]] is also a valid [[Getter]], [[Fold]], [[PLens]], [[PPrism]], [[POptional]], [[PTraversal]] and
   * [[PSetter]]
