@@ -71,7 +71,7 @@ class Index extends React.Component {
     const docUrl = doc => `${baseUrl}${docsPart}${langPart}${doc}`;
 
     const organization = "dev.optics";
-    const latestVersion = "3.0.0"
+    const latestVersion = "3.1.0"
 
     const latestVersionBadge = latestVersion
       .replace("-", "--")
@@ -113,20 +113,20 @@ user.focus(_.address.streetNumber).get
 
 ## Installation
 
-Monocle is published for Scala **2.13** and **3.0.0**. You can add it to your sbt build with:
+Monocle is published for Scala **2.13.x** and **3.x**. You can add it to your sbt build with:
 
 
 \`\`\`scala
 libraryDependencies ++= Seq(
  "${organization}" %% "monocle-core"  % "${latestVersion}",
- "${organization}" %% "monocle-macro" % "${latestVersion}", // only for Scala 2.13
+ "${organization}" %% "monocle-macro" % "${latestVersion}",
 )
 \`\`\`
 
 You also need this compiler option if you want to use macro annotations - only available for Scala **2.13*: 
 
 \`\`\`scala
-scalacOptions in Global += "-Ymacro-annotations"
+Global / scalacOptions += "-Ymacro-annotations"
 \`\`\`
 
 ## Copyright and license
