@@ -85,7 +85,8 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
       .find(_.name.decodedName.toString == strFieldName)
       .getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $sTpe"))
 
-    val F = TypeName(c.freshName("F"))
+    val F  = TypeName(c.freshName("F"))
+    val ev = TermName(c.freshName("evFunctor"))
 
     c.Expr[PLens[S, T, A, B]](q"""
       import _root_.scala.language.higherKinds // prevent warning at call site
@@ -97,7 +98,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
         override def replace(a: $bTpe): $sTpe => $tTpe =
           _.copy($field = a)
 
-        override def modifyF[$F[_]: _root_.cats.Functor](f: $aTpe => $F[$bTpe])(s: $sTpe): $F[$tTpe] =
+        override def modifyF[$F[_]](f: $aTpe => $F[$bTpe])(s: $sTpe)(implicit $ev: _root_.cats.Functor[$F]): $F[$tTpe] =
           _root_.cats.Functor[$F].map(f(s.$fieldMethod))(a => s.copy($field = a))
 
         override def modify(f: $aTpe => $bTpe): $sTpe => $tTpe =
