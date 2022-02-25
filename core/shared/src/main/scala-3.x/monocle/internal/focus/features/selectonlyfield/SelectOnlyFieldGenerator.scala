@@ -1,27 +1,25 @@
 package monocle.internal.focus.features.selectonlyfield
 
 import monocle.internal.focus.FocusBase
+import monocle.internal.focus.features.SelectGeneratorBase
 import monocle.Iso
-import scala.quoted.Quotes
 
 private[focus] trait SelectOnlyFieldGenerator {
-  this: FocusBase =>
+  this: FocusBase with SelectGeneratorBase =>
 
   import macroContext.reflect._
 
   def generateSelectOnlyField(action: FocusAction.SelectOnlyField): Term = {
     import action.{fieldName, fromType, fromTypeArgs, fromCompanion, toType}
 
-    def generateGetter(from: Term): Term =
-      Select.unique(from, fieldName) // o.field
-
     def generateReverseGet(to: Term): Term =
-      Select.overloaded(fromCompanion, "apply", fromTypeArgs, List(to)) // Companion.apply(value)
+      // Companion.apply(value)(implicits)*
+      etaExpandIfNecessary(Select.overloaded(fromCompanion, "apply", fromTypeArgs, List(to)))
 
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) =>
         '{
-          Iso.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm).asExprOf[t] })((to: t) =>
+          Iso.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, fieldName).asExprOf[t] })((to: t) =>
             ${ generateReverseGet('{ to }.asTerm).asExprOf[f] }
           )
         }.asTerm

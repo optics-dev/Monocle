@@ -14,6 +14,7 @@ import scala.quoted.Type
 
 private[focus] trait AllFeatureGenerators
     extends FocusBase
+    with SelectGeneratorBase
     with SelectFieldGenerator
     with SelectOnlyFieldGenerator
     with SomeGenerator
