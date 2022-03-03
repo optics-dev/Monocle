@@ -27,11 +27,36 @@ private[focus] trait SelectOnlyFieldParser {
       toType    <- getFieldType(fromType, fieldName)
       companion <- getCompanionObject(fromType)
       supplied = getSuppliedTypeArgs(fromType)
-    } yield FocusAction.SelectOnlyField(fieldName, fromType, supplied, companion, toType)
+      reverseGet <- constructReverseGet(companion, fromType, toType, supplied)
+    } yield FocusAction.SelectOnlyField(fieldName, fromType, toType, reverseGet)
 
   private def hasOnlyOneField(fromCode: Term): Boolean =
     getType(fromCode).classSymbol.exists(_.caseFields.length == 1)
 
   private def getCompanionObject(fromType: TypeRepr): FocusResult[Term] =
     getClassSymbol(fromType).map(sym => Ref(sym.companionModule))
+
+  private case class LiftException(error: FocusError) extends Exception
+
+  private def constructReverseGet(
+    companion: Term,
+    fromType: TypeRepr,
+    toType: TypeRepr,
+    fromTypeArgs: List[TypeRepr]
+  ): FocusResult[Term] =
+    // Companion.apply(value)(implicits)*
+    (fromType.asType, toType.asType) match {
+      case ('[f], '[t]) =>
+        scala.util.Try('{ (to: t) =>
+          ${
+            etaExpandIfNecessary(
+              Select.overloaded(companion, "apply", fromTypeArgs, List('{ to }.asTerm))
+            ).fold(error => throw new LiftException(error), _.asExprOf[f])
+          }
+        }.asTerm) match {
+          case scala.util.Success(term)                 => Right(term)
+          case scala.util.Failure(LiftException(error)) => Left(error)
+          case scala.util.Failure(other)                => Left(FocusError.ExpansionFailed(other.toString))
+        }
+    }
 }

@@ -13,13 +13,17 @@ private[focus] trait FocusBase {
   case class LambdaConfig(argName: String, lambdaBody: Term)
 
   enum FocusAction {
-    case SelectField(fieldName: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
+    case SelectField(
+      fieldName: String,
+      fromType: TypeRepr,
+      toType: TypeRepr,
+      setter: Term
+    )
     case SelectOnlyField(
       fieldName: String,
       fromType: TypeRepr,
-      fromTypeArgs: List[TypeRepr],
-      fromCompanion: Term,
-      toType: TypeRepr
+      toType: TypeRepr,
+      reverseGet: Term
     )
     case KeywordSome(toType: TypeRepr)
     case KeywordAs(fromType: TypeRepr, toType: TypeRepr)
@@ -29,10 +33,10 @@ private[focus] trait FocusBase {
     case KeywordWithDefault(toType: TypeRepr, defaultValue: Term)
 
     override def toString(): String = this match {
-      case SelectField(fieldName, fromType, fromTypeArgs, toType) =>
-        s"SelectField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
-      case SelectOnlyField(fieldName, fromType, fromTypeArgs, _, toType) =>
-        s"SelectOnlyField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ..., ${toType.show})"
+      case SelectField(fieldName, fromType, toType, setter) =>
+        s"SelectField($fieldName, ${fromType.show}, ${toType.show}, ${setter.asExpr.show})"
+      case SelectOnlyField(fieldName, fromType, toType, reverseGet) =>
+        s"SelectOnlyField($fieldName, ${fromType.show}, ${toType.show}, ${reverseGet.asExpr.show})"
       case KeywordSome(toType)                  => s"KeywordSome(${toType.show})"
       case KeywordAs(fromType, toType)          => s"KeywordAs(${fromType.show}, ${toType.show})"
       case KeywordEach(fromType, toType, _)     => s"KeywordEach(${fromType.show}, ${toType.show}, ...)"
@@ -52,6 +56,8 @@ private[focus] trait FocusBase {
     case CouldntFindFieldType(fromType: String, fieldName: String)
     case ComposeMismatch(type1: String, type2: String)
     case InvalidDowncast(fromType: String, toType: String)
+    case ImplicitNotFound(implicitType: String)
+    case ExpansionFailed(reason: String)
 
     def asResult: FocusResult[Nothing] = Left(this)
   }

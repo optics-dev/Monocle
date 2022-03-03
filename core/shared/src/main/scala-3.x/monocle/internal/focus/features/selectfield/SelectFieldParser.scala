@@ -27,6 +27,33 @@ private[focus] trait SelectFieldParser {
 
   private def getFieldAction(fromType: TypeRepr, fieldName: String): FocusResult[FocusAction] =
     getFieldType(fromType, fieldName).flatMap { toType =>
-      Right(FocusAction.SelectField(fieldName, fromType, getSuppliedTypeArgs(fromType), toType))
+      val typeArgs = getSuppliedTypeArgs(fromType)
+      constructSetter(fieldName, fromType, toType, typeArgs).map { setter =>
+        FocusAction.SelectField(fieldName, fromType, toType, setter)
+      }
+    }
+
+  private case class LiftException(error: FocusError) extends Exception
+
+  private def constructSetter(
+    fieldName: String,
+    fromType: TypeRepr,
+    toType: TypeRepr,
+    fromTypeArgs: List[TypeRepr]
+  ): FocusResult[Term] =
+    // Companion.copy(value)(implicits)*
+    (fromType.asType, toType.asType) match {
+      case ('[f], '[t]) =>
+        scala.util.Try('{ (to: t) => (from: f) =>
+          ${
+            etaExpandIfNecessary(
+              Select.overloaded('{ from }.asTerm, "copy", fromTypeArgs, List(NamedArg(fieldName, '{ to }.asTerm)))
+            ).fold(error => throw new LiftException(error), _.asExprOf[f])
+          }
+        }.asTerm) match {
+          case scala.util.Success(term)                 => Right(term)
+          case scala.util.Failure(LiftException(error)) => Left(error)
+          case scala.util.Failure(other)                => Left(FocusError.ExpansionFailed(other.toString))
+        }
     }
 }

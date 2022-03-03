@@ -1,26 +1,21 @@
 package monocle.internal.focus.features.selectfield
 
 import monocle.internal.focus.FocusBase
-import monocle.internal.focus.features.SelectGeneratorBase
 import monocle.Lens
 
 private[focus] trait SelectFieldGenerator {
-  this: FocusBase with SelectGeneratorBase =>
+  this: FocusBase =>
 
   import macroContext.reflect._
 
   def generateSelectField(action: FocusAction.SelectField): Term = {
-    import action.{fieldName, fromType, fromTypeArgs, toType}
-
-    def generateSetter(from: Term, to: Term): Term =
-      // o.copy(field = value)(implicits)*
-      etaExpandIfNecessary(Select.overloaded(from, "copy", fromTypeArgs, NamedArg(fieldName, to) :: Nil))
+    import action.{fieldName, fromType, toType, setter}
 
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) =>
         '{
-          Lens.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, fieldName).asExprOf[t] })((to: t) =>
-            (from: f) => ${ generateSetter('{ from }.asTerm, '{ to }.asTerm).asExprOf[f] }
+          Lens.apply[f, t]((from: f) => ${ Select.unique('{ from }.asTerm, fieldName).asExprOf[t] })(
+            ${ setter.asExprOf[t => f => f] }
           )
         }.asTerm
     }

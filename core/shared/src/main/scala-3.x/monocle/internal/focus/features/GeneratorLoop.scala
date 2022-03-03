@@ -14,7 +14,6 @@ import scala.quoted.Type
 
 private[focus] trait AllFeatureGenerators
     extends FocusBase
-    with SelectGeneratorBase
     with SelectFieldGenerator
     with SelectOnlyFieldGenerator
     with SomeGenerator
@@ -29,13 +28,14 @@ private[focus] trait GeneratorLoop {
 
   import macroContext.reflect._
 
-  def generateCode[From: Type](actions: List[FocusAction]): FocusResult[Term] = {
-    val idOptic: FocusResult[Term] = Right('{ Iso.id[From] }.asTerm)
-
-    actions.foldLeft(idOptic) { (resultSoFar, action) =>
-      resultSoFar.flatMap(term => composeOptics(term, generateActionCode(action)))
+  def generateCode[From: Type](actions: List[FocusAction]): FocusResult[Term] =
+    actions match {
+      case Nil => Right('{ Iso.id[From] }.asTerm)
+      case head :: tail =>
+        tail.foldLeft[FocusResult[Term]](Right(generateActionCode(head))) { (resultSoFar, action) =>
+          resultSoFar.flatMap(term => composeOptics(term, generateActionCode(action)))
+        }
     }
-  }
 
   private def generateActionCode(action: FocusAction): Term =
     action match {

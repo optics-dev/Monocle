@@ -1,6 +1,10 @@
 package monocle.internal.focus.features
 
 import monocle.internal.focus.FocusBase
+import scala.annotation.tailrec
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
 
 private[focus] trait SelectParserBase extends ParserBase {
   this: FocusBase =>
@@ -30,7 +34,7 @@ private[focus] trait SelectParserBase extends ParserBase {
     // We need to do this to support tuples, because even though they conform as case classes in other respects,
     // for some reason their field names (_1, _2, etc) have a space at the end, ie `_1 `.
     def getTrimmedFieldSymbol(fromTypeSymbol: Symbol): Symbol =
-      fromTypeSymbol.memberFields.find(_.name.trim == fieldName).getOrElse(Symbol.noSymbol)
+      fromTypeSymbol.fieldMembers.find(_.name.trim == fieldName).getOrElse(Symbol.noSymbol)
 
     getClassSymbol(fromType).flatMap { fromTypeSymbol =>
       getTrimmedFieldSymbol(fromTypeSymbol) match {
@@ -68,5 +72,37 @@ private[focus] trait SelectParserBase extends ParserBase {
     classType.classSymbol.map(_.primaryConstructor.paramSymss) match {
       case Some(typeParamList :: _) if typeParamList.exists(_.isTypeParam) => typeParamList
       case _                                                               => Nil
+    }
+
+  @tailrec
+  final def etaExpandIfNecessary(term: Term): FocusResult[Term] =
+    if (term.isExpr) {
+      Right(term)
+    } else {
+      val expanded: Term = term.etaExpand(Symbol.spliceOwner)
+
+      val implicitsResult: FocusResult[List[Term]] =
+        expanded match {
+          case Block(List(DefDef(_, List(params), _, _)), _) =>
+            params.params.foldLeft[FocusResult[List[Term]]](Right(List.empty[Term])) {
+              case (Right(acc), ValDef(_, t, _)) =>
+                val typeRepr: TypeRepr = t.tpe.dealias
+                Implicits.search(typeRepr) match {
+                  case success: ImplicitSearchSuccess => Right(success.tree :: acc)
+                  case _                              => FocusError.ImplicitNotFound(typeRepr.show).asResult
+                }
+              case (Right(acc), other) =>
+                FocusError.ExpansionFailed(s"Expected value definition but found unexpected ${other.show}").asResult
+              case (left @ Left(_), _) =>
+                left
+            }
+          case other =>
+            FocusError.ExpansionFailed(s"Expected block of expanded term but found unexpected ${other.show}").asResult
+        }
+
+      implicitsResult match {
+        case Left(error)      => Left(error)
+        case Right(implicits) => etaExpandIfNecessary(Apply(term, implicits))
+      }
     }
 }
