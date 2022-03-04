@@ -39,14 +39,16 @@ private[focus] trait GeneratorLoop {
 
   private def generateActionCode(action: FocusAction): Term =
     action match {
-      case a: FocusAction.SelectField        => generateSelectField(a)
-      case a: FocusAction.SelectOnlyField    => generateSelectOnlyField(a)
-      case a: FocusAction.KeywordSome        => generateSome(a)
-      case a: FocusAction.KeywordAs          => generateAs(a)
-      case a: FocusAction.KeywordEach        => generateEach(a)
-      case a: FocusAction.KeywordAt          => generateAt(a)
-      case a: FocusAction.KeywordIndex       => generateIndex(a)
-      case a: FocusAction.KeywordWithDefault => generateWithDefault(a)
+      case a: FocusAction.SelectField                  => generateSelectField(a)
+      case a: FocusAction.SelectFieldWithImplicits     => generateSelectFieldWithImplicits(a)
+      case a: FocusAction.SelectOnlyField              => generateSelectOnlyField(a)
+      case a: FocusAction.SelectOnlyFieldWithImplicits => generateSelectOnlyFieldWithImplicits(a)
+      case a: FocusAction.KeywordSome                  => generateSome(a)
+      case a: FocusAction.KeywordAs                    => generateAs(a)
+      case a: FocusAction.KeywordEach                  => generateEach(a)
+      case a: FocusAction.KeywordAt                    => generateAt(a)
+      case a: FocusAction.KeywordIndex                 => generateIndex(a)
+      case a: FocusAction.KeywordWithDefault           => generateWithDefault(a)
     }
 
   private def composeOptics(lens1: Term, lens2: Term): FocusResult[Term] =

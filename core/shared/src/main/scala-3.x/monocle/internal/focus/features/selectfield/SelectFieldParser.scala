@@ -12,9 +12,13 @@ private[focus] trait SelectFieldParser {
 
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
 
-      case Select(CaseClass(remainingCode), fieldName) =>
-        val fromType                = getType(remainingCode)
-        val action                  = getFieldAction(fromType, fieldName)
+      case Select(CaseClass(remainingCode, classSymbol), fieldName) =>
+        val fromType = getType(remainingCode)
+        val action = if (hasOnlyOneParameterList(classSymbol)) {
+          getFieldAction(fromType, fieldName)
+        } else {
+          getFieldActionWithImplicits(fromType, fieldName)
+        }
         val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
         Some(remainingCodeWithAction)
 
@@ -25,11 +29,23 @@ private[focus] trait SelectFieldParser {
     }
   }
 
+  private def hasOnlyOneParameterList(classSymbol: Symbol): Boolean =
+    classSymbol.primaryConstructor.paramSymss match {
+      case _ :: Nil                                    => true
+      case (head :: _) :: _ :: Nil if head.isTypeParam => true
+      case _                                           => false
+    }
+
   private def getFieldAction(fromType: TypeRepr, fieldName: String): FocusResult[FocusAction] =
+    getFieldType(fromType, fieldName).flatMap { toType =>
+      Right(FocusAction.SelectField(fieldName, fromType, getSuppliedTypeArgs(fromType), toType))
+    }
+
+  private def getFieldActionWithImplicits(fromType: TypeRepr, fieldName: String): FocusResult[FocusAction] =
     getFieldType(fromType, fieldName).flatMap { toType =>
       val typeArgs = getSuppliedTypeArgs(fromType)
       constructSetter(fieldName, fromType, toType, typeArgs).map { setter =>
-        FocusAction.SelectField(fieldName, fromType, toType, setter)
+        FocusAction.SelectFieldWithImplicits(fieldName, fromType, toType, setter)
       }
     }
 

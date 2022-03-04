@@ -13,9 +13,9 @@ private[focus] trait SelectParserBase extends ParserBase {
 
   // Match on a term that is an instance of a case class
   object CaseClass {
-    def unapply(term: Term): Option[Term] =
+    def unapply(term: Term): Option[(Term, Symbol)] =
       term.tpe.classSymbol.flatMap { sym =>
-        Option.when(sym.flags.is(Flags.Case))(term)
+        Option.when(sym.flags.is(Flags.Case))((term, sym))
       }
   }
 
@@ -86,11 +86,17 @@ private[focus] trait SelectParserBase extends ParserBase {
           case Block(List(DefDef(_, List(params), _, _)), _) =>
             params.params.foldLeft[FocusResult[List[Term]]](Right(List.empty[Term])) {
               case (Right(acc), ValDef(_, t, _)) =>
-                val typeRepr: TypeRepr = t.tpe.dealias
-                Implicits.search(typeRepr) match {
-                  case success: ImplicitSearchSuccess => Right(success.tree :: acc)
-                  case _                              => FocusError.ImplicitNotFound(typeRepr.show).asResult
-                }
+                def searchForImplicit(typeRepr: TypeRepr): FocusResult[Term] =
+                  Implicits.search(typeRepr) match {
+                    case success: ImplicitSearchSuccess => Right(success.tree)
+                    case _                              => FocusError.ImplicitNotFound(typeRepr.show).asResult
+                  }
+                searchForImplicit(t.tpe)
+                  .orElse(searchForImplicit(t.tpe.dealias))
+                  .orElse(searchForImplicit(t.tpe.widen))
+                  .orElse(searchForImplicit(t.tpe.widen.dealias))
+                  .map(acc :+ _)
+
               case (Right(acc), other) =>
                 FocusError.ExpansionFailed(s"Expected value definition but found unexpected ${other.show}").asResult
               case (left @ Left(_), _) =>

@@ -12,9 +12,16 @@ private[focus] trait SelectOnlyFieldParser {
 
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
 
-      case Select(CaseClass(remainingCode), fieldName) if hasOnlyOneField(remainingCode) =>
-        val fromType                = getType(remainingCode)
-        val action                  = getFieldAction(fromType, fieldName)
+      case Select(CaseClass(remainingCode, classSymbol), fieldName) if notACaseField(classSymbol, fieldName) =>
+        Some(FocusError.NotACaseField(remainingCode.tpe.show, fieldName).asResult)
+
+      case Select(CaseClass(remainingCode, classSymbol), fieldName) if hasOnlyOneField(classSymbol) =>
+        val fromType = getType(remainingCode)
+        val action = if (hasOnlyOneParameterList(classSymbol)) {
+          getFieldAction(fromType, classSymbol, fieldName)
+        } else {
+          getFieldActionWithImplicits(fromType, classSymbol, fieldName)
+        }
         val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
         Some(remainingCodeWithAction)
 
@@ -22,19 +29,44 @@ private[focus] trait SelectOnlyFieldParser {
     }
   }
 
-  private def getFieldAction(fromType: TypeRepr, fieldName: String): FocusResult[FocusAction] =
+  private def getFieldAction(
+    fromType: TypeRepr,
+    fromClassSymbol: Symbol,
+    fieldName: String
+  ): FocusResult[FocusAction] =
     for {
-      toType    <- getFieldType(fromType, fieldName)
-      companion <- getCompanionObject(fromType)
-      supplied = getSuppliedTypeArgs(fromType)
+      toType <- getFieldType(fromType, fieldName)
+      companion = getCompanionObject(fromClassSymbol)
+      supplied  = getSuppliedTypeArgs(fromType)
+    } yield FocusAction.SelectOnlyField(fieldName, fromType, supplied, companion, toType)
+
+  private def getFieldActionWithImplicits(
+    fromType: TypeRepr,
+    fromClassSymbol: Symbol,
+    fieldName: String
+  ): FocusResult[FocusAction] =
+    for {
+      toType <- getFieldType(fromType, fieldName)
+      companion = getCompanionObject(fromClassSymbol)
+      supplied  = getSuppliedTypeArgs(fromType)
       reverseGet <- constructReverseGet(companion, fromType, toType, supplied)
-    } yield FocusAction.SelectOnlyField(fieldName, fromType, toType, reverseGet)
+    } yield FocusAction.SelectOnlyFieldWithImplicits(fieldName, fromType, toType, reverseGet)
 
-  private def hasOnlyOneField(fromCode: Term): Boolean =
-    getType(fromCode).classSymbol.exists(_.caseFields.length == 1)
+  private def hasOnlyOneField(classSymbol: Symbol): Boolean =
+    classSymbol.caseFields.length == 1
 
-  private def getCompanionObject(fromType: TypeRepr): FocusResult[Term] =
-    getClassSymbol(fromType).map(sym => Ref(sym.companionModule))
+  private def notACaseField(classSymbol: Symbol, fieldName: String): Boolean =
+    classSymbol.caseFields.forall(_.name != fieldName)
+
+  private def hasOnlyOneParameterList(classSymbol: Symbol): Boolean =
+    classSymbol.primaryConstructor.paramSymss match {
+      case _ :: Nil                                    => true
+      case (head :: _) :: _ :: Nil if head.isTypeParam => true
+      case _                                           => false
+    }
+
+  private def getCompanionObject(classSymbol: Symbol): Term =
+    Ref(classSymbol.companionModule)
 
   private case class LiftException(error: FocusError) extends Exception
 

@@ -6,6 +6,8 @@ private[focus] trait ErrorHandling {
   def errorMessage(error: FocusError): String = error match {
     case FocusError.NotACaseClass(fromClass, fieldName) =>
       s"Cannot generate Lens for field '$fieldName', because '$fromClass' is not a case class"
+    case FocusError.NotACaseField(caseClass, fieldName) =>
+      s"Can only create lenses for case fields, but '$fieldName' is not a case field of '$caseClass'"
     case FocusError.NotAConcreteClass(fromClass) =>
       s"Expecting a concrete case class in the 'From' position; cannot reify type $fromClass"
     case FocusError.NotASimpleLambdaFunction =>
