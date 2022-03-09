@@ -13,14 +13,19 @@ private[focus] trait SelectFieldParser {
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
 
       case Select(CaseClass(remainingCode, classSymbol), fieldName) =>
-        val fromType = getType(remainingCode)
-        val action = if (hasOnlyOneParameterList(classSymbol)) {
-          getFieldAction(fromType, fieldName)
+        if (isCaseField(classSymbol, fieldName)) {
+          val fromType = getType(remainingCode)
+          val action = (hasOnlyOneParameterList(classSymbol), hasOnlyOneField(classSymbol)) match {
+            case (true, false)  => getSelectFieldAction(fromType, fieldName)
+            case (false, false) => getSelectFieldActionWithImplicits(fromType, fieldName)
+            case (true, true)   => getSelectOnlyFieldAction(fromType, classSymbol, fieldName)
+            case (false, true)  => getSelectOnlyFieldActionWithImplicits(fromType, classSymbol, fieldName)
+          }
+          val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
+          Some(remainingCodeWithAction)
         } else {
-          getFieldActionWithImplicits(fromType, fieldName)
+          Some(FocusError.NotACaseField(remainingCode.tpe.show, fieldName).asResult)
         }
-        val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
-        Some(remainingCodeWithAction)
 
       case Select(remainingCode, fieldName) =>
         Some(FocusError.NotACaseClass(remainingCode.tpe.show, fieldName).asResult)
@@ -29,6 +34,12 @@ private[focus] trait SelectFieldParser {
     }
   }
 
+  private def isCaseField(classSymbol: Symbol, fieldName: String): Boolean =
+    classSymbol.caseFields.exists(_.name == fieldName)
+
+  private def hasOnlyOneField(classSymbol: Symbol): Boolean =
+    classSymbol.caseFields.length == 1
+
   private def hasOnlyOneParameterList(classSymbol: Symbol): Boolean =
     classSymbol.primaryConstructor.paramSymss match {
       case _ :: Nil                                    => true
@@ -36,12 +47,15 @@ private[focus] trait SelectFieldParser {
       case _                                           => false
     }
 
-  private def getFieldAction(fromType: TypeRepr, fieldName: String): FocusResult[FocusAction] =
+  private def getCompanionObject(classSymbol: Symbol): Term =
+    Ref(classSymbol.companionModule)
+
+  private def getSelectFieldAction(fromType: TypeRepr, fieldName: String): FocusResult[FocusAction] =
     getFieldType(fromType, fieldName).flatMap { toType =>
       Right(FocusAction.SelectField(fieldName, fromType, getSuppliedTypeArgs(fromType), toType))
     }
 
-  private def getFieldActionWithImplicits(fromType: TypeRepr, fieldName: String): FocusResult[FocusAction] =
+  private def getSelectFieldActionWithImplicits(fromType: TypeRepr, fieldName: String): FocusResult[FocusAction] =
     getFieldType(fromType, fieldName).flatMap { toType =>
       val typeArgs = getSuppliedTypeArgs(fromType)
       constructSetter(fieldName, fromType, toType, typeArgs).map { setter =>
@@ -49,7 +63,37 @@ private[focus] trait SelectFieldParser {
       }
     }
 
+  private def getSelectOnlyFieldAction(
+    fromType: TypeRepr,
+    fromClassSymbol: Symbol,
+    fieldName: String
+  ): FocusResult[FocusAction] =
+    for {
+      toType <- getFieldType(fromType, fieldName)
+      companion = getCompanionObject(fromClassSymbol)
+      supplied  = getSuppliedTypeArgs(fromType)
+    } yield FocusAction.SelectOnlyField(fieldName, fromType, supplied, companion, toType)
+
+  private def getSelectOnlyFieldActionWithImplicits(
+    fromType: TypeRepr,
+    fromClassSymbol: Symbol,
+    fieldName: String
+  ): FocusResult[FocusAction] =
+    for {
+      toType <- getFieldType(fromType, fieldName)
+      companion = getCompanionObject(fromClassSymbol)
+      supplied  = getSuppliedTypeArgs(fromType)
+      reverseGet <- constructReverseGet(companion, fromType, toType, supplied)
+    } yield FocusAction.SelectOnlyFieldWithImplicits(fieldName, fromType, toType, reverseGet)
+
   private case class LiftException(error: FocusError) extends Exception
+
+  private def liftEtaExpansionResult(term: => Term): FocusResult[Term] =
+    scala.util.Try(term) match {
+      case scala.util.Success(term)                 => Right(term)
+      case scala.util.Failure(LiftException(error)) => Left(error)
+      case scala.util.Failure(other)                => Left(FocusError.ExpansionFailed(other.toString))
+    }
 
   private def constructSetter(
     fieldName: String,
@@ -57,19 +101,33 @@ private[focus] trait SelectFieldParser {
     toType: TypeRepr,
     fromTypeArgs: List[TypeRepr]
   ): FocusResult[Term] =
-    // Companion.copy(value)(implicits)*
+    // from.copy(value)(implicits)+
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) =>
-        scala.util.Try('{ (to: t) => (from: f) =>
+        liftEtaExpansionResult('{ (to: t) => (from: f) =>
           ${
             etaExpandIfNecessary(
               Select.overloaded('{ from }.asTerm, "copy", fromTypeArgs, List(NamedArg(fieldName, '{ to }.asTerm)))
             ).fold(error => throw new LiftException(error), _.asExprOf[f])
           }
-        }.asTerm) match {
-          case scala.util.Success(term)                 => Right(term)
-          case scala.util.Failure(LiftException(error)) => Left(error)
-          case scala.util.Failure(other)                => Left(FocusError.ExpansionFailed(other.toString))
-        }
+        }.asTerm)
+    }
+
+  private def constructReverseGet(
+    companion: Term,
+    fromType: TypeRepr,
+    toType: TypeRepr,
+    fromTypeArgs: List[TypeRepr]
+  ): FocusResult[Term] =
+    // Companion.apply(value)(implicits)+
+    (fromType.asType, toType.asType) match {
+      case ('[f], '[t]) =>
+        liftEtaExpansionResult('{ (to: t) =>
+          ${
+            etaExpandIfNecessary(
+              Select.overloaded(companion, "apply", fromTypeArgs, List('{ to }.asTerm))
+            ).fold(error => throw new LiftException(error), _.asExprOf[f])
+          }
+        }.asTerm)
     }
 }
