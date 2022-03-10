@@ -9,19 +9,19 @@ private[focus] trait SelectFieldGenerator {
 
   import macroContext.reflect._
 
-  private def generateGetter(from: Term, fieldName: String): Term =
-    Select.unique(from, fieldName) // o.field
+  private def generateGetter(from: Term, caseFieldSymbol: Symbol): Term =
+    Select(from, caseFieldSymbol) // o.field
 
   def generateSelectField(action: FocusAction.SelectField): Term = {
-    import action.{fieldName, fromType, fromTypeArgs, toType}
+    import action.{caseFieldSymbol, fromType, fromTypeArgs, toType}
 
     def generateSetter(from: Term, to: Term): Term =
-      Select.overloaded(from, "copy", fromTypeArgs, NamedArg(fieldName, to) :: Nil) // o.copy(field = value)
+      Select.overloaded(from, "copy", fromTypeArgs, NamedArg(caseFieldSymbol.name, to) :: Nil) // o.copy(field = value)
 
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) =>
         '{
-          Lens.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, fieldName).asExprOf[t] })((to: t) =>
+          Lens.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, caseFieldSymbol).asExprOf[t] })((to: t) =>
             (from: f) => ${ generateSetter('{ from }.asTerm, '{ to }.asTerm).asExprOf[f] }
           )
         }.asTerm
@@ -29,12 +29,12 @@ private[focus] trait SelectFieldGenerator {
   }
 
   def generateSelectFieldWithImplicits(action: FocusAction.SelectFieldWithImplicits): Term = {
-    import action.{fieldName, fromType, toType, setter}
+    import action.{caseFieldSymbol, fromType, toType, setter}
 
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) =>
         '{
-          Lens.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, fieldName).asExprOf[t] })(
+          Lens.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, caseFieldSymbol).asExprOf[t] })(
             ${ setter.asExprOf[t => f => f] }
           )
         }.asTerm
@@ -42,7 +42,7 @@ private[focus] trait SelectFieldGenerator {
   }
 
   def generateSelectOnlyField(action: FocusAction.SelectOnlyField): Term = {
-    import action.{fieldName, fromType, fromTypeArgs, fromCompanion, toType}
+    import action.{caseFieldSymbol, fromType, fromTypeArgs, fromCompanion, toType}
 
     def generateReverseGet(to: Term): Term =
       Select.overloaded(fromCompanion, "apply", fromTypeArgs, List(to)) // Companion.apply(value)
@@ -50,7 +50,7 @@ private[focus] trait SelectFieldGenerator {
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) =>
         '{
-          Iso.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, fieldName).asExprOf[t] })((to: t) =>
+          Iso.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, caseFieldSymbol).asExprOf[t] })((to: t) =>
             ${ generateReverseGet('{ to }.asTerm).asExprOf[f] }
           )
         }.asTerm
@@ -58,12 +58,12 @@ private[focus] trait SelectFieldGenerator {
   }
 
   def generateSelectOnlyFieldWithImplicits(action: FocusAction.SelectOnlyFieldWithImplicits): Term = {
-    import action.{fieldName, fromType, toType, reverseGet}
+    import action.{caseFieldSymbol, fromType, toType, reverseGet}
 
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) =>
         '{
-          Iso.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, fieldName).asExprOf[t] })(
+          Iso.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm, caseFieldSymbol).asExprOf[t] })(
             ${ reverseGet.asExprOf[t => f] }
           )
         }.asTerm

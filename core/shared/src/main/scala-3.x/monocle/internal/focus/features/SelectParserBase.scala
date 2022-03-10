@@ -11,11 +11,34 @@ private[focus] trait SelectParserBase extends ParserBase {
 
   import this.macroContext.reflect._
 
-  // Match on a term that is an instance of a case class
-  object CaseClass {
-    def unapply(term: Term): Option[(Term, Symbol)] =
+  case class CaseClass(typeRepr: TypeRepr, classSymbol: Symbol) {
+    val typeArgs: List[TypeRepr] = getSuppliedTypeArgs(typeRepr)
+    val companionObject: Term    = Ref(classSymbol.companionModule)
+
+    private val (typeParams, caseFieldParams :: otherParams) =
+      classSymbol.primaryConstructor.paramSymss.span(_.head.isTypeParam)
+    val hasOnlyOneCaseField: Boolean     = caseFieldParams.length == 1
+    val hasOnlyOneParameterList: Boolean = otherParams.isEmpty
+    private val nonCaseNonImplicitParameters: List[Symbol] =
+      otherParams.flatten.filterNot(symbol => symbol.flags.is(Flags.Implicit) || symbol.flags.is(Flags.Given))
+    val allOtherParametersAreImplicitResult: FocusResult[Unit] = nonCaseNonImplicitParameters match {
+      case Nil  => Right(())
+      case list => FocusError.NonImplicitNonCaseParameter(typeRepr.show, list.map(_.name)).asResult
+    }
+
+    def getCaseFieldSymbol(fieldName: String): FocusResult[Symbol] =
+      classSymbol.caseFields.find(_.name == fieldName) match {
+        case Some(symbol) => Right(symbol)
+        case None         => FocusError.NotACaseField(typeRepr.show, fieldName).asResult
+      }
+    def getCaseFieldType(caseFieldSymbol: Symbol): FocusResult[TypeRepr] =
+      getFieldType(typeRepr, caseFieldSymbol)
+  }
+
+  object CaseClassExtractor {
+    def unapply(term: Term): Option[CaseClass] =
       term.tpe.classSymbol.flatMap { sym =>
-        Option.when(sym.flags.is(Flags.Case))((term, sym))
+        Option.when(sym.flags.is(Flags.Case))(CaseClass(getType(term), sym))
       }
   }
 
@@ -25,24 +48,11 @@ private[focus] trait SelectParserBase extends ParserBase {
       case _                            => Nil
     }
 
-  def getClassSymbol(tpe: TypeRepr): FocusResult[Symbol] = tpe.classSymbol match {
-    case Some(sym) => Right(sym)
-    case None      => FocusError.NotAConcreteClass(tpe.show).asResult
-  }
-
-  def getFieldType(fromType: TypeRepr, fieldName: String): FocusResult[TypeRepr] = {
-    // We need to do this to support tuples, because even though they conform as case classes in other respects,
-    // for some reason their field names (_1, _2, etc) have a space at the end, ie `_1 `.
-    def getTrimmedFieldSymbol(fromTypeSymbol: Symbol): Symbol =
-      fromTypeSymbol.fieldMembers.find(_.name.trim == fieldName).getOrElse(Symbol.noSymbol)
-
-    getClassSymbol(fromType).flatMap { fromTypeSymbol =>
-      getTrimmedFieldSymbol(fromTypeSymbol) match {
-        case FieldType(possiblyTypeArg) => Right(swapWithSuppliedType(fromType, possiblyTypeArg))
-        case _                          => FocusError.CouldntFindFieldType(fromType.show, fieldName).asResult
-      }
+  def getFieldType(fromType: TypeRepr, caseFieldSymbol: Symbol): FocusResult[TypeRepr] =
+    caseFieldSymbol match {
+      case FieldType(possiblyTypeArg) => Right(swapWithSuppliedType(fromType, possiblyTypeArg))
+      case _                          => FocusError.CouldntFindFieldType(fromType.show, caseFieldSymbol.name).asResult
     }
-  }
 
   private object FieldType {
     def unapply(fieldSymbol: Symbol): Option[TypeRepr] = fieldSymbol match {
@@ -50,7 +60,9 @@ private[focus] trait SelectParserBase extends ParserBase {
       case sym =>
         sym.tree match {
           case ValDef(_, typeTree, _) => Some(typeTree.tpe)
-          case _                      => None
+          // Only needed for Tuples because `_1` is a DefDef while `_1 ` is a ValDef.
+          case DefDef(_, _, typeTree, _) => Some(typeTree.tpe)
+          case _                         => None
         }
     }
   }
