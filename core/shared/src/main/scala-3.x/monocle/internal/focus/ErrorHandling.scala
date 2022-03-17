@@ -21,8 +21,8 @@ private[focus] trait ErrorHandling {
     case FocusError.UnexpectedCodeStructure(code)             => s"Unexpected code structure: $code"
     case FocusError.CouldntFindFieldType(fromType, fieldName) => s"Couldn't find type for $fromType.$fieldName"
     case FocusError.InvalidDowncast(fromType, toType)         => s"Type '$fromType' could not be cast to '$toType'"
-    case FocusError.ImplicitNotFound(implicitType) =>
-      s"Could not find implicit for '$implicitType'. Note: implicits with default values are not supported."
+    case FocusError.ImplicitNotFound(implicitType, explanation) =>
+      s"Could not find (unique) implicit value for '$implicitType' due to $explanation. Note: implicits with default values are not supported."
     case FocusError.ExpansionFailed(reason) =>
       s"Case class with multiple parameter sets could not be expanded because of: $reason"
   }

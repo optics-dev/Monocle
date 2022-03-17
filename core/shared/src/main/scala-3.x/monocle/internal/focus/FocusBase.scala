@@ -61,7 +61,7 @@ private[focus] trait FocusBase {
     case CouldntFindFieldType(fromType: String, fieldName: String)
     case ComposeMismatch(type1: String, type2: String)
     case InvalidDowncast(fromType: String, toType: String)
-    case ImplicitNotFound(implicitType: String)
+    case ImplicitNotFound(implicitType: String, explanation: String)
     case ExpansionFailed(reason: String)
 
     def asResult: FocusResult[Nothing] = Left(this)

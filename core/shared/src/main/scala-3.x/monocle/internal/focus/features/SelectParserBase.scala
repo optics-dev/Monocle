@@ -16,7 +16,7 @@ private[focus] trait SelectParserBase extends ParserBase {
     val companionObject: Term    = Ref(classSymbol.companionModule)
 
     private val (typeParams, caseFieldParams :: otherParams) =
-      classSymbol.primaryConstructor.paramSymss.span(_.head.isTypeParam)
+      classSymbol.primaryConstructor.paramSymss.span(_.headOption.fold(false)(_.isTypeParam))
     val hasOnlyOneCaseField: Boolean     = caseFieldParams.length == 1
     val hasOnlyOneParameterList: Boolean = otherParams.isEmpty
     private val nonCaseNonImplicitParameters: List[Symbol] =
@@ -32,7 +32,10 @@ private[focus] trait SelectParserBase extends ParserBase {
         case None         => FocusError.NotACaseField(typeRepr.show, fieldName).asResult
       }
     def getCaseFieldType(caseFieldSymbol: Symbol): FocusResult[TypeRepr] =
-      getFieldType(typeRepr, caseFieldSymbol)
+      caseFieldSymbol match {
+        case FieldType(possiblyTypeArg) => Right(swapWithSuppliedType(typeRepr, possiblyTypeArg))
+        case _                          => FocusError.CouldntFindFieldType(typeRepr.show, caseFieldSymbol.name).asResult
+      }
   }
 
   object CaseClassExtractor {
@@ -42,16 +45,10 @@ private[focus] trait SelectParserBase extends ParserBase {
       }
   }
 
-  def getSuppliedTypeArgs(fromType: TypeRepr): List[TypeRepr] =
+  private def getSuppliedTypeArgs(fromType: TypeRepr): List[TypeRepr] =
     fromType match {
       case AppliedType(_, argTypeReprs) => argTypeReprs
       case _                            => Nil
-    }
-
-  def getFieldType(fromType: TypeRepr, caseFieldSymbol: Symbol): FocusResult[TypeRepr] =
-    caseFieldSymbol match {
-      case FieldType(possiblyTypeArg) => Right(swapWithSuppliedType(fromType, possiblyTypeArg))
-      case _                          => FocusError.CouldntFindFieldType(fromType.show, caseFieldSymbol.name).asResult
     }
 
   private object FieldType {
@@ -60,7 +57,7 @@ private[focus] trait SelectParserBase extends ParserBase {
       case sym =>
         sym.tree match {
           case ValDef(_, typeTree, _) => Some(typeTree.tpe)
-          // Only needed for Tuples because `_1` is a DefDef while `_1 ` is a ValDef.
+          // Only needed for Tuples because `_1` is a DefDef while `_1 ` is the corresponding ValDef.
           case DefDef(_, _, typeTree, _) => Some(typeTree.tpe)
           case _                         => None
         }
@@ -100,13 +97,13 @@ private[focus] trait SelectParserBase extends ParserBase {
               case (Right(acc), ValDef(_, t, _)) =>
                 def searchForImplicit(typeRepr: TypeRepr): FocusResult[Term] =
                   Implicits.search(typeRepr) match {
-                    case success: ImplicitSearchSuccess => Right(success.tree)
-                    case _                              => FocusError.ImplicitNotFound(typeRepr.show).asResult
+                    case success: ImplicitSearchSuccess =>
+                      Right(success.tree)
+                    case failure: ImplicitSearchFailure =>
+                      FocusError.ImplicitNotFound(typeRepr.show, failure.explanation).asResult
                   }
+
                 searchForImplicit(t.tpe)
-                  .orElse(searchForImplicit(t.tpe.dealias))
-                  .orElse(searchForImplicit(t.tpe.widen))
-                  .orElse(searchForImplicit(t.tpe.widen.dealias))
                   .map(acc :+ _)
 
               case (Right(acc), other) =>
