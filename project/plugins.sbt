@@ -5,7 +5,7 @@ addSbtPlugin("com.typesafe"       % "sbt-mima-plugin" % "1.0.1")
 addSbtPlugin("pl.project13.scala" % "sbt-jmh"         % "0.4.3")
 
 val scalaJSVersion =
-  Option(System.getenv("SCALAJS_VERSION")).getOrElse("1.9.0")
+  Option(System.getenv("SCALAJS_VERSION")).getOrElse("1.10.0")
 
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"              % scalaJSVersion)
 addSbtPlugin("org.portable-scala" % "sbt-crossproject"         % "1.2.0")
