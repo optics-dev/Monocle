@@ -150,8 +150,8 @@ object Plated extends PlatedFunctions {
         new Traversal[Chain[A], Chain[A]] {
           def modifyA[F[_]: Applicative](f: Chain[A] => F[Chain[A]])(s: Chain[A]): F[Chain[A]] =
             s.uncons match {
-              case Some((x, xs)) => Applicative[F].map(f(xs))(_.prepend(x))
-              case None          => Applicative[F].pure(Chain.empty)
+              case Some(x, xs) => Applicative[F].map(f(xs))(_.prepend(x))
+              case None        => Applicative[F].pure(Chain.empty)
             }
         }
     }

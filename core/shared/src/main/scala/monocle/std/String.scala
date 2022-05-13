@@ -39,7 +39,7 @@ trait StringOptics extends PlatformSpecificStringOptics {
     // * String starts with +
     // * String starts with 0 and has multiple digits
     def inputBreaksPrismLaws(input: String): Boolean =
-      s.isEmpty || s.startsWith("+") || (s.startsWith("0") && s.length > 1)
+      s.isEmpty || s.startsWith("+") || s.startsWith("0") && s.length > 1
 
     if (inputBreaksPrismLaws(s)) None
     else

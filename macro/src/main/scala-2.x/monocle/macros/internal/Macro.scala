@@ -23,7 +23,7 @@ private[macros] class MacroImpl(val c: blackbox.Context) {
           case Select(tail, field: TermName) =>
             SelectChain
               .unapply(tail)
-              .map(t => t.copy(_2 = t._2 :+ (tail.tpe.widen -> field)))
+              .map(t => t.copy(_2 = t._2 :+ tail.tpe.widen -> field))
           case _ => None
         }
     }

@@ -126,7 +126,7 @@ lazy val scalajsSettings = Seq(
     val a = (LocalRootProject / baseDirectory).value.toURI.toString
     val g = "https://raw.githubusercontent.com/optics-dev/Monocle"
     CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((3, _)) =>
+      case Some(3, _) =>
         Seq(s"-scalajs-mapSourceURI:$a->$g")
       case _ =>
         Seq(s"-P:scalajs:mapSourceURI:$a->$g/$s/")
@@ -142,9 +142,9 @@ def scalaVersionSpecificFolders(srcName: String, srcBaseDir: java.io.File, scala
       .flatMap(_.sharedSrcDir(srcBaseDir, srcName).toList.map(f => file(f.getPath + suffix)))
 
   CrossVersion.partialVersion(scalaVersion) match {
-    case Some((2, y))     => extraDirs("-2.x") ++ (if (y >= 13) extraDirs("-2.13+") else Nil)
-    case Some((0 | 3, _)) => extraDirs("-2.13+") ++ extraDirs("-3.x")
-    case _                => Nil
+    case Some(2, y)     => extraDirs("-2.x") ++ (if (y >= 13) extraDirs("-2.13+") else Nil)
+    case Some(0 | 3, _) => extraDirs("-2.13+") ++ extraDirs("-3.x")
+    case _              => Nil
   }
 }
 
@@ -380,7 +380,7 @@ lazy val mdocSettings = Seq(
   scalacOptions ~= (_.filterNot(_.startsWith("-Wconf"))),
   crossScalaVersions                         := Seq(scalaVersion.value),
   ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(core.jvm),
-  (ScalaUnidoc / unidoc / target)            := (LocalRootProject / baseDirectory).value / "website" / "static" / "api",
+  ScalaUnidoc / unidoc / target              := (LocalRootProject / baseDirectory).value / "website" / "static" / "api",
   cleanFiles += (ScalaUnidoc / unidoc / target).value,
   docusaurusCreateSite := docusaurusCreateSite
     .dependsOn(Compile / unidoc)
@@ -391,7 +391,7 @@ lazy val mdocSettings = Seq(
       .dependsOn(Compile / unidoc)
       .dependsOn(ThisBuild / updateSiteVariables)
       .value,
-  (ScalaUnidoc / unidoc / scalacOptions) ++= Seq(
+  ScalaUnidoc / unidoc / scalacOptions ++= Seq(
     "-doc-source-url",
     s"https://github.com/optics-dev/Monocle/tree/v${(ThisBuild / latestVersion).value}€{FILE_PATH}.scala",
     "-sourcepath",

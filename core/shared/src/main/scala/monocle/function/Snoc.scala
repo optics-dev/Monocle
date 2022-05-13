@@ -111,9 +111,9 @@ object Snoc extends SnocFunctions {
         @tailrec
         def go(oldC: Chain[A], newC: Chain[A]): Option[(Chain[A], A)] =
           oldC.uncons match {
-            case Some((h, t)) if t.isEmpty => Some((newC, h))
-            case Some((h, t))              => go(t, newC.append(h))
-            case None                      => None
+            case Some(h, t) if t.isEmpty => Some((newC, h))
+            case Some(h, t)              => go(t, newC.append(h))
+            case None                    => None
           }
 
         go(c, Chain.empty)

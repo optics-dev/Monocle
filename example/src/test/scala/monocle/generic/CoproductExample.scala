@@ -95,13 +95,13 @@ class CoproductExample extends MonocleSuite with GenericInstances {
     case class C(otherName: String) extends S
 
     val lens: Lens[S, String] =
-      coProductToDisjunction[S].apply andThen (Choice[Lens].choice(
+      coProductToDisjunction[S].apply andThen Choice[Lens].choice(
         GenLens[A](_.name),
         Choice[Lens].choice(
           GenLens[B](_.name),
           GenLens[C](_.otherName)
         )
-      ))
+      )
 
     assertEquals(lens.get(A("a")), "a")
     assertEquals(lens.get(B("b")), "b")

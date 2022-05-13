@@ -106,7 +106,7 @@ object Index extends IndexFunctions {
             @tailrec
             def go(cur: Int, oldC: Chain[A], newC: Chain[A]): Chain[A] =
               oldC.uncons match {
-                case Some((h, t)) =>
+                case Some(h, t) =>
                   if (cur == i)
                     newC.append(a).concat(t)
                   else

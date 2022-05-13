@@ -30,7 +30,7 @@ class HListSpec extends DisciplineSuite {
   implicit val hEq        = Eq.instance[H]((a1, a2) => fromHList[H, Example].get(a1) === fromHList[H, Example].get(a2))
   implicit val reverseHEq = Eq.instance[ReverseH]((a1, a2) => a1.reverse === a2.reverse)
   implicit val hTailEq    = Eq.instance[HTail]((a1, a2) => (1 :: a1) === (1 :: a2))
-  implicit val hInitEq    = Eq.instance[HInit]((a1, a2) => (a1.tail :+ 3.5) === (a2.tail :+ 3.5))
+  implicit val hInitEq    = Eq.instance[HInit]((a1, a2) => a1.tail :+ 3.5 === a2.tail :+ 3.5)
 
   implicit val exampleArb: Arbitrary[Example] = Arbitrary(for {
     i <- Arbitrary.arbitrary[Int]
