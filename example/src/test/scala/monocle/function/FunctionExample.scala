@@ -34,7 +34,7 @@ import scala.annotation.nowarn
     /** Here we increase the first argument by one, and then apply the function, Which is easier to do when the function
       * is curried rather than uncurried, so we do the modification through the Iso.
       */
-    assertEquals((f _ applyIso curry modify (_ compose (_ + 1)))(5, 7), (2 * 6 + 3 * 7))
+    assertEquals((f _ applyIso curry modify (_ compose (_ + 1)))(5, 7), 2 * 6 + 3 * 7)
   }
 
   test("flip exchanges the the first 2 parameters of a function") {
@@ -49,6 +49,6 @@ import scala.annotation.nowarn
 
     /** If we wanted to increase the second argument instead, we could use flip.
       */
-    assertEquals((f _ applyIso curry composeIso flip modify (_ compose (_ + 1)))(5, 7), (2 * 5 + 3 * 8))
+    assertEquals((f _ applyIso curry composeIso flip modify (_ compose (_ + 1)))(5, 7), 2 * 5 + 3 * 8)
   }
 }

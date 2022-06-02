@@ -48,7 +48,7 @@ trait CurryInstances1 extends CurryInstances2 {
 }
 
 trait CurryInstances2 {
-  implicit def curry2[A, B, C]: Curry[(A, B) => C, (A => B => C)] =
+  implicit def curry2[A, B, C]: Curry[(A, B) => C, A => B => C] =
     Curry(
       Iso((_: (A, B) => C).curried)(f => Function.uncurried(f))
     )

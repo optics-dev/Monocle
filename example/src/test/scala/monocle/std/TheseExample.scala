@@ -12,7 +12,7 @@ class TheseExample extends MonocleSuite {
     assertEquals(theseToDisjunction.getOption(That("Hello"): Ior[Int, String]), Some("Hello".asRight[Int]))
     assertEquals(theseToDisjunction.getOption(Both(5, "Hello"): Ior[Int, String]), None)
 
-    assertEquals(theseToDisjunction.reverseGet(Left(5): Either[Int, String]), (This(5): Ior[Int, String]))
-    assertEquals(theseToDisjunction.reverseGet(Right("Hello"): Either[Int, String]), (That("Hello"): Ior[Int, String]))
+    assertEquals(theseToDisjunction.reverseGet(Left(5): Either[Int, String]), This(5): Ior[Int, String])
+    assertEquals(theseToDisjunction.reverseGet(Right("Hello"): Either[Int, String]), That("Hello"): Ior[Int, String])
   }
 }

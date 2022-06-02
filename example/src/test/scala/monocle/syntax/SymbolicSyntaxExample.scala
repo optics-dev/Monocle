@@ -24,14 +24,14 @@ class SymbolicSyntaxExample extends MonocleSuite {
 
     assertEquals(
       (_articles ^|-? headOption ^<-? _sofa ^|-> _color).getOption(myStore),
-      (myStore &|-> _articles ^|-? headOption ^<-? _sofa ^|-> _color getOption)
+      myStore &|-> _articles ^|-? headOption ^<-? _sofa ^|-> _color getOption
     )
 
     assertEquals(
       (_articles ^<-> reverse ^|->> each ^<-? _sofa ^|-> _price).modify(_ / 2)(myStore),
-      (myStore &|-> _articles ^<-> reverse ^|->> each ^<-? _sofa ^|-> _price modify (_ / 2))
+      myStore &|-> _articles ^<-> reverse ^|->> each ^<-? _sofa ^|-> _price modify (_ / 2)
     )
 
-    assertEquals((myStore.articles &|-? index(1) ^<-? _sofa getOption), None)
+    assertEquals(myStore.articles &|-? index(1) ^<-? _sofa getOption, None)
   }
 }

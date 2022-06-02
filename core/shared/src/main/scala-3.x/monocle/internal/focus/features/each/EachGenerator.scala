@@ -12,7 +12,7 @@ private[focus] trait EachGenerator {
     import action.{fromType, toType, eachInstance}
 
     (fromType.asType, toType.asType) match {
-      case ('[f], '[t]) => '{ (${ eachInstance.asExprOf[Each[f, t]] }.each) }.asTerm
+      case ('[f], '[t]) => '{ ${ eachInstance.asExprOf[Each[f, t]] }.each }.asTerm
     }
   }
 

@@ -12,7 +12,7 @@ private[focus] trait AtGenerator {
     import action.{fromType, toType, index, atInstance}
 
     (fromType.asType, index.tpe.asType, toType.asType) match {
-      case ('[f], '[i], '[t]) => '{ (${ atInstance.asExprOf[At[f, i, t]] }.at(${ index.asExprOf[i] })) }.asTerm
+      case ('[f], '[i], '[t]) => '{ ${ atInstance.asExprOf[At[f, i, t]] }.at(${ index.asExprOf[i] }) }.asTerm
     }
   }
 
