@@ -87,12 +87,12 @@ class IsoSpec extends MonocleSuite {
     // format: off
 assertEquals(    (Nullary() match { case _nullary(unit) => unit }) ,  (()))
     // format: on
-    assertEquals((Unary(3) match { case _unary(value) => value * 2 }), 6)
-    assertEquals((Binary("foo", 7) match { case _binary(s, i) => s + i }), "foo7")
+    assertEquals(Unary(3) match { case _unary(value) => value * 2 }, 6)
+    assertEquals(Binary("foo", 7) match { case _binary(s, i) => s + i }, "foo7")
     assertEquals(
-      (Quintary('x', true, "bar", 13, 0.4) match {
+      Quintary('x', true, "bar", 13, 0.4) match {
         case _quintary(c, b, s, i, f) => "" + c + b + s + i + f
-      }),
+      },
       "xtruebar130.4"
     )
   }

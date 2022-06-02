@@ -12,7 +12,7 @@ private[focus] trait IndexGenerator {
     import action.{fromType, toType, index, indexInstance}
 
     (fromType.asType, index.tpe.widen.asType, toType.asType) match {
-      case ('[f], '[i], '[t]) => '{ (${ indexInstance.asExprOf[Index[f, i, t]] }.index(${ index.asExprOf[i] })) }.asTerm
+      case ('[f], '[i], '[t]) => '{ ${ indexInstance.asExprOf[Index[f, i, t]] }.index(${ index.asExprOf[i] }) }.asTerm
     }
   }
 

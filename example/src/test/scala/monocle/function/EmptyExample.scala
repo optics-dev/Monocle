@@ -8,11 +8,11 @@ import scala.annotation.nowarn
 @nowarn
 class EmptyExample extends MonocleSuite {
   test("empty is a Prism that is successful only when S is empty") {
-    assertEquals((List(1, 2, 3) applyPrism mempty getOption), None)
+    assertEquals(List(1, 2, 3) applyPrism mempty getOption, None)
 
-    assertEquals((List.empty[Int] applyPrism mempty getOption), Some(()))
-    assertEquals((Vector.empty[Int] applyPrism mempty getOption), Some(()))
-    assertEquals(("" applyPrism mempty getOption), Some(()))
+    assertEquals(List.empty[Int] applyPrism mempty getOption, Some(()))
+    assertEquals(Vector.empty[Int] applyPrism mempty getOption, Some(()))
+    assertEquals("" applyPrism mempty getOption, Some(()))
   }
 
   test("_empty return the empty value of a given type") {
