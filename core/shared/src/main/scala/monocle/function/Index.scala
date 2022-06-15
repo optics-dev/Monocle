@@ -3,6 +3,7 @@ package monocle.function
 import monocle.{Iso, Optional}
 
 import scala.annotation.{implicitNotFound, tailrec}
+import scala.collection.SeqOps
 import scala.collection.immutable.{ListMap, SortedMap}
 import scala.util.Try
 
@@ -45,6 +46,13 @@ object Index extends IndexFunctions {
   /** Std instances */
   /** *********************************************************************************************
     */
+  implicit def seqIndex[A, S[B] <: SeqOps[B, S, S[B]]]: Index[S[A], Int, A] =
+    Index(i =>
+      if (i < 0) Optional.void
+      else
+        Optional[S[A], A](s => Some(i).filter(s.indices.contains).map(s.apply))(a => s => Try(s.updated(i, a)).getOrElse(s))
+    )
+
   implicit def listIndex[A]: Index[List[A], Int, A] =
     Index(i =>
       if (i < 0) Optional.void
