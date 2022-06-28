@@ -3,6 +3,7 @@ package monocle.function
 import monocle.{Iso, Optional}
 
 import scala.annotation.{implicitNotFound, tailrec}
+import scala.collection.SeqOps
 import scala.collection.immutable.{ListMap, SortedMap}
 import scala.util.Try
 
@@ -45,6 +46,15 @@ object Index extends IndexFunctions {
   /** Std instances */
   /** *********************************************************************************************
     */
+  implicit def seqIndex[A, S[B] <: SeqOps[B, S, S[B]]]: Index[S[A], Int, A] =
+    Index(i =>
+      if (i < 0) Optional.void
+      else
+        Optional[S[A], A](s => if (s.isDefinedAt(i)) Some(s(i)) else None)(a =>
+          s => if (s.isDefinedAt(i)) s.updated(i, a) else s
+        )
+    )
+
   implicit def listIndex[A]: Index[List[A], Int, A] =
     Index(i =>
       if (i < 0) Optional.void
@@ -73,14 +83,7 @@ object Index extends IndexFunctions {
   implicit val stringIndex: Index[String, Int, Char] =
     Index(key => monocle.std.string.stringToList.andThen(Index.index[List[Char], Int, Char](key)))
 
-  implicit def vectorIndex[A]: Index[Vector[A], Int, A] =
-    Index(i =>
-      Optional[Vector[A], A](v => if (v.isDefinedAt(i)) Some(v(i)) else None)(a =>
-        v =>
-          if (v.isDefinedAt(i)) v.updated(i, a)
-          else v
-      )
-    )
+  implicit def vectorIndex[A]: Index[Vector[A], Int, A] = seqIndex
 
   /** *********************************************************************************************
     */
