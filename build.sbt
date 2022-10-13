@@ -303,7 +303,7 @@ lazy val buildInfoSettings = Seq(
     scalacOptions,
     sourceDirectory,
     BuildInfoKey.map(ThisBuild / tlLatestVersion) { case (_, v) =>
-      "latestVersion" -> v
+      "latestVersion" -> v.getOrElse("0.0.0")
     },
     BuildInfoKey.map(ThisBuild / version) { case (_, v) =>
       "latestSnapshotVersion" -> v
