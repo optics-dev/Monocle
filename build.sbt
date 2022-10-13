@@ -143,7 +143,19 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     )),
     libraryDependencies ++= Seq(
       munitDiscipline.value
-    )
+    ),
+    mimaBinaryIssueFilters ++= {
+      import com.typesafe.tools.mima.core._
+
+      if (tlIsScala3.value)
+        Seq( // package-private objects moved in #1197
+          ProblemFilters.exclude[MissingClassProblem]("monocle.syntax.AsPrism"),
+          ProblemFilters.exclude[MissingClassProblem]("monocle.syntax.AsPrism$"),
+          ProblemFilters.exclude[MissingClassProblem]("monocle.syntax.AsPrismImpl"),
+          ProblemFilters.exclude[MissingClassProblem]("monocle.syntax.AsPrismImpl$")
+        )
+      else Nil
+    }
   )
 
 lazy val generic = crossProject(JVMPlatform, JSPlatform)
