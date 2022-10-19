@@ -6,6 +6,10 @@ private[focus] trait ErrorHandling {
   def errorMessage(error: FocusError): String = error match {
     case FocusError.NotACaseClass(fromClass, fieldName) =>
       s"Cannot generate Lens for field '$fieldName', because '$fromClass' is not a case class"
+    case FocusError.NotACaseField(caseClass, fieldName) =>
+      s"Can only create lenses for case fields, but '$fieldName' is not a case field of '$caseClass'"
+    case FocusError.NonImplicitNonCaseParameter(caseClass, parameters) =>
+      s"Case class '$caseClass' has non-implicit non-case parameters, which is not supported: ${parameters.map("'" + _ + "'").mkString(", ")}"
     case FocusError.NotAConcreteClass(fromClass) =>
       s"Expecting a concrete case class in the 'From' position; cannot reify type $fromClass"
     case FocusError.NotASimpleLambdaFunction =>
@@ -17,5 +21,9 @@ private[focus] trait ErrorHandling {
     case FocusError.UnexpectedCodeStructure(code)             => s"Unexpected code structure: $code"
     case FocusError.CouldntFindFieldType(fromType, fieldName) => s"Couldn't find type for $fromType.$fieldName"
     case FocusError.InvalidDowncast(fromType, toType)         => s"Type '$fromType' could not be cast to '$toType'"
+    case FocusError.ImplicitNotFound(implicitType, explanation) =>
+      s"Could not find (unique) implicit value for '$implicitType' due to $explanation. Note: implicits with default values are not supported."
+    case FocusError.ExpansionFailed(reason) =>
+      s"Case class with multiple parameter sets could not be expanded because of: $reason"
   }
 }

@@ -7,20 +7,23 @@ private[focus] trait FocusBase {
 
   given Quotes = macroContext
 
+  type Symbol   = macroContext.reflect.Symbol
   type Term     = macroContext.reflect.Term
   type TypeRepr = macroContext.reflect.TypeRepr
 
   case class LambdaConfig(argName: String, lambdaBody: Term)
 
   enum FocusAction {
-    case SelectField(fieldName: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
+    case SelectField(caseFieldSymbol: Symbol, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
+    case SelectFieldWithImplicits(caseFieldSymbol: Symbol, fromType: TypeRepr, toType: TypeRepr, setter: Term)
     case SelectOnlyField(
-      fieldName: String,
+      caseFieldSymbol: Symbol,
       fromType: TypeRepr,
       fromTypeArgs: List[TypeRepr],
       fromCompanion: Term,
       toType: TypeRepr
     )
+    case SelectOnlyFieldWithImplicits(caseFieldSymbol: Symbol, fromType: TypeRepr, toType: TypeRepr, reverseGet: Term)
     case KeywordSome(toType: TypeRepr)
     case KeywordAs(fromType: TypeRepr, toType: TypeRepr)
     case KeywordEach(fromType: TypeRepr, toType: TypeRepr, eachInstance: Term)
@@ -29,10 +32,14 @@ private[focus] trait FocusBase {
     case KeywordWithDefault(toType: TypeRepr, defaultValue: Term)
 
     override def toString(): String = this match {
-      case SelectField(fieldName, fromType, fromTypeArgs, toType) =>
-        s"SelectField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
-      case SelectOnlyField(fieldName, fromType, fromTypeArgs, _, toType) =>
-        s"SelectOnlyField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ..., ${toType.show})"
+      case SelectField(caseFieldSymbol, fromType, fromTypeArgs, toType) =>
+        s"SelectField(${caseFieldSymbol.name}, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
+      case SelectFieldWithImplicits(caseFieldSymbol, fromType, toType, setter) =>
+        s"SelectFieldWithImplicits(${caseFieldSymbol.name}, ${fromType.show}, ${toType.show}, ...)"
+      case SelectOnlyField(caseFieldSymbol, fromType, fromTypeArgs, _, toType) =>
+        s"SelectOnlyField(${caseFieldSymbol.name}, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ..., ${toType.show})"
+      case SelectOnlyFieldWithImplicits(caseFieldSymbol, fromType, toType, reverseGet) =>
+        s"SelectOnlyFieldWithImplicits(${caseFieldSymbol.name}, ${fromType.show}, ${toType.show}, ...)"
       case KeywordSome(toType)                  => s"KeywordSome(${toType.show})"
       case KeywordAs(fromType, toType)          => s"KeywordAs(${fromType.show}, ${toType.show})"
       case KeywordEach(fromType, toType, _)     => s"KeywordEach(${fromType.show}, ${toType.show}, ...)"
@@ -44,6 +51,8 @@ private[focus] trait FocusBase {
 
   enum FocusError {
     case NotACaseClass(className: String, fieldName: String)
+    case NotACaseField(className: String, fieldName: String)
+    case NonImplicitNonCaseParameter(className: String, parameters: List[String])
     case NotAConcreteClass(className: String)
     case DidNotDirectlyAccessArgument(argName: String)
     case NotASimpleLambdaFunction
@@ -52,6 +61,8 @@ private[focus] trait FocusBase {
     case CouldntFindFieldType(fromType: String, fieldName: String)
     case ComposeMismatch(type1: String, type2: String)
     case InvalidDowncast(fromType: String, toType: String)
+    case ImplicitNotFound(implicitType: String, explanation: String)
+    case ExpansionFailed(reason: String)
 
     def asResult: FocusResult[Nothing] = Left(this)
   }

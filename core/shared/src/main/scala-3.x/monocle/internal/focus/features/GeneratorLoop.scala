@@ -2,7 +2,6 @@ package monocle.internal.focus.features
 
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.selectfield.SelectFieldGenerator
-import monocle.internal.focus.features.selectonlyfield.SelectOnlyFieldGenerator
 import monocle.internal.focus.features.some.SomeGenerator
 import monocle.internal.focus.features.as.AsGenerator
 import monocle.internal.focus.features.each.EachGenerator
@@ -15,7 +14,6 @@ import scala.quoted.Type
 private[focus] trait AllFeatureGenerators
     extends FocusBase
     with SelectFieldGenerator
-    with SelectOnlyFieldGenerator
     with SomeGenerator
     with AsGenerator
     with EachGenerator
@@ -28,24 +26,27 @@ private[focus] trait GeneratorLoop {
 
   import macroContext.reflect._
 
-  def generateCode[From: Type](actions: List[FocusAction]): FocusResult[Term] = {
-    val idOptic: FocusResult[Term] = Right('{ Iso.id[From] }.asTerm)
-
-    actions.foldLeft(idOptic) { (resultSoFar, action) =>
-      resultSoFar.flatMap(term => composeOptics(term, generateActionCode(action)))
+  def generateCode[From: Type](actions: List[FocusAction]): FocusResult[Term] =
+    actions match {
+      case Nil => Right('{ Iso.id[From] }.asTerm)
+      case head :: tail =>
+        tail.foldLeft[FocusResult[Term]](Right(generateActionCode(head))) { (resultSoFar, action) =>
+          resultSoFar.flatMap(term => composeOptics(term, generateActionCode(action)))
+        }
     }
-  }
 
   private def generateActionCode(action: FocusAction): Term =
     action match {
-      case a: FocusAction.SelectField        => generateSelectField(a)
-      case a: FocusAction.SelectOnlyField    => generateSelectOnlyField(a)
-      case a: FocusAction.KeywordSome        => generateSome(a)
-      case a: FocusAction.KeywordAs          => generateAs(a)
-      case a: FocusAction.KeywordEach        => generateEach(a)
-      case a: FocusAction.KeywordAt          => generateAt(a)
-      case a: FocusAction.KeywordIndex       => generateIndex(a)
-      case a: FocusAction.KeywordWithDefault => generateWithDefault(a)
+      case a: FocusAction.SelectField                  => generateSelectField(a)
+      case a: FocusAction.SelectFieldWithImplicits     => generateSelectFieldWithImplicits(a)
+      case a: FocusAction.SelectOnlyField              => generateSelectOnlyField(a)
+      case a: FocusAction.SelectOnlyFieldWithImplicits => generateSelectOnlyFieldWithImplicits(a)
+      case a: FocusAction.KeywordSome                  => generateSome(a)
+      case a: FocusAction.KeywordAs                    => generateAs(a)
+      case a: FocusAction.KeywordEach                  => generateEach(a)
+      case a: FocusAction.KeywordAt                    => generateAt(a)
+      case a: FocusAction.KeywordIndex                 => generateIndex(a)
+      case a: FocusAction.KeywordWithDefault           => generateWithDefault(a)
     }
 
   private def composeOptics(lens1: Term, lens2: Term): FocusResult[Term] =
