@@ -101,8 +101,8 @@ lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.10.1")
 lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.10.1" % "test")
 
 lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "1.5.1")
-lazy val munit           = Def.setting("org.scalameta" %% "munit" % "0.7.21" % Test)
-lazy val munitDiscipline = Def.setting("org.typelevel" %% "discipline-munit" % "1.0.9" % Test)
+lazy val munit           = Def.setting("org.scalameta" %%% "munit" % "1.0.0-M6" % Test)
+lazy val munitDiscipline = Def.setting("org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test)
 
 lazy val macroVersion = "2.1.1"
 
@@ -110,9 +110,14 @@ lazy val scalajsSettings = Seq(
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
 )
 
-lazy val monocleSettings    = buildSettings
-lazy val monocleJvmSettings = monocleSettings
-lazy val monocleJsSettings  = monocleSettings ++ scalajsSettings
+lazy val scalaNativeSettings = Seq(
+  tlVersionIntroduced := List("2.13", "3").map(_ -> "3.2.0").toMap
+)
+
+lazy val monocleSettings       = buildSettings
+lazy val monocleJvmSettings    = monocleSettings
+lazy val monocleJsSettings     = monocleSettings ++ scalajsSettings
+lazy val monocleNativeSettings = monocleSettings ++ scalaNativeSettings
 
 lazy val root = tlCrossRootProject.aggregate(
   core,
@@ -127,11 +132,10 @@ lazy val root = tlCrossRootProject.aggregate(
   bench
 )
 
-lazy val core = crossProject(JVMPlatform, JSPlatform)
-  .configureCross(
-    _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings)
-  )
+lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
   .settings(libraryDependencies ++= Seq(cats.value, catsFree.value))
   .settings(
     moduleName := "monocle-core",
@@ -158,7 +162,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     }
   )
 
-lazy val generic = crossProject(JVMPlatform, JSPlatform)
+lazy val generic = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core, law % "test->test")
   .settings(
@@ -166,22 +170,20 @@ lazy val generic = crossProject(JVMPlatform, JSPlatform)
     publish / skip  := tlIsScala3.value,
     publishArtifact := !tlIsScala3.value
   )
-  .configureCross(
-    _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings)
-  )
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
   .settings(libraryDependencies ++= {
     if (tlIsScala3.value) Nil else Seq(cats.value, shapeless.value, munitDiscipline.value)
   })
 
-lazy val refined = crossProject(JVMPlatform, JSPlatform)
+lazy val refined = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core, law)
   .settings(moduleName := "monocle-refined")
-  .configureCross(
-    _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings)
-  )
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
   .settings(
     libraryDependencies ++= Seq(
       cats.value,
@@ -191,27 +193,25 @@ lazy val refined = crossProject(JVMPlatform, JSPlatform)
     )
   )
 
-lazy val law = crossProject(JVMPlatform, JSPlatform)
+lazy val law = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core)
-  .configureCross(
-    _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings)
-  )
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
   .settings(
     moduleName := "monocle-law"
   )
   .settings(libraryDependencies += discipline.value)
 
-lazy val macros = crossProject(JVMPlatform, JSPlatform)
+lazy val macros = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core, law % "test->test")
   .in(file("macro"))
   .settings(moduleName := "monocle-macro")
-  .configureCross(
-    _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings)
-  )
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
   .settings(
     scalacOptions += "-language:experimental.macros",
     libraryDependencies ++= {
@@ -226,37 +226,34 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform)
     }
   )
 
-lazy val state = crossProject(JVMPlatform, JSPlatform)
+lazy val state = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core)
-  .configureCross(
-    _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings)
-  )
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
   .settings(
     moduleName := "monocle-state"
   )
   .settings(libraryDependencies ++= Seq(cats.value))
 
-lazy val unsafe = crossProject(JVMPlatform, JSPlatform)
+lazy val unsafe = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core)
-  .configureCross(
-    _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings)
-  )
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
   .settings(
     moduleName := "monocle-unsafe"
   )
   .settings(libraryDependencies ++= Seq(cats.value, alleycats.value))
 
-lazy val test = crossProject(JVMPlatform, JSPlatform)
+lazy val test = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .dependsOn(core, law, state, unsafe, macros)
   .settings(moduleName := "monocle-test")
-  .configureCross(
-    _.jvmSettings(monocleJvmSettings),
-    _.jsSettings(monocleJsSettings)
-  )
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
   .enablePlugins(NoPublishPlugin)
   .settings(
     libraryDependencies ++= Seq(
