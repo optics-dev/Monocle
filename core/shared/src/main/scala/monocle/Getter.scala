@@ -156,6 +156,10 @@ final case class GetterSyntax[S, A](private val self: Getter[S, A]) extends AnyV
   def at[I, A1](i: I)(implicit evAt: At[A, I, A1]): Getter[S, A1] =
     self.andThen(evAt.at(i))
 
+  @deprecated("Preserved for bincompat", "3.1.0")
+  def index[I, A1](i: I, evIndex: Index[A, I, A1]): Fold[S, A1] =
+    self.index(i)(evIndex)
+
   /** compose a [[Fold]] with a [[Fold]] */
   @deprecated("use andThen", since = "3.0.0-M1")
   def composeFold[C](other: Fold[A, C]): Fold[S, C] =

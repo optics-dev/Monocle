@@ -97,6 +97,9 @@ class MacroAppliedFoldOps[S, A](private val optic: AppliedFold[S, A]) extends An
   def as[CastTo <: A]: AppliedFold[S, CastTo] = macro MacroOpsImpl.as_impl[AppliedFold, S, A, CastTo]
 }
 
+@deprecated("Preserved for bincompat", "3.2.0")
+class MacroAsOpsImpl(c: blackbox.Context) extends MacroOpsImpl(c)
+
 class MacroOpsImpl(val c: blackbox.Context) {
   def as_impl[Optic[_, _], From, To: c.WeakTypeTag, CastTo: c.WeakTypeTag]: c.Expr[Optic[From, CastTo]] = {
     import c.universe._
