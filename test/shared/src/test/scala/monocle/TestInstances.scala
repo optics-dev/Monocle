@@ -1,7 +1,6 @@
 package monocle
 
 import java.net.URI
-import java.util.UUID
 
 import org.scalacheck.Arbitrary._
 import org.scalacheck.rng.Seed
@@ -77,11 +76,6 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
       Cogen[(A, Option[Cofree[Option, A]])]
         .perturb(seed, (t.head, t.tail.value))
     )
-
-  implicit def uuidArbitrary: Arbitrary[UUID] = Arbitrary(UUID.randomUUID)
-
-  implicit def uuidCoGen: Cogen[UUID] =
-    Cogen[(Long, Long)].contramap[UUID]((u: UUID) => (u.getMostSignificantBits, u.getLeastSignificantBits))
 
   implicit def uriArbitrary: Arbitrary[URI] =
     Arbitrary {
