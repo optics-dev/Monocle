@@ -335,13 +335,13 @@ lazy val mdocSettings = Seq(
       .value,
   (ScalaUnidoc / unidoc / scalacOptions) ++= Seq(
     "-doc-source-url",
-    s"https://github.com/optics-dev/Monocle/tree/v${(ThisBuild / tlLatestVersion).value}€{FILE_PATH}.scala",
+    s"https://github.com/optics-dev/Monocle/tree/v${tlLatestVersion.value.getOrElse(version.value)}€{FILE_PATH}.scala",
     "-sourcepath",
     (LocalRootProject / baseDirectory).value.getAbsolutePath,
     "-doc-title",
     "Monocle",
     "-doc-version",
-    s"v${(ThisBuild / tlLatestVersion).value}"
+    s"v${tlLatestVersion.value.getOrElse(version.value)}"
   )
 )
 
