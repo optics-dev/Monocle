@@ -43,12 +43,14 @@ class PlatedSpec extends MonocleSuite {
     assert(universe(addAll(e)).forall(add(_).isEmpty))
   }
 
-  test("transform every elements even for leaf node") {
-    val e1 = Val(1)
-    val e2 = Add(Add(Val(1), Val(1)), Val(1))
+  test("transform every nested elements") {
+    val e = Add(Add(Val(1), Val(1)), Val(1))
+    assert(universe(negateAll(e)).collect { case v: Val => v }.forall(_.v < 0))
+  }
 
-    assertEquals(negateAll(e1), negate(e1))
-    assert(universe(negateAll(e2)).collect { case v: Val => v }.forall(_.v < 0))
+  test("transform top level leaf node") {
+    val e = Val(1)
+    assertEquals(negateAll(e), negate(e))
   }
 
 }
