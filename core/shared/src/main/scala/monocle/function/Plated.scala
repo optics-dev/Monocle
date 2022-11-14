@@ -42,10 +42,7 @@ trait PlatedFunctions extends CommonPlatedFunctions {
     * an infinite loop if there is no fixpoint)
     */
   def rewriteOf[A](l: Setter[A, A])(f: A => Option[A])(a: A): A = {
-    def go(b: A): A = {
-      val c = transformOf(l)(go)(b)
-      f(c).fold(c)(go)
-    }
+    def go: A => A = transformOf(l)(x => f(x).map(go).getOrElse(x))
     go(a)
   }
 
@@ -54,8 +51,10 @@ trait PlatedFunctions extends CommonPlatedFunctions {
     transformOf(plate[A].asSetter)(f)(a)
 
   /** transform every element by applying a [[Setter]] */
-  def transformOf[A](l: Setter[A, A])(f: A => A)(a: A): A =
-    l.modify(b => transformOf(l)(f)(f(b)))(a)
+  def transformOf[A](l: Setter[A, A])(f: A => A)(a: A): A = {
+    def go: A => A = l.modify(x => go(x)).andThen(f)
+    go(a)
+  }
 
   /** transforming counting changes */
   def transformCounting[A: Plated](f: A => Option[A])(a: A): (Int, A) =
