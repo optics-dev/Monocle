@@ -1,4 +1,4 @@
-addSbtPlugin("org.typelevel"      % "sbt-typelevel-ci-release" % "0.4.16")
+addSbtPlugin("org.typelevel"      % "sbt-typelevel-ci-release" % "0.4.17")
 addSbtPlugin("com.eed3si9n"       % "sbt-buildinfo"            % "0.11.0")
 addSbtPlugin("pl.project13.scala" % "sbt-jmh"                  % "0.4.3")
 
