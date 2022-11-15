@@ -90,7 +90,7 @@ lazy val buildSettings = Seq(
 
 lazy val catsVersion   = "2.8.0"
 lazy val scala2Version = "2.13.10"
-lazy val scala3Version = "3.2.0"
+lazy val scala3Version = "3.2.1"
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
@@ -335,13 +335,13 @@ lazy val mdocSettings = Seq(
       .value,
   (ScalaUnidoc / unidoc / scalacOptions) ++= Seq(
     "-doc-source-url",
-    s"https://github.com/optics-dev/Monocle/tree/v${(ThisBuild / tlLatestVersion).value}€{FILE_PATH}.scala",
+    s"https://github.com/optics-dev/Monocle/tree/v${tlLatestVersion.value.getOrElse(version.value)}€{FILE_PATH}.scala",
     "-sourcepath",
     (LocalRootProject / baseDirectory).value.getAbsolutePath,
     "-doc-title",
     "Monocle",
     "-doc-version",
-    s"v${(ThisBuild / tlLatestVersion).value}"
+    s"v${tlLatestVersion.value.getOrElse(version.value)}"
   )
 )
 
