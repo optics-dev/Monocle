@@ -64,7 +64,7 @@ To do this we will use the relation between the typeclass <code>cats.Traverse</c
 <span class="hljs-keyword">val</span> xs = <span class="hljs-type">List</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>)
 </code></pre>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> eachL = <span class="hljs-type">Traversal</span>.fromTraverse[<span class="hljs-type">List</span>, <span class="hljs-type">Int</span>]
-<span class="hljs-comment">// eachL: Traversal[List[Int], Int] = monocle.PTraversal$$anon$2@1784c281</span>
+<span class="hljs-comment">// eachL: Traversal[List[Int], Int] = monocle.PTraversal$$anon$2@29c103e4</span>
 eachL.replace(<span class="hljs-number">0</span>)(xs)
 <span class="hljs-comment">// res0: List[Int] = List(0, 0, 0, 0, 0)</span>
 eachL.modify(_ + <span class="hljs-number">1</span>)(xs)
@@ -106,7 +106,7 @@ A <code>Traversal</code> is defined by a single method <code>modifyA</code> whic
 <span class="hljs-keyword">val</span> m = <span class="hljs-type">Map</span>(<span class="hljs-number">1</span> -&gt; <span class="hljs-string">"one"</span>, <span class="hljs-number">2</span> -&gt; <span class="hljs-string">"two"</span>, <span class="hljs-number">3</span> -&gt; <span class="hljs-string">"three"</span>, <span class="hljs-number">4</span> -&gt; <span class="hljs-string">"Four"</span>)
 </code></pre>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> filterEven = filterKey[<span class="hljs-type">Int</span>, <span class="hljs-type">String</span>](_ % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>)
-<span class="hljs-comment">// filterEven: Traversal[Map[Int, String], String] = repl.MdocSession$MdocApp$$anon$1@233d2514</span>
+<span class="hljs-comment">// filterEven: Traversal[Map[Int, String], String] = repl.MdocSession$MdocApp$$anon$1@17591aa</span>
 
 filterEven.modify(_.toUpperCase)(m)
 <span class="hljs-comment">// res7: Map[Int, String] = Map(</span>
@@ -127,4 +127,4 @@ You can check the validity of your own <code>Traversal</code> using <code>Traver
 <pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">composeModify</span></span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>](t: <span class="hljs-type">Traversal</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>], s: <span class="hljs-type">S</span>, f: <span class="hljs-type">A</span> =&gt; <span class="hljs-type">A</span>, g: <span class="hljs-type">A</span> =&gt; <span class="hljs-type">A</span>): <span class="hljs-type">Boolean</span> =
     t.modify(g)(t.modify(f)(s)) == t.modify(g compose f)(s)
 </code></pre>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/Monocle/docs/optics/optional"><span class="arrow-prev">← </span><span>Optional</span></a><a class="docs-next button" href="/Monocle/docs/focus"><span>Focus</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2022.</section></footer></div></body></html>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/Monocle/docs/optics/optional"><span class="arrow-prev">← </span><span>Optional</span></a><a class="docs-next button" href="/Monocle/docs/focus"><span>Focus</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#laws">Laws</a></li></ul></nav></div><footer class="nav-footer" id="footer"><hr class="separator"/><section class="copyright">Copyright the maintainers © 2016-2023.</section></footer></div></body></html>
