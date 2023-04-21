@@ -20,20 +20,20 @@ In an attempt to be modular, Monocle is broken up into several modules:
 You can add a module to your build by adding the following line to `libraryDependencies`:
 
 ```scala
-"com.github.julien-truffaut"  %%  "monocle-${module}" % ${version}
+"dev.optics"  %%  "monocle-${module}" % ${version}
 ```
 
 Here is the complete list of published artifacts:
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.github.julien-truffaut"  %%  "monocle-core"    % ${version},
-  "com.github.julien-truffaut"  %%  "monocle-generic" % ${version},
-  "com.github.julien-truffaut"  %%  "monocle-macro"   % ${version},
-  "com.github.julien-truffaut"  %%  "monocle-state"   % ${version},
-  "com.github.julien-truffaut"  %%  "monocle-refined" % ${version},
-  "com.github.julien-truffaut"  %%  "monocle-unsafe"  % ${version},
-  "com.github.julien-truffaut"  %%  "monocle-law"     % ${version} % "test"
+  "dev.optics"  %%  "monocle-core"    % ${version},
+  "dev.optics"  %%  "monocle-generic" % ${version},
+  "dev.optics"  %%  "monocle-macro"   % ${version},
+  "dev.optics"  %%  "monocle-state"   % ${version},
+  "dev.optics"  %%  "monocle-refined" % ${version},
+  "dev.optics"  %%  "monocle-unsafe"  % ${version},
+  "dev.optics"  %%  "monocle-law"     % ${version} % "test"
 )
 ```
 
