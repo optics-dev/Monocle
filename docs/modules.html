@@ -69,17 +69,17 @@ type class instances for standard library types and cats data types</li>
 <li><em>docs</em> - source for this website</li>
 </ul>
 <p>You can add a module to your build by adding the following line to <code>libraryDependencies</code>:</p>
-<pre><code class="hljs css language-scala"><span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-${module}"</span> % ${version}
+<pre><code class="hljs css language-scala"><span class="hljs-string">"dev.optics"</span>  %%  <span class="hljs-string">"monocle-${module}"</span> % ${version}
 </code></pre>
 <p>Here is the complete list of published artifacts:</p>
 <pre><code class="hljs css language-scala">libraryDependencies ++= <span class="hljs-type">Seq</span>(
-  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-core"</span>    % ${version},
-  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-generic"</span> % ${version},
-  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-macro"</span>   % ${version},
-  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-state"</span>   % ${version},
-  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-refined"</span> % ${version},
-  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-unsafe"</span>  % ${version},
-  <span class="hljs-string">"com.github.julien-truffaut"</span>  %%  <span class="hljs-string">"monocle-law"</span>     % ${version} % <span class="hljs-string">"test"</span>
+  <span class="hljs-string">"dev.optics"</span>  %%  <span class="hljs-string">"monocle-core"</span>    % ${version},
+  <span class="hljs-string">"dev.optics"</span>  %%  <span class="hljs-string">"monocle-generic"</span> % ${version},
+  <span class="hljs-string">"dev.optics"</span>  %%  <span class="hljs-string">"monocle-macro"</span>   % ${version},
+  <span class="hljs-string">"dev.optics"</span>  %%  <span class="hljs-string">"monocle-state"</span>   % ${version},
+  <span class="hljs-string">"dev.optics"</span>  %%  <span class="hljs-string">"monocle-refined"</span> % ${version},
+  <span class="hljs-string">"dev.optics"</span>  %%  <span class="hljs-string">"monocle-unsafe"</span>  % ${version},
+  <span class="hljs-string">"dev.optics"</span>  %%  <span class="hljs-string">"monocle-law"</span>     % ${version} % <span class="hljs-string">"test"</span>
 )
 </code></pre>
 <p>You need to replace <code>${version}</code> with the version of Monocle you want to use.</p>
