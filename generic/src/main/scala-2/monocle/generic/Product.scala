@@ -17,13 +17,13 @@ trait ProductOptics {
     Iso[S, ev.Repr](s => ev.to(s))(t => ev.from(t))
 
   @deprecated("no replacement", since = "3.0.0-M1")
-  implicit def hNilEach[A] =
+  implicit def hNilEach[A]: Each[HNil, A] =
     new Each[HNil, A] {
       def each: Traversal[HNil, A] = Traversal.void[HNil, A]
     }
 
   @deprecated("no replacement", since = "3.0.0-M1")
-  implicit def hConsEach[A, Rest <: HList](implicit restEach: Each[Rest, A]) =
+  implicit def hConsEach[A, Rest <: HList](implicit restEach: Each[Rest, A]): Each[A :: Rest, A] =
     new Each[A :: Rest, A] {
       def each: Traversal[A :: Rest, A] =
         new PTraversal[A :: Rest, A :: Rest, A, A] {

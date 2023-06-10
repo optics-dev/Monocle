@@ -54,7 +54,7 @@ trait HListInstances {
   implicit def hListField1[S <: HList, A](implicit
     evAt: At.Aux[S, shapeless.nat._0.N, A],
     evReplace: ReplaceAt.Aux[S, shapeless.nat._0.N, A, (A, S)]
-  ) =
+  ): Field1[S, A] =
     new Field1[S, A] {
       def first = hListAt(shapeless.nat._0)
     }
@@ -63,7 +63,7 @@ trait HListInstances {
   implicit def hListField2[S <: HList, A](implicit
     evAt: At.Aux[S, shapeless.nat._1.N, A],
     evReplace: ReplaceAt.Aux[S, shapeless.nat._1.N, A, (A, S)]
-  ) =
+  ): Field2[S, A] =
     new Field2[S, A] {
       def second = hListAt(shapeless.nat._1)
     }
@@ -72,7 +72,7 @@ trait HListInstances {
   implicit def hListField3[S <: HList, A](implicit
     evAt: At.Aux[S, shapeless.nat._2.N, A],
     evReplace: ReplaceAt.Aux[S, shapeless.nat._2.N, A, (A, S)]
-  ) =
+  ): Field3[S, A] =
     new Field3[S, A] {
       def third = hListAt(shapeless.nat._2)
     }
@@ -81,7 +81,7 @@ trait HListInstances {
   implicit def hListField4[S <: HList, A](implicit
     evAt: At.Aux[S, shapeless.nat._3.N, A],
     evReplace: ReplaceAt.Aux[S, shapeless.nat._3.N, A, (A, S)]
-  ) =
+  ): Field4[S, A] =
     new Field4[S, A] {
       def fourth = hListAt(shapeless.nat._3)
     }
@@ -90,7 +90,7 @@ trait HListInstances {
   implicit def hListField5[S <: HList, A](implicit
     evAt: At.Aux[S, shapeless.nat._4.N, A],
     evReplace: ReplaceAt.Aux[S, shapeless.nat._4.N, A, (A, S)]
-  ) =
+  ): Field5[S, A] =
     new Field5[S, A] {
       def fifth = hListAt(shapeless.nat._4)
     }
@@ -99,7 +99,7 @@ trait HListInstances {
   implicit def hListField6[S <: HList, A](implicit
     evAt: At.Aux[S, shapeless.nat._5.N, A],
     evReplace: ReplaceAt.Aux[S, shapeless.nat._5.N, A, (A, S)]
-  ) =
+  ): Field6[S, A] =
     new Field6[S, A] {
       def sixth = hListAt(shapeless.nat._5)
     }
