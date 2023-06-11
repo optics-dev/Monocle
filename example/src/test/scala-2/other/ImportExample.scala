@@ -12,7 +12,7 @@ object Custom {
   import monocle.Lens
   import monocle.function.Each
 
-  implicit val customHead = new Each[Custom, Int] {
+  implicit val customHead: Each[Custom, Int] = new Each[Custom, Int] {
     def each: Traversal[Custom, Int] = Lens((_: Custom).value)(v => c => c.copy(value = v)).asTraversal
   }
 }
