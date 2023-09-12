@@ -79,7 +79,7 @@ jobs:
         run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' doc
 
       - name: Run documentation
-        if: matrix.scala == '2.13.11' && matrix.project == 'rootJVM'
+        if: matrix.scala == '2.13.12' && matrix.project == 'rootJVM'
         run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' docs/mdoc
 
       - name: Make target directories
