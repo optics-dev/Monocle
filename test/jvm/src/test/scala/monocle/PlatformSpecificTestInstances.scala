@@ -3,10 +3,12 @@ package monocle
 import java.net.URL
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 import cats.Eq
+import scala.annotation.nowarn
 
 private[monocle] trait PlatformSpecificTestInstances {
   implicit val urlEqual: Eq[URL] = Eq.instance((a, b) => a.toURI() == b.toURI())
 
+  @nowarn("msg=constructor URL in class URL is deprecated")
   implicit def urlArbitrary: Arbitrary[URL] =
     Arbitrary {
       val idGen = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString)

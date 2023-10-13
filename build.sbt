@@ -28,6 +28,7 @@ inThisBuild(
       name = Some("Run documentation"),
       cond = Some(s"matrix.scala == '${scala2Version}' && matrix.project == 'rootJVM'")
     ),
+    githubWorkflowJavaVersions += JavaSpec.temurin("21"),
     githubWorkflowPublishPostamble += WorkflowStep.Sbt(
       List("docs/docusaurusPublishGhpages"),
       name = Some("Publish website"),
