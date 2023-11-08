@@ -26,7 +26,7 @@ inThisBuild(
     githubWorkflowBuild += WorkflowStep.Sbt(
       List("docs/mdoc"),
       name = Some("Run documentation"),
-      cond = Some(s"matrix.scala == '${scala2Version}' && matrix.project == 'rootJVM'")
+      cond = Some(s"matrix.scala == '2.13' && matrix.project == 'rootJVM'")
     ),
     githubWorkflowJavaVersions += JavaSpec.temurin("21"),
     githubWorkflowPublishPostamble += WorkflowStep.Sbt(
