@@ -18,6 +18,7 @@ inThisBuild(
       ).map { case (username, fullName) =>
         Developer(username, fullName, s"@$username", url(s"https://github.com/$username"))
       },
+    run / fork              := true,
     scalaVersion            := scala2Version,
     crossScalaVersions      := Seq(scala2Version, scala3Version),
     tlSonatypeUseLegacyHost := false,
