@@ -9,6 +9,7 @@ private[focus] trait FocusBase {
 
   type Term     = macroContext.reflect.Term
   type TypeRepr = macroContext.reflect.TypeRepr
+  type Position = macroContext.reflect.Position
 
   case class LambdaConfig(argName: String, lambdaBody: Term)
 
@@ -43,13 +44,13 @@ private[focus] trait FocusBase {
   }
 
   enum FocusError {
-    case NotACaseClass(className: String, fieldName: String)
+    case NotACaseClass(className: String, fieldName: String, pos: Position)
     case NotAConcreteClass(className: String)
     case DidNotDirectlyAccessArgument(argName: String)
     case NotASimpleLambdaFunction
     case CouldntUnderstandKeywordContext
     case UnexpectedCodeStructure(code: String)
-    case CouldntFindFieldType(fromType: String, fieldName: String)
+    case CouldntFindFieldType(fromType: String, fieldName: String, pos: Position)
     case ComposeMismatch(type1: String, type2: String)
     case InvalidDowncast(fromType: String, toType: String)
 

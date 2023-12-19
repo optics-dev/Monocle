@@ -14,7 +14,7 @@ private[focus] trait SelectOnlyFieldParser {
 
       case Select(CaseClass(remainingCode), fieldName) if hasOnlyOneField(remainingCode) =>
         val fromType                = getType(remainingCode)
-        val action                  = getFieldAction(fromType, fieldName)
+        val action                  = getFieldAction(fromType, fieldName, term.pos)
         val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
         Some(remainingCodeWithAction)
 
@@ -22,9 +22,9 @@ private[focus] trait SelectOnlyFieldParser {
     }
   }
 
-  private def getFieldAction(fromType: TypeRepr, fieldName: String): FocusResult[FocusAction] =
+  private def getFieldAction(fromType: TypeRepr, fieldName: String, pos: Position): FocusResult[FocusAction] =
     for {
-      toType    <- getFieldType(fromType, fieldName)
+      toType    <- getFieldType(fromType, fieldName, pos)
       companion <- getCompanionObject(fromType)
       supplied = getSuppliedTypeArgs(fromType)
     } yield FocusAction.SelectOnlyField(fieldName, fromType, supplied, companion, toType)

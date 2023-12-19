@@ -25,7 +25,9 @@ private[focus] class FocusImpl(val macroContext: Quotes)
 
     generatedCode match {
       case Right(code) => code.asExpr
-      case Left(error) => report.error(errorMessage(error)); '{ ??? }
+      case Left(error) =>
+        val (msg, pos) = errorReport(error)
+        report.errorAndAbort(msg, pos.getOrElse(lambda.asTerm.pos))
     }
   }
 }
