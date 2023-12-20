@@ -26,8 +26,6 @@ private[focus] trait SelectParserBase extends ParserBase {
     case None      => FocusError.NotAConcreteClass(tpe.show).asResult
   }
 
-  import scala.util.matching.Regex
-
   private val tupleFieldPattern = "^_[0-9]+$".r
 
   def getFieldType(fromType: TypeRepr, fieldName: String, pos: Position): FocusResult[TypeRepr] = {
@@ -35,8 +33,8 @@ private[focus] trait SelectParserBase extends ParserBase {
       // We need to do this to support tuples, because even though they conform as case classes in other respects,
       // for some reason their field names (_1, _2, etc) have a space at the end, ie `_1 `.
       val f: String => String =
-        if (fromType <:< TypeRepr.of[Tuple])
-          s => if (tupleFieldPattern.matches(fieldName)) s.trim else s
+        if (fromType <:< TypeRepr.of[Tuple] && tupleFieldPattern.matches(fieldName))
+          _.trim
         else
           identity
       fromTypeSymbol.fieldMembers.find(s => f(s.name) == fieldName).getOrElse(Symbol.noSymbol)
