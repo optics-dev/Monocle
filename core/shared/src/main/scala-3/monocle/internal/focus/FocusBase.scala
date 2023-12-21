@@ -14,7 +14,7 @@ private[focus] trait FocusBase {
   case class LambdaConfig(argName: String, lambdaBody: Term)
 
   enum SelectType {
-    case CaseClassField, PublicField
+    case CaseClassField, PublicField, VirtualField
   }
 
   enum FocusAction {

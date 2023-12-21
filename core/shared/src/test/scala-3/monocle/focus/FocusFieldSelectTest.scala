@@ -141,6 +141,14 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     )
   }
 
+  test("Non case-class virtual field access") {
+    val getter: Getter[String, Int] = Focus[String](_.length)
+    assertEquals(
+      getter.get("foo"),
+      3
+    )
+  }
+
   /*
   test("Refined type field access") {
     assertEquals(

@@ -48,6 +48,19 @@ private[focus] trait SelectParserBase extends ParserBase {
     }
   }
 
+  def getVirtualFieldType(fromType: TypeRepr, fieldName: String, pos: Position): FocusResult[TypeRepr] =
+    getClassSymbol(fromType).flatMap { fromTypeSymbol =>
+      fromTypeSymbol
+        .methodMember(fieldName)
+        .collectFirst {
+          case sym if sym.paramSymss == List(Nil) =>
+            fromType.memberType(sym) match {
+              case MethodType(_, _, tpe) => tpe
+            }
+        }
+        .toRight(FocusError.CouldntFindFieldType(fromType.show, fieldName, pos))
+    }
+
   private object FieldType {
     def unapply(fieldSymbol: Symbol): Option[TypeRepr] = fieldSymbol match {
       case sym if sym.isNoSymbol => None

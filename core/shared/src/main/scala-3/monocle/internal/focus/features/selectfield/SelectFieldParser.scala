@@ -23,6 +23,16 @@ private[focus] trait SelectFieldParser {
         val action                  = getFieldAction(fromType, fieldName, SelectType.PublicField, term.pos)
         val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
         Some(remainingCodeWithAction)
+      case Apply(Select(remainingCode, fieldName), List()) =>
+        val fromType = getType(remainingCode)
+        val action = getVirtualFieldType(fromType, fieldName, term.pos).flatMap { toType =>
+          Right(
+            FocusAction.SelectField(fieldName, fromType, getSuppliedTypeArgs(fromType), toType, SelectType.VirtualField)
+          )
+        }
+        val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
+        Some(remainingCodeWithAction)
+
       case _ => None
     }
   }

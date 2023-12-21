@@ -33,6 +33,14 @@ private[focus] trait SelectFieldGenerator {
           case ('[f], '[t]) =>
             '{ Getter.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm).asExprOf[t] }) }.asTerm
         }
+      case SelectType.VirtualField =>
+        (fromType.asType, toType.asType) match {
+          case ('[f], '[t]) =>
+            '{
+              Getter.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm).appliedToArgs(List()).asExprOf[t] })
+            }.asTerm
+        }
+
     }
   }
 }
