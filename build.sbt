@@ -51,7 +51,12 @@ lazy val buildSettings = Seq(
   Compile / console / scalacOptions -= "-Ywarn-unused:imports",
   scalacOptions ++= {
     if (tlIsScala3.value)
-      Seq("-source:3.0-migration", "-Ykind-projector", "-language:implicitConversions,higherKinds,postfixOps")
+      Seq(
+        "-source:3.0-migration",
+        "-Ykind-projector",
+        "-language:implicitConversions,higherKinds,postfixOps",
+        "-Wunused:all"
+      )
     else
       Seq(
         "-Ymacro-annotations",
@@ -158,7 +163,9 @@ lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
           ProblemFilters.exclude[MissingClassProblem]("monocle.syntax.AsPrism"),
           ProblemFilters.exclude[MissingClassProblem]("monocle.syntax.AsPrism$"),
           ProblemFilters.exclude[MissingClassProblem]("monocle.syntax.AsPrismImpl"),
-          ProblemFilters.exclude[MissingClassProblem]("monocle.syntax.AsPrismImpl$")
+          ProblemFilters.exclude[MissingClassProblem]("monocle.syntax.AsPrismImpl$"),
+          // ignore mima for classes only used by `Focus` macro
+          ProblemFilters.exclude[DirectMissingMethodProblem]("monocle.internal.focus.*")
         )
       else Nil
     }

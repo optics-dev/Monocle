@@ -26,16 +26,24 @@ private[focus] trait SelectParserBase extends ParserBase {
     case None      => FocusError.NotAConcreteClass(tpe.show).asResult
   }
 
-  def getFieldType(fromType: TypeRepr, fieldName: String): FocusResult[TypeRepr] = {
-    // We need to do this to support tuples, because even though they conform as case classes in other respects,
-    // for some reason their field names (_1, _2, etc) have a space at the end, ie `_1 `.
-    def getTrimmedFieldSymbol(fromTypeSymbol: Symbol): Symbol =
-      fromTypeSymbol.memberFields.find(_.name.trim == fieldName).getOrElse(Symbol.noSymbol)
+  private val tupleFieldPattern = "^_[0-9]+$".r
+
+  def getFieldType(fromType: TypeRepr, fieldName: String, pos: Position): FocusResult[TypeRepr] = {
+    def getFieldSymbol(fromTypeSymbol: Symbol): Symbol = {
+      // We need to do this to support tuples, because even though they conform as case classes in other respects,
+      // for some reason their field names (_1, _2, etc) have a space at the end, ie `_1 `.
+      val f: String => String =
+        if (fromType <:< TypeRepr.of[Tuple] && tupleFieldPattern.matches(fieldName))
+          _.trim
+        else
+          identity
+      fromTypeSymbol.fieldMembers.find(s => f(s.name) == fieldName).getOrElse(Symbol.noSymbol)
+    }
 
     getClassSymbol(fromType).flatMap { fromTypeSymbol =>
-      getTrimmedFieldSymbol(fromTypeSymbol) match {
+      getFieldSymbol(fromTypeSymbol) match {
         case FieldType(possiblyTypeArg) => Right(swapWithSuppliedType(fromType, possiblyTypeArg))
-        case _                          => FocusError.CouldntFindFieldType(fromType.show, fieldName).asResult
+        case _                          => FocusError.CouldntFindFieldType(fromType.show, fieldName, pos).asResult
       }
     }
   }
