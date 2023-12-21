@@ -1,6 +1,6 @@
 package monocle.focus
 
-import monocle.{Focus, Iso, Lens}
+import monocle.{Focus, Getter, Iso, Lens}
 
 final class FocusFieldSelectTest extends munit.FunSuite {
 
@@ -19,6 +19,8 @@ final class FocusFieldSelectTest extends munit.FunSuite {
   case class UnionBox[A, B](aOrB: A | B)
   case class ConstraintBox[A <: AnyVal](a: A)
   case class Varargs[A](a: A*)
+  opaque type OpaqueType = Fub
+  final class NonCaseClass(val value: Owner)
 
   object Public {
     case class Private(private[Public] a: Int)
@@ -121,6 +123,22 @@ final class FocusFieldSelectTest extends munit.FunSuite {
 
     assertEquals(Focus[CCInt](_.i).get(cc), 3)
     assertEquals(Focus[CCInt](_.t).get(cc), 2)
+  }
+
+  test("Opaque type field access") {
+    val lens: Lens[OpaqueType, Int] = Focus[OpaqueType](_.bab)
+    assertEquals(
+      lens.get(Fub(1)),
+      1
+    )
+  }
+
+  test("Non case-class field access") {
+    val getter: Getter[NonCaseClass, String] = Focus[NonCaseClass](_.value.pet.name)
+    assertEquals(
+      getter.get(NonCaseClass(Owner(Animal("fido")))),
+      "fido"
+    )
   }
 
   /*

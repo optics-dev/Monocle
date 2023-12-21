@@ -14,18 +14,26 @@ private[focus] trait SelectFieldParser {
 
       case Select(CaseClass(remainingCode), fieldName) =>
         val fromType                = getType(remainingCode)
-        val action                  = getFieldAction(fromType, fieldName, term.pos)
+        val action                  = getFieldAction(fromType, fieldName, SelectType.CaseClassField, term.pos)
         val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
         Some(remainingCodeWithAction)
 
       case Select(remainingCode, fieldName) =>
-        Some(FocusError.NotACaseClass(remainingCode.tpe.widen.show, fieldName, term.pos).asResult)
+        val fromType                = getType(remainingCode)
+        val action                  = getFieldAction(fromType, fieldName, SelectType.PublicField, term.pos)
+        val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
+        Some(remainingCodeWithAction)
       case _ => None
     }
   }
 
-  private def getFieldAction(fromType: TypeRepr, fieldName: String, pos: Position): FocusResult[FocusAction] =
+  private def getFieldAction(
+    fromType: TypeRepr,
+    fieldName: String,
+    selectType: SelectType,
+    pos: Position
+  ): FocusResult[FocusAction] =
     getFieldType(fromType, fieldName, pos).flatMap { toType =>
-      Right(FocusAction.SelectField(fieldName, fromType, getSuppliedTypeArgs(fromType), toType))
+      Right(FocusAction.SelectField(fieldName, fromType, getSuppliedTypeArgs(fromType), toType, selectType))
     }
 }

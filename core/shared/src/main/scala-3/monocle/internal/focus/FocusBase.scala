@@ -13,8 +13,18 @@ private[focus] trait FocusBase {
 
   case class LambdaConfig(argName: String, lambdaBody: Term)
 
+  enum SelectType {
+    case CaseClassField, PublicField
+  }
+
   enum FocusAction {
-    case SelectField(fieldName: String, fromType: TypeRepr, fromTypeArgs: List[TypeRepr], toType: TypeRepr)
+    case SelectField(
+      fieldName: String,
+      fromType: TypeRepr,
+      fromTypeArgs: List[TypeRepr],
+      toType: TypeRepr,
+      selectType: SelectType
+    )
     case SelectOnlyField(
       fieldName: String,
       fromType: TypeRepr,
@@ -30,8 +40,8 @@ private[focus] trait FocusBase {
     case KeywordWithDefault(toType: TypeRepr, defaultValue: Term)
 
     override def toString(): String = this match {
-      case SelectField(fieldName, fromType, fromTypeArgs, toType) =>
-        s"SelectField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
+      case SelectField(fieldName, fromType, fromTypeArgs, toType, selectType) =>
+        s"SelectField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show}, $selectType)"
       case SelectOnlyField(fieldName, fromType, fromTypeArgs, _, toType) =>
         s"SelectOnlyField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ..., ${toType.show})"
       case KeywordSome(toType)                  => s"KeywordSome(${toType.show})"

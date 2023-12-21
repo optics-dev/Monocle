@@ -1,7 +1,7 @@
 package monocle.internal.focus.features.selectfield
 
 import monocle.internal.focus.FocusBase
-import monocle.Lens
+import monocle.{Getter, Lens}
 import scala.quoted.Quotes
 
 private[focus] trait SelectFieldGenerator {
@@ -18,13 +18,21 @@ private[focus] trait SelectFieldGenerator {
     def generateSetter(from: Term, to: Term): Term =
       Select.overloaded(from, "copy", fromTypeArgs, NamedArg(fieldName, to) :: Nil) // o.copy(field = value)
 
-    (fromType.asType, toType.asType) match {
-      case ('[f], '[t]) =>
-        '{
-          Lens.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm).asExprOf[t] })((to: t) =>
-            (from: f) => ${ generateSetter('{ from }.asTerm, '{ to }.asTerm).asExprOf[f] }
-          )
-        }.asTerm
+    action.selectType match {
+      case SelectType.CaseClassField =>
+        (fromType.asType, toType.asType) match {
+          case ('[f], '[t]) =>
+            '{
+              Lens.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm).asExprOf[t] })((to: t) =>
+                (from: f) => ${ generateSetter('{ from }.asTerm, '{ to }.asTerm).asExprOf[f] }
+              )
+            }.asTerm
+        }
+      case SelectType.PublicField =>
+        (fromType.asType, toType.asType) match {
+          case ('[f], '[t]) =>
+            '{ Getter.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm).asExprOf[t] }) }.asTerm
+        }
     }
   }
 }
