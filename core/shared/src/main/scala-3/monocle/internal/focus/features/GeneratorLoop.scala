@@ -9,7 +9,7 @@ import monocle.internal.focus.features.each.EachGenerator
 import monocle.internal.focus.features.at.AtGenerator
 import monocle.internal.focus.features.index.IndexGenerator
 import monocle.internal.focus.features.withdefault.WithDefaultGenerator
-import monocle.{function, Iso, Lens, Optional, PIso, PLens, POptional, PPrism, PTraversal, Prism, Traversal}
+import monocle.Iso
 import scala.quoted.Type
 
 private[focus] trait AllFeatureGenerators
@@ -50,36 +50,59 @@ private[focus] trait GeneratorLoop {
 
   import scala.util.control.NonFatal
 
-  private val _arity2 = Set(
-    TypeRepr.of[Lens[*, *]],
-    TypeRepr.of[Iso[*, *]],
-    TypeRepr.of[Prism[*, *]],
-    TypeRepr.of[Optional[*, *]],
-    TypeRepr.of[Traversal[*, *]],
-    TypeRepr.of[function.Each[*, *]],
-    TypeRepr.of[PLens[*, *, *, *]],
-    TypeRepr.of[PIso[*, *, *, *]],
-    TypeRepr.of[PPrism[*, *, *, *]],
-    TypeRepr.of[POptional[*, *, *, *]],
-    TypeRepr.of[PTraversal[*, *, *, *]]
-  )
+  private def composeOptics(lens1: Term, lens2: Term): FocusResult[Term] = {
 
-  /** Whether the expected `andThen` method has 2 type parameters. */
-  private def arity2(term: Term): Boolean =
-    term.tpe.widen match {
-      case AppliedType(tpe, _) => _arity2.exists(tpe <:< _)
+    def dispatchType(tpe: TypeRepr): TypeRepr = tpe match {
+      case AppliedType(tpe, _) => tpe
+      case tpe                 => tpe
     }
 
-  private def composeOptics(lens1: Term, lens2: Term): FocusResult[Term] =
-    try
-      lens2.tpe.widen match {
-        // Won't yet work for polymorphism where A != B
-        case AppliedType(_, List(_, toType2)) if arity2(lens1) && arity2(lens2) =>
-          Right(Select.overloaded(lens1, "andThen", List(toType2, toType2), List(lens2)))
-        case AppliedType(_, List(_, toType2)) =>
-          Right(Select.overloaded(lens1, "andThen", List(toType2), List(lens2)))
-      }
-    catch {
-      case NonFatal(_) => FocusError.ComposeMismatch(lens1.tpe.show, lens2.tpe.show).asResult
+    def erasedSubtypeOf(lhs: TypeRepr, rhs: TypeRepr): Boolean =
+      lhs.derivesFrom(rhs.classSymbol.get)
+
+    val tpe2 = dispatchType(lens2.tpe.dealias)
+
+    lens1.tpe.classSymbol match {
+      case Some(classSym) =>
+        val methodSym = {
+          var current: Null | (Symbol, TypeRepr) = null
+
+          for {
+            methodSym <- classSym.methodMember("andThen")
+          } {
+            val List(typeArgs, List(param)) = methodSym.paramSymss
+            val ValDef(_, tpt, _)           = param.tree
+            val tpe1                        = dispatchType(tpt.tpe)
+            val replace = if (erasedSubtypeOf(tpe2, tpe1)) {
+              current match {
+                case null      => true
+                case (_, tpe3) => erasedSubtypeOf(tpe1, tpe3)
+              }
+            } else {
+              false
+            }
+            if (replace) {
+              current = (methodSym, tpe1)
+            }
+          }
+          current
+        }
+
+        methodSym match {
+          case null => FocusError.ComposeMismatch(lens1.tpe.show, lens2.tpe.show).asResult
+          case (methodSym, _) =>
+            val AppliedType(_, List(_, toType2)) = lens2.tpe.widen
+            val args                             = List.fill(methodSym.paramSymss.head.size)(toType2)
+            try {
+              // We can't seem to use the `Symbol` directly...
+              val expr = Select.overloaded(lens1, methodSym.name, args, List(lens2))
+              Right(expr)
+            } catch {
+              case NonFatal(_) => FocusError.ComposeMismatch(lens1.tpe.show, lens2.tpe.show).asResult
+            }
+        }
+      case None => FocusError.ComposeMismatch(lens1.tpe.show, lens2.tpe.show).asResult
     }
+
+  }
 }
