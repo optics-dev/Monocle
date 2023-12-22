@@ -164,14 +164,26 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     )
   }
 
-  test("overloaded") {
+  test("overloaded class") {
     final class Foo(_bar: Int) {
       def bar: Int = _bar
       def bar(i: Int): Foo = ???
     }
 
-    Focus[Foo](_.bar)
+    val getter = Focus[Foo](_.bar)
+    assertEquals(
+      getter.get(new Foo(3)),
+      3
+    )
   }
+
+  test("overloaded case-class") {
+    final case class Foo(bar: Int) {
+      def bar(i: Int): Foo = ???
+    }
+    val lens: Lens[Foo, Int] = Focus[Foo](_.bar)
+  }
+
 
   /*
   test("Existential type field access") {
