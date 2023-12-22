@@ -58,12 +58,16 @@ private[focus] trait GeneratorLoop {
     }
 
     def erasedSubtypeOf(lhs: TypeRepr, rhs: TypeRepr): Boolean =
-      lhs.derivesFrom(rhs.classSymbol.get)
+      rhs.classSymbol.map(lhs.derivesFrom).getOrElse(false)
 
     val tpe2 = dispatchType(lens2.tpe.dealias)
 
     lens1.tpe.classSymbol match {
       case Some(classSym) =>
+
+        // This is to select the correct 'andThen' method. The algorithm
+        // essentially loops through and finds the 'lowest' subtype which
+        // is related to the term on the right.
         val methodSym = {
           var current: Null | (Symbol, TypeRepr) = null
 
@@ -94,8 +98,7 @@ private[focus] trait GeneratorLoop {
             val AppliedType(_, List(_, toType2)) = lens2.tpe.widen
             val args                             = List.fill(methodSym.paramSymss.head.size)(toType2)
             try {
-              // We can't seem to use the `Symbol` directly...
-              val expr = Select.overloaded(lens1, methodSym.name, args, List(lens2))
+              val expr = Select(lens1, methodSym).appliedToTypes(args).appliedTo(lens2)
               Right(expr)
             } catch {
               case NonFatal(_) => FocusError.ComposeMismatch(lens1.tpe.show, lens2.tpe.show).asResult
