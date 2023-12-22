@@ -53,31 +53,20 @@ private[focus] trait SelectParserBase extends ParserBase {
     }
   }
 
-  def paramAccessorType(tpe: TypeRepr, symbol: Symbol, fieldName: String): Option[TypeRepr] = {
-    symbol.methodMember(fieldName).map(each => println(each.paramSymss))
-    val x = symbol
+  def paramAccessorType(tpe: TypeRepr, symbol: Symbol, fieldName: String): Option[TypeRepr] =
+    symbol
       .methodMember(fieldName)
       .collectFirst {
-        case sym if sym.paramSymss == Nil =>
+        case sym if sym.paramSymss == Nil || sym.paramSymss == List(Nil) =>
           tpe.memberType(sym) match {
             case MethodType(_, _, tpe) => tpe
             case ByNameType(tpe)       => tpe
           }
       }
-    x
-  }
 
   def getVirtualFieldType(fromType: TypeRepr, fieldName: String, pos: Position): FocusResult[TypeRepr] =
     getClassSymbol(fromType).flatMap { fromTypeSymbol =>
-      fromTypeSymbol
-        .methodMember(fieldName)
-        .collectFirst {
-          case sym if sym.paramSymss == List(Nil) =>
-            fromType.memberType(sym) match {
-              case MethodType(_, _, tpe) => tpe
-              case ByNameType(tpe)       => tpe
-            }
-        }
+      paramAccessorType(fromType, fromTypeSymbol, fieldName)
         .toRight(FocusError.CouldntFindFieldType(fromType.show, fieldName, pos))
     }
 

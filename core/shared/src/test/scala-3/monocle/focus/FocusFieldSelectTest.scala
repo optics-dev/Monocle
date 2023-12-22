@@ -90,6 +90,7 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     assertEquals(Public.lens.replace(55)(a), Public.Private(55))
   }
 
+
   test("Tuple field access") {
     val f1 = Focus[(Int, String)](_._1)
     val f2 = Focus[(Int, String)](_._2)
@@ -161,6 +162,15 @@ final class FocusFieldSelectTest extends munit.FunSuite {
       Focus[RefinedBox { type A = String }](_.a).get(new RefinedBox { type A = String; def a = "Bob" }),
       "Bob"
     )
+  }
+
+  test("overloaded") {
+    final class Foo(_bar: Int) {
+      def bar: Int = _bar
+      def bar(i: Int): Foo = ???
+    }
+
+    Focus[Foo](_.bar)
   }
 
   /*

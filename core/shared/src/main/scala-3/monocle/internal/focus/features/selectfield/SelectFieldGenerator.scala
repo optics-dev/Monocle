@@ -3,6 +3,7 @@ package monocle.internal.focus.features.selectfield
 import monocle.internal.focus.FocusBase
 import monocle.{Getter, Lens}
 import scala.quoted.Quotes
+import scala.util.control.NonFatal
 
 private[focus] trait SelectFieldGenerator {
   this: FocusBase =>
@@ -13,7 +14,17 @@ private[focus] trait SelectFieldGenerator {
     import action.{fieldName, fromType, fromTypeArgs, toType}
 
     def generateGetter(from: Term): Term =
-      Select.unique(from, fieldName) // o.field
+      try
+        Select.unique(from, fieldName)
+      catch {
+        case NonFatal(_) =>
+          from.tpe.typeSymbol
+            .methodMember(fieldName)
+            .collect {
+              case sym if sym.paramSymss == Nil => Select(from, sym)
+            }
+            .head
+      }
 
     def generateSetter(from: Term, to: Term): Term =
       Select.overloaded(from, "copy", fromTypeArgs, NamedArg(fieldName, to) :: Nil) // o.copy(field = value)

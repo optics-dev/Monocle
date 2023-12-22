@@ -11,7 +11,6 @@ private[focus] trait SelectFieldParser {
   object SelectField extends FocusParser {
 
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] = term match {
-
       case Select(CaseClass(remainingCode), fieldName) =>
         val fromType                = getType(remainingCode)
         val action                  = getFieldAction(fromType, fieldName, SelectType.CaseClassField, term.pos)
@@ -32,7 +31,6 @@ private[focus] trait SelectFieldParser {
         }
         val remainingCodeWithAction = action.map(a => (RemainingCode(remainingCode), a))
         Some(remainingCodeWithAction)
-
       case _ => None
     }
   }
