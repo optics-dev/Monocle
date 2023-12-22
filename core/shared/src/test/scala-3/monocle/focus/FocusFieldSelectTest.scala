@@ -155,13 +155,13 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     assertEquals(lens.get(Foo(0, 42)), 42)
   }
 
-  /*
+  
   test("Refined type field access") {
     assertEquals(
       Focus[RefinedBox { type A = String }](_.a).get(new RefinedBox { type A = String; def a = "Bob" }),
       "Bob"
     )
-  }*/
+  }
 
   /*
   test("Existential type field access") {
