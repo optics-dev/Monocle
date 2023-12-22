@@ -149,6 +149,12 @@ final class FocusFieldSelectTest extends munit.FunSuite {
     )
   }
 
+  test("case-class names with spaces") {
+    final case class Foo(x: Int, `x  `: Int)
+    val lens = Focus[Foo](_.`x  `)
+    assertEquals(lens.get(Foo(0, 42)), 42)
+  }
+
   /*
   test("Refined type field access") {
     assertEquals(

@@ -64,7 +64,6 @@ private[focus] trait GeneratorLoop {
 
     lens1.tpe.classSymbol match {
       case Some(classSym) =>
-
         // This is to select the correct 'andThen' method. The algorithm
         // essentially loops through and finds the 'lowest' subtype which
         // is related to the term on the right.

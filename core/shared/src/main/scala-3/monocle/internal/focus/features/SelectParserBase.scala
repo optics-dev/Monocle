@@ -29,7 +29,7 @@ private[focus] trait SelectParserBase extends ParserBase {
   private val tupleFieldPattern = "^_[0-9]+$".r
 
   def getFieldType(fromType: TypeRepr, fieldName: String, pos: Position): FocusResult[TypeRepr] = {
-    def getFieldSymbol(fromTypeSymbol: Symbol): Symbol = {
+    def getFieldSymbol(fromTypeSymbol: Symbol): Option[TypeRepr] = {
       // We need to do this to support tuples, because even though they conform as case classes in other respects,
       // for some reason their field names (_1, _2, etc) have a space at the end, ie `_1 `.
       val f: String => String =
@@ -37,15 +37,34 @@ private[focus] trait SelectParserBase extends ParserBase {
           _.trim
         else
           identity
-      fromTypeSymbol.fieldMembers.find(s => f(s.name) == fieldName).getOrElse(Symbol.noSymbol)
+      fromTypeSymbol.fieldMembers
+        .find(s => f(s.name) == fieldName)
+        .collect { case FieldType(possiblyTypeArg) =>
+          swapWithSuppliedType(fromType, possiblyTypeArg)
+        }
+        .orElse(paramAccessorType(fromType, fromTypeSymbol, fieldName))
     }
 
     getClassSymbol(fromType).flatMap { fromTypeSymbol =>
       getFieldSymbol(fromTypeSymbol) match {
-        case FieldType(possiblyTypeArg) => Right(swapWithSuppliedType(fromType, possiblyTypeArg))
-        case _                          => FocusError.CouldntFindFieldType(fromType.show, fieldName, pos).asResult
+        case Some(sym) => Right(sym)
+        case _         => FocusError.CouldntFindFieldType(fromType.show, fieldName, pos).asResult
       }
     }
+  }
+
+  def paramAccessorType(tpe: TypeRepr, symbol: Symbol, fieldName: String): Option[TypeRepr] = {
+    symbol.methodMember(fieldName).map(each => println(each.paramSymss))
+    val x = symbol
+      .methodMember(fieldName)
+      .collectFirst {
+        case sym if sym.paramSymss == Nil =>
+          tpe.memberType(sym) match {
+            case MethodType(_, _, tpe) => tpe
+            case ByNameType(tpe)       => tpe
+          }
+      }
+    x
   }
 
   def getVirtualFieldType(fromType: TypeRepr, fieldName: String, pos: Position): FocusResult[TypeRepr] =
@@ -56,6 +75,7 @@ private[focus] trait SelectParserBase extends ParserBase {
           case sym if sym.paramSymss == List(Nil) =>
             fromType.memberType(sym) match {
               case MethodType(_, _, tpe) => tpe
+              case ByNameType(tpe)       => tpe
             }
         }
         .toRight(FocusError.CouldntFindFieldType(fromType.show, fieldName, pos))
