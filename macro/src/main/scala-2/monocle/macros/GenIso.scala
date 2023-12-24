@@ -20,7 +20,7 @@ object GenIso {
     *
     * Case classes with multiple parameter-lists (example: `case class X(…)(…)`) are rejected.
     */
-  def fields[S]: Iso[S, _] = macro GenIsoImplW.genIso_fields_impl[S]
+  def fields[S]: Iso[S, ?] = macro GenIsoImplW.genIso_fields_impl[S]
 }
 
 sealed abstract class GenIsoImplBase {
