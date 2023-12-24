@@ -23,23 +23,23 @@ class ComposeIssueExample extends MonocleSuite {
   val bS2S = new B[String, String]
 
   test("compose same class") {
-    assertEquals((aI2S compose aS2S).isInstanceOf[A[_, _]], true)
-    assertEquals((aS2S compose aS2S).isInstanceOf[A[_, _]], true)
-    assertEquals((bI2S compose bS2S).isInstanceOf[B[_, _]], true)
+    assertEquals((aI2S compose aS2S).isInstanceOf[A[?, ?]], true)
+    assertEquals((aS2S compose aS2S).isInstanceOf[A[?, ?]], true)
+    assertEquals((bI2S compose bS2S).isInstanceOf[B[?, ?]], true)
   }
 
   test("compose different class") {
-    assertEquals((aI2S compose bS2S).isInstanceOf[B[_, _]], true)
-    assertEquals((bI2S compose aS2S).isInstanceOf[B[_, _]], true)
+    assertEquals((aI2S compose bS2S).isInstanceOf[B[?, ?]], true)
+    assertEquals((bI2S compose aS2S).isInstanceOf[B[?, ?]], true)
   }
 
   def b2S[T] = new B[T, String]
 
   test("compose with parametric method") {
     // explicit type
-    assertEquals((aI2S compose b2S[String]).isInstanceOf[B[_, _]], true)
+    assertEquals((aI2S compose b2S[String]).isInstanceOf[B[?, ?]], true)
     // non overloaded method
-    assertEquals((aI2S composeB b2S).isInstanceOf[B[_, _]], true)
+    assertEquals((aI2S composeB b2S).isInstanceOf[B[?, ?]], true)
 
     // do not compile if we do not specify the type with an overloaded method
     // see https://stackoverflow.com/questions/7845569/scala-type-inference-on-overloaded-method/7847406#7847406
