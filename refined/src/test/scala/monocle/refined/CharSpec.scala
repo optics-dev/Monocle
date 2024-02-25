@@ -2,7 +2,6 @@ package monocle.refined
 
 import eu.timepit.refined.scalacheck.char._
 import eu.timepit.refined.scalacheck.refTypeCogen
-import eu.timepit.refined.scalacheck.any.arbitraryFromValidate
 import monocle.refined.all._
 import monocle.law.discipline.PrismTests
 
