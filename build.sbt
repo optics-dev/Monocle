@@ -38,7 +38,7 @@ inThisBuild(
   )
 )
 
-lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.2" cross CrossVersion.full
+lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.3" cross CrossVersion.full
 
 lazy val buildSettings = Seq(
   scalacOptions ++= Seq(
