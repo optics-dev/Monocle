@@ -5,7 +5,6 @@ import cats.arrow.Choice
 import cats.data.Const
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
-import cats.catsInstancesForId
 import cats.syntax.traverse._
 
 /** A [[PTraversal]] can be seen as a [[POptional]] generalised to 0 to n targets where n can be infinite.

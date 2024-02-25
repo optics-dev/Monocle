@@ -3,7 +3,6 @@ package monocle.law
 import monocle.Optional
 import monocle.internal.{IsEq, Monoids}
 import cats.Id
-import cats.catsInstancesForId
 import cats.data.Const
 import cats.kernel.Monoid
 
