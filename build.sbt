@@ -95,7 +95,7 @@ lazy val buildSettings = Seq(
   }
 )
 
-lazy val catsVersion   = "2.10.0"
+lazy val catsVersion   = "2.12.0"
 lazy val scala2Version = "2.13.14"
 lazy val scala3Version = "3.3.3"
 
@@ -103,13 +103,13 @@ lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsV
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
 lazy val catsLaws          = Def.setting("org.typelevel" %%% "cats-laws" % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel" %%% "alleycats-core" % catsVersion)
-lazy val shapeless         = Def.setting("com.chuusai" %%% "shapeless" % "2.3.11")
-lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.11.1")
-lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.11.1" % "test")
+lazy val shapeless         = Def.setting("com.chuusai" %%% "shapeless" % "2.3.12")
+lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.11.2")
+lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.11.2" % "test")
 
-lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "1.6.0")
+lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "1.7.0")
 lazy val munit           = Def.setting("org.scalameta" %%% "munit" % "1.0.0-M6" % Test)
-lazy val munitDiscipline = Def.setting("org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test)
+lazy val munitDiscipline = Def.setting("org.typelevel" %%% "discipline-munit" % "2.0.0" % Test)
 
 lazy val macroVersion = "2.1.1"
 
@@ -118,7 +118,7 @@ lazy val scalajsSettings = Seq(
 )
 
 lazy val scalaNativeSettings = Seq(
-  tlVersionIntroduced := List("2.13", "3").map(_ -> "3.2.0").toMap
+  tlMimaPreviousVersions := Set.empty
 )
 
 lazy val monocleSettings       = buildSettings
