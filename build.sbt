@@ -2,7 +2,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(
   List(
-    tlBaseVersion := "3.2",
+    tlBaseVersion := "3.3",
     organization  := "dev.optics",
     homepage      := Some(url("https://github.com/optics-dev/Monocle")),
     licenses      := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
