@@ -3,8 +3,6 @@ package monocle.std
 import monocle.Prism
 import monocle.internal.Bounded
 
-import cats.instances.int._
-
 object int extends IntOptics
 
 trait IntOptics {

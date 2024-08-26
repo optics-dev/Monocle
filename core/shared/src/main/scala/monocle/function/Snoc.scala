@@ -1,7 +1,6 @@
 package monocle.function
 
 import cats.Applicative
-import cats.instances.option._
 import cats.syntax.either._
 import monocle.{Iso, Optional, Prism}
 

@@ -3,7 +3,6 @@ package monocle
 import cats.{Applicative, Eq, Traverse}
 import cats.arrow.Category
 import cats.evidence.{<~<, Is}
-import cats.instances.option._
 import cats.syntax.either._
 import monocle.function.{At, Each, FilterIndex, Index}
 

@@ -7,7 +7,6 @@ import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
 import cats.Eq
-import cats.instances.option._
 
 object OptionalTests extends Laws {
   def apply[S: Arbitrary: Eq, A: Arbitrary: Eq](optional: Optional[S, A])(implicit arbAA: Arbitrary[A => A]): RuleSet =

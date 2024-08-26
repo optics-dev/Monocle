@@ -5,8 +5,6 @@ import monocle.{Setter, Traversal}
 import scala.annotation.implicitNotFound
 import cats.{Applicative, Monad, Traverse}
 import cats.data.State
-import cats.instances.int._
-import cats.instances.lazyList._
 import cats.syntax.flatMap._
 
 /** [[Plated]] is a type-class for types which can extract their immediate self-similar children.
