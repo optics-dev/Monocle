@@ -11,8 +11,8 @@ class GenPrismSpec extends DisciplineSuite {
   case class I(i: Int)    extends IntOrString
   case class S(s: String) extends IntOrString
 
-  implicit val iArb: Arbitrary[I] = Arbitrary(arbitrary[Int].map(I))
-  implicit val sArb: Arbitrary[S] = Arbitrary(arbitrary[String].map(S))
+  implicit val iArb: Arbitrary[I] = Arbitrary(arbitrary[Int].map(I.apply))
+  implicit val sArb: Arbitrary[S] = Arbitrary(arbitrary[String].map(S.apply))
 
   implicit val intOrStringArb: Arbitrary[IntOrString] =
     Arbitrary(Gen.oneOf(iArb.arbitrary, sArb.arbitrary))

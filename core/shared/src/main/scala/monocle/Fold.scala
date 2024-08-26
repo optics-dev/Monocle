@@ -35,23 +35,23 @@ trait Fold[S, A] extends Serializable { self =>
 
   /** find the first target matching the predicate */
   def find(p: A => Boolean): S => Option[A] =
-    foldMap(a => Some(a).filter(p))(_)(Monoids.firstOption)
+    foldMap(a => Some(a).filter(p))(_)(using Monoids.firstOption)
 
   /** get the first target */
   def headOption(s: S): Option[A] =
-    foldMap(Option(_))(s)(Monoids.firstOption)
+    foldMap(Option(_))(s)(using Monoids.firstOption)
 
   /** get the last target */
   def lastOption(s: S): Option[A] =
-    foldMap(Option(_))(s)(Monoids.lastOption)
+    foldMap(Option(_))(s)(using Monoids.lastOption)
 
   /** check if at least one target satisfies the predicate */
   def exist(p: A => Boolean): S => Boolean =
-    foldMap(p(_))(_)(Monoids.any)
+    foldMap(p(_))(_)(using Monoids.any)
 
   /** check if all targets satisfy the predicate */
   def all(p: A => Boolean): S => Boolean =
-    foldMap(p(_))(_)(Monoids.all)
+    foldMap(p(_))(_)(using Monoids.all)
 
   /** calculate the number of targets */
   def length(s: S): Int =
@@ -59,7 +59,7 @@ trait Fold[S, A] extends Serializable { self =>
 
   /** check if there is no target */
   def isEmpty(s: S): Boolean =
-    foldMap(_ => false)(s)(Monoids.all)
+    foldMap(_ => false)(s)(using Monoids.all)
 
   /** check if there is at least one target */
   def nonEmpty(s: S): Boolean =

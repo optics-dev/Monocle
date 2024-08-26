@@ -50,7 +50,7 @@ trait PTraversal[S, T, A, B] extends PSetter[S, T, A, B] with Fold[S, A] { self 
     */
   def parModifyF[F[_]](f: A => F[B])(s: S)(implicit F: Parallel[F]): F[T] =
     F.sequential(
-      modifyA(a => F.parallel(f(a)))(s)(F.applicative)
+      modifyA(a => F.parallel(f(a)))(s)(using F.applicative)
     )
 
   override def some[A1, B1](implicit ev1: A =:= Option[A1], ev2: B =:= Option[B1]): PTraversal[S, T, A1, B1] =

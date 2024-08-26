@@ -22,7 +22,7 @@ private[focus] trait KeywordParserBase extends ParserBase {
         Some(
           Name(keyword),
           FromType(code.tpe.widen),
-          TypeArgs(inferredTypeArgs.map(_.tpe): _*),
+          TypeArgs(inferredTypeArgs.map(_.tpe)*),
           ValueArgs(),
           RemainingCode(code)
         )
@@ -32,8 +32,8 @@ private[focus] trait KeywordParserBase extends ParserBase {
         Some(
           Name(keyword),
           FromType(code.tpe.widen),
-          TypeArgs(inferredTypeArgs.map(_.tpe): _*),
-          ValueArgs(valueArgs: _*),
+          TypeArgs(inferredTypeArgs.map(_.tpe)*),
+          ValueArgs(valueArgs*),
           RemainingCode(code)
         )
 
@@ -42,7 +42,7 @@ private[focus] trait KeywordParserBase extends ParserBase {
         Some(
           Name(keyword),
           FromType(code.tpe.widen),
-          TypeArgs(directTypeArgs.map(_.tpe): _*),
+          TypeArgs(directTypeArgs.map(_.tpe)*),
           ValueArgs(),
           RemainingCode(code)
         )
@@ -53,7 +53,7 @@ private[focus] trait KeywordParserBase extends ParserBase {
         Some(
           Name(keyword),
           FromType(code.tpe.widen),
-          TypeArgs(allTypeArgs.map(_.tpe): _*),
+          TypeArgs(allTypeArgs.map(_.tpe)*),
           ValueArgs(),
           RemainingCode(code)
         )
