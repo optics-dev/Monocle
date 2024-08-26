@@ -62,7 +62,6 @@ object GenIso {
     ${ _fields[S]('m) }
 
   private def _fields[S <: Product](e: Expr[Mirror.ProductOf[S]])(using Quotes, Type[S]): Expr[Iso[S, Any]] = {
-    import quotes.reflect.*
 
     def whitebox[A](e: Expr[Iso[S, A]]): Expr[Iso[S, Any]] =
       e.asInstanceOf[Expr[Iso[S, Any]]]

@@ -1,6 +1,5 @@
 package monocle.internal.focus.features
 
-import scala.quoted.Type
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.selectfield.SelectFieldParser
 import monocle.internal.focus.features.selectonlyfield.SelectOnlyFieldParser
