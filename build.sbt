@@ -52,7 +52,6 @@ lazy val buildSettings = Seq(
   scalacOptions ++= {
     if (tlIsScala3.value)
       Seq(
-        "-source:3.0-migration",
         "-Ykind-projector",
         "-language:implicitConversions,higherKinds,postfixOps",
         "-Wunused:all"
