@@ -50,6 +50,16 @@ lazy val buildSettings = Seq(
   ) ++ { if (tlIsScala3.value) Seq() else Seq("-Xfatal-warnings") }, // Scala 3 doesn't support -Wconf
   Compile / console / scalacOptions -= "-Ywarn-unused:imports",
   scalacOptions ++= {
+    scalaBinaryVersion.value match {
+      case "2.12" =>
+        Seq("-Xsource:3")
+      case "2.13" =>
+        Seq("-Xsource:3-cross")
+      case _ =>
+        Nil
+    }
+  },
+  scalacOptions ++= {
     if (tlIsScala3.value)
       Seq(
         "-Ykind-projector",

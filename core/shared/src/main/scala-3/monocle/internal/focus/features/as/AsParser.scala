@@ -4,7 +4,7 @@ import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.KeywordParserBase
 
 private[focus] trait AsParser {
-  this: FocusBase with KeywordParserBase =>
+  this: FocusBase & KeywordParserBase =>
 
   object KeywordAs extends FocusParser {
 

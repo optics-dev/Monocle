@@ -60,7 +60,7 @@ class HttpRequestExample extends MonocleSuite {
 
   test("headers with filterIndex") {
     val r = headers
-      .filterIndex { h: String => h.contains("timeout") }
+      .filterIndex((h: String) => h.contains("timeout"))
       .andThen(stringToInt)
       .modify(_ * 2)(r1)
 

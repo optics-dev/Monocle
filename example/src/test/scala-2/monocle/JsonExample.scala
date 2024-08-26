@@ -218,8 +218,8 @@ class JsonExample extends MonocleSuite {
       def modifyA[F[_]: Applicative](f: Json => F[Json])(a: Json): F[Json] =
         a match {
           case j @ (JsString(_) | JsNumber(_)) => Applicative[F].pure(j)
-          case JsArray(l)                      => l.traverse(f).map(JsArray)
-          case JsObject(m)                     => Traverse[Map[String, *]].traverse(m)(f).map(JsObject)
+          case JsArray(l)                      => l.traverse(f).map(JsArray.apply)
+          case JsObject(m)                     => Traverse[Map[String, *]].traverse(m)(f).map(JsObject.apply)
         }
     }
   }
