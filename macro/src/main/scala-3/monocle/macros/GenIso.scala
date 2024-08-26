@@ -24,7 +24,7 @@ object GenIso {
         }
 
       case '{ $m: Mirror.ProductOf[S] { type MirroredElemTypes = a } } =>
-        report.throwError(
+        report.errorAndAbort(
           s"Can't generate an Iso[${Type.show[S]}, ${Type.show[A]}] because it's fields are ${TypeRepr.of[a].show} "
         )
     }
@@ -46,7 +46,7 @@ object GenIso {
         }
 
       case '{ $m: Mirror.ProductOf[S] { type MirroredElemTypes = a } } =>
-        report.throwError(
+        report.errorAndAbort(
           s"Can't generate an Iso[${Type.show[S]}, Unit] because it's fields are ${TypeRepr.of[a].show} "
         )
     }
