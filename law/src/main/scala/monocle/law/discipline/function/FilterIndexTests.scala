@@ -14,5 +14,5 @@ object FilterIndexTests extends Laws {
     arbAA: Arbitrary[A => A],
     arbIB: Arbitrary[I => Boolean]
   ): RuleSet =
-    new SimpleRuleSet("FilterIndex", TraversalTests(filterIndex(_: I => Boolean)(evFilterIndex)).props: _*)
+    new SimpleRuleSet("FilterIndex", TraversalTests(filterIndex(_: I => Boolean)(evFilterIndex)).props *)
 }

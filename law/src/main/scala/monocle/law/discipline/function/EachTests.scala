@@ -10,5 +10,5 @@ import cats.Eq
 
 object EachTests extends Laws {
   def apply[S: Eq: Arbitrary, A: Eq: Arbitrary](implicit evEach: Each[S, A], arbAA: Arbitrary[A => A]): RuleSet =
-    new SimpleRuleSet("Each", TraversalTests(each[S, A]).props: _*)
+    new SimpleRuleSet("Each", TraversalTests(each[S, A]).props *)
 }

@@ -14,5 +14,5 @@ object PossibleTests extends Laws {
     evPossible: Possible[S, A],
     arbAA: Arbitrary[A => A]
   ): RuleSet =
-    new SimpleRuleSet("Possible", OptionalTests(possible[S, A]).props: _*)
+    new SimpleRuleSet("Possible", OptionalTests(possible[S, A]).props *)
 }

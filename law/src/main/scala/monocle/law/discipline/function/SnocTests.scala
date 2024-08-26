@@ -19,8 +19,8 @@ object SnocTests extends Laws {
   ): RuleSet =
     new SimpleRuleSet(
       "Snoc",
-      PrismTests(snoc[S, A]).props ++
+      (PrismTests(snoc[S, A]).props ++
         OptionalTests(lastOption[S, A]).props ++
-        OptionalTests(initOption[S, A]).props: _*
+        OptionalTests(initOption[S, A]).props) *
     )
 }

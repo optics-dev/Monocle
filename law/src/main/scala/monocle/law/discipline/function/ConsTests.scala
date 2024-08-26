@@ -19,8 +19,8 @@ object ConsTests extends Laws {
   ): RuleSet =
     new SimpleRuleSet(
       "Cons",
-      PrismTests(cons[S, A]).props ++
+      (PrismTests(cons[S, A]).props ++
         OptionalTests(headOption[S, A]).props ++
-        OptionalTests(tailOption[S, A]).props: _*
+        OptionalTests(tailOption[S, A]).props) *
     )
 }

@@ -16,7 +16,7 @@ object MSorteMap {
 
   implicit def mmapEq[K, V]: Eq[MSorteMap[K, V]] = Eq.fromUniversalEquals
   implicit def mmapArb[K: Arbitrary, V: Arbitrary](implicit ok: Order[K]): Arbitrary[MSorteMap[K, V]] =
-    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MSorteMap(SortedMap(kvs: _*)(ok.toOrdering))))
+    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MSorteMap(SortedMap(kvs *)(ok.toOrdering))))
 }
 
 case class MMap[K, V](map: Map[K, V])
@@ -27,7 +27,7 @@ object MMap {
 
   implicit def mmapEq[K, V]: Eq[MMap[K, V]] = Eq.fromUniversalEquals
   implicit def mmapArb[K: Arbitrary, V: Arbitrary]: Arbitrary[MMap[K, V]] =
-    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MMap(Map(kvs: _*))))
+    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MMap(Map(kvs *))))
 }
 
 case class CNel(head: Char, tail: List[Char])
@@ -68,7 +68,7 @@ case class Raw(b: Boolean, c: Char, i: Int, l: Long, f: Float, d: Double)
 
 object Raw extends TestInstances {
   val toTuple: Iso[Raw, (Boolean, Char, Int, Long, Float, Double)] =
-    Iso((r: Raw) => (r.b, r.c, r.i, r.l, r.f, r.d))((Raw.apply _) tupled)
+    Iso((r: Raw) => (r.b, r.c, r.i, r.l, r.f, r.d))(Raw.apply.tupled)
 
   implicit val rawEq: Eq[Raw] = Eq.fromUniversalEquals
   implicit val rawArb: Arbitrary[Raw] = Arbitrary(

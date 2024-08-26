@@ -63,7 +63,7 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
     Arbitrary(Arbitrary.arbitrary[List[A]].map(_.toVector))
 
   implicit def listMapArbitrary[K: Arbitrary, V: Arbitrary]: Arbitrary[ListMap[K, V]] =
-    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(l => ListMap(l: _*)))
+    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(l => ListMap(l *)))
 
   implicit def mapArbitrary[K: Arbitrary, V: Arbitrary]: Arbitrary[Map[K, V]] =
     Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(_.toMap))

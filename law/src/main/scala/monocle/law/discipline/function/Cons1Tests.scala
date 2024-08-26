@@ -19,8 +19,8 @@ object Cons1Tests extends Laws {
   ): RuleSet =
     new SimpleRuleSet(
       "Cons1",
-      IsoTests(cons1[S, H, T]).props ++
+      (IsoTests(cons1[S, H, T]).props ++
         LensTests(head[S, H, T]).props ++
-        LensTests(tail[S, H, T]).props: _*
+        LensTests(tail[S, H, T]).props) *
     )
 }
