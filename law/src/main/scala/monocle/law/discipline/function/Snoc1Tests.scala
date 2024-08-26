@@ -19,8 +19,8 @@ object Snoc1Tests extends Laws {
   ): RuleSet =
     new SimpleRuleSet(
       "Snoc1",
-      IsoTests(snoc1[S, I, L]).props ++
+      (IsoTests(snoc1[S, I, L]).props ++
         LensTests(init[S, I, L]).props ++
-        LensTests(last[S, I, L]).props: _*
+        LensTests(last[S, I, L]).props) *
     )
 }

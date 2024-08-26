@@ -32,11 +32,11 @@ class PlatedSpec extends MonocleSuite {
     case _                     => None
   }
 
-  private val negateAll = Plated.transform(negate) _
+  private val negateAll = Plated.transform(negate)
 
-  private val addAll = Plated.rewrite(add) _
+  private val addAll = Plated.rewrite(add)
 
-  private val universe = Plated.universe[Expr] _
+  private val universe = Plated.universe[Expr]
 
   test("apply rule everywhere until that rule cannot be applied anywhere") {
     val e = Add(Add(Val(1), Val(2)), Val(3))

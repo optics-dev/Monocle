@@ -31,7 +31,7 @@ object MapTraversal {
               .traverse { case (k, v) =>
                 (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
               }
-              .map(kvs => Map(kvs: _*))
+              .map(kvs => Map(kvs *))
         }
     }
 }
