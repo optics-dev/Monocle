@@ -29,12 +29,12 @@ class PrismSpec extends MonocleSuite {
     Prism[Arities, (String, Int)] {
       case Binary(s, i) => Some((s, i))
       case _            => None
-    }((Binary.apply _).tupled)
+    }(Binary.apply.tupled)
   val _quintary: Prism[Arities, (Char, Boolean, String, Int, Double)] =
     Prism[Arities, (Char, Boolean, String, Int, Double)] {
       case Quintary(c, b, s, i, f) => Some((c, b, s, i, f))
       case _                       => None
-    }((Quintary.apply _).tupled)
+    }(Quintary.apply.tupled)
 
   checkAll("apply Prism", PrismTests(_right[String, Int]))
   checkAll("apply partial Prism", PrismTests(_pright[String, Int]))

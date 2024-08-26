@@ -92,10 +92,10 @@ trait TestInstances extends PlatformSpecificTestInstances with cats.instances.Al
 
   implicit val nullaryGen: Arbitrary[Nullary] = Arbitrary(Gen.const(Nullary()))
   implicit val unaryGen: Arbitrary[Unary]     = Arbitrary(arbitrary[Int].map(Unary.apply))
-  implicit val binaryGen: Arbitrary[Binary]   = Arbitrary(arbitrary[(String, Int)].map((Binary.apply _) tupled))
+  implicit val binaryGen: Arbitrary[Binary]   = Arbitrary(arbitrary[(String, Int)].map(Binary.apply.tupled))
   implicit val quintaryGen: Arbitrary[Quintary] = Arbitrary(
     arbitrary[(Char, Boolean, String, Int, Double)]
-      .map((Quintary.apply _) tupled)
+      .map(Quintary.apply.tupled)
   )
   implicit val aritiesGen: Arbitrary[Arities] =
     Arbitrary(
