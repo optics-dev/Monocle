@@ -1,6 +1,6 @@
 package monocle.internal.focus
 
-import monocle.{Focus, Lens}
+import monocle.Focus
 import scala.quoted.{quotes, Expr, Quotes, Type}
 import monocle.internal.focus.features.{AllFeatureGenerators, AllFeatureParsers, GeneratorLoop, ParserLoop}
 

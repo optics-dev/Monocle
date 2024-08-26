@@ -1,7 +1,6 @@
 package monocle.focus
 
 import monocle.Focus
-import monocle.Focus._
 import monocle.function.Each._
 import monocle.std.list._
 

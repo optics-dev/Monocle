@@ -1,19 +1,6 @@
 package monocle.internal.focus
 
-import monocle.{
-  AppliedFold,
-  AppliedGetter,
-  AppliedSetter,
-  Focus,
-  Fold,
-  Getter,
-  Iso,
-  Lens,
-  Optional,
-  Prism,
-  Setter,
-  Traversal
-}
+import monocle.{AppliedFold, AppliedGetter, AppliedSetter, Focus, Fold, Getter, Setter}
 import scala.quoted.{quotes, Expr, Quotes, Type}
 
 private[monocle] object ComposedFocusImpl {

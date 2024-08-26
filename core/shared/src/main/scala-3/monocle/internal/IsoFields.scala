@@ -12,7 +12,6 @@ object IsoFields {
 private[monocle] object IsoFieldsImpl {
 
   def apply[S <: Product](mirror: Expr[Mirror.ProductOf[S]])(using Quotes, Type[S]): Expr[Iso[S, Tuple]] = {
-    import quotes.reflect.*
 
     def whitebox[A <: Tuple](e: Expr[Iso[S, A]]): Expr[Iso[S, Tuple]] =
       e.asInstanceOf[Expr[Iso[S, Tuple]]]

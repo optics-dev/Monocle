@@ -1,7 +1,6 @@
 package monocle.function
 
 import monocle.MonocleSuite
-import monocle.function.Plated
 import cats.implicits._
 import cats.Applicative
 import monocle.Traversal

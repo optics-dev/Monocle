@@ -9,7 +9,7 @@ import monocle.internal.focus.features.each.EachGenerator
 import monocle.internal.focus.features.at.AtGenerator
 import monocle.internal.focus.features.index.IndexGenerator
 import monocle.internal.focus.features.withdefault.WithDefaultGenerator
-import monocle.{Iso, Lens, Optional, Prism, Traversal}
+import monocle.Iso
 import scala.quoted.Type
 
 private[focus] trait AllFeatureGenerators

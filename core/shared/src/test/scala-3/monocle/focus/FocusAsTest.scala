@@ -3,8 +3,6 @@ package monocle.focus
 import monocle.Focus
 import monocle.syntax.all.as
 
-import scala.annotation.nowarn
-
 final class FocusAsTest extends munit.FunSuite {
 
   trait Food { def calories: Int }

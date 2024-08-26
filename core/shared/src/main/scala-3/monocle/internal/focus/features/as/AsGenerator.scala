@@ -1,6 +1,5 @@
 package monocle.internal.focus.features.as
 
-import monocle.Prism
 import monocle.internal.focus.FocusBase
 import monocle.internal.AsPrismImpl
 
