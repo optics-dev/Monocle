@@ -5,7 +5,6 @@ import monocle.{Iso, PTraversal, Traversal}
 import scala.annotation.implicitNotFound
 import scala.collection.immutable.ListMap
 import cats.{Applicative, Order, Traverse}
-import cats.instances.lazyList._
 
 /** Typeclass that defines a [[Traversal]] from a monomorphic container `S` to all of its elements of type `A`
   * @tparam S
@@ -46,9 +45,6 @@ object Each extends EachFunctions {
   /** Std instances */
   /** *********************************************************************************************
     */
-  import cats.instances.list._
-  import cats.instances.sortedMap._
-  import cats.instances.vector._
   import scala.collection.immutable.SortedMap
   import scala.util.Try
 

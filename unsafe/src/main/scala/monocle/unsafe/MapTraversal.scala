@@ -2,7 +2,6 @@ package monocle.unsafe
 
 import alleycats.std.map._
 import cats.Applicative
-import cats.instances.list._
 import cats.syntax.applicative._
 import cats.syntax.functor._
 import cats.syntax.traverse._

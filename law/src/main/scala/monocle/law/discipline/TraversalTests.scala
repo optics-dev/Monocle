@@ -7,8 +7,6 @@ import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
 import cats.Eq
-import cats.instances.list._
-import cats.instances.option._
 
 object TraversalTests extends Laws {
   def apply[S: Arbitrary: Eq, A: Arbitrary: Eq](

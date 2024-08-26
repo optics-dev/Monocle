@@ -6,8 +6,6 @@ import java.util.UUID
 import monocle.{Iso, Prism}
 
 import scala.util.Try
-import cats.instances.list._
-import cats.instances.option._
 import cats.syntax.traverse._
 
 object string extends StringOptics
