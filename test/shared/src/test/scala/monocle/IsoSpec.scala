@@ -15,9 +15,9 @@ class IsoSpec extends MonocleSuite {
   }
   val _unary: Iso[Unary, Int] = Iso[Unary, Int](_.i)(Unary.apply)
   val _binary: Iso[Binary, (String, Int)] =
-    Iso[Binary, (String, Int)](b => (b.s, b.i))((Binary.apply _).tupled)
+    Iso[Binary, (String, Int)](b => (b.s, b.i))(Binary.apply.tupled)
   val _quintary: Iso[Quintary, (Char, Boolean, String, Int, Double)] =
-    Iso[Quintary, (Char, Boolean, String, Int, Double)](b => (b.c, b.b, b.s, b.i, b.f))((Quintary.apply _).tupled)
+    Iso[Quintary, (Char, Boolean, String, Int, Double)](b => (b.c, b.b, b.s, b.i, b.f))(Quintary.apply.tupled)
 
   case class IntWrapper(i: Int)
   implicit val intWrapperGen: Arbitrary[IntWrapper] = Arbitrary(arbitrary[Int].map(IntWrapper.apply))
