@@ -6,7 +6,7 @@ import monocle.internal.focus.FocusBase
 private[focus] trait EachGenerator {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def generateEach(action: FocusAction.KeywordEach): Term = {
     import action.{fromType, toType, eachInstance}

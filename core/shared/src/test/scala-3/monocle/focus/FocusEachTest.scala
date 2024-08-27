@@ -1,8 +1,8 @@
 package monocle.focus
 
 import monocle.Focus
-import monocle.function.Each._
-import monocle.std.list._
+import monocle.function.Each.*
+import monocle.std.list.*
 
 final class FocusEachTest extends munit.FunSuite {
 

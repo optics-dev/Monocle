@@ -6,7 +6,7 @@ import monocle.internal.focus.features.SelectParserBase
 private[focus] trait SelectFieldParser {
   this: FocusBase & SelectParserBase =>
 
-  import this.macroContext.reflect._
+  import this.macroContext.reflect.*
 
   object SelectField extends FocusParser {
 

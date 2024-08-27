@@ -6,7 +6,7 @@ import monocle.internal.focus.FocusBase
 private[focus] trait KeywordParserBase extends ParserBase {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   // Marker classes for type safety
   case class Name(name: String)

@@ -20,6 +20,6 @@ object SnocTests extends Laws {
       "Snoc",
       (PrismTests(snoc[S, A]).props ++
         OptionalTests(lastOption[S, A]).props ++
-        OptionalTests(initOption[S, A]).props) *
+        OptionalTests(initOption[S, A]).props)*
     )
 }

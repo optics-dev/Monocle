@@ -6,7 +6,7 @@ import monocle.std.option.withDefault
 private[focus] trait WithDefaultGenerator {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def generateWithDefault(action: FocusAction.KeywordWithDefault): Term = {
     import action.{toType, defaultValue}

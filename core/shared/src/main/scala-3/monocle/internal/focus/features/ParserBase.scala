@@ -6,7 +6,7 @@ import monocle.internal.focus.FocusBase
 private[focus] trait ParserBase {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   // Marker class for type safety
   case class RemainingCode(code: Term)

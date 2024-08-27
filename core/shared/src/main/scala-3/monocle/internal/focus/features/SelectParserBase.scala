@@ -5,7 +5,7 @@ import monocle.internal.focus.FocusBase
 private[focus] trait SelectParserBase extends ParserBase {
   this: FocusBase =>
 
-  import this.macroContext.reflect._
+  import this.macroContext.reflect.*
 
   // Match on a term that is an instance of a case class
   object CaseClass {

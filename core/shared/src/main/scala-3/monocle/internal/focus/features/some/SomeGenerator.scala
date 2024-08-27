@@ -6,7 +6,7 @@ import monocle.std.option.some
 private[focus] trait SomeGenerator {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def generateSome(action: FocusAction.KeywordSome): Term =
     action.toType.asType match {

@@ -1,7 +1,7 @@
 package monocle.focus
 
-import monocle._
-import monocle.syntax.all._
+import monocle.*
+import monocle.syntax.all.*
 import monocle.syntax.{AppliedGetter, AppliedSetter}
 
 object ComposedFocusTest {
@@ -28,7 +28,7 @@ object ComposedFocusTest {
 
 final class ComposedFocusTest extends munit.FunSuite {
 
-  import ComposedFocusTest._
+  import ComposedFocusTest.*
 
   test("Lens refocus correctly composes Lens") {
     val addressLens: Lens[User, Address] = Focus[User](_.address)

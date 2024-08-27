@@ -9,7 +9,7 @@ private[monocle] object AppliedFocusImpl {
     Quotes
   ): Expr[Any] = {
 
-    import quotes.reflect._
+    import quotes.reflect.*
 
     val generatedOptic = FocusImpl(lambda)
 

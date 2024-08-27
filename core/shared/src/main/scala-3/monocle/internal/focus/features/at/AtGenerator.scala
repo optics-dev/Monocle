@@ -6,7 +6,7 @@ import monocle.internal.focus.FocusBase
 private[focus] trait AtGenerator {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def generateAt(action: FocusAction.KeywordAt): Term = {
     import action.{fromType, toType, index, atInstance}

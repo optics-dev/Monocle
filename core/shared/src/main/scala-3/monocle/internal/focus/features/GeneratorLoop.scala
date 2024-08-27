@@ -26,7 +26,7 @@ private[focus] trait AllFeatureGenerators
 private[focus] trait GeneratorLoop {
   this: AllFeatureGenerators =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def generateCode[From: Type](actions: List[FocusAction]): FocusResult[Term] = {
     val idOptic: FocusResult[Term] = Right('{ Iso.id[From] }.asTerm)
