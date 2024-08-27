@@ -88,7 +88,7 @@ object FilterIndex extends FilterIndexFunctions {
               .traverse { case (k, v) =>
                 (if (predicate(k)) f(v) else v.pure[F]).tupleLeft(k)
               }
-              .map(kvs => SortedMap(kvs *)(ok.toOrdering))
+              .map(kvs => SortedMap(kvs*)(ok.toOrdering))
         }
     }
 

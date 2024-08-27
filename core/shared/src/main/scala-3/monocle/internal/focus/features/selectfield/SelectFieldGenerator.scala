@@ -7,7 +7,7 @@ import scala.quoted.Quotes
 private[focus] trait SelectFieldGenerator {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def generateSelectField(action: FocusAction.SelectField): Term = {
     import action.{fieldName, fromType, fromTypeArgs, toType}

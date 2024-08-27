@@ -6,7 +6,7 @@ import monocle.internal.AsPrismImpl
 private[focus] trait AsGenerator {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def generateAs(action: FocusAction.KeywordAs): Term = {
     import action.{fromType, toType}

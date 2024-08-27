@@ -6,7 +6,7 @@ import monocle.internal.focus.FocusBase
 private[focus] trait IndexGenerator {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def generateIndex(action: FocusAction.KeywordIndex): Term = {
     import action.{fromType, toType, index, indexInstance}

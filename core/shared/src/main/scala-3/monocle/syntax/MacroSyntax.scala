@@ -1,6 +1,6 @@
 package monocle.syntax
 
-import monocle._
+import monocle.*
 import monocle.internal.{AsPrism, IsoFields}
 import scala.deriving.Mirror
 

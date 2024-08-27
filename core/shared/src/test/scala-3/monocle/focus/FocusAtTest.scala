@@ -1,7 +1,7 @@
 package monocle.focus
 
 import monocle.Focus
-import monocle.function.At._
+import monocle.function.At.*
 
 final class FocusAtTest extends munit.FunSuite {
 

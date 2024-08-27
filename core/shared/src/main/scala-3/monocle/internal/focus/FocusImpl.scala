@@ -13,7 +13,7 @@ private[focus] class FocusImpl(val macroContext: Quotes)
     with GeneratorLoop
     with AllFeatureGenerators {
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def run[From: Type, To: Type](lambda: Expr[Focus.KeywordContext ?=> From => To]): Expr[Any] = {
     val generatedCode =

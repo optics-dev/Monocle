@@ -20,6 +20,6 @@ object ConsTests extends Laws {
       "Cons",
       (PrismTests(cons[S, A]).props ++
         OptionalTests(headOption[S, A]).props ++
-        OptionalTests(tailOption[S, A]).props) *
+        OptionalTests(tailOption[S, A]).props)*
     )
 }

@@ -13,5 +13,5 @@ object IndexTests extends Laws {
     evIndex: Index[S, I, A],
     arbAA: Arbitrary[A => A]
   ): RuleSet =
-    new SimpleRuleSet("Index", OptionalTests(index(_: I)(evIndex)).props *)
+    new SimpleRuleSet("Index", OptionalTests(index(_: I)(evIndex)).props*)
 }

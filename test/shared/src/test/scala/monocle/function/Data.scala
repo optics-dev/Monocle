@@ -16,7 +16,7 @@ object MSorteMap {
 
   implicit def mmapEq[K, V]: Eq[MSorteMap[K, V]] = Eq.fromUniversalEquals
   implicit def mmapArb[K: Arbitrary, V: Arbitrary](implicit ok: Order[K]): Arbitrary[MSorteMap[K, V]] =
-    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MSorteMap(SortedMap(kvs *)(ok.toOrdering))))
+    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MSorteMap(SortedMap(kvs*)(ok.toOrdering))))
 }
 
 case class MMap[K, V](map: Map[K, V])
@@ -27,7 +27,7 @@ object MMap {
 
   implicit def mmapEq[K, V]: Eq[MMap[K, V]] = Eq.fromUniversalEquals
   implicit def mmapArb[K: Arbitrary, V: Arbitrary]: Arbitrary[MMap[K, V]] =
-    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MMap(Map(kvs *))))
+    Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MMap(Map(kvs*))))
 }
 
 case class CNel(head: Char, tail: List[Char])

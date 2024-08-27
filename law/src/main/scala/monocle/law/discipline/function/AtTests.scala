@@ -13,5 +13,5 @@ object AtTests extends Laws {
     evAt: At[S, I, A],
     arbAA: Arbitrary[A => A]
   ): RuleSet =
-    new SimpleRuleSet("At", LensTests[S, A, I](at(_)).props *)
+    new SimpleRuleSet("At", LensTests[S, A, I](at(_)).props*)
 }

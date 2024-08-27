@@ -7,7 +7,7 @@ import scala.quoted.Quotes
 private[focus] trait SelectOnlyFieldGenerator {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def generateSelectOnlyField(action: FocusAction.SelectOnlyField): Term = {
     import action.{fieldName, fromType, fromTypeArgs, fromCompanion, toType}

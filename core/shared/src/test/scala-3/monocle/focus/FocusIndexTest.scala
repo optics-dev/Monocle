@@ -1,7 +1,7 @@
 package monocle.focus
 
 import monocle.Focus
-import monocle.function.Index._
+import monocle.function.Index.*
 
 final class FocusIndexTest extends munit.FunSuite {
 

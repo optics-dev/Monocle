@@ -10,12 +10,12 @@ final class FocusImportTest extends munit.FunSuite {
   val user = User("Edith", Some(Address(45, "2120")))
 
   test("import Focus object") {
-    import monocle.Focus._
+    import monocle.Focus.*
     user.focus(_.address.some.streetNumber)
   }
 
   test("import all syntax") {
-    import monocle.syntax.all._
+    import monocle.syntax.all.*
     user.focus(_.address.some.streetNumber)
   }
 

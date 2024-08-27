@@ -5,7 +5,7 @@ import scala.quoted.Type
 private[focus] trait LambdaConfigParser {
   this: FocusBase =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def parseLambdaConfig[From: Type](lambda: Term): FocusResult[LambdaConfig] = {
     val fromType           = TypeRepr.of[From]

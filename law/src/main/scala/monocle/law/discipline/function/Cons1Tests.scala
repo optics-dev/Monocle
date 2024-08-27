@@ -20,6 +20,6 @@ object Cons1Tests extends Laws {
       "Cons1",
       (IsoTests(cons1[S, H, T]).props ++
         LensTests(head[S, H, T]).props ++
-        LensTests(tail[S, H, T]).props) *
+        LensTests(tail[S, H, T]).props)*
     )
 }

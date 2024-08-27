@@ -20,6 +20,6 @@ object Snoc1Tests extends Laws {
       "Snoc1",
       (IsoTests(snoc1[S, I, L]).props ++
         LensTests(init[S, I, L]).props ++
-        LensTests(last[S, I, L]).props) *
+        LensTests(last[S, I, L]).props)*
     )
 }

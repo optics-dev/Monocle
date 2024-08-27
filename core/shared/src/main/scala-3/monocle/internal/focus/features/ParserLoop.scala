@@ -26,7 +26,7 @@ private[focus] trait AllFeatureParsers
 private[focus] trait ParserLoop {
   this: AllFeatureParsers =>
 
-  import macroContext.reflect._
+  import macroContext.reflect.*
 
   def parseFocusActions(config: LambdaConfig): FocusResult[List[FocusAction]] = {
     def loop(remainingBody: RemainingCode, listSoFar: List[FocusAction]): FocusResult[List[FocusAction]] =

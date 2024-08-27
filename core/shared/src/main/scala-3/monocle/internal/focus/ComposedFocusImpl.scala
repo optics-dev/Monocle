@@ -11,7 +11,7 @@ private[monocle] object ComposedFocusImpl {
     optic: Expr[AnyOptic[S, A]],
     lambda: Expr[Focus.KeywordContext ?=> A => Next]
   )(using Quotes): Expr[Any] = {
-    import quotes.reflect._
+    import quotes.reflect.*
 
     val generatedOptic = FocusImpl(lambda).asTerm
     val opticType      = optic.asTerm.tpe.widen

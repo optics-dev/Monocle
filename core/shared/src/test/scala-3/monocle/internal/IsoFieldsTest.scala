@@ -1,7 +1,7 @@
 package monocle.internal
 
 import monocle.Iso
-import monocle.syntax.all._
+import monocle.syntax.all.*
 
 final class IsoFieldsTest extends munit.FunSuite {
 
