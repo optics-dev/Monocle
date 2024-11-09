@@ -1,5 +1,5 @@
 addSbtPlugin("org.typelevel"      % "sbt-typelevel-ci-release" % "0.7.4")
-addSbtPlugin("com.eed3si9n"       % "sbt-buildinfo"            % "0.13.0")
+addSbtPlugin("com.eed3si9n"       % "sbt-buildinfo"            % "0.13.1")
 addSbtPlugin("pl.project13.scala" % "sbt-jmh"                  % "0.4.7")
 
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"                   % "1.17.0")
