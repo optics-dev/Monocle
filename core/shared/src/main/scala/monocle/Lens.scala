@@ -7,7 +7,7 @@ import monocle.function.{At, Each, FilterIndex, Index}
 
 /** A [[PLens]] can be seen as a pair of functions:
   *   - `get: S => A` i.e. from an `S`, we can extract an `A`
-  *   - `set: (B, S) => T` i.e. if we replace an `A` by a `B` in an `S`, we obtain a `T`
+  *   - `replace: (B, S) => T` i.e. if we replace an `A` by a `B` in an `S`, we obtain a `T`
   *
   * A [[PLens]] could also be defined as a weaker [[PIso]] where replace requires an additional parameter than
   * reverseGet.
