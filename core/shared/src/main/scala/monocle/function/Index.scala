@@ -104,22 +104,20 @@ object Index extends IndexFunctions {
             if (it.hasNext) Some(it.next())
             else None
           }
-        }(a =>
-          c => {
-            @tailrec
-            def go(cur: Int, oldC: Chain[A], newC: Chain[A]): Chain[A] =
-              oldC.uncons match {
-                case Some((h, t)) =>
-                  if (cur == i)
-                    newC.append(a).concat(t)
-                  else
-                    go(cur + 1, t, newC.append(h))
-                case None => newC
-              }
+        } { a => c =>
+          @tailrec
+          def go(cur: Int, oldC: Chain[A], newC: Chain[A]): Chain[A] =
+            oldC.uncons match {
+              case Some((h, t)) =>
+                if (cur == i)
+                  newC.append(a).concat(t)
+                else
+                  go(cur + 1, t, newC.append(h))
+              case None => newC
+            }
 
-            if (i >= 0 && i < c.length) go(0, c, Chain.empty) else c
-          }
-        )
+          if (i >= 0 && i < c.length) go(0, c, Chain.empty) else c
+        }
     }
 
   implicit def necIndex[A]: Index[NonEmptyChain[A], Int, A] =
