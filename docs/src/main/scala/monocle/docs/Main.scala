@@ -6,7 +6,7 @@ import scala.collection.Seq
 
 object Main {
   def sourceDirectoryPath(rest: String*): Path =
-    FileSystems.getDefault.getPath(sourceDirectory.getAbsolutePath, rest *)
+    FileSystems.getDefault.getPath(sourceDirectory.getAbsolutePath, rest*)
 
   def minorVersion(version: String): String = {
     val Array(major, minor, _) = version.split('.')

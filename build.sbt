@@ -232,7 +232,7 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .nativeSettings(monocleNativeSettings)
   .settings(
     scalacOptions += "-language:experimental.macros",
-    libraryDependencies ++= {
+    libraryDependencies ++=
       Seq(munitDiscipline.value) ++ {
         if (tlIsScala3.value) Seq.empty
         else
@@ -241,7 +241,6 @@ lazy val macros = crossProject(JVMPlatform, JSPlatform, NativePlatform)
             scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided"
           )
       }
-    }
   )
 
 lazy val state = crossProject(JVMPlatform, JSPlatform, NativePlatform)
