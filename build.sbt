@@ -104,7 +104,7 @@ lazy val buildSettings = Seq(
   }
 )
 
-lazy val catsVersion   = "2.12.0"
+lazy val catsVersion   = "2.13.0"
 lazy val scala2Version = "2.13.16"
 lazy val scala3Version = "3.3.4"
 
