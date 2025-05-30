@@ -13,7 +13,7 @@ import scala.annotation.nowarn
 class ProductSpec extends DisciplineSuite {
   case class Person(name: String, age: Int)
 
-  implicit val personEq: Eq[Person] = Eq.fromUniversalEquals
+  implicit val personEq: Eq[Person]         = Eq.fromUniversalEquals
   implicit val personArb: Arbitrary[Person] = Arbitrary(for {
     n <- Arbitrary.arbitrary[String]
     a <- Arbitrary.arbitrary[Int]
@@ -21,7 +21,7 @@ class ProductSpec extends DisciplineSuite {
 
   case class Permissions(read: Boolean, write: Boolean, execute: Boolean)
 
-  implicit val nameEq: Eq[Permissions] = Eq.fromUniversalEquals
+  implicit val nameEq: Eq[Permissions]         = Eq.fromUniversalEquals
   implicit val nameArb: Arbitrary[Permissions] = Arbitrary(for {
     f <- Arbitrary.arbitrary[Boolean]
     l <- Arbitrary.arbitrary[Boolean]

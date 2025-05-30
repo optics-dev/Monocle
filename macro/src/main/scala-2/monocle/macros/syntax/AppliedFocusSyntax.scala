@@ -23,7 +23,7 @@ class GenAppliedLensOpsImpl(val c: blackbox.Context) {
 
     val subj = c.prefix.tree match {
       case Apply(TypeApply(_, _), List(x)) => x
-      case t =>
+      case t                               =>
         c.abort(c.enclosingPosition, s"Invalid prefix tree ${show(t)}")
     }
 

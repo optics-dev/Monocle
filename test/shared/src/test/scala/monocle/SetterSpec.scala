@@ -7,7 +7,7 @@ import scala.collection.immutable
 
 class SetterSpec extends MonocleSuite {
   def eachL[A]: Setter[List[A], A] = PSetter.fromFunctor[List, A, A]
-  def even[A]: Setter[List[A], A] =
+  def even[A]: Setter[List[A], A]  =
     filterIndex[List[A], Int, A](_ % 2 == 0).asSetter
 
   def eachLi: Setter[List[Int], Int]             = eachL[Int]

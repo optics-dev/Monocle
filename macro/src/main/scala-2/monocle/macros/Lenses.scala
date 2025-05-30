@@ -25,7 +25,7 @@ private[macros] class LensesImpl(val c: blackbox.Context) {
     import c.universe._
 
     val LensesTpe = TypeName(if (poly) "PLenses" else "Lenses")
-    val prefix = c.macroApplication match {
+    val prefix    = c.macroApplication match {
       case Apply(Select(Apply(Select(New(Ident(LensesTpe)), t), args), _), _) if t == termNames.CONSTRUCTOR =>
         args match {
           case Literal(Constant(s: String)) :: Nil => s

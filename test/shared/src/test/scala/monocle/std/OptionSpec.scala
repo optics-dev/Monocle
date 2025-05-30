@@ -20,7 +20,7 @@ class OptionSpec extends MonocleSuite {
 
   case class IntNoZero(value: Int)
   object IntNoZero {
-    implicit val eq: Eq[IntNoZero] = Eq.fromUniversalEquals
+    implicit val eq: Eq[IntNoZero]               = Eq.fromUniversalEquals
     implicit val arbitrary: Arbitrary[IntNoZero] =
       Arbitrary(Arbitrary.arbitrary[Int].filterNot(_ == 0).map(IntNoZero(_)))
     implicit val cogen: Cogen[IntNoZero] =

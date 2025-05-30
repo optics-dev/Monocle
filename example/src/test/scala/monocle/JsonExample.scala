@@ -23,7 +23,7 @@ class JsonExample extends MonocleSuite {
       "first_name" -> JsString("John"),
       "last_name"  -> JsString("Doe"),
       "age"        -> JsNumber(28),
-      "siblings" -> JsArray(
+      "siblings"   -> JsArray(
         List(
           JsObject(
             Map(
@@ -64,7 +64,7 @@ class JsonExample extends MonocleSuite {
           "first_name" -> JsString("John"),
           "last_name"  -> JsString("Doe"),
           "age"        -> JsNumber(28),
-          "siblings" -> JsArray(
+          "siblings"   -> JsArray(
             List(
               JsObject(
                 Map(
@@ -94,7 +94,7 @@ class JsonExample extends MonocleSuite {
           "nick_name"  -> JsString("Jojo"), // new field
           "last_name"  -> JsString("Doe"),
           "age"        -> JsNumber(28),
-          "siblings" -> JsArray(
+          "siblings"   -> JsArray(
             List(
               JsObject(
                 Map(
@@ -120,7 +120,7 @@ class JsonExample extends MonocleSuite {
         Map(
           "first_name" -> JsString("John"),
           "last_name"  -> JsString("Doe"), // John is ageless now
-          "siblings" -> JsArray(
+          "siblings"   -> JsArray(
             List(
               JsObject(
                 Map(
@@ -153,7 +153,7 @@ class JsonExample extends MonocleSuite {
           "first_name" -> JsString("john"), // starts with lower case
           "last_name"  -> JsString("doe"),  // starts with lower case
           "age"        -> JsNumber(28),
-          "siblings" -> JsArray(
+          "siblings"   -> JsArray(
             List(
               JsObject(
                 Map(
@@ -187,7 +187,7 @@ class JsonExample extends MonocleSuite {
           "first_name" -> JsString("John"),
           "last_name"  -> JsString("Doe"),
           "age"        -> JsNumber(28),
-          "siblings" -> JsArray(
+          "siblings"   -> JsArray(
             List(
               JsObject(
                 Map(
@@ -237,7 +237,7 @@ class JsonExample extends MonocleSuite {
           "first_name" -> JsString("JOHN"),
           "last_name"  -> JsString("DOE"),
           "age"        -> JsNumber(28),
-          "siblings" -> JsArray(
+          "siblings"   -> JsArray(
             List(
               JsObject(
                 Map(

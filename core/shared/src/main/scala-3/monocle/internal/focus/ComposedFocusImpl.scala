@@ -13,9 +13,9 @@ private[monocle] object ComposedFocusImpl {
   )(using Quotes): Expr[Any] = {
     import quotes.reflect.*
 
-    val generatedOptic = FocusImpl(lambda).asTerm
-    val opticType      = optic.asTerm.tpe.widen
-    val nextType       = TypeRepr.of[Next]
+    val generatedOptic           = FocusImpl(lambda).asTerm
+    val opticType                = optic.asTerm.tpe.widen
+    val nextType                 = TypeRepr.of[Next]
     val singleTypeParam: Boolean =
       opticType =:= TypeRepr.of[Fold[S, A]] ||
         opticType =:= TypeRepr.of[Getter[S, A]] ||

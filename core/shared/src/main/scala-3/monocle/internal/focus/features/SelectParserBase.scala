@@ -51,7 +51,7 @@ private[focus] trait SelectParserBase extends ParserBase {
   private object FieldType {
     def unapply(fieldSymbol: Symbol): Option[TypeRepr] = fieldSymbol match {
       case sym if sym.isNoSymbol => None
-      case sym =>
+      case sym                   =>
         sym.tree match {
           case ValDef(_, typeTree, _) => Some(typeTree.tpe)
           case _                      => None
