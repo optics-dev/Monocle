@@ -64,7 +64,7 @@ trait PlatedFunctions extends CommonPlatedFunctions {
 
   /** transforming every element using monadic transformation */
   def transformM[A: Plated, M[_]: Monad](f: A => M[A])(a: A): M[A] = {
-    val l = plate[A]
+    val l              = plate[A]
     def go(c: A): M[A] =
       l.modifyA[M](b => f(b).flatMap(go))(c)
     go(a)

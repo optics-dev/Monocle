@@ -25,7 +25,7 @@ object MMap {
   def toMap[K, V]: Iso[MMap[K, V], Map[K, V]] =
     Iso[MMap[K, V], Map[K, V]](_.map)(MMap(_))
 
-  implicit def mmapEq[K, V]: Eq[MMap[K, V]] = Eq.fromUniversalEquals
+  implicit def mmapEq[K, V]: Eq[MMap[K, V]]                               = Eq.fromUniversalEquals
   implicit def mmapArb[K: Arbitrary, V: Arbitrary]: Arbitrary[MMap[K, V]] =
     Arbitrary(Arbitrary.arbitrary[List[(K, V)]].map(kvs => MMap(Map(kvs*))))
 }
@@ -36,7 +36,7 @@ object CNel extends TestInstances {
   val toNel: Iso[CNel, NonEmptyList[Char]] =
     Iso[CNel, NonEmptyList[Char]](c => NonEmptyList(c.head, c.tail))(n => CNel(n.head, n.tail))
 
-  implicit val cNelEq: Eq[CNel] = Eq.fromUniversalEquals
+  implicit val cNelEq: Eq[CNel]         = Eq.fromUniversalEquals
   implicit val cNelArb: Arbitrary[CNel] = Arbitrary(
     (Arbitrary.arbitrary[Char], Arbitrary.arbitrary[List[Char]]).mapN(CNel.apply)
   )
@@ -48,7 +48,7 @@ object CNev extends TestInstances {
   val toNev: Iso[CNev, NonEmptyVector[Char]] =
     Iso[CNev, NonEmptyVector[Char]](c => NonEmptyVector(c.head, c.tail))(n => CNev(n.head, n.tail))
 
-  implicit val cNevEq: Eq[CNev] = Eq.fromUniversalEquals
+  implicit val cNevEq: Eq[CNev]         = Eq.fromUniversalEquals
   implicit val cNevArb: Arbitrary[CNev] = Arbitrary(
     (Arbitrary.arbitrary[Char], Arbitrary.arbitrary[Vector[Char]]).mapN(CNev.apply)
   )
@@ -70,7 +70,7 @@ object Raw extends TestInstances {
   val toTuple: Iso[Raw, (Boolean, Char, Int, Long, Float, Double)] =
     Iso((r: Raw) => (r.b, r.c, r.i, r.l, r.f, r.d))(Raw.apply.tupled)
 
-  implicit val rawEq: Eq[Raw] = Eq.fromUniversalEquals
+  implicit val rawEq: Eq[Raw]         = Eq.fromUniversalEquals
   implicit val rawArb: Arbitrary[Raw] = Arbitrary(
     (
       Arbitrary.arbitrary[Boolean],

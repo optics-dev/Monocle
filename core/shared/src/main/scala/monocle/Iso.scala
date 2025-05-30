@@ -222,8 +222,8 @@ object PIso extends IsoInstances {
     */
   def id[S, T]: PIso[S, T, S, T] =
     new PIso[S, T, S, T] { self =>
-      def get(s: S): S        = s
-      def reverseGet(t: T): T = t
+      def get(s: S): S              = s
+      def reverseGet(t: T): T       = t
       def reverse: PIso[T, S, T, S] =
         new PIso[T, S, T, S] {
           def get(t: T): T              = t

@@ -68,7 +68,7 @@ class GenIsoImpl(override val c: blackbox.Context) extends GenIsoImplBase {
 
     val fieldMethod = caseAccessorsOf[S] match {
       case m :: Nil => m
-      case Nil =>
+      case Nil      =>
         fail(s"Cannot find a case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")
       case _ =>
         fail(s"Found several case class accessor for $sTpe, $sTpe needs to be a case class with a single accessor.")

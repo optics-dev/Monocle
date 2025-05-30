@@ -6,7 +6,7 @@ inThisBuild(
     organization  := "dev.optics",
     homepage      := Some(url("https://github.com/optics-dev/Monocle")),
     licenses      := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
-    developers :=
+    developers    :=
       List(
         "aoiroaoino"      -> "Naoki Aoyama",
         "cquiroz"         -> "Carlos Quiroz",
@@ -312,7 +312,7 @@ lazy val docs = project
 lazy val buildInfoSettings = Seq(
   buildInfoPackage := "monocle.build",
   buildInfoObject  := "info",
-  buildInfoKeys := Seq[BuildInfoKey](
+  buildInfoKeys    := Seq[BuildInfoKey](
     scalaVersion,
     scalacOptions,
     sourceDirectory,
@@ -374,9 +374,9 @@ ThisBuild / updateSiteVariables := {
 
   val variables =
     Map[String, String](
-      "organization"   -> (LocalRootProject / organization).value,
-      "coreModuleName" -> (core.jvm / moduleName).value,
-      "latestVersion"  -> (ThisBuild / tlLatestVersion).value.getOrElse((ThisBuild / version).value),
+      "organization"         -> (LocalRootProject / organization).value,
+      "coreModuleName"       -> (core.jvm / moduleName).value,
+      "latestVersion"        -> (ThisBuild / tlLatestVersion).value.getOrElse((ThisBuild / version).value),
       "scalaPublishVersions" -> {
         val minorVersions = (core.jvm / crossScalaVersions).value.map(minorVersion)
         if (minorVersions.size <= 2) minorVersions.mkString(" and ")

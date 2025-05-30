@@ -18,7 +18,7 @@ object ReverseTests extends Laws {
       override def name: String                  = "Reverse"
       override def bases: Seq[(String, RuleSet)] = Nil
       override def parents: Seq[RuleSet]         = Nil
-      override def props: Seq[(String, Prop)] =
+      override def props: Seq[(String, Prop)]    =
         IsoTests(reverse[S, A]).props
     }
 }

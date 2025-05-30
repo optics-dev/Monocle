@@ -73,7 +73,7 @@ class StateExample extends MonocleSuite {
     assertEquals(set20.run(p).value, ((Person("John", 20), ())))
   }
 
-  val _oldAge = Optional[Person, Int](p => if (p.age > 50) Some(p.age) else None)(a => _.copy(age = a))
+  val _oldAge  = Optional[Person, Int](p => if (p.age > 50) Some(p.age) else None)(a => _.copy(age = a))
   val _coolGuy = Optional[Person, String](p => if (p.name.startsWith("C")) Some(p.name) else None) { n =>
     _.copy(name = n)
   }
@@ -108,7 +108,7 @@ class StateExample extends MonocleSuite {
 
   test("mod for Optional (predicate is false)") {
     val youngPerson = Person("John", 30)
-    val update = for {
+    val update      = for {
       i <- _oldAge mod (_ + 1)
     } yield i
 
@@ -117,7 +117,7 @@ class StateExample extends MonocleSuite {
 
   test("mod for Optional (predicate is true)") {
     val oldPerson = Person("John", 100)
-    val update = for {
+    val update    = for {
       i <- _oldAge mod (_ + 1)
     } yield i
 
@@ -126,7 +126,7 @@ class StateExample extends MonocleSuite {
 
   test("modo for Optional (predicate is false)") {
     val youngPerson = Person("John", 30)
-    val update = for {
+    val update      = for {
       i <- _oldAge modo (_ + 1)
     } yield i
 
@@ -135,7 +135,7 @@ class StateExample extends MonocleSuite {
 
   test("modo for Optional (predicate is true)") {
     val oldPerson = Person("John", 100)
-    val update = for {
+    val update    = for {
       i <- _oldAge modo (_ + 1)
     } yield i
 
@@ -144,7 +144,7 @@ class StateExample extends MonocleSuite {
 
   test("modo for Optional (chaining modifications)") {
     val oldCoolPerson = Person("Chris", 100)
-    val update = for {
+    val update        = for {
       _ <- _oldAge modo (_ + 1)
       x <- _coolGuy modo (_.toLowerCase)
     } yield x
@@ -154,7 +154,7 @@ class StateExample extends MonocleSuite {
 
   test("modo for Optional (only some of the modifications are applied)") {
     val oldCoolPerson = Person("Chris", 30)
-    val update = for {
+    val update        = for {
       _ <- _oldAge modo (_ + 1)
       x <- _coolGuy modo (_.toLowerCase)
     } yield x
@@ -178,7 +178,7 @@ class StateExample extends MonocleSuite {
 
   test("assign for Optional (predicate is true)") {
     val oldPerson = Person("John", 100)
-    val update = for {
+    val update    = for {
       i <- _oldAge assign 30
     } yield i
 
@@ -187,7 +187,7 @@ class StateExample extends MonocleSuite {
 
   test("assign for Optional (predicate is false)") {
     val youngPerson = Person("John", 30)
-    val update = for {
+    val update      = for {
       i <- _oldAge assign 100
     } yield i
 
@@ -196,7 +196,7 @@ class StateExample extends MonocleSuite {
 
   test("assigno for Optional (predicate is true)") {
     val oldPerson = Person("John", 100)
-    val update = for {
+    val update    = for {
       i <- _oldAge assigno 30
     } yield i
 
@@ -205,7 +205,7 @@ class StateExample extends MonocleSuite {
 
   test("assigno for Optional (predicate is false)") {
     val youngPerson = Person("John", 30)
-    val update = for {
+    val update      = for {
       i <- _oldAge assigno 100
     } yield i
 

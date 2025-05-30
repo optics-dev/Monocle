@@ -13,7 +13,7 @@ class IsoSpec extends MonocleSuite {
   val _nullary: Iso[Nullary, Unit] = Iso[Nullary, Unit](n => ()) { case () =>
     Nullary()
   }
-  val _unary: Iso[Unary, Int] = Iso[Unary, Int](_.i)(Unary.apply)
+  val _unary: Iso[Unary, Int]             = Iso[Unary, Int](_.i)(Unary.apply)
   val _binary: Iso[Binary, (String, Int)] =
     Iso[Binary, (String, Int)](b => (b.s, b.i))(Binary.apply.tupled)
   val _quintary: Iso[Quintary, (Char, Boolean, String, Int, Double)] =
@@ -37,7 +37,7 @@ class IsoSpec extends MonocleSuite {
     Arbitrary(Gen.const(EmptyCaseType()))
   implicit def emptyCaseTypeEq[A]: Eq[EmptyCaseType[A]] = Eq.fromUniversalEquals[EmptyCaseType[A]]
 
-  val iso = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)
+  val iso                  = Iso[IntWrapper, Int](_.i)(IntWrapper.apply)
   val involutedListReverse =
     Iso.involuted[List[Int]](_.reverse) // ∀ {T} -> List(ts: T*).reverse.reverse == List(ts: T*)
   val involutedTwoMinusN = Iso.involuted[Int](2 - _) //  ∀ {n : Int} -> n == 2 - (2 - n)

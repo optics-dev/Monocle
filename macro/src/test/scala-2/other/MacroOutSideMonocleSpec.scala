@@ -21,7 +21,7 @@ class MacroOutSideMonocleSpec extends DisciplineSuite {
   case class Bar1(s: String) extends Foo
   case class Bar2(i: Int)    extends Foo
 
-  implicit val exampleArb: Arbitrary[Example] = Arbitrary(arbitrary[Int].map(Example.apply))
+  implicit val exampleArb: Arbitrary[Example]   = Arbitrary(arbitrary[Int].map(Example.apply))
   implicit val example2Arb: Arbitrary[Example2] = Arbitrary(
     for { l <- arbitrary[Long]; s <- arbitrary[String] } yield Example2(l, s)
   )

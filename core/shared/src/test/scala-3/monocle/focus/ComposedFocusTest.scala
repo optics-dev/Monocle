@@ -120,7 +120,7 @@ final class ComposedFocusTest extends munit.FunSuite {
   }
 
   test("AppliedFold refocus correctly composes Lens") {
-    val mailingList = MailingList(List(elise))
+    val mailingList                                 = MailingList(List(elise))
     val userFold: AppliedFold[MailingList, Address] =
       mailingList.focus(_.users.each).andThen(Getter[User, Address](_.address))
     val newLens: AppliedFold[MailingList, Int] = userFold.refocus(_.streetNumber)
