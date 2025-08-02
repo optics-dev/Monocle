@@ -9,7 +9,7 @@ class FieldsExample extends MonocleSuite {
   test("_1 creates a Lens from a 2-6 tuple to its first element") {
     assertEquals(("Hello", 3).focus().composeLens(first).get, "Hello")
 
-    assertEquals(("Hello", 3, true).focus().composeLens(first).replace("World"), (("World", 3, true)))
+    assertEquals(("Hello", 3, true).focus().composeLens(first).replace("World"), ("World", 3, true))
 
     assertEquals(("Hello", 3, true, 5.6, 7L, 'c').focus().composeLens(first).get, "Hello")
   }
@@ -19,7 +19,7 @@ class FieldsExample extends MonocleSuite {
 
     assertEquals(
       ("Hello", 3, true, 5.6, 7L, 'c').focus().composeLens(second).replace(4),
-      (("Hello", 4, true, 5.6, 7L, 'c'))
+      ("Hello", 4, true, 5.6, 7L, 'c')
     )
   }
 
@@ -30,7 +30,7 @@ class FieldsExample extends MonocleSuite {
 
     assertEquals(
       ("Hello", 3, true, 5.6, 7L, 'c').focus().composeLens(sixth).replace('a'),
-      (("Hello", 3, true, 5.6, 7L, 'a'))
+      ("Hello", 3, true, 5.6, 7L, 'a')
     )
   }
 }

@@ -11,7 +11,7 @@ class HeadExample extends MonocleSuite {
     assertEquals((2, false) applyLens head get, 2)
     assertEquals(('r', false, "lala", 5.6, 7, 4) applyLens head get, 'r')
 
-    assertEquals((2, false) applyLens head replace 4, ((4, false)))
+    assertEquals((2, false) applyLens head replace 4, (4, false))
   }
 
   test("head creates a Lens from a OneAnd its first element") {

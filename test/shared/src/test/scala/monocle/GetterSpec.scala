@@ -47,7 +47,7 @@ class GetterSpec extends MonocleSuite {
       Semigroupal[Getter[String, *]]
         .product(length, upper)
         .get("helloworld"),
-      ((10, "HELLOWORLD"))
+      (10, "HELLOWORLD")
     )
   }
 
@@ -68,7 +68,7 @@ class GetterSpec extends MonocleSuite {
   test("zip") {
     val length = Getter[String, Int](_.length)
     val upper  = Getter[String, String](_.toUpperCase)
-    assertEquals(length.zip(upper).get("helloworld"), ((10, "HELLOWORLD")))
+    assertEquals(length.zip(upper).get("helloworld"), (10, "HELLOWORLD"))
   }
 
   test("to") {
