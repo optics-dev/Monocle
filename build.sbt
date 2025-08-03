@@ -21,7 +21,6 @@ inThisBuild(
     run / fork              := true,
     scalaVersion            := scala2Version,
     crossScalaVersions      := Seq(scala2Version, scala3Version),
-    tlSonatypeUseLegacyHost := false,
     tlCiScalafmtCheck       := true,
     tlCiReleaseBranches     := Seq("master"),
     githubWorkflowBuild += WorkflowStep.Sbt(
