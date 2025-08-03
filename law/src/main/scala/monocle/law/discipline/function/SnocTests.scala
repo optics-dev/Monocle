@@ -12,7 +12,7 @@ import cats.Eq
 object SnocTests extends Laws {
   def apply[S: Eq: Arbitrary, A: Eq: Arbitrary](implicit
     evSnoc: Snoc[S, A],
-    arbASAS: Arbitrary[((S, A)) => ((S, A))],
+    arbASAS: Arbitrary[((S, A)) => (S, A)],
     arbAA: Arbitrary[A => A],
     arbSS: Arbitrary[S => S]
   ): RuleSet =
