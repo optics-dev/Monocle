@@ -66,7 +66,7 @@ object Empty extends EmptyFunctions {
 
   implicit def sortedMapEmpty[K, V](implicit ok: Order[K]): Empty[SortedMap[K, V]] =
     Empty(
-      Prism[SortedMap[K, V], Unit](m => if (m.isEmpty) Some(()) else None)(_ => SortedMap.empty(ok.toOrdering))
+      Prism[SortedMap[K, V], Unit](m => if (m.isEmpty) Some(()) else None)(_ => SortedMap.empty(using ok.toOrdering))
     )
 
   implicit def optionEmpty[A]: Empty[Option[A]] =
