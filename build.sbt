@@ -103,7 +103,7 @@ lazy val buildSettings = Seq(
 )
 
 lazy val catsVersion   = "2.13.0"
-lazy val scala2Version = "2.13.17"
+lazy val scala2Version = "2.13.18"
 lazy val scala3Version = "3.3.7"
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
