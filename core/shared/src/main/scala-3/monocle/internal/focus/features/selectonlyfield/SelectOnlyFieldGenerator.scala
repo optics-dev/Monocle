@@ -21,8 +21,8 @@ private[focus] trait SelectOnlyFieldGenerator {
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) =>
         '{
-          Iso.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm).asExprOf[t] })((to: t) =>
-            ${ generateReverseGet('{ to }.asTerm).asExprOf[f] }
+          Iso.apply[f, t]((from: f) => ${ generateGetter('from.asTerm).asExprOf[t] })((to: t) =>
+            ${ generateReverseGet('to.asTerm).asExprOf[f] }
           )
         }.asTerm
     }

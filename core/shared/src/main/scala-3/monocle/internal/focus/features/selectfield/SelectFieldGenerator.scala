@@ -21,8 +21,8 @@ private[focus] trait SelectFieldGenerator {
     (fromType.asType, toType.asType) match {
       case ('[f], '[t]) =>
         '{
-          Lens.apply[f, t]((from: f) => ${ generateGetter('{ from }.asTerm).asExprOf[t] })((to: t) =>
-            (from: f) => ${ generateSetter('{ from }.asTerm, '{ to }.asTerm).asExprOf[f] }
+          Lens.apply[f, t]((from: f) => ${ generateGetter('from.asTerm).asExprOf[t] })((to: t) =>
+            (from: f) => ${ generateSetter('from.asTerm, 'to.asTerm).asExprOf[f] }
           )
         }.asTerm
     }
