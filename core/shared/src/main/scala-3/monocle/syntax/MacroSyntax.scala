@@ -13,7 +13,7 @@ trait MacroSyntax {
       * Case classes with 0 fields will correspond with `EmptyTuple`, 1 with `Tuple1[field type]`, 2 or more with a
       * tuple of all field types in the same order as the fields themselves.
       */
-    transparent inline def fields[S <: Product: Mirror.ProductOf]: Iso[S, Tuple] =
+    transparent inline def fields[S <: Product: Mirror.ProductOf]: PIso[S, S, ? <: Tuple, ? <: Tuple] =
       IsoFields[S]
   }
 
