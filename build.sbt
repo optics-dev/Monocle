@@ -27,7 +27,10 @@ inThisBuild(
       name = Some("Run documentation"),
       cond = Some(s"matrix.scala == '2.13' && matrix.project == 'rootJVM'")
     ),
-    githubWorkflowJavaVersions += JavaSpec.temurin("21"),
+    githubWorkflowJavaVersions := Seq(
+      JavaSpec.temurin("11"),
+      JavaSpec.temurin("25")
+    ),
     githubWorkflowPublishPostamble += WorkflowStep.Sbt(
       List("docs/docusaurusPublishGhpages"),
       name = Some("Publish website"),
@@ -40,6 +43,7 @@ lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.4" cross Cro
 
 lazy val buildSettings = Seq(
   scalacOptions ++= Seq(
+    "-release:8",
     "-encoding",
     "UTF-8",
     "-feature",
