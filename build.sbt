@@ -129,6 +129,7 @@ lazy val scalajsSettings = Seq(
 )
 
 lazy val scalaNativeSettings = Seq(
+  evictionErrorLevel     := Level.Warn,
   tlMimaPreviousVersions := Set.empty
 )
 
