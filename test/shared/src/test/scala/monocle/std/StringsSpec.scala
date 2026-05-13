@@ -25,4 +25,17 @@ class StringsSpec extends MonocleSuite {
   // checkAll("String to URI", PrismTests(stringToURI))
 
   checkAll("plated String", TraversalTests(plate[String]))
+
+  // see #1582: "-0" et al. parsed to 0L but reverseGet round-tripped to "0"
+  test("stringToLong rejects negative-zero forms") {
+    assertEquals(stringToLong.getOption("-0"), None)
+    assertEquals(stringToLong.getOption("-00"), None)
+    assertEquals(stringToLong.getOption("-01"), None)
+  }
+
+  test("stringToLong still accepts ordinary negatives and zero") {
+    assertEquals(stringToLong.getOption("0"), Some(0L))
+    assertEquals(stringToLong.getOption("-1"), Some(-1L))
+    assertEquals(stringToLong.getOption("-10"), Some(-10L))
+  }
 }
