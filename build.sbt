@@ -43,7 +43,6 @@ lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.4" cross Cro
 
 lazy val buildSettings = Seq(
   scalacOptions ++= Seq(
-    "-release:8",
     "-encoding",
     "UTF-8",
     "-feature",
@@ -133,10 +132,31 @@ lazy val scalaNativeSettings = Seq(
   tlMimaPreviousVersions := Set.empty
 )
 
-lazy val monocleSettings       = buildSettings
-lazy val monocleJvmSettings    = monocleSettings
-lazy val monocleJsSettings     = monocleSettings ++ scalajsSettings
-lazy val monocleNativeSettings = monocleSettings ++ scalaNativeSettings
+lazy val defaultReleaseOption = "-release:8"
+
+lazy val monocleSettings    = buildSettings
+lazy val monocleJvmSettings = monocleSettings ++ Seq(
+  scalacOptions ++= {
+    if (scalaVersion.value.startsWith("3.3.")) {
+      Seq(
+        "-Yfuture-lazy-vals",
+        "-release:11"
+      )
+    } else if (scalaBinaryVersion.value == "3") {
+      Nil
+    } else {
+      Seq(
+        defaultReleaseOption
+      )
+    }
+  }
+)
+lazy val monocleJsSettings = monocleSettings ++ scalajsSettings ++ Seq(
+  scalacOptions += defaultReleaseOption
+)
+lazy val monocleNativeSettings = monocleSettings ++ scalaNativeSettings ++ Seq(
+  scalacOptions += defaultReleaseOption
+)
 
 lazy val root = tlCrossRootProject.aggregate(
   core,
