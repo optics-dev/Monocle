@@ -31,4 +31,13 @@ final class IsoFieldsTest extends munit.FunSuite {
     assertEquals(iso.reverseGet(("hi", 5)), Foo("hi", 5))
     assertEquals(iso.reverseGet(iso.get(Foo("hi", 5))), Foo("hi", 5))
   }
+
+  test("fields extension method works") {
+    case class Foo(s: String, i: Int)
+    val foo = Foo("hi", 5)
+    val iso: Iso[Foo, (String, Int)] = Iso.fields[Foo]
+
+    assertEquals(iso.get(foo), ("hi", 5))
+    assertEquals(iso.reverseGet(("hi", 5)), foo)
+  }
 }

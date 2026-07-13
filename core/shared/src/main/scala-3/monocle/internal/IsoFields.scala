@@ -19,5 +19,7 @@ private[monocle] object IsoFieldsImpl {
           val g: a => S = $m.fromProduct(_)
           Iso[S, a](f)(g)
         }
+      case other =>
+        quotes.reflect.report.errorAndAbort(s"Unexpected mirror type: ${other.show}")
     }
 }
