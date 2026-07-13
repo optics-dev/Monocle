@@ -1,6 +1,6 @@
 package monocle.macros
 
-import monocle.Iso
+import monocle.{Iso, PIso}
 import scala.language.`3.0`
 import scala.deriving.*
 import scala.quoted.*
@@ -63,7 +63,7 @@ object GenIso {
 
   private def _fields[S <: Product](e: Expr[Mirror.ProductOf[S]])(using Quotes, Type[S]): Expr[Iso[S, Any]] = {
 
-    def whitebox[A](e: Expr[Iso[S, A]]): Expr[Iso[S, Any]] =
+    def whitebox(e: Expr[PIso[S, S, ?, ?]]): Expr[Iso[S, Any]] =
       e.asInstanceOf[Expr[Iso[S, Any]]]
 
     e match {
