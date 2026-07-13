@@ -11,7 +11,9 @@ object IsoFields {
 
 private[monocle] object IsoFieldsImpl {
 
-  def apply[S <: Product](mirror: Expr[Mirror.ProductOf[S]])(using Quotes, Type[S]): Expr[PIso[S, S, ? <: Tuple, ? <: Tuple]] =
+  def apply[S <: Product](
+    mirror: Expr[Mirror.ProductOf[S]]
+  )(using Quotes, Type[S]): Expr[PIso[S, S, ? <: Tuple, ? <: Tuple]] =
     mirror match {
       case '{ type a <: Tuple; $m: Mirror.ProductOf[S] { type MirroredElemTypes = `a` } } =>
         '{
