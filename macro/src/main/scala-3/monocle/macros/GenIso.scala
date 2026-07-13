@@ -74,7 +74,7 @@ object GenIso {
         whitebox(_apply[S, a](e))
 
       case _ =>
-        whitebox('{ monocle.internal.IsoFields[S](using $e) })
+        '{ monocle.internal.IsoFields[S](using $e) }.asInstanceOf[Expr[Iso[S, Any]]]
     }
   }
 }
