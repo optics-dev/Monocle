@@ -1,6 +1,6 @@
 package monocle.macros
 
-import monocle.Iso
+import monocle.{Iso, PIso}
 import scala.language.`3.0`
 import scala.deriving.*
 import scala.quoted.*
@@ -58,23 +58,18 @@ object GenIso {
     * types in the same order as the fields themselves.
     */
   @deprecated("use monocle.Iso.fields", since = "3.1.0")
-  transparent inline def fields[S <: Product](using m: Mirror.ProductOf[S]): Iso[S, Any] =
+  transparent inline def fields[S <: Product](using m: Mirror.ProductOf[S]): PIso[S, S, ?, ?] =
     ${ _fields[S]('m) }
 
-  private def _fields[S <: Product](e: Expr[Mirror.ProductOf[S]])(using Quotes, Type[S]): Expr[Iso[S, Any]] = {
-
-    def whitebox[A](e: Expr[Iso[S, A]]): Expr[Iso[S, Any]] =
-      e.asInstanceOf[Expr[Iso[S, Any]]]
-
+  private def _fields[S <: Product](e: Expr[Mirror.ProductOf[S]])(using Quotes, Type[S]): Expr[PIso[S, S, ?, ?]] =
     e match {
       case '{ $m: Mirror.ProductOf[S] { type MirroredElemTypes = EmptyTuple } } =>
-        whitebox(_unit[S](e))
+        _unit[S](e)
 
       case '{ $m: Mirror.ProductOf[S] { type MirroredElemTypes = a *: EmptyTuple } } =>
-        whitebox(_apply[S, a](e))
+        _apply[S, a](e)
 
       case _ =>
-        '{ monocle.internal.IsoFields[S](using $e) }.asInstanceOf[Expr[Iso[S, Any]]]
+        '{ monocle.internal.IsoFields[S](using $e) }
     }
-  }
 }
