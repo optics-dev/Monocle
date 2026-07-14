@@ -27,10 +27,6 @@ inThisBuild(
       name = Some("Run documentation"),
       cond = Some(s"matrix.scala == '2.13' && matrix.project == 'rootJVM'")
     ),
-    githubWorkflowAddedJobs ~= (
-      // https://github.com/typelevel/sbt-typelevel/issues/904
-      _.filter(_.id != "validate-steward")
-    ),
     githubWorkflowJavaVersions := Seq(
       JavaSpec.temurin("11"),
       JavaSpec.temurin("25")
