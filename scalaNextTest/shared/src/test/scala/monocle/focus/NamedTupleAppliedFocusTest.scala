@@ -5,16 +5,30 @@ import monocle.Focus.*
 
 final class AppliedFocusTest extends munit.FunSuite {
 
+  // test("Applied focus returning an Optional") {
+  //   // type User = (name: String, address: Option[Address])
+  //   // type Address = (streetNumber: Int, postcode: String)
+  //   val elise = (name = "Elise", address = Some((streetNumber = 12, postcode = "high street")))
+  //
+  //   val streetNumber = elise.focus(_.address.some.streetNumber).getOption
+  //   val newElise     = elise.focus(_.address.some.streetNumber).replace(50)
+  //
+  //   assertEquals(streetNumber, Some(12))
+  //   assertEquals(newElise, ("Elise", Some((50, "high street"))))
+  // }
+
+  // test named tuple within a case class
   test("Applied focus returning an Optional") {
-    // type User = (name: String, address: Option[Address])
-    // type Address = (streetNumber: Int, postcode: String)
-    val elise = (name = "Elise", address = Some((streetNumber = 12, postcode = "high street")))
+    case class User(name: String, address: Option[Address])
+      type Address = (streetNumber: Int, postcode: String)
+
+    val elise = User("Elise", Some((12, "high street")))
 
     val streetNumber = elise.focus(_.address.some.streetNumber).getOption
     val newElise     = elise.focus(_.address.some.streetNumber).replace(50)
 
     assertEquals(streetNumber, Some(12))
-    assertEquals(newElise, ("Elise", Some((50, "high street"))))
+    assertEquals(newElise, User("Elise", Some((50, "high street"))))
   }
 
   //
