@@ -1,6 +1,7 @@
 package monocle.internal.focus.features
 
 import monocle.internal.focus.FocusBase
+import scala.quoted.Type
 
 private[focus] trait SelectParserBase extends ParserBase {
   this: FocusBase =>
@@ -13,6 +14,21 @@ private[focus] trait SelectParserBase extends ParserBase {
       term.tpe.classSymbol.flatMap { sym =>
         Option.when(sym.flags.is(Flags.Case))(term)
       }
+  }
+
+  // unappliedNamedTuple is the type lambda [Names, Values] =>> NamedTuple[Names, Values], used to harvest its type symbol later on
+  final class NamedTuples private (private val unappliedNamedTuple: Type[?]) {
+    def isNamedTuple(tpe: Type[?]) =
+      TypeRepr.of(using tpe).dealias.typeSymbol == TypeRepr.of(using unappliedNamedTuple).typeSymbol
+  }
+
+  object NamedTuples {
+    def create: Option[NamedTuples] =
+      Symbol
+        .requiredModule("scala.NamedTuple")
+        .declaredType("NamedTuple")
+        .headOption
+        .map(sym => NamedTuples(sym.typeRef.asType))
   }
 
   def getSuppliedTypeArgs(fromType: TypeRepr): List[TypeRepr] =
