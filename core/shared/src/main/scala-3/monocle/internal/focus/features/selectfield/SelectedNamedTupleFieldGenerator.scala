@@ -10,20 +10,20 @@ private[focus] trait SelectNamedTupleFieldGenerator {
   import macroContext.reflect.*
 
   def generateSelectNamedTupleField(action: FocusAction.SelectNamedTupleField): Term = {
+    // TODO: handle errors
+    def generateGetter(from: Term): Term = action.namedTuples.accessFieldByName(from, action.from, action.fieldName).get
 
-    def generateGetter(from: Term): Term = ???
+    def generateSetter(from: Term, to: Term): Term =
+      action.namedTuples.reconstruct(from, action.from, action.fieldName, to)
 
-    def generateSetter(from: Term, to: Term): Term = ???
+    (action.from.sourceType.asType, action.toType.asType) match {
+      case ('[f], '[t]) =>
+        '{
+          Lens.apply[f, t]((from: f) => ${ generateGetter('from.asTerm).asExprOf[t] })((to: t) =>
+            (from: f) => ${ generateSetter('from.asTerm, 'to.asTerm).asExprOf[f] }
+          )
+        }.asTerm
+    }
 
-    // (fromType.asType, toType.asType) match {
-    //   case ('[f], '[t]) =>
-    //     '{
-    //       Lens.apply[f, t]((from: f) => ${ generateGetter('from.asTerm).asExprOf[t] })((to: t) =>
-    //         (from: f) => ${ generateSetter('from.asTerm, 'to.asTerm).asExprOf[f] }
-    //       )
-    //     }.asTerm
-    // }
-
-    ???
   }
 }

@@ -1,6 +1,7 @@
 package monocle.internal.focus
 
-import scala.quoted.Quotes
+import scala.annotation.tailrec
+import scala.quoted.*
 
 private[focus] trait FocusBase {
   val macroContext: Quotes
@@ -10,6 +11,8 @@ private[focus] trait FocusBase {
   type Term     = macroContext.reflect.Term
   type TypeRepr = macroContext.reflect.TypeRepr
   type Position = macroContext.reflect.Position
+
+  import macroContext.reflect.*
 
   case class LambdaConfig(argName: String, lambdaBody: Term)
 
@@ -22,7 +25,12 @@ private[focus] trait FocusBase {
       fromCompanion: Term,
       toType: TypeRepr
     )
-    case SelectNamedTupleField(fieldName: String, fromType: TypeRepr, toType: TypeRepr)
+    case SelectNamedTupleField(
+      fieldName: String,
+      from: NamedTuples.Description,
+      toType: TypeRepr,
+      namedTuples: NamedTuples
+    )
     case KeywordSome(toType: TypeRepr)
     case KeywordAs(fromType: TypeRepr, toType: TypeRepr)
     case KeywordEach(fromType: TypeRepr, toType: TypeRepr, eachInstance: Term)
@@ -35,8 +43,8 @@ private[focus] trait FocusBase {
         s"SelectField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
       case SelectOnlyField(fieldName, fromType, fromTypeArgs, _, toType) =>
         s"SelectOnlyField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ..., ${toType.show})"
-      case SelectNamedTupleField(fieldName, fromType, toType) =>
-        s"SelectNamedTupleField($fieldName, ${fromType.show}, ${toType.show})"
+      case SelectNamedTupleField(fieldName, fromType, toType, _) =>
+        s"SelectNamedTupleField($fieldName, ${fromType.toString()}, ${toType.show})"
       case KeywordSome(toType)                  => s"KeywordSome(${toType.show})"
       case KeywordAs(fromType, toType)          => s"KeywordAs(${fromType.show}, ${toType.show})"
       case KeywordEach(fromType, toType, _)     => s"KeywordEach(${fromType.show}, ${toType.show}, ...)"
@@ -60,4 +68,109 @@ private[focus] trait FocusBase {
   }
 
   type FocusResult[+A] = Either[FocusError, A]
+
+  // unappliedNamedTuple is the type lambda [Names, Values] =>> NamedTuple[Names, Values], used to harvest its type symbol later on
+  final class NamedTuples private (private val unappliedNamedTuple: TypeRepr, private val companion: Symbol) {
+    def isNamedTuple(tpe: TypeRepr) =
+      tpe.dealias.typeSymbol == unappliedNamedTuple.typeSymbol
+
+    // NamedTuple.toTuple[Names <: Tuple, Values <: Tuple](tup: NamedTuple.NamedTuple[Names, Values]): Values
+    def toTuple(term: Term, description: NamedTuples.Description) =
+      Select
+        .unique(Ident(companion.termRef), "toTuple")
+        .appliedToTypes(description.namesTpe :: description.valuesTpe :: Nil)
+        .appliedTo(term)
+
+    def accessFieldByName(term: Term, description: NamedTuples.Description, fieldName: String): Option[Term] = {
+      val idxOfName = description.names.indexOf(fieldName)
+      Option.when(idxOfName != -1) {
+        val asTuple = toTuple(term, description)
+        unsafeAccessFieldByIndex(asTuple, description.values, idxOfName)
+      }
+    }
+
+    // there's a chance that we're operating on a non-normalized (non TupleN) tuple (for example when N is > 22 or when using NamedTuple.From)
+    // in which case we need to fall back to using Product methods since TupleXXL <: scala.Product and doesn't get _N accessors
+    private def unsafeAccessFieldByIndex(asTuple: Term, valueTpes: Vector[TypeRepr], index: Int) = {
+      val tupleAccessor = s"_${index + 1}"
+
+      if (asTuple.tpe.typeSymbol.fieldMember(tupleAccessor).exists) {
+        Select.unique(asTuple, tupleAccessor)
+      } else {
+        val tpeAtIndex = valueTpes(index)
+        (asTuple.asExpr, tpeAtIndex.asType) match {
+          case '{ $prod: scala.Product } -> '[tpe] =>
+            '{ $prod.productElement(${ Expr(index) }).asInstanceOf[tpe] }.asTerm
+        }
+      }
+    }
+
+    def reconstruct(from: Term, description: NamedTuples.Description, fieldToUpdate: String, updatedValue: Term) = {
+      val updatedFieldIdx = description.names.indexOf(fieldToUpdate)
+      val asTuple         = toTuple(from, description)
+      val values          = 0
+        .until(description.values.size)
+        .map(idx =>
+          if (idx == updatedFieldIdx) updatedValue.asExpr
+          else unsafeAccessFieldByIndex(asTuple, description.values, idx).asExpr
+        )
+      Typed(Expr.ofTupleFromSeq(values).asTerm, TypeTree.of(using description.sourceType.asType))
+    }
+
+    def describe(sourceType: TypeRepr): Option[NamedTuples.Description] =
+      sourceType.dealias.simplified match {
+        case tpe @ AppliedType(_, namesTpe :: valuesTpe :: Nil) if isNamedTuple(tpe) =>
+          Some(
+            NamedTuples.Description(
+              unrollStrings(namesTpe),
+              unroll(valuesTpe),
+              sourceType,
+              namesTpe,
+              valuesTpe
+            )
+          )
+        case _ => None
+      }
+
+    // TODO: handle errors with an either later on
+    private def unrollStrings(tp: TypeRepr): Vector[String] =
+      unroll(tp).map { case ConstantType(StringConstant(l)) => l }
+
+    private def unroll(tpe: TypeRepr): Vector[TypeRepr] = {
+      @tailrec def loop(curr: Type[?], acc: Vector[TypeRepr]): Vector[TypeRepr] =
+        curr match {
+          case '[head *: tail] =>
+            loop(Type.of[tail], acc.appended(TypeRepr.of[head]))
+          case '[EmptyTuple] =>
+            acc
+          case other =>
+            report.errorAndAbort(
+              s"Unexpected type (${Type.show(using other)}) encountered when extracting tuple type elems."
+            )
+        }
+
+      loop(tpe.asType, Vector.empty)
+    }
+
+  }
+
+  object NamedTuples {
+    def create: Option[NamedTuples] = {
+      val companion = Symbol.requiredModule("scala.NamedTuple")
+
+      companion
+        .declaredType("NamedTuple")
+        .headOption
+        .map(sym => NamedTuples(sym.typeRef, companion))
+    }
+
+    case class Description private[NamedTuples] (
+      names: Vector[String],
+      values: Vector[TypeRepr],
+      sourceType: TypeRepr,
+      namesTpe: TypeRepr,
+      valuesTpe: TypeRepr
+    )
+  }
+
 }

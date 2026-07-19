@@ -3,6 +3,7 @@ package monocle.internal.focus.features
 import monocle.internal.focus.FocusBase
 import scala.quoted.Type
 import scala.quoted.Expr
+import scala.annotation.tailrec
 
 private[focus] trait SelectParserBase extends ParserBase {
   this: FocusBase =>
@@ -15,74 +16,6 @@ private[focus] trait SelectParserBase extends ParserBase {
       term.tpe.classSymbol.flatMap { sym =>
         Option.when(sym.flags.is(Flags.Case))(term)
       }
-  }
-
-  // unappliedNamedTuple is the type lambda [Names, Values] =>> NamedTuple[Names, Values], used to harvest its type symbol later on
-  final class NamedTuples private (private val unappliedNamedTuple: Type[?], private val companion: Symbol) {
-    def isNamedTuple(tpe: Type[?]) =
-      TypeRepr.of(using tpe).dealias.typeSymbol == TypeRepr.of(using unappliedNamedTuple).typeSymbol
-
-    // NamedTuple.toTuple[Names <: Tuple, Values <: Tuple](tup: NamedTuple.NamedTuple[Names, Values]): Values
-    def toTuple(term: Term, description: NamedTuples.Description) =
-      Select
-        .unique(Ident(companion.termRef), "toTuple")
-        .appliedToTypes(description.namesTpe :: description.valuesTpe :: Nil)
-        .appliedTo(term)
-
-    def accessFieldByName(term: Term, description: NamedTuples.Description, fieldName: String): Option[Term] = {
-      val idxOfName = description.names.indexOf(fieldName)
-      Option.when(idxOfName != -1) {
-        val asTuple = toTuple(term, description)
-        unsafeAccessFieldByIndex(asTuple, description.values, idxOfName)
-      }
-    }
-
-    // there's a chance that we're operating on a non-normalized (non TupleN) tuple (for example when N is > 22 or when using NamedTuple.From)
-    // in which case we need to fall back to using Product methods since TupleXXL <: scala.Product and doesn't get _N accessors
-    private def unsafeAccessFieldByIndex(asTuple: Term, valueTpes: Vector[TypeRepr], index: Int) = {
-      val tupleAccessor = s"_${index + 1}"
-
-      if (asTuple.tpe.typeSymbol.fieldMember(tupleAccessor).exists) {
-        Select.unique(asTuple, tupleAccessor)
-      } else {
-        val tpeAtIndex = valueTpes(index)
-        (asTuple.asExpr, tpeAtIndex.asType) match {
-          case '{ $prod: scala.Product } -> '[tpe] =>
-            '{ $prod.productElement(${ Expr(index) }).asInstanceOf[tpe] }.asTerm
-        }
-      }
-    }
-
-    def reconstruct(from: Term, description: NamedTuples.Description, fieldToUpdate: String, updatedValue: Term) = {
-      val updatedFieldIdx = description.names.indexOf(fieldToUpdate)
-      val asTuple         = toTuple(from, description)
-      val values          = 0
-        .until(description.values.size)
-        .map(idx =>
-          if (idx == updatedFieldIdx) updatedValue.asExpr
-          else unsafeAccessFieldByIndex(asTuple, description.values, idx).asExpr
-        )
-      Typed(Expr.ofTupleFromSeq(values).asTerm, TypeTree.of(using description.sourceType.asType))
-    }
-  }
-
-  object NamedTuples {
-    def create: Option[NamedTuples] = {
-      val companion = Symbol.requiredModule("scala.NamedTuple")
-
-      companion
-        .declaredType("NamedTuple")
-        .headOption
-        .map(sym => NamedTuples(sym.typeRef.asType, companion))
-    }
-
-    case class Description(
-      names: Vector[String],
-      values: Vector[TypeRepr],
-      sourceType: TypeRepr,
-      namesTpe: TypeRepr,
-      valuesTpe: TypeRepr
-    )
   }
 
   def getSuppliedTypeArgs(fromType: TypeRepr): List[TypeRepr] =
