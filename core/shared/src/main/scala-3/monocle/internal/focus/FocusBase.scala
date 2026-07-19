@@ -22,6 +22,7 @@ private[focus] trait FocusBase {
       fromCompanion: Term,
       toType: TypeRepr
     )
+    case SelectNamedTupleField(fieldName: String, fromType: TypeRepr, toType: TypeRepr)
     case KeywordSome(toType: TypeRepr)
     case KeywordAs(fromType: TypeRepr, toType: TypeRepr)
     case KeywordEach(fromType: TypeRepr, toType: TypeRepr, eachInstance: Term)
@@ -34,6 +35,8 @@ private[focus] trait FocusBase {
         s"SelectField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ${toType.show})"
       case SelectOnlyField(fieldName, fromType, fromTypeArgs, _, toType) =>
         s"SelectOnlyField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ..., ${toType.show})"
+      case SelectNamedTupleField(fieldName, fromType, toType) =>
+        s"SelectNamedTupleField($fieldName, ${fromType.show}, ${toType.show})"
       case KeywordSome(toType)                  => s"KeywordSome(${toType.show})"
       case KeywordAs(fromType, toType)          => s"KeywordAs(${fromType.show}, ${toType.show})"
       case KeywordEach(fromType, toType, _)     => s"KeywordEach(${fromType.show}, ${toType.show}, ...)"
@@ -42,7 +45,6 @@ private[focus] trait FocusBase {
       case KeywordWithDefault(toType, _)        => s"KeywordWithDefault(${toType.show}, ...)"
     }
   }
-
   enum FocusError {
     case NotACaseClass(className: String, fieldName: String, pos: Position)
     case NotAConcreteClass(className: String)

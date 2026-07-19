@@ -9,6 +9,7 @@ import monocle.internal.focus.features.each.EachParser
 import monocle.internal.focus.features.at.AtParser
 import monocle.internal.focus.features.index.IndexParser
 import monocle.internal.focus.features.withdefault.WithDefaultParser
+import monocle.internal.focus.features.selectfield.SelectNamedTupleFieldParser
 
 private[focus] trait AllFeatureParsers
     extends FocusBase
@@ -16,6 +17,7 @@ private[focus] trait AllFeatureParsers
     with KeywordParserBase
     with SelectFieldParser
     with SelectOnlyFieldParser
+    with SelectNamedTupleFieldParser
     with SomeParser
     with AsParser
     with EachParser
@@ -57,6 +59,9 @@ private[focus] trait ParserLoop {
 
         case SelectField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case SelectField(Left(error))                  => Left(error)
+
+        case SelectNamedTupleField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case SelectNamedTupleField(Left(error))                  => Left(error)
 
         case unexpected => FocusError.UnexpectedCodeStructure(unexpected.toString).asResult
       }
