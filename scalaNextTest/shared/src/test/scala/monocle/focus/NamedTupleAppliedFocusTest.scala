@@ -59,20 +59,7 @@ final class NamedTupleAppliedFocusTest extends munit.FunSuite {
     assertEquals(newElise, User("Elise", Some(Address(50, "high street"))))
   }
 
-  // test("Applied focus returning a Lens") {
-  //   case class User(name: String, address: Address)
-  //   case class Address(streetNumber: Int, postcode: String)
-  //
-  //   val bob = User("Bob", Address(5, "Bob St"))
-  //
-  //   val streetNumber = bob.focus(_.address.streetNumber).get
-  //   val newBob       = bob.focus(_.address.streetNumber).replace(77)
-  //
-  //   assertEquals(streetNumber, 5)
-  //   assertEquals(newBob, User("Bob", Address(77, "Bob St")))
-  // }
-
-  test("Applied focus returning am Optional with NamedTuple.From") {
+  test("Applied focus returning an Optional with NamedTuple.From") {
     case class User[A](name: String, address: A)
     case class Address(streetNumber: Int, postcode: String)
 
@@ -90,6 +77,81 @@ final class NamedTupleAppliedFocusTest extends munit.FunSuite {
     assertEquals(newBob, (
       name = "Bob",
       address = Option(streetNumber = 77, postcode = "Bob St")
+    ))
+  }
+
+  test("Applied focus returning a Lens in nested named tuples") {
+    val bob = (
+      name = "Bob",
+      address = (streetNumber = 5, postcode = "Bob St")
+    )
+
+    val streetNumber = bob.focus(_.address.streetNumber).get
+    val newBob       = bob.focus(_.address.streetNumber).replace(77)
+
+    assertEquals(streetNumber, 5)
+    assertEquals(newBob, (name = "Bob", address = (streetNumber = 77, postcode = "Bob St")))
+  }
+
+  test("Applied focus returning a Lens with a named tuple inside a case class") {
+    case class User(name: String, address: Address)
+    type Address = (streetNumber: Int, postcode: String)
+
+    val bob = User("Bob", (streetNumber = 5, postcode = "Bob St"))
+
+    val streetNumber = bob.focus(_.address.streetNumber).get
+    val newBob       = bob.focus(_.address.streetNumber).replace(77)
+
+    assertEquals(streetNumber, 5)
+    assertEquals(newBob, User("Bob", (streetNumber = 77, postcode = "Bob St")))
+  }
+
+  test("Applied focus returning a Lens with a case class inside a named tuple") {
+    case class Address(streetNumber: Int, postcode: String)
+    type User = (name: String, address: Address)
+    val bob: User = (
+      name = "Bob",
+      address = Address(5, "Bob St")
+    )
+
+    val streetNumber = bob.focus(_.address.streetNumber).get
+    val newBob       = bob.focus(_.address.streetNumber).replace(77)
+
+    assertEquals(streetNumber, 5)
+    assertEquals(newBob, (name = "Bob", address = Address(77, "Bob St")))
+  }
+
+  test("Applied focus returning a Lens") {
+    case class User(name: String, address: Address)
+    case class Address(streetNumber: Int, postcode: String)
+
+    val bob = User("Bob", Address(5, "Bob St"))
+
+    val streetNumber = bob.focus(_.address.streetNumber).get
+    val newBob       = bob.focus(_.address.streetNumber).replace(77)
+
+    assertEquals(streetNumber, 5)
+    assertEquals(newBob, User("Bob", Address(77, "Bob St")))
+  }
+
+  test("Applied focus returning a Lens with NamedTuple.From") {
+    case class User[A](name: String, address: A)
+    case class Address(streetNumber: Int, postcode: String)
+
+    type Bob = NamedTuple.From[User[NamedTuple.From[Address]]]
+
+    val bob: Bob = (
+      name = "Bob",
+      address = (streetNumber = 5, postcode = "Bob St")
+    )
+
+    val streetNumber = bob.focus(_.address.streetNumber).get
+    val newBob       = bob.focus(_.address.streetNumber).replace(77)
+
+    assertEquals(streetNumber, 5)
+    assertEquals(newBob, (
+      name = "Bob",
+      address = (streetNumber = 77, postcode = "Bob St")
     ))
   }
 }
