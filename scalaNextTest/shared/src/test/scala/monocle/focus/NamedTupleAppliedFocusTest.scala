@@ -71,4 +71,25 @@ final class NamedTupleAppliedFocusTest extends munit.FunSuite {
   //   assertEquals(streetNumber, 5)
   //   assertEquals(newBob, User("Bob", Address(77, "Bob St")))
   // }
+
+  test("Applied focus returning am Optional with NamedTuple.From") {
+    case class User[A](name: String, address: A)
+    case class Address(streetNumber: Int, postcode: String)
+
+    type Bob = NamedTuple.From[User[Option[NamedTuple.From[Address]]]]
+
+    val bob: Bob = (
+      name = "Bob",
+      address = Option(streetNumber = 5, postcode = "Bob St")
+    )
+
+    val streetNumber = bob.focus(_.address.some.streetNumber).getOption
+    val newBob       = bob.focus(_.address.some.streetNumber).replace(77)
+
+    assertEquals(streetNumber, Some(5))
+    assertEquals(newBob, (
+      name = "Bob",
+      address = Option(streetNumber = 77, postcode = "Bob St")
+    ))
+  }
 }
