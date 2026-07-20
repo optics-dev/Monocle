@@ -44,7 +44,7 @@ private[focus] trait FocusBase {
       case SelectOnlyField(fieldName, fromType, fromTypeArgs, _, toType) =>
         s"SelectOnlyField($fieldName, ${fromType.show}, ${fromTypeArgs.map(_.show)}, ..., ${toType.show})"
       case SelectNamedTupleField(fieldName, fromType, toType, _) =>
-        s"SelectNamedTupleField($fieldName, ${fromType.toString()}, ${toType.show})"
+        s"SelectNamedTupleField($fieldName, ${fromType.show}, ${toType.show})"
       case KeywordSome(toType)                  => s"KeywordSome(${toType.show})"
       case KeywordAs(fromType, toType)          => s"KeywordAs(${fromType.show}, ${toType.show})"
       case KeywordEach(fromType, toType, _)     => s"KeywordEach(${fromType.show}, ${toType.show}, ...)"
@@ -170,7 +170,12 @@ private[focus] trait FocusBase {
       sourceType: TypeRepr,
       namesTpe: TypeRepr,
       valuesTpe: TypeRepr
-    )
+    ) {
+      def show: String = {
+        given Printer[TypeRepr] = Printer.TypeReprShortCode
+        s"Description($names, ${values.map(_.show)}, ${sourceType.show}, ${namesTpe.show}, ${valuesTpe.show})"
+      }
+    }
   }
 
 }

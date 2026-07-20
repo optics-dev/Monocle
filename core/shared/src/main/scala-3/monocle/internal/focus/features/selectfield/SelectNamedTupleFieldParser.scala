@@ -25,10 +25,10 @@ private[focus] trait SelectNamedTupleFieldParser {
                 ),
                 Literal(IntConstant(idx)) :: Nil
               ) =>
-            namedTuples.describe(remainingCode.tpe).flatMap { description =>
+            namedTuples.describe(getType(remainingCode)).flatMap { description =>
               val fieldType = description.values(idx)
               val fieldName = description.names(idx)
-              println(description)
+              println(description.show)
               println()
               Some(
                 Right(
