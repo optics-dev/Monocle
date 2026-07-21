@@ -57,13 +57,12 @@ private[focus] trait ParserLoop {
         case SelectOnlyField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case SelectOnlyField(Left(error))                  => Left(error)
 
-        case SelectField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
-        case SelectField(Left(error))                  => Left(error)
-
         case SelectNamedTupleField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case SelectNamedTupleField(Left(error))                  => Left(error)
 
-        case unexpected => FocusError.UnexpectedCodeStructure(unexpected.toString).asResult
+        case SelectField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case SelectField(Left(error))                  => Left(error)
+        case unexpected                                => FocusError.UnexpectedCodeStructure(unexpected.show).asResult
       }
     loop(RemainingCode(config.lambdaBody), Nil)
   }

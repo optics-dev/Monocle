@@ -2,9 +2,6 @@ package monocle.internal.focus.features.selectfield
 
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.SelectParserBase
-import scala.quoted.Type
-import scala.quoted.Quotes
-import scala.annotation.tailrec
 
 private[focus] trait SelectNamedTupleFieldParser {
   this: FocusBase & SelectParserBase =>
@@ -12,12 +9,11 @@ private[focus] trait SelectNamedTupleFieldParser {
   import this.macroContext.reflect.*
 
   object SelectNamedTupleField extends FocusParser {
-    val namedTuples = NamedTuples.create
 
     def unapply(term: Term): Option[FocusResult[(RemainingCode, FocusAction)]] =
-      namedTuples.flatMap { namedTuples =>
+      NamedTuples.Support.flatMap { namedTuples =>
         term match {
-          // TODO: document what kinda tree this actually matches (i.e. look at the desugared named tuple access calls)
+          // the compiler expands a call like 'someNamedTuple.someField' to a call on NamedTuple.apply[Names, Values](someNamedTuple)(idx) where idx == index of 'someField' in the Names tuple
           case Apply(
                 Apply(
                   TypeApply(Select(Ident("NamedTuple"), "apply") | Ident("apply"), List(namesTpe, valueTpes)),
@@ -28,8 +24,6 @@ private[focus] trait SelectNamedTupleFieldParser {
             namedTuples.describe(getType(remainingCode)).flatMap { description =>
               val fieldType = description.values(idx)
               val fieldName = description.names(idx)
-              println(description.show)
-              println()
               Some(
                 Right(
                   RemainingCode(remainingCode) -> FocusAction

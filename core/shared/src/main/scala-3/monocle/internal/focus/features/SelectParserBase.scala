@@ -2,8 +2,6 @@ package monocle.internal.focus.features
 
 import monocle.internal.focus.FocusBase
 import scala.quoted.Type
-import scala.quoted.Expr
-import scala.annotation.tailrec
 
 private[focus] trait SelectParserBase extends ParserBase {
   this: FocusBase =>
@@ -13,7 +11,7 @@ private[focus] trait SelectParserBase extends ParserBase {
   // Match on a term that is an instance of a case class
   object CaseClass {
     def unapply(term: Term): Option[Term] =
-      term.tpe.classSymbol.flatMap { sym =>
+      term.tpe.simplified.classSymbol.flatMap { sym =>
         Option.when(sym.flags.is(Flags.Case))(term)
       }
   }

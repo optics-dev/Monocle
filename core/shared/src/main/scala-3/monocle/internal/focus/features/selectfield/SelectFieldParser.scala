@@ -2,9 +2,6 @@ package monocle.internal.focus.features.selectfield
 
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.SelectParserBase
-import scala.quoted.Type
-import scala.quoted.Quotes
-import scala.annotation.tailrec
 
 private[focus] trait SelectFieldParser {
   this: FocusBase & SelectParserBase =>

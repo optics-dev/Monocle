@@ -1,6 +1,5 @@
 package monocle.internal.focus.features
 
-import scala.quoted.Quotes
 import monocle.internal.focus.FocusBase
 
 private[focus] trait ParserBase {
@@ -16,6 +15,6 @@ private[focus] trait ParserBase {
   }
 
   def getType(code: Term): TypeRepr =
-    code.tpe.widen.dealias
+    code.tpe.widen.dealias.simplified
 
 }

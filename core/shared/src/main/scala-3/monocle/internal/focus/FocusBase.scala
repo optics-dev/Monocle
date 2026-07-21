@@ -70,51 +70,50 @@ private[focus] trait FocusBase {
   type FocusResult[+A] = Either[FocusError, A]
 
   // unappliedNamedTuple is the type lambda [Names, Values] =>> NamedTuple[Names, Values], used to harvest its type symbol later on
-  final class NamedTuples private (private val unappliedNamedTuple: TypeRepr, private val companion: Symbol) {
+  final class NamedTuples private (private val unappliedNamedTuple: TypeRepr, val companion: Symbol) {
     def isNamedTuple(tpe: TypeRepr) =
       tpe.dealias.typeSymbol == unappliedNamedTuple.typeSymbol
 
-    // NamedTuple.toTuple[Names <: Tuple, Values <: Tuple](tup: NamedTuple.NamedTuple[Names, Values]): Values
+    // a call to NamedTuple.toTuple[Names <: Tuple, Values <: Tuple](tup: NamedTuple.NamedTuple[Names, Values]): Values
     def toTuple(term: Term, description: NamedTuples.Description) =
       Select
         .unique(Ident(companion.termRef), "toTuple")
         .appliedToTypes(description.namesTpe :: description.valuesTpe :: Nil)
         .appliedTo(term)
 
-    def accessFieldByName(term: Term, description: NamedTuples.Description, fieldName: String): Option[Term] = {
-      val idxOfName = description.names.indexOf(fieldName)
-      Option.when(idxOfName != -1) {
-        val asTuple = toTuple(term, description)
-        unsafeAccessFieldByIndex(asTuple, description.values, idxOfName)
-      }
+    def accessFieldByName(term: Term, action: FocusAction.SelectNamedTupleField): Term = {
+      val idxOfName = action.from.names.indexOf(action.fieldName)
+      val asTuple   = toTuple(term, action.from)
+      unsafeAccessFieldByIndex(asTuple, action.from, idxOfName)
+    }
+
+    def reconstructWithUpdatedField(from: Term, action: FocusAction.SelectNamedTupleField, updatedValue: Term) = {
+      val updatedFieldIdx = action.from.names.indexOf(action.fieldName)
+      val asTuple         = toTuple(from, action.from)
+      val values          = 0
+        .until(action.from.values.size)
+        .map(idx =>
+          if (idx == updatedFieldIdx) updatedValue.asExpr
+          else unsafeAccessFieldByIndex(asTuple, action.from, idx).asExpr
+        )
+      // NamedTuple >: Tuple so to 'construct' a named tuple we can just upcast an ordinary Tuple to a NamedTuple
+      Typed(Expr.ofTupleFromSeq(values).asTerm, TypeTree.of(using action.from.sourceType.asType))
     }
 
     // there's a chance that we're operating on a non-normalized (non TupleN) tuple (for example when N is > 22 or when using NamedTuple.From)
     // in which case we need to fall back to using Product methods since TupleXXL <: scala.Product and doesn't get _N accessors
-    private def unsafeAccessFieldByIndex(asTuple: Term, valueTpes: Vector[TypeRepr], index: Int) = {
+    private def unsafeAccessFieldByIndex(asTuple: Term, description: NamedTuples.Description, index: Int) = {
       val tupleAccessor = s"_${index + 1}"
 
       if (asTuple.tpe.typeSymbol.fieldMember(tupleAccessor).exists) {
         Select.unique(asTuple, tupleAccessor)
       } else {
-        val tpeAtIndex = valueTpes(index)
+        val tpeAtIndex = description.values(index)
         (asTuple.asExpr, tpeAtIndex.asType) match {
           case '{ $prod: scala.Product } -> '[tpe] =>
             '{ $prod.productElement(${ Expr(index) }).asInstanceOf[tpe] }.asTerm
         }
       }
-    }
-
-    def reconstruct(from: Term, description: NamedTuples.Description, fieldToUpdate: String, updatedValue: Term) = {
-      val updatedFieldIdx = description.names.indexOf(fieldToUpdate)
-      val asTuple         = toTuple(from, description)
-      val values          = 0
-        .until(description.values.size)
-        .map(idx =>
-          if (idx == updatedFieldIdx) updatedValue.asExpr
-          else unsafeAccessFieldByIndex(asTuple, description.values, idx).asExpr
-        )
-      Typed(Expr.ofTupleFromSeq(values).asTerm, TypeTree.of(using description.sourceType.asType))
     }
 
     def describe(sourceType: TypeRepr): Option[NamedTuples.Description] =
@@ -143,10 +142,6 @@ private[focus] trait FocusBase {
             loop(Type.of[tail], acc.appended(TypeRepr.of[head]))
           case '[EmptyTuple] =>
             acc
-          case other =>
-            report.errorAndAbort(
-              s"Unexpected type (${Type.show(using other)}) encountered when extracting tuple type elems."
-            )
         }
 
       loop(tpe.asType, Vector.empty)
@@ -155,7 +150,7 @@ private[focus] trait FocusBase {
   }
 
   object NamedTuples {
-    def create: Option[NamedTuples] = {
+    val Support: Option[NamedTuples] = {
       val companion = Symbol.requiredModule("scala.NamedTuple")
 
       companion
