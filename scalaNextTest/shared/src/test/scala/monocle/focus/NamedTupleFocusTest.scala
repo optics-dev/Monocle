@@ -24,7 +24,6 @@ final class NamedTupleFocusTest extends munit.FunSuite {
 
     val elise = User("Elise", Some((streetNumber = 12, postcode = "high street")))
 
-
     val streetNumber = elise.focus(_.address.some.streetNumber).getOption
     val newElise     = elise.focus(_.address.some.streetNumber).replace(50)
 

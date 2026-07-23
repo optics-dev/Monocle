@@ -27,7 +27,7 @@ private[focus] trait FocusBase {
     )
     case SelectNamedTupleField(
       fieldName: String,
-      from: NamedTuples.Description,
+      fromDescription: NamedTuples.Description,
       toType: TypeRepr,
       namedTuples: NamedTuples
     )
@@ -82,23 +82,27 @@ private[focus] trait FocusBase {
         .appliedTo(term)
 
     def accessFieldByName(term: Term, action: FocusAction.SelectNamedTupleField): Term = {
-      val idxOfName = action.from.names.indexOf(action.fieldName)
-      val asTuple   = toTuple(term, action.from)
-      unsafeAccessFieldByIndex(asTuple, action.from, idxOfName)
+      val idxOfName = action.fromDescription.names.indexOf(action.fieldName)
+      val asTuple   = toTuple(term, action.fromDescription)
+      unsafeAccessFieldByIndex(asTuple, action.fromDescription, idxOfName)
     }
 
     def reconstructWithUpdatedField(from: Term, action: FocusAction.SelectNamedTupleField, updatedValue: Term) = {
-      val updatedFieldIdx = action.from.names.indexOf(action.fieldName)
-      val asTuple         = toTuple(from, action.from)
-      val values          = 0
-        .until(action.from.values.size)
-        .map(idx =>
-          if (idx == updatedFieldIdx) updatedValue.asExpr
-          else unsafeAccessFieldByIndex(asTuple, action.from, idx).asExpr
-        )
-      // NamedTuple >: Tuple so to 'construct' a named tuple we can just upcast an ordinary Tuple to a NamedTuple
-      Typed(Expr.ofTupleFromSeq(values).asTerm, TypeTree.of(using action.from.sourceType.asType))
+      val updatedFieldIdx = action.fromDescription.names.indexOf(action.fieldName)
+      val asTuple         = toTuple(from, action.fromDescription)
+      val values          =
+        0
+          .until(action.fromDescription.values.size)
+          .map(idx =>
+            if (idx == updatedFieldIdx) updatedValue.asExpr
+            else unsafeAccessFieldByIndex(asTuple, action.fromDescription, idx).asExpr
+          )
+      construct(action.fromDescription, values)
     }
+
+    // NamedTuple >: Tuple so to 'construct' a named tuple we can just upcast an ordinary Tuple to a NamedTuple
+    def construct(description: NamedTuples.Description, values: Seq[Expr[Any]]): Term =
+      Typed(Expr.ofTupleFromSeq(values).asTerm, TypeTree.of(using description.sourceType.asType))
 
     // there's a chance that we're operating on a non-normalized (non TupleN) tuple (for example when N is > 22 or when using NamedTuple.From)
     // in which case we need to fall back to using Product methods since TupleXXL <: scala.Product and doesn't get _N accessors
