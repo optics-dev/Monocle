@@ -312,7 +312,6 @@ lazy val scalaNextTest = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .nativeSettings(monocleNativeSettings)
   .enablePlugins(NoPublishPlugin)
   .settings(
-    scalaVersion       := scalaNextVersion,
     crossScalaVersions := Seq(scalaNextVersion),
     libraryDependencies ++= Seq(munitDiscipline.value),
     scalacOptions --= Seq("-release:8", "-Ykind-projector")
