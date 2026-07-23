@@ -15,22 +15,15 @@ private[focus] trait SelectNamedTupleFieldParser {
         term match {
           // the compiler expands a call like 'someNamedTuple.someField' to a call on NamedTuple.apply[Names, Values](someNamedTuple)(idx) where idx == index of 'someField' in the Names tuple
           case Apply(
-                Apply(
-                  TypeApply(Select(Ident("NamedTuple"), "apply") | Ident("apply"), List(namesTpe, valueTpes)),
-                  remainingCode :: Nil
-                ),
-                Literal(IntConstant(idx)) :: Nil
-              ) =>
-            namedTuples.describe(getType(remainingCode)).flatMap { description =>
-              val fieldType = description.values(idx)
-              val fieldName = description.names(idx)
-              Some(
-                Right(
-                  RemainingCode(remainingCode) -> FocusAction
-                    .SelectNamedTupleField(fieldName, description, fieldType, namedTuples)
-                )
-              )
-            }
+                Apply(TypeApply(Select(ident, "apply"), _), remainingCode :: Nil),
+                Literal(IntConstant(fieldIndex)) :: Nil
+              ) if ident.symbol == namedTuples.companion =>
+            for {
+              description <- namedTuples.describe(getType(remainingCode))
+              fieldType   <- description.values.lift(fieldIndex)
+              fieldName   <- description.names.lift(fieldIndex)
+              action = FocusAction.SelectNamedTupleField(fieldName, description, fieldType, namedTuples)
+            } yield Right(RemainingCode(remainingCode) -> action)
           case _ => None
         }
       }
