@@ -151,7 +151,8 @@ lazy val root = tlCrossRootProject.aggregate(
   unsafe,
   test,
   example,
-  bench
+  bench,
+  scalaNextTest
 )
 
 lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
@@ -287,24 +288,16 @@ lazy val test = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   )
 
 lazy val scalaNextTest = crossProject(JVMPlatform, JSPlatform, NativePlatform)
-  .dependsOn(core, law, state, unsafe, macros)
-  .jvmSettings(
-    monocleJvmSettings ++ Seq(
-      scalacOptions --= Seq("-release:8", "-Ykind-projectors"),
-      scalacOptions ++= Seq("-Xkind-projector")
-    )
-  )
+  .dependsOn(core, macros)
+  .jvmSettings(monocleJvmSettings)
   .jsSettings(monocleJsSettings)
   .nativeSettings(monocleNativeSettings)
   .enablePlugins(NoPublishPlugin)
   .settings(
-    scalaVersion := scalaNextVersion,
+    scalaVersion       := scalaNextVersion,
     crossScalaVersions := Seq(scalaNextVersion),
-    libraryDependencies ++= Seq(
-      cats.value,
-      catsLaws.value,
-      munitDiscipline.value
-    )
+    libraryDependencies ++= Seq(munitDiscipline.value),
+    scalacOptions --= Seq("-release:8", "-Ykind-projector")
   )
 
 lazy val bench = project
