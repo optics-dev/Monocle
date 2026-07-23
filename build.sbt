@@ -43,7 +43,6 @@ lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.4" cross Cro
 
 lazy val buildSettings = Seq(
   scalacOptions ++= Seq(
-    "-release:8",
     "-encoding",
     "UTF-8",
     "-feature",
@@ -108,7 +107,7 @@ lazy val buildSettings = Seq(
 
 lazy val catsVersion      = "2.13.0"
 lazy val scala2Version    = "2.13.18"
-lazy val scala3Version    = "3.3.7"
+lazy val scala3Version    = "3.3.8"
 lazy val scalaNextVersion = "3.8.4"
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
@@ -116,8 +115,8 @@ lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsV
 lazy val catsLaws          = Def.setting("org.typelevel" %%% "cats-laws" % catsVersion)
 lazy val alleycats         = Def.setting("org.typelevel" %%% "alleycats-core" % catsVersion)
 lazy val shapeless         = Def.setting("com.chuusai" %%% "shapeless" % "2.3.13")
-lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.11.3")
-lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.11.3" % "test")
+lazy val refinedDep        = Def.setting("eu.timepit" %%% "refined" % "0.11.4")
+lazy val refinedScalacheck = Def.setting("eu.timepit" %%% "refined-scalacheck" % "0.11.4" % "test")
 
 lazy val discipline      = Def.setting("org.typelevel" %%% "discipline-core" % "1.7.0")
 lazy val munit           = Def.setting("org.scalameta" %%% "munit" % "1.0.0-M6" % Test)
@@ -134,10 +133,31 @@ lazy val scalaNativeSettings = Seq(
   tlMimaPreviousVersions := Set.empty
 )
 
-lazy val monocleSettings       = buildSettings
-lazy val monocleJvmSettings    = monocleSettings
-lazy val monocleJsSettings     = monocleSettings ++ scalajsSettings
-lazy val monocleNativeSettings = monocleSettings ++ scalaNativeSettings
+lazy val defaultReleaseOption = "-release:8"
+
+lazy val monocleSettings    = buildSettings
+lazy val monocleJvmSettings = monocleSettings ++ Seq(
+  scalacOptions ++= {
+    if (scalaVersion.value.startsWith("3.3.")) {
+      Seq(
+        "-Yfuture-lazy-vals",
+        "-release:11"
+      )
+    } else if (scalaBinaryVersion.value == "3") {
+      Nil
+    } else {
+      Seq(
+        defaultReleaseOption
+      )
+    }
+  }
+)
+lazy val monocleJsSettings = monocleSettings ++ scalajsSettings ++ Seq(
+  scalacOptions += defaultReleaseOption
+)
+lazy val monocleNativeSettings = monocleSettings ++ scalaNativeSettings ++ Seq(
+  scalacOptions += defaultReleaseOption
+)
 
 lazy val root = tlCrossRootProject.aggregate(
   core,

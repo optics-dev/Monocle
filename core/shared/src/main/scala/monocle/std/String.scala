@@ -36,8 +36,10 @@ trait StringOptics extends PlatformSpecificStringOptics {
     // we reject cases where String will be an invalid Prism according 2nd Prism law
     // * String starts with +
     // * String starts with 0 and has multiple digits
+    // * String starts with -0 (negative zero forms never round-trip)
     def inputBreaksPrismLaws(input: String): Boolean =
-      s.isEmpty || s.startsWith("+") || (s.startsWith("0") && s.length > 1)
+      s.isEmpty || s.startsWith("+") || (s.startsWith("0") && s.length > 1) ||
+        (s.length > 1 && s.charAt(0) == '-' && s.charAt(1) == '0')
 
     if (inputBreaksPrismLaws(s)) None
     else
