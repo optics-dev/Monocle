@@ -2,6 +2,7 @@ package monocle.internal.focus.features
 
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.selectfield.SelectFieldParser
+import monocle.internal.focus.features.selectfield.SelectNamedTupleFieldParser
 import monocle.internal.focus.features.selectonlyfield.SelectOnlyFieldParser
 import monocle.internal.focus.features.some.SomeParser
 import monocle.internal.focus.features.as.AsParser
@@ -9,7 +10,6 @@ import monocle.internal.focus.features.each.EachParser
 import monocle.internal.focus.features.at.AtParser
 import monocle.internal.focus.features.index.IndexParser
 import monocle.internal.focus.features.withdefault.WithDefaultParser
-import monocle.internal.focus.features.selectfield.SelectNamedTupleFieldParser
 
 private[focus] trait AllFeatureParsers
     extends FocusBase
@@ -57,12 +57,13 @@ private[focus] trait ParserLoop {
         case SelectOnlyField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case SelectOnlyField(Left(error))                  => Left(error)
 
+        case SelectField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
+        case SelectField(Left(error))                  => Left(error)
+
         case SelectNamedTupleField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
         case SelectNamedTupleField(Left(error))                  => Left(error)
 
-        case SelectField(Right(remainingCode, action)) => loop(remainingCode, action :: listSoFar)
-        case SelectField(Left(error))                  => Left(error)
-        case unexpected                                => FocusError.UnexpectedCodeStructure(unexpected.show).asResult
+        case unexpected => FocusError.UnexpectedCodeStructure(unexpected.toString).asResult
       }
     loop(RemainingCode(config.lambdaBody), Nil)
   }

@@ -1,5 +1,6 @@
 package monocle.internal.focus.features
 
+import scala.quoted.Quotes
 import monocle.internal.focus.FocusBase
 
 private[focus] trait ParserBase {

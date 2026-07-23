@@ -19,7 +19,7 @@ inThisBuild(
         Developer(username, fullName, s"@$username", url(s"https://github.com/$username"))
       },
     run / fork         := true,
-    scalaVersion       := scala3Version,
+    scalaVersion       := scala2Version,
     crossScalaVersions := Seq(scala2Version, scala3Version),
     tlCiScalafmtCheck  := true,
     githubWorkflowBuild += WorkflowStep.Sbt(
@@ -126,14 +126,12 @@ lazy val munitDiscipline = Def.setting("org.typelevel" %%% "discipline-munit" % 
 lazy val macroVersion = "2.1.1"
 
 lazy val scalajsSettings = Seq(
-  Test / testOptions += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50"),
-  bspEnabled := false
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "8", "-minSuccessfulTests", "50")
 )
 
 lazy val scalaNativeSettings = Seq(
   evictionErrorLevel     := Level.Warn,
-  tlMimaPreviousVersions := Set.empty,
-  bspEnabled             := false
+  tlMimaPreviousVersions := Set.empty
 )
 
 lazy val monocleSettings       = buildSettings

@@ -1,7 +1,6 @@
 package monocle.internal.focus.features
 
 import monocle.internal.focus.FocusBase
-import scala.quoted.Type
 
 private[focus] trait SelectParserBase extends ParserBase {
   this: FocusBase =>

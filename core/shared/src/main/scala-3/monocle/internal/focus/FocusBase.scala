@@ -1,7 +1,7 @@
 package monocle.internal.focus
 
-import scala.annotation.tailrec
 import scala.quoted.*
+import scala.annotation.tailrec
 
 private[focus] trait FocusBase {
   val macroContext: Quotes
@@ -53,6 +53,7 @@ private[focus] trait FocusBase {
       case KeywordWithDefault(toType, _)        => s"KeywordWithDefault(${toType.show}, ...)"
     }
   }
+
   enum FocusError {
     case NotACaseClass(className: String, fieldName: String, pos: Position)
     case NotAConcreteClass(className: String)
@@ -91,12 +92,10 @@ private[focus] trait FocusBase {
       val updatedFieldIdx = action.fromDescription.names.indexOf(action.fieldName)
       val asTuple         = toTuple(from, action.fromDescription)
       val values          =
-        0
-          .until(action.fromDescription.values.size)
-          .map(idx =>
-            if (idx == updatedFieldIdx) updatedValue.asExpr
-            else unsafeAccessFieldByIndex(asTuple, action.fromDescription, idx).asExpr
-          )
+        Vector.tabulate(action.fromDescription.values.size) { idx =>
+          if (idx == updatedFieldIdx) updatedValue.asExpr
+          else unsafeAccessFieldByIndex(asTuple, action.fromDescription, idx).asExpr
+        }
       construct(action.fromDescription, values)
     }
 
@@ -105,7 +104,7 @@ private[focus] trait FocusBase {
       Typed(Expr.ofTupleFromSeq(values).asTerm, TypeTree.of(using description.sourceType.asType))
 
     // there's a chance that we're operating on a non-normalized (non TupleN) tuple (for example when N is > 22 or when using NamedTuple.From)
-    // in which case we need to fall back to using Product methods since TupleXXL <: scala.Product and doesn't get _N accessors
+    // in which case we need to fall back to using Product methods since TupleXXL <: scala.Product and '*:' (tuple cons) <: Product AND doesn't get _N accessors
     private def unsafeAccessFieldByIndex(asTuple: Term, description: NamedTuples.Description, index: Int) = {
       val tupleAccessor = s"_${index + 1}"
 
@@ -135,7 +134,6 @@ private[focus] trait FocusBase {
         case _ => None
       }
 
-    // TODO: handle errors with an either later on
     private def unrollStrings(tp: TypeRepr): Vector[String] =
       unroll(tp).map { case ConstantType(StringConstant(l)) => l }
 
@@ -170,10 +168,8 @@ private[focus] trait FocusBase {
       namesTpe: TypeRepr,
       valuesTpe: TypeRepr
     ) {
-      def show: String = {
-        given Printer[TypeRepr] = Printer.TypeReprShortCode
+      def show: String =
         s"Description($names, ${values.map(_.show)}, ${sourceType.show}, ${namesTpe.show}, ${valuesTpe.show})"
-      }
     }
   }
 

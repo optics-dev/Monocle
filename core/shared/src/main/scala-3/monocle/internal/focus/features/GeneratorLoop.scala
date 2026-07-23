@@ -2,6 +2,7 @@ package monocle.internal.focus.features
 
 import monocle.internal.focus.FocusBase
 import monocle.internal.focus.features.selectfield.SelectFieldGenerator
+import monocle.internal.focus.features.selectfield.SelectNamedTupleFieldGenerator
 import monocle.internal.focus.features.selectonlyfield.SelectOnlyFieldGenerator
 import monocle.internal.focus.features.some.SomeGenerator
 import monocle.internal.focus.features.as.AsGenerator
@@ -11,7 +12,6 @@ import monocle.internal.focus.features.index.IndexGenerator
 import monocle.internal.focus.features.withdefault.WithDefaultGenerator
 import monocle.Iso
 import scala.quoted.Type
-import monocle.internal.focus.features.selectfield.SelectNamedTupleFieldGenerator
 
 private[focus] trait AllFeatureGenerators
     extends FocusBase
