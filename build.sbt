@@ -105,9 +105,10 @@ lazy val buildSettings = Seq(
   }
 )
 
-lazy val catsVersion   = "2.13.0"
-lazy val scala2Version = "2.13.18"
-lazy val scala3Version = "3.3.8"
+lazy val catsVersion      = "2.13.0"
+lazy val scala2Version    = "2.13.18"
+lazy val scala3Version    = "3.3.8"
+lazy val scalaNextVersion = "3.8.4"
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
@@ -168,7 +169,8 @@ lazy val root = tlCrossRootProject.aggregate(
   unsafe,
   test,
   example,
-  bench
+  bench,
+  scalaNextTest
 )
 
 lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
@@ -301,6 +303,18 @@ lazy val test = crossProject(JVMPlatform, JSPlatform, NativePlatform)
       catsLaws.value,
       munitDiscipline.value
     )
+  )
+
+lazy val scalaNextTest = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+  .dependsOn(core, macros)
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
+  .enablePlugins(NoPublishPlugin)
+  .settings(
+    crossScalaVersions := Seq(scalaNextVersion),
+    libraryDependencies ++= Seq(munitDiscipline.value),
+    scalacOptions --= Seq("-release:8", "-Ykind-projector")
   )
 
 lazy val bench = project
