@@ -58,10 +58,13 @@ final class NamedTupleFocusTest extends munit.FunSuite {
     val newBob       = bob.focus(_.address.some.streetNumber).replace(77)
 
     assertEquals(streetNumber, Some(5))
-    assertEquals(newBob, (
-      name = "Bob",
-      address = Option(streetNumber = 77, postcode = "Bob St")
-    ))
+    assertEquals(
+      newBob,
+      (
+        name = "Bob",
+        address = Option(streetNumber = 77, postcode = "Bob St")
+      )
+    )
   }
 
   test("Applied focus returning a Lens in nested named tuples") {
@@ -90,20 +93,20 @@ final class NamedTupleFocusTest extends munit.FunSuite {
     assertEquals(newBob, User("Bob", (streetNumber = 77, postcode = "Bob St")))
   }
 
-   test("Applied focus returning a Lens with a case class inside a named tuple") {
-     case class Address(streetNumber: Int, postcode: String)
-     type User = (name: String, address: Address)
-     val bob: User = (
-       name = "Bob",
-       address = Address(5, "Bob St")
-     )
+  test("Applied focus returning a Lens with a case class inside a named tuple") {
+    case class Address(streetNumber: Int, postcode: String)
+    type User = (name: String, address: Address)
+    val bob: User = (
+      name = "Bob",
+      address = Address(5, "Bob St")
+    )
 
-     val streetNumber = bob.focus(_.address.streetNumber).get
-     val newBob       = bob.focus(_.address.streetNumber).replace(77)
+    val streetNumber = bob.focus(_.address.streetNumber).get
+    val newBob       = bob.focus(_.address.streetNumber).replace(77)
 
-     assertEquals(streetNumber, 5)
-     assertEquals(newBob, (name = "Bob", address = Address(77, "Bob St")))
-   }
+    assertEquals(streetNumber, 5)
+    assertEquals(newBob, (name = "Bob", address = Address(77, "Bob St")))
+  }
 
   test("Applied focus returning a Lens with NamedTuple.From") {
     case class User[A](name: String, address: A)
@@ -120,23 +123,26 @@ final class NamedTupleFocusTest extends munit.FunSuite {
     val newBob       = bob.focus(_.address.streetNumber).replace(77)
 
     assertEquals(streetNumber, 5)
-    assertEquals(newBob, (
-      name = "Bob",
-      address = (streetNumber = 77, postcode = "Bob St")
-    ))
+    assertEquals(
+      newBob,
+      (
+        name = "Bob",
+        address = (streetNumber = 77, postcode = "Bob St")
+      )
+    )
 
   }
 
   test("Each on a named tuple field") {
-    type School = (name: String, students: List[Student])
+    type School  = (name: String, students: List[Student])
     type Student = (firstName: String, lastName: String, yearLevel: Int)
 
     val school: School = (
       name = "Sparkvale Primary School",
       students = List(
-        (firstName = "Arlen", lastName = "Appleby",  yearLevel = 5),
+        (firstName = "Arlen", lastName = "Appleby", yearLevel = 5),
         (firstName = "Bob", lastName = "Bobson", yearLevel = 6),
-        (firstName = "Carol", lastName =  "Cornell", yearLevel = 7)
+        (firstName = "Carol", lastName = "Cornell", yearLevel = 7)
       )
     )
 
@@ -161,7 +167,7 @@ final class NamedTupleFocusTest extends munit.FunSuite {
   def Animal(name: String): Animal = (name = name)
 
   type Owner = (pet: Animal)
-  def Owner(pet: Animal): Owner = (pet = pet) 
+  def Owner(pet: Animal): Owner = (pet = pet)
 
   type Shop = (owner: Owner)
   def Shop(owner: Owner): Shop = (owner = owner)
@@ -175,8 +181,8 @@ final class NamedTupleFocusTest extends munit.FunSuite {
   type HigherBox[F[_], A] = (fa: F[A])
   def HigherBox[F[_], A](fa: F[A]): HigherBox[F, A] = (fa = fa)
 
-  type UnionBox[A, B]= (aOrB: A | B)
-  def UnionBox[A, B](aOrB: A | B):UnionBox[A, B] = (aOrB = aOrB)
+  type UnionBox[A, B] = (aOrB: A | B)
+  def UnionBox[A, B](aOrB: A | B): UnionBox[A, B] = (aOrB = aOrB)
 
   type ConstraintBox[A <: AnyVal] = (a: A)
   def ConstraintBox[A <: AnyVal](a: A): ConstraintBox[A] = (a = a)
@@ -252,6 +258,4 @@ final class NamedTupleFocusTest extends munit.FunSuite {
     assertEquals(Focus[CCInt](_.t).get(cc), 2)
   }
 
-
-  
 }
