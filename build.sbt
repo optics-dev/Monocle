@@ -22,11 +22,19 @@ inThisBuild(
     scalaVersion       := scala2Version,
     crossScalaVersions := Seq(scala2Version, scala3Version),
     tlCiScalafmtCheck  := true,
-    githubWorkflowBuild += WorkflowStep.Sbt(
-      List("docs/mdoc"),
-      name = Some("Run documentation"),
-      cond = Some(s"matrix.scala == '2.13' && matrix.project == 'rootJVM'")
-    ),
+    githubWorkflowBuild ++=
+      Seq(
+        WorkflowStep.Sbt(
+          List("docs/mdoc"),
+          name = Some("Run documentation"),
+          cond = Some(s"matrix.scala == '2.13' && matrix.project == 'rootJVM'")
+        ),
+        WorkflowStep.Sbt(
+          List("scalaNextTestJVM/test"),
+          name = Some("Run Scala Next Tests"),
+          cond = Some(s"matrix.java == 'temurin@25' && matrix.scala == '3' && matrix.project == 'rootJVM'")
+        )
+      ),
     githubWorkflowJavaVersions := Seq(
       JavaSpec.temurin("11"),
       JavaSpec.temurin("25")
@@ -38,7 +46,6 @@ inThisBuild(
     )
   )
 )
-
 lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.4" cross CrossVersion.full
 
 lazy val buildSettings = Seq(
@@ -169,8 +176,7 @@ lazy val root = tlCrossRootProject.aggregate(
   unsafe,
   test,
   example,
-  bench,
-  scalaNextTest
+  bench
 )
 
 lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
