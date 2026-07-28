@@ -23,18 +23,19 @@ inThisBuild(
     crossScalaVersions := Seq(scala2Version, scala3Version),
     tlCiScalafmtCheck  := true,
     githubWorkflowBuild ++=
-      Seq(
+      Vector(
         WorkflowStep.Sbt(
           List("docs/mdoc"),
           name = Some("Run documentation"),
           cond = Some(s"matrix.scala == '2.13' && matrix.project == 'rootJVM'")
-        ),
-        WorkflowStep.Sbt(
-          List("scalaNextTestJVM/test"),
-          name = Some("Run Scala Next Tests"),
-          cond = Some(s"matrix.java == 'temurin@25' && matrix.scala == '3' && matrix.project == 'rootJVM'")
         )
-      ),
+      ) ++ scalaNextTest.projects.map { case (platform, project) =>
+        WorkflowStep.Sbt(
+          List(s"${project.id}/test"),
+          name = Some(s"Run Scala Next Tests (${platform.identifier})"),
+          cond = Some(s"matrix.java == 'temurin@25' && matrix.scala == '3'")
+        )
+      },
     githubWorkflowJavaVersions := Seq(
       JavaSpec.temurin("11"),
       JavaSpec.temurin("25")

@@ -103,9 +103,17 @@ jobs:
         if: matrix.scala == '2.13' && matrix.project == 'rootJVM'
         run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' docs/mdoc
 
-      - name: Run Scala Next Tests
-        if: matrix.java == 'temurin@25' && matrix.scala == '3' && matrix.project == 'rootJVM'
+      - name: Run Scala Next Tests (jvm)
+        if: matrix.java == 'temurin@25' && matrix.scala == '3'
         run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' scalaNextTestJVM/test
+
+      - name: Run Scala Next Tests (js)
+        if: matrix.java == 'temurin@25' && matrix.scala == '3'
+        run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' scalaNextTestJS/test
+
+      - name: Run Scala Next Tests (native)
+        if: matrix.java == 'temurin@25' && matrix.scala == '3'
+        run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' scalaNextTestNative/test
 
       - name: Make target directories
         if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/v'))
