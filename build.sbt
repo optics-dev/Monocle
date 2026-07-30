@@ -313,7 +313,7 @@ lazy val test = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   )
 
 lazy val scalaNextTest = crossProject(JVMPlatform, JSPlatform, NativePlatform)
-  .dependsOn(core, macros)
+  .dependsOn(test % "test->test")
   .jvmSettings(monocleJvmSettings)
   .jsSettings(monocleJsSettings)
   .nativeSettings(monocleNativeSettings)

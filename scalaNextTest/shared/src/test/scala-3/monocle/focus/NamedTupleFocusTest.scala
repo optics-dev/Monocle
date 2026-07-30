@@ -194,6 +194,13 @@ final class NamedTupleFocusTest extends munit.FunSuite {
     )
   }
 
+  test("Single field access (no type alias)") {
+    assertEquals(
+      Focus[(name: String)](_.name).get(Animal("Bob")),
+      "Bob"
+    )
+  }
+
   test("Nested field access") {
     assertEquals(
       Focus[Shop](_.owner.pet.name).get(Shop(Owner(Animal("Fred")))),
@@ -256,6 +263,68 @@ final class NamedTupleFocusTest extends munit.FunSuite {
 
     assertEquals(Focus[CCInt](_.i).get(cc), 3)
     assertEquals(Focus[CCInt](_.t).get(cc), 2)
+  }
+
+  test("Focus on a XXL named tuple works") {
+    val bigTuple = (
+      field0 = 0,
+      field1 = 1,
+      field2 = 2,
+      field3 = 3,
+      field4 = 4,
+      field5 = 5,
+      field6 = 6,
+      field7 = 7,
+      field8 = 8,
+      field9 = 9,
+      field10 = 10,
+      field11 = 11,
+      field12 = 12,
+      field13 = 13,
+      field14 = 14,
+      field15 = 15,
+      field16 = 16,
+      field17 = 17,
+      field18 = 18,
+      field19 = 19,
+      field20 = 20,
+      field21 = 21,
+      field22 = 22,
+      field23 = 23,
+      field24 = 24
+    )
+
+    val expected = (
+      field0 = 0,
+      field1 = 1,
+      field2 = 2,
+      field3 = 3,
+      field4 = 4,
+      field5 = 5,
+      field6 = 6,
+      field7 = 7,
+      field8 = 8,
+      field9 = 9,
+      field10 = 100,
+      field11 = 11,
+      field12 = 12,
+      field13 = 13,
+      field14 = 14,
+      field15 = 15,
+      field16 = 16,
+      field17 = 17,
+      field18 = 18,
+      field19 = 19,
+      field20 = 20,
+      field21 = 21,
+      field22 = 22,
+      field23 = 23,
+      field24 = 24
+    )
+
+    val updated = bigTuple.focus(_.field10).replace(100)
+
+    assertEquals(updated, expected)
   }
 
 }
