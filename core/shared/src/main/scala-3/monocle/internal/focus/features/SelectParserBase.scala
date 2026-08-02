@@ -10,7 +10,7 @@ private[focus] trait SelectParserBase extends ParserBase {
   // Match on a term that is an instance of a case class
   object CaseClass {
     def unapply(term: Term): Option[Term] =
-      term.tpe.classSymbol.flatMap { sym =>
+      term.tpe.simplified.classSymbol.flatMap { sym =>
         Option.when(sym.flags.is(Flags.Case))(term)
       }
   }

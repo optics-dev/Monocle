@@ -22,11 +22,20 @@ inThisBuild(
     scalaVersion       := scala2Version,
     crossScalaVersions := Seq(scala2Version, scala3Version),
     tlCiScalafmtCheck  := true,
-    githubWorkflowBuild += WorkflowStep.Sbt(
-      List("docs/mdoc"),
-      name = Some("Run documentation"),
-      cond = Some(s"matrix.scala == '2.13' && matrix.project == 'rootJVM'")
-    ),
+    githubWorkflowBuild ++=
+      Vector(
+        WorkflowStep.Sbt(
+          List("docs/mdoc"),
+          name = Some("Run documentation"),
+          cond = Some(s"matrix.scala == '2.13' && matrix.project == 'rootJVM'")
+        )
+      ) ++ scalaNextTest.projects.map { case (platform, project) =>
+        WorkflowStep.Sbt(
+          List(s"${project.id}/test"),
+          name = Some(s"Run Scala Next Tests (${platform.identifier})"),
+          cond = Some(s"matrix.java == 'temurin@25' && matrix.scala == '3'")
+        )
+      },
     githubWorkflowJavaVersions := Seq(
       JavaSpec.temurin("11"),
       JavaSpec.temurin("25")
@@ -38,7 +47,6 @@ inThisBuild(
     )
   )
 )
-
 lazy val kindProjector = "org.typelevel" % "kind-projector" % "0.13.4" cross CrossVersion.full
 
 lazy val buildSettings = Seq(
@@ -105,9 +113,10 @@ lazy val buildSettings = Seq(
   }
 )
 
-lazy val catsVersion   = "2.13.0"
-lazy val scala2Version = "2.13.18"
-lazy val scala3Version = "3.3.8"
+lazy val catsVersion      = "2.13.0"
+lazy val scala2Version    = "2.13.18"
+lazy val scala3Version    = "3.3.8"
+lazy val scalaNextVersion = "3.8.4"
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
@@ -301,6 +310,18 @@ lazy val test = crossProject(JVMPlatform, JSPlatform, NativePlatform)
       catsLaws.value,
       munitDiscipline.value
     )
+  )
+
+lazy val scalaNextTest = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+  .dependsOn(test % "test->test")
+  .jvmSettings(monocleJvmSettings)
+  .jsSettings(monocleJsSettings)
+  .nativeSettings(monocleNativeSettings)
+  .enablePlugins(NoPublishPlugin)
+  .settings(
+    crossScalaVersions := Seq(scalaNextVersion),
+    libraryDependencies ++= Seq(munitDiscipline.value),
+    scalacOptions --= Seq("-release:8", "-Ykind-projector")
   )
 
 lazy val bench = project
