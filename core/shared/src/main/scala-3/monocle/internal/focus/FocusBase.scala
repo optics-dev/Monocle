@@ -29,6 +29,8 @@ private[focus] trait FocusBase {
       fieldName: String,
       fromDescription: NamedTuples.Description,
       toType: TypeRepr,
+      // storing the whole NamedTuples helper class might feel weird but it's the best way one can describe that this focus action is only possible
+      // when named tuples are actually supported (i.e. on Scala > 3.7.x)
       namedTuples: NamedTuples
     )
     case KeywordSome(toType: TypeRepr)
