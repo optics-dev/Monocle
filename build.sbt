@@ -142,26 +142,23 @@ lazy val scalaNativeSettings = Seq(
 )
 
 lazy val defaultReleaseOption = "-release:8"
+lazy val scala3ReleaseOption  = "-release:17"
+
+// Scala 3 has not accepted a target below 17 since 3.8 (minReleaseVersion = 17),
+// so the release flag has to follow the binary version on every platform.
+lazy val releaseOption = Def.setting {
+  if (scalaBinaryVersion.value == "3") scala3ReleaseOption else defaultReleaseOption
+}
 
 lazy val monocleSettings    = buildSettings
 lazy val monocleJvmSettings = monocleSettings ++ Seq(
-  scalacOptions ++= {
-    if (scalaBinaryVersion.value == "3") {
-      Seq(
-        "-release:17"
-      )
-    } else {
-      Seq(
-        defaultReleaseOption
-      )
-    }
-  }
+  scalacOptions += releaseOption.value
 )
 lazy val monocleJsSettings = monocleSettings ++ scalajsSettings ++ Seq(
-  scalacOptions += defaultReleaseOption
+  scalacOptions += releaseOption.value
 )
 lazy val monocleNativeSettings = monocleSettings ++ scalaNativeSettings ++ Seq(
-  scalacOptions += defaultReleaseOption
+  scalacOptions += releaseOption.value
 )
 
 lazy val root = tlCrossRootProject.aggregate(
