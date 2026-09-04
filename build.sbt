@@ -29,13 +29,7 @@ inThisBuild(
           name = Some("Run documentation"),
           cond = Some(s"matrix.scala == '2.13' && matrix.project == 'rootJVM'")
         )
-      ) ++ scalaNextTest.projects.map { case (platform, project) =>
-        WorkflowStep.Sbt(
-          List(s"${project.id}/test"),
-          name = Some(s"Run Scala Next Tests (${platform.identifier})"),
-          cond = Some(s"matrix.java == 'temurin@25' && matrix.scala == '3'")
-        )
-      },
+      ),
     githubWorkflowJavaVersions := Seq(
       JavaSpec.temurin("17"),
       JavaSpec.temurin("25")
@@ -113,10 +107,9 @@ lazy val buildSettings = Seq(
   }
 )
 
-lazy val catsVersion      = "2.13.0"
-lazy val scala2Version    = "2.13.18"
-lazy val scala3Version    = "3.9.0"
-lazy val scalaNextVersion = "3.10.0-RC1"
+lazy val catsVersion   = "2.13.0"
+lazy val scala2Version = "2.13.18"
+lazy val scala3Version = "3.9.0"
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
 lazy val catsFree          = Def.setting("org.typelevel" %%% "cats-free" % catsVersion)
@@ -144,8 +137,6 @@ lazy val scalaNativeSettings = Seq(
 lazy val defaultReleaseOption = "-release:8"
 lazy val scala3ReleaseOption  = "-release:17"
 
-// Scala 3 has not accepted a target below 17 since 3.8 (minReleaseVersion = 17),
-// so the release flag has to follow the binary version on every platform.
 lazy val releaseOption = Def.setting {
   if (scalaBinaryVersion.value == "3") scala3ReleaseOption else defaultReleaseOption
 }
@@ -304,18 +295,6 @@ lazy val test = crossProject(JVMPlatform, JSPlatform, NativePlatform)
       catsLaws.value,
       munitDiscipline.value
     )
-  )
-
-lazy val scalaNextTest = crossProject(JVMPlatform, JSPlatform, NativePlatform)
-  .dependsOn(test % "test->test")
-  .jvmSettings(monocleJvmSettings)
-  .jsSettings(monocleJsSettings)
-  .nativeSettings(monocleNativeSettings)
-  .enablePlugins(NoPublishPlugin)
-  .settings(
-    crossScalaVersions := Seq(scalaNextVersion),
-    libraryDependencies ++= Seq(munitDiscipline.value),
-    scalacOptions --= Seq("-release:8", "-Ykind-projector")
   )
 
 lazy val bench = project
