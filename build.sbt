@@ -37,7 +37,7 @@ inThisBuild(
         )
       },
     githubWorkflowJavaVersions := Seq(
-      JavaSpec.temurin("11"),
+      JavaSpec.temurin("17"),
       JavaSpec.temurin("25")
     ),
     githubWorkflowPublishPostamble += WorkflowStep.Sbt(
@@ -115,7 +115,7 @@ lazy val buildSettings = Seq(
 
 lazy val catsVersion      = "2.13.0"
 lazy val scala2Version    = "2.13.18"
-lazy val scala3Version    = "3.3.8"
+lazy val scala3Version    = "3.9.0"
 lazy val scalaNextVersion = "3.8.4"
 
 lazy val cats              = Def.setting("org.typelevel" %%% "cats-core" % catsVersion)
@@ -146,13 +146,10 @@ lazy val defaultReleaseOption = "-release:8"
 lazy val monocleSettings    = buildSettings
 lazy val monocleJvmSettings = monocleSettings ++ Seq(
   scalacOptions ++= {
-    if (scalaVersion.value.startsWith("3.3.")) {
+    if (scalaBinaryVersion.value == "3") {
       Seq(
-        "-Yfuture-lazy-vals",
-        "-release:11"
+        "-release:17"
       )
-    } else if (scalaBinaryVersion.value == "3") {
-      Nil
     } else {
       Seq(
         defaultReleaseOption
