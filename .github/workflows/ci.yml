@@ -29,7 +29,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04]
         scala: [2.13, 3]
-        java: [temurin@11, temurin@25]
+        java: [temurin@17, temurin@25]
         project: [rootJS, rootJVM, rootNative]
         exclude:
           - project: rootJS
@@ -47,17 +47,17 @@ jobs:
       - name: Setup sbt
         uses: sbt/setup-sbt@v1
 
-      - name: Setup Java (temurin@11)
-        id: setup-java-temurin-11
-        if: matrix.java == 'temurin@11'
+      - name: Setup Java (temurin@17)
+        id: setup-java-temurin-17
+        if: matrix.java == 'temurin@17'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
 
       - name: sbt update
-        if: matrix.java == 'temurin@11' && steps.setup-java-temurin-11.outputs.cache-hit == 'false'
+        if: matrix.java == 'temurin@17' && steps.setup-java-temurin-17.outputs.cache-hit == 'false'
         run: sbt +update
 
       - name: Setup Java (temurin@25)
@@ -77,7 +77,7 @@ jobs:
         run: sbt githubWorkflowCheck
 
       - name: Check formatting
-        if: matrix.java == 'temurin@11' && matrix.os == 'ubuntu-22.04'
+        if: matrix.java == 'temurin@17' && matrix.os == 'ubuntu-22.04'
         run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' scalafmtCheckAll 'project /' scalafmtSbtCheck
 
       - name: scalaJSLink
@@ -92,28 +92,16 @@ jobs:
         run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' test
 
       - name: Check binary compatibility
-        if: matrix.java == 'temurin@11' && matrix.os == 'ubuntu-22.04'
+        if: matrix.java == 'temurin@17' && matrix.os == 'ubuntu-22.04'
         run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' mimaReportBinaryIssues
 
       - name: Generate API documentation
-        if: matrix.java == 'temurin@11' && matrix.os == 'ubuntu-22.04'
+        if: matrix.java == 'temurin@17' && matrix.os == 'ubuntu-22.04'
         run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' doc
 
       - name: Run documentation
         if: matrix.scala == '2.13' && matrix.project == 'rootJVM'
         run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' docs/mdoc
-
-      - name: Run Scala Next Tests (jvm)
-        if: matrix.java == 'temurin@25' && matrix.scala == '3'
-        run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' scalaNextTestJVM/test
-
-      - name: Run Scala Next Tests (js)
-        if: matrix.java == 'temurin@25' && matrix.scala == '3'
-        run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' scalaNextTestJS/test
-
-      - name: Run Scala Next Tests (native)
-        if: matrix.java == 'temurin@25' && matrix.scala == '3'
-        run: sbt 'project ${{ matrix.project }}' '++ ${{ matrix.scala }}' scalaNextTestNative/test
 
       - name: Make target directories
         if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/v'))
@@ -137,7 +125,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        java: [temurin@11]
+        java: [temurin@17]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
@@ -148,17 +136,17 @@ jobs:
       - name: Setup sbt
         uses: sbt/setup-sbt@v1
 
-      - name: Setup Java (temurin@11)
-        id: setup-java-temurin-11
-        if: matrix.java == 'temurin@11'
+      - name: Setup Java (temurin@17)
+        id: setup-java-temurin-17
+        if: matrix.java == 'temurin@17'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
 
       - name: sbt update
-        if: matrix.java == 'temurin@11' && steps.setup-java-temurin-11.outputs.cache-hit == 'false'
+        if: matrix.java == 'temurin@17' && steps.setup-java-temurin-17.outputs.cache-hit == 'false'
         run: sbt +update
 
       - name: Setup Java (temurin@25)
@@ -269,7 +257,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        java: [temurin@11]
+        java: [temurin@17]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
@@ -280,17 +268,17 @@ jobs:
       - name: Setup sbt
         uses: sbt/setup-sbt@v1
 
-      - name: Setup Java (temurin@11)
-        id: setup-java-temurin-11
-        if: matrix.java == 'temurin@11'
+      - name: Setup Java (temurin@17)
+        id: setup-java-temurin-17
+        if: matrix.java == 'temurin@17'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
 
       - name: sbt update
-        if: matrix.java == 'temurin@11' && steps.setup-java-temurin-11.outputs.cache-hit == 'false'
+        if: matrix.java == 'temurin@17' && steps.setup-java-temurin-17.outputs.cache-hit == 'false'
         run: sbt +update
 
       - name: Setup Java (temurin@25)
@@ -309,7 +297,7 @@ jobs:
       - name: Submit Dependencies
         uses: scalacenter/sbt-dependency-submission@v2
         with:
-          modules-ignore: monocle-test_2.13 monocle-test_3 monocle-test_native0.5_2.13 monocle-test_native0.5_3 rootjs_2.13 rootjs_3 monocle-docs_2.13 scalanexttest_3 rootjvm_2.13 rootjvm_3 rootnative_2.13 rootnative_3 scalanexttest_native0.5_3 scalanexttest_sjs1_3 monocle-test_sjs1_2.13 monocle-test_sjs1_3 monocle-example_2.13 monocle-example_3 monocle-bench_2.13 monocle-bench_3
+          modules-ignore: monocle-test_2.13 monocle-test_3 monocle-test_native0.5_2.13 monocle-test_native0.5_3 rootjs_2.13 rootjs_3 monocle-docs_2.13 rootjvm_2.13 rootjvm_3 rootnative_2.13 rootnative_3 monocle-test_sjs1_2.13 monocle-test_sjs1_3 monocle-example_2.13 monocle-example_3 monocle-bench_2.13 monocle-bench_3
           configs-ignore: test scala-tool scala-doc-tool test-internal
 
   validate-steward:
