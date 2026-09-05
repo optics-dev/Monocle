@@ -323,6 +323,7 @@ lazy val docs = project
   .settings(buildInfoSettings)
   .settings(scalacOptions ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Ywarn-dead-code"))))
   .settings(
+    docusaurusVersion := DocusaurusVersion.V1,
     libraryDependencies ++= Seq(cats.value, shapeless.value)
   )
 
